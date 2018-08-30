@@ -360,10 +360,14 @@ define(function(require) {
 	 * - open myaccount submodule
 	 * - absolute container if isPersistent
 	 * - current app
-	 * @param  {Boolean} isPersistent Keep it open when switching apps
+	 * @param  {Boolean} pIsPersistent Indicates whether or not to persist the
+	 *                                 dialog when switching app contexts
 	 * @return {jQuery}               Container of the dialog
 	 */
-	function getDialogAppendTo(isPersistent) {
+	function getDialogAppendTo(pIsPersistent) {
+		var isPersistent = _.isBoolean(pIsPersistent)
+			? pIsPersistent
+			: false;
 		var $coreWrapper = $('.core-wrapper'),
 			$coreContent = $coreWrapper.find('.core-content'),
 			$coreAbsolute = $coreWrapper.find('.core-absolute'),
@@ -682,6 +686,9 @@ define(function(require) {
 		},
 
 		dialog: function(content, options) {
+			var isPersistent = _.has(options, 'isPersistent')
+				? options.isPersistent
+				: false;
 			var dialog = $('<div />').append(content),
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
@@ -702,7 +709,7 @@ define(function(require) {
 
 			//Unoverridable options
 			var strictOptions = {
-					appendTo: getDialogAppendTo(options.isPersistent),
+					appendTo: getDialogAppendTo(isPersistent),
 					show: { effect: 'fade', duration: 200 },
 					hide: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
