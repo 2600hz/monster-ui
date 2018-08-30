@@ -48,64 +48,6 @@ define(function(require) {
 			}
 		},
 
-		getMomentFormat: function(pFormat, pUser) {
-			var self = this,
-				format = pFormat || 'dateTime',
-				user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
-				userHourFormat = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? '12h' : '24h',
-				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
-				dateFormats = {
-					'dmy': 'DD/MM/YYYY',
-					'mdy': 'MM/DD/YYYY',
-					'ymd': 'YYYY/MM/DD'
-				},
-				hourFormats = {
-					'12h': 'hh',
-					'24h': 'HH'
-				},
-				// map of moment formats
-				shortcuts = {
-					shortDateTime: dateFormats[userDateFormat].replace('YYYY', 'YY') + ' ' + hourFormats[userHourFormat] + ':mm',
-					dateTime: dateFormats[userDateFormat] + ' - ' + hourFormats[userHourFormat] + ':mm:ss',
-					shortDate: dateFormats[userDateFormat].replace('YYYY', 'YY'),
-					shortTime: '' + hourFormats[userHourFormat] + ':mm',
-					time: '' + hourFormats[userHourFormat] + ':mm:ss',
-					calendarDate: (userDateFormat === 'mdy' ? 'MMMM DD' : 'DD MMMM') + ', YYYY',
-					date: dateFormats[userDateFormat]
-				},
-				momentFormat = shortcuts[format];
-
-			// If user wants to see the 12 hour mode, and the date format selected includes the time, then we show AM / PM
-			if (userHourFormat === '12h' && ['shortDateTime', 'dateTime', 'shortTime', 'time'].indexOf(format) >= 0) {
-				momentFormat += ' A';
-			}
-
-			return momentFormat;
-		},
-
-		toFriendlyDate: function(pDate, format, pUser, pIsGregorian, tz) {
-			// If Date is undefined, then we return an empty string.
-			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
-			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			var friendlyDate = '';
-
-			if (typeof pDate !== 'undefined') {
-				var self = this,
-					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
-					// date can be either a JS Date or a gregorian timestamp
-					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
-					momentFormat = self.getMomentFormat(format, pUser);
-
-				if (tz) {
-					friendlyDate = moment(date).tz(tz).format(momentFormat);
-				} else {
-					friendlyDate = moment(date).format(momentFormat);
-				}
-			}
-
-			return friendlyDate;
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -124,20 +66,6 @@ define(function(require) {
 			return new Date(dateString.replace(regex, dateFormats[format]));
 		},
 
-		gregorianToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				formattedResponse = new Date((timestamp - 62167219200) * 1000);
-			}
-
-			return formattedResponse;
-		},
-
 		dateToGregorian: function(date) {
 			var formattedResponse;
 
@@ -152,7 +80,7 @@ define(function(require) {
 		},
 
 		getModbID: function(id, timestamp) {
-			var jsDate = monster.util.gregorianToDate(timestamp),
+			var jsDate = gregorianToDate(timestamp),
 				UTCYear = jsDate.getUTCFullYear() + '',
 				UTCMonth = jsDate.getUTCMonth() + 1,
 				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
@@ -167,30 +95,6 @@ define(function(require) {
 			}
 
 			return modbString;
-		},
-
-		unixToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				// Sometimes unix times are defined with more precision, such as with the /legs API which returns channel created time in microsec, so we need to remove this extra precision to use the standard JS constructor
-				while (timestamp > 9999999999999) {
-					timestamp /= 1000;
-				}
-
-				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
-				if (timestamp < 10000000000) {
-					timestamp *= 1000;
-				}
-
-				formattedResponse = new Date(timestamp);
-			}
-
-			return formattedResponse;
 		},
 
 		dateToUnix: function(date) {
@@ -622,7 +526,11 @@ define(function(require) {
 			transaction.hasAddOns = false;
 
 			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-			if (transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') && !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
+			if (transaction.hasOwnProperty('metadata')
+				&& transaction.metadata.hasOwnProperty('add_ons')
+				&& transaction.metadata.hasOwnProperty('discounts')
+				&& !(transaction.metadata.add_ons.length === 0
+				&& transaction.metadata.discounts.length === 0)) {
 				var mapDiscounts = {};
 				_.each(transaction.metadata.discounts, function(discount) {
 					mapDiscounts[discount.id] = discount;
@@ -1265,6 +1173,89 @@ define(function(require) {
 	}
 
 	/**
+	 * Determine the date format from a specific or current user's settings
+	 * @private
+	 * @param  {String} pFormat Specific format for the user
+	 * @param  {Object} pUser   Specific user to get format from
+	 * @return {String}         Computed representation of the format
+	 */
+	function getMomentFormat(pFormat, pUser) {
+		var format = _.isString(pFormat)
+			? pFormat
+			: 'dateTime';
+		var user = _.isObject(pUser)
+			? pUser
+			: _.get(monster, 'apps.auth.currentUser', {});
+		var hourFormat = _.get(user, 'ui_flags.twelve_hours_mode', false)
+			? '12h'
+			: '24h';
+		var dateFormat = _.get(user, 'ui_flags.date_format', 'mdy');
+		var dateFormats = {
+			dmy: 'DD/MM/YYYY',
+			mdy: 'MM/DD/YYYY',
+			ymd: 'YYYY/MM/DD'
+		};
+		var hourFormats = {
+			'12h': 'hh',
+			'24h': 'HH'
+		};
+		var shortcuts = {
+			calendarDate: (dateFormat === 'mdy'
+				? 'MMMM DD'
+				: 'DD MMMM'
+			) + ', YYYY',
+			date: dateFormats[dateFormat],
+			dateTime: dateFormats[dateFormat]
+				.concat(
+					' - ',
+					hourFormats[hourFormat],
+					':mm:ss'
+				),
+			shortDate: dateFormats[dateFormat].replace('YYYY', 'YY'),
+			shortDateTime: dateFormats[dateFormat]
+				.replace('YYYY', 'YY')
+				.concat(
+					' ',
+					hourFormats[hourFormat],
+					':mm'
+				),
+			shortTime: '' + hourFormats[hourFormat] + ':mm',
+			time: '' + hourFormats[hourFormat] + ':mm:ss'
+		};
+		if (!_.includes(_.keys(shortcuts), format)) {
+			throw new Error('`format` must be one of '.concat(
+				_.keys(shortcuts).join(', '),
+				' or undefined'
+			));
+		}
+		if (hourFormat === '12h'
+			&& _.includes([
+				'shortDateTime',
+				'dateTime',
+				'shortTime',
+				'time'
+			], format)) {
+			return shortcuts[format] + ' A';
+		}
+		return shortcuts[format];
+	}
+
+	/**
+	 * Converts a Gregorian timestamp into a Date instance
+	 * @param  {Number} pTimestamp Gregorian timestamp
+	 * @return {Date}           Converted Date instance
+	 */
+	function gregorianToDate(pTimestamp) {
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		return new Date((_.floor(timestamp) - 62167219200) * 1000);
+	}
+
+	/**
 	 * Determine if a specific number feature is enabled on the current account
 	 * @param  {String}  feature  Feature to check (e.g. e911, cnam)
 	 * @param  {Object}  pAccount Account object to check from (optional)
@@ -1287,9 +1278,93 @@ define(function(require) {
 			);
 	}
 
+	/**
+	 * Formats a Gregorian/Unix timestamp or Date instances into a String
+	 * representation of the corresponding date.
+	 * @param  {Date|String} pDate   Representation of the date to format.
+	 * @param  {String} pFormat      Tokens to format the date with.
+	 * @param  {Object} pUser        Specific user to use for formatting.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
+	 *                                gregorian format.
+	 * @param  {String} tz           Timezone to format the date with.
+	 * @return {String}              Representation of the formatted date.
+	 *
+	 * If pDate is undefined then return an empty string. Useful for form which
+	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
+	 * would display NaN/NaN/NaN in Firefox for example.
+	 *
+	 * By default, the timezone of the specified or logged in user will be used
+	 * to format the date. If that timezone is not set, then the account
+	 * timezone will be used. If not set, the browser’s timezone will be used as
+	 * a last resort.
+	 */
+	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, tz) {
+		if (_.isUndefined(pDate)) {
+			return '';
+		}
+		var isGregorian = _.isBoolean(pIsGregorian)
+			? pIsGregorian
+			: true;
+		var date = _.isDate(pDate)
+			? pDate
+			: isGregorian
+				? gregorianToDate(pDate)
+				: unixToDate(pDate);
+		var format = getMomentFormat(pFormat, pUser);
+		if (!_.isNull(moment.tz.zone(tz))) {
+			return moment(date).tz(tz).format(format);
+		}
+		if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+			return moment(date)
+				.tz(monster.apps.auth.currentUser.timezone)
+				.format(format);
+		}
+		if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+			return moment(date)
+				.tz(monster.apps.auth.currentAccount.timezone)
+				.format(format);
+		}
+		return moment(date).tz(moment.tz.guess()).format(format);
+	}
+
+	/**
+	 * Converts a Unix timestamp into a Date instance
+	 * @param  {Number} pTimestamp Unix timestamp
+	 * @return {Date}           Converted Date instance
+	 *
+	 * Sometimes Unix times are defined with more precision, such as with the
+	 * /legs API which returns channel created time in microseconds, so we need
+	 * need to remove this extra precision to use the Date constructor.
+	 *
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
+	 * get milliseconds in order to use the Date constructor.
+	 */
+	function unixToDate(pTimestamp) {
+		var max = 9999999999999;
+		var min = 10000000000;
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		while (timestamp > max || timestamp < min) {
+			if (timestamp > max) {
+				timestamp /= 1000;
+			}
+			if (timestamp < min) {
+				timestamp *= 1000;
+			}
+		}
+		return new Date(timestamp);
+	}
+
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
+	util.toFriendlyDate = toFriendlyDate;
+	util.unixToDate = unixToDate;
 
 	return util;
 });
