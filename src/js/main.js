@@ -132,6 +132,7 @@ require([
 		monster.util = util;
 		monster.webphone = webphone;
 
+		monster.routing.init();
 		monster.util.setDefaultLanguage();
 
 		monster.loadBuildConfig(function() {
