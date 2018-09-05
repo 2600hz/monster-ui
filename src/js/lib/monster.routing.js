@@ -1,87 +1,81 @@
 define(function(require) {
-	var $ = require('jquery'),
-		_ = require('lodash'),
-		monster = require('monster'),
-		crossroads = require('crossroads'),
-		hasher = require('hasher');
+	var Hasher = require('hasher');
+	var Crossroads = require('crossroads');
+	var _ = require('lodash');
+	var monster = require('monster');
+	var $ = require('jquery');
 
-	var routes = [];
+	function addDefaultRoutes() {
+		var appWhitelist = {
+			appstore: {
+				onlyAdmins: true
+			}
+		};
+		var app;
+		addRoutes('apps/{appName}:?query:', function(name, query) {
+			if (!_.has(monster, 'apps.auth')) {
+				return;
+			}
+			if (_.has(appWhitelist, name)) {
+				if (!appWhitelist[name].onlyAdmins || monster.util.isAdmin()) {
+					app = {
+						name: name
+					};
+				} else {
+					return;
+				}
+			} else {
+				app = _.find(monster.apps.auth.installedApps, {
+					name: name
+				});
+			}
+			loadApp(app.name, query);
+		});
+	}
 
-	function add(url, callback) {
+	function addRoutes(url, callback) {
 		var currentUrl = getUrl();
-
-		routes.push(crossroads.addRoute(url, callback));
-
+		Crossroads.addRoute(url, callback);
 		if (currentUrl === url) {
 			parseHash(url);
 		}
 	}
 
-	function addDefaultRoutes() {
-		var appWhitelist = {
-			'appstore': { onlyAdmins: true }
-		};
-
-		add('apps/{appName}:?query:', function(appName, query) {
-			if (monster && monster.apps && monster.apps.auth) {
-				if (appWhitelist.hasOwnProperty(appName)) {
-					if (!appWhitelist[appName].onlyAdmins || monster.util.isAdmin()) {
-						loadApp(appName, query);
-					}
-				} else {
-					var found = false;
-
-					_.each(monster.apps.auth.installedApps, function(app) {
-						if (appName === app.name && !found) {
-							loadApp(appName, query);
-
-							found = true;
-						}
-					});
-				}
-			}
-		});
-	}
-
 	function getUrl() {
-		return hasher.getHash();
+		return Hasher.getHash();
 	}
 
 	function goTo(url) {
 		updateHash(url);
-
 		parseHash(url);
 	}
 
 	function hasMatch() {
-		return crossroads._getMatchedRoutes(getUrl()).length > 0;
+		return !_.isEmpty(Crossroads._getMatchedRoutes(getUrl()));
 	}
 
 	function init() {
-		var onEvent = function(newHash, oldHash) {
-			parseHash(newHash, oldHash);
+		var onEvent = function(newHash) {
+			parseHash(newHash);
 		};
-
 		addDefaultRoutes();
-
-		hasher.initialized.add(onEvent); // parse initial hash
-		hasher.changed.add(onEvent); // parse hash changes
-		hasher.init(); // start listening for history changes
-
-		crossroads.ignoreState = true;
+		Hasher.initialized.add(onEvent);
+		Hasher.changed.add(onEvent);
+		Hasher.init();
+		Crossroads.ignoreState = true;
 	}
 
 	function isAccountIDMasqueradable(id) {
-		return /^[0-9a-f]{32}$/i.test(id) && (monster.apps.auth.currentAccount.id !== id);
+		return /^[0-9a-f]{32}$/i.test(id)
+			&& monster.apps.auth.currentAccount.id !== id;
 	}
 
 	function loadApp(appName, query) {
-		// See if we have a 'm' query string (masquerading), and see if it's an ID, if yes, then trigger an attempt to masquerade
-		if (query && query.hasOwnProperty('m') && isAccountIDMasqueradable(query.m)) {
-			var accountData = { id: query.m };
-
+		if (_.has(query, 'm') && isAccountIDMasqueradable(query.m)) {
 			monster.pub('core.triggerMasquerading', {
-				account: accountData,
+				account: {
+					id: query.m
+				},
 				callback: function() {
 					renderApp(appName);
 				}
@@ -92,39 +86,35 @@ define(function(require) {
 	}
 
 	function parseHash(newHash) {
-		if (!newHash || newHash === '') {
+		if (_.isUndefined(newHash) || _.isEmpty(newHash)) {
 			newHash = getUrl();
 		}
-
-		crossroads.parse(newHash);
+		Crossroads.parse(newHash);
 	}
 
 	function renderApp(appName) {
-		if (appName === 'appstore' || !monster.util.isMasquerading() || monster.appsStore[appName].masqueradable === true) {
-			monster.pub('apploader.hide');
-			monster.pub('myaccount.hide');
-
-			monster.apps.load(appName, function(loadedApp) {
-				monster.pub('core.showAppName', appName);
-				$('#monster_content').empty();
-
-				loadedApp.render();
-			});
-		} else {
+		if (!(appName === 'appstore'
+			|| !monster.util.isMasquerading()
+			|| monster.appsStore[appName].masqueradable === true)) {
 			monster.ui.toast({
 				type: 'error',
 				message: monster.apps.core.i18n.active().appMasqueradingError
 			});
+			return;
 		}
+		monster.pub('apploader.hide');
+		monster.pub('myaccount.hide');
+		monster.apps.load(appName, function(loadedApp) {
+			monster.pub('core.showAppName', appName);
+			$('#monster_content').empty();
+			loadedApp.render();
+		});
 	}
 
-	// We silence the event so it only changes the URL.
 	function updateHash(url) {
-		hasher.changed.active = false; //disable changed signal
-
-		hasher.setHash(url); //set hash without dispatching changed signal
-
-		hasher.changed.active = true; //re-enable signal
+		Hasher.changed.active = false;
+		Hasher.setHash(url);
+		Hasher.changed.active = true;
 	}
 
 	return {
