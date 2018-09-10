@@ -15,6 +15,7 @@ define(function(require) {
 		_servicePlanRenderContent: function(args) {
 			var self = this,
 				defaults = {
+					showBookkeeper: false,
 					hasServicePlan: false,
 					hasSubscriptions: false,
 					totalAmount: 0,
@@ -24,54 +25,43 @@ define(function(require) {
 
 			monster.parallel({
 				servicePlan: function(callback) {
-					self.servicePlanGet(function success(data) {
-						var dataArray = [],
-							totalAmount = 0,
-							serviceName;
-
-						renderData.hasServicePlan = true;
-
-						if ('items' in data.data) {
-							$.each(data.data.items, function(categoryName, category) {
-								$.each(category, function(itemName, item) {
-									var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-										monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0);
-
-									if (monthlyCharges > 0) {
-										serviceName = self.i18n.active().servicePlan.titles.hasOwnProperty(itemName) ? self.i18n.active().servicePlan.titles[itemName] : monster.util.formatVariableToDisplay(itemName);
-
-										dataArray.push({
-											service: serviceName,
-											rate: item.rate || 0,
-											quantity: item.quantity || 0,
-											discount: discount > 0
-												? '- ' + monster.util.formatPrice({
-													price: discount,
-													digits: 2
-												})
-												: '',
-											monthlyCharges: monthlyCharges
-										});
-
-										totalAmount += monthlyCharges;
-									}
-								});
+					self.servicePlanGetSummary({
+						success: function(data) {
+							renderData.showBookkeeper = _.size(data.invoices) > 1;
+							renderData.invoices = _.map(data.invoices, function(invoice) {
+								renderData.hasServicePlan = true;
+								return {
+									bookkeeper: _.capitalize(invoice.bookkeeper.type),
+									items: _
+										.chain(invoice.items)
+										.filter(function(item) {
+											return item.quantity > 0;
+										})
+										.map(function(item) {
+											renderData.totalAmount += item.total;
+											return {
+												name: _.has(self.i18n.active().servicePlan.titles, item.category)
+													? self.i18n.active().servicePlan.titles[item.category]
+													: monster.util.formatVariableToDisplay(item.category),
+												rate: item.rate || 0,
+												quantity: item.quantity || 0,
+												discount: _.has(item, 'discounts.total')
+													? '- ' + monster.util.formatPrice({
+														price: item.discounts.total
+													})
+													: '',
+												monthlyCharges: item.total
+											};
+										})
+										.orderBy('monthlyCharges', 'desc')
+										.value()
+								};
 							});
+							callback(null, data);
+						},
+						error: function() {
+							callback(null, {});
 						}
-
-						var sortByPrice = function(a, b) {
-							return parseFloat(a.monthlyCharges) >= parseFloat(b.monthlyCharges) ? -1 : 1;
-						};
-
-						dataArray.sort(sortByPrice);
-
-						renderData.servicePlanArray = dataArray;
-						renderData.totalAmount = totalAmount;
-
-						callback(null, data);
-					},
-					function error(data) {
-						callback(null, {});
 					});
 				},
 				subscription: function(callback) {
@@ -148,20 +138,19 @@ define(function(require) {
 			});
 		},
 
-		servicePlanGet: function(success, error) {
+		servicePlanGetSummary: function(args) {
 			var self = this;
 
 			self.callApi({
-				resource: 'servicePlan.listCurrent',
-				data: {
-					accountId: self.accountId,
-					generateError: false
-				},
+				resource: 'services.getSummary',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data, status) {
-					success && success(data, status);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
-				error: function(data, status) {
-					error && error(data, status);
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		},

@@ -312,6 +312,7 @@
 		"discount": "Discount",
 		"dueOn": "Due By",
 		"empty": "Your current service plan is empty!",
+		"none": "There is no service plan applied to your account!",
 		"monthlyChargesTitle": "Monthly Charges",
 		"quantityTitle": "Quantity",
 		"rateTitle": "Rate",

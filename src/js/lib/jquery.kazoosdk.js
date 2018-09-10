@@ -164,7 +164,7 @@
 			},
 			faxes: {
 				'send': { verb: 'PUT', url: 'accounts/{accountId}/faxes' },
-				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: "multipart/mixed" },
+				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: 'multipart/mixed' },
 
 				'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog' },
 				'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}' },
@@ -398,6 +398,9 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
+			},
+			services: {
+				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
