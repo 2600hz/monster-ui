@@ -986,7 +986,7 @@ define(function(require) {
 			var self = this;
 
 			self.callApi({
-				resource: 'balance.add',
+				resource: 'services.topup',
 				data: {
 					accountId: self.accountId,
 					data: data

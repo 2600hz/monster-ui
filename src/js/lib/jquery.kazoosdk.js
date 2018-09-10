@@ -400,7 +400,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
 			},
 			services: {
-				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' }
+				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
