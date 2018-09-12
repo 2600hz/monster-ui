@@ -29,11 +29,11 @@ define(function(require) {
 			var self = this;
 
 			if (!args.hasOwnProperty('except') || args.except !== 'balance') {
-				self.balanceGet(function(data) {
+				self.balanceGet(function(balance) {
 					var argsBadge = {
 						module: 'balance',
 						data: monster.util.formatPrice({
-							price: data.data.balance,
+							price: balance,
 							digits: self.appFlags.balance.digits.availableCreditsBadge
 						}),
 						callback: args.callback
@@ -50,8 +50,8 @@ define(function(require) {
 
 			monster.parallel({
 				balance: function(callback) {
-					self.balanceGet(function(data) {
-						var amount = parseFloat(data.data.balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge);
+					self.balanceGet(function(balance) {
+						var amount = parseFloat(balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge);
 
 						callback(null, amount);
 					});
@@ -196,7 +196,7 @@ define(function(require) {
 				},
 				balance: function(callback) {
 					self.callApi({
-						resource: 'balance.get',
+						resource: 'ledgers.list',
 						data: {
 							accountId: self.accountId
 						},
@@ -214,7 +214,14 @@ define(function(require) {
 
 		balanceFormatDialogData: function(data) {
 			var self = this,
-				amount = (data.balance.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+				amount = _
+					.chain(data.balance)
+					.reduce(function(acc, ledger) {
+						acc += ledger.amount;
+						return acc;
+					}, 0)
+					.value()
+					.toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
 
@@ -554,8 +561,8 @@ define(function(require) {
 							});
 
 							if (typeof params.callback === 'function') {
-								self.balanceGet(function(data) {
-									params.callback(data.data.balance);
+								self.balanceGet(function(balance) {
+									params.callback(balance);
 									parent.dialog('close');
 								});
 							} else {
@@ -960,12 +967,15 @@ define(function(require) {
 			var self = this;
 
 			self.callApi({
-				resource: 'balance.get',
+				resource: 'ledgers.list',
 				data: {
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					success && success(data, status);
+					success && success(_.reduce(data.data, function(acc, ledger) {
+						acc += ledger.amount;
+						return acc;
+					}, 0), status);
 				},
 				error: function(data, status) {
 					error && error(data, status);
