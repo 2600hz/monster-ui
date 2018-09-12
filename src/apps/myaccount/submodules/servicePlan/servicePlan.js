@@ -1,123 +1,76 @@
 define(function(require) {
-	var $ = require('jquery'),
-		_ = require('lodash'),
-		monster = require('monster');
+	var $ = require('jquery');
+	var _ = require('lodash');
+	var monster = require('monster');
 
-	var servicePlan = {
-
-		requests: {
-		},
-
+	return {
 		subscribe: {
-			'myaccount.servicePlan.renderContent': '_servicePlanRenderContent'
+			'myaccount.servicePlan.renderContent': '_servicePlanRender'
 		},
 
-		_servicePlanRenderContent: function(args) {
-			var self = this,
-				defaults = {
-					hasServicePlan: false,
-					hasSubscriptions: false,
-					totalAmount: 0,
-					servicePlanArray: []
-				},
-				renderData = defaults;
-
-			monster.parallel({
-				servicePlan: function(callback) {
-					self.servicePlanGet(function success(data) {
-						var dataArray = [],
-							totalAmount = 0,
-							serviceName;
-
-						renderData.hasServicePlan = true;
-
-						if ('items' in data.data) {
-							$.each(data.data.items, function(categoryName, category) {
-								$.each(category, function(itemName, item) {
-									var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-										monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0);
-
-									if (monthlyCharges > 0) {
-										serviceName = self.i18n.active().servicePlan.titles.hasOwnProperty(itemName) ? self.i18n.active().servicePlan.titles[itemName] : monster.util.formatVariableToDisplay(itemName);
-
-										dataArray.push({
-											service: serviceName,
-											rate: item.rate || 0,
-											quantity: item.quantity || 0,
-											discount: discount > 0
-												? '- ' + monster.util.formatPrice({
-													price: discount,
-													digits: 2
-												})
-												: '',
-											monthlyCharges: monthlyCharges
-										});
-
-										totalAmount += monthlyCharges;
-									}
-								});
-							});
-						}
-
-						var sortByPrice = function(a, b) {
-							return parseFloat(a.monthlyCharges) >= parseFloat(b.monthlyCharges) ? -1 : 1;
-						};
-
-						dataArray.sort(sortByPrice);
-
-						renderData.servicePlanArray = dataArray;
-						renderData.totalAmount = totalAmount;
-
-						callback(null, data);
-					},
-					function error(data) {
-						callback(null, {});
-					});
-				},
-				subscription: function(callback) {
-					self.servicePlanGetSubscription(function success(data) {
-						renderData.hasSubscriptions = true;
-
-						renderData.dueDate = '?';
-
-						if (data.data.length > 0) {
-							// Hack to find the Active subscription
-							data.data.forEach(function(subscription) {
-								if (subscription.status === 'Active') {
-									renderData.dueDate = monster.util.toFriendlyDate(subscription.next_bill_date, 'date');
-
-									return false;
-								}
-							});
-						}
-
-						callback(null, data);
-					},
-					function error(data) {
-						callback(null, {});
-					});
-				}
-			}, function(err, results) {
-				var servicePlanView = $(self.getTemplate({
+		_servicePlanRender: function(args) {
+			var self = this;
+			var initTemplate = function(result) {
+				var template = $(self.getTemplate({
 					name: 'layout',
-					data: renderData,
+					data: self.servicePlanFormat(result),
 					submodule: 'servicePlan'
 				}));
-
-				self.servicePlanBindEvents(servicePlanView);
-
-				monster.pub('myaccount.renderSubmodule', servicePlanView);
-
-				if (typeof args.callback === 'function') {
-					args.callback(servicePlanView);
+				self.servicePlanBindEvents(template);
+				monster.pub('myaccount.renderSubmodule', template);
+				return template;
+			};
+			self.servicePlanRequestGetSummary({
+				success: function(result) {
+					var template = initTemplate(result);
+					args.hasOwnProperty('callback') && args.callback(template);
 				}
 			});
 		},
 
-		servicePlanCleanFormData: function(module, data) {
-			delete data.extra;
-
-			return data;
+		servicePlanFormat: function(data) {
+			var self = this;
+			return {
+				showBookkeeper: _.size(data.invoices) > 1,
+				hasSubscriptions: _.has(data, 'billing_cycle.next'),
+				hasServicePlan: !_.isEmpty(data.invoices),
+				totalAmount: _.reduce(data.invoices, function(acc, invoice) {
+					_.forEach(invoice.items, function(item) {
+						acc += item.total;
+					});
+					return acc;
+				}, 0),
+				dueDate: _.has(data, 'billing_cycle.next')
+					? monster.util.toFriendlyDate(data.billing_cycle.next, 'date')
+					: '?',
+				invoices: _.map(data.invoices, function(invoice) {
+					return {
+						bookkeeper: _.capitalize(invoice.bookkeeper.type),
+						items: _
+							.chain(invoice.items)
+							.filter(function(item) {
+								return item.quantity > 0;
+							})
+							.map(function(item) {
+								return {
+									name: _.has(self.i18n.active().servicePlan.titles, item.category)
+										? self.i18n.active().servicePlan.titles[item.category]
+										: monster.util.formatVariableToDisplay(item.category),
+									rate: item.rate || 0,
+									quantity: item.quantity || 0,
+									discount: _.has(item, 'discounts.total')
+										? '- ' + monster.util.formatPrice({
+											price: item.discounts.total
+										})
+										: '',
+									monthlyCharges: item.total
+								};
+							})
+							.orderBy('monthlyCharges', 'desc')
+							.value()
+					};
+				})
+			};
 		},
 
 		servicePlanBindEvents: function(parent) {
@@ -126,64 +79,29 @@ define(function(require) {
 			monster.ui.tooltips(parent);
 
 			parent.find('.action-number#download').on('click', function() {
-				window.location.href = self.apiUrl + 'accounts/' + self.accountId + '/service_plans/current?depth=4&identifier=items&accept=csv&auth_token=' + self.getAuthToken();
+				window.location.href = self.apiUrl
+					+ 'accounts/'
+					+ self.accountId
+					+ '/service_plans/current?depth=4&identifier=items&accept=csv&auth_token='
+					+ self.getAuthToken();
 			});
 		},
 
-		//utils
-		servicePlanDownloadCsv: function(success, error) {
+		servicePlanRequestGetSummary: function(args) {
 			var self = this;
 
 			self.callApi({
-				resource: 'servicePlan.getCsv',
-				data: {
+				resource: 'services.getSummary',
+				data: _.merge({
 					accountId: self.accountId
-				},
+				}, args.data),
 				success: function(data, status) {
-					success && success(data, status);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
-				error: function(data, status) {
-					error && error(data, status);
-				}
-			});
-		},
-
-		servicePlanGet: function(success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'servicePlan.listCurrent',
-				data: {
-					accountId: self.accountId,
-					generateError: false
-				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
-				}
-			});
-		},
-
-		servicePlanGetSubscription: function(success, error) {
-			var self = this;
-
-			self.callApi({
-				resource: 'balance.getSubscriptions',
-				data: {
-					accountId: self.accountId,
-					generateError: false
-				},
-				success: function(data, status) {
-					success && success(data, status);
-				},
-				error: function(data, status) {
-					error && error(data, status);
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		}
 	};
-
-	return servicePlan;
 });

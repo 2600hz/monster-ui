@@ -62,15 +62,6 @@
 				'getLink': { verb: 'GET', url: 'accounts/{accountId}/auth/links/{auth_id}' },
 				'impersonate': { verb: 'PUT', url: 'accounts/{accountId}/users/{userId}/user_auth' }
 			},
-			balance: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-				'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
-				'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
-				'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
-				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit' }
-			},
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
@@ -164,7 +155,7 @@
 			},
 			faxes: {
 				'send': { verb: 'PUT', url: 'accounts/{accountId}/faxes' },
-				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: "multipart/mixed" },
+				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: 'multipart/mixed' },
 
 				'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog' },
 				'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}' },
@@ -214,7 +205,9 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
 				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' },
-				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' }
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
+				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
@@ -399,6 +392,10 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
 			},
+			services: {
+				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
+			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
 				'add': { verb: 'PUT', url: 'accounts/{accountId}/storage' },
@@ -429,6 +426,9 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets' }
+			},
+			transactions: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
 			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },

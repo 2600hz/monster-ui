@@ -162,12 +162,14 @@ define(function(require) {
 			var self = this;
 
 			self.callApi({
-				resource: 'balance.getCharges',
+				resource: 'transactions.list',
 				data: {
 					accountId: self.accountId,
-					from: from,
-					to: to,
-					reason: 'no_calls'
+					filters: {
+						created_from: from,
+						created_to: to,
+						reason: 'no_calls'
+					}
 				},
 				success: function(data, status) {
 					success && success(data, status);
