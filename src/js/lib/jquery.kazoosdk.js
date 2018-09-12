@@ -66,9 +66,7 @@
 				'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
 				'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
 				'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
-				'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
-				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit' }
+				'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' }
 			},
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
@@ -213,7 +211,9 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
 				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' },
-				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' }
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
+				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },

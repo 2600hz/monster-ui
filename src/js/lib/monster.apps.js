@@ -194,7 +194,6 @@ define(function() {
 							}
 							break;
 
-						case 'balance.add':
 						case 'billing.get':
 						case 'billing.update':
 							if (monster.config.disableBraintree) {
