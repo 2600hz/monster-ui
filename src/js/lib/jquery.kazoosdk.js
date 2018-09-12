@@ -62,12 +62,6 @@
 				'getLink': { verb: 'GET', url: 'accounts/{accountId}/auth/links/{auth_id}' },
 				'impersonate': { verb: 'PUT', url: 'accounts/{accountId}/users/{userId}/user_auth' }
 			},
-			balance: {
-				'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
-				'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
-				'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' }
-			},
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
@@ -432,6 +426,9 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets' }
+			},
+			transactions: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
 			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
