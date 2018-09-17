@@ -764,33 +764,39 @@ define(function(require) {
 			var self = this,
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
-				formatData = function(data) {
-					var renderData = [];
-
-					$.each(data, function(categoryName, category) {
-						if (categoryName !== 'activation_charges') {
-							$.each(category, function(itemName, item) {
-								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
-								if (monthlyCharges > 0) {
-									renderData.push({
-										service: i18n.services.hasOwnProperty(itemName) ? i18n.services[itemName] : itemName.replace(/_/, ' '),
-										rate: item.rate.toFixed(2) || 0,
-										quantity: item.quantity || 0,
-										discount: discount > 0 ? parseFloat(discount).toFixed(2) : 0,
-										monthlyCharges: monthlyCharges
-									});
-								}
-							});
-						}
-					});
-
-					return renderData;
+				formatData = function(invoices) {
+					return {
+						showBookkeeper: _.size(invoices) > 1,
+						invoices: _.map(invoices, function(invoice) {
+							return {
+								bookkeeper: _.capitalize(invoice.bookkeeper.type),
+								items: _
+									.chain(invoice.items)
+									.filter(function(item) {
+										return item.quantity > 0;
+									})
+									.map(function(item) {
+										return {
+											service: _.has(i18n.services, item.item)
+												? i18n.services[item.item]
+												: monster.util.formatVariableToDisplay(item.item),
+											quantity: item.quantity || 0,
+											rate: item.rate || 0,
+											discount: item.discount > 0
+												? item.discount
+												: 0,
+											monthlyCharges: item.total
+										};
+									})
+									.orderBy('monthlyCharges', 'desc')
+									.value()
+							};
+						})
+					};
 				},
-				charges = data.activation_charges ? data.activation_charges.toFixed(2) : 0,
-				template = $(monster.template(coreApp, 'dialog-charges', {
-					activation_charges: charges,
-					charges: formatData(data)
+				template = $(coreApp.getTemplate({
+					name: 'dialog-charges',
+					data: formatData(data)
 				}));
 
 			return self.confirm(template, callbackOk, callbackCancel, {
