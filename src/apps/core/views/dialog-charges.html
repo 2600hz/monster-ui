@@ -10,14 +10,19 @@
 			<div class="title-block">{{i18n.confirmCharges.oneTimeFee}}</div>
 		</div>
 	{{/if}}
-	{{#if charges}}
+	{{#each invoices}}
+		{{#if @root.showBookkeeper}}
+			<h3 class="bookkeeper">
+				{{bookkeeper}}
+			</h3>
+		{{/if}}
 		<div class="section">
 			<div class="charges-info">
 				<i class="fa fa-exclamation-triangle pull-left"></i>
-				<span>{{i18n.confirmCharges.detail}}</span>
+				<span>{{@root.i18n.confirmCharges.detail}}</span>
 			</div>
 			<div class="charges-list">
-			{{#each charges}}
+			{{#each items}}
 				<div class="charges-element">
 					<table>
 						<tr>
@@ -51,6 +56,6 @@
 			{{/each}}
 			</div>
 		</div>
-	{{/if}}
+	{{/each}}
 	</div>
 </div>

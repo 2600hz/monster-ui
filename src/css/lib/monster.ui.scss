@@ -81,7 +81,10 @@
 .dialog-charges {
 	width: 520px;
 }
-.dialog-charges .content > div {
+.dialog-charges .content > .bookkeeper {
+	text-align: left;
+}
+.dialog-charges .content > .section {
 	padding: 10px;
 	border: solid 1px #c0c0c9;
 	border-radius: 2px;
@@ -99,6 +102,8 @@
 }
 .dialog-charges .charges-list {
 	margin-top: 20px;
+	max-height: 349px;
+	overflow-y: auto;
 }
 .dialog-charges .charges-element {
 	padding: 10px;
