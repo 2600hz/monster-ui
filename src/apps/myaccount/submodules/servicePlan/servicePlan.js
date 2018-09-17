@@ -53,9 +53,7 @@ define(function(require) {
 							})
 							.map(function(item) {
 								return {
-									name: _.has(self.i18n.active().servicePlan.titles, item.category)
-										? self.i18n.active().servicePlan.titles[item.category]
-										: monster.util.formatVariableToDisplay(item.category),
+									name: item.name,
 									rate: item.rate || 0,
 									quantity: item.quantity || 0,
 									discount: _.has(item, 'discounts.total')
@@ -66,7 +64,7 @@ define(function(require) {
 									monthlyCharges: item.total
 								};
 							})
-							.orderBy('monthlyCharges', 'desc')
+							.sortBy('name')
 							.value()
 					};
 				})
