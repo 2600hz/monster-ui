@@ -241,6 +241,7 @@ define(function(require) {
 			};
 			config.api = getValue(config, 'api', _.isObject, {});
 			config.api.default = getValue(config.api, 'default', _.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/');
+			config.currencyCode = getValue(config, 'currencyCode', _.isString, 'USD');
 			config.whitelabel = getValue(config, 'whitelabel', _.isObject, {});
 			config.whitelabel.disableNumbersFeatures = getValue(config.whitelabel, 'disableNumbersFeatures', _.isBoolean, false);
 			config.developerFlags = getValue(config, 'developerFlags', _.isObject, {});
