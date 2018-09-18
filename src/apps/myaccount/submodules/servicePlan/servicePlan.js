@@ -43,9 +43,9 @@ define(function(require) {
 				dueDate: _.has(data, 'billing_cycle.next')
 					? monster.util.toFriendlyDate(data.billing_cycle.next, 'date')
 					: '?',
-				invoices: _.map(data.invoices, function(invoice) {
+				invoices: _.map(data.invoices, function(invoice, index) {
 					return {
-						bookkeeper: _.capitalize(invoice.bookkeeper.type),
+						bookkeeper: invoice.bookkeeper.name || 'Invoice ' + (index + 1),
 						items: _
 							.chain(invoice.items)
 							.filter(function(item) {
@@ -53,7 +53,7 @@ define(function(require) {
 							})
 							.map(function(item) {
 								return {
-									name: item.name,
+									name: item.name || item.category + '/' + item.item,
 									rate: item.rate || 0,
 									quantity: item.quantity || 0,
 									discount: _.has(item, 'discounts.total')
@@ -80,7 +80,7 @@ define(function(require) {
 				window.location.href = self.apiUrl
 					+ 'accounts/'
 					+ self.accountId
-					+ '/service_plans/current?depth=4&identifier=items&accept=csv&auth_token='
+					+ '/services/summary?depth=4&identifier=items&accept=csv&auth_token='
 					+ self.getAuthToken();
 			});
 		},

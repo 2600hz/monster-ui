@@ -523,74 +523,41 @@ define(function(require) {
 		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
 		// The input needed is an object from the array of transaction returned by the /transactions API.
 		formatTransaction: function(transaction, app) {
-			transaction.hasAddOns = false;
-
-			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-			if (transaction.hasOwnProperty('metadata')
-				&& transaction.metadata.hasOwnProperty('add_ons')
-				&& transaction.metadata.hasOwnProperty('discounts')
-				&& !(transaction.metadata.add_ons.length === 0
-				&& transaction.metadata.discounts.length === 0)) {
-				var mapDiscounts = {};
-				_.each(transaction.metadata.discounts, function(discount) {
-					mapDiscounts[discount.id] = discount;
-				});
-
-				transaction.hasAddOns = true;
-				transaction.services = [];
-
-				$.each(transaction.metadata.add_ons, function(k, addOn) {
-					var discount = 0,
-						discountName = 'discount_' + addOn.id,
-						discountItem;
-
-					if (mapDiscounts.hasOwnProperty('discountName')) {
-						discountItem = mapDiscounts[discountName];
-						discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
-					}
-
-					addOn.amount = parseFloat(addOn.amount).toFixed(2);
-					addOn.quantity = parseFloat(addOn.quantity);
-					addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
-
-					transaction.services.push({
-						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
-						rate: addOn.amount,
-						quantity: addOn.quantity,
-						discount: discount > 0
-							? '-' + monster.util.formatPrice({
-								price: discount,
-								digits: 2
-							})
-							: '',
-						monthly_charges: addOn.monthly_charges
-					});
-				});
-
-				transaction.services.sort(function(a, b) {
-					return parseFloat(a.rate) <= parseFloat(b.rate);
-				});
-			}
-
 			transaction.amount = parseFloat(transaction.amount).toFixed(2);
 
-			if (transaction.hasOwnProperty('code')) {
-				transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
+			if (transaction.hasOwnProperty('executor')) {
+                                var executor = transaction.executor;
 
-				if (transaction.type === 'credit') {
-					transaction.friendlyName += ' ' + app.i18n.active().transactions.refundText;
+                                if (transaction.hasOwnProperty('description') && transaction.description) {
+                                        transaction.friendlyName = transaction.description;
+                                }
+
+                                if (!transaction.friendlyName && executor.module in app.i18n.active().transactions.executors) {
+                                        if (executor.trigger in app.i18n.active().transactions.executors[executor.module]) {
+                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module][executor.trigger];
+                                        } else if ('default' in app.i18n.active().transactions.executors[executor.module]) {
+                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module]['default'];
+                                        }
+                                }
+
+                                if (!transaction.friendlyName) {
+                                        transaction.friendlyName = 'General Transaction';
+                                }
+
+				if (transaction.amount < 0) {
+					transaction.friendlyName = app.i18n.active().transactions.refundText + ' ' + transaction.friendlyName.charAt(0).toLowerCase() + transaction.friendlyName.slice(1);
 				}
 			}
 
-			// If status is missing or among the following list, the transaction is approved
-			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized', 'settled', 'settlement_confirmed', 'submitted_for_settlement'].indexOf(transaction.status) >= 0;
+                        transaction.approved = transaction.hasOwnProperty('status') && transaction.status == 'completed';
 
 			if (!transaction.approved) {
-				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;
+                                if (transaction.hasOwnProperty('bookkeeper') && transaction.bookkeeper.message) {
+                                        transaction.errorMessage = transaction.bookkeeper.message;
+                                } else {
+                                        transaction.errorMessage = transaction.status in app.i18n.active().transactions.statuses ? app.i18n.active().transactions.statuses[transaction.status] : transaction.status;
+                                }
 			}
-
-			// Our API return created but braintree returns created_at
-			transaction.created = transaction.created_at || transaction.created;
 
 			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
 

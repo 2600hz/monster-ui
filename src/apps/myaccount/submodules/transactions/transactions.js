@@ -128,19 +128,15 @@ define(function(require) {
 						var arrayCharges = [];
 
 						$.each(dataCharges.data, function(k, v) {
-							// We don't want to display Balance Carry-Over anymore
-							if (v.code !== 4000) {
-								v = monster.util.formatTransaction(v, self);
+							if (v.status && v.status == 'pending') {
+                                                                  return true;
+                                                        }
 
-								arrayCharges.push(v);
+                					v = monster.util.formatTransaction(v, self);
+							arrayCharges.push(v);
 
-								if (v.approved) {
-									if (v.type === 'credit') {
-										defaults.amount -= parseFloat(v.amount);
-									} else {
-										defaults.amount += parseFloat(v.amount);
-									}
-								}
+							if (v.approved) {
+							        defaults.amount += parseFloat(v.amount);
 							}
 						});
 
