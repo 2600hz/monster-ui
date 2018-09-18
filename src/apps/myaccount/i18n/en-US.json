@@ -301,7 +301,11 @@
 			},
 			"ledgers": {
 				"mobile_data": "Mobile Data",
-				"per-minute-voip": "Per Minute"
+                                "2600Hz-mobile": "Mobile Data",
+				"per-minute-voip": "Per Minute",
+                                "kazoo-topup": "Credit Recharge",
+                                "kazoo-services": "Service Plan",
+                                "administrative-discretion": "Administrative Discretion"
 			}
 		},
 
