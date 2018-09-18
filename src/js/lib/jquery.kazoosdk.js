@@ -206,6 +206,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
 				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' },
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
+				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
 				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
 				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
 			},

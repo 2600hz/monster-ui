@@ -196,7 +196,7 @@ define(function(require) {
 				},
 				balance: function(callback) {
 					self.callApi({
-						resource: 'ledgers.list',
+						resource: 'ledgers.total',
 						data: {
 							accountId: self.accountId
 						},
@@ -214,14 +214,7 @@ define(function(require) {
 
 		balanceFormatDialogData: function(data) {
 			var self = this,
-				amount = _
-					.chain(data.balance)
-					.reduce(function(acc, ledger) {
-						acc += ledger.amount;
-						return acc;
-					}, 0)
-					.value()
-					.toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+				amount = (data.balance.amount || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
 
@@ -967,15 +960,12 @@ define(function(require) {
 			var self = this;
 
 			self.callApi({
-				resource: 'ledgers.list',
+				resource: 'ledgers.total',
 				data: {
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					success && success(_.reduce(data.data, function(acc, ledger) {
-						acc += ledger.amount;
-						return acc;
-					}, 0), status);
+					success && success(data.data.amount, status);
 				},
 				error: function(data, status) {
 					error && error(data, status);

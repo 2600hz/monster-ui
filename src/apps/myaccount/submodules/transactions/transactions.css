@@ -99,6 +99,10 @@
 	color: red;
 }
 
+.transactions-content-wrapper .list-transactions .transaction-box .text-box .title {
+	text-align: left;
+}
+
 .transactions-content-wrapper .list-transactions .transaction-box .text-box > * {
 	float: left;
 	width: 33%;

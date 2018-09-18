@@ -347,10 +347,6 @@
 	"transactions": {
 		"title": "Transactions",
 		"billingCycle": "Billing Cycle",
-		"oneTimeCharge": "One-Time Charge",
-		"monthlyCharge": "Monthly Charge",
-		"serviceCharge": "Service Charge - Prorated",
-
 		"noData": "There are no transactions between the 2 dates selected !",
 
 		"serviceTitle": "Service",
@@ -358,18 +354,7 @@
 		"rateTitle": "Rate",
 		"quantityTitle": "Quantity",
 		"monthlyChargesTitle": "Monthly Charges",
-		"declined": "Declined",
 
-		"database_rollup": "Balance Carry-over",
-		"per_minute_call": "Per-Minute Call",
-		"sub_account_per_minute_call": "Per-Minute Call (Sub-Account)",
-		"feature_activation": "Feature Activation",
-		"sub_account_feature_activation": "Feature Activation (Sub-Account)",
-		"number_activation": "Number Activation",
-		"sub_account_number_activation": "Number Activation (Sub-Account)",
-		"manual_addition": "Manual Addition",
-		"sub_account_manual_addition": "Manual Addition (Sub-Account)",
-		"admin_discretion": "Admin Discretion",
 		"__comment": "UI-383: Fixing transactions for good",
 		"__version": "v3.20_s0",
 		"unknown": "Charge",
@@ -381,30 +366,21 @@
 
 		"__comment": "UI-1248: Work on transactions to fix the way they're displayed",
 		"__version": "3.19",
-		"refundText": "(Refund)",
-		"codes": {
-			"1001": "Per Minute Call",
-			"1002": "Sub-Account Per Minute Call",
-			"2001": "Feature Activation",
-			"2002": "Sub-Account Feature Activation",
-			"2003": "Number Activation",
-			"2004": "Sub-Account Number Activation",
-			"3001": "Manual Addition",
-			"3002": "Sub-Account Manual Addition",
-			"3003": "Auto-Addition",
-			"3004": "Sub-Account Auto-Addition",
-			"3005": "Admin Discretion",
-			"3006": "Top Up",
-			"4000": "Balance Carry-over",
-			"5000": "Recurring",
-			"5001": "Monthly Recurring",
-			"5002": "Monthly Recurring (Pro-rated)",
-			"9999": "Unknown"
-		},
-		"errorStatuses": {
-			"voided": "Voided",
-			"declined": "Declined",
-			"processor_declined": "Declined"
+		"refundText": "Refund",
+                "executors": {
+                    "kz_services_topup": {
+                        "automatic": "Automatic Credit Replenishment",
+                        "default" : "Credit Replenishment"
+                    },
+                    "cb_transactions": {
+                        "crossbar": "API Request",
+                        "default": "API Request"
+                    }
+                },
+		"statuses": {
+			"pending": "Pending",
+			"failed": "Failed",
+			"completed": "Completed"
 		}
 	},
 
