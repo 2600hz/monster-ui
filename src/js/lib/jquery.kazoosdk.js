@@ -395,6 +395,7 @@
 			},
 			services: {
 				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
 				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
 			},
 			storage: {
