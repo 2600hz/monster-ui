@@ -17,6 +17,26 @@ define(function(require) {
 		appFlags: {
 			balance: {
 				customLedgers: {
+					'payments': {
+						format: 'balanceFormatGenericDataTable',
+						table: 'payments-table',
+						rows: 'payments-tows'
+					},
+					'prorations': {
+						format: 'balanceFormatGenericDataTable',
+						table: 'prorations-table',
+						rows: 'prorations-tows'
+					},
+					'adjustments': {
+						format: 'balanceFormatGenericDataTable',
+						table: 'adjustments-table',
+						rows: 'adjustments-tows'
+					},
+					'rollovers': {
+						format: 'balanceFormatGenericDataTable',
+						table: 'rollovers-table',
+						rows: 'rollovers-tows'
+					},
 					'recurring': {
 						format: 'balanceFormatRecurringDataTable',
 						table: 'recurring-table',
