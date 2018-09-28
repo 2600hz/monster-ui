@@ -1077,7 +1077,7 @@ define(function(require) {
 				template = $(self.getTemplate({
 					name: 'spare',
 					data: dataNumbers,
-					submodule: 'spare'
+					submodule: 'numbers'
 				}));
 
 			parent
