@@ -297,15 +297,17 @@
 				"amount": "Amount",
 				"date": "Date",
 				"description": "Description",
-				"usage": "Usage"
+				"usage": "Usage",
+				"agent": "Agent"
 			},
 			"ledgers": {
 				"mobile_data": "Mobile Data",
                                 "2600Hz-mobile": "Mobile Data",
 				"per-minute-voip": "Per Minute",
-                                "kazoo-topup": "Credit Recharge",
-                                "kazoo-services": "Service Plan",
-                                "administrative-discretion": "Administrative Discretion"
+                                "payments": "Payments",
+                                "prorations": "Prorations",
+                                "rollovers": "Rollovers",
+                                "adjustments": "Adjustments"
 			}
 		},
 

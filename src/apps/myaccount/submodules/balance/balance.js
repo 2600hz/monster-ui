@@ -348,7 +348,11 @@ define(function(require) {
 			var self = this,
 				customLedgers = {
 					'per-minute-voip': 'per-minute-voip-table',
-					'mobile_data': 'mobile-table'
+					'mobile_data': 'mobile-table',
+					'payments': 'payments-table',
+					'prorations': 'prorations-table',
+					'adjustments': 'adjustments-table',
+					'rollovers': 'rollovers-table'
 				},
 				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName] : 'generic-table',
 				template = $(self.getTemplate({ name: templateName, submodule: 'balance', data: { showCredits: showCredits } })),
@@ -385,6 +389,22 @@ define(function(require) {
 					'mobile_data': {
 						rowsTemplate: 'mobile-rows',
 						formatFunction: 'balanceFormatMobileDataTable'
+					},
+					'payments': {
+						rowsTemplate: 'payments-rows',
+						formatFunction: 'balanceFormatGenericDataTable'
+					},
+					'prorations': {
+						rowsTemplate: 'prorations-rows',
+						formatFunction: 'balanceFormatGenericDataTable'
+					},
+					'adjustments': {
+						rowsTemplate: 'adjustments-rows',
+						formatFunction: 'balanceFormatGenericDataTable'
+					},
+					'rollovers': {
+						rowsTemplate: 'rollovers-rows',
+						formatFunction: 'balanceFormatGenericDataTable'
 					}
 				},
 				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
