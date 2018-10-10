@@ -178,7 +178,7 @@
 
 	"callerId": {
 		"callerIdName": "Anrufer-ID-Name",
-		"callerIdPlaceholder": "Hans Müller",
+		"callerIdPlaceholder": "VORNAME NACHNAME",
 		"dialogTitle": "Auswahl des Anrufer-ID-Namens",
 		"errorUpdate": "Anrufer-ID für diese Telefonnummer konnte nicht aktualisiert werden",
 		"help": {
@@ -271,7 +271,7 @@
 		"processingMessage1": "Nummern werden aktiviert …",
 		"processingMessage2": "Warten Sie, bis der Vorgang abgeschlossen ist.",
 		"unavailable": "Nicht verfügbar",
-		"unavailableMessage": "Hoppla! Diese Nummern stehen nun doch nicht mehr zur Verfügung. Setzen Sie den Vorgang mit den verbleibenden Nummern fort oder kehren Sie zu den Suchergebnissen zurück und fügen Sie weitere Nummern hinzu.",
+		"unavailableMessage": "Achtung! Diese Nummern stehen nun doch nicht mehr zur Verfügung. Setzen Sie den Vorgang mit den verbleibenden Nummern fort oder kehren Sie zu den Suchergebnissen zurück und fügen Sie weitere Nummern hinzu.",
 		"unavailableServiceAlert": "Verzeihung, dieser Service ist derzeit leider nicht verfügbar. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.",
 		"continue": "Weiter",
 		"backToSearchResults": "Zurück zu den Suchergebnissen",
@@ -281,7 +281,7 @@
 		"confirmInfoMsg2": "Ihre hinterlegte Kreditkarte wird sofort für regelmäßig anfallende Services belastet. Gebühren werden für Ihren Abrechnungszyklus anteilig berechnet.",
 		"vanitySearchLabel": "Lokale oder gebührenfreie Vanity-Nummer suchen:",
 		"vanitySearchInfo1": "Sie können nach einer beliebigen Kombination aus Ziffern und Buchstaben suchen.",
-		"vanitySearchInfo2": "Wenn Sie eine bestimmte Nummer nicht finden, können Sie uns gerne eine Anfrage senden. Wir schauen dann alle Datenbanken nach der von Ihnen gesuchten Nummer durch.",
+		"vanitySearchInfo2": "Wenn Sie eine bestimmte Nummer nicht finden, können Sie uns gerne eine Anfrage senden. Wir schauen dann alle Datenbanken nach der von Ihnen gesuchten Nummer durch. Für die Anforderung einer speziellen Nummer wird eine einmalige Gebühr in Höhe von $20 berechnet.",
 		"sendRequest": "Suchanfrage senden",
 		"to": "bis",
 		"partialPurchaseFailure": "Die folgenden Nummern konnten nicht gekauft werden:",
@@ -386,7 +386,7 @@
 
 	"ringingDurationControl": {
 		"distribute": "Weiterleiten",
-		"maxDurationTooltip": "Klicken Sie in dieses Kästchen, um die maximale Zeitdauer für Ihre Rufgruppe zu ändern. Sie müssen eine Zahl zwischen 30 und 999 eingeben.",
+		"maxDurationTooltip": "Klicken Sie in dieses Kästchen, um die maximale Zeitdauer für Ihre Anrufgruppe zu ändern. Sie müssen eine Zahl zwischen 30 und 999 eingeben.",
 		"doNotRing": "Kein Rufton"
 	},
 

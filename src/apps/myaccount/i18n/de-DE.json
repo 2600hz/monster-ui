@@ -11,9 +11,9 @@
 
 	"editSettings": "Bearbeiten",
 	"changesSaved": "Änderungen wurden gespeichert!",
-	"placeholderEmail": "hans_muller@firma.de",
+	"placeholderEmail": "namer@firma.de",
 	"phoneNumber": "Telefonnummer",
-	"placeholderNumber": "4152223333",
+	"placeholderNumber": "+49123456789033",
 
 	"walkthrough": {
 		"greetingsDialog": {
@@ -126,7 +126,7 @@
 		"title": "Format von Telefonnummern",
 		"listCountries": "Länder",
 		"globalSetting": "Formatmodus",
-		"help": "In der Standardeinstellung werden alle Telefonnummern nach dem internationalen Standard angezeigt (z B. +1 415 222 3333 bei einer US-Nummer). Sie können aber auch festlegen, dass Nummern in der jeweiligen nationalen Schreibweise angezeigt werden (z. B. (415) 888-2222 bei einer US-Nummer). Sie können aber auch festlegen, dass alle Nummern im internationalen Format angezeigt werden sollen, und dann einzelne Länder auswählen, deren Nummern im jeweiligen nationalen Format stehen sollen.",
+		"help": "In der Standardeinstellung werden alle Telefonnummern nach dem internationalen Standard angezeigt (z B. +49 123 456 789 bei einer deutschen Nummer). Sie können aber auch festlegen, dass Nummern in der jeweiligen nationalen Schreibweise angezeigt werden (z. B. (415) 888-2222 bei einer US-Nummer). Sie können aber auch festlegen, dass alle Nummern im internationalen Format angezeigt werden sollen, und dann einzelne Länder auswählen, deren Nummern im jeweiligen nationalen Format stehen sollen.",
 		"international": "International",
 		"national": "National",
 		"inherit": "Account-Standard",
@@ -160,6 +160,8 @@
 		"outboundTitle": "Limits für Trunking in Ausgangsrichtung",
 		"inboundTitle": "Limits für Trunking in Eingangsrichtung",
 		"inboundCalling": "Unbegrenzte Trunks in Eingangsrichtung",
+		"simultaneousTwoway": "$_Variable__/month",
+		"simultaneousInbound": "$_Variable__/month",
 		"perMonth": "/month",
 		"quantity": "Neues Limit festlegen",
 		"trunks": "Trunks",
@@ -190,6 +192,7 @@
 
 		"title": "Nutzungsgebühren",
 		"payPerMinute": "Bei einer minutenweisen Abrechnung brauchen Sie nur für die Telefonate zu zahlen, die Sie getätigt haben. Hinterlegen Sie dazu als erstes Geld in Ihrem Account, dann können Sie Ihre Telefonnutzung minutenweise abrechnen lassen.",
+		"currentBalance": "Ihr aktueller Saldo: USD",
 		"amount": "Betrag",
 		"addCredit": "Guthaben aufstocken",
 		"invalidAmount": "Bei dem Betrag, den Sie eingegeben haben, liegt ein Fehler vor. Bitte achten Sie bei der Eingabe von Zahlen darauf, nur Ziffern, Punkte und ein Komma zu verwenden.",
