@@ -385,7 +385,7 @@
 	},
 
 	"ringingDurationControl": {
-		"distribute": "Weiterleiten",
+		"distribute": "Verteilen",
 		"maxDurationTooltip": "Klicken Sie in dieses Kästchen, um die maximale Zeitdauer für Ihre Anrufgruppe zu ändern. Sie müssen eine Zahl zwischen 30 und 999 eingeben.",
 		"doNotRing": "Kein Rufton"
 	},
