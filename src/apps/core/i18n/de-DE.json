@@ -26,6 +26,8 @@
 			"type": "Der Wert für das Feld „{{field}}“ muss vom Typ „{{value}}“ sein.",
 			"unique": "Der Wert für das Feld „{{field}}“ muss eindeutig sein.",
 			"forbidden": "Der Wert für das Feld „{{field}}“ kann nicht aktualisiert werden.",
+			"__comment": "UI-883 (v3.19_s1): Lokalisierung für service_restriction-Fehler hinzugefügt",
+			"service_restriction": "Das Guthaben reicht nicht für den Kauf der Nummer „{{field}}“ aus ({{value}} USD).",
 			"__comment": "UI-1882: Fehlerbehandlung für zu großen Upload hinzufügen",
 			"__version": "3.22",
 			"maxSize": "Der Inhalt für das Feld „{{field}}“ darf nicht größer als {{value}} Byte sein."
@@ -62,6 +64,7 @@
 	"close" : "Schließen",
 	"conferencingLogo": "Konferenzschaltung",
 	"csv": "CSV",
+	"currencyUsed": "USD",
 	"delete": "Löschen",
 	"dialog" : {
 		"showError": "Fehler anzeigen",
@@ -77,7 +80,7 @@
 	"download": "Herunterladen",
 	"enabled": "Aktiviert",
 	"endDate": "Ende:",
-	"examplePhoneNumber": "+1 (415) 482-9912",
+	"examplePhoneNumber": "+49 (123) 4567890",
 	"filter": "Filter",
 	"info": "Infos",
 	"next": "Weiter",
@@ -158,14 +161,14 @@
 		"rate": "Preis",
 		"quantity": "Menge",
 		"discount": "Rabatt",
-		"monthlyCharges": "Monatliche Kosten"
+		"monthlyCharges": "Monatliche Kosten",
+		"amount": "{{variable}} USD"
 	},
 	"languages": {
 		"auto": "Standard",
 		"americanEnglish": "Englisch (en-US)",
 		"frenchFrench": "Französisch (fr-FR)",
 		"russianRussian": "Russisch (ru-RU)",
-		"germanGerman": "Deutsch (de-DE)",
 		"__comment": "Spanisch zur Sprachauswahlliste in Mein Account hinzugefügt",
 		"__version": "v3.22",
 		"spainSpanish": "Spanisch (es-ES)"
