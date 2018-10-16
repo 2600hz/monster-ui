@@ -543,6 +543,15 @@ define(function(require) {
 						minlength: 1,
 						maxlength: 128
 					},
+					'bill.street_number': {
+						digits: true,
+						minlength: 1,
+						maxlength: 8
+					},
+					'bill.street_type': {
+						minlength: 1,
+						maxlength: 128
+					},
 					'bill.street_address': {
 						minlength: 1,
 						maxlength: 128

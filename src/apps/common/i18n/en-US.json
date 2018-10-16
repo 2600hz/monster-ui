@@ -826,7 +826,9 @@
 					"btn": "BTN"
 				},
 				"placeholder": {
-					"street": "1234 Street Name",
+					"streetNumber": "Street Number",
+					"streetType": "Street Type",
+					"streetName": "Street Name",
 					"city": "City",
 					"state": "State",
 					"zip": "ZIP Code"
