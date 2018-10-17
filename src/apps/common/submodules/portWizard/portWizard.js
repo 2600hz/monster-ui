@@ -540,42 +540,51 @@ define(function(require) {
 			var self = this,
 				formValidationRules = {
 					'bill.name': {
+						required: true,
 						minlength: 1,
 						maxlength: 128
 					},
 					'bill.street_number': {
+						required: true,
 						digits: true,
 						minlength: 1,
 						maxlength: 8
 					},
 					'bill.street_type': {
+						required: true,
 						minlength: 1,
 						maxlength: 128
 					},
 					'bill.street_address': {
+						required: true,
 						minlength: 1,
 						maxlength: 128
 					},
 					'bill.locality': {
+						required: true,
 						minlength: 1,
 						maxlength: 128
 					},
 					'bill.region': {
+						required: true,
 						minlength: 2,
 						maxlength: 2
 					},
 					'bill.postal_code': {
+						required: true,
 						digits: true,
 						minlength: 5,
 						maxlength: 5
 					},
 					'bill.account_number': {
+						required: true,
 						maxlength: 128
 					},
 					'bill.pin': {
 						maxlength: 6
 					},
 					'bill.btn': {
+						required: true,
 						maxlength: 20
 					}
 				};
