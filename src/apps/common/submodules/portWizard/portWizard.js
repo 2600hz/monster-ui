@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		moment = require('moment'),
 		monster = require('monster');
 
 	var portWizard = {
@@ -330,6 +331,7 @@ define(function(require) {
 				formType = self.portWizardGetFormType(request),
 				initTemplate = function initTemplate() {
 					var dataToTemplate = {
+							request: request,
 							type: self.i18n.active().portWizard.formTypes[formType],
 							formLink: monster.config.whitelabel.port[formType]
 						},
@@ -338,6 +340,10 @@ define(function(require) {
 							data: dataToTemplate,
 							submodule: 'portWizard'
 						})),
+						todayJsDate = moment().toDate(),
+						defaultJsDate = _.has(args.data.request, 'signing_date')
+							? monster.util.gregorianToDate(args.data.request.signing_date)
+							: todayJsDate,
 						actionsTemplate;
 
 					if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
@@ -350,6 +356,10 @@ define(function(require) {
 							.find('.actions')
 								.append(actionsTemplate);
 					}
+
+					monster.ui.datepicker(template.find('#signing_date'), {
+						maxDate: todayJsDate
+					}).datepicker('setDate', defaultJsDate);
 
 					self.portWizardBindUploadFormEvents(template, args);
 
@@ -893,6 +903,7 @@ define(function(require) {
 
 		portWizardBindUploadFormEvents: function(template, args) {
 			var self = this,
+				$datepicker = template.find('#signing_date'),
 				fileUploadOptions = (function(data) {
 					var request = data.request,
 						options = {
@@ -993,7 +1004,28 @@ define(function(require) {
 				.on('click', '.uploadForm-success', function(event) {
 					event.preventDefault();
 
-					self.portWizardRenderPortNotify(args);
+					var formData = monster.ui.getFormData('form_upload_document'),
+						$form = template.find('#form_upload_document');
+
+					monster.ui.validate($form, {
+						rules: {
+							signee_name: {
+								required: true,
+								minlength: 1,
+								maxlength: 128
+							},
+							signing_date: {
+								required: true
+							}
+						}
+					});
+
+					if (monster.ui.valid($form)) {
+						$.extend(true, args.data.request, formData, {
+							signing_date: monster.util.dateToGregorian($datepicker.datepicker('getDate'))
+						});
+						self.portWizardRenderPortNotify(args);
+					}
 				});
 
 			template

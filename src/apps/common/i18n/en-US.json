@@ -896,6 +896,12 @@
 				"text": "Upload your {{variable}} form",
 				"format": ".pdf format ONLY"
 			},
+			"signee": {
+				"label": {
+					"name": "Signee Name",
+					"date": "Signing Date"
+				}
+			},
 			"button": "Next - Notifications & Scheduling"
 		},
 		"signForm": {
