@@ -826,7 +826,9 @@
 					"btn": "BTN"
 				},
 				"placeholder": {
-					"street": "1234 Street Name",
+					"streetNumber": "Street Number",
+					"streetType": "Street Type",
+					"streetName": "Street Name",
 					"city": "City",
 					"state": "State",
 					"zip": "ZIP Code"
@@ -893,6 +895,12 @@
 				"title": "Step 3",
 				"text": "Upload your {{variable}} form",
 				"format": ".pdf format ONLY"
+			},
+			"signee": {
+				"label": {
+					"name": "Signee Name",
+					"date": "Signing Date"
+				}
 			},
 			"button": "Next - Notifications & Scheduling"
 		},
