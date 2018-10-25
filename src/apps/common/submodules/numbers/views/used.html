@@ -29,35 +29,31 @@
 						</div>
 
 						<div class="used-by">
-							{{#compare ../../viewType '!==' 'pbx'}}
-								{{ this.friendlyUsedBy }}
+							{{#compare this.ownerType '===' 'user'}}
+								<i class="icon-telicon-seats"></i>
 							{{else}}
-								{{#compare this.ownerType '===' 'user'}}
-									<i class="icon-telicon-seats"></i>
+								{{#compare this.ownerType '===' 'group'}}
+									<i class="fa fa-users"></i>
 								{{else}}
-									{{#compare this.ownerType '===' 'group'}}
-										<i class="fa fa-users"></i>
+									{{#compare this.ownerType '===' 'main'}}
+										<i class="icon-telicon-home"></i>
 									{{else}}
-										{{#compare this.ownerType '===' 'main'}}
-											<i class="icon-telicon-home"></i>
+										{{#compare this.ownerType '===' 'conference'}}
+											<i class="fa fa-comments"></i>
 										{{else}}
-											{{#compare this.ownerType '===' 'conference'}}
-												<i class="fa fa-comments"></i>
+											{{#compare this.ownerType '===' 'callflows'}}
+												<i class="fa fa-random"></i>
 											{{else}}
-												{{#compare this.ownerType '===' 'callflows'}}
-													<i class="fa fa-random"></i>
-												{{else}}
-													{{#compare this.ownerType '===' 'mobileUser'}}
-														<i class="icon-telicon-mobile-phone"></i>
-													{{/compare}}
+												{{#compare this.ownerType '===' 'mobileUser'}}
+													<i class="icon-telicon-mobile-phone"></i>
 												{{/compare}}
 											{{/compare}}
 										{{/compare}}
 									{{/compare}}
 								{{/compare}}
-
-								{{ this.owner }}
 							{{/compare}}
+
+							{{ this.owner }}
 						</div>
 
 						<div class="features pull-right">
