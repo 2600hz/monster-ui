@@ -14,6 +14,7 @@ define(function(require) {
 		'failover',
 		'mediaSelect',
 		'monsterListing',
+		'navigationWizard',
 		'numberFeaturesMenu',
 		'numberPrepend',
 		'numberRenameCarrier',
