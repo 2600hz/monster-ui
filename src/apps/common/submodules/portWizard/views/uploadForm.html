@@ -35,6 +35,24 @@
 			<h4 class="title">
 				{{i18n.portWizard.uploadForm.upload.title}}
 			</h4>
+			<form class="form-horizontal" id="form_upload_document">
+				<div class="control-group">
+					<label for="signee_name" class="control-label">
+						{{i18n.portWizard.uploadForm.signee.label.name}}
+					</label>
+					<div class="controls">
+						<input type="text" id="signee_name" name="signee_name" value="{{request.bill.signee_name}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="signing_date" class="control-label">
+						{{i18n.portWizard.uploadForm.signee.label.date}}
+					</label>
+					<div class="controls">
+						<input type="text" id="signing_date" name="signing_date" readonly="true" class="input-small">
+					</div>
+				</div>
+			</form>
 			<div class="file-upload-wrapper">
 				<h5 class="title">
 					{{replaceVar i18n.portWizard.uploadForm.upload.text type.compact}}
