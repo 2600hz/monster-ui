@@ -375,10 +375,9 @@ define(function(require) {
 
 					break;
 				case 'start-talking':
-					if ($userDiv.find('[data-action-category="mute"]').hasClass('active')) {
-						break;
+					if (!$userDiv.find('[data-action-category="mute"]').hasClass('active')) {
+						$userDiv.addClass('speaking');
 					}
-					$userDiv.addClass('speaking');
 					break;
 				case 'stop-talking':
 					$userDiv.removeClass('speaking');
