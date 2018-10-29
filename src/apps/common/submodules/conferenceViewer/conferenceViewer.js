@@ -342,6 +342,7 @@ define(function(require) {
 					userName = newParticipant.displayName;
 					break;
 				case 'mute-member':
+					$userDiv.removeClass('speaking');
 					$userDiv.find('[data-action-category="mute"]').addClass('active');
 					break;
 				case 'unmute-member':
@@ -374,6 +375,9 @@ define(function(require) {
 
 					break;
 				case 'start-talking':
+					if ($userDiv.find('[data-action-category="mute"]').hasClass('active')) {
+						break;
+					}
 					$userDiv.addClass('speaking');
 					break;
 				case 'stop-talking':
