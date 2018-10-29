@@ -98,7 +98,7 @@ define(function(require) {
 
 			templateDevice.find('.device-popup-search').on('keyup', function() {
 				var $this = $(this),
-					searchType = $this.data('search-type'),
+					searchType = $this.data('search_type'),
 					searchTerm = $this.val().toUpperCase(),
 					$elements = templateDevice.find('.brand-box');
 
@@ -144,7 +144,7 @@ define(function(require) {
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
 					brand = $this.data('brand'),
-					$searchBox = templateDevice.find('.device-popup-search[data-search-type="models"]');
+					$searchBox = templateDevice.find('.device-popup-search[data-search_type="models"]');
 
 				selectedBrand = brand;
 
