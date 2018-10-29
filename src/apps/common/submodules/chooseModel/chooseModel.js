@@ -98,11 +98,11 @@ define(function(require) {
 
 			templateDevice.find('.device-popup-search').on('keyup', function() {
 				var $this = $(this),
-					$searchType = $this.data('search-type'),
-					$search = $this.val().toUpperCase(),
-					$elements = $('.brand-box');
+					searchType = $this.data('search-type'),
+					searchTerm = $this.val().toUpperCase(),
+					$elements = templateDevice.find('.brand-box');
 
-				if ($searchType === 'models') {
+				if (searchType === 'models') {
 					$elements = $('.model-box');
 				}
 
@@ -115,16 +115,16 @@ define(function(require) {
 						criteria = $element.data('model');
 					}
 
-					if (criteria.toString().toUpperCase().indexOf($search) > -1) {
-						$element.addClass('search-match-' + $searchType);
+					if (criteria.toString().toUpperCase().indexOf(searchTerm) > -1) {
+						$element.addClass('search-match-' + searchType);
 						$element.show();
 					} else {
-						$element.removeClass('search-match-' + $searchType);
+						$element.removeClass('search-match-' + searchType);
 						$element.hide();
 					}
 
 					if (index === ($elements.length - 1)) {
-						var $matches = $('.search-match-' + $searchType);
+						var $matches = $('.search-match-' + searchType);
 						if ($matches.length === 1) {
 							$matches.trigger('click');
 						}
@@ -135,7 +135,7 @@ define(function(require) {
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
 					brand = $this.data('brand'),
-					$searchBox = $('.device-popup-search[data-search-type="models"]');
+					$searchBox = templateDevice.find('.device-popup-search[data-search-type="models"]');
 
 				selectedBrand = brand;
 
