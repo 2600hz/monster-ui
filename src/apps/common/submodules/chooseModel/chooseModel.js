@@ -125,8 +125,17 @@ define(function(require) {
 
 					if (index === ($elements.length - 1)) {
 						var $matches = $('.search-match-' + searchType);
-						if ($matches.length === 1) {
-							$matches.trigger('click');
+
+						switch ($matches.length) {
+							case 1:
+								$matches.trigger('click');
+								templateDevice.find('.block-model').slideDown();
+								break;
+							case 0:
+								templateDevice.find('.block-model').slideUp();
+								templateDevice.find('.block-footer').slideUp();
+								templateDevice.find('.model-box.selected').removeClass('selected');
+								break;
 						}
 					}
 				});
