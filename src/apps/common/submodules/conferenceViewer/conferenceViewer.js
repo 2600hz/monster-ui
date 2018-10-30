@@ -208,7 +208,17 @@ define(function(require) {
 					$parent.toggleClass('active');
 				}
 
-				self.conferenceViewerActionParticipant(action, data.conference.id, participantId);
+				var callback = null;
+				if ($parent.hasClass('hangup')) {
+					callback = function(requestData) {
+						self.conferenceViewerOnParticipantAction({
+							event: 'del-member',
+							participant_id: requestData.participantId
+						});
+					};
+				}
+
+				self.conferenceViewerActionParticipant(action, data.conference.id, participantId, callback);
 			});
 
 			template.find('.conference-action').on('click', function() {
@@ -355,6 +365,13 @@ define(function(require) {
 					$userDiv.find('[data-action-category="deaf"]').removeClass('active');
 					break;
 				case 'del-member':
+					if ($userDiv.length === 0) {
+						// If user car was already removed, this method was called
+						// both from socket event handler and hangup button event,
+						// and this is the second call, so there is nothing more to do
+						return;
+					}
+
 					$userDiv.remove();
 					var moderatorsCount = $moderatorsDiv.find('.conference-user-wrapper').length,
 						participantsCount = $participantsDiv.find('.conference-user-wrapper').length;
@@ -427,18 +444,19 @@ define(function(require) {
 				allowedActions = ['kick', 'mute', 'unmute', 'deaf', 'undeaf'];
 
 			if (allowedActions.indexOf(action) >= 0) {
+				var requestData = {
+					accountId: self.accountId,
+					conferenceId: conferenceId,
+					participantId: participantId,
+					data: {
+						action: action
+					}
+				};
 				self.callApi({
 					resource: 'conference.participantsAction',
-					data: {
-						accountId: self.accountId,
-						conferenceId: conferenceId,
-						participantId: participantId,
-						data: {
-							action: action
-						}
-					},
+					data: requestData,
 					success: function(data) {
-						callback && callback(data.data);
+						callback && callback(requestData, data.data);
 					}
 				});
 			} else {
