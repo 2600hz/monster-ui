@@ -105,7 +105,7 @@ define(function(require) {
 					type: 'info',
 					message: self.i18n.active().conferenceViewer.refreshWebsocket
 				});
-				self.conferenceViewerGet({ container: container, id: conferenceId });
+				self.conferenceViewerGet({ id: conferenceId });
 			}
 		},
 
@@ -150,6 +150,9 @@ define(function(require) {
 				binding: 'conference.event.' + conferenceId + '.*',
 				requiredElement: template,
 				callback: function(event) {
+					if (event.event === 'del-member') {
+						return;	// TODO: REMOVE THIS!!!
+					}
 					self.conferenceViewerOnParticipantAction(event);
 				}
 			});
@@ -224,15 +227,18 @@ define(function(require) {
 			template.find('.conference-action').on('click', function() {
 				var $this = $(this),
 					action = $this.data('action'),
-					isDisabled = $this.hasClass('disabled'),
-					$parent = $this.parents('.action-user');
-
-				if ($parent.hasClass('togglable')) {
-					$parent.toggleClass('active');
-				}
+					isDisabled = $this.hasClass('disabled');
 
 				if (!isDisabled) {
-					self.conferenceViewerActionConference(action, data.conference);
+					var callback = null;
+					if (action === 'kick') {
+						callback = function(data) {
+							template.find('.conference-user-wrapper').remove();
+							self.afterUserRemoved(template);
+						};
+					}
+
+					self.conferenceViewerActionConference(action, data.conference, callback);
 				}
 			});
 		},
@@ -340,9 +346,6 @@ define(function(require) {
 				container = $('.view-conference-wrapper'),
 				toasterActions = ['mute-member', 'unmute-member', 'deaf-member', 'undeaf-member', 'del-member', 'lock', 'unlock'],
 				$userDiv = container.find('.conference-user-wrapper[data-id="' + data.participant_id + '"]'),
-				isModerator = $userDiv.parents('.moderators-wrapper').length,
-				$participantsDiv = container.find('.participants-wrapper .users'),
-				$moderatorsDiv = container.find('.moderators-wrapper .users'),
 				userName = $userDiv.data('name');
 
 			switch (action) {
@@ -366,29 +369,14 @@ define(function(require) {
 					break;
 				case 'del-member':
 					if ($userDiv.length === 0) {
-						// If user car was already removed, this method was called
-						// both from socket event handler and hangup button event,
+						// If user card was already removed, this method was called
+						// both from socket event handler and user hangup click event,
 						// and this is the second call, so there is nothing more to do
 						return;
 					}
 
 					$userDiv.remove();
-					var moderatorsCount = $moderatorsDiv.find('.conference-user-wrapper').length,
-						participantsCount = $participantsDiv.find('.conference-user-wrapper').length;
-
-					if (container.find('.conference-user-wrapper').length === 0) {
-						self.conferenceViewerStopConference();
-					}
-
-					if (isModerator && moderatorsCount === 0) {
-						$moderatorsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators } }));
-					} else if (!isModerator && participantsCount === 0) {
-						$participantsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants } }));
-					}
-
-					if (moderatorsCount + participantsCount === 0) {
-						container.find('.admin-actions button').addClass('disabled');
-					}
+					self.afterUserRemoved(container);
 
 					break;
 				case 'start-talking':
@@ -597,6 +585,26 @@ define(function(require) {
 			var self = this;
 
 			return data;
+		},
+
+		afterUserRemoved: function(container) {
+			var self = this,
+				$participantsDiv = container.find('.participants-wrapper .users'),
+				$moderatorsDiv = container.find('.moderators-wrapper .users'),
+				moderatorsCount = $moderatorsDiv.find('.conference-user-wrapper').length,
+				participantsCount = $participantsDiv.find('.conference-user-wrapper').length;
+
+			if (moderatorsCount + participantsCount === 0) {
+				self.conferenceViewerStopConference();
+				container.find('.admin-actions button').addClass('disabled');
+			}
+
+			if ($moderatorsDiv.children('.empty-user-category').length === 0) {
+				$moderatorsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators } }));
+			}
+			if ($participantsDiv.children('.empty-user-category').length === 0) {
+				$participantsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants } }));
+			}
 		}
 	};
 
