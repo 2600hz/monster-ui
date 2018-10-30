@@ -71,6 +71,24 @@ define(function(require) {
 			return formattedData;
 		},
 
+		hideDeviceBoxes: function(templateDevice, searchType) {
+			if (searchType === 'models') {
+				templateDevice.find('.model-box').removeClass('selected').removeClass('unselected');
+			} else if (searchType === 'brand') {
+				templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut('fast', function() {
+					templateDevice.find('.brand-box').removeClass('selected').removeClass('unselected');
+				});
+
+				templateDevice.find('.block-model').slideUp();
+				templateDevice.find('.block-footer').slideUp();
+				templateDevice.find('.model-box.selected').removeClass('selected');
+			}
+		},
+
+		hideDeviceFooter: function(templateDevice) {
+			templateDevice.find('.block-footer').slideUp();
+		},
+
 		chooseModelRenderProvisioner: function(dataTemplate, callback, callbackMissingBrand) {
 			var self = this,
 				selectedBrand,
@@ -99,12 +117,16 @@ define(function(require) {
 			templateDevice.find('.device-popup-search').on('keyup', function() {
 				var $this = $(this),
 					searchType = $this.data('search_type'),
-					searchTerm = $this.val().toUpperCase(),
+					searchTypeClass = 'search-match-' + searchType,
+					searchTerm = $this.val().trim().toUpperCase(),
 					$elements = templateDevice.find('.brand-box');
 
 				if (searchType === 'models') {
-					$elements = $('.model-box');
+					var selectedBrand = templateDevice.find('.brand-box.selected').data('brand');
+					$elements = $('.models-brand[data-brand="' + selectedBrand + '"] .model-box');
 				}
+
+				templateDevice.find('.' + searchTypeClass).removeClass(searchTypeClass);
 
 				// Loop through all elements, and hide those who don't match the search query
 				$elements.each(function(index, element) {
@@ -115,7 +137,7 @@ define(function(require) {
 						criteria = $element.data('model');
 					}
 
-					if (criteria.toString().toUpperCase().indexOf(searchTerm) > -1) {
+					if (criteria.toString().trim().toUpperCase().indexOf(searchTerm) > -1) {
 						$element.addClass('search-match-' + searchType);
 						$element.show();
 					} else {
@@ -129,12 +151,20 @@ define(function(require) {
 						switch ($matches.length) {
 							case 1:
 								$matches.trigger('click');
+								templateDevice.find('.models-brand');
 								templateDevice.find('.block-model').slideDown();
+								if (searchType === 'brand') {
+									templateDevice.find('.device-popup-search[data-search_type="models"]').focus().val('');
+									templateDevice.find('.model-box').show();
+									self.hideDeviceFooter(templateDevice);
+								}
 								break;
 							case 0:
-								templateDevice.find('.block-model').slideUp();
-								templateDevice.find('.block-footer').slideUp();
-								templateDevice.find('.model-box.selected').removeClass('selected');
+								self.hideDeviceBoxes(templateDevice, searchType);
+								self.hideDeviceFooter(templateDevice);
+								break;
+							default:
+								self.hideDeviceBoxes(templateDevice, searchType);
 								break;
 						}
 					}
@@ -165,6 +195,7 @@ define(function(require) {
 						templateDevice.find('.brand-box.selected').removeClass('selected').addClass('unselected');
 
 						$this.removeClass('unselected').addClass('selected');
+						templateDevice.find('.block-model').css('display', 'block');
 						templateDevice.find('.models-brand[data-brand="' + brand + '"]').fadeIn('fast');
 					});
 				}
