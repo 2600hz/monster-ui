@@ -1,7 +1,9 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster');
+		monster = require('monster'),
+		intervalId,
+		templateDevice;
 
 	var app = {
 
@@ -89,34 +91,13 @@ define(function(require) {
 			templateDevice.find('.block-footer').slideUp();
 		},
 
-		chooseModelRenderProvisioner: function(dataTemplate, callback, callbackMissingBrand) {
-			var self = this,
-				selectedBrand,
-				selectedFamily,
-				selectedModel,
-				templateDevice = $(self.getTemplate({
-					name: 'provisioner',
-					data: dataTemplate,
-					submodule: 'chooseModel'
-				}));
+		getSearchRequest: function() {
+			var args = Array.prototype.slice.call(arguments),
+				self = args[0],
+				$this = $(args[1].target);
 
-			monster.ui.validate(templateDevice.find('#device_form'), {
-				rules: {
-					'name': {
-						required: true
-					},
-					'mac_address': {
-						required: true,
-						mac: true
-					}
-				}
-			});
-
-			monster.ui.mask(templateDevice.find('#mac_address'), 'macAddress');
-
-			templateDevice.find('.device-popup-search').on('keyup', function() {
-				var $this = $(this),
-					searchType = $this.data('search_type'),
+			intervalId = setTimeout(function() {
+				var searchType = $this.data('search_type'),
 					searchTypeClass = 'search-match-' + searchType,
 					searchTerm = $this.val().trim().toUpperCase(),
 					$elements = templateDevice.find('.brand-box');
@@ -170,6 +151,39 @@ define(function(require) {
 					}
 				});
 			});
+		},
+
+		chooseModelRenderProvisioner: function(dataTemplate, callback, callbackMissingBrand) {
+			var self = this,
+				selectedBrand,
+				selectedFamily,
+				selectedModel;
+
+			templateDevice = $(self.getTemplate({
+				name: 'provisioner',
+				data: dataTemplate,
+				submodule: 'chooseModel'
+			}));
+
+			monster.ui.validate(templateDevice.find('#device_form'), {
+				rules: {
+					'name': {
+						required: true
+					},
+					'mac_address': {
+						required: true,
+						mac: true
+					}
+				}
+			});
+
+			monster.ui.mask(templateDevice.find('#mac_address'), 'macAddress');
+
+			templateDevice.find('.device-popup-search').on('keydown', function() {
+				clearInterval(intervalId);
+			});
+
+			templateDevice.find('.device-popup-search').on('keydown', _.debounce(self.getSearchRequest.bind(null, self), 500));
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
