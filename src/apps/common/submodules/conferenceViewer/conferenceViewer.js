@@ -150,9 +150,6 @@ define(function(require) {
 				binding: 'conference.event.' + conferenceId + '.*',
 				requiredElement: template,
 				callback: function(event) {
-					if (event.event === 'del-member') {
-						return;	// TODO: REMOVE THIS!!!
-					}
 					self.conferenceViewerOnParticipantAction(event);
 				}
 			});
@@ -212,7 +209,7 @@ define(function(require) {
 				}
 
 				var callback = null;
-				if ($parent.hasClass('hangup')) {
+				if (action === 'kick') {
 					callback = function(requestData) {
 						self.conferenceViewerOnParticipantAction({
 							event: 'del-member',
@@ -235,6 +232,10 @@ define(function(require) {
 						callback = function(data) {
 							template.find('.conference-user-wrapper').remove();
 							self.afterUserRemoved(template);
+							monster.ui.toast({
+								type: 'info',
+								message: self.i18n.active().conferenceViewer.conferenceActions.kick
+							});
 						};
 					}
 
@@ -599,10 +600,10 @@ define(function(require) {
 				container.find('.admin-actions button').addClass('disabled');
 			}
 
-			if ($moderatorsDiv.children('.empty-user-category').length === 0) {
+			if ($moderatorsDiv.children().length === 0) {
 				$moderatorsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyModerators } }));
 			}
-			if ($participantsDiv.children('.empty-user-category').length === 0) {
+			if ($participantsDiv.children().length === 0) {
 				$participantsDiv.append(self.getTemplate({ name: 'emptyCategory', submodule: 'conferenceViewer', data: { title: self.i18n.active().conferenceViewer.empty, text: self.i18n.active().conferenceViewer.emptyParticipants } }));
 			}
 		}

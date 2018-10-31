@@ -548,6 +548,9 @@
 				"add": "Invite Participants"
 			}
 		},
+		"conferenceActions": {
+			"kick": "All users have been removed from the conference"
+		},
 		"moderators": "Moderators",
 		"participants": "Participants",
 		"userActions": {
