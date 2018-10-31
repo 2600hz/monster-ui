@@ -96,60 +96,58 @@ define(function(require) {
 				self = args[0],
 				$this = $(args[1].target);
 
-			intervalId = setTimeout(function() {
-				var searchType = $this.data('search_type'),
-					searchTypeClass = 'search-match-' + searchType,
-					searchTerm = $this.val().trim().toUpperCase(),
-					$elements = templateDevice.find('.brand-box');
+			var searchType = $this.data('search_type'),
+				searchTypeClass = 'search-match-' + searchType,
+				searchTerm = $this.val().trim().toUpperCase(),
+				$elements = templateDevice.find('.brand-box');
 
-				if (searchType === 'models') {
-					var selectedBrand = templateDevice.find('.brand-box.selected').data('brand');
-					$elements = $('.models-brand[data-brand="' + selectedBrand + '"] .model-box');
+			if (searchType === 'models') {
+				var selectedBrand = templateDevice.find('.brand-box.selected').data('brand');
+				$elements = $('.models-brand[data-brand="' + selectedBrand + '"] .model-box');
+			}
+
+			templateDevice.find('.' + searchTypeClass).removeClass(searchTypeClass);
+
+			// Loop through all elements, and hide those who don't match the search query
+			$elements.each(function(index, element) {
+				var $element = $(element),
+					criteria = $element.data('brand');
+
+				if ($element.data('model')) {
+					criteria = $element.data('model');
 				}
 
-				templateDevice.find('.' + searchTypeClass).removeClass(searchTypeClass);
+				if (criteria.toString().trim().toUpperCase().indexOf(searchTerm) > -1) {
+					$element.addClass('search-match-' + searchType);
+					$element.show();
+				} else {
+					$element.removeClass('search-match-' + searchType);
+					$element.hide();
+				}
 
-				// Loop through all elements, and hide those who don't match the search query
-				$elements.each(function(index, element) {
-					var $element = $(element),
-						criteria = $element.data('brand');
+				if (index === ($elements.length - 1)) {
+					var $matches = $('.search-match-' + searchType);
 
-					if ($element.data('model')) {
-						criteria = $element.data('model');
-					}
-
-					if (criteria.toString().trim().toUpperCase().indexOf(searchTerm) > -1) {
-						$element.addClass('search-match-' + searchType);
-						$element.show();
-					} else {
-						$element.removeClass('search-match-' + searchType);
-						$element.hide();
-					}
-
-					if (index === ($elements.length - 1)) {
-						var $matches = $('.search-match-' + searchType);
-
-						switch ($matches.length) {
-							case 1:
-								$matches.trigger('click');
-								templateDevice.find('.models-brand');
-								templateDevice.find('.block-model').slideDown();
-								if (searchType === 'brand') {
-									templateDevice.find('.device-popup-search[data-search_type="models"]').focus().val('');
-									templateDevice.find('.model-box').show();
-									self.hideDeviceFooter(templateDevice);
-								}
-								break;
-							case 0:
-								self.hideDeviceBoxes(templateDevice, searchType);
+					switch ($matches.length) {
+						case 1:
+							$matches.trigger('click');
+							templateDevice.find('.models-brand');
+							templateDevice.find('.block-model').slideDown();
+							if (searchType === 'brand') {
+								templateDevice.find('.device-popup-search[data-search_type="models"]').focus().val('');
+								templateDevice.find('.model-box').show();
 								self.hideDeviceFooter(templateDevice);
-								break;
-							default:
-								self.hideDeviceBoxes(templateDevice, searchType);
-								break;
-						}
+							}
+							break;
+						case 0:
+							self.hideDeviceBoxes(templateDevice, searchType);
+							self.hideDeviceFooter(templateDevice);
+							break;
+						default:
+							self.hideDeviceBoxes(templateDevice, searchType);
+							break;
 					}
-				});
+				}
 			});
 		},
 
@@ -179,11 +177,7 @@ define(function(require) {
 
 			monster.ui.mask(templateDevice.find('#mac_address'), 'macAddress');
 
-			templateDevice.find('.device-popup-search').on('keydown', function() {
-				clearInterval(intervalId);
-			});
-
-			templateDevice.find('.device-popup-search').on('keydown', _.debounce(self.getSearchRequest.bind(null, self), 500));
+			templateDevice.find('.device-popup-search').on('keydown', _.debounce(self.getSearchRequest.bind(null, self), 250));
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
