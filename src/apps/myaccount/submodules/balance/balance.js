@@ -483,7 +483,7 @@ define(function(require) {
 									tabAnimationInProgress = true;
 
 									parent.find('.add-credits-content-wrapper.active')
-											.fadeOut(function() {
+											.fadeOut(250, function() {
 												parent
 													.find('.navbar-menu-item-link.active')
 													.removeClass('active');
@@ -493,7 +493,7 @@ define(function(require) {
 
 												parent
 													.find(event.target.hash)
-														.fadeIn(function() {
+														.fadeIn(250, function() {
 															$(this)
 																.addClass('active');
 
