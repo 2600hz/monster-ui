@@ -1243,37 +1243,45 @@ define(function(require) {
 	 */
 	function randomString(length, pPreset) {
 		if (!_.isNumber(length)) {
-			throw new TypeError('Expected a number for `length`');
+			throw new TypeError('"length" is not a string');
+		}
+		if (_.isNaN(length)) {
+			throw new TypeError('"length" is NaN');
 		}
 		if (!_.isUndefined(pPreset) && !_.isString(pPreset)) {
-			throw new TypeError('Expected a string for `preset`');
+			throw new TypeError('"preset" is not a string');
 		}
-		var string = _.isUndefined(pPreset)
+		if (!_.isUndefined(pPreset) && pPreset.length === 0) {
+			throw new TypeError('"preset" is an empty string');
+		}
+		var input = _.isUndefined(pPreset)
 			? 'safe'
 			: pPreset;
 		var presets = {
 			alpha: '1234567890abcdefghijklmnopqrstuvwxyz',
+			hex: '1234567890abcdef',
 			letters: 'abcdefghijklmnopqrstuvwxyz',
 			numerals: '1234567890',
-			hex: '1234567890abcdef',
 			safe: '23456789abcdefghjkmnpqrstuvwxyz'
 		};
 		var preset = _
 			.chain(presets)
-			.get(string, string)
+			.get(input, input)
 			.shuffle()
 			.value();
+		var upper = preset.length - 1;
 		var getRandomItem = function() {
 			var isUpper = _.sample([true, false]);
-			var item = preset[_.random(preset.length - 1)];
+			var item = preset[_.random(upper)];
 			return _[isUpper ? 'toUpper' : 'toLower'](item);
 		};
-		return _
-			.chain(0)
-			.range(length)
-			.map(getRandomItem)
-			.join('')
-			.value();
+		return length === 0
+			? ''
+			: _.chain(0)
+				.range(length)
+				.map(getRandomItem)
+				.join('')
+				.value();
 	}
 
 	/**
@@ -1357,6 +1365,7 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 
+	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.gregorianToDate = gregorianToDate;
