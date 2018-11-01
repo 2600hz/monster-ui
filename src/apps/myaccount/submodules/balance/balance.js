@@ -903,7 +903,7 @@ define(function(require) {
 					filters: filters
 				},
 				success: function(data) {
-                                        delete data.data['kazoo-rollover'];
+					delete data.data['kazoo-rollover'];
 					callback && callback(data.data);
 				}
 			});
@@ -918,7 +918,7 @@ define(function(require) {
 					accountId: self.accountId
 				},
 				success: function(data) {
-                                        delete data.data['kazoo-rollover'];
+					delete data.data['kazoo-rollover'];
 					callback && callback(data.data);
 				}
 			});
