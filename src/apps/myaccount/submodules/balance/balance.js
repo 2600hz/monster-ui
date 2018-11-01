@@ -16,6 +16,18 @@ define(function(require) {
 
 		appFlags: {
 			balance: {
+				customLedgers: {
+					'per-minute-voip': {
+						format: 'balanceFormatPerMinuteDataTable',
+						table: 'per-minute-voip-table',
+						rows: 'per-minute-voip-rows'
+					},
+					'mobile_data': {
+						format: 'balanceFormatMobileDataTable',
+						table: 'mobile-table',
+						rows: 'mobile-rows'
+					}
+				},
 				digits: {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
@@ -340,10 +352,9 @@ define(function(require) {
 
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
 			var self = this,
-				customLedgers = {
-					'per-minute-voip': 'per-minute-voip-table',
-					'mobile_data': 'mobile-table'
-				},
+				customLedgers = _.mapValues(self.appFlags.balance.customLedgers, function(value) {
+					return value.table;
+				}),
 				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName] : 'generic-table',
 				template = $(self.getTemplate({ name: templateName, submodule: 'balance', data: { showCredits: showCredits } })),
 				fromDate = parent.find('input.filter-from').datepicker('getDate'),
@@ -371,16 +382,12 @@ define(function(require) {
 
 		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback) {
 			var self = this,
-				customLedgers = {
-					'per-minute-voip': {
-						rowsTemplate: 'per-minute-voip-rows',
-						formatFunction: 'balanceFormatPerMinuteDataTable'
-					},
-					'mobile_data': {
-						rowsTemplate: 'mobile-rows',
-						formatFunction: 'balanceFormatMobileDataTable'
-					}
-				},
+				customLedgers = _.mapValues(self.appFlags.balance.customLedgers, function(value) {
+					return {
+						rowsTemplate: value.rows,
+						formatFunction: value.format
+					};
+				}),
 				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
 				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable';
 
