@@ -49,7 +49,7 @@ define(function(require) {
 						items: _
 							.chain(invoice.items)
 							.filter(function(item) {
-								return item.quantity > 0;
+								return item.billable > 0;
 							})
 							.map(function(item) {
 								return {
