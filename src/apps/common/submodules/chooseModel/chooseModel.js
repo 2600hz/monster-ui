@@ -71,22 +71,25 @@ define(function(require) {
 			return formattedData;
 		},
 
+		hideDeviceFooter: function(templateDevice) {
+			templateDevice.find('.block-footer').slideUp();
+		},
+
 		hideDeviceBoxes: function(templateDevice, searchType) {
+			var self = this;
+
 			if (searchType === 'models') {
 				templateDevice.find('.model-box').removeClass('selected').removeClass('unselected');
+				self.hideDeviceFooter(templateDevice);
 			} else if (searchType === 'brand') {
 				templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut('fast', function() {
 					templateDevice.find('.brand-box').removeClass('selected').removeClass('unselected');
 				});
 
 				templateDevice.find('.block-model').slideUp();
-				templateDevice.find('.block-footer').slideUp();
+				self.hideDeviceFooter(templateDevice);
 				templateDevice.find('.model-box.selected').removeClass('selected');
 			}
-		},
-
-		hideDeviceFooter: function(templateDevice) {
-			templateDevice.find('.block-footer').slideUp();
 		},
 
 		getSearchRequest: function(templateDevice, event) {
@@ -132,6 +135,7 @@ define(function(require) {
 							templateDevice.find('.block-model').slideDown();
 							if (searchType === 'brand') {
 								templateDevice.find('.device-popup-search[data-search_type="models"]').focus().val('');
+								templateDevice.find('.model-box.search-match-models.selected').removeClass('selected');
 								templateDevice.find('.model-box').show();
 								self.hideDeviceFooter(templateDevice);
 							}
