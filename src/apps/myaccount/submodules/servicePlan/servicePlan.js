@@ -55,7 +55,7 @@ define(function(require) {
 								return {
 									name: item.name || item.category + '/' + item.item,
 									rate: item.rate || 0,
-									quantity: item.quantity || 0,
+									quantity: item.billable || 0,
 									discount: _.has(item, 'discounts.total')
 										? '- ' + monster.util.formatPrice({
 											price: item.discounts.total
