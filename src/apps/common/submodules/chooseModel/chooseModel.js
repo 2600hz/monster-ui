@@ -1,9 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		intervalId,
-		templateDevice;
+		monster = require('monster');
 
 	var app = {
 
@@ -91,10 +89,9 @@ define(function(require) {
 			templateDevice.find('.block-footer').slideUp();
 		},
 
-		getSearchRequest: function() {
-			var args = Array.prototype.slice.call(arguments),
-				self = args[0],
-				$this = $(args[1].target);
+		getSearchRequest: function(templateDevice, event) {
+			var $this = $(event.target),
+				self = this;
 
 			var searchType = $this.data('search_type'),
 				searchTypeClass = 'search-match-' + searchType,
@@ -155,7 +152,8 @@ define(function(require) {
 			var self = this,
 				selectedBrand,
 				selectedFamily,
-				selectedModel;
+				selectedModel,
+				templateDevice;
 
 			templateDevice = $(self.getTemplate({
 				name: 'provisioner',
@@ -177,7 +175,9 @@ define(function(require) {
 
 			monster.ui.mask(templateDevice.find('#mac_address'), 'macAddress');
 
-			templateDevice.find('.device-popup-search').on('keydown', _.debounce(self.getSearchRequest.bind(null, self), 250));
+			templateDevice.find('.device-popup-search').on('keydown', _.debounce(function(event) {
+				self.getSearchRequest(templateDevice, event);
+			}, 250));
 
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
