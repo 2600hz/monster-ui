@@ -195,14 +195,8 @@ define(function(require) {
 					});
 				},
 				balance: function(callback) {
-					self.callApi({
-						resource: 'ledgers.total',
-						data: {
-							accountId: self.accountId
-						},
-						success: function(data) {
-							callback(null, data.data);
-						}
+					self.balanceGet(function(data) {
+						callback(null, data);
 					});
 				}
 			}, function(err, results) {
@@ -214,7 +208,7 @@ define(function(require) {
 
 		balanceFormatDialogData: function(data) {
 			var self = this,
-				amount = (data.balance.amount || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+				amount = (data.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
 
