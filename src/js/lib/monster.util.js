@@ -203,17 +203,6 @@ define(function(require) {
 			return format;
 		},
 
-		randomString: function(length, _chars) {
-			var chars = _chars || '23456789abcdefghjkmnpqrstuvwxyz',
-				randomString = '';
-
-			for (var i = length; i > 0; i--) {
-				randomString += chars.charAt(Math.floor(Math.random() * chars.length));
-			}
-
-			return randomString;
-		},
-
 		cmp: function(a, b) {
 			return (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
@@ -1246,6 +1235,48 @@ define(function(require) {
 	}
 
 	/**
+	 * Generates a string of `length` random characters chosen from either a
+	 * preset or a custom string of characters.
+	 * @param  {Number} length  Number of characters to include.
+	 * @param  {String} pPreset Characters to choose from.
+	 * @return {String}         A string of random characters.
+	 */
+	function randomString(length, pPreset) {
+		if (!_.isNumber(length)) {
+			throw new TypeError('Expected a number for `length`');
+		}
+		if (!_.isUndefined(pPreset) && !_.isString(pPreset)) {
+			throw new TypeError('Expected a string for `preset`');
+		}
+		var string = _.isUndefined(pPreset)
+			? 'safe'
+			: pPreset;
+		var presets = {
+			alpha: '1234567890abcdefghijklmnopqrstuvwxyz',
+			letters: 'abcdefghijklmnopqrstuvwxyz',
+			numerals: '1234567890',
+			hex: '1234567890abcdef',
+			safe: '23456789abcdefghjkmnpqrstuvwxyz'
+		};
+		var preset = _
+			.chain(presets)
+			.get(string, string)
+			.shuffle()
+			.value();
+		var getRandomItem = function() {
+			var isUpper = _.sample([true, false]);
+			var item = preset[_.random(preset.length - 1)];
+			return _[isUpper ? 'toUpper' : 'toLower'](item);
+		};
+		return _
+			.chain(0)
+			.range(length)
+			.map(getRandomItem)
+			.join('')
+			.value();
+	}
+
+	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
 	 * representation of the corresponding date.
 	 * @param  {Date|String} pDate   Representation of the date to format.
@@ -1330,6 +1361,7 @@ define(function(require) {
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
+	util.randomString = randomString;
 	util.toFriendlyDate = toFriendlyDate;
 	util.unixToDate = unixToDate;
 
