@@ -17,6 +17,11 @@ define(function(require) {
 		appFlags: {
 			balance: {
 				customLedgers: {
+					'recurring': {
+						format: 'balanceFormatRecurringDataTable',
+						table: 'recurring-table',
+						rows: 'recurring-rows'
+					},
 					'per-minute-voip': {
 						format: 'balanceFormatPerMinuteDataTable',
 						table: 'per-minute-voip-table',
@@ -347,6 +352,32 @@ define(function(require) {
 			});
 
 			return data;
+		},
+
+		balanceFormatRecurringDataTable: function(dataRequest, showCredits) {
+			return {
+				showCredits: showCredits,
+				transactions: _
+					.chain(dataRequest.ledger.data)
+					.filter(function(value) {
+						return _.get(value, 'metadata.item.billable', 0) > 0;
+					})
+					.map(function(value) {
+						var item = value.metadata.item;
+						return {
+							name: item.name || item.category + '/' + item.item,
+							rate: item.rate || 0,
+							quantity: item.billable || 0,
+							discount: _.has(item, 'discounts.total')
+								? '- ' + monster.util.formatPrice({
+									price: item.discounts.total
+								})
+								: '',
+							monthlyCharges: item.total
+						};
+					})
+					.value()
+			};
 		},
 
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
