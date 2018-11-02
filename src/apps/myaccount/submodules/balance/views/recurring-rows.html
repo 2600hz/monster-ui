@@ -1,0 +1,23 @@
+{{#each transactions}}
+	<tr class="transaction-row">
+		<td>
+			{{name}}
+		</td>
+	{{#if @root.showCredits}}
+		<td data-sort-value="{{rate}}">
+			{{formatPrice rate 2}}
+		</td>
+	{{/if}}
+		<td>
+			{{quantity}}
+		</td>
+	{{#if @root.showCredits}}
+		<td>
+			{{discount}}
+		</td>
+		<td data-sort-value="{{monthlyCharges}}">
+			{{formatPrice monthlyCharges 2}}
+		</td>
+	{{/if}}
+	</tr>
+{{/each}}
