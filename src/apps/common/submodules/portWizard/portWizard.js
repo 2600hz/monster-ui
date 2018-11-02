@@ -560,12 +560,12 @@ define(function(require) {
 						minlength: 1,
 						maxlength: 8
 					},
-					'bill.street_type': {
+					'bill.street_address': {
 						required: true,
 						minlength: 1,
 						maxlength: 128
 					},
-					'bill.street_address': {
+                    'bill.street_type': {
 						required: true,
 						minlength: 1,
 						maxlength: 128
