@@ -4,6 +4,8 @@
 		<td>{{ account.name }}</td>
 		<td>{{ description }}</td>
 		<td>{{ usage.quantity }} {{usage.unit }}</td>
+	{{#if @root.showCredits}}
 		<td>{{formatPrice amount }}</td>
+	{{/if}}
 	</tr>
 {{/each}}

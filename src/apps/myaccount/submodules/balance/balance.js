@@ -283,7 +283,7 @@ define(function(require) {
 			});
 		},
 
-		balanceFormatMobileDataTable: function(dataRequest, showCredits) {
+		balanceFormatMobileDataTable: function(dataRequest) {
 			var self = this,
 				data = {
 					transactions: []
@@ -296,11 +296,10 @@ define(function(require) {
 			return data;
 		},
 
-		balanceFormatPerMinuteDataTable: function(dataRequest, showCredits) {
+		balanceFormatPerMinuteDataTable: function(dataRequest) {
 			var self = this,
 				data = {
-					transactions: [],
-					showCredits: showCredits
+					transactions: []
 				};
 
 			_.each(dataRequest.ledger.data, function(v) {
@@ -392,7 +391,9 @@ define(function(require) {
 				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable';
 
 			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
-				var formattedData = self[formatFunction](data, showCredits),
+				var formattedData = _.merge({
+						showCredits: showCredits
+					}, self[formatFunction](data)),
 					$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
 
 					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
