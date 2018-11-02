@@ -565,7 +565,7 @@ define(function(require) {
 						minlength: 1,
 						maxlength: 128
 					},
-                    'bill.street_type': {
+					'bill.street_type': {
 						required: true,
 						minlength: 1,
 						maxlength: 128
