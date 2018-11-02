@@ -17,26 +17,6 @@ define(function(require) {
 		appFlags: {
 			balance: {
 				customLedgers: {
-					'payments': {
-						format: 'balanceFormatGenericDataTable',
-						table: 'payments-table',
-						rows: 'payments-tows'
-					},
-					'prorations': {
-						format: 'balanceFormatGenericDataTable',
-						table: 'prorations-table',
-						rows: 'prorations-tows'
-					},
-					'adjustments': {
-						format: 'balanceFormatGenericDataTable',
-						table: 'adjustments-table',
-						rows: 'adjustments-tows'
-					},
-					'rollovers': {
-						format: 'balanceFormatGenericDataTable',
-						table: 'rollovers-table',
-						rows: 'rollovers-tows'
-					},
 					'recurring': {
 						format: 'balanceFormatRecurringDataTable',
 						table: 'recurring-table',
@@ -402,11 +382,13 @@ define(function(require) {
 
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
 			var self = this,
-				customLedgers = _.mapValues(self.appFlags.balance.customLedgers, function(value) {
-					return value.table;
-				}),
-				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName] : 'generic-table',
-				template = $(self.getTemplate({ name: templateName, submodule: 'balance', data: { showCredits: showCredits } })),
+				template = $(self.getTemplate({
+					name: _.get(self.appFlags.balance.customLedgers, ledgerName + '.table', 'generic-table'),
+					data: {
+						showCredits: showCredits
+					},
+					submodule: 'balance'
+				})),
 				fromDate = parent.find('input.filter-from').datepicker('getDate'),
 				toDate = parent.find('input.filter-to').datepicker('getDate');
 
@@ -432,20 +414,18 @@ define(function(require) {
 
 		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback) {
 			var self = this,
-				customLedgers = _.mapValues(self.appFlags.balance.customLedgers, function(value) {
-					return {
-						rowsTemplate: value.rows,
-						formatFunction: value.format
-					};
-				}),
-				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
-				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable';
+				customLedger = _.get(self.appFlags.balance.customLedgers, ledgerName, {}),
+				formatFunction = _.get(customLedger, 'format', 'balanceFormatGenericDataTable');
 
 			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
 				var formattedData = _.merge({
 						showCredits: showCredits
 					}, self[formatFunction](data)),
-					$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
+					$rows = $(self.getTemplate({
+						name: _.get(customLedger, 'rows', 'generic-rows'),
+						data: formattedData,
+						submodule: 'balance'
+					}));
 
 					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
 				callback && callback($rows, data.ledger);
