@@ -1,7 +1,17 @@
 {{#each transactions}}
 	<tr class="transaction-row">
 		<td>
-			{{name}}
+			{{toFriendlyDate timestamp}}
+		</td>
+		<td>
+			<a data-toggle="tooltip" title="{{description}}">
+				<i class="fa fa-question-circle"></i>
+			</a>
+		</td>
+		<td>
+			<span>
+				{{name}}
+			</span>
 		</td>
 	{{#if @root.showCredits}}
 		<td data-sort-value="{{rate}}">
