@@ -354,9 +354,8 @@ define(function(require) {
 			return data;
 		},
 
-		balanceFormatRecurringDataTable: function(dataRequest, showCredits) {
+		balanceFormatRecurringDataTable: function(dataRequest) {
 			return {
-				showCredits: showCredits,
 				transactions: _
 					.chain(dataRequest.ledger.data)
 					.filter(function(value) {
@@ -365,7 +364,9 @@ define(function(require) {
 					.map(function(value) {
 						var item = value.metadata.item;
 						return {
+							timestamp: value.period.start,
 							name: item.name || item.category + '/' + item.item,
+							description: value.description,
 							rate: item.rate || 0,
 							quantity: item.billable || 0,
 							discount: _.has(item, 'discounts.total')
@@ -426,6 +427,8 @@ define(function(require) {
 						data: formattedData,
 						submodule: 'balance'
 					}));
+
+				monster.ui.tooltips($rows);
 
 					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
 				callback && callback($rows, data.ledger);
