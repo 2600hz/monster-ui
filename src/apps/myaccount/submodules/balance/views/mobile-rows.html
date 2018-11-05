@@ -4,6 +4,8 @@
 		<td>{{ account.name }}</td>
 		<td>{{ formatPhoneNumber source.id }}</td>
 		<td data-sort-value="{{usage.quantity}}">{{ usage.quantity }} {{usage.unit }}</td>
+	{{#if @root.showCredits}}
 		<td>{{formatPrice amount }}</td>
+	{{/if}}
 	</tr>
 {{/each}}
