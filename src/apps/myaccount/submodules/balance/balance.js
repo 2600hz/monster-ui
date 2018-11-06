@@ -16,6 +16,23 @@ define(function(require) {
 
 		appFlags: {
 			balance: {
+				customLedgers: {
+					'recurring': {
+						format: 'balanceFormatRecurringDataTable',
+						table: 'recurring-table',
+						rows: 'recurring-rows'
+					},
+					'per-minute-voip': {
+						format: 'balanceFormatPerMinuteDataTable',
+						table: 'per-minute-voip-table',
+						rows: 'per-minute-voip-rows'
+					},
+					'mobile_data': {
+						format: 'balanceFormatMobileDataTable',
+						table: 'mobile-table',
+						rows: 'mobile-rows'
+					}
+				},
 				digits: {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
@@ -195,14 +212,8 @@ define(function(require) {
 					});
 				},
 				balance: function(callback) {
-					self.callApi({
-						resource: 'ledgers.total',
-						data: {
-							accountId: self.accountId
-						},
-						success: function(data) {
-							callback(null, data.data);
-						}
+					self.balanceGet(function(data) {
+						callback(null, data);
 					});
 				}
 			}, function(err, results) {
@@ -214,7 +225,7 @@ define(function(require) {
 
 		balanceFormatDialogData: function(data) {
 			var self = this,
-				amount = (data.balance.amount || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+				amount = (data.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
 
@@ -277,7 +288,7 @@ define(function(require) {
 			});
 		},
 
-		balanceFormatMobileDataTable: function(dataRequest, showCredits) {
+		balanceFormatMobileDataTable: function(dataRequest) {
 			var self = this,
 				data = {
 					transactions: []
@@ -290,11 +301,10 @@ define(function(require) {
 			return data;
 		},
 
-		balanceFormatPerMinuteDataTable: function(dataRequest, showCredits) {
+		balanceFormatPerMinuteDataTable: function(dataRequest) {
 			var self = this,
 				data = {
-					transactions: [],
-					showCredits: showCredits
+					transactions: []
 				};
 
 			_.each(dataRequest.ledger.data, function(v) {
@@ -344,14 +354,42 @@ define(function(require) {
 			return data;
 		},
 
+		balanceFormatRecurringDataTable: function(dataRequest) {
+			return {
+				transactions: _
+					.chain(dataRequest.ledger.data)
+					.filter(function(value) {
+						return _.get(value, 'metadata.item.billable', 0) > 0;
+					})
+					.map(function(value) {
+						var item = value.metadata.item;
+						return {
+							timestamp: value.period.start,
+							name: item.name || item.category + '/' + item.item,
+							description: value.description,
+							rate: item.rate || 0,
+							quantity: item.billable || 0,
+							discount: _.has(item, 'discounts.total')
+								? '- ' + monster.util.formatPrice({
+									price: item.discounts.total
+								})
+								: '',
+							monthlyCharges: item.total
+						};
+					})
+					.value()
+			};
+		},
+
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
 			var self = this,
-				customLedgers = {
-					'per-minute-voip': 'per-minute-voip-table',
-					'mobile_data': 'mobile-table'
-				},
-				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName] : 'generic-table',
-				template = $(self.getTemplate({ name: templateName, submodule: 'balance', data: { showCredits: showCredits } })),
+				template = $(self.getTemplate({
+					name: _.get(self.appFlags.balance.customLedgers, ledgerName + '.table', 'generic-table'),
+					data: {
+						showCredits: showCredits
+					},
+					submodule: 'balance'
+				})),
 				fromDate = parent.find('input.filter-from').datepicker('getDate'),
 				toDate = parent.find('input.filter-to').datepicker('getDate');
 
@@ -377,22 +415,20 @@ define(function(require) {
 
 		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback) {
 			var self = this,
-				customLedgers = {
-					'per-minute-voip': {
-						rowsTemplate: 'per-minute-voip-rows',
-						formatFunction: 'balanceFormatPerMinuteDataTable'
-					},
-					'mobile_data': {
-						rowsTemplate: 'mobile-rows',
-						formatFunction: 'balanceFormatMobileDataTable'
-					}
-				},
-				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
-				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable';
+				customLedger = _.get(self.appFlags.balance.customLedgers, ledgerName, {}),
+				formatFunction = _.get(customLedger, 'format', 'balanceFormatGenericDataTable');
 
 			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
-				var formattedData = self[formatFunction](data, showCredits),
-					$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
+				var formattedData = _.merge({
+						showCredits: showCredits
+					}, self[formatFunction](data)),
+					$rows = $(self.getTemplate({
+						name: _.get(customLedger, 'rows', 'generic-rows'),
+						data: formattedData,
+						submodule: 'balance'
+					}));
+
+				monster.ui.tooltips($rows);
 
 					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
 				callback && callback($rows, data.ledger);
@@ -489,7 +525,7 @@ define(function(require) {
 									tabAnimationInProgress = true;
 
 									parent.find('.add-credits-content-wrapper.active')
-											.fadeOut(function() {
+											.fadeOut(250, function() {
 												parent
 													.find('.navbar-menu-item-link.active')
 													.removeClass('active');
@@ -499,7 +535,7 @@ define(function(require) {
 
 												parent
 													.find(event.target.hash)
-														.fadeIn(function() {
+														.fadeIn(250, function() {
 															$(this)
 																.addClass('active');
 
@@ -903,7 +939,7 @@ define(function(require) {
 					filters: filters
 				},
 				success: function(data) {
-                                        delete data.data['kazoo-rollover'];
+					delete data.data['kazoo-rollover'];
 					callback && callback(data.data);
 				}
 			});
@@ -918,7 +954,7 @@ define(function(require) {
 					accountId: self.accountId
 				},
 				success: function(data) {
-                                        delete data.data['kazoo-rollover'];
+					delete data.data['kazoo-rollover'];
 					callback && callback(data.data);
 				}
 			});

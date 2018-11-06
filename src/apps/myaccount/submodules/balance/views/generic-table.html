@@ -5,8 +5,9 @@
 				<th data-breakpoints="xs">{{ i18n.balance.genericLedger.columns.date }}</th>
 				<th>{{ i18n.balance.genericLedger.columns.account }}</th>
 				<th>{{ i18n.balance.genericLedger.columns.description }}</th>
-				<th>{{ i18n.balance.genericLedger.columns.usage }}</th>
+			{{#if @root.showCredits}}
 				<th>{{ i18n.balance.genericLedger.columns.amount }}</th>
+			{{/if}}
 			</tr>
 		</thead>
 		<tbody></tbody>
