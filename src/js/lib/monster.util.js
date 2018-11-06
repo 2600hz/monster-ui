@@ -1365,7 +1365,6 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 
-	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.gregorianToDate = gregorianToDate;
