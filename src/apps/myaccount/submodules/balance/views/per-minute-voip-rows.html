@@ -1,6 +1,6 @@
 {{#each transactions}}
 	<tr class="transaction-row">
-		<td data-filter-value="{{callId}}">
+		<td data-filter-value="{{callId}}" data-sort-value="{{direction}}">
 			{{#compare direction '===' 'inbound'}}
 				<i class="fa fa-arrow-right monster-green arrow-direction"></i>
 			{{else}}
@@ -8,13 +8,13 @@
 			{{/compare}}
 		</td>
 		<td>{{ toFriendlyDate timestamp }}</td>
-		<td>
+		<td data-sort-value="{{fromField}}">
 			<div class="multi-line-div">{{ fromField }}</div>
 			{{#if callerIdNumber}}
 				<div class="multi-line-div">{{ callerIdNumber }} ({{ @root.i18n.balance.cidHint }})</div>
 			{{/if}}
 		</td>
-		<td>
+		<td data-sort-value="{{toField}}">
 			<div class="multi-line-div">{{ toField }}</div>
 			{{#if calleeIdNumber}}
 				<div class="multi-line-div">{{ calleeIdNumber }} ({{ @root.i18n.balance.cidHint }})</div>
