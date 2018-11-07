@@ -71,16 +71,99 @@ define(function(require) {
 			return formattedData;
 		},
 
+		hideDeviceFooter: function(templateDevice) {
+			templateDevice.find('.block-footer').slideUp();
+		},
+
+		hideDeviceBoxes: function(templateDevice, searchType) {
+			var self = this;
+
+			if (searchType === 'models') {
+				templateDevice.find('.model-box').removeClass('selected').removeClass('unselected');
+				self.hideDeviceFooter(templateDevice);
+			} else if (searchType === 'brand') {
+				templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut('fast', function() {
+					templateDevice.find('.brand-box').removeClass('selected').removeClass('unselected');
+				});
+
+				templateDevice.find('.block-model').slideUp();
+				self.hideDeviceFooter(templateDevice);
+				templateDevice.find('.model-box.selected').removeClass('selected');
+			}
+		},
+
+		getSearchRequest: function(templateDevice, event) {
+			var $this = $(event.target),
+				self = this;
+
+			var searchType = $this.data('search_type'),
+				searchTypeClass = 'search-match-' + searchType,
+				searchTerm = $this.val().trim().toUpperCase(),
+				$elements = templateDevice.find('.brand-box');
+
+			if (searchType === 'models') {
+				var selectedBrand = templateDevice.find('.brand-box.selected').data('brand');
+				$elements = $('.models-brand[data-brand="' + selectedBrand + '"] .model-box');
+			}
+
+			templateDevice.find('.' + searchTypeClass).removeClass(searchTypeClass);
+
+			// Loop through all elements, and hide those who don't match the search query
+			$elements.each(function(index, element) {
+				var $element = $(element),
+					criteria = $element.data('brand');
+
+				if ($element.data('model')) {
+					criteria = $element.data('model');
+				}
+
+				if (criteria.toString().trim().toUpperCase().indexOf(searchTerm) > -1) {
+					$element.addClass('search-match-' + searchType);
+					$element.show();
+				} else {
+					$element.removeClass('search-match-' + searchType);
+					$element.hide();
+				}
+
+				if (index === ($elements.length - 1)) {
+					var $matches = $('.search-match-' + searchType);
+
+					switch ($matches.length) {
+						case 1:
+							$matches.trigger('click');
+							templateDevice.find('.models-brand');
+							templateDevice.find('.block-model').slideDown();
+							if (searchType === 'brand') {
+								templateDevice.find('.device-popup-search[data-search_type="models"]').focus().val('');
+								templateDevice.find('.model-box.search-match-models.selected').removeClass('selected');
+								templateDevice.find('.model-box').show();
+								self.hideDeviceFooter(templateDevice);
+							}
+							break;
+						case 0:
+							self.hideDeviceBoxes(templateDevice, searchType);
+							self.hideDeviceFooter(templateDevice);
+							break;
+						default:
+							self.hideDeviceBoxes(templateDevice, searchType);
+							break;
+					}
+				}
+			});
+		},
+
 		chooseModelRenderProvisioner: function(dataTemplate, callback, callbackMissingBrand) {
 			var self = this,
 				selectedBrand,
 				selectedFamily,
 				selectedModel,
-				templateDevice = $(self.getTemplate({
-					name: 'provisioner',
-					data: dataTemplate,
-					submodule: 'chooseModel'
-				}));
+				templateDevice;
+
+			templateDevice = $(self.getTemplate({
+				name: 'provisioner',
+				data: dataTemplate,
+				submodule: 'chooseModel'
+			}));
 
 			monster.ui.validate(templateDevice.find('#device_form'), {
 				rules: {
@@ -96,9 +179,14 @@ define(function(require) {
 
 			monster.ui.mask(templateDevice.find('#mac_address'), 'macAddress');
 
+			templateDevice.find('.device-popup-search').on('keydown', _.debounce(function(event) {
+				self.getSearchRequest(templateDevice, event);
+			}, 250));
+
 			templateDevice.find('.brand-box').on('click', function() {
 				var $this = $(this),
-					brand = $this.data('brand');
+					brand = $this.data('brand'),
+					$searchBox = templateDevice.find('.device-popup-search[data-search_type="models"]');
 
 				selectedBrand = brand;
 
@@ -113,10 +201,13 @@ define(function(require) {
 						templateDevice.find('.block-model').slideDown();
 					});
 				} else if ($this.hasClass('unselected')) {
+					$searchBox.val('');
+					$searchBox.trigger('keyup');
 					templateDevice.find('.models-brand[data-brand="' + templateDevice.find('.brand-box.selected').data('brand') + '"]').fadeOut('fast', function() {
 						templateDevice.find('.brand-box.selected').removeClass('selected').addClass('unselected');
 
 						$this.removeClass('unselected').addClass('selected');
+						templateDevice.find('.block-model').css('display', 'block');
 						templateDevice.find('.models-brand[data-brand="' + brand + '"]').fadeIn('fast');
 					});
 				}
