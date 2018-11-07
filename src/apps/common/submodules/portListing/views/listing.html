@@ -115,12 +115,8 @@
 					<td data-sort-value="{{extra.lastSubmitted.timestamp}}">
 						{{toFriendlyDate extra.lastSubmitted.timestamp 'date'}}
 					</td>
-					<td data-sort-value="{{#if winning_carrier}}{{winning_carrier}}{{else}}{{@root.i18n.portListing.misc.unknownCarrier}}{{/if}}">
-					{{#if winning_carrier}}
-						{{winning_carrier}}
-					{{else}}
-						{{@root.i18n.portListing.misc.unknownCarrier}}
-					{{/if}}
+					<td>
+						{{coalesce winning_carrier @root.i18n.portListing.misc.unknownCarrier}}
 					</td>
 					<td>
 						{{extra.lastSubmitted.submitter}}
@@ -184,12 +180,8 @@
 					<td>
 						{{extra.numbersAmount}}
 					</td>
-					<td data-sort-value="{{#if carrier}}{{carrier}}{{else}}{{@root.i18n.portListing.misc.unknownCarrier}}{{/if}}">
-					{{#if carrier}}
-						{{carrier}}
-					{{else}}
-						{{@root.i18n.portListing.misc.unknownCarrier}}
-					{{/if}}
+					<td>
+						{{coalesce carrier @root.i18n.portListing.misc.unknownCarrier}}
 					</td>
 				</tr>
 			{{/each}}
