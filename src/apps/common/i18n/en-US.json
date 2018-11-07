@@ -548,6 +548,9 @@
 				"add": "Invite Participants"
 			}
 		},
+		"conferenceActions": {
+			"kick": "All users have been removed from the conference"
+		},
 		"moderators": "Moderators",
 		"participants": "Participants",
 		"userActions": {
@@ -827,8 +830,8 @@
 				},
 				"placeholder": {
 					"streetNumber": "Street Number",
-					"streetType": "Street Type",
 					"streetName": "Street Name",
+					"streetType": "Street Type",
 					"city": "City",
 					"state": "State",
 					"zip": "ZIP Code"

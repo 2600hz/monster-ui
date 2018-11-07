@@ -1,10 +1,16 @@
 <div class="device-popup" type="provisioner">
 	<div class="block-brand">
 		<div class="title-bar clearfix">
-			<div class="title pull-left">{{i18n.chooseModel.brandHeadline}}</div>
-		{{#if show_not_listed_links}}
-			<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingBrand}}</a>
-		{{/if}}
+			<div class="title pull-left">
+				{{i18n.chooseModel.brandHeadline}}
+			</div>
+		</div>
+
+		<div class="action-bar">
+			<input type="text" class="device-popup-search" data-search_type="brand" placeholder="Search by brand">
+			{{#if show_not_listed_links}}
+				<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingBrand}}</a>
+			{{/if}}
 		</div>
 
 		<div class="brand-selection">
@@ -16,10 +22,16 @@
 
 	<div class="block-model">
 		<div class="title-bar clearfix">
-			<div class="title pull-left">{{i18n.chooseModel.deviceHeadline}}</div>
-		{{#if show_not_listed_links}}
-			<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingDevice}}</a>
-		{{/if}}
+			<div class="title pull-left">
+				{{i18n.chooseModel.deviceHeadline}}
+			</div>
+		</div>
+
+		<div class="action-bar">
+			<input type="text" class="device-popup-search" data-search_type="models" placeholder="Search by model device">
+			{{#if show_not_listed_links}}
+				<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingDevice}}</a>
+			{{/if}}
 		</div>
 
 		<div class="model-selection">

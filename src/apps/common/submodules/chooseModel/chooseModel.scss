@@ -13,7 +13,13 @@
 	background: #eee;
 }
 .device-popup .title-bar {
-	padding: 20px 10px;
+	padding: 20px 10px 0 10px;
+}
+.device-popup .action-bar{
+	display: flex;
+    justify-content: space-between;
+	align-items: center;
+	padding: 0 10px;
 }
 .device-popup .block-brand .brand-selection {
 	overflow-x: auto;
