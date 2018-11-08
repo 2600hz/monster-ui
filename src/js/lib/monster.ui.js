@@ -20,13 +20,16 @@ define(function(require) {
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
 			coalesce: function() {
-				if (arguments.length < 2) {
+				var args = _.toArray(arguments);
+
+				if (args.length < 2) {
 					throw new Error('Handlerbars Helper "coalesce" needs at least 2 parameters');
 				}
 
-				for (var i = 0; i < arguments.length - 1; i++) {
-					if (!_.isNil(arguments[i])) {
-						return arguments[i];
+				// Last argument is discarded because it is handlebars' options parameter
+				for (var i = 0; i < args.length - 1; i++) {
+					if (!_.isNil(args[i])) {
+						return args[i];
 					}
 				}
 				return null;
