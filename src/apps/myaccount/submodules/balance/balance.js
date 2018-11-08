@@ -272,6 +272,12 @@ define(function(require) {
 						data: parseFloat(data.amount).toFixed(self.appFlags.balance.digits.availableCreditsBadge)
 					};
 
+				addCreditDialog
+					.find('#amount')
+						.mask('#0.00', {
+							reverse: true
+						});
+
 				monster.pub('myaccount.updateMenu', dataUpdate);
 
 				popup = monster.ui.dialog(addCreditDialog, {
@@ -569,14 +575,69 @@ define(function(require) {
 						}
 					});
 
-			parent.find('#add_credit').on('click', function(ev) {
-				ev.preventDefault();
+			parent
+				.find('#add_credit')
+					.on('click', function(event) {
+						event.preventDefault();
 
-				var creditsToAdd = parseFloat(parent.find('#amount').val().replace(',', '.'));
+						var $this = $(this),
+							creditsToAdd = parseFloat(parent.find('#amount').val());
 
-				if (creditsToAdd) {
-					self.balanceAddCredits(creditsToAdd,
-						function() {
+						if (_.isNaN(creditsToAdd)) {
+							monster.ui.toast({
+								type: 'warning',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().myAccountApp.balance.toast.warning.invalidTopup,
+									data: {
+										value: creditsToAdd
+									}
+								})
+							});
+							return;
+						}
+
+						$this.prop('disabled', true);
+
+						monster.series([
+							function(callback) {
+								self.balanceRequestTopup({
+									data: {
+										data: {
+											amount: creditsToAdd
+										}
+									},
+									success: function() {
+										callback(null);
+									},
+									error: function(data) {
+										callback(data);
+									}
+								});
+							},
+							function(callback) {
+								if (!_.isFunction(params.callback)) {
+									callback(null);
+									return;
+								}
+								self.balanceGet(function(balance) {
+									params.callback(balance);
+									callback(null);
+								});
+							}
+						], function(err, results) {
+							if (err) {
+								monster.ui.toast({
+									type: 'error',
+									message: self.getTemplate({
+										name: '!' + self.i18n.active().myAccountApp.balance.toast.error.topup,
+										data: {
+											reason: err.bookkeeper.results.message
+										}
+									})
+								});
+								$this.prop('disabled', false);
+								return;
+							}
 							monster.ui.toast({
 								type: 'success',
 								message: self.getTemplate({
@@ -588,21 +649,9 @@ define(function(require) {
 									}
 								})
 							});
-
-							if (typeof params.callback === 'function') {
-								self.balanceGet(function(balance) {
-									params.callback(balance);
-									parent.dialog('close');
-								});
-							} else {
-								parent.dialog('close');
-							}
-						}
-					);
-				} else {
-					monster.ui.alert(self.i18n.active().balance.invalidAmount);
-				}
-			});
+							parent.dialog('close');
+						});
+					});
 
 			thresholdAlertsSwitch
 				.on('change', function() {
@@ -1011,29 +1060,26 @@ define(function(require) {
 			});
 		},
 
-		balanceAddCredits: function(credits, success, error) {
-			var self = this,
-				data = {
-					amount: credits
-				};
-
-			self.balanceUpdateRecharge(data, success, error);
-		},
-
-		balanceUpdateRecharge: function(data, success, error) {
+		balanceRequestTopup: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'services.topup',
-				data: {
+				data: _.merge({
 					accountId: self.accountId,
-					data: data
-				},
+					generateError: false
+				}, args.data),
 				success: function(data, status) {
-					success && success(data, status);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
-				error: function(data, status) {
-					error && error(data, status);
+				error: function(parsedError, error, globalHandler) {
+					if (error.status !== 500) {
+						globalHandler(parsedError, {
+							generateError: true
+						});
+						return;
+					}
+					args.hasOwnProperty('error') && args.error(parsedError.data);
 				}
 			});
 		}
