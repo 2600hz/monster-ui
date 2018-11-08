@@ -33,7 +33,7 @@
 			<tbody>
 			{{#each allOtherPorts}}
 				<tr class="listing-item" data-id="{{id}}">
-					<td data-sort-value="{{name}}{{#if reference_number}} {{replaceVar @root.i18n.portListing.listing.tbody.reference reference_number}}{{/if}}">
+					<td data-filter-value="{{name}}{{#if reference_number}} {{replaceVar @root.i18n.portListing.listing.tbody.reference reference_number}}{{/if}}" data-sort-value="{{name}}">
 						<div class="bold">
 							{{name}}
 						</div>
@@ -143,7 +143,7 @@
 					<th data-type="html">
 						{{toUpperCase i18n.portListing.misc.portInfo.name}}
 					</th>
-					<th data-type="html">
+					<th data-type="html" data-sortable="false">
 						{{toUpperCase i18n.portListing.misc.portInfo.status}}
 					</th>
 					<th>
@@ -167,7 +167,7 @@
 						</div>
 					{{/if}}
 					</td>
-					<td data-sort-value="{{@root.i18n.portListing.misc.status.unconfirmed}}">
+					<td>
 						<div class="status-wrapper">
 							<i class="fa fa-refresh"></i>
 							<div class="content">
