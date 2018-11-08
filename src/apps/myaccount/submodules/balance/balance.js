@@ -296,16 +296,22 @@ define(function(require) {
 		},
 
 		balanceFormatMobileDataTable: function(dataRequest) {
-			var self = this,
-				data = {
-					transactions: []
-				};
-
-			_.each(dataRequest.ledger.data, function(transaction) {
-				data.transactions.push(transaction);
-			});
-
-			return data;
+			var self = this;
+			return {
+				transactions: _.map(dataRequest.ledger.data, function(item) {
+					return {
+						amount: item.amount,
+						name: item.account.name,
+						phoneNumber: item.source.id,
+						timestamp: _.get(
+							item,
+							'period.end',
+							_.get(item, 'period.start', undefined)
+						),
+						usage: item.usage
+					};
+				})
+			};
 		},
 
 		balanceFormatPerMinuteDataTable: function(dataRequest) {
