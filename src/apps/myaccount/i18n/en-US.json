@@ -1,5 +1,15 @@
 {
 	"myAccountApp": {
+		"balance": {
+			"toast": {
+				"error": {
+					"topup": "Your topup failed for the following reason: {{reason}}"
+				},
+				"warning": {
+					"invalidTopup": "Invalid topup value: {{value}}"
+				}
+			}
+		},
 		"common": {
 			"outboundPrivacy": {
 				"label": "Caller-ID Privacy",
