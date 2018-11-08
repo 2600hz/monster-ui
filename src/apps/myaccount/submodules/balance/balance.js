@@ -37,6 +37,7 @@ define(function(require) {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
 					genericTableAmount: 2,
+					recurringTableAmount: 2,
 					perMinuteTableAmount: 4
 				},
 				range: 'monthly'
@@ -368,26 +369,30 @@ define(function(require) {
 		},
 
 		balanceFormatRecurringDataTable: function(dataRequest) {
+			var self = this;
 			return {
 				transactions: _
 					.chain(dataRequest.ledger.data)
-					.filter(function(value) {
-						return _.get(value, 'metadata.item.billable', 0) > 0;
-					})
+					.filter('metadata.item.billable')
 					.map(function(value) {
 						var item = value.metadata.item;
 						return {
 							timestamp: value.period.start,
 							name: item.name || item.category + '/' + item.item,
 							description: value.description,
-							rate: item.rate || 0,
+							rate: {
+								value: item.rate || 0,
+								digits: self.appFlags.balance.digits.recurringTableAmount
+							},
 							quantity: item.billable || 0,
-							discount: _.has(item, 'discounts.total')
-								? '- ' + monster.util.formatPrice({
-									price: item.discounts.total
-								})
-								: '',
-							monthlyCharges: item.total
+							discount: {
+								value: _.get(item, 'discounts.total', undefined),
+								digits: self.appFlags.balance.digits.recurringTableAmount
+							},
+							charges: {
+								value: item.total,
+								digits: self.appFlags.balance.digits.recurringTableAmount
+							}
 						};
 					})
 					.value()
