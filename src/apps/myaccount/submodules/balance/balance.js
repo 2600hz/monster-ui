@@ -36,6 +36,7 @@ define(function(require) {
 				digits: {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
+					genericTableAmount: 2,
 					perMinuteTableAmount: 4
 				},
 				range: 'monthly'
@@ -441,30 +442,25 @@ define(function(require) {
 			}, filters);
 		},
 
-		balanceFormatGenericDataTable: function(dataRequest, showCredits) {
-			var self = this,
-				data = {
-					transactions: [],
-					showCredits: showCredits
-				};
-
-			_.each(dataRequest.ledger.data, function(v) {
-				v.extra = {};
-
-				if (v.hasOwnProperty('period')) {
-					if (v.period.hasOwnProperty('end')) {
-						v.extra.date = v.period.end;
-					} else if (v.period.hasOwnProperty('start')) {
-						v.extra.date = v.period.start;
-					}
-				} else {
-					v.extra.date = undefined;
-				}
-
-				data.transactions.push(v);
-			});
-
-			return data;
+		balanceFormatGenericDataTable: function(dataRequest) {
+			var self = this;
+			return {
+				transactions: _.map(dataRequest.ledger.data, function(item) {
+					return {
+						amount: {
+							value: item.amount,
+							digits: self.appFlags.balance.digits.genericTableAmount
+						},
+						description: item.description,
+						name: item.account.name,
+						timestamp: _.get(
+							item,
+							'period.end',
+							_.get(item, 'period.start', undefined)
+						)
+					};
+				})
+			};
 		},
 
 		balanceGetData: function(filters, webhookId, callback) {
