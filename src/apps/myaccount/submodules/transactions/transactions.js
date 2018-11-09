@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		moment = require('moment'),
 		monster = require('monster');
 
 	var transactions = {
@@ -15,9 +16,10 @@ define(function(require) {
 		transactionsRange: 'monthly',
 
 		_transactionsRenderContent: function(args) {
-			var self = this;
+			var self = this,
+				dates = self.utilDefaultRangeDates();
 
-			self.listTransactions(function(data) {
+			self.listTransactions(dates.from, dates.to, function(data) {
 				var transactionsView = $(self.getTemplate({
 						name: 'layout',
 						data: data,
@@ -30,7 +32,8 @@ define(function(require) {
 					})),
 					optionsDatePicker = {
 						container: transactionsView,
-						range: self.transactionsRange
+						range: self.transactionsRange,
+						startDate: dates.from
 					};
 
 				transactionsView.find('.list-transactions').append(listTransactionsView);
@@ -99,6 +102,17 @@ define(function(require) {
 		},
 
 		//utils
+
+		utilDefaultRangeDates() {
+			var today = moment().toDate(),
+				firstDOM = moment().startOf('month').toDate();
+
+			return {
+				from: firstDOM,
+				to: today
+			};
+		},
+
 		// from, to: optional together. Date objects.
 		listTransactions: function(from, to, callback) {
 			var self = this;
@@ -112,15 +126,15 @@ define(function(require) {
 				to = dates.to;
 			}
 
+			var defaults = {
+				amount: 0.00,
+				billingStartDate: moment(from).format(monster.util.getMomentFormat('date')),
+				billingEndDate: moment(to).format(monster.util.getMomentFormat('date'))
+			};
+
 			// We search from the beginning of the from date, to the end of the to date
 			from = monster.util.dateToBeginningOfGregorianDay(from);
 			to = monster.util.dateToEndOfGregorianDay(to);
-
-			var defaults = {
-				amount: 0.00,
-				billingStartDate: monster.util.toFriendlyDate(from, 'date'),
-				billingEndDate: monster.util.toFriendlyDate(to, 'date')
-			};
 
 			monster.parallel({
 				charges: function(callback) {
