@@ -2,11 +2,19 @@
 	<table id="transactions_grid" class="monster-table footable">
 		<thead>
 			<tr>
-				<th data-breakpoints="xs">{{ i18n.balance.genericLedger.columns.date }}</th>
-				<th>{{ i18n.balance.genericLedger.columns.account }}</th>
-				<th>{{ i18n.balance.genericLedger.columns.description }}</th>
+				<th data-breakpoints="xs">
+					{{i18n.balance.genericLedger.columns.date}}
+				</th>
+				<th>
+					{{i18n.balance.genericLedger.columns.account}}
+				</th>
+				<th>
+					{{i18n.balance.genericLedger.columns.description}}
+				</th>
 			{{#if @root.showCredits}}
-				<th>{{ i18n.balance.genericLedger.columns.amount }}</th>
+				<th>
+					{{i18n.balance.genericLedger.columns.amount}}
+				</th>
 			{{/if}}
 			</tr>
 		</thead>
