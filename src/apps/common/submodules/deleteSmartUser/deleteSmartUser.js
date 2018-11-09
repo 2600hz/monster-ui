@@ -30,7 +30,7 @@ define(function(require) {
 				var removeDevices = dialogTemplate.find('#delete_devices').is(':checked'),
 					removeConferences = dialogTemplate.find('#delete_conferences').is(':checked');
 
-				self.deleteSmartUserDeleteUser({
+				self.deleteSmartUserDeleteUserData({
 					data: {
 						accountId: args.accountId,
 						userId: user.id
@@ -56,7 +56,7 @@ define(function(require) {
 			});
 		},
 
-		deleteSmartUserDeleteUser: function(args) {
+		deleteSmartUserDeleteUserData: function(args) {
 			var self = this,
 				accountId = args.data.accountId,
 				userId = args.data.userId,
