@@ -168,7 +168,7 @@ define(function(require) {
 									accountId: accountId,
 									callflowId: callflow.id
 								},
-								success: function(data) {
+								success: function() {
 									callback(null, '');
 								}
 							});
@@ -178,14 +178,20 @@ define(function(require) {
 
 				_.each(results.vmbox, function(vmbox) {
 					listFnDelete.push(function(callback) {
-						self.usersDeleteVMBox(vmbox.id, function(data) {
-							callback(null, '');
+						self.deleteSmartUserDeleteVMBox({
+							data: {
+								accountId: accountId,
+								voicemailId: vmbox.id
+							},
+							success: function() {
+								callback(null, '');
+							}
 						});
 					});
 				});
 
 				monster.parallel(listFnDelete, function(err, resultsDelete) {
-					self.usersDeleteUser({
+					self.deleteSmartUserDeleteUser({
 						data: args.data,
 						success: function(data) {
 							args.hasOwnProperty('success') && args.success(data);
@@ -412,6 +418,12 @@ define(function(require) {
 			self.deleteSmartUserListAllResources('voicemail.list', args);
 		},
 
+		deleteSmartUserDeleteVMBox: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('voicemail.delete', args);
+		},
+
 		/* - Callflows */
 
 		deleteSmartUserGetCallflow: function(args) {
@@ -462,6 +474,14 @@ define(function(require) {
 			var self = this;
 
 			self.deleteSmartUserModifySingleResource('conference.delete', args);
+		},
+
+		/* - Users */
+
+		deleteSmartUserDeleteUser: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('user.delete', args);
 		},
 
 		/* API utils */
