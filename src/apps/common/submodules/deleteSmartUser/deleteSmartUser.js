@@ -152,42 +152,25 @@ define(function(require) {
 					reassign mobile devices to their respective mobile callflow instead of just deleting the callflow
 					 */
 					if (callflow.type === 'mobile') {
-						listFnDelete.push(function(mainCallback) {
-							monster.parallel({
-								callflow: function(callback) {
-									self.usersGetCallflow(callflow.id, function(data) {
-										callback(null, data);
-									});
-								},
-								mobileDevice: function(callback) {
-									self.usersGetMobileDevice(callflow.numbers[0].slice(2), function(data) {
-										callback(null, data);
-									});
+						listFnDelete.push(function(callback) {
+							self.deleteSmartUserReassignMobileDevice({
+								accountId: accountId,
+								callflow: callflow,
+								success: function(data) {
+									callback(null, data);
 								}
-							}, function(err, results) {
-								var fullCallflow = results.callflow,
-									mobileDeviceId = results.mobileDevice.id;
-
-								delete fullCallflow.owner_id;
-
-								$.extend(true, fullCallflow, {
-									flow: {
-										module: 'device',
-										data: {
-											id: mobileDeviceId
-										}
-									}
-								});
-
-								self.usersUpdateCallflow(fullCallflow, function(data) {
-									mainCallback(null, data);
-								});
 							});
 						});
 					} else {
 						listFnDelete.push(function(callback) {
-							self.usersDeleteCallflow(callflow.id, function(data) {
-								callback(null, '');
+							self.usersDeleteCallflow({
+								data: {
+									accountId: accountId,
+									callflowId: callflow.id
+								},
+								success: function(data) {
+									callback(null, '');
+								}
 							});
 						});
 					}
@@ -330,42 +313,83 @@ define(function(require) {
 			});
 		},
 
+		deleteSmartUserReassignMobileDevice: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				callflow = args.callflow;
+
+			monster.parallel({
+				callflow: function(callback) {
+					self.deleteSmartUserGetCallflow({
+						data: {
+							accountId: accountId,
+							callflowId: callflow.id
+						},
+						success: function(callflow) {
+							callback(null, callflow);
+						}
+					});
+				},
+				mobileDevice: function(callback) {
+					var mdn = callflow.numbers[0].slice(2);
+
+					// List mobile devices
+					self.deleteSmartUserListDevices({
+						data: {
+							accountId: accountId,
+							data: {
+								filters: {
+									'filter_mobile.mdn': encodeURIComponent(mdn)
+								}
+							}
+						},
+						success: function(mobileDevices) {
+							callback(null, mobileDevices);
+						}
+					});
+				}
+			}, function(err, results) {
+				var fullCallflow = results.callflow,
+					mobileDeviceId = results.mobileDevice.id;
+
+				delete fullCallflow.owner_id;
+
+				$.extend(true, fullCallflow, {
+					flow: {
+						module: 'device',
+						data: {
+							id: mobileDeviceId
+						}
+					}
+				});
+
+				self.deleteSmartUserUpdateCallflow({
+					data: {
+						accountId: accountId,
+						callflowId: fullCallflow.id,
+						data: fullCallflow
+					},
+					success: function(data) {
+						args.hasOwnProperty('success') && args.success(data);
+					}
+				});
+			});
+		},
+
 		/* API resource calls */
 
-		deleteSmartUserListDevices: function(args) {
-			var self = this;
-
-			self.deleteSmartUserListAllResources('device.list', args);
-		},
-
-		deleteSmartUserListVMBoxes: function(args) {
-			var self = this;
-
-			self.deleteSmartUserListAllResources('voicemail.list', args);
-		},
-
-		deleteSmartUserListCallflows: function(args) {
-			var self = this;
-
-			self.deleteSmartUserListAllResources('callflow.list', args);
-		},
-
-		deleteSmartUserListConferences: function(args) {
-			var self = this;
-
-			self.deleteSmartUserListAllResources('conference.list', args);
-		},
-
-		deleteSmartUserDeleteDevice: function(args) {
-			var self = this;
-
-			self.deleteSmartUserModifySingleResource('device.delete', args);
-		},
+		/* - Devices */
 
 		deleteSmartUserGetDevice: function(args) {
 			var self = this;
 
 			self.deleteSmartUserGetResource('device.get', args);
+		},
+
+		deleteSmartUserListDevices: function(args) {
+			var self = this;
+
+			self.deleteSmartUserListAllResources('device.list', args);
 		},
 
 		deleteSmartUserUpdateDevice: function(args) {
@@ -374,11 +398,47 @@ define(function(require) {
 			self.deleteSmartUserModifySingleResource('device.update', args);
 		},
 
-		deleteSmartUserDeleteConference: function(args) {
+		deleteSmartUserDeleteDevice: function(args) {
 			var self = this;
 
-			self.deleteSmartUserModifySingleResource('conference.delete', args);
+			self.deleteSmartUserModifySingleResource('device.delete', args);
 		},
+
+		/* - VMBoxes */
+
+		deleteSmartUserListVMBoxes: function(args) {
+			var self = this;
+
+			self.deleteSmartUserListAllResources('voicemail.list', args);
+		},
+
+		/* - Callflows */
+
+		deleteSmartUserGetCallflow: function(args) {
+			var self = this;
+
+			self.deleteSmartUserGetResource('callflow.get', args);
+		},
+
+		deleteSmartUserListCallflows: function(args) {
+			var self = this;
+
+			self.deleteSmartUserListAllResources('callflow.list', args);
+		},
+
+		deleteSmartUserUpdateCallflow: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('callflow.update', args);
+		},
+
+		deleteSmartUserDeleteCallflow: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('callflow.delete', args);
+		},
+
+		/* - Conferences */
 
 		deleteSmartUserGetConference: function(args) {
 			var self = this;
@@ -386,10 +446,22 @@ define(function(require) {
 			self.deleteSmartUserGetResource('conference.get', args);
 		},
 
+		deleteSmartUserListConferences: function(args) {
+			var self = this;
+
+			self.deleteSmartUserListAllResources('conference.list', args);
+		},
+
 		deleteSmartUserUpdateConference: function(args) {
 			var self = this;
 
 			self.deleteSmartUserModifySingleResource('conference.update', args);
+		},
+
+		deleteSmartUserDeleteConference: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('conference.delete', args);
 		},
 
 		/* API utils */
