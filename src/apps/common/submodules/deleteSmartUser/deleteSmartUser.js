@@ -136,8 +136,13 @@ define(function(require) {
 				}
 
 				listFnDelete.push(function(callback) {
-					self.usersRemoveBulkConferences(results.conferences, removeConferences, function() {
-						callback(null, '');
+					self.deleteSmartUserRemoveBulkConferences({
+						accountId: accountId,
+						conferences: results.conferences,
+						forceDelete: removeConferences,
+						success: function() {
+							callback(null, '');
+						}
 					});
 				});
 
@@ -207,6 +212,126 @@ define(function(require) {
 			});
 		},
 
+		deleteSmartUserUnassignDevice: function(args) {
+			var self = this;
+
+			monster.waterfall([
+				function(callback) {
+					self.deleteSmartUserGetDevice({
+						data: args.data,
+						success: function(deviceGet) {
+							callback(null, deviceGet);
+						},
+						error: function() {
+							callback(true);
+						}
+					});
+				},
+				function(deviceGet, callback) {
+					delete deviceGet.owner_id;
+
+					self.deleteSmartUserUpdateDevice({
+						data: _.merge({
+							data: deviceGet
+						}, args.data),
+						success: function(updatedDevice) {
+							callback(null, updatedDevice);
+						},
+						error: function() {
+							callback(true);
+						}
+					});
+				}
+			], function(err, updatedDevice) {
+				if (err) {
+					args.hasOwnProperty('error') && args.error(err);
+					return;
+				}
+
+				args.hasOwnProperty('success') && args.success(updatedDevice);
+			});
+		},
+
+		deleteSmartUserRemoveBulkConferences: function(args) {
+			var self = this,
+				listRequests = [];
+
+			if (args.forceDelete) {
+				_.each(args.conferences, function(conference) {
+					listRequests.push(function(subCallback) {
+						self.deleteSmartUserDeleteConference({
+							data: {
+								accountId: args.accountId,
+								conferenceId: conference.id
+							},
+							success: function(data) {
+								subCallback(null, data);
+							}
+						});
+					});
+				});
+			} else {
+				_.each(args.conferences, function(conference) {
+					listRequests.push(function(subCallback) {
+						self.deleteSmartUserUnassignConference({
+							data: {
+								accountId: args.accountId,
+								conferenceId: conference.id
+							},
+							success: function(data) {
+								subCallback(null, data);
+							}
+						});
+					});
+				});
+			}
+
+			monster.parallel(listRequests, function(err, results) {
+				if (err) {
+					args.hasOwnProperty('error') && args.error(err);
+					return;
+				}
+				args.hasOwnProperty('success') && args.success(results);
+			});
+		},
+
+		deleteSmartUserUnassignConference: function(args) {
+			var self = this;
+
+			monster.waterfall([
+				function(callback) {
+					self.deleteSmartUserGetConference({
+						data: args.data,
+						success: function(conference) {
+							callback(null, conference);
+						}
+					});
+				},
+				function(conference, callback) {
+					conference.name = 'Unassigned ' + conference.name;
+					delete conference.owner_id;
+
+					self.deleteSmartUserUpdateConference({
+						data: _.merge({
+							data: conference
+						}, args.data),
+						success: function(updatedConference) {
+							callback(null, updatedConference);
+						}
+					});
+				}
+			], function(err, updatedConference) {
+				if (err) {
+					args.hasOwnProperty('error') && args.error(err);
+					return;
+				}
+
+				args.hasOwnProperty('success') && args.success(updatedConference);
+			});
+		},
+
+		/* API resource calls */
+
 		deleteSmartUserListDevices: function(args) {
 			var self = this;
 
@@ -237,44 +362,6 @@ define(function(require) {
 			self.deleteSmartUserModifySingleResource('device.delete', args);
 		},
 
-		deleteSmartUserUnassignDevice: function(args) {
-			var self = this;
-
-			monster.waterfall([
-				function(callback) {
-					self.deleteSmartUserGetDevice({
-						data: args.data,
-						success: function(deviceGet) {
-							callback(null, deviceGet);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
-				},
-				function(deviceGet, callback) {
-					delete deviceGet.owner_id;
-
-					self.deleteSmartUserUpdateDevice({
-						device: deviceGet,
-						success: function(updatedDevice) {
-							callback(null, updatedDevice);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
-				}
-			], function(err, updatedDevice) {
-				if (err) {
-					args.hasOwnProperty('error') && args.error(err);
-					return;
-				}
-
-				args.hasOwnProperty('success') && args.success(updatedDevice);
-			});
-		},
-
 		deleteSmartUserGetDevice: function(args) {
 			var self = this;
 
@@ -282,18 +369,30 @@ define(function(require) {
 		},
 
 		deleteSmartUserUpdateDevice: function(args) {
-			var self = this,
-				deviceData = args.device;
-
-			args.data = {
-				deviceId: deviceData.id,
-				data: deviceData
-			};
-
-			delete args.device;
+			var self = this;
 
 			self.deleteSmartUserModifySingleResource('device.update', args);
 		},
+
+		deleteSmartUserDeleteConference: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('conference.delete', args);
+		},
+
+		deleteSmartUserGetConference: function(args) {
+			var self = this;
+
+			self.deleteSmartUserGetResource('conference.get', args);
+		},
+
+		deleteSmartUserUpdateConference: function(args) {
+			var self = this;
+
+			self.deleteSmartUserModifySingleResource('conference.update', args);
+		},
+
+		/* API utils */
 
 		deleteSmartUserGetResource: function(resource, args) {
 			var self = this,
