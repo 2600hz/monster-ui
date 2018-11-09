@@ -36,6 +36,8 @@ define(function(require) {
 				digits: {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
+					genericTableAmount: 2,
+					recurringTableAmount: 2,
 					perMinuteTableAmount: 4
 				},
 				range: 'monthly'
@@ -294,97 +296,81 @@ define(function(require) {
 			});
 		},
 
-		balanceFormatMobileDataTable: function(dataRequest) {
-			var self = this,
-				data = {
-					transactions: []
+		balanceFormatMobileDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(item) {
+				return {
+					amount: item.amount,
+					name: item.account.name,
+					phoneNumber: item.source.id,
+					timestamp: _.get(
+						item,
+						'period.end',
+						_.get(item, 'period.start', undefined)
+					),
+					usage: item.usage
 				};
-
-			_.each(dataRequest.ledger.data, function(transaction) {
-				data.transactions.push(transaction);
 			});
-
-			return data;
 		},
 
-		balanceFormatPerMinuteDataTable: function(dataRequest) {
-			var self = this,
-				data = {
-					transactions: []
-				};
-
-			_.each(dataRequest.ledger.data, function(v) {
-				v.metadata = v.metadata || {
-					to: '-',
-					from: '-'
-				};
-
-				v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id };
-
-				var duration = self.i18n.active().balance.active_call,
-					accountName = v.account.name,
-					fromField = monster.util.formatPhoneNumber(v.metadata.from.replace(/@.*/, '') || ''),
-					toField = monster.util.formatPhoneNumber(v.metadata.to.replace(/@.*/, '') || ''),
-					callerIdNumber = monster.util.formatPhoneNumber(v.metadata.caller_id_number || ''),
-					calleeIdNumber = monster.util.formatPhoneNumber(v.metadata.callee_id_number || '');
-
-				if (v.usage && v.usage.hasOwnProperty('quantity')) {
-					duration = Math.ceil((parseInt(v.usage.quantity)) / 60);
-				}
-
-				var obj = {
-					direction: v.metadata.call.direction,
-					callId: v.id,
-					timestamp: v.period.start,
-					fromField: fromField,
-					toField: toField,
-					accountName: accountName,
-					duration: duration,
-					friendlyAmount: monster.util.formatPrice({
-						price: v.amount,
+		balanceFormatPerMinuteDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(item) {
+				var fromField = monster.util.formatPhoneNumber(item.metadata.from.replace(/@.*/, '') || ''),
+					toField = monster.util.formatPhoneNumber(item.metadata.to.replace(/@.*/, '') || ''),
+					callerIdNumber = monster.util.formatPhoneNumber(item.metadata.caller_id_number || ''),
+					calleeIdNumber = monster.util.formatPhoneNumber(item.metadata.callee_id_number || '');
+				return {
+					amount: {
+						value: item.amount,
 						digits: self.appFlags.balance.digits.perMinuteTableAmount
-					})
+					},
+					calleeNumber: calleeIdNumber !== toField
+						? callerIdNumber
+						: '',
+					callerNumber: callerIdNumber !== fromField
+						? callerIdNumber
+						: '',
+					callId: item.id,
+					direction: _.get(item, 'metadata.direction', 'inbound'),
+					from: fromField,
+					minutes: _.has(item, 'usage.quantity')
+						? Math.ceil(parseInt(item.usage.quantity) / 60)
+						: -1,
+					name: item.account.name,
+					timestamp: item.period.start,
+					to: toField
 				};
-
-				if (callerIdNumber !== fromField) {
-					obj.callerIdNumber = callerIdNumber;
-				}
-
-				if (calleeIdNumber !== toField) {
-					obj.calleeIdNumber = calleeIdNumber;
-				}
-
-				data.transactions.push(obj);
 			});
-
-			return data;
 		},
 
-		balanceFormatRecurringDataTable: function(dataRequest) {
-			return {
-				transactions: _
-					.chain(dataRequest.ledger.data)
-					.filter(function(value) {
-						return _.get(value, 'metadata.item.billable', 0) > 0;
-					})
-					.map(function(value) {
-						var item = value.metadata.item;
-						return {
-							timestamp: value.period.start,
-							name: item.name || item.category + '/' + item.item,
-							description: value.description,
-							rate: item.rate || 0,
-							quantity: item.billable || 0,
-							discount: _.has(item, 'discounts.total')
-								? '- ' + monster.util.formatPrice({
-									price: item.discounts.total
-								})
-								: '',
-							monthlyCharges: item.total
-						};
-					})
-					.value()
-			};
+		balanceFormatRecurringDataTable: function(data) {
+			var self = this;
+			return _
+				.chain(data)
+				.filter('metadata.item.billable')
+				.map(function(value) {
+					var item = value.metadata.item;
+					return {
+						timestamp: value.period.start,
+						name: item.name || item.category + '/' + item.item,
+						description: value.description,
+						rate: {
+							value: item.rate || 0,
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						},
+						quantity: item.billable || 0,
+						discount: {
+							value: _.get(item, 'discounts.total', undefined),
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						},
+						charges: {
+							value: item.total,
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						}
+					};
+				})
+				.value();
 		},
 
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
@@ -425,9 +411,10 @@ define(function(require) {
 				formatFunction = _.get(customLedger, 'format', 'balanceFormatGenericDataTable');
 
 			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
-				var formattedData = _.merge({
-						showCredits: showCredits
-					}, self[formatFunction](data)),
+				var formattedData = {
+						showCredits: showCredits,
+						transactions: self[formatFunction](data.ledger.data)
+					},
 					$rows = $(self.getTemplate({
 						name: _.get(customLedger, 'rows', 'generic-rows'),
 						data: formattedData,
@@ -441,30 +428,23 @@ define(function(require) {
 			}, filters);
 		},
 
-		balanceFormatGenericDataTable: function(dataRequest, showCredits) {
-			var self = this,
-				data = {
-					transactions: [],
-					showCredits: showCredits
+		balanceFormatGenericDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(item) {
+				return {
+					amount: {
+						value: item.amount,
+						digits: self.appFlags.balance.digits.genericTableAmount
+					},
+					description: item.description,
+					name: item.account.name,
+					timestamp: _.get(
+						item,
+						'period.end',
+						_.get(item, 'period.start', undefined)
+					)
 				};
-
-			_.each(dataRequest.ledger.data, function(v) {
-				v.extra = {};
-
-				if (v.hasOwnProperty('period')) {
-					if (v.period.hasOwnProperty('end')) {
-						v.extra.date = v.period.end;
-					} else if (v.period.hasOwnProperty('start')) {
-						v.extra.date = v.period.start;
-					}
-				} else {
-					v.extra.date = undefined;
-				}
-
-				data.transactions.push(v);
 			});
-
-			return data;
 		},
 
 		balanceGetData: function(filters, webhookId, callback) {
