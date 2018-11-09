@@ -1372,6 +1372,7 @@ define(function(require) {
 	util.randomString = randomString;
 	util.toFriendlyDate = toFriendlyDate;
 	util.unixToDate = unixToDate;
+	util.getMomentFormat = getMomentFormat;
 
 	return util;
 });
