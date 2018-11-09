@@ -296,87 +296,81 @@ define(function(require) {
 			});
 		},
 
-		balanceFormatMobileDataTable: function(dataRequest) {
+		balanceFormatMobileDataTable: function(data) {
 			var self = this;
-			return {
-				transactions: _.map(dataRequest.ledger.data, function(item) {
-					return {
-						amount: item.amount,
-						name: item.account.name,
-						phoneNumber: item.source.id,
-						timestamp: _.get(
-							item,
-							'period.end',
-							_.get(item, 'period.start', undefined)
-						),
-						usage: item.usage
-					};
-				})
-			};
+			return _.map(data, function(item) {
+				return {
+					amount: item.amount,
+					name: item.account.name,
+					phoneNumber: item.source.id,
+					timestamp: _.get(
+						item,
+						'period.end',
+						_.get(item, 'period.start', undefined)
+					),
+					usage: item.usage
+				};
+			});
 		},
 
-		balanceFormatPerMinuteDataTable: function(dataRequest) {
+		balanceFormatPerMinuteDataTable: function(data) {
 			var self = this;
-			return {
-				transactions: _.map(dataRequest.ledger.data, function(item) {
-					var fromField = monster.util.formatPhoneNumber(item.metadata.from.replace(/@.*/, '') || ''),
-						toField = monster.util.formatPhoneNumber(item.metadata.to.replace(/@.*/, '') || ''),
-						callerIdNumber = monster.util.formatPhoneNumber(item.metadata.caller_id_number || ''),
-						calleeIdNumber = monster.util.formatPhoneNumber(item.metadata.callee_id_number || '');
+			return _.map(data, function(item) {
+				var fromField = monster.util.formatPhoneNumber(item.metadata.from.replace(/@.*/, '') || ''),
+					toField = monster.util.formatPhoneNumber(item.metadata.to.replace(/@.*/, '') || ''),
+					callerIdNumber = monster.util.formatPhoneNumber(item.metadata.caller_id_number || ''),
+					calleeIdNumber = monster.util.formatPhoneNumber(item.metadata.callee_id_number || '');
+				return {
+					amount: {
+						value: item.amount,
+						digits: self.appFlags.balance.digits.perMinuteTableAmount
+					},
+					calleeNumber: calleeIdNumber !== toField
+						? callerIdNumber
+						: '',
+					callerNumber: callerIdNumber !== fromField
+						? callerIdNumber
+						: '',
+					callId: item.id,
+					direction: _.get(item, 'metadata.direction', 'inbound'),
+					from: fromField,
+					minutes: _.has(item, 'usage.quantity')
+						? Math.ceil(parseInt(item.usage.quantity) / 60)
+						: -1,
+					name: item.account.name,
+					timestamp: item.period.start,
+					to: toField
+				};
+			});
+		},
+
+		balanceFormatRecurringDataTable: function(data) {
+			var self = this;
+			return _
+				.chain(data)
+				.filter('metadata.item.billable')
+				.map(function(value) {
+					var item = value.metadata.item;
 					return {
-						amount: {
-							value: item.amount,
-							digits: self.appFlags.balance.digits.perMinuteTableAmount
+						timestamp: value.period.start,
+						name: item.name || item.category + '/' + item.item,
+						description: value.description,
+						rate: {
+							value: item.rate || 0,
+							digits: self.appFlags.balance.digits.recurringTableAmount
 						},
-						calleeNumber: calleeIdNumber !== toField
-							? callerIdNumber
-							: '',
-						callerNumber: callerIdNumber !== fromField
-							? callerIdNumber
-							: '',
-						callId: item.id,
-						direction: _.get(item, 'metadata.direction', 'inbound'),
-						from: fromField,
-						minutes: _.has(item, 'usage.quantity')
-							? Math.ceil(parseInt(item.usage.quantity) / 60)
-							: -1,
-						name: item.account.name,
-						timestamp: item.period.start,
-						to: toField
+						quantity: item.billable || 0,
+						discount: {
+							value: _.get(item, 'discounts.total', undefined),
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						},
+						charges: {
+							value: item.total,
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						}
 					};
 				})
-			};
-		},
-
-		balanceFormatRecurringDataTable: function(dataRequest) {
-			var self = this;
-			return {
-				transactions: _
-					.chain(dataRequest.ledger.data)
-					.filter('metadata.item.billable')
-					.map(function(value) {
-						var item = value.metadata.item;
-						return {
-							timestamp: value.period.start,
-							name: item.name || item.category + '/' + item.item,
-							description: value.description,
-							rate: {
-								value: item.rate || 0,
-								digits: self.appFlags.balance.digits.recurringTableAmount
-							},
-							quantity: item.billable || 0,
-							discount: {
-								value: _.get(item, 'discounts.total', undefined),
-								digits: self.appFlags.balance.digits.recurringTableAmount
-							},
-							charges: {
-								value: item.total,
-								digits: self.appFlags.balance.digits.recurringTableAmount
-							}
-						};
-					})
-					.value()
-			};
+				.value();
 		},
 
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
@@ -417,9 +411,10 @@ define(function(require) {
 				formatFunction = _.get(customLedger, 'format', 'balanceFormatGenericDataTable');
 
 			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
-				var formattedData = _.merge({
-						showCredits: showCredits
-					}, self[formatFunction](data)),
+				var formattedData = {
+						showCredits: showCredits,
+						transactions: self[formatFunction](data.ledger.data)
+					},
 					$rows = $(self.getTemplate({
 						name: _.get(customLedger, 'rows', 'generic-rows'),
 						data: formattedData,
@@ -433,25 +428,23 @@ define(function(require) {
 			}, filters);
 		},
 
-		balanceFormatGenericDataTable: function(dataRequest) {
+		balanceFormatGenericDataTable: function(data) {
 			var self = this;
-			return {
-				transactions: _.map(dataRequest.ledger.data, function(item) {
-					return {
-						amount: {
-							value: item.amount,
-							digits: self.appFlags.balance.digits.genericTableAmount
-						},
-						description: item.description,
-						name: item.account.name,
-						timestamp: _.get(
-							item,
-							'period.end',
-							_.get(item, 'period.start', undefined)
-						)
-					};
-				})
-			};
+			return _.map(data, function(item) {
+				return {
+					amount: {
+						value: item.amount,
+						digits: self.appFlags.balance.digits.genericTableAmount
+					},
+					description: item.description,
+					name: item.account.name,
+					timestamp: _.get(
+						item,
+						'period.end',
+						_.get(item, 'period.start', undefined)
+					)
+				};
+			});
 		},
 
 		balanceGetData: function(filters, webhookId, callback) {
