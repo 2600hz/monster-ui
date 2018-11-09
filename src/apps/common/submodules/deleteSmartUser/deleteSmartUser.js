@@ -163,7 +163,7 @@ define(function(require) {
 						});
 					} else {
 						listFnDelete.push(function(callback) {
-							self.usersDeleteCallflow({
+							self.deleteSmartUserDeleteCallflow({
 								data: {
 									accountId: accountId,
 									callflowId: callflow.id
