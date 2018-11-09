@@ -1,29 +1,49 @@
 {{#each transactions}}
 	<tr class="transaction-row">
 		<td data-filter-value="{{callId}}" data-sort-value="{{direction}}">
-			{{#compare direction '===' 'inbound'}}
-				<i class="fa fa-arrow-right monster-green arrow-direction"></i>
-			{{else}}
-				<i class="fa fa-arrow-left monster-orange arrow-direction"></i>
-			{{/compare}}
+		{{#compare direction '===' 'inbound'}}
+			<i class="fa fa-arrow-right monster-green arrow-direction"></i>
+		{{else}}
+			<i class="fa fa-arrow-left monster-orange arrow-direction"></i>
+		{{/compare}}
 		</td>
-		<td>{{ toFriendlyDate timestamp }}</td>
-		<td data-sort-value="{{fromField}}">
-			<div class="multi-line-div">{{ fromField }}</div>
-			{{#if callerIdNumber}}
-				<div class="multi-line-div">{{ callerIdNumber }} ({{ @root.i18n.balance.cidHint }})</div>
-			{{/if}}
+		<td>
+			{{toFriendlyDate timestamp}}
 		</td>
-		<td data-sort-value="{{toField}}">
-			<div class="multi-line-div">{{ toField }}</div>
-			{{#if calleeIdNumber}}
-				<div class="multi-line-div">{{ calleeIdNumber }} ({{ @root.i18n.balance.cidHint }})</div>
-			{{/if}}
-		</td>
-		<td>{{ accountName}}</td>
-		<td>{{ duration }}</td>
-		{{#if @root.showCredits}}
-			<td>{{friendlyAmount}}</td>
+		<td data-sort-value="{{from}}">
+			<div class="multi-line-div">
+				{{from}}
+			</div>
+		{{#if callerNumber}}
+			<div class="multi-line-div">
+				{{callerNumber}} ({{@root.i18n.balance.cidHint}})
+			</div>
 		{{/if}}
+		</td>
+		<td data-sort-value="{{to}}">
+			<div class="multi-line-div">
+				{{to}}
+			</div>
+		{{#if calleeNumber}}
+			<div class="multi-line-div">
+				{{calleeNumber}} ({{@root.i18n.balance.cidHint}})
+			</div>
+		{{/if}}
+		</td>
+		<td>
+			{{name}}
+		</td>
+		<td data-sort-value="{{minutes}}">
+		{{#compare minutes '>' '-1'}}
+			{{minutes}}
+		{{else}}
+			{{@root.i18n.balance.activeCall}}
+		{{/compare}}
+		</td>
+	{{#if @root.showCredits}}
+		<td data-sort-value="{{amount.value}}">
+			{{formatPrice amount.value amount.digits}}
+		</td>
+	{{/if}}
 	</tr>
 {{/each}}

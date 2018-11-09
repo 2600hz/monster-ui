@@ -316,56 +316,36 @@ define(function(require) {
 		},
 
 		balanceFormatPerMinuteDataTable: function(dataRequest) {
-			var self = this,
-				data = {
-					transactions: []
-				};
-
-			_.each(dataRequest.ledger.data, function(v) {
-				v.metadata = v.metadata || {
-					to: '-',
-					from: '-'
-				};
-
-				v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id };
-
-				var duration = self.i18n.active().balance.active_call,
-					accountName = v.account.name,
-					fromField = monster.util.formatPhoneNumber(v.metadata.from.replace(/@.*/, '') || ''),
-					toField = monster.util.formatPhoneNumber(v.metadata.to.replace(/@.*/, '') || ''),
-					callerIdNumber = monster.util.formatPhoneNumber(v.metadata.caller_id_number || ''),
-					calleeIdNumber = monster.util.formatPhoneNumber(v.metadata.callee_id_number || '');
-
-				if (v.usage && v.usage.hasOwnProperty('quantity')) {
-					duration = Math.ceil((parseInt(v.usage.quantity)) / 60);
-				}
-
-				var obj = {
-					direction: v.metadata.call.direction,
-					callId: v.id,
-					timestamp: v.period.start,
-					fromField: fromField,
-					toField: toField,
-					accountName: accountName,
-					duration: duration,
-					friendlyAmount: monster.util.formatPrice({
-						price: v.amount,
-						digits: self.appFlags.balance.digits.perMinuteTableAmount
-					})
-				};
-
-				if (callerIdNumber !== fromField) {
-					obj.callerIdNumber = callerIdNumber;
-				}
-
-				if (calleeIdNumber !== toField) {
-					obj.calleeIdNumber = calleeIdNumber;
-				}
-
-				data.transactions.push(obj);
-			});
-
-			return data;
+			var self = this;
+			return {
+				transactions: _.map(dataRequest.ledger.data, function(item) {
+					var fromField = monster.util.formatPhoneNumber(item.metadata.from.replace(/@.*/, '') || ''),
+						toField = monster.util.formatPhoneNumber(item.metadata.to.replace(/@.*/, '') || ''),
+						callerIdNumber = monster.util.formatPhoneNumber(item.metadata.caller_id_number || ''),
+						calleeIdNumber = monster.util.formatPhoneNumber(item.metadata.callee_id_number || '');
+					return {
+						amount: {
+							value: item.amount,
+							digits: self.appFlags.balance.digits.perMinuteTableAmount
+						},
+						calleeNumber: calleeIdNumber !== toField
+							? callerIdNumber
+							: '',
+						callerNumber: callerIdNumber !== fromField
+							? callerIdNumber
+							: '',
+						callId: item.id,
+						direction: _.get(item, 'metadata.direction', 'inbound'),
+						from: fromField,
+						minutes: _.has(item, 'usage.quantity')
+							? Math.ceil(parseInt(item.usage.quantity) / 60)
+							: -1,
+						name: item.account.name,
+						timestamp: item.period.start,
+						to: toField
+					};
+				})
+			};
 		},
 
 		balanceFormatRecurringDataTable: function(dataRequest) {
