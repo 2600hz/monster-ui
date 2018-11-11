@@ -24,7 +24,7 @@ Key | Description | Type | Default | Required
 A `String` representation of the template.
 
 ## Description
-The `monster.template()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.
+The `monster.getTemplate()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.
 
 You can use the same getTemplate method and bypass the app property by using `this.getTemplate(args)` within the right scope in an app.
 
