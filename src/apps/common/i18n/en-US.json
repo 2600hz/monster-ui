@@ -987,5 +987,11 @@
 		"confirmDeleteTitle": "Warning! Are you sure?",
 		"successUpdate": "Your Storage Settings were successfully updated!",
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
+	},
+	"fileUpload": {
+		"cancel": "Cancel",
+		"upload": "Upload",
+		"fileUploadButton": "Choose File",
+		"greetingsHelp": "You need to click the \"Upload\" button in order to save your changes for the greeting message."
 	}
 }
