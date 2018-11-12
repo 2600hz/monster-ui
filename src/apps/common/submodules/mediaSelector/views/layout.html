@@ -1,0 +1,32 @@
+<div class="media-selector">
+	<div class="media-selector-content">
+		<input class="media-selector-input" type="hidden" name="{{inputName}}" value="{{file}}">
+		<div class="media-selector-dropdown" tabindex="0">
+			<div class="media-selector-clickable"></div>
+			<div class="media-selector-element remove-element {{#unless file}}hidden{{/unless}}" data-action="remove">
+				<span class="link">{{labels.remove}}</span>
+				<span class="file">{{file}}</span>
+			</div>
+			{{#unless noChoose}}
+			<div class="media-selector-element" data-action="select">
+				<span class="link">{{labels.choose}}</span>
+			</div>
+			{{/unless}}
+			{{#unless noUpload}}
+			<div class="media-selector-element" data-action="upload">
+				<span class="link">{{labels.upload}}</span>
+			</div>
+			{{/unless}}
+		</div>
+		<div class="media-selector-displayed">
+			<span class="file">
+			{{#if file}}
+				{{file}}
+			{{else}}
+				{{labels.empty}}
+			{{/if}}
+			</span>
+			<span class="handle"></span>
+		</div>
+	</div>
+</div>
