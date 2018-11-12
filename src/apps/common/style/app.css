@@ -20,6 +20,7 @@
 @import url('../submodules/numberRenameCarrier/numberRenameCarrier.css');
 @import url('../submodules/storageSelector/storageSelector.css');
 @import url('../submodules/storagePlanManager/storagePlanManager.css');
+@import url('../submodules/deleteSmartUser/deleteSmartUser.css');
 
 
 /* Hack because of otpimization: can't have relative paths since the folder hierarchy changes after optimization */

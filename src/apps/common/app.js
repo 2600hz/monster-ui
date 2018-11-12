@@ -23,6 +23,7 @@ define(function(require) {
 		'portWizard',
 		'ringingDurationControl',
 		'servicePlanDetails',
+		'deleteSmartUser',
 		'storagePlanManager',
 		'storageSelector',
 		'webphone'
