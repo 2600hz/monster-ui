@@ -73,8 +73,8 @@ define(function(require) {
 				devices: function(callback) {
 					self.deleteSmartUserListDevices({
 						data: queryData,
-						success: function(devices) {
-							callback(null, devices);
+						success: function(data) {
+							callback(null, data);
 						}
 					});
 				},
@@ -255,6 +255,9 @@ define(function(require) {
 							},
 							success: function(data) {
 								subCallback(null, data);
+							},
+							error: function() {
+								subCallback(true);
 							}
 						});
 					});
@@ -269,6 +272,9 @@ define(function(require) {
 							},
 							success: function(data) {
 								subCallback(null, data);
+							},
+							error: function() {
+								subCallback(true);
 							}
 						});
 					});
@@ -293,6 +299,9 @@ define(function(require) {
 						data: args.data,
 						success: function(conference) {
 							callback(null, conference);
+						},
+						error: function() {
+							callback(true);
 						}
 					});
 				},
@@ -306,6 +315,9 @@ define(function(require) {
 						}, args.data),
 						success: function(updatedConference) {
 							callback(null, updatedConference);
+						},
+						error: function() {
+							callback(true);
 						}
 					});
 				}
