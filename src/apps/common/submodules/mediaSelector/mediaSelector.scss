@@ -1,0 +1,127 @@
+@import "../../../../css/partials/base";
+
+.media-selector {
+	.media-selector-content {
+		position: relative;
+		display: inline-block;
+	}
+
+	.media-selector-displayed {
+		position: relative;
+		width: 220px;
+		border: 1px solid #c0c0c9;
+		background: #fff;
+		box-sizing: border-box;
+		height: 30px;
+		line-height: 30px;
+		border-radius: 4px;
+		z-index: 1;
+
+		.number {
+			padding: 0px 10px;
+		}
+
+		.handle {
+			position: absolute;
+			width: 18px;
+			height: 100%;
+			top: 0px;
+			right: 0px;
+
+			&:before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				right: 7px;
+				border-color: #000 transparent;
+				transform: translateY(-50%);
+				border-style: solid;
+				border-width: 6px 3px 0;
+			}
+		}
+
+	}
+
+	.media-selector-dropdown.open + .media-selector-displayed {
+		border-radius: 4px 4px 0px 0px;
+	}
+
+	.media-selector-dropdown {
+		position: absolute;
+		width: 100%;
+		box-sizing: border-box;
+		cursor: pointer;
+		z-index: 2;
+
+		.media-selector-clickable {
+			background-color: transparent;
+			height: 30px;
+		}
+
+		.link {
+			color: $primary-color;
+		}
+
+		.number {
+			margin-left: 5px;
+		}
+
+		.media-selector-element {
+			display: none;
+			height: 30px;
+			line-height: 30px;
+			padding: 0px 10px;
+			background: #fff;
+			border: solid 1px #c0c0c9;
+			border-bottom: none;
+
+			&:hover {
+				cursor: pointer;
+				background: #f0f0f9;
+			}
+
+			&:last-child {
+				border-radius: 0px 0px 4px 4px;
+				border-bottom: solid 1px #c0c0c9;
+			}
+		}
+
+		&.open {
+			.media-selector-element:not(.hidden) {
+				display: block;
+			}
+		}
+	}
+}
+
+/* Special rules to fit firefox's dropdown style */
+@-moz-document url-prefix() {
+	.media-selector .media-selector-displayed .handle {
+		border: solid 1px #aaa;
+		background-color: #eee;
+		box-sizing: border-box;
+	}
+	.media-selector .media-selector-displayed .handle:before {
+		top: 11px;
+		right: 4px;
+		border-color: #555 transparent;
+		border-width: 6px 4px 0px;
+		transform: none;
+	}
+	.media-selector .media-selector-displayed .handle:after {
+		content: '';
+		position: absolute;
+		top: 8px;
+		right: 4px;
+		border-style: solid;
+		border-color: #eee transparent;
+		border-width: 6px 4px 0px;
+	}
+	.media-selector .media-selector-dropdown.open + .media-selector-displayed .handle:before {
+		border-color: #000 transparent;
+	}
+	.media-selector .media-selector-dropdown.open + .media-selector-displayed .handle {
+		background-color: #e7f2fc;
+		border-color: #7eb4ea;
+	}
+}

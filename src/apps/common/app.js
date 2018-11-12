@@ -26,7 +26,9 @@ define(function(require) {
 		'storagePlanManager',
 		'storageSelector',
 		'webphone',
-		'fileUpload'
+		'fileUpload',
+		'mediaChoose',
+		'mediaSelector'
 	];
 
 	require(_.map(appSubmodules, function(name) {
