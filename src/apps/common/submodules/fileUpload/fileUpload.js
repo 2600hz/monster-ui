@@ -71,6 +71,17 @@ define(function(require) {
 							},
 							success: function(data, status) {
 								callback && callback();
+							},
+							error: function(data, status) {
+								self.callApi({
+									resource: 'media.delete',
+									data: {
+										accountId: self.accountId,
+										mediaId: file.id,
+										data: {}
+									},
+									success: function(data, status) {}
+								});
 							}
 						});
 					};
