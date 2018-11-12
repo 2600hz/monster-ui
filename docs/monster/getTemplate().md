@@ -18,7 +18,7 @@ Key | Description | Type | Default | Required
 `submodule` | Name of the submodule, used to find the template to load | `String` | `undefined` | `false`
 `raw` | When set to `true`, Handlebars will not compile the template and it will be sent as is. | `Boolean` | `false` | `false`
 `ignoreCache` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
-`ignoreSpaces` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
+`ignoreSpaces` | When set to `true`, carriage return, linefeed, tab, whitespace will not be trimmed from the template. | `Boolean` | `false` | `false`
 
 ### Return value
 A `String` representation of the template.
