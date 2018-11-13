@@ -17,9 +17,12 @@ define(function(require) {
 
 		_transactionsRenderContent: function(args) {
 			var self = this,
-				dates = self.utilDefaultRangeDates();
+				defaultRange = {
+					from: moment().startOf('month').toDate(),
+					to: moment().toDate()
+				};
 
-			self.listTransactions(dates.from, dates.to, function(data) {
+			self.listTransactions(defaultRange.from, defaultRange.to, function(data) {
 				var transactionsView = $(self.getTemplate({
 						name: 'layout',
 						data: data,
@@ -33,7 +36,7 @@ define(function(require) {
 					optionsDatePicker = {
 						container: transactionsView,
 						range: self.transactionsRange,
-						startDate: dates.from
+						startDate: defaultRange.from
 					};
 
 				transactionsView.find('.list-transactions').append(listTransactionsView);
@@ -99,18 +102,6 @@ define(function(require) {
 					}));
 				});
 			});
-		},
-
-		//utils
-
-		utilDefaultRangeDates() {
-			var today = moment().toDate(),
-				firstDOM = moment().startOf('month').toDate();
-
-			return {
-				from: firstDOM,
-				to: today
-			};
 		},
 
 		// from, to: optional together. Date objects.
