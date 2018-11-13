@@ -16,7 +16,7 @@ define(function(require) {
 					empty: self.i18n.active().mediaSelector.emptyValue,
 					choose: self.i18n.active().mediaSelector.choose,
 					upload: self.i18n.active().mediaSelector.upload,
-					removeTooltip: self.i18n.active().mediaSelector.removeTooltip
+					remove: self.i18n.active().mediaSelector.remove
 				}, args.labels),
 				layout = $(self.getTemplate({
 					name: 'layout',
@@ -34,7 +34,6 @@ define(function(require) {
 				args.labels = labels;
 				self.mediaSelectorBindEvents($.extend({ template: layout }, args));
 				container.append(layout);
-				monster.ui.tooltips(container);
 			} else {
 				throw new Error('A container must be provided.');
 			}
