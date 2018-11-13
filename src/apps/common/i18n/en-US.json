@@ -991,6 +991,11 @@
 	"mediaSelector": {
 		"choose": "Select media",
 		"upload": "Upload media",
-		"emptyValue": "- No media selected -"
+		"emptyValue": "- No media selected -",
+		"dialogSelect": {
+			"title": "Select media",
+			"headline": "Select media headline",
+			"proceed": "Save"
+		}
 	}
 }
