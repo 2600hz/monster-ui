@@ -13,15 +13,20 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				labels = $.extend({
-					empty: self.i18n.active().mediaSelector.emptyValue,
-					choose: self.i18n.active().mediaSelector.choose,
-					upload: self.i18n.active().mediaSelector.upload,
-					remove: self.i18n.active().mediaSelector.remove
+					select: {
+						empty: self.i18n.active().mediaSelector.select.emptyValue,
+						choose: self.i18n.active().mediaSelector.select.choose,
+						upload: self.i18n.active().mediaSelector.select.upload,
+						remove: self.i18n.active().mediaSelector.select.remove
+					},
+					upload: {
+						headline: self.i18n.active().mediaSelector.upload.headline
+					}
 				}, args.labels),
 				layout = $(self.getTemplate({
 					name: 'layout',
 					data: {
-						labels: labels,
+						labels: labels.select,
 						inputName: args.inputName || '',
 						media: args.media,
 						noChoose: !!args.noChoose,
@@ -89,7 +94,7 @@ define(function(require) {
 						break;
 					}
 					case 'upload': {
-						// Upload media
+						self.fileUpload(args);
 						break;
 					}
 				}
@@ -102,6 +107,58 @@ define(function(require) {
 			args.displayedElement.text(self.i18n.active().mediaSelector.emptyValue);
 			args.removeElement.addClass('hidden');
 			args.removeElement.find('.media').text('');
+		},
+
+		fileUpload: function(args) {
+			var self = this,
+				template = $(self.getTemplate({
+					name: 'file-uploadDialog',
+					data: {
+						labels: args.labels.upload
+					},
+					submodule: 'mediaSelector'
+				}));
+
+			self.mediaUploadBinEvents(template);
+
+			monster.pub('common.mediaSelect.render', {
+				container: template.find('.media-wrapper'),
+				options: [],
+				selectedOption: null,
+				label: 'Label',
+				noneLabel: 'NonLabel',
+				skin: 'tabs',
+				callback: function() {
+					/*self.bindWelcomeDialog(template, audioControl, results.callflow, function() {
+						dialog.dialog('close').remove();
+					});*/
+
+					monster.ui.dialog(template, {
+						position: ['top', 20],
+						title: args.labels.upload.headline
+					});
+				}
+			});
+		},
+
+		mediaUploadBinEvents: function(template) {
+			var mediaToUpload = undefined;
+
+			template.find('.media-upload-input').fileUpload({
+				inputOnly: true,
+				wrapperClass: 'file-upload input-append',
+				btnClass: 'monster-button',
+				maxSize: 5,
+				success: function(results) {
+					mediaToUpload = results[0];
+				},
+				error: function(errors) {
+					if (errors.hasOwnProperty('size') && errors.size.length > 0) {
+						monster.ui.alert(self.i18n.active().mediaSelect.fileTooBigAlert);
+					}
+					template.find('.upload-div input').val('');
+				}
+			});
 		}
 	};
 

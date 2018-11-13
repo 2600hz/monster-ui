@@ -96,6 +96,17 @@
 	}
 }
 
+.monster-media-selection {
+	.upload-div {
+		display: flex;
+		justify-content: center;
+
+		.file-upload > input {
+			width: auto;
+		}
+	}
+}
+
 /* Special rules to fit firefox's dropdown style */
 @-moz-document url-prefix() {
 	.media-selector .media-selector-displayed .handle {

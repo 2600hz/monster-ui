@@ -989,10 +989,15 @@
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
 	},
 	"mediaSelector": {
-		"choose": "Select media",
-		"upload": "Upload media",
-		"emptyValue": "- No media selected -",
-		"remove": "Remove",
+		"select": {
+			"choose": "Select media",
+			"upload": "Upload media",
+			"emptyValue": "- No media selected -",
+			"remove": "Remove"
+		},
+		"upload": {
+			"headline": "Media upload"
+		},
 		"dialogSelect": {
 			"title": "Select media",
 			"headline": "Select media headline",
