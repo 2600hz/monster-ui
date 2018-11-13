@@ -15,7 +15,8 @@ define(function(require) {
 				labels = $.extend({
 					empty: self.i18n.active().mediaSelector.emptyValue,
 					choose: self.i18n.active().mediaSelector.choose,
-					upload: self.i18n.active().mediaSelector.upload
+					upload: self.i18n.active().mediaSelector.upload,
+					removeTooltip: self.i18n.active().mediaSelector.removeTooltip
 				}, args.labels),
 				layout = $(self.getTemplate({
 					name: 'layout',
@@ -33,6 +34,7 @@ define(function(require) {
 				args.labels = labels;
 				self.mediaSelectorBindEvents($.extend({ template: layout }, args));
 				container.append(layout);
+				monster.ui.tooltips(container);
 			} else {
 				throw new Error('A container must be provided.');
 			}
@@ -44,7 +46,7 @@ define(function(require) {
 				afterCallback = args.afterCallback,
 				dropdown = template.find('.media-selector-dropdown'),
 				input = template.find('input[name="' + args.inputName + '"]'),
-				displayed = template.find('.media-selector-displayed .media'),
+				displayedElement = template.find('.media-selector-displayed .media'),
 				removeElement = template.find('.remove-element'),
 				medias = args.medias,
 				selectMediaCallback = function(media) {
@@ -52,7 +54,7 @@ define(function(require) {
 						input.val(media[0].id);
 
 						removeElement.find('.media').text(media[0].name);
-						displayed.text(media[0].name);
+						displayedElement.text(media[0].name);
 						removeElement.removeClass('hidden');
 
 						afterCallback && afterCallback(media.id);
@@ -70,7 +72,7 @@ define(function(require) {
 			template.find('.media-selector-element').on('click', function() {
 				switch ($(this).data('action')) {
 					case 'remove': {
-						// remove media
+						self.removeSelectedMedia({input: input, displayedElement: displayedElement, removeElement: removeElement});
 						break;
 					}
 					case 'select': {
@@ -93,6 +95,14 @@ define(function(require) {
 					}
 				}
 			});
+		},
+
+		removeSelectedMedia: function(args) {
+			var self = this;
+			args.input.val('');
+			args.displayedElement.text(self.i18n.active().mediaSelector.emptyValue);
+			args.removeElement.addClass('hidden');
+			args.removeElement.find('.media').text('');
 		}
 	};
 
