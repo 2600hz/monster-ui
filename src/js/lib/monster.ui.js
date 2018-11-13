@@ -984,7 +984,11 @@ define(function(require) {
 				inputEndDate = container.find('#endDate'),
 				now = new Date(),
 				today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				startDate = options.startDate || new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+				startDate = _.get(
+					options,
+					'startDate',
+					new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+					),
 				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
 			if (options.startDate) {
