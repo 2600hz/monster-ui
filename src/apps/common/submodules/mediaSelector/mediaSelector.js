@@ -22,7 +22,7 @@ define(function(require) {
 					data: {
 						labels: labels,
 						inputName: args.inputName || '',
-						file: args.file,
+						media: args.media,
 						noChoose: !!args.noChoose,
 						noUpload: !!args.noUpload
 					},
@@ -41,7 +41,23 @@ define(function(require) {
 		mediaSelectorBindEvents: function(args) {
 			var self = this,
 				template = args.template,
-				dropdown = template.find('.media-selector-dropdown');
+				afterCallback = args.afterCallback,
+				dropdown = template.find('.media-selector-dropdown'),
+				input = template.find('input[name="' + args.inputName + '"]'),
+				displayed = template.find('.media-selector-displayed .media'),
+				removeElement = template.find('.remove-element'),
+				medias = args.medias,
+				selectMediaCallback = function(media) {
+					if (!_.isEmpty(media[0])) {
+						input.val(media[0].id);
+
+						removeElement.find('.media').text(media[0].name);
+						displayed.text(media[0].name);
+						removeElement.removeClass('hidden');
+
+						afterCallback && afterCallback(media.id);
+					}
+				};
 
 			dropdown.on('click', function() {
 				dropdown.toggleClass('open');
@@ -54,15 +70,25 @@ define(function(require) {
 			template.find('.media-selector-element').on('click', function() {
 				switch ($(this).data('action')) {
 					case 'remove': {
-						// remove file
+						// remove media
 						break;
 					}
 					case 'select': {
-						// Choose file form list
+						monster.pub('common.monsterListing.render', {
+							dataList: medias,
+							dataType: 'medias',
+							labels: {
+								title: self.i18n.active().mediaSelector.dialogSelect.title,
+								headline: self.i18n.active().mediaSelector.dialogSelect.headline,
+								okButton: self.i18n.active().mediaSelector.dialogSelect.proceed
+							},
+							singleSelect: true,
+							okCallback: selectMediaCallback
+						});
 						break;
 					}
 					case 'upload': {
-						// Upload file
+						// Upload media
 						break;
 					}
 				}

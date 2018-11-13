@@ -16,8 +16,9 @@
 		line-height: 30px;
 		border-radius: 4px;
 		z-index: 1;
+		overflow: hidden;
 
-		.number {
+		.media {
 			padding: 0px 10px;
 		}
 
@@ -62,7 +63,7 @@
 			color: $primary-color;
 		}
 
-		.number {
+		.media {
 			margin-left: 5px;
 		}
 
@@ -74,6 +75,7 @@
 			background: #fff;
 			border: solid 1px #c0c0c9;
 			border-bottom: none;
+			overflow: hidden;
 
 			&:hover {
 				cursor: pointer;

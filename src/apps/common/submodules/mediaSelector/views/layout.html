@@ -1,11 +1,11 @@
 <div class="media-selector">
 	<div class="media-selector-content">
-		<input class="media-selector-input" type="hidden" name="{{inputName}}" value="{{file}}">
+		<input class="media-selector-input {{inputName}}" type="hidden" name="{{inputName}}" value="{{media.id}}">
 		<div class="media-selector-dropdown" tabindex="0">
 			<div class="media-selector-clickable"></div>
-			<div class="media-selector-element remove-element {{#unless file}}hidden{{/unless}}" data-action="remove">
+			<div class="media-selector-element remove-element {{#unless media}}hidden{{/unless}}" data-action="remove">
 				<span class="link">{{labels.remove}}</span>
-				<span class="file">{{file}}</span>
+				<span class="media">{{media.name}}</span>
 			</div>
 			{{#unless noChoose}}
 			<div class="media-selector-element" data-action="select">
@@ -19,9 +19,9 @@
 			{{/unless}}
 		</div>
 		<div class="media-selector-displayed">
-			<span class="file">
-			{{#if file}}
-				{{file}}
+			<span class="media">
+			{{#if media}}
+				{{media.name}}
 			{{else}}
 				{{labels.empty}}
 			{{/if}}
