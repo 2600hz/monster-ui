@@ -26,8 +26,6 @@ define(function(require) {
 		'storagePlanManager',
 		'storageSelector',
 		'webphone',
-		'fileUpload',
-		'mediaChoose',
 		'mediaSelector'
 	];
 
