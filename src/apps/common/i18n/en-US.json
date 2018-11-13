@@ -992,6 +992,7 @@
 		"choose": "Select media",
 		"upload": "Upload media",
 		"emptyValue": "- No media selected -",
+		"removeTooltip": "Remove media",
 		"dialogSelect": {
 			"title": "Select media",
 			"headline": "Select media headline",

@@ -3,7 +3,11 @@
 		<input class="media-selector-input {{inputName}}" type="hidden" name="{{inputName}}" value="{{media.id}}">
 		<div class="media-selector-dropdown" tabindex="0">
 			<div class="media-selector-clickable"></div>
-			<div class="media-selector-element remove-element {{#unless media}}hidden{{/unless}}" data-action="remove">
+			<div class="media-selector-element remove-element {{#unless media}}hidden{{/unless}}"
+				data-action="remove"
+				data-toggle="tooltip"
+				data-placement="left"
+				data-original-title="{{labels.removeTooltip}}">
 				<span class="link">{{labels.remove}}</span>
 				<span class="media">{{media.name}}</span>
 			</div>
