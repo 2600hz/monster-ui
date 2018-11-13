@@ -355,10 +355,8 @@ define(function(require) {
 					self.deleteSmartUserListDevices({
 						data: {
 							accountId: accountId,
-							data: {
-								filters: {
-									'filter_mobile.mdn': encodeURIComponent(mdn)
-								}
+							filters: {
+								'filter_mobile.mdn': encodeURIComponent(mdn)
 							}
 						},
 						success: function(mobileDevices) {
