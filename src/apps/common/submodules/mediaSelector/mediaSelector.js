@@ -122,29 +122,17 @@ define(function(require) {
 
 		onMediaUpload: function(args) {
 			var self = this,
-				popup,
 				template = $(self.getTemplate({
 					name: 'media-uploadDialog',
 					data: {
 						labels: args.labels.upload
 					},
 					submodule: 'mediaSelector'
-				}));
-
-			monster.pub('common.mediaSelect.render', {
-				container: template.find('.media-wrapper'),
-				options: [],
-				selectedOption: null,
-				label: 'Label',
-				noneLabel: 'NonLabel',
-				skin: 'tabs',
-				callback: function() {
-					popup = monster.ui.dialog(template, {
-						position: ['top', 20],
-						title: args.labels.upload.headline
-					});
-				}
-			});
+				})),
+				popup = monster.ui.dialog(template, {
+					position: ['top', 20],
+					title: args.labels.upload.headline
+				});
 
 			self.mediaUploadBinEvents({
 				template: template,
