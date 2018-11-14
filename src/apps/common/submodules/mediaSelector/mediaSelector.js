@@ -20,7 +20,9 @@ define(function(require) {
 						remove: self.i18n.active().mediaSelector.select.remove
 					},
 					upload: {
-						headline: self.i18n.active().mediaSelector.upload.headline
+						headline: self.i18n.active().mediaSelector.upload.headline,
+						upload: self.i18n.active().mediaSelector.upload.upload,
+						cancel: self.i18n.active().mediaSelector.upload.cancel
 					}
 				}, args.labels),
 				layout = $(self.getTemplate({
@@ -44,23 +46,96 @@ define(function(require) {
 			}
 		},
 
+		onMediaUpload: function(args) {
+			var self = this,
+				popup,
+				template = $(self.getTemplate({
+					name: 'media-uploadDialog',
+					data: {
+						labels: args.labels.upload
+					},
+					submodule: 'mediaSelector'
+				}));
+
+			monster.pub('common.mediaSelect.render', {
+				container: template.find('.media-wrapper'),
+				options: [],
+				selectedOption: null,
+				label: 'Label',
+				noneLabel: 'NonLabel',
+				skin: 'tabs',
+				callback: function() {
+					popup = monster.ui.dialog(template, {
+						position: ['top', 20],
+						title: args.labels.upload.headline
+					});
+				}
+			});
+
+			self.mediaUploadBinEvents({
+				template: template,
+				popup: popup,
+				callback: function(media) {
+					popup && popup.dialog('close').remove();
+					args.media = media;
+					self.onMediaSelected(args);
+				}
+			});
+		},
+
+		onMediaSelected: function(args) {
+			var media = args.media,
+				input = args.input,
+				removeElement = args.removeElement,
+				displayedElement = args.displayedElement;
+
+			input.val(media.id);
+			removeElement.find('.media').text(media.name);
+			displayedElement.text(media.name);
+			removeElement.removeClass('hidden');
+		},
+
+		onMediaRemove: function(args) {
+			var self = this;
+			args.input.val('');
+			args.displayedElement.text(self.i18n.active().mediaSelector.select.emptyValue);
+			args.removeElement.addClass('hidden');
+			args.removeElement.find('.media').text('');
+		},
+
+		onMediaSelect: function(args) {
+			var self = this;
+
+			monster.pub('common.monsterListing.render', {
+				dataList: args.medias,
+				dataType: 'medias',
+				labels: {
+					title: self.i18n.active().mediaSelector.dialogSelect.title,
+					headline: self.i18n.active().mediaSelector.dialogSelect.headline,
+					okButton: self.i18n.active().mediaSelector.dialogSelect.proceed
+				},
+				singleSelect: true,
+				okCallback: args.okCallback
+			});
+		},
+
+		onMediaCancel: function(args) {
+			args.popup && args.popup.dialog('close').remove();
+		},
+
 		mediaSelectorBindEvents: function(args) {
 			var self = this,
 				template = args.template,
 				afterCallback = args.afterCallback,
 				dropdown = template.find('.media-selector-dropdown'),
-				input = template.find('input[name="' + args.inputName + '"]'),
-				displayedElement = template.find('.media-selector-displayed .media'),
-				removeElement = template.find('.remove-element'),
-				medias = args.medias,
+				args = $.extend({
+					input: template.find('input[name="' + args.inputName + '"]'),
+					removeElement: template.find('.remove-element'),
+					displayedElement: template.find('.media-selector-displayed .media')
+				}, args),
 				selectMediaCallback = function(media) {
 					if (!_.isEmpty(media[0])) {
-						input.val(media[0].id);
-
-						removeElement.find('.media').text(media[0].name);
-						displayedElement.text(media[0].name);
-						removeElement.removeClass('hidden');
-
+						self.onMediaSelected($.extend({}, args, { template: template, media: media[0] }));
 						afterCallback && afterCallback(media.id);
 					}
 				};
@@ -76,73 +151,33 @@ define(function(require) {
 			template.find('.media-selector-element').on('click', function() {
 				switch ($(this).data('action')) {
 					case 'remove': {
-						self.removeSelectedMedia({input: input, displayedElement: displayedElement, removeElement: removeElement});
+						self.onMediaRemove({
+							input: args.input,
+							displayedElement: args.displayedElement,
+							removeElement: args.removeElement
+						});
 						break;
 					}
 					case 'select': {
-						monster.pub('common.monsterListing.render', {
-							dataList: medias,
-							dataType: 'medias',
-							labels: {
-								title: self.i18n.active().mediaSelector.dialogSelect.title,
-								headline: self.i18n.active().mediaSelector.dialogSelect.headline,
-								okButton: self.i18n.active().mediaSelector.dialogSelect.proceed
-							},
-							singleSelect: true,
+						self.onMediaSelect({
+							medias: args.medias,
 							okCallback: selectMediaCallback
 						});
 						break;
 					}
 					case 'upload': {
-						self.fileUpload(args);
+						self.onMediaUpload(args);
 						break;
 					}
 				}
 			});
 		},
 
-		removeSelectedMedia: function(args) {
-			var self = this;
-			args.input.val('');
-			args.displayedElement.text(self.i18n.active().mediaSelector.emptyValue);
-			args.removeElement.addClass('hidden');
-			args.removeElement.find('.media').text('');
-		},
-
-		fileUpload: function(args) {
+		mediaUploadBinEvents: function(args) {
 			var self = this,
-				template = $(self.getTemplate({
-					name: 'file-uploadDialog',
-					data: {
-						labels: args.labels.upload
-					},
-					submodule: 'mediaSelector'
-				}));
-
-			self.mediaUploadBinEvents(template);
-
-			monster.pub('common.mediaSelect.render', {
-				container: template.find('.media-wrapper'),
-				options: [],
-				selectedOption: null,
-				label: 'Label',
-				noneLabel: 'NonLabel',
-				skin: 'tabs',
-				callback: function() {
-					/*self.bindWelcomeDialog(template, audioControl, results.callflow, function() {
-						dialog.dialog('close').remove();
-					});*/
-
-					monster.ui.dialog(template, {
-						position: ['top', 20],
-						title: args.labels.upload.headline
-					});
-				}
-			});
-		},
-
-		mediaUploadBinEvents: function(template) {
-			var mediaToUpload = undefined;
+				template = args.template,
+				callback = args.callback,
+				mediaToUpload = undefined;
 
 			template.find('.media-upload-input').fileUpload({
 				inputOnly: true,
@@ -154,10 +189,58 @@ define(function(require) {
 				},
 				error: function(errors) {
 					if (errors.hasOwnProperty('size') && errors.size.length > 0) {
-						monster.ui.alert(self.i18n.active().mediaSelect.fileTooBigAlert);
+						monster.ui.alert(self.i18n.active().mediaSelect.upload.fileTooBigAlert);
 					}
 					template.find('.upload-div input').val('');
 				}
+			});
+
+			template.find('.upload-submit').on('click', function() {
+				if (mediaToUpload) {
+					self.callApi({
+						resource: 'media.create',
+						data: {
+							accountId: self.accountId,
+							data: {
+								streamable: true,
+								name: mediaToUpload.name,
+								media_source: 'upload',
+								description: mediaToUpload.name
+							}
+						},
+						success: function(data) {
+							var media = data.data;
+							self.callApi({
+								resource: 'media.upload',
+								data: {
+									accountId: self.accountId,
+									mediaId: media.id,
+									data: mediaToUpload.file
+								},
+								success: function() {
+									callback && callback(media);
+								},
+								error: function() {
+									self.callApi({
+										resource: 'media.delete',
+										data: {
+											accountId: self.accountId,
+											mediaId: media.id,
+											data: {}
+										},
+										success: function() {}
+									});
+								}
+							});
+						}
+					});
+				} else {
+					monster.ui.alert(self.i18n.active().mediaSelect.emptyUploadAlert);
+				}
+			});
+
+			template.find('.cancel').on('click', function() {
+				self.onMediaCancel(args);
 			});
 		}
 	};

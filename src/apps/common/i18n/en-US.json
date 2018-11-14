@@ -996,7 +996,10 @@
 			"remove": "Remove"
 		},
 		"upload": {
-			"headline": "Media upload"
+			"headline": "Media upload",
+			"upload": "Upload",
+			"cancel": "Cancel",
+			"fileTooBigAlert": "File Too Big"
 		},
 		"dialogSelect": {
 			"title": "Select media",
