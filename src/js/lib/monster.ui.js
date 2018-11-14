@@ -984,10 +984,16 @@ define(function(require) {
 				inputEndDate = container.find('#endDate'),
 				now = new Date(),
 				today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+				startDate = _.get(
+					options,
+					'startDate',
+					new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+					),
 				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-			if (range === 'monthly') {
+			if (options.startDate) {
+				startDate.setDate(startDate.getDate() - 1);
+			} else if (range === 'monthly') {
 				startDate.setMonth(startDate.getMonth() - 1);
 			} else {
 				startDate.setDate(startDate.getDate() - initRange);

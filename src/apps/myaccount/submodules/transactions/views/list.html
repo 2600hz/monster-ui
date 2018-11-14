@@ -1,28 +1,30 @@
-{{#each listTransactions}}
-	<div class="transaction-box{{#compare this.type "===" "credit"}} refund{{/compare}}">
-		<div class="expand-box{{#unless this.hasAddOns}} disabled{{/unless}}">
+{{#each transactions}}
+	<div class="transaction-box{{#compare type "===" "credit"}} refund{{/compare}}">
+		<div class="expand-box{{#unless hasAddOns}} disabled{{/unless}} hidden">
 			<span class="container-icon">
 				<i class="fa fa-minus expanded"></i>
 				<i class="fa fa-plus collapsed"></i>
 			</span>
 		</div>
-		<div class="text-box {{#unless this.approved}}declined{{/unless}}">
+		<div class="text-box {{#unless isApproved}}declined{{/unless}}">
 			<div class="title">
-				{{#unless this.approved}}
+				{{#unless isApproved}}
 					<i class="monster-red fa fa-exclamation-triangle"></i>
 					&nbsp;
 				{{/unless}}
 
-				{{ this.friendlyName }}
+				{{ friendlyName }}
 
-				{{#unless this.approved}}
-					&nbsp;({{ this.errorMessage }})
+				{{#unless isApproved}}
+					&nbsp;({{ errorMessage }})
 				{{/unless}}
 			</div>
-			<div class="date">{{ this.friendlyCreated }}</div>
-			<div class="price">{{#compare this.type "===" "credit"}}-{{/compare}} {{formatPrice this.amount }}</div>
+			<div class="date">{{toFriendlyDate timestamp}}</div>
+			<div class="price">
+				{{#compare type "===" "credit"}}-{{/compare}} {{formatPrice amount @root.priceDigits}}
+			</div>
 		</div>
-		{{#if this.hasAddOns}}
+		{{#if hasAddOns}}
 			<div class="expandable">
 				<div class="table-content">
 					<table class="table">

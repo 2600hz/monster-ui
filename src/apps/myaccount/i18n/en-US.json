@@ -312,12 +312,12 @@
 			},
 			"ledgers": {
 				"mobile_data": "Mobile Data",
-                                "2600Hz-mobile": "Mobile Data",
+				"2600Hz-mobile": "Mobile Data",
 				"per-minute-voip": "Per Minute",
-                                "payments": "Payments",
-                                "prorations": "Prorations",
-                                "rollovers": "Rollovers",
-                                "adjustments": "Adjustments"
+				"payments": "Payments",
+				"prorations": "Prorations",
+				"rollovers": "Rollovers",
+				"adjustments": "Adjustments"
 			}
 		},
 
@@ -382,17 +382,18 @@
 
 		"__comment": "UI-1248: Work on transactions to fix the way they're displayed",
 		"__version": "3.19",
-		"refundText": "Refund",
-                "executors": {
-                    "kz_services_topup": {
-                        "automatic": "Automatic Credit Replenishment",
-                        "default" : "Credit Replenishment"
-                    },
-                    "cb_transactions": {
-                        "crossbar": "API Request",
-                        "default": "API Request"
-                    }
-                },
+		"refundText": "Refund {{message}}",
+		"generalTransaction": "General Transaction",
+		"executors": {
+			"kz_services_topup": {
+				"automatic": "Automatic Credit Replenishment",
+				"default" : "Credit Replenishment"
+			},
+			"cb_transactions": {
+				"crossbar": "API Request",
+				"default": "API Request"
+			}
+		},
 		"statuses": {
 			"pending": "Pending",
 			"failed": "Failed",
