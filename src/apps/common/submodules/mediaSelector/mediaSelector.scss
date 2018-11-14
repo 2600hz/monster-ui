@@ -107,6 +107,15 @@
 	}
 }
 
+// Media upload
+#file_upload_dialog {
+	.actions {
+		.cancel {
+			margin-right: 10px;
+		}
+	}
+}
+
 /* Special rules to fit firefox's dropdown style */
 @-moz-document url-prefix() {
 	.media-selector .media-selector-displayed .handle {

@@ -194,7 +194,7 @@ define(function(require) {
 				error: function(errors) {
 					$submitBtn.prop('disabled', true);
 					if (errors.hasOwnProperty('size') && errors.size.length > 0) {
-						monster.ui.alert(self.i18n.active().mediaSelect.fileTooBigAlert);
+						monster.ui.alert(self.i18n.active().mediaSelector.upload.fileTooBigAlert);
 					}
 					template.find('.upload-div input').val('');
 				}
