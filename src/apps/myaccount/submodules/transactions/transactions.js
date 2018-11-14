@@ -13,7 +13,13 @@ define(function(require) {
 			'myaccount.transactions.renderContent': '_transactionsRenderContent'
 		},
 
-		transactionsRange: 'monthly',
+		appFlags: {
+			transactions: {
+				dateFormat: 'date',
+				datePickerRange: 'monthly',
+				priceDigits: 2
+			}
+		},
 
 		_transactionsRenderContent: function(args) {
 			var self = this,
@@ -22,29 +28,31 @@ define(function(require) {
 					to: moment().toDate()
 				};
 
-			self.listTransactions({
-				from: defaultRange.from,
-				to: defaultRange.to,
+			self.transactionsHelperList({
+				range: defaultRange,
 				callback: function(data) {
 					var transactionsView = $(self.getTemplate({
 							name: 'layout',
 							data: {
-								billingStartDate: data.billingStartDate,
-								billingEndDate: data.billingEndDate,
-								amount: data.amount
+								amount: data.amount,
+								dateFormat: self.appFlags.transactions.dateFormat,
+								endDate: defaultRange.to,
+								priceDigits: self.appFlags.transactions.priceDigits,
+								startDate: defaultRange.from
 							},
 							submodule: 'transactions'
 						})),
 						listTransactionsView = $(self.getTemplate({
 							name: 'list',
 							data: {
-								listTransactions: data.listTransactions
+								priceDigits: self.appFlags.transactions.priceDigits,
+								transactions: data.transactions
 							},
 							submodule: 'transactions'
 						})),
 						optionsDatePicker = {
 							container: transactionsView,
-							range: self.transactionsRange,
+							range: self.appFlags.transactions.datePickerRange,
 							startDate: defaultRange.from
 						};
 
@@ -78,73 +86,92 @@ define(function(require) {
 			});
 
 			parent.find('#filter_transactions').on('click', function() {
-				self.listTransactions({
+				var range = {
 					from: parent.find('#startDate').datepicker('getDate'),
-					to: parent.find('#endDate').datepicker('getDate'),
+					to: parent.find('#endDate').datepicker('getDate')
+				};
+				self.transactionsHelperList({
+					range: range,
 					callback: function(data) {
-						var listTransactions = parent.find('.list-transactions').empty();
-
-						listTransactions
-							.append($(self.getTemplate({
-								name: 'list',
-								data: {
-									listTransactions: data.listTransactions
-								},
-								submodule: 'transactions'
-							})));
+						parent
+							.find('.list-transactions')
+								.empty()
+								.append($(self.getTemplate({
+									name: 'list',
+									data: {
+										priceDigits: self.appFlags.transactions.priceDigits,
+										transactions: data.transactions
+									},
+									submodule: 'transactions'
+								})));
 
 						parent.find('.expandable').hide();
 
-						parent.find('.start-date .value').html(data.billingStartDate);
-						parent.find('.end-date .value').html(data.billingEndDate);
-						parent.find('.total-amount .value').html(monster.util.formatPrice({
-							price: data.amount
-						}));
+						parent
+							.find('.start-date .value')
+								.text(monster.util.toFriendlyDate(range.from, self.appFlags.transactions.dateFormat));
+						parent
+							.find('.end-date .value')
+								.text(monster.util.toFriendlyDate(range.to, self.appFlags.transactions.dateFormat));
+						parent
+							.find('.total-amount .value')
+								.text(monster.util.formatPrice({
+									digits: self.appFlags.transactions.priceDigits,
+									price: data.amount
+								}));
 					}
 				});
 			});
 		},
 
-		// from, to: optional together. Date objects.
-		listTransactions: function(args) {
-			var self = this;
+		transactionsHelperList: function(args) {
+			var self = this,
+				range = args.range;
 
-			var defaults = {
-				amount: 0.00,
-				billingStartDate: moment(args.from).format(monster.util.getMomentFormat('date')),
-				billingEndDate: moment(args.to).format(monster.util.getMomentFormat('date'))
-			};
-
-			self.callApi({
-				resource: 'transactions.list',
+			self.transactionsRequestList({
 				data: {
-					accountId: self.accountId,
 					filters: {
-						created_from: monster.util.dateToBeginningOfGregorianDay(args.from),
-						created_to: monster.util.dateToEndOfGregorianDay(args.to),
+						paginate: false,
+						created_from: monster.util.dateToBeginningOfGregorianDay(range.from),
+						created_to: monster.util.dateToEndOfGregorianDay(range.to),
 						reason: 'no_calls'
 					}
 				},
 				success: function(transactions) {
-					defaults.listTransactions = _.chain(transactions.data)
+					var formatted = _
+						.chain(transactions)
 						.filter(function(transaction) {
 							return _.get(transaction, 'status', 'pending') !== 'pending';
 						})
 						.map(function(transaction) {
 							return monster.util.formatTransaction(transaction, self);
 						})
-						.sortBy('created', 'asc')
+						.orderBy('created', 'desc')
 						.value();
 
-					defaults.amount = _.reduce(defaults.listTransactions, function(total, trans) {
-						if (trans.approved) {
-							return total + parseFloat(trans.amount);
-						}
-					}, 0);
+					args.callback({
+						amount: _.reduce(formatted, function(acc, transaction) {
+							return acc + parseFloat(transaction.amount);
+						}, 0),
+						transactions: formatted
+					});
+				}
+			});
+		},
 
-					defaults.amount = parseFloat(defaults.amount).toFixed(2);
+		transactionsRequestList: function(args) {
+			var self = this;
 
-					args.callback(defaults);
+			self.callApi({
+				resource: 'transactions.list',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		}
