@@ -382,7 +382,8 @@
 
 		"__comment": "UI-1248: Work on transactions to fix the way they're displayed",
 		"__version": "3.19",
-		"refundText": "Refund",
+		"refundText": "Refund {{message}}",
+		"generalTransaction": "General Transaction",
 		"executors": {
 			"kz_services_topup": {
 				"automatic": "Automatic Credit Replenishment",

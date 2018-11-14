@@ -144,7 +144,7 @@ define(function(require) {
 							return _.get(transaction, 'status', 'pending') !== 'pending';
 						})
 						.map(function(transaction) {
-							return monster.util.formatTransaction(transaction, self);
+							return self.transactionsHelperFormat(transaction);
 						})
 						.orderBy('created', 'desc')
 						.value();
@@ -157,6 +157,68 @@ define(function(require) {
 					});
 				}
 			});
+		},
+
+		transactionsHelperFormat: function(transaction) {
+			var self = this,
+				i18n = self.i18n.active().transactions,
+				executor = transaction.executor,
+				formatted = {
+					amount: parseFloat(transaction.amount),
+					isApproved: _.get(transaction, 'status', 'null') === 'completed',
+					timestamp: transaction.created
+				};
+
+			if (!_.isUndefined(executor)) {
+				if (_.has(transaction, 'description')) {
+					formatted.friendlyName = transaction.description;
+				}
+
+				if (!_.has(formatted, 'friendlyName')
+					&& _.has(i18n.executors, executor.module)
+				) {
+					formatted.friendlyName = _.get(
+						i18n.executors[executor.module],
+						executor.trigger,
+						_.get(
+							i18n.executors[executor.module],
+							'default',
+							undefined
+						)
+					);
+				}
+
+				if (!_.has(formatted, 'friendlyName')) {
+					formatted.friendlyName = i18n.generalTransaction;
+				}
+
+				if (formatted.amount < 0) {
+					formatted.friendlyName = self.getTemplate({
+						name: '!' + i18n.refundText,
+						data: {
+							message: _.startCase(formatted.friendlyName)
+						}
+					});
+				}
+			}
+
+			if (!formatted.isApproved) {
+				formatted.errorMessage = _.get(
+					transaction,
+					'bookkeeper.message',
+					_.get(
+						i18n.statuses,
+						transaction.status,
+						transaction.status
+					)
+				);
+			}
+
+			if (_.has(transaction, 'type')) {
+				formatted.type = transaction.type;
+			}
+
+			return formatted;
 		},
 
 		transactionsRequestList: function(args) {
