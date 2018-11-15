@@ -12,23 +12,12 @@ define(function(require) {
 		mediaSelectorRender: function(args) {
 			var self = this,
 				container = args.container,
-				labels = $.extend({
-					select: {
-						empty: self.i18n.active().mediaSelector.select.emptyValue,
-						choose: self.i18n.active().mediaSelector.select.choose,
-						upload: self.i18n.active().mediaSelector.select.upload,
-						remove: self.i18n.active().mediaSelector.select.remove
-					},
-					upload: {
-						headline: self.i18n.active().mediaSelector.upload.headline,
-						upload: self.i18n.active().mediaSelector.upload.upload,
-						cancel: self.i18n.active().mediaSelector.upload.cancel
-					}
-				}, args.labels),
-				layout = $(self.getTemplate({
+				callback = args.callback,
+				formattedData = self.formattedData(args),
+				template = $(self.getTemplate({
 					name: 'layout',
 					data: {
-						labels: labels.select,
+						labels: formattedData.select,
 						inputName: args.inputName || '',
 						media: args.media,
 						noChoose: !!args.noChoose,
@@ -37,13 +26,41 @@ define(function(require) {
 					submodule: 'mediaSelector'
 				}));
 
-			if (container) {
-				args.labels = labels;
-				self.mediaSelectorBindEvents($.extend({ template: layout }, args));
-				container.append(layout);
-			} else {
-				throw new Error('A container must be provided.');
-			}
+			args.labels = formattedData;
+
+			self.mediaSelectorBindEvents(_.merge({ template: template }, args));
+
+			container
+				.empty()
+				.append(template);
+
+			callback && callback({
+				getValue: function() {
+					return self.mediaSelectGetValue(template, args);
+				}
+			});
+		},
+
+		formattedData: function(args) {
+			var self = this;
+
+			return _.merge({
+				select: {
+					empty: self.i18n.active().mediaSelector.select.emptyValue,
+					choose: self.i18n.active().mediaSelector.select.choose,
+					upload: self.i18n.active().mediaSelector.select.upload,
+					remove: self.i18n.active().mediaSelector.select.remove
+				},
+				upload: {
+					headline: self.i18n.active().mediaSelector.upload.headline,
+					upload: self.i18n.active().mediaSelector.upload.upload,
+					cancel: self.i18n.active().mediaSelector.upload.cancel
+				}
+			}, args.labels);
+		},
+
+		mediaSelectGetValue: function(template, args) {
+			return template.find('input[name="' + args.inputName + '"]').val();
 		},
 
 		mediaSelectorBindEvents: function(args) {
