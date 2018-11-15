@@ -9,6 +9,7 @@ define(function(require) {
 		'carrierSelector',
 		'chooseModel',
 		'conferenceViewer',
+		'deleteSmartUser',
 		'e911',
 		'extensionTools',
 		'failover',
@@ -23,7 +24,6 @@ define(function(require) {
 		'portWizard',
 		'ringingDurationControl',
 		'servicePlanDetails',
-		'deleteSmartUser',
 		'storagePlanManager',
 		'storageSelector',
 		'webphone'
