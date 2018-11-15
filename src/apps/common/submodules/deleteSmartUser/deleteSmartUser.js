@@ -9,10 +9,10 @@ define(function(require) {
 
 		// Define the events available for other apps
 		subscribe: {
-			'common.deleteSmartUser.showDeleteDialog': 'deleteSmartUserShowDeleteDialog'
+			'common.deleteSmartUser.renderPopup': 'deleteSmartUserRender'
 		},
 
-		deleteSmartUserShowDeleteDialog: function(args) {
+		deleteSmartUserRender: function(args) {
 			var self = this,
 				user = args.user,
 				dataTemplate = {
@@ -360,24 +360,26 @@ define(function(require) {
 							}
 						},
 						success: function(mobileDevices) {
-							callback(null, mobileDevices);
+							callback(null, _.head(mobileDevices));
 						}
 					});
 				}
 			}, function(err, results) {
 				var fullCallflow = results.callflow,
-					mobileDeviceId = results.mobileDevice.id;
+					mobileDevice = results.mobileDevice;
 
 				delete fullCallflow.owner_id;
 
-				$.extend(true, fullCallflow, {
-					flow: {
-						module: 'device',
-						data: {
-							id: mobileDeviceId
+				if (mobileDevice) {
+					_.merge(fullCallflow, {
+						flow: {
+							module: 'device',
+							data: {
+								id: mobileDevice.id
+							}
 						}
-					}
-				});
+					});
+				}
 
 				self.deleteSmartUserUpdateCallflow({
 					data: {
@@ -497,61 +499,58 @@ define(function(require) {
 		/* API utils */
 
 		deleteSmartUserGetResource: function(resource, args) {
-			var self = this,
-				queryArgs = {
-					resource: resource,
-					data: _.merge({
-						accountId: self.accountId
-					}, args.data),
-					success: function(data) {
-						args.hasOwnProperty('success') && args.success(data.data);
-					},
-					error: function(parsedError) {
-						args.hasOwnProperty('error') && args.success(parsedError);
-					}
-				};
+			var self = this;
 
-			self.callApi(queryArgs);
+			self.callApi({
+				resource: resource,
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.success(parsedError);
+				}
+			});
 		},
 
 		deleteSmartUserListAllResources: function(resource, args) {
-			var self = this,
-				queryArgs = {
-					resource: resource,
-					data: _.merge({
-						accountId: self.accountId,
-						filters: {
-							paginate: 'false'
-						}
-					}, args.data),
-					success: function(data) {
-						args.hasOwnProperty('success') && args.success(data.data);
-					},
-					error: function(parsedError) {
-						args.hasOwnProperty('error') && args.success(parsedError);
-					}
-				};
+			var self = this;
 
-			self.callApi(queryArgs);
+			self.callApi({
+				resource: resource,
+				data: _.merge({
+					accountId: self.accountId,
+					filters: {
+						paginate: 'false'
+					}
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.success(parsedError);
+				}
+			});
 		},
 
 		deleteSmartUserModifySingleResource: function(resource, args) {
-			var self = this,
-				deleteArgs = {
-					resource: resource,
-					data: _.merge({
-						accountId: self.accountId,
-						data: {}
-					}, args.data),
-					success: function(data) {
-						args.hasOwnProperty('success') && args.success(data.data);
-					},
-					error: function(parsedError) {
-						args.hasOwnProperty('error') && args.success(parsedError);
-					}
-				};
+			var self = this;
 
-			self.callApi(deleteArgs);
+			self.callApi({
+				resource: resource,
+				data: _.merge({
+					accountId: self.accountId,
+					data: {}
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.success(parsedError);
+				}
+			});
 		}
 	};
 
