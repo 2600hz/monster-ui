@@ -976,5 +976,26 @@
 		"confirmDeleteTitle": "Warnung! Sind Sie sicher?",
 		"successUpdate": "Ihre Einstellungen für die Speicherung wurden erfolgreich aktualisiert!",
 		"successPathUpdate": "Sie haben erfolgreich den Pfad aktualisiert, unter dem dieser Speichertarif seine Dateien speichern wird."
+	},
+
+	"__comment": "UI-3147",
+	"__version": "4.3",
+	"deleteSmartUser": {
+		"__comment": "UI-2138: Neues Dialogfeld: Benutzer löschen",
+		"__version": "3.22",
+		"deleteDialog": {
+			"title": "Löschen von {{ name }} aus dem System",
+			"headerAdmin": "Sie versuchen gerade, einen ADMIN zu löschen! Wenn man einen Admin löscht, werden sein Benutzer und seine Voicemailbox gelöscht, und seine Geräte sind ihm nicht länger zugewiesen. Außerdem wird dieser Admin dann nicht mehr in der Lage sein, diese UI zu verwalten. Möchten Sie den Vorgang wirklich fortsetzen?",
+			"headerUser": "Durch das Löschen eines Benutzers werden dieser Benutzer und seine Voicemailboxen gelöscht. Seine Geräte und Nummern sind ihm nicht länger zugewiesen. Möchten Sie den Vorgang fortsetzen?",
+			"deleteUser": "Löschen",
+			"deleteUserName": "„{{variable}}“ löschen",
+			"proceed": "Fortfahren",
+			"deleteDevices": "Die Geräte dieses Benutzers ebenfalls entfernen",
+			"deleteDevicesHelp": "Wenn Sie diese Option nicht aktivieren, verlieren diese Geräte ihre Zuweisung und tauchen in der Liste freier Geräte auf.",
+			"__comment": "UI-2467: Beim Löschen eines Benutzers in Smart PBX werden auch Konferenzen entfernt",
+			"__version": "4.0",
+			"deleteConferences": "Die Konferenzen dieses Benutzers ebenfalls entfernen",
+			"deleteConferencesHelp": "Wenn Sie diese Option deaktiviert lassen, werden Sie die Konferenznummer des Benutzers nirgends anders verwenden können, da sie weiterhin von dieser Konferenz belegt sein wird."
+		}
 	}
 }
