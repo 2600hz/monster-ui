@@ -819,8 +819,8 @@
 				"text": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
 				"label": {
 					"carrier": "Carrier",
-					"accountName": "Name on Account",
-					"billingAddress": "Billing Address",
+					"accountName": "Account Name on Bill",
+					"billingAddress": "Service Address",
 					"billVerification": "Recent Bill Verification",
 					"acknowledgeBill": "I acknowledge the date on this bill is within the last 30 days",
 					"accountNumber": "Account Number",
@@ -841,12 +841,13 @@
 			}
 		},
 		"addNumbers": {
-			"title": "Now we can establish what numbers you would like to port.",
-			"text1": "Input the desired number you wish to port, or input a larger batch of numbers from your bill by separating each number with a single space.",
-			"text2": "You can copy/paste larger batches of numbers, but no other other characters besides numbers and spaces are accepted.",
+			"title": "Enter the numbers you wish to port from the bill.",
+			"text1": "To avoid delays ensure you only enter <US Toll Free | US Local> phone numbers that belong to the bill you uploaded.",
+			"text2": "Enter each number without any parentheses, dashes or spaces.",
+			"text3": "If you wish you can add multiple numbers at once by separating them by a single space.",
 			"textarea": {
 				"link": "Add More Numbers",
-				"legend": "Input Numbers to Port",
+				"legend": "Numbers to Port from Bill",
 				"button": "Add Numbers"
 			},
 			"list": {
@@ -854,9 +855,9 @@
 				"text": "You have not added any numbers to your port request yet."
 			},
 			"portion": {
-				"errorMessage": "It looks like you selected you current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
+				"errorMessage": "It looks like you selected your current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
 				"text1": "Do these numbers make up the entire current account per your bill?",
-				"text2": "Or do these numbers male up only a select portion of numbers?",
+				"text2": "Or do these numbers make up only a select portion of numbers?",
 				"selection": {
 					"full": "Full Account Port",
 					"portion": "Portion Of Numbers"
@@ -870,7 +871,7 @@
 			"buttons": {
 				"next": {
 					"manual": {
-						"loa": "Next - LoA Form (Manual LoA, no e-sign)",
+						"loa": "Next - LoA Form",
 						"resporg": "Next - RespOrg Form (Manual RespOrg, no e-sign)"
 					},
 					"eSign": {
@@ -886,8 +887,7 @@
 			"link": "Learn more about {{variable}}'s' here.",
 			"download": {
 				"title": "Step 1",
-				"text": "Download your {{variable}}",
-				"button": "Download Pre-filled {{variable}}"
+				"button": "Download {{variable}}"
 			},
 			"doubleCheck": {
 				"title": "Step 2",
