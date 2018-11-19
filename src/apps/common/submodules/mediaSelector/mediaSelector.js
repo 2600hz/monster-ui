@@ -45,17 +45,9 @@ define(function(require) {
 			var self = this;
 
 			return _.merge({
-				select: {
-					empty: self.i18n.active().mediaSelector.select.emptyValue,
-					choose: self.i18n.active().mediaSelector.select.choose,
-					upload: self.i18n.active().mediaSelector.select.upload,
-					remove: self.i18n.active().mediaSelector.select.remove
-				},
-				upload: {
-					headline: self.i18n.active().mediaSelector.upload.headline,
-					upload: self.i18n.active().mediaSelector.upload.upload,
-					cancel: self.i18n.active().mediaSelector.upload.cancel
-				}
+				select: self.i18n.active().mediaSelector.select,
+				dialogSelect: self.i18n.active().mediaSelector.dialogSelect,
+				upload: self.i18n.active().mediaSelector.upload
 			}, args.labels);
 		},
 
@@ -101,6 +93,7 @@ define(function(require) {
 					case 'select': {
 						self.onMediaSelect({
 							medias: args.medias,
+							labels: args.labels.dialogSelect,
 							okCallback: selectMediaCallback
 						});
 						break;
@@ -122,18 +115,27 @@ define(function(require) {
 		},
 
 		onMediaSelect: function(args) {
-			var self = this;
+			var self = this,
+				template = $(self.getTemplate({
+					name: 'media-selectDialog',
+					data: {
+						labels: args.labels
+					},
+					submodule: 'mediaSelector'
+				})),
+				popup = monster.ui.dialog(template, {
+					position: ['top', 20],
+					title: args.labels.headline
+				});
 
-			monster.pub('common.monsterListing.render', {
-				dataList: args.medias,
-				dataType: 'medias',
-				labels: {
-					title: self.i18n.active().mediaSelector.dialogSelect.title,
-					headline: self.i18n.active().mediaSelector.dialogSelect.headline,
-					okButton: self.i18n.active().mediaSelector.dialogSelect.proceed
-				},
-				singleSelect: true,
-				okCallback: args.okCallback
+			self.mediaSelectBindEvents({
+				template: template,
+				popup: popup,
+				callback: function(media) {
+					popup && popup.dialog('close').remove();
+					args.media = media;
+					self.onMediaSelected(args);
+				}
 			});
 		},
 
@@ -151,7 +153,7 @@ define(function(require) {
 					title: args.labels.upload.headline
 				});
 
-			self.mediaUploadBinEvents({
+			self.mediaUploadBindEvents({
 				template: template,
 				popup: popup,
 				callback: function(media) {
@@ -178,7 +180,15 @@ define(function(require) {
 			args.popup && args.popup.dialog('close').remove();
 		},
 
-		mediaUploadBinEvents: function(args) {
+		mediaSelectBindEvents: function(args) {
+			var self = this,
+				template = args.template,
+				callback = args.callback,
+				mediaToUpload = undefined,
+				$submitBtn = template.find('.select-submit');
+		},
+
+		mediaUploadBindEvents: function(args) {
 			var self = this,
 				template = args.template,
 				callback = args.callback,

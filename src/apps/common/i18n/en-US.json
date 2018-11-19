@@ -992,19 +992,20 @@
 		"select": {
 			"choose": "Select media",
 			"upload": "Upload media",
-			"emptyValue": "- No media selected -",
-			"remove": "Remove"
+			"empty": "- No media selected -"
 		},
-		"upload": {
+		"dialogUpload": {
+			"label": "Upload New Media",
 			"headline": "Media upload",
 			"upload": "Upload",
 			"cancel": "Cancel",
 			"fileTooBigAlert": "File Too Big"
 		},
 		"dialogSelect": {
-			"title": "Select media",
-			"headline": "Select media headline",
-			"proceed": "Save"
+			"headline": "Select media",
+			"select": "Select Media",
+			"cancel": "Cancel",
+			"remove": "Remove"
 		}
 	}
 }
