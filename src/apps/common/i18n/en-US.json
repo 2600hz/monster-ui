@@ -797,15 +797,14 @@
 			},
 			"numbersType": {
 				"text1": "What type of number will you be requesting to port?",
-				"text2": "(All numbers in a port request must be the same format).",
 				"label": {
 					"local": "U.S. Local Numbers",
 					"tollFree": "U.S. Toll-free Numbers"
 				}
 			},
 			"verifyOwner": {
-				"title": "We will need to verify ownership of the numbers you wish to port.",
-				"text1": "To do this, you will need to upload a recent (within 30 days) bill from your carrier which contains the numbers you want to port.",
+				"title": "We need to verify ownership of the numbers you wish to port.",
+				"text1": "As is required by law, please upload a bill that you have received within the last 30 days as proof that these are your numbers.",
 				"text2": "This proof of your account and ownership is required by law."
 			},
 			"buttons": {
