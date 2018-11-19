@@ -6,6 +6,7 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
 * [How to use it](#how-to-use-it)
 * [Going Further](#going-further)
 * [Listing of different helpers](#listing-of-different-helpers)
+  - [coalesce](#coalesce)
 	- [compare](#compare)
 	- [debug](#debug)
 	- [ifInArray](#ifinarray)
@@ -357,3 +358,11 @@ example.html
 
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
+
+
+#### coalesce
+This helper will return the first non nullish (`null` or `undefined`) element to be found from a list of 2 or more values. If all of them are nullish, then it will return `null`.
+
+```handlebars
+{{coalesce val1 val2 ... valN}}
+```

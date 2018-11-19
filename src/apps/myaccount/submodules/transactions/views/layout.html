@@ -2,7 +2,7 @@
 	<div class="title-bar clearfix">
 		<div class="title-box start-date">
 			<div class="value">
-				{{ billingStartDate }}
+				{{toFriendlyDate startDate dateFormat}}
 			</div>
 			<div class="title">
 				{{ i18n.transactions.startDate }}
@@ -10,7 +10,7 @@
 		</div>
 		<div class="title-box end-date">
 			<div class="value">
-				{{ billingEndDate }}
+				{{toFriendlyDate endDate dateFormat}}
 			</div>
 			<div class="title">
 				{{ i18n.transactions.endDate }}
@@ -18,7 +18,7 @@
 		</div>
 		<div class="title-box pull-right total-amount">
 			<div class="value">
-				{{formatPrice amount }}
+				{{formatPrice amount priceDigits}}
 			</div>
 			<div class="title">
 				{{ i18n.transactions.total }}

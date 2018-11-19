@@ -19,6 +19,22 @@ define(function(require) {
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
+			coalesce: function() {
+				var args = _.toArray(arguments);
+
+				if (args.length < 2) {
+					throw new Error('Handlerbars Helper "coalesce" needs at least 2 parameters');
+				}
+
+				// Last argument is discarded because it is handlebars' options parameter
+				for (var i = 0; i < args.length - 1; i++) {
+					if (!_.isNil(args[i])) {
+						return args[i];
+					}
+				}
+				return null;
+			},
+
 			compare: function(lvalue, operator, rvalue, options) {
 				var operators, result;
 
@@ -968,10 +984,16 @@ define(function(require) {
 				inputEndDate = container.find('#endDate'),
 				now = new Date(),
 				today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+				startDate = _.get(
+					options,
+					'startDate',
+					new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+					),
 				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-			if (range === 'monthly') {
+			if (options.startDate) {
+				startDate.setDate(startDate.getDate() - 1);
+			} else if (range === 'monthly') {
 				startDate.setMonth(startDate.getMonth() - 1);
 			} else {
 				startDate.setDate(startDate.getDate() - initRange);
