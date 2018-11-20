@@ -986,5 +986,26 @@
 		"confirmDeleteTitle": "Warning! Are you sure?",
 		"successUpdate": "Your Storage Settings were successfully updated!",
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
+	},
+
+	"__comment": "UI-3147: Migrate Smart PBX user deletion to common submodule",
+	"__version": "4.3",
+	"deleteSmartUser": {
+		"__comment": "UI-2138: Delete User new Dialog",
+		"__version": "3.22",
+		"deleteDialog": {
+			"title": "Remove {{ name }} from the system",
+			"headerAdmin": "You're about to delete an ADMIN! Deleting an admin will delete his user, voicemail boxes and unassign his devices. It will also prevent them from managing this UI. Do you want to continue?",
+			"headerUser": "Deleting a user will delete this user and his Voicemail Box, and unassign the devices and numbers that were assigned to this user. Do you want to continue?",
+			"deleteUser": "Delete",
+			"deleteUserName": "Delete \"{{variable}}\"",
+			"proceed": "Proceed",
+			"deleteDevices": "Also remove this user's devices from the system",
+			"deleteDevicesHelp": "If you leave this option unchecked, we'll just unassign these devices and they will show up in the list of Spare Devices",
+			"__comment": "UI-2467: also remove conferences when deleting a user from smartpbx",
+			"__version": "4.0",
+			"deleteConferences": "Also remove this user's conferences from the system",
+			"deleteConferencesHelp": "If you leave this option unchecked, you won't be able to use the user's conference number anywhere else, as it will still be used by that conference."
+		}
 	}
 }

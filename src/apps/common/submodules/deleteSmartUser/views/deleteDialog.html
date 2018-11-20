@@ -1,0 +1,34 @@
+<div id="delete_smart_user_dialog">
+	<div class="alert-dialog">
+		<div class="dialog-content">
+			<div class="dialog-header">{{ replaceVar i18n.deleteSmartUser.deleteDialog.deleteUserName user.name }}</div>
+
+			<div>
+				{{#monsterCheckbox i18n.deleteSmartUser.deleteDialog.deleteDevices }}
+					<input id="delete_devices" type="checkbox"></input>
+				{{/monsterCheckbox}}
+				<i class="help-popover fa fa-question-circle fa-lg" data-original-title="{{ i18n.deleteSmartUser.deleteDialog.deleteDevicesHelp }}" data-placement="left" data-toggle="tooltip"></i>
+			</div>
+
+			<div>
+				{{#monsterCheckbox i18n.deleteSmartUser.deleteDialog.deleteConferences }}
+					<input id="delete_conferences" type="checkbox"></input>
+				{{/monsterCheckbox}}
+				<i class="help-popover fa fa-question-circle fa-lg" data-original-title="{{ i18n.deleteSmartUser.deleteDialog.deleteConferencesHelp }}" data-placement="left" data-toggle="tooltip"></i>
+			</div>
+
+			<div class="dialog-text">
+				{{#compare user.priv_level "===" "admin"}}
+					{{ i18n.deleteSmartUser.deleteDialog.headerAdmin }}
+				{{else}}
+					{{ i18n.deleteSmartUser.deleteDialog.headerUser }}
+				{{/compare}}
+			</div>
+		</div>
+
+		<div class="alert-buttons-wrapper clearfix">
+			<button class="monster-button" id="cancel_button">{{ i18n.cancel }}</button>
+			<button class="monster-button-success" id="confirm_button">{{ i18n.deleteSmartUser.deleteDialog.proceed }}</button>
+		</div>
+	</div>
+</div>
