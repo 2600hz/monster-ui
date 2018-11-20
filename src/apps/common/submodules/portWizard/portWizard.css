@@ -143,6 +143,11 @@
 	line-height: 34px;
 }
 
+#port_wizard .steps span.label-button button {
+	display: block;
+	margin: 0 auto;
+}
+
 #port_wizard .steps .item:not(:first-child) {
 	margin-top: 50px;
 }

@@ -173,6 +173,9 @@ define(function(require) {
 				container = args.container,
 				template = $(self.getTemplate({
 					name: 'addNumbers',
+					data: {
+						text1Var: self.i18n.active().portWizard.portInfo.numbersType.label[args.data.request.ui_flags.type]
+					},
 					submodule: 'portWizard'
 				}));
 

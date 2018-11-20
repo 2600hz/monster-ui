@@ -842,9 +842,9 @@
 		},
 		"addNumbers": {
 			"title": "Enter the numbers you wish to port from the bill.",
-			"text1": "To avoid delays ensure you only enter <US Toll Free | US Local> phone numbers that belong to the bill you uploaded.",
-			"text2": "Enter each number without any parentheses, dashes or spaces.",
-			"text3": "If you wish you can add multiple numbers at once by separating them by a single space.",
+			"text1": "To avoid delays ensure you only enter {{variable}} that belong to the bill you uploaded.",
+			"text2": "If you wish you can add multiple numbers at once by separating them by a single space.",
+			"text3": "Enter each number without any parentheses, dashes or spaces.",
 			"textarea": {
 				"link": "Add More Numbers",
 				"legend": "Numbers to Port from Bill",
@@ -872,7 +872,7 @@
 				"next": {
 					"manual": {
 						"loa": "Next - LoA Form",
-						"resporg": "Next - RespOrg Form (Manual RespOrg, no e-sign)"
+						"resporg": "Next - RespOrg Form"
 					},
 					"eSign": {
 						"loa": "Next - LoA Form (E-sign enabled on account)",
