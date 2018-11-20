@@ -1237,10 +1237,36 @@ define(function(require) {
 				title: self.i18n.active().portWizard.loading.title,
 				text: self.i18n.active().portWizard.loading.text,
 				callback: function() {
+					// Add error handler for errors that can be processed
+					var portSavingArgs = _.merge({}, args, {
+						error: function(parsedError) {
+							// TODO: Group errors
+							var groupedErrors = {
+								knownErrors: {
+									error_key: {
+										message: '',
+										numbers: [ 'phone', 'numbers' ]
+									}
+								},
+								unknownErrors: {
+									error_key: {
+										message: '',
+										numbers: [ 'phone', 'numbers' ]
+									}
+								}
+							};
+
+							// TODO: Check if error data can be processed, to avoid unexpected errors
+							// Consider to have globalhandler from callApi here, in case the error cannot be processed
+
+							args.hasOwnProperty('error') && args.error(groupedErrors);
+						}
+					});
+
 					if (args.data.request.hasOwnProperty('id')) {
-						self.portWizardHelperUpdatePort(args);
+						self.portWizardHelperUpdatePort(portSavingArgs);
 					} else {
-						self.portWizardHelperCreatePort(args);
+						self.portWizardHelperCreatePort(portSavingArgs);
 					}
 				}
 			});
@@ -1286,8 +1312,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		},
@@ -1354,8 +1380,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		},
