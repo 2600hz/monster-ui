@@ -66,10 +66,6 @@ define(function(require) {
 				.append(template);
 
 			self.portListingRenderListing(args);
-
-			if (monster.util.isSuperDuper()) {
-				self.portListingRenderAccountFilter(args);
-			}
 		},
 
 		portListingRenderListing: function(args) {
@@ -171,84 +167,7 @@ define(function(require) {
 						});
 					}
 				}, function(err, results) {
-					insertTemplateCallback(initTemplate(results), function() {
-						if (monster.util.isSuperDuper()) {
-							// Adjusting the layout divs height to always fit the window's size
-							$(window).resize(function(e) {
-								if ($('#port_app_container').find('.account-list-container').length) {
-									var $content = $('#port_app_container'),
-										$topbar = $('.core-topbar-wrapper'),
-										$accountListContainer = $content.find('.account-list-container'),
-										$accountInfo = $content.find('.account-info'),
-										$mainContent = $content.find('.listing-section-wrapper'),
-										listHeight = this.innerHeight - $accountListContainer.position().top;
-
-									if (args.isMonsterApp) {
-										listHeight -= $topbar.outerHeight();
-									}
-
-									$accountListContainer.css('height', listHeight + 'px');
-									$mainContent.css('height', this.innerHeight - $accountInfo.outerHeight() - $mainContent.position().top + 'px');
-								}
-							});
-							$(window).resize();
-						}
-					});
-				});
-			});
-		},
-
-		portListingRenderAccountFilter: function(args) {
-			var self = this,
-				container = args.container,
-				requests = [];
-
-			if (args.hasOwnProperty('data') && args.data.hasOwnProperty('accountId')) {
-				requests.push(function(callback) {
-					self.portListingRequestGetAccount({
-						data: {
-							accountId: args.data.accountId
-						},
-						success: function(accountData) {
-							callback(null, accountData);
-						}
-					});
-				});
-			}
-
-			monster.parallel(requests, function(err, results) {
-				var accountName = _.isEmpty(results) ? monster.apps.auth.currentAccount.name : results[0].name;
-
-				container
-					.find('.filtering-section-wrapper')
-						.append($(self.getTemplate({
-							name: 'filtering',
-							data: {
-								accountName: accountName
-							},
-							submodule: 'portListing'
-						})));
-
-				monster.pub('common.accountBrowser.render', {
-					container: container.find('.filtering-section'),
-					parentId: args.hasOwnProperty('data') && args.data.hasOwnProperty('accountId') ? args.data.accountId : self.accountId,
-					addBackButton: true,
-					hideRealm: true,
-					onAccountClick: function(accountId, accountName) {
-						container
-							.find('.account-info .name')
-								.fadeOut(function() {
-									$(this)
-										.text(accountName)
-										.fadeIn();
-								});
-
-						self.portListingRenderListing($.extend(true, {}, args, {
-							data: {
-								accountId: accountId
-							}
-						}));
-					}
+					insertTemplateCallback(initTemplate(results));
 				});
 			});
 		},
@@ -1054,23 +973,6 @@ define(function(require) {
 					filters: {
 						paginate: false
 					}
-				}, args.data),
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-
-		portListingRequestGetAccount: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'account.get',
-				data: $.extend(true, {
-					accountId: self.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
