@@ -2,19 +2,24 @@
 	<div class="monster-tab-wrapper">
 		<nav class="monster-navbar monster-tab-navbar">
 			<ul class="navbar-menu">
+				{{#unless hideSelect}}
 				<li class="navbar-menu-item">
 					<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab="use_existing">
 						{{ i18n.mediaSelect.useExistingMedia }}
 					</a>
 				</li>
+				{{/unless}}
+				{{#unless hideUpload}}
 				<li class="navbar-menu-item">
 					<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab="upload_new">
 						{{ i18n.mediaSelect.uploadNewMedia }}
 					</a>
 				</li>
+				{{/unless}}
 			</ul>
 		</nav>
 
+		{{#unless hideSelect}}
 		<div class="monster-tab-content" data-tab="use_existing">
 			<div class="control-group">
 				<label class="control-label" for="{{ name }}">{{ label }}</label>
@@ -42,7 +47,9 @@
 				</div>
 			</div>
 		</div>
+		{{/unless}}
 
+		{{#unless hideUpload}}
 		<div class="monster-tab-content" data-tab="upload_new">
 			<label class="control-label" for="input_media_upload">{{ i18n.mediaSelect.uploadNewMedia }}</label>
 			<div class="upload-div">
@@ -50,5 +57,6 @@
 				<button type="button" class="monster-button-primary non-fixed upload-action upload-submit"><i class="fa fa-upload"></i></button>
 			</div>
 		</div>
+		{{/unless}}
 	</div>
 </div>

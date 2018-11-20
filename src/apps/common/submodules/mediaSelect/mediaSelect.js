@@ -89,20 +89,39 @@ define(function(require) {
 				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
 				template;
 
-			if (skin === 'default') {
-				template = $(self.getTemplate({
-					name: 'layout',
-					data: formattedData,
-					submodule: 'mediaSelect'
-				}));
-				self.mediaSelectBindDefaultTemplate(template);
-			} else if (skin === 'tabs') {
-				template = $(self.getTemplate({
-					name: 'tabs-layout',
-					data: formattedData,
-					submodule: 'mediaSelect'
-				}));
-				self.mediaSelectBindTabsTemplate(template);
+			switch (skin) {
+				case 'tabs':
+					template = $(self.getTemplate({
+						name: 'tabs-layout',
+						data: formattedData,
+						submodule: 'mediaSelect'
+					}));
+					self.mediaSelectBindTabsTemplate(template);
+					break;
+				case 'select':
+					template = $(self.getTemplate({
+						name: 'tabs-layout',
+						data: _.merge(formattedData, {hideUpload: true}),
+						submodule: 'mediaSelect'
+					}));
+					self.mediaSelectBindTabsTemplate(template);
+					break;
+				case 'upload':
+					template = $(self.getTemplate({
+						name: 'tabs-layout',
+						data: _.merge(formattedData, {hideSelect: true}),
+						submodule: 'mediaSelect'
+					}));
+					self.mediaSelectBindTabsTemplate(template);
+					break;
+				default:
+					template = $(self.getTemplate({
+						name: 'layout',
+						data: formattedData,
+						submodule: 'mediaSelect'
+					}));
+					self.mediaSelectBindDefaultTemplate(template);
+					break;
 			}
 
 			return template;
