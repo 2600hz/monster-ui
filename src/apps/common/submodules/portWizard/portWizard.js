@@ -1388,14 +1388,22 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'port.create',
-				data: $.extend(true, {
-					accountId: self.accountId
+				data: _.merge({
+					accountId: self.accountId,
+					generateError: false
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
-					args.hasOwnProperty('error') && args.error(parsedError);
+					if (error.status === 500) {
+						args.hasOwnProperty('error') && args.error(parsedError);
+						return;
+					}
+
+					globalHandler(error, {
+						generateError: true
+					});
 				}
 			});
 		},
@@ -1404,14 +1412,22 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'port.update',
-				data: $.extend(true, {
-					accountId: self.accountId
+				data: _.merge({
+					accountId: self.accountId,
+					generateError: false
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
-					args.hasOwnProperty('error') && args.error(parsedError);
+					if (error.status === 500) {
+						args.hasOwnProperty('error') && args.error(parsedError);
+						return;
+					}
+
+					globalHandler(error, {
+						generateError: true
+					});
 				}
 			});
 		},
