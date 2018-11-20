@@ -143,6 +143,11 @@
 	line-height: 34px;
 }
 
+#port_wizard .steps span.label-button button {
+	display: block;
+	margin: 0 auto;
+}
+
 #port_wizard .steps .item:not(:first-child) {
 	margin-top: 50px;
 }
@@ -154,7 +159,7 @@
 
 #port_wizard .file-upload-wrapper {
 	width: 380px;
-	margin: 0 auto;
+	margin: 20px auto;
 	padding: 20px 10px 5px;
 	border: 1px dashed #c0c0c9;
 	border-radius: 2px;
