@@ -12,7 +12,6 @@ define(function(require) {
 		mediaSelectorRender: function(args) {
 			var self = this,
 				container = args.container,
-				callback = args.callback,
 				formattedData = self.formattedData(args),
 				template = $(self.getTemplate({
 					name: 'layout',
@@ -33,12 +32,6 @@ define(function(require) {
 			container
 				.empty()
 				.append(template);
-
-			callback && callback({
-				getValue: function() {
-					return self.mediaSelectGetValue(template, args);
-				}
-			});
 		},
 
 		formattedData: function(args) {
@@ -51,26 +44,19 @@ define(function(require) {
 			}, args.labels);
 		},
 
-		mediaSelectGetValue: function(template, args) {
+		mediaSelectorGetValue: function(template, args) {
 			return template.find('input[name="' + args.inputName + '"]').val();
 		},
 
 		mediaSelectorBindEvents: function(args) {
 			var self = this,
 				template = args.template,
-				afterCallback = args.afterCallback,
 				dropdown = template.find('.media-selector-dropdown'),
 				args = $.extend({
 					input: template.find('input[name="' + args.inputName + '"]'),
 					removeElement: template.find('.remove-element'),
 					displayedElement: template.find('.media-selector-displayed .media')
-				}, args),
-				selectMediaCallback = function(media) {
-					if (!_.isEmpty(media[0])) {
-						self.onMediaSelected($.extend({}, args, { template: template, media: media[0] }));
-						afterCallback && afterCallback(media.id);
-					}
-				};
+				}, args);
 
 			dropdown.on('click', function() {
 				dropdown.toggleClass('open');
@@ -93,8 +79,11 @@ define(function(require) {
 					case 'select': {
 						self.onMediaSelect({
 							medias: args.medias,
+							media: args.media,
 							labels: args.labels.dialogSelect,
-							okCallback: selectMediaCallback
+							callbackAfterSelect: function(media) {
+								self.onMediaSelected(args, media);
+							}
 						});
 						break;
 					}
@@ -128,13 +117,23 @@ define(function(require) {
 					title: args.labels.headline
 				});
 
-			self.mediaSelectBindEvents({
-				template: template,
-				popup: popup,
-				callback: function(media) {
-					popup && popup.dialog('close').remove();
-					args.media = media;
-					self.onMediaSelected(args);
+			monster.pub('common.mediaSelect.render', {
+				container: template.find('.media-select-wrapper'),
+				name: 'media.unavailable',
+				options: args.medias,
+				selectedOption: _.get(args, 'media.id', null),
+				label: '',
+				skin: 'select',
+				callback: function(mediaControl) {
+					self.onMediaSelectBindEvents({
+						template: template,
+						popup: popup,
+						mediaControl: mediaControl,
+						callback: function(media) {
+							popup && popup.dialog('close').remove();
+							args.callbackAfterSelect(media);
+						}
+					});
 				}
 			});
 		},
@@ -164,28 +163,43 @@ define(function(require) {
 			});
 		},
 
-		onMediaSelected: function(args) {
-			var media = args.media,
+		onMediaSelected: function(args, media) {
+			var selectedMedia = _.find(args.medias, function(file) { return file.id === media; }),
 				input = args.input,
 				removeElement = args.removeElement,
-				displayedElement = args.displayedElement;
+				displayedElement = args.displayedElement,
+				callback = args.callback;
 
-			input.val(media.id);
-			removeElement.find('.media').text(media.name);
-			displayedElement.text(media.name);
+			input.val(media);
+			removeElement.find('.media').text(selectedMedia.name);
+			displayedElement.text(selectedMedia.name);
 			removeElement.removeClass('hidden');
+
+			callback && callback({
+				getValue: function() {
+					return media;
+				}
+			});
 		},
 
 		onMediaCancel: function(args) {
 			args.popup && args.popup.dialog('close').remove();
 		},
 
-		mediaSelectBindEvents: function(args) {
+		onMediaSelectBindEvents: function(args) {
 			var self = this,
 				template = args.template,
 				callback = args.callback,
-				mediaToUpload = undefined,
-				$submitBtn = template.find('.select-submit');
+				mediaControl = args.mediaControl,
+				$selectBtn = template.find('.select-submit');
+
+			$selectBtn.on('click', function() {
+				callback(mediaControl.getValue());
+			});
+
+			template.find('.cancel').on('click', function() {
+				self.onMediaCancel(args);
+			});
 		},
 
 		mediaUploadBindEvents: function(args) {
