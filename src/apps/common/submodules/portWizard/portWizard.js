@@ -1129,10 +1129,6 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var isKnownErrorKey = function(errorGroup, errorKey) {
-							return self.isKnownError(errorKey);
-						};
-
 						self.portWizardHelperSavePort($.extend(true, args, {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
@@ -1147,6 +1143,10 @@ define(function(require) {
 								});
 							},
 							error: function(parsedError, groupedErrors) {
+								var isKnownErrorKey = function(errorGroup, errorKey) {
+									return self.isKnownError(errorKey);
+								};
+
 								if (_.some(groupedErrors, isKnownErrorKey)) {
 									self.portWizardRenderAddNumbers(args);
 								}
@@ -1308,8 +1308,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
@@ -1376,8 +1376,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
@@ -1533,15 +1533,15 @@ define(function(require) {
 		 **************************************************/
 
 		portWizardGroupSavePortErrors: function(parsedError, errorData) {
-			if (errorData.status === '500' && errorData.message === 'invalid request') {
-				// Errors cannot be grouped
+			if (errorData.status !== 400) {
+				// Errors cannot be processed
 				return null;
 			}
 
 			var self = this,
 				groupedErrors = {};
 
-			_.each(parsedError, function(value, key) {
+			_.each(parsedError.data, function(value, key) {
 				if (!value.hasOwnProperty('type') || !value.type.hasOwnProperty('message')) {
 					return;
 				}
@@ -1569,6 +1569,8 @@ define(function(require) {
 			var minIndex = _.chain([':', ',', '.'])
 				.map(function(separator) {
 					return errorMessage.indexOf(separator);
+				}).filter(function(index) {
+					return index > 0;
 				}).min().value();
 
 			return _.snakeCase(errorMessage.slice(0, minIndex));
@@ -1597,7 +1599,7 @@ define(function(require) {
 				});
 			});
 
-			if (viewErrors === 1) {
+			if (viewErrors.length === 1) {
 				// Show toast
 				var error = viewErrors[0];
 
@@ -1622,7 +1624,8 @@ define(function(require) {
 				name: 'errorDialog',
 				data: {
 					errors: viewErrors
-				}
+				},
+				submodule: 'portWizard'
 			}));
 		},
 
