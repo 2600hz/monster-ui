@@ -349,6 +349,26 @@ kazooSdk.auth.userAuth({
 | Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
+|||
+|---|---|
+| Method: | __cdrs.listByInteraction(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/cdrs/interaction |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __cdrs.listLegs(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/cdrs/legs/{id} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, 'id' |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
 ###### Channel
 
 |||
