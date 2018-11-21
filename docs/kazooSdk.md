@@ -363,10 +363,10 @@ kazooSdk.auth.userAuth({
 |---|---|
 | Method: | __cdrs.listLegs(__*settings*__)__ |
 | Request Type: | GET |
-| Request URL: | {apiRoot}/accounts/{accountId}/cdrs/legs/{id} |
+| Request URL: | {apiRoot}/accounts/{accountId}/cdrs/legs/{callId} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, `id` |
+| Mandatory _settings_: | `accountId`, `callId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Channel
