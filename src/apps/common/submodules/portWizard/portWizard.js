@@ -1129,6 +1129,10 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
+						var isKnownErrorKey = function(errorGroup, errorKey) {
+							return self.isKnownError(errorKey);
+						};
+
 						self.portWizardHelperSavePort($.extend(true, args, {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
@@ -1142,8 +1146,10 @@ define(function(require) {
 									}
 								});
 							},
-							error: function() {
-								self.portWizardRenderAddNumbers(args);
+							error: function(parsedError, groupedErrors) {
+								if (_.some(groupedErrors, isKnownErrorKey)) {
+									self.portWizardRenderAddNumbers(args);
+								}
 							}
 						}));
 					});
@@ -1574,7 +1580,7 @@ define(function(require) {
 
 			// Update messages with i18n values
 			_.each(groupedErrors, function(errorGroup, errorKey) {
-				var i18nKey = this.appFlags.portWizard.knownErrors[errorKey],
+				var i18nKey = self.appFlags.portWizard.knownErrors.savePort[errorKey],
 					message = errorGroup.message;
 
 				if (i18nKey) {
@@ -1618,6 +1624,12 @@ define(function(require) {
 					errors: viewErrors
 				}
 			}));
+		},
+
+		isKnownError: function(errorKey) {
+			var self = this;
+
+			return self.appFlags.portWizard.knownErrors.savePort.hasOwnProperty(errorKey);
 		}
 	};
 
