@@ -1239,27 +1239,10 @@ define(function(require) {
 				callback: function() {
 					// Add error handler for errors that can be processed
 					var portSavingArgs = _.merge({}, args, {
-						error: function(parsedError) {
-							// TODO: Group errors
-							var groupedErrors = {
-								knownErrors: {
-									error_key: {
-										message: '',
-										numbers: [ 'phone', 'numbers' ]
-									}
-								},
-								unknownErrors: {
-									error_key: {
-										message: '',
-										numbers: [ 'phone', 'numbers' ]
-									}
-								}
-							};
+						error: function(parsedError, groupedErrors) {
+							// TODO: Show errors to user
 
-							// TODO: Check if error data can be processed, to avoid unexpected errors
-							// Consider to have globalhandler from callApi here, in case the error cannot be processed
-
-							args.hasOwnProperty('error') && args.error(groupedErrors);
+							args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 						}
 					});
 
@@ -1412,32 +1395,18 @@ define(function(require) {
 		portWizardRequestCreatePort: function(args) {
 			var self = this;
 
-			self.callApi({
-				resource: 'port.create',
-				data: _.merge({
-					accountId: self.accountId,
-					generateError: false
-				}, args.data),
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError, error, globalHandler) {
-					if (error.status === 500) {
-						args.hasOwnProperty('error') && args.error(parsedError);
-						return;
-					}
-
-					globalHandler(error, {
-						generateError: true
-					});
-				}
-			});
+			self.portWizardRequestSavePort('port.create', args);
 		},
 		portWizardRequestUpdatePort: function(args) {
 			var self = this;
 
+			self.portWizardRequestSavePort('port.update', args);
+		},
+		portWizardRequestSavePort: function(resource, args) {
+			var self = this;
+
 			self.callApi({
-				resource: 'port.update',
+				resource: resource,
 				data: _.merge({
 					accountId: self.accountId,
 					generateError: false
@@ -1446,14 +1415,18 @@ define(function(require) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
-					if (error.status === 500) {
-						args.hasOwnProperty('error') && args.error(parsedError);
+					var groupedErrors = self.portWizardGroupSavePortErrors(parsedError, error);
+
+					if (groupedErrors) {
+						args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 						return;
 					}
 
 					globalHandler(error, {
 						generateError: true
 					});
+
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		},
@@ -1540,6 +1513,54 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		/**************************************************
+		 *             Error handling helpers             *
+		 **************************************************/
+
+		portWizardSavePortCommonErrorHandler:
+
+		portWizardGroupSavePortErrors(parsedError, errorData) {
+			if (errorData.status === '500' && errorData.message === 'invalid request') {
+				// Errors cannot be grouped
+				return null;
+			}
+
+			var self = this,
+				groupedErrors = {};
+
+			_.each(parsedError, function(value, key) {
+				if (!value.hasOwnProperty('type') || !value.type.hasOwnProperty('message')) {
+					return;
+				}
+
+				var errorType = value.type,
+					errorKey = self.portWizardGetErrorKey(errorType.message);
+
+				if (groupedErrors.hasOwnProperty(errorKey)) {
+					if (errorType.cause) {
+						groupedErrors[errorKey].causes.push(errorType.cause);
+					}
+					return;
+				}
+
+				groupedErrors[errorKey] = {
+					message: errorType.message,
+					causes: errorType.cause ? [ errorType.cause ] : []
+				};
+			});
+
+			return _.isEmpty(groupedErrors) ? null : groupedErrors;
+		},
+
+		portWizardGetErrorKey(errorMessage) {
+			var minIndex = _.chain([':', ',', '.'])
+				.map(function(separator) {
+					return errorMessage.indexOf(separator);
+				}).min().value();
+
+			return _.snakeCase(errorMessage.slice(0, minIndex));
 		}
 	};
 
