@@ -797,15 +797,14 @@
 			},
 			"numbersType": {
 				"text1": "What type of number will you be requesting to port?",
-				"text2": "(All numbers in a port request must be the same format).",
 				"label": {
 					"local": "U.S. Local Numbers",
 					"tollFree": "U.S. Toll-free Numbers"
 				}
 			},
 			"verifyOwner": {
-				"title": "We will need to verify ownership of the numbers you wish to port.",
-				"text1": "To do this, you will need to upload a recent (within 30 days) bill from your carrier which contains the numbers you want to port.",
+				"title": "We need to verify ownership of the numbers you wish to port.",
+				"text1": "As is required by law, please upload a bill that you have received within the last 30 days as proof that these are your numbers.",
 				"text2": "This proof of your account and ownership is required by law."
 			},
 			"buttons": {
@@ -820,8 +819,8 @@
 				"text": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
 				"label": {
 					"carrier": "Carrier",
-					"accountName": "Name on Account",
-					"billingAddress": "Billing Address",
+					"accountName": "Account Name on Bill",
+					"billingAddress": "Service Address",
 					"billVerification": "Recent Bill Verification",
 					"acknowledgeBill": "I acknowledge the date on this bill is within the last 30 days",
 					"accountNumber": "Account Number",
@@ -842,12 +841,13 @@
 			}
 		},
 		"addNumbers": {
-			"title": "Now we can establish what numbers you would like to port.",
-			"text1": "Input the desired number you wish to port, or input a larger batch of numbers from your bill by separating each number with a single space.",
-			"text2": "You can copy/paste larger batches of numbers, but no other other characters besides numbers and spaces are accepted.",
+			"title": "Enter the numbers you wish to port from the bill.",
+			"text1": "To avoid delays ensure you only enter {{variable}} that belong to the bill you uploaded.",
+			"text2": "If you wish you can add multiple numbers at once by separating them by a single space.",
+			"text3": "Enter each number without any parentheses, dashes or spaces.",
 			"textarea": {
 				"link": "Add More Numbers",
-				"legend": "Input Numbers to Port",
+				"legend": "Numbers to Port from Bill",
 				"button": "Add Numbers"
 			},
 			"list": {
@@ -855,9 +855,9 @@
 				"text": "You have not added any numbers to your port request yet."
 			},
 			"portion": {
-				"errorMessage": "It looks like you selected you current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
+				"errorMessage": "It looks like you selected your current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
 				"text1": "Do these numbers make up the entire current account per your bill?",
-				"text2": "Or do these numbers male up only a select portion of numbers?",
+				"text2": "Or do these numbers make up only a select portion of numbers?",
 				"selection": {
 					"full": "Full Account Port",
 					"portion": "Portion Of Numbers"
@@ -871,8 +871,8 @@
 			"buttons": {
 				"next": {
 					"manual": {
-						"loa": "Next - LoA Form (Manual LoA, no e-sign)",
-						"resporg": "Next - RespOrg Form (Manual RespOrg, no e-sign)"
+						"loa": "Next - LoA Form",
+						"resporg": "Next - RespOrg Form"
 					},
 					"eSign": {
 						"loa": "Next - LoA Form (E-sign enabled on account)",
@@ -887,8 +887,7 @@
 			"link": "Learn more about {{variable}}'s' here.",
 			"download": {
 				"title": "Step 1",
-				"text": "Download your {{variable}}",
-				"button": "Download Pre-filled {{variable}}"
+				"button": "Download {{variable}}"
 			},
 			"doubleCheck": {
 				"title": "Step 2",
@@ -987,5 +986,26 @@
 		"confirmDeleteTitle": "Warning! Are you sure?",
 		"successUpdate": "Your Storage Settings were successfully updated!",
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
+	},
+
+	"__comment": "UI-3147: Migrate Smart PBX user deletion to common submodule",
+	"__version": "4.3",
+	"deleteSmartUser": {
+		"__comment": "UI-2138: Delete User new Dialog",
+		"__version": "3.22",
+		"deleteDialog": {
+			"title": "Remove {{ name }} from the system",
+			"headerAdmin": "You're about to delete an ADMIN! Deleting an admin will delete his user, voicemail boxes and unassign his devices. It will also prevent them from managing this UI. Do you want to continue?",
+			"headerUser": "Deleting a user will delete this user and his Voicemail Box, and unassign the devices and numbers that were assigned to this user. Do you want to continue?",
+			"deleteUser": "Delete",
+			"deleteUserName": "Delete \"{{variable}}\"",
+			"proceed": "Proceed",
+			"deleteDevices": "Also remove this user's devices from the system",
+			"deleteDevicesHelp": "If you leave this option unchecked, we'll just unassign these devices and they will show up in the list of Spare Devices",
+			"__comment": "UI-2467: also remove conferences when deleting a user from smartpbx",
+			"__version": "4.0",
+			"deleteConferences": "Also remove this user's conferences from the system",
+			"deleteConferencesHelp": "If you leave this option unchecked, you won't be able to use the user's conference number anywhere else, as it will still be used by that conference."
+		}
 	}
 }
