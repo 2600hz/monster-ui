@@ -22,6 +22,12 @@ define(function(require) {
 						'application/pdf'
 					],
 					maxSize: 8
+				},
+				knownErrors: {
+					savePort: {
+						number_is_on_a_port_request_already: 'numberAlreadyOnPortRequest',
+						number_exists_on_the_system_already: 'numberAlreadyOnSystem'
+					}
 				}
 			}
 		},
@@ -1242,8 +1248,7 @@ define(function(require) {
 					// Add error handler for errors that can be processed
 					var portSavingArgs = _.merge({}, args, {
 						error: function(parsedError, groupedErrors) {
-							// TODO: Show errors to user
-
+							self.portWizardShowErrors(groupedErrors);
 							args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 						}
 					});
@@ -1554,13 +1559,48 @@ define(function(require) {
 			return _.isEmpty(groupedErrors) ? null : groupedErrors;
 		},
 
-		portWizardGetErrorKey(errorMessage) {
+		portWizardGetErrorKey: function(errorMessage) {
 			var minIndex = _.chain([':', ',', '.'])
 				.map(function(separator) {
 					return errorMessage.indexOf(separator);
 				}).min().value();
 
 			return _.snakeCase(errorMessage.slice(0, minIndex));
+		},
+
+		portWizardShowErrors: function(groupedErrors) {
+			if (_.size(groupedErrors)) {
+				// Show toast
+				var errorKey = _.chain(groupedErrors).keys().head().value(),
+					i18nKey = this.appFlags.portWizard.knownErrors[errorKey],
+					errorData = groupedErrors[errorKey],
+					message = errorData.message;
+
+				if (i18nKey) {
+					message = self.i18n.active().portWizard.portSubmit.knownErrors[i18nKey];
+				} else {
+					message = message + (message.charAt(message.length - 1) === '.' ? '' : '.') + ' Phone numbers: {{variable}}';
+				}
+
+				var toastMessage = self.getTemplate({
+					name: '!' + message,
+					data: {
+						email: errorData.causes.join(', ')
+					}
+				});
+
+				monster.ui.toast({
+					type: 'error',
+					message: toastMessage,
+					options: {
+						timeOut: 10000
+					}
+				});
+
+				return;
+			}
+
+			// TODO: Show dialog
 		}
 	};
 
