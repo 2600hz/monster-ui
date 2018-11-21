@@ -15,21 +15,30 @@ define(function(require) {
 			'common.portListing.render': 'portListingRender'
 		},
 
-		states: [
-			{ value: 'unconfirmed', next: [1, 6] },
-			{ value: 'submitted', next: [2, 4, 6] },
-			{ value: 'pending', next: [3, 4, 5, 6] },
-			{ value: 'scheduled', next: [4, 5, 6] },
-			{ value: 'rejected', next: [1, 5, 6] },
-			{ value: 'completed', next: [] },
-			{ value: 'canceled', next: [] }
-		],
+		appFlags: {
+			portListing: {
+				isMonsterApp: undefined,
+				states: [
+					{ value: 'unconfirmed', next: [1, 6] },
+					{ value: 'submitted', next: [2, 4, 6] },
+					{ value: 'pending', next: [3, 4, 5, 6] },
+					{ value: 'scheduled', next: [4, 5, 6] },
+					{ value: 'rejected', next: [1, 5, 6] },
+					{ value: 'completed', next: [] },
+					{ value: 'canceled', next: [] }
+				]
+			}
+		},
 
 		portListingRender: function(args) {
 			var self = this,
 				modal;
 
-			if (args.isMonsterApp) {
+			self.appFlags.portListing.isMonsterApp = _.isBoolean(args.isMonsterApp)
+				? args.isMonsterApp
+				: false;
+
+			if (self.appFlags.portListing.isMonsterApp) {
 				self.portListingRenderLayout(args);
 			} else {
 				if (args.parent && args.parent.getId()) {
@@ -264,17 +273,18 @@ define(function(require) {
 
 		portListingRenderUpdateStatus: function(args) {
 			var self = this,
+				states = self.appFlags.portListing.states,
 				data = args.data,
 				port = data.port,
-				stateInfo = _.find(self.states, function(state) { return state.value === port.port_state; }),
+				stateInfo = _.find(states, { value: port.port_state }),
 				template = $(self.getTemplate({
 					name: 'updateStatus',
 					data: {
 						currentState: self.i18n.active().portListing.misc.status[stateInfo.value],
 						availableStates: _.map(stateInfo.next, function(index) {
 							return {
-								value: self.states[index].value,
-								label: self.i18n.active().portListing.misc.status[self.states[index].value]
+								value: states[index].value,
+								label: self.i18n.active().portListing.misc.status[states[index].value]
 							};
 						}),
 						request: port
