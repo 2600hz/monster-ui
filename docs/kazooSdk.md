@@ -366,7 +366,7 @@ kazooSdk.auth.userAuth({
 | Request URL: | {apiRoot}/accounts/{accountId}/cdrs/legs/{id} |
 | Request Content Type: | application/json |
 | Response Content Type: | json |
-| Mandatory _settings_: | `accountId`, 'id' |
+| Mandatory _settings_: | `accountId`, `id` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Channel
