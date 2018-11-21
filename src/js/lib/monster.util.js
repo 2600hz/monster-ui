@@ -509,50 +509,6 @@ define(function(require) {
 			}
 		},
 
-		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
-		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, app) {
-			transaction.amount = parseFloat(transaction.amount).toFixed(2);
-
-			if (transaction.hasOwnProperty('executor')) {
-                                var executor = transaction.executor;
-
-                                if (transaction.hasOwnProperty('description') && transaction.description) {
-                                        transaction.friendlyName = transaction.description;
-                                }
-
-                                if (!transaction.friendlyName && executor.module in app.i18n.active().transactions.executors) {
-                                        if (executor.trigger in app.i18n.active().transactions.executors[executor.module]) {
-                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module][executor.trigger];
-                                        } else if ('default' in app.i18n.active().transactions.executors[executor.module]) {
-                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module]['default'];
-                                        }
-                                }
-
-                                if (!transaction.friendlyName) {
-                                        transaction.friendlyName = 'General Transaction';
-                                }
-
-				if (transaction.amount < 0) {
-					transaction.friendlyName = app.i18n.active().transactions.refundText + ' ' + transaction.friendlyName.charAt(0).toLowerCase() + transaction.friendlyName.slice(1);
-				}
-			}
-
-                        transaction.approved = transaction.hasOwnProperty('status') && transaction.status == 'completed';
-
-			if (!transaction.approved) {
-                                if (transaction.hasOwnProperty('bookkeeper') && transaction.bookkeeper.message) {
-                                        transaction.errorMessage = transaction.bookkeeper.message;
-                                } else {
-                                        transaction.errorMessage = transaction.status in app.i18n.active().transactions.statuses ? app.i18n.active().transactions.statuses[transaction.status] : transaction.status;
-                                }
-			}
-
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
-
-			return transaction;
-		},
-
 		accountArrayToTree: function(accountArray, rootAccountId) {
 			var result = {};
 
