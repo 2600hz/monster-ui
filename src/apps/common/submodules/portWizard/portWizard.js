@@ -1521,9 +1521,7 @@ define(function(require) {
 		 *             Error handling helpers             *
 		 **************************************************/
 
-		portWizardSavePortCommonErrorHandler:
-
-		portWizardGroupSavePortErrors(parsedError, errorData) {
+		portWizardGroupSavePortErrors: function(parsedError, errorData) {
 			if (errorData.status === '500' && errorData.message === 'invalid request') {
 				// Errors cannot be grouped
 				return null;
