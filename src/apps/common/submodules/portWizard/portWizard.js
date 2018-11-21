@@ -16,11 +16,13 @@ define(function(require) {
 		},
 
 		appFlags: {
-			attachments: {
-				mimeTypes: [
-					'application/pdf'
-				],
-				maxSize: 8
+			portWizard: {
+				attachments: {
+					mimeTypes: [
+						'application/pdf'
+					],
+					maxSize: 8
+				}
 			}
 		},
 
@@ -57,8 +59,8 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
 									success: function(results) {
 										self.portWizardRequestUpdateAttachment({
@@ -473,8 +475,8 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									success: function(results) {
 										var actionsTemplate = $(self.getTemplate({
 											name: 'portInfo-actions',
@@ -914,8 +916,8 @@ define(function(require) {
 							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
 							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-							mimeTypes: self.appFlags.attachments.mimeTypes,
-							maxSize: self.appFlags.attachments.maxSize,
+							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+							maxSize: self.appFlags.portWizard.attachments.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
@@ -1204,7 +1206,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.attachments.mimeTypes)
+										.chain(self.appFlags.portWizard.attachments.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -1221,7 +1223,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.attachments.maxSize
+									variable: self.appFlags.portWizard.attachments.maxSize
 								}
 							})
 						});
