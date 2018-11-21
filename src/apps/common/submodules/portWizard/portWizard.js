@@ -1569,29 +1569,40 @@ define(function(require) {
 		},
 
 		portWizardShowErrors: function(groupedErrors) {
-			if (_.size(groupedErrors)) {
-				// Show toast
-				var errorKey = _.chain(groupedErrors).keys().head().value(),
-					i18nKey = this.appFlags.portWizard.knownErrors[errorKey],
-					errorData = groupedErrors[errorKey],
-					message = errorData.message;
+			var self = this,
+				viewErrors = [];
+
+			// Update messages with i18n values
+			_.each(groupedErrors, function(errorGroup, errorKey) {
+				var i18nKey = this.appFlags.portWizard.knownErrors[errorKey],
+					message = errorGroup.message;
 
 				if (i18nKey) {
 					message = self.i18n.active().portWizard.portSubmit.knownErrors[i18nKey];
 				} else {
-					message = message + (message.charAt(message.length - 1) === '.' ? '' : '.') + ' Phone numbers: {{variable}}';
+					message
+						= message + (message.charAt(message.length - 1) === '.' ? '' : '.')
+							+ ' Phone numbers: {{variable}}';
 				}
 
-				var toastMessage = self.getTemplate({
-					name: '!' + message,
-					data: {
-						email: errorData.causes.join(', ')
-					}
+				viewErrors.push({
+					message: message,
+					causes: errorGroup.causes.join(', ')
 				});
+			});
+
+			if (viewErrors === 1) {
+				// Show toast
+				var error = viewErrors[0];
 
 				monster.ui.toast({
 					type: 'error',
-					message: toastMessage,
+					message: self.getTemplate({
+						name: '!' + error.message,
+						data: {
+							variable: error.causes
+						}
+					}),
 					options: {
 						timeOut: 10000
 					}
@@ -1600,7 +1611,13 @@ define(function(require) {
 				return;
 			}
 
-			// TODO: Show dialog
+			// Show dialog
+			monster.ui.alert('error', self.getTemplate({
+				name: 'errorDialog',
+				data: {
+					errors: viewErrors
+				}
+			}));
 		}
 	};
 

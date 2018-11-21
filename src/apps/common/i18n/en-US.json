@@ -948,7 +948,11 @@
 					"standard": "There are standard phone numbers, not featured (like star-ring)"
 				}
 			},
-			"button": "Submit This Port Request"
+			"button": "Submit This Port Request",
+			"knownErrors" : {
+				"numberAlreadyOnPortRequest": "One or more phone numbers are already included in port requests: {{variable}}",
+				"numberAlreadyOnSystem": "One or more phone numbers already exist in the system: {{variable}}"
+			}
 		}
 	},
 

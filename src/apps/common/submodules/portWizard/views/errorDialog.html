@@ -1,0 +1,9 @@
+<div id="port_wizard_error_dialog">
+	<ul>
+	{{#each errors}}
+		<li>
+			{{replaceVar this.message this.causes}}
+		</li>
+	{{/each}}
+	</ul>
+</div>
