@@ -112,7 +112,7 @@ define(function(require) {
 						data: _.merge(formattedData, {hideSelect: true}),
 						submodule: 'mediaSelect'
 					}));
-					self.mediaSelectBindTabsTemplate(template);
+					self.mediaSelectBindTabsTemplate(template, args);
 					break;
 				default:
 					template = $(self.getTemplate({
@@ -264,13 +264,19 @@ define(function(require) {
 			});
 		},
 
-		mediaSelectBindTabsTemplate: function(template) {
+		mediaSelectBindTabsTemplate: function(template, args) {
 			var self = this,
 				mediaToUpload;
 
 			monster.ui.fancyTabs(template.find('.monster-tab-wrapper'));
 
-			self.mediaSelectBindCommon(template, mediaToUpload);
+			self.mediaSelectBindCommon(template, mediaToUpload, function(media) {
+				args.callback({
+					getValue: function() {
+						return media;
+					}
+				});
+			});
 		}
 	};
 
