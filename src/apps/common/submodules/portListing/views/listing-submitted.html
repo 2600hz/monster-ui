@@ -1,0 +1,126 @@
+<div class="monster-table-wrapper-spaced">
+	<div class="monster-table-header">
+		<button class="monster-button-primary port-wizard">
+			{{i18n.portListing.listing.button}}
+		</button>
+	</div>
+	<table class="monster-table footable" id="submitted_ports_listing">
+		<thead>
+			<tr>
+				<th data-type="html">
+					{{toUpperCase i18n.portListing.misc.portInfo.name}}
+				</th>
+				<th data-type="html">
+					{{toUpperCase i18n.portListing.misc.portInfo.status}}
+				</th>
+				<th data-type="number">
+					{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
+				</th>
+				{{!-- <th>
+					{{toUpperCase i18n.portListing.misc.portInfo.dateSubmitted}}
+				</th> --}}
+				<th>
+					{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
+				</th>
+				{{!-- <th>
+					{{toUpperCase i18n.portListing.misc.portInfo.submitter}}
+				</th> --}}
+			</tr>
+		</thead>
+		<tbody>
+		{{#each requests}}
+			<tr class="listing-item" data-id="{{id}}">
+				<td data-filter-value="{{name}} {{id}} {{#if reference}} {{replaceVar @root.i18n.portListing.listing.tbody.reference reference}}{{/if}}" data-sort-value="{{name}}">
+					<div class="bold">
+						{{name}}
+					</div>
+				{{#if reference}}
+					<div class="info">
+						{{replaceVar @root.i18n.portListing.listing.tbody.reference reference}}
+					</div>
+				{{/if}}
+				</td>
+				{{!-- <td data-filter-value="{{state}}{{#if extra.isScheduledToday}} scheduledtoday{{/if}}" data-sort-value="{{ tryI18n @root.i18n.portListing.misc.status state }}{{#compare state '===' 'scheduled'}}-{{scheduled_date}}{{/compare}}"> --}}
+				<td data-filter-value="{{state}}" data-sort-value="{{ tryI18n @root.i18n.portListing.misc.status state }}">
+					<div class="status-wrapper">
+				{{#compare state '===' 'submitted'}}
+					<div class="status-wrapper">
+						<i class="icon-telicon-prioritize"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.submitted}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'pending'}}
+					<div class="status-wrapper">
+						<i class="icon-telicon-porting"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.pending}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'scheduled'}}
+					<div class="status-wrapper">
+						<i class="icon-telicon-calendar"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.scheduled}}
+							</div>
+							{{!-- <div class="info">
+								({{toFriendlyDate scheduled_date 'dateTime'}})
+							</div> --}}
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'completed'}}
+					<div class="status-wrapper success">
+						<i class="icon-telicon-check-circle"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.completed}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'rejected'}}
+					<div class="status-wrapper warning">
+						<i class="icon-telicon-warning"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.rejected}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'canceled'}}
+					<div class="status-wrapper error">
+						<i class="icon-telicon-x-circled"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.canceled}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				</td>
+				<td>
+					{{amount}}
+				</td>
+				{{!-- <td data-sort-value="{{extra.lastSubmitted.timestamp}}">
+					{{toFriendlyDate extra.lastSubmitted.timestamp 'date'}}
+				</td> --}}
+				<td>
+					{{carrier.winning}}
+				</td>
+				{{!-- <td>
+					{{extra.lastSubmitted.submitter}}
+				</td> --}}
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>

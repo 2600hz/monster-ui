@@ -1,0 +1,67 @@
+<div class="monster-table-wrapper-spaced">
+	<h4 class="title">
+		{{i18n.portListing.listing.title}}
+	</h4>
+	<table class="monster-table footable" id="unconfirmed_ports_listing">
+		<thead>
+			<tr>
+				<th data-type="html">
+					{{toUpperCase i18n.portListing.misc.portInfo.name}}
+				</th>
+				<th data-type="html" data-sortable="false">
+					{{toUpperCase i18n.portListing.misc.portInfo.status}}
+				</th>
+				<th data-type="number">
+					{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
+				</th>
+				<th>
+					{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		{{#each requests}}
+			<tr class="listing-item" data-id="{{id}}">
+				<td data-sort-value="{{name}}{{#if reference}} {{replaceVar @root.i18n.portListing.listing.tbody.reference reference}}{{/if}}">
+					<div class="bold">
+						{{name}}
+					</div>
+				{{#if reference}}
+					<div class="info">
+						{{replaceVar @root.i18n.portListing.listing.tbody.reference reference}}
+					</div>
+				{{/if}}
+				</td>
+				<td>
+				{{#compare state '===' 'rejected'}}
+					<div class="status-wrapper warning">
+						<i class="icon-telicon-warning"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.rejected}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'unconfirmed'}}
+					<div class="status-wrapper">
+						<i class="fa fa-refresh"></i>
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.unconfirmed}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				</td>
+				<td>
+					{{amount}}
+				</td>
+				<td>
+					{{carrier.losing}}
+				</td>
+			</tr>
+		{{/each}}
+		</tbody>
+	</table>
+</div>
