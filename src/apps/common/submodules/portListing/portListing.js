@@ -121,6 +121,7 @@ define(function(require) {
 					var template = $(self.getTemplate({
 						name: 'listing-incomplete',
 						data: {
+							isMonsterApp: self.appFlags.portListing.isMonsterApp,
 							requests: _
 								.chain(requests)
 								.filter(function(request) {
@@ -132,7 +133,7 @@ define(function(require) {
 						submodule: 'portListing'
 					}));
 
-					monster.ui.footable(template.find('#unconfirmed_ports_listing'), {
+					monster.ui.footable(template.find('#incomplete_ports_listing'), {
 						filtering: {
 							enabled: false
 						}
@@ -153,6 +154,7 @@ define(function(require) {
 					var template = $(self.getTemplate({
 						name: 'listing-submitted',
 						data: {
+							isMonsterApp: self.appFlags.portListing.isMonsterApp,
 							requests: _.filter(requests, function(request) {
 								return !_.includes(['unconfirmed', 'rejected'], request.state);
 							})
@@ -189,8 +191,9 @@ define(function(require) {
 						submodule: 'portListing'
 					}));
 
-					self.portListingBindDetailEvents(template, $.extend(true, {}, args, {
+					self.portListingBindDetailEvents(template, _.assign({}, args, {
 						data: {
+							portId: portId,
 							port: results.port
 						}
 					}));
@@ -220,8 +223,20 @@ define(function(require) {
 						isUpdatable: unactionableStatuses.indexOf(port.port_state) < 0,
 						port: port
 					};
-				},
-				parallelRequests = {
+				};
+
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				monster.parallel({
+					port: function(callback) {
+						self.portListingRequestGetPort({
+							data: {
+								portRequestId: portId
+							},
+							success: function(portData) {
+								callback(null, portData);
+							}
+						});
+					},
 					transitions: function(callback) {
 						self.portListingRequestListLastSubmitted({
 							data: args.data,
@@ -240,26 +255,8 @@ define(function(require) {
 							}
 						});
 					}
-				};
-
-			if (!args.data.hasOwnProperty('port')) {
-				parallelRequests.port = function(callback) {
-					self.portListingRequestGetPort({
-						data: {
-							portRequestId: portId
-						},
-						success: function(portData) {
-							callback(null, portData);
-						}
-					});
-				};
-			}
-
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
-				monster.parallel(parallelRequests, function(err, results) {
-					insertTemplateCallback(initTemplate($.extend(true, results, {
-						port: args.data.port
-					})), function() {
+				}, function(err, results) {
+					insertTemplateCallback(initTemplate(results), function() {
 						self.portListingScrollToBottomOfTimeline(args);
 					});
 				});
@@ -392,53 +389,65 @@ define(function(require) {
 						event.preventDefault();
 
 						var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering),
-							filter = $(this).prop('href').split('#')[1];
+							filter = $(this).prop('href').split('#')[1],
+							column = self.appFlags.portListing.isMonsterApp
+								? [2]
+								: [1];
 
 						if (filter === 'all') {
 							filtering.removeFilter('byState');
 							filtering.removeFilter('byScheduleDate');
 						} else if (filter === 'today') {
 							filtering.removeFilter('byState');
-							filtering.addFilter('byScheduleDate', 'scheduledtoday', [1]);
+							filtering.addFilter('byScheduleDate', 'scheduledtoday', column);
 						} else {
 							filtering.removeFilter('byScheduleDate');
-							filtering.addFilter('byState', filter, [1]);
+							filtering.addFilter('byState', filter, column);
 						}
 
 						filtering.filter();
 					});
 
 			template
-				.find('#submitted_ports_listing')
+				.find('.footable')
 					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
-
 						var portId = $(this).data('id');
 
-						args.data.port = args.data.ports[portId];
+						if (args.data.ports[portId].state === 'unconfirmed') {
+							monster.pub('common.portWizard.render', _.extend({}, args, {
+								data: {
+									request: args.data.ports[portId]
+								},
+								globalCallback: function() {
+									self.portListingGlobalCallback(args);
+								}
+							}));
+						} else {
+							args.data.port = args.data.ports[portId];
 
-						self.portListingRenderDetail(_.merge(true, {}, args, {
-							data: {
-								portId: portId
-							}
-						}));
+							self.portListingRenderDetail(_.merge(true, {}, args, {
+								data: {
+									portId: portId
+								}
+							}));
+						}
 					});
 
 			template
-				.find('#unconfirmed_ports_listing')
-					.on('click', '.listing-item', function(event) {
+				.find('.footable')
+					.on('click', '.account-ancestors', function(event) {
 						event.preventDefault();
+						event.stopPropagation();
+						var id = $(this).data('id');
 
-						var portId = $(this).data('id');
-
-						monster.pub('common.portWizard.render', _.extend({}, args, {
-							data: {
-								request: args.data.ports[portId]
-							},
-							globalCallback: function() {
-								self.portListingGlobalCallback(args);
+						monster.pub('common.accountAncestors.render', {
+							accountId: id,
+							isMasqueradable: false,
+							entity: {
+								type: 'account'
 							}
-						}));
+						});
 					});
 		},
 
