@@ -19,9 +19,15 @@
 	{{#each parents}}
 		<div class="account-line">
 		{{#if @last}}
-			<a href="#" class="monster-link blue" id="masqueradable" data-id="{{id}}" data-toggle="tooltip" data-placement="right" data-original-title="{{@root.i18n.accountAncestors.tooltip}}">
-				{{name}}
-			</a>
+			{{#if @root.isMasqueradable}}
+				<a href="#" class="monster-link blue" id="masqueradable" data-id="{{id}}" data-toggle="tooltip" data-placement="right" data-original-title="{{@root.i18n.accountAncestors.tooltip}}">
+					{{name}}
+				</a>
+			{{else}}
+				<div class="account-name" data-id="{{id}}">
+					{{name}}
+				</div>
+			{{/if}}
 		{{else}}
 			<div class="account-name" data-id="{{id}}">
 				{{name}}
