@@ -208,10 +208,6 @@ define(function(require) {
 			});
 		},
 
-		onMediaCancel: function(args) {
-			args.popup && args.popup.dialog('close').remove();
-		},
-
 		onMediaSelectBindEvents: function(args) {
 			var self = this,
 				template = args.template,
@@ -224,7 +220,7 @@ define(function(require) {
 			});
 
 			template.find('.cancel').on('click', function() {
-				self.onMediaCancel(args);
+				args.popup && args.popup.dialog('close').remove();
 			});
 		}
 	};
