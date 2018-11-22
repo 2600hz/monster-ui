@@ -780,8 +780,9 @@ define(function(require) {
 							}
 						});
 
-						self.portWizardHelperSavePort($.extend(true, args, {
-							success: args.globalCallback
+						self.portWizardHelperSavePort(_.merge({}, args, {
+							success: args.globalCallback,
+							error: self.portWizardGetSavePortErrorCallback(args, false)
 						}));
 					});
 
@@ -1129,7 +1130,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort($.extend(true, args, {
+						self.portWizardHelperSavePort(_.merge({}, args, {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
@@ -1142,15 +1143,7 @@ define(function(require) {
 									}
 								});
 							},
-							error: function(parsedError, groupedErrors) {
-								var isKnownErrorKey = function(errorGroup, errorKey) {
-									return self.isKnownError(errorKey);
-								};
-
-								if (_.some(groupedErrors, isKnownErrorKey)) {
-									self.portWizardRenderAddNumbers(args);
-								}
-							}
+							error: self.portWizardGetSavePortErrorCallback(args, true)
 						}));
 					});
 
@@ -1541,7 +1534,7 @@ define(function(require) {
 			var self = this,
 				groupedErrors = {};
 
-			_.each(parsedError.data, function(value, key) {
+			_.each(parsedError.data, function(value) {
 				if (!value.hasOwnProperty('type') || !value.type.hasOwnProperty('message')) {
 					return;
 				}
@@ -1600,7 +1593,7 @@ define(function(require) {
 			});
 
 			if (viewErrors.length === 1) {
-				// Show toast
+				// If there is only one kind of error, show toast
 				var error = viewErrors[0];
 
 				monster.ui.toast({
@@ -1619,7 +1612,7 @@ define(function(require) {
 				return;
 			}
 
-			// Show dialog
+			// If there are more than one errors, show dialog
 			monster.ui.alert('error', self.getTemplate({
 				name: 'errorDialog',
 				data: {
@@ -1629,10 +1622,27 @@ define(function(require) {
 			}));
 		},
 
-		isKnownError: function(errorKey) {
+		portWizardIsKnownError: function(errorKey) {
 			var self = this;
 
 			return self.appFlags.portWizard.knownErrors.savePort.hasOwnProperty(errorKey);
+		},
+
+		portWizardGetSavePortErrorCallback: function(args, stopPropagation) {
+			var self = this,
+				isKnownErrorKey = function(errorGroup, errorKey) {
+					return self.portWizardIsKnownError(errorKey);
+				};
+
+			return function(parsedError, groupedErrors) {
+				if (_.some(groupedErrors, isKnownErrorKey)) {
+					self.portWizardRenderAddNumbers(args);
+				}
+
+				if (!stopPropagation && args.hasOwnProperty('error')) {
+					args.error(parsedError);
+				}
+			};
 		}
 	};
 
