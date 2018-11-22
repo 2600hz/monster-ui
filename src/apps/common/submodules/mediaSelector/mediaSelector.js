@@ -192,22 +192,25 @@ define(function(require) {
 				input = args.input,
 				removeElement = args.removeElement,
 				displayedElement = args.displayedElement,
-				callback = args.callback;
+				callback = args.callback,
+				mediaId = media;
 
-			if (_.isObject(media) && _.isFunction(media.getValue())) {
+			if (_.isObject(media)) {
 				if (!selectedMedia) {
 					selectedMedia = media.getValue();
 				}
 
-				input.val(selectedMedia.id);
-				removeElement.find('.media').text(selectedMedia.name);
-				displayedElement.text(selectedMedia.name);
-				removeElement.removeClass('hidden');
+				mediaId = selectedMedia.id;
 			}
+
+			input.val(selectedMedia.id);
+			removeElement.find('.media').text(selectedMedia.name);
+			displayedElement.text(selectedMedia.name);
+			removeElement.removeClass('hidden');
 
 			callback && callback({
 				getValue: function() {
-					return media.getValue();
+					return mediaId;
 				}
 			});
 		},
