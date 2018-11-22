@@ -1532,27 +1532,65 @@ define(function(require) {
 			}
 
 			var self = this,
-				groupedErrors = {};
+				groupedErrors = {},
+				savePortKnownErrors = self.appFlags.portWizard.knownErrors.savePort,
+				errorsI18n = monster.apps.core.i18n.active().portWizard.errors;
 
-			_.each(parsedError.data, function(value) {
-				if (!value.hasOwnProperty('type') || !value.type.hasOwnProperty('message')) {
-					return;
-				}
+			_.each(parsedError.data, function(fieldErrors, fieldKey) {
+				var isPhoneNumber = _.startsWith(fieldKey, '+');
 
-				var errorType = value.type,
-					errorKey = self.portWizardGetErrorKey(errorType.message);
+				_.each(fieldErrors, function(errorData, errorDataKey) {
+					var errorKey, errorMessage, errorCause, i18nKey;
 
-				if (groupedErrors.hasOwnProperty(errorKey)) {
-					if (errorType.cause) {
-						groupedErrors[errorKey].causes.push(errorType.cause);
+					// Error cannot be processed
+					if (typeof fieldErrors === 'string') {
+						return;
 					}
-					return;
-				}
 
-				groupedErrors[errorKey] = {
-					message: errorType.message,
-					causes: errorType.cause ? [ errorType.cause ] : []
-				};
+					// Separate error data depending on the case
+					if (isPhoneNumber) {
+						if (errorData.hasOwnProperty('message')) {
+							errorKey = self.portWizardGetErrorKey(errorData.message);
+						} else {
+							errorKey = errorDataKey;
+						}
+
+						i18nKey = savePortKnownErrors[errorKey];
+
+						if (i18nKey) {
+							errorMessage = self.i18n.active().portWizard.portSubmit.knownErrors[i18nKey];
+						} else {
+							errorMessage
+								= errorData.message + (errorData.message.charAt(errorData.message.length - 1) === '.' ? '' : '.')
+									+ ' Phone numbers: {{variable}}';
+						}
+
+						errorCause = errorData.message;
+					} else {
+						errorCause = fieldKey;
+						if (typeof errorData === 'string' || typeof errorData === 'number') {
+							errorMessage = errorData;
+						} else if (errorDataKey in errorsI18n.invalidData) {
+							errorMessage = errorsI18n.invalidData[errorDataKey];
+						} else if (errorData.hasOwnProperty('message')) {
+							errorMessage = errorData.message;
+						}
+					}
+
+					// If error group already exists, add cause
+					if (groupedErrors.hasOwnProperty(errorKey)) {
+						if (errorCause) {
+							groupedErrors[errorKey].causes.push(errorCause);
+						}
+						return;
+					}
+
+					// Else add new error group
+					groupedErrors[errorKey] = {
+						message: errorMessage,
+						causes: errorCause ? [ errorCause ] : []
+					};
+				});
 			});
 
 			return _.isEmpty(groupedErrors) ? null : groupedErrors;
@@ -1571,26 +1609,12 @@ define(function(require) {
 
 		portWizardShowErrors: function(groupedErrors) {
 			var self = this,
-				viewErrors = [];
-
-			// Update messages with i18n values
-			_.each(groupedErrors, function(errorGroup, errorKey) {
-				var i18nKey = self.appFlags.portWizard.knownErrors.savePort[errorKey],
-					message = errorGroup.message;
-
-				if (i18nKey) {
-					message = self.i18n.active().portWizard.portSubmit.knownErrors[i18nKey];
-				} else {
-					message
-						= message + (message.charAt(message.length - 1) === '.' ? '' : '.')
-							+ ' Phone numbers: {{variable}}';
-				}
-
-				viewErrors.push({
-					message: message,
-					causes: errorGroup.causes.join(', ')
+				viewErrors = _.map(groupedErrors, function(errorGroup) {
+					return {
+						message: errorGroup.message,
+						causes: errorGroup.causes.join(', ')
+					};
 				});
-			});
 
 			if (viewErrors.length === 1) {
 				// If there is only one kind of error, show toast
