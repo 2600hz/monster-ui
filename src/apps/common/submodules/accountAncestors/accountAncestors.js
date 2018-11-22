@@ -14,6 +14,10 @@ define(function(require) {
 		accountAncestorsRender: function(args) {
 			var self = this;
 
+			if (!_.isBoolean(args.isMasqueradable)) {
+				args.isMasqueradable = true;
+			}
+
 			self.accountAncestorsRequestGetData({
 				data: {
 					accountId: args.accountId
@@ -21,6 +25,7 @@ define(function(require) {
 				success: function(accounts) {
 					var account = accounts[accounts.length - 1],
 						dataToTemplate = $.extend(true, self.accountAncestorsFormatDataToTemplate(args.entity, account), {
+							isMasqueradable: args.isMasqueradable,
 							parents: accounts
 						}),
 						template = $(self.getTemplate({
