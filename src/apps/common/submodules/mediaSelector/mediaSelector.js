@@ -39,8 +39,10 @@ define(function(require) {
 
 			return _.merge({
 				select: self.i18n.active().mediaSelector.select,
-				dialogSelect: self.i18n.active().mediaSelector.dialogSelect,
-				dialogUpload: self.i18n.active().mediaSelector.dialogUpload
+				dialog: {
+					select: self.i18n.active().mediaSelector.dialog.select,
+					upload: self.i18n.active().mediaSelector.dialog.upload
+				}
 			}, args.labels);
 		},
 
@@ -63,7 +65,9 @@ define(function(require) {
 			});
 
 			template.find('.media-selector-element').on('click', function() {
-				switch ($(this).data('action')) {
+				var action = $(this).data('action');
+
+				switch (action) {
 					case 'remove': {
 						self.onMediaRemove({
 							input: args.input,
@@ -76,7 +80,10 @@ define(function(require) {
 						self.onMediaSelect({
 							medias: args.medias,
 							media: args.media,
-							labels: args.labels.dialogSelect,
+							labels: args.labels.dialog[action],
+							templateName: 'media-selectDialog',
+							selectedOption: _.get(args, 'media.id', null),
+							skin: action,
 							callbackAfterSelect: function(media) {
 								self.onMediaSelected(args, media);
 							}
@@ -84,10 +91,13 @@ define(function(require) {
 						break;
 					}
 					case 'upload': {
-						self.onMediaUpload({
+						self.onMediaSelect({
 							medias: args.medias,
 							media: args.media,
-							labels: args.labels.dialogUpload,
+							labels: args.labels.dialog[action],
+							templateName: 'media-uploadDialog',
+							selectedOption: _.get(args, 'media.id', null),
+							skin: action,
 							callbackAfterSelect: function(media) {
 								self.onMediaSelected(args, media);
 							}
@@ -101,7 +111,7 @@ define(function(require) {
 		onMediaRemove: function(args) {
 			var self = this;
 			args.input.val('');
-			args.displayedElement.text(self.i18n.active().mediaSelector.select.emptyValue);
+			args.displayedElement.text(self.i18n.active().mediaSelector.select.empty);
 			args.removeElement.addClass('hidden');
 			args.removeElement.find('.media').text('');
 		},
@@ -110,7 +120,7 @@ define(function(require) {
 			var self = this,
 				inputName = 'media_id',
 				template = $(self.getTemplate({
-					name: 'media-selectDialog',
+					name: args.templateName,
 					data: {
 						labels: args.labels
 					},
@@ -123,50 +133,12 @@ define(function(require) {
 
 			monster.pub('common.mediaSelect.render', {
 				container: template.find('.media-select-wrapper'),
-				name: 'hold_treatment',
+				name: args.inputName,
 				options: args.medias,
-				selectedOption: _.get(args, 'media.id', null),
+				selectedOption: args.selectedOption,
 				label: '',
 				inputName: inputName,
-				skin: 'select',
-				callback: function(mediaControl) {
-					self.onMediaSelectBindEvents({
-						template: template,
-						popup: popup,
-						mediaControl: mediaControl,
-						inputName: inputName,
-						callback: function(media) {
-							popup && popup.dialog('close').remove();
-							args.callbackAfterSelect(media);
-						}
-					});
-				}
-			});
-		},
-
-		onMediaUpload: function(args) {
-			var self = this,
-				inputName = 'media_id',
-				template = $(self.getTemplate({
-					name: 'media-uploadDialog',
-					data: {
-						labels: args.labels
-					},
-					submodule: 'mediaSelector'
-				})),
-				popup = monster.ui.dialog(template, {
-					position: ['top', 20],
-					title: args.labels.headline
-				});
-
-			monster.pub('common.mediaSelect.render', {
-				container: template.find('.media-select-wrapper'),
-				name: 'hold_treatment',
-				options: args.medias,
-				selectedOption: null,
-				label: '',
-				inputName: inputName,
-				skin: 'upload',
+				skin: args.skin,
 				callback: function(mediaControl) {
 					self.onMediaSelectBindEvents({
 						template: template,
