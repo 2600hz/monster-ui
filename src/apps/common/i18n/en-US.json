@@ -598,6 +598,7 @@
 			"unknownUser": "Unknown User",
 			"unknownCarrier": "Unknown Carrier",
 			"portInfo": {
+				"account": "Account",
 				"winningCarrier": "Winning Carrier",
 				"refNumber": "Reference Number",
 				"name": "Request Name",
@@ -625,7 +626,7 @@
 			"hint": "Viewing"
 		},
 		"listing": {
-			"title": "Incomplete Requests - Saved for Later",
+			"title": "Saved for Later/Rejected Requests",
 			"customSelect": {
 				"byStatus": "View by Status",
 				"forToday": "Scheduled for Today",
