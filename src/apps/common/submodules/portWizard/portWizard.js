@@ -16,11 +16,19 @@ define(function(require) {
 		},
 
 		appFlags: {
-			attachments: {
-				mimeTypes: [
-					'application/pdf'
-				],
-				maxSize: 8
+			portWizard: {
+				attachments: {
+					mimeTypes: [
+						'application/pdf'
+					],
+					maxSize: 8
+				},
+				knownErrors: {
+					savePort: {
+						number_is_on_a_port_request_already: 'numberAlreadyOnPortRequest',
+						number_exists_on_the_system_already: 'numberAlreadyOnSystem'
+					}
+				}
 			}
 		},
 
@@ -57,8 +65,8 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
 									success: function(results) {
 										self.portWizardRequestUpdateAttachment({
@@ -473,8 +481,8 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									success: function(results) {
 										var actionsTemplate = $(self.getTemplate({
 											name: 'portInfo-actions',
@@ -914,8 +922,8 @@ define(function(require) {
 							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
 							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-							mimeTypes: self.appFlags.attachments.mimeTypes,
-							maxSize: self.appFlags.attachments.maxSize,
+							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+							maxSize: self.appFlags.portWizard.attachments.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
@@ -1134,8 +1142,14 @@ define(function(require) {
 									}
 								});
 							},
-							error: function() {
-								self.portWizardRenderAddNumbers(args);
+							error: function(parsedError, groupedErrors) {
+								var isKnownErrorKey = function(errorGroup, errorKey) {
+									return self.isKnownError(errorKey);
+								};
+
+								if (_.some(groupedErrors, isKnownErrorKey)) {
+									self.portWizardRenderAddNumbers(args);
+								}
 							}
 						}));
 					});
@@ -1204,7 +1218,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.attachments.mimeTypes)
+										.chain(self.appFlags.portWizard.attachments.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -1221,7 +1235,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.attachments.maxSize
+									variable: self.appFlags.portWizard.attachments.maxSize
 								}
 							})
 						});
@@ -1237,10 +1251,18 @@ define(function(require) {
 				title: self.i18n.active().portWizard.loading.title,
 				text: self.i18n.active().portWizard.loading.text,
 				callback: function() {
+					// Add error handler for errors that can be processed
+					var portSavingArgs = _.merge({}, args, {
+						error: function(parsedError, groupedErrors) {
+							self.portWizardShowErrors(groupedErrors);
+							args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+						}
+					});
+
 					if (args.data.request.hasOwnProperty('id')) {
-						self.portWizardHelperUpdatePort(args);
+						self.portWizardHelperUpdatePort(portSavingArgs);
 					} else {
-						self.portWizardHelperCreatePort(args);
+						self.portWizardHelperCreatePort(portSavingArgs);
 					}
 				}
 			});
@@ -1286,8 +1308,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
@@ -1354,8 +1376,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
@@ -1386,31 +1408,37 @@ define(function(require) {
 		portWizardRequestCreatePort: function(args) {
 			var self = this;
 
-			self.callApi({
-				resource: 'port.create',
-				data: $.extend(true, {
-					accountId: self.accountId
-				}, args.data),
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError, error, globalHandler) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
+			self.portWizardRequestSavePort('port.create', args);
 		},
 		portWizardRequestUpdatePort: function(args) {
 			var self = this;
 
+			self.portWizardRequestSavePort('port.update', args);
+		},
+		portWizardRequestSavePort: function(resource, args) {
+			var self = this;
+
 			self.callApi({
-				resource: 'port.update',
-				data: $.extend(true, {
-					accountId: self.accountId
+				resource: resource,
+				data: _.merge({
+					accountId: self.accountId,
+					generateError: false
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
+					var groupedErrors = self.portWizardGroupSavePortErrors(parsedError, error);
+
+					if (groupedErrors) {
+						args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+						return;
+					}
+
+					globalHandler(error, {
+						generateError: true
+					});
+
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
@@ -1498,6 +1526,113 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		/**************************************************
+		 *             Error handling helpers             *
+		 **************************************************/
+
+		portWizardGroupSavePortErrors: function(parsedError, errorData) {
+			if (errorData.status !== 400) {
+				// Errors cannot be processed
+				return null;
+			}
+
+			var self = this,
+				groupedErrors = {};
+
+			_.each(parsedError.data, function(value, key) {
+				if (!value.hasOwnProperty('type') || !value.type.hasOwnProperty('message')) {
+					return;
+				}
+
+				var errorType = value.type,
+					errorKey = self.portWizardGetErrorKey(errorType.message);
+
+				if (groupedErrors.hasOwnProperty(errorKey)) {
+					if (errorType.cause) {
+						groupedErrors[errorKey].causes.push(errorType.cause);
+					}
+					return;
+				}
+
+				groupedErrors[errorKey] = {
+					message: errorType.message,
+					causes: errorType.cause ? [ errorType.cause ] : []
+				};
+			});
+
+			return _.isEmpty(groupedErrors) ? null : groupedErrors;
+		},
+
+		portWizardGetErrorKey: function(errorMessage) {
+			var minIndex = _.chain([':', ',', '.'])
+				.map(function(separator) {
+					return errorMessage.indexOf(separator);
+				}).filter(function(index) {
+					return index > 0;
+				}).min().value();
+
+			return _.snakeCase(errorMessage.slice(0, minIndex));
+		},
+
+		portWizardShowErrors: function(groupedErrors) {
+			var self = this,
+				viewErrors = [];
+
+			// Update messages with i18n values
+			_.each(groupedErrors, function(errorGroup, errorKey) {
+				var i18nKey = self.appFlags.portWizard.knownErrors.savePort[errorKey],
+					message = errorGroup.message;
+
+				if (i18nKey) {
+					message = self.i18n.active().portWizard.portSubmit.knownErrors[i18nKey];
+				} else {
+					message
+						= message + (message.charAt(message.length - 1) === '.' ? '' : '.')
+							+ ' Phone numbers: {{variable}}';
+				}
+
+				viewErrors.push({
+					message: message,
+					causes: errorGroup.causes.join(', ')
+				});
+			});
+
+			if (viewErrors.length === 1) {
+				// Show toast
+				var error = viewErrors[0];
+
+				monster.ui.toast({
+					type: 'error',
+					message: self.getTemplate({
+						name: '!' + error.message,
+						data: {
+							variable: error.causes
+						}
+					}),
+					options: {
+						timeOut: 10000
+					}
+				});
+
+				return;
+			}
+
+			// Show dialog
+			monster.ui.alert('error', self.getTemplate({
+				name: 'errorDialog',
+				data: {
+					errors: viewErrors
+				},
+				submodule: 'portWizard'
+			}));
+		},
+
+		isKnownError: function(errorKey) {
+			var self = this;
+
+			return self.appFlags.portWizard.knownErrors.savePort.hasOwnProperty(errorKey);
 		}
 	};
 
