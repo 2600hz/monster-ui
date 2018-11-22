@@ -998,6 +998,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
+						var signeeFormData = monster.ui.getFormData('form_upload_document');
+						args.data.request = _.merge(signeeFormData, args.data.request);
+
 						self.portWizardHelperSavePort($.extend(true, args, {
 							success: args.globalCallback
 						}));
