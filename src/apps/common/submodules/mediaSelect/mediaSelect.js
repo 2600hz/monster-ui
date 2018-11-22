@@ -16,17 +16,20 @@ define(function(require) {
 				container = args.container,
 				callback = args.callback,
 				formattedData = self.mediaSelectFormatData(args),
-				template = self.mediaSelectGetSkinnedTemplate(args, formattedData);
+				skin = _.get(args, 'skin', 'default'),
+				template = self.mediaSelectGetSkinnedTemplate(_.merge({ skin: skin }, args), formattedData);
 
 			container
 				.empty()
 				.append(template);
 
-			callback && callback({
-				getValue: function() {
-					return self.mediaSelectGetValue(template, args);
-				}
-			});
+			if (skin !== 'upload') {
+				callback && callback({
+					getValue: function() {
+						return self.mediaSelectGetValue(template, args);
+					}
+				});
+			}
 		},
 
 		mediaSelectFormatData: function(args) {
@@ -86,7 +89,7 @@ define(function(require) {
 
 		mediaSelectGetSkinnedTemplate: function(args, formattedData) {
 			var self = this,
-				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
+				skin = args.skin,
 				template;
 
 			switch (skin) {
@@ -96,7 +99,9 @@ define(function(require) {
 						data: formattedData,
 						submodule: 'mediaSelect'
 					}));
-					self.mediaSelectBindTabsTemplate(template);
+					self.mediaSelectBindTabsTemplate(_.merge({
+						template: template
+					}, args));
 					break;
 				case 'select':
 					template = $(self.getTemplate({
@@ -104,7 +109,9 @@ define(function(require) {
 						data: _.merge(formattedData, {hideUpload: true}),
 						submodule: 'mediaSelect'
 					}));
-					self.mediaSelectBindTabsTemplate(template);
+					self.mediaSelectBindTabsTemplate(_.merge({
+						template: template
+					}, args));
 					break;
 				case 'upload':
 					template = $(self.getTemplate({
@@ -112,7 +119,16 @@ define(function(require) {
 						data: _.merge(formattedData, {hideSelect: true}),
 						submodule: 'mediaSelect'
 					}));
-					self.mediaSelectBindTabsTemplate(template, args);
+					self.mediaSelectBindTabsTemplate(_.merge({
+						template: template,
+						callbackAfterSave: function(media) {
+							args.callback({
+								getValue: function() {
+									return media;
+								}
+							});
+						}
+					}, args));
 					break;
 				default:
 					template = $(self.getTemplate({
@@ -120,7 +136,7 @@ define(function(require) {
 						data: formattedData,
 						submodule: 'mediaSelect'
 					}));
-					self.mediaSelectBindDefaultTemplate(template);
+					self.mediaSelectBindDefaultTemplate(template, args);
 					break;
 			}
 
@@ -146,8 +162,11 @@ define(function(require) {
 			return response;
 		},
 
-		mediaSelectBindCommon: function(template, mediaToUpload, callbackAfterSave) {
-			var self = this;
+		mediaSelectBindCommon: function(args) {
+			var self = this,
+				template = args.template,
+				mediaToUpload = args.mediaToUpload,
+				callbackAfterSave = args.callbackAfterSave;
 
 			template.find('.upload-input').fileUpload({
 				inputOnly: true,
@@ -259,24 +278,25 @@ define(function(require) {
 				closeUploadDiv();
 			});
 
-			self.mediaSelectBindCommon(template, mediaToUpload, function(media) {
-				closeUploadDiv(media);
+			self.mediaSelectBindCommon({
+				template: template,
+				mediaToUpload: mediaToUpload,
+				callbackAfterSave: function(media) {
+					closeUploadDiv(media);
+				}
 			});
 		},
 
-		mediaSelectBindTabsTemplate: function(template, args) {
+		mediaSelectBindTabsTemplate: function(args) {
 			var self = this,
+				template = args.template,
 				mediaToUpload;
 
 			monster.ui.fancyTabs(template.find('.monster-tab-wrapper'));
 
-			self.mediaSelectBindCommon(template, mediaToUpload, function(media) {
-				args.callback({
-					getValue: function() {
-						return media;
-					}
-				});
-			});
+			self.mediaSelectBindCommon(_.merge({
+				mediaToUpload: mediaToUpload
+			}, args));
 		}
 	};
 
