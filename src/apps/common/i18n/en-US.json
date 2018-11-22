@@ -950,6 +950,9 @@
 				}
 			},
 			"button": "Submit This Port Request",
+			"errorDialog": {
+				"label": "The port request has some problems that need to be addressed before submit:"
+			},
 			"knownErrors" : {
 				"numberAlreadyOnPortRequest": "One or more phone numbers are already included in port requests: {{variable}}",
 				"numberAlreadyOnSystem": "One or more phone numbers already exist in the system: {{variable}}"
