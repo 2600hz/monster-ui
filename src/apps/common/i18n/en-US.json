@@ -992,20 +992,22 @@
 		"select": {
 			"choose": "Select media",
 			"upload": "Upload media",
-			"empty": "- No media selected -"
-		},
-		"dialogUpload": {
-			"label": "Upload New Media",
-			"headline": "Media upload",
-			"upload": "Upload",
-			"cancel": "Cancel",
-			"fileTooBigAlert": "File Too Big"
-		},
-		"dialogSelect": {
-			"headline": "Select media",
-			"select": "Select Media",
-			"cancel": "Cancel",
+			"empty": "- No media selected -",
 			"remove": "Remove"
+		},
+		"dialog": {
+			"upload": {
+				"label": "Upload New Media",
+				"headline": "Media upload",
+				"upload": "Upload",
+				"cancel": "Cancel",
+				"fileTooBigAlert": "File Too Big"
+			},
+			"select": {
+				"headline": "Select media",
+				"select": "Select Media",
+				"cancel": "Cancel"
+			}
 		}
 	}
 }
