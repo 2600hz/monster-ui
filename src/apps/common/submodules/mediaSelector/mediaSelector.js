@@ -44,10 +44,6 @@ define(function(require) {
 			}, args.labels);
 		},
 
-		mediaSelectorGetValue: function(template, args) {
-			return template.find('input[name="' + args.inputName + '"]').val();
-		},
-
 		mediaSelectorBindEvents: function(args) {
 			var self = this,
 				template = args.template,
@@ -172,7 +168,7 @@ define(function(require) {
 				inputName: inputName,
 				skin: 'upload',
 				callback: function(mediaControl) {
-					self.mediaUploadBindEvents({
+					self.onMediaSelectBindEvents({
 						template: template,
 						popup: popup,
 						mediaControl: mediaControl,
@@ -196,10 +192,7 @@ define(function(require) {
 				mediaId = media;
 
 			if (_.isObject(media)) {
-				if (!selectedMedia) {
-					selectedMedia = media.getValue();
-				}
-
+				selectedMedia = media;
 				mediaId = selectedMedia.id;
 			}
 
@@ -228,22 +221,6 @@ define(function(require) {
 
 			$selectBtn.on('click', function() {
 				callback(mediaControl.getValue());
-			});
-
-			template.find('.cancel').on('click', function() {
-				self.onMediaCancel(args);
-			});
-		},
-
-		mediaUploadBindEvents: function(args) {
-			var self = this,
-				template = args.template,
-				callback = args.callback,
-				mediaControl = args.mediaControl,
-				$submitBtn = template.find('.select-submit');
-
-			$submitBtn.on('click', function() {
-				callback(mediaControl);
 			});
 
 			template.find('.cancel').on('click', function() {
