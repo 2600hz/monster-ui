@@ -998,12 +998,31 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var signeeFormData = monster.ui.getFormData('form_upload_document');
-						args.data.request = _.merge(signeeFormData, args.data.request);
+						var formData = monster.ui.getFormData('form_upload_document'),
+							$form = template.find('#form_upload_document');
 
-						self.portWizardHelperSavePort($.extend(true, args, {
-							success: args.globalCallback
-						}));
+						monster.ui.validate($form, {
+							rules: {
+								signee_name: {
+									required: true,
+									minlength: 1,
+									maxlength: 128
+								},
+								signing_date: {
+									required: true
+								}
+							}
+						});
+
+						if (monster.ui.valid($form)) {
+							$.extend(true, args.data.request, formData, {
+								signing_date: monster.util.dateToGregorian($datepicker.datepicker('getDate'))
+							});
+
+							self.portWizardHelperSavePort($.extend(true, args, {
+								success: args.globalCallback
+							}));
+						}
 					});
 
 			template
