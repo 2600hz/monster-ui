@@ -15,7 +15,8 @@ define(function(require) {
 		footable = require('footable'),
 		mousetrap = require('mousetrap'),
 		Drop = require('drop'),
-		Clipboard = require('clipboard');
+		Clipboard = require('clipboard'),
+		moment = require('moment');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
@@ -976,29 +977,27 @@ define(function(require) {
 		// Set to 'monthly', it will always set the end date to be one month away from the start date (unless it's after "today")
 		// container: jQuery Object. Container of the datepickers
 		initRangeDatepicker: function(options) {
-			var self = this,
-				container = options.container,
+			var container = options.container,
 				range = options.range || 7,
 				initRange = options.initRange || options.range || 1,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
-				now = new Date(),
-				today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+				initDate = moment(),
+				today = initDate.set({hours: 0, minutes: 0, seconds: 0}).toDate(),
 				startDate = _.get(
 					options,
 					'startDate',
-					new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+					today
 					),
-				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+				endDate = initDate.set({hours: 23, minutes: 59, seconds: 59}).toDate();
 
 			if (options.startDate) {
-				startDate.setDate(startDate.getDate() - 1);
+				startDate = moment(startDate).toDate();
 			} else if (range === 'monthly') {
-				startDate.setMonth(startDate.getMonth() - 1);
+				startDate = initDate.subtract(1, 'months').toDate();
 			} else {
-				startDate.setDate(startDate.getDate() - initRange);
+				startDate = initDate.subtract(initRange, 'days').toDate();
 			}
-			startDate.setDate(startDate.getDate() + 1);
 
 			monster.ui.datepicker(container.find('#startDate, #endDate'), {
 				beforeShow: customRange,
