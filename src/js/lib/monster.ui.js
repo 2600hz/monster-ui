@@ -983,7 +983,7 @@ define(function(require) {
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
 				initDate = moment(),
-				today = initDate.set({hours: 0, minutes: 0, seconds: 0}).toDate(),
+				today = initDate.set({hours: 0, minutes: 0, seconds: 0}),
 				startDate = _.get(
 					options,
 					'startDate',
@@ -1012,23 +1012,23 @@ define(function(require) {
 			// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or today (the closest to the start date is chosen).
 			// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "today". (we had to do that since the # of days in a month varies)
 			function customSelect(dateText, input) {
-				var dateMin = inputStartDate.datepicker('getDate');
+				var dateMin = inputStartDate.datepicker('getDate'),
+					dateMaxRange;
 
 				if (input.id === 'startDate') {
-					var dateMaxRange = new Date(dateMin);
+					dateMaxRange = moment(dateMin);
 
 					if (range === 'monthly') {
-						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
+						dateMaxRange = dateMaxRange.add(1, 'months');
 					} else {
-						dateMaxRange.setDate(dateMaxRange.getDate() + range);
+						dateMaxRange = dateMaxRange.add(range, 'days');
 					}
-					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
 
-					if (dateMaxRange > today) {
+					if (moment(dateMaxRange).after(today)) {
 						dateMaxRange = today;
 					}
 
-					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange, 'date'));
+					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange.toDate(), 'date'));
 				}
 			};
 
