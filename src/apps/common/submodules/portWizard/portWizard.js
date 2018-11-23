@@ -24,10 +24,14 @@ define(function(require) {
 					maxSize: 8
 				},
 				knownErrors: {
-					addNumbers: [
-						'number_is_on_a_port_request_already',
-						'number_exists_on_the_system_already'
-					]
+					addNumbers: {
+						number_is_on_a_port_request_already: [],
+						number_exists_on_the_system_already: [],
+						too_few_properties: [ 'numbers' ]
+					},
+					notify: {
+						wrong_format: [ 'notifications.email.send_to' ]
+					}
 				}
 			}
 		},
@@ -1007,8 +1011,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort($.extend(true, args, {
-							success: args.globalCallback
+						self.portWizardHelperSavePort(_.merge({}, args, {
+							success: args.globalCallback,
+							error: self.portWizardGetSavePortErrorCallback(args, false)
 						}));
 					});
 
@@ -1092,8 +1097,9 @@ define(function(require) {
 						});
 
 						if (action === 'save') {
-							self.portWizardHelperSavePort($.extend(true, args, {
-								success: args.globalCallback
+							self.portWizardHelperSavePort(_.merge({}, args, {
+								success: args.globalCallback,
+								error: self.portWizardGetSavePortErrorCallback(args, false)
 							}));
 						} else if (action === 'next') {
 							self.portWizardRenderSubmitPort(args);
@@ -1561,8 +1567,7 @@ define(function(require) {
 							if (!errorMessage) {
 								if (errorData.hasOwnProperty('message')) {
 									errorMessage
-										= _.capitalize(errorData.message) + (errorData.message.charAt(errorData.message.length - 1) === '.' ? '' : '.')
-											+ ' Phone numbers: {{variable}}';
+										= _.capitalize(errorData.message) + ': {{variable}}';
 								} else {
 									errorMessage = errorsI18n.unknown_error;
 								}
@@ -1576,7 +1581,7 @@ define(function(require) {
 							} else if (errorsI18n.hasOwnProperty(errorDataKey)) {
 								errorMessage = errorsI18n[errorDataKey];
 							} else if (errorData.hasOwnProperty('message')) {
-								errorMessage = _.capitalize(errorData.message);
+								errorMessage = _.capitalize(errorData.message) + ': {{variable}}';
 							}
 						}
 					} catch (err) {
@@ -1653,25 +1658,45 @@ define(function(require) {
 			}));
 		},
 
-		portWizardIsKnownError: function(wizardStep, errorKey) {
+		portWizardIsKnownError: function(wizardStep, errorKey, causes) {
 			var self = this,
 				knownErrors = self.appFlags.portWizard.knownErrors;
 
-			return knownErrors.hasOwnProperty(wizardStep) && _.includes(knownErrors[wizardStep], errorKey);
+			if (!knownErrors.hasOwnProperty(wizardStep) || !knownErrors[wizardStep].hasOwnProperty(errorKey)) {
+				return false;
+			}
+
+			var knownCauses = knownErrors[wizardStep][errorKey];
+			if (_.isEmpty(knownCauses)) {
+				return true;
+			}
+
+			if (!causes) {
+				return false;
+			}
+
+			return _.some(knownCauses, function(knownCause) {
+				return _.includes(causes, knownCause);
+			});
 		},
 
 		portWizardGetSavePortErrorCallback: function(args, stopPropagation) {
 			var self = this,
 				isAddNumbersKnownError = function(errorGroup, errorKey) {
-					return self.portWizardIsKnownError('addNumbers', errorKey);
+					return self.portWizardIsKnownError('addNumbers', errorKey, errorGroup.causes);
+				},
+				isNotifyKnownError = function(errorGroup, errorKey) {
+					return self.portWizardIsKnownError('notify', errorKey, errorGroup.causes);
 				};
 
 			return function(parsedError, groupedErrors) {
 				if (_.some(groupedErrors, isAddNumbersKnownError)) {
 					self.portWizardRenderAddNumbers(args);
+				} else if (_.some(groupedErrors, isNotifyKnownError)) {
+					self.portWizardRenderPortNotify(args);
 				}
 
-				if (!stopPropagation && args.hasOwnProperty('error')) {
+				if (!stopPropagation && args.hasOwnProperty('error') && args.error !== this) {
 					args.error(parsedError);
 				}
 			};
