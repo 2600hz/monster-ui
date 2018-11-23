@@ -949,14 +949,16 @@
 					"standard": "There are standard phone numbers, not featured (like star-ring)"
 				}
 			},
-			"button": "Submit This Port Request",
-			"errorDialog": {
-				"label": "The port request has some problems that need to be addressed before submit:"
-			},
-			"knownErrors" : {
-				"numberAlreadyOnPortRequest": "One or more phone numbers are already included in port requests: {{variable}}",
-				"numberAlreadyOnSystem": "One or more phone numbers already exist in the system: {{variable}}"
-			}
+			"button": "Submit This Port Request"
+		},
+		"errorDialog": {
+			"label": "The port request has some problems that need to be addressed before submit:"
+		},
+		"errors": {
+			"number_is_on_a_port_request_already": "One or more phone numbers are already included in port requests: {{variable}}",
+			"number_exists_on_the_system_already": "One or more phone numbers already exist in the system: {{variable}}",
+			"unknown_error": "Unknown error at: {{variable}}",
+			"wrong_format": "Invalid data at: {{variable}}"
 		}
 	},
 

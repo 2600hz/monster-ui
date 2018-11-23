@@ -24,10 +24,10 @@ define(function(require) {
 					maxSize: 8
 				},
 				knownErrors: {
-					savePort: {
-						number_is_on_a_port_request_already: 'numberAlreadyOnPortRequest',
-						number_exists_on_the_system_already: 'numberAlreadyOnSystem'
-					}
+					addNumbers: [
+						'number_is_on_a_port_request_already',
+						'number_exists_on_the_system_already'
+					]
 				}
 			}
 		},
@@ -1533,48 +1533,55 @@ define(function(require) {
 
 			var self = this,
 				groupedErrors = {},
-				savePortKnownErrors = self.appFlags.portWizard.knownErrors.savePort,
-				errorsI18n = monster.apps.core.i18n.active().portWizard.errors;
+				errorsI18n = self.i18n.active().portWizard.errors;
 
 			_.each(parsedError.data, function(fieldErrors, fieldKey) {
 				var isPhoneNumber = _.startsWith(fieldKey, '+');
 
+				if (typeof fieldErrors === 'string') {
+					return;
+				}
+
 				_.each(fieldErrors, function(errorData, errorDataKey) {
-					var errorKey, errorMessage, errorCause, i18nKey;
+					var errorKey, errorMessage, errorCause;
 
-					// Error cannot be processed
-					if (typeof fieldErrors === 'string') {
-						return;
-					}
+					try {
+						// Separate error data depending on the case
+						if (isPhoneNumber) {
+							errorCause = errorData.cause || fieldKey;
 
-					// Separate error data depending on the case
-					if (isPhoneNumber) {
-						if (errorData.hasOwnProperty('message')) {
-							errorKey = self.portWizardGetErrorKey(errorData.message);
+							if (errorData.hasOwnProperty('message')) {
+								errorKey = self.portWizardGetErrorKey(errorData.message);
+							} else {
+								errorKey = errorDataKey;
+							}
+
+							errorMessage = errorsI18n[errorKey];
+
+							if (!errorMessage) {
+								if (errorData.hasOwnProperty('message')) {
+									errorMessage
+										= _.capitalize(errorData.message) + (errorData.message.charAt(errorData.message.length - 1) === '.' ? '' : '.')
+											+ ' Phone numbers: {{variable}}';
+								} else {
+									errorMessage = errorsI18n.unknown_error;
+								}
+							}
 						} else {
 							errorKey = errorDataKey;
-						}
+							errorCause = fieldKey;
 
-						i18nKey = savePortKnownErrors[errorKey];
-
-						if (i18nKey) {
-							errorMessage = self.i18n.active().portWizard.portSubmit.knownErrors[i18nKey];
-						} else {
-							errorMessage
-								= errorData.message + (errorData.message.charAt(errorData.message.length - 1) === '.' ? '' : '.')
-									+ ' Phone numbers: {{variable}}';
+							if (typeof errorData === 'string' || typeof errorData === 'number') {
+								errorMessage = _.capitalize(errorData + '');
+							} else if (errorsI18n.hasOwnProperty(errorDataKey)) {
+								errorMessage = errorsI18n[errorDataKey];
+							} else if (errorData.hasOwnProperty('message')) {
+								errorMessage = _.capitalize(errorData.message);
+							}
 						}
-
-						errorCause = errorData.message;
-					} else {
-						errorCause = fieldKey;
-						if (typeof errorData === 'string' || typeof errorData === 'number') {
-							errorMessage = errorData;
-						} else if (errorDataKey in errorsI18n.invalidData) {
-							errorMessage = errorsI18n.invalidData[errorDataKey];
-						} else if (errorData.hasOwnProperty('message')) {
-							errorMessage = errorData.message;
-						}
+					} catch (err) {
+						// In case of error, skip
+						return false;
 					}
 
 					// If error group already exists, add cause
@@ -1597,7 +1604,7 @@ define(function(require) {
 		},
 
 		portWizardGetErrorKey: function(errorMessage) {
-			var minIndex = _.chain([':', ',', '.'])
+			var minIndex = _.chain([':', ';', ',', '.'])
 				.map(function(separator) {
 					return errorMessage.indexOf(separator);
 				}).filter(function(index) {
@@ -1646,20 +1653,21 @@ define(function(require) {
 			}));
 		},
 
-		portWizardIsKnownError: function(errorKey) {
-			var self = this;
+		portWizardIsKnownError: function(wizardStep, errorKey) {
+			var self = this,
+				knownErrors = self.appFlags.portWizard.knownErrors;
 
-			return self.appFlags.portWizard.knownErrors.savePort.hasOwnProperty(errorKey);
+			return knownErrors.hasOwnProperty(wizardStep) && _.includes(knownErrors[wizardStep], errorKey);
 		},
 
 		portWizardGetSavePortErrorCallback: function(args, stopPropagation) {
 			var self = this,
-				isKnownErrorKey = function(errorGroup, errorKey) {
-					return self.portWizardIsKnownError(errorKey);
+				isAddNumbersKnownError = function(errorGroup, errorKey) {
+					return self.portWizardIsKnownError('addNumbers', errorKey);
 				};
 
 			return function(parsedError, groupedErrors) {
-				if (_.some(groupedErrors, isKnownErrorKey)) {
+				if (_.some(groupedErrors, isAddNumbersKnownError)) {
 					self.portWizardRenderAddNumbers(args);
 				}
 
