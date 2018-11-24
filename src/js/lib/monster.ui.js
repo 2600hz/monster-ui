@@ -1024,7 +1024,7 @@ define(function(require) {
 						dateMaxRange = dateMaxRange.add(range, 'days');
 					}
 
-					if (moment(dateMaxRange).after(today)) {
+					if (moment(dateMaxRange).isAfter(today)) {
 						dateMaxRange = today;
 					}
 
