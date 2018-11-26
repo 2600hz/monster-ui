@@ -167,12 +167,6 @@
 			color: $error-color;
 		}
 	}
-
-	&.danger {
-		i, .status {
-			color: $danger-color;
-		}
-	}
 }
 
 /************************************************************/
@@ -399,10 +393,6 @@
 	color: $panel-border-color;
 }
 
-#port_app_container .timeline-panel .entry-wrapper:not(:first-child) {
-	margin-top: 25px;
-}
-
 #port_app_container .timeline-panel .entry {
 	margin-left: 56px;
 	padding: 15px 20px;
@@ -450,68 +440,97 @@
 	flex-grow: 100;
 }
 
-#port_app_container .timeline-panel .entry-wrapper.status .icon-wrapper {
-	border-color: $primary-color;
-	background-color: $primary-color;
-}
+#port_app_container .timeline-panel .entry-wrapper {
+	&:not(:first-child) {
+		margin-top: 25px;
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.status .iconography {
-	color: #fff;
-}
+	&.status {
+		.icon-wrapper {
+			border-color: $primary-color;
+			background-color: $primary-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.status .entry .title {
-	color: $primary-color;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.success .icon-wrapper {
-	border-color: $success-color;
-	background-color: $success-color;
-}
+		.entry .title {
+			color: $primary-color;
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.success .iconography {
-	color: #fff;
-}
+	&.success {
+		.icon-wrapper {
+			border-color: $success-color;
+			background-color: $success-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.success .entry {
-	border-color: $success-color;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.success .entry .title {
-	color: $success-color;
-}
+		.entry {
+			border-color: $success-color;
+			.title {
+				color: $success-color;
+			}
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .icon-wrapper {
-	border-color: #f0b400;
-	background-color: #f0b400;
-}
+	&.warning {
+		.icon-wrapper {
+			border-color: #f0b400;
+			background-color: #f0b400;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .iconography {
-	color: #fff;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .entry {
-	border-color: #f0b400;
-}
+		.entry {
+			border-color: #f0b400;
+			.title {
+				color: #f0b400;
+			}
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .entry .title {
-	color: #f0b400;
-}
+	&.error {
+		.icon-wrapper {
+			border-color: $error-color;
+			background-color: $error-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.error .icon-wrapper {
-	border-color: $error-color;
-	background-color: $error-color;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.error .iconography {
-	color: #fff;
-}
+		.entry {
+			border-color: $error-color;
+			.title {
+				color: $error-color;
+			}
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.error .entry {
-	border-color: $error-color;
-}
+	&.danger {
+		.icon-wrapper {
+			border-color: $danger-color;
+			background-color: $danger-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.error .entry .title {
-	color: $error-color;
+		.iconography {
+			color: #fff;
+		}
+
+		.entry {
+			border-color: $danger-color;
+			.title {
+				color: $danger-color;
+			}
+		}
+	}
 }
 
 /*********************** STATUS POPUP ***********************/

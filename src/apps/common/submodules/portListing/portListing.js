@@ -780,7 +780,8 @@ define(function(require) {
 						formattedComment = {
 							timestamp: moment(monster.util.gregorianToDate(newComment.timestamp)).valueOf(),
 							title: newComment.author,
-							content: newComment.content
+							content: newComment.content,
+							isSuperDuperEntry: newComment.superduper_comment
 						};
 
 					// check if the last entry was created the same day than today
@@ -820,7 +821,8 @@ define(function(require) {
 				timeline.push({
 					timestamp: moment(monster.util.gregorianToDate(comment.timestamp)).valueOf(),
 					title: comment.author,
-					content: comment.content
+					content: comment.content,
+					isSuperDuperEntry: comment.superduper_comment
 				});
 			});
 
@@ -1089,6 +1091,10 @@ define(function(require) {
 			event.preventDefault();
 
 			var comment = $textarea.val();
+
+			if (_.chain(comment).trim().isEmpty().value()) {
+				return;
+			}
 
 			self.portListingHelperAddComment(_.merge({}, args, {
 				data: {

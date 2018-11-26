@@ -192,7 +192,7 @@
 					</div>
 					<ul class="entries">
 					{{#each entries}}
-						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{else}}{{#if superduper_comment}} danger{{/if}}{{/if}}">
+						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{else}}{{#if isSuperDuperEntry}} danger{{/if}}{{/if}}">
 							<div class="icon-wrapper">
 							{{#if status}}
 								{{#compare status '===' 'submitted'}}
@@ -214,7 +214,7 @@
 									<i class="icon-telicon-x-circled iconography"></i>
 								{{/compare}}
 							{{else}}
-								<i class="fa fa-{{#if superduper_comment}}envelope{{else}}lock{{/if}} iconography"></i>
+								<i class="fa fa-{{#if isSuperDuperEntry}}lock{{else}}envelope{{/if}} iconography"></i>
 							{{/if}}
 							</div>
 							<div class="entry">
