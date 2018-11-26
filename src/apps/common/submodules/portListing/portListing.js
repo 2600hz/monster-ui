@@ -454,7 +454,9 @@ define(function(require) {
 		portListingBindDetailEvents: function(template, args) {
 			var self = this,
 				portId = args.data.portId,
-				port = args.data.port;
+				port = args.data.port,
+				textareaWrapper = template.find('.textarea-wrapper'),
+				textarea = textareaWrapper.find('textarea[name="comment"]');
 
 			template
 				.find('#back')
@@ -552,21 +554,21 @@ define(function(require) {
 					}));
 				});
 
-			template
+			textareaWrapper
 				.find('#add_comment')
 					.on('click', function(event) {
-						event.preventDefault();
+						self.portListingHelperPostComment(event, textarea, args, false);
+					});
 
-						var textarea = template.find('textarea[name="comment"]'),
-							comment = textarea.val();
+			if (!monster.util.isSuperDuper()) {
+				this.return;
+			}
 
-						self.portListingHelperAddComment($.extend(true, {}, args, {
-							data: {
-								comment: comment
-							}
-						}));
-
-						textarea.val('');
+			// Set event handlers for superduper options
+			textareaWrapper
+				.find('#add_private_comment')
+					.on('click', function(event) {
+						self.portListingHelperPostComment(event, textarea, args, true);
 					});
 		},
 
@@ -766,7 +768,8 @@ define(function(require) {
 							{
 								timestamp: monster.util.dateToGregorian(now),
 								author: author,
-								content: data.comment
+								content: data.comment,
+								superduper_comment: data.isSuperDuperComment
 							}
 						]
 					}
@@ -1078,6 +1081,23 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		portListingHelperPostComment: function(event, $textarea, args, isSuperDuperComment) {
+			var self = this;
+
+			event.preventDefault();
+
+			var comment = $textarea.val();
+
+			self.portListingHelperAddComment(_.merge({}, args, {
+				data: {
+					comment: comment,
+					isSuperDuperComment: isSuperDuperComment
+				}
+			}));
+
+			$textarea.val('');
 		}
 	};
 

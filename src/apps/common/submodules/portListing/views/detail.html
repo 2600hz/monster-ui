@@ -159,7 +159,7 @@
 		<div class="numbers-section">
 		{{#with port}}
 			<div class="title">
-				{{extra.numbersAmount}} 
+				{{extra.numbersAmount}}
 			{{#compare extra.numbersAmount '===' 1}}
 				{{@root.i18n.portListing.detail.numbers.singular}}
 			{{else}}
@@ -192,7 +192,7 @@
 					</div>
 					<ul class="entries">
 					{{#each entries}}
-						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{/if}}">
+						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{else}}{{#if superduper_comment}} danger{{/if}}{{/if}}">
 							<div class="icon-wrapper">
 							{{#if status}}
 								{{#compare status '===' 'submitted'}}
@@ -214,7 +214,7 @@
 									<i class="icon-telicon-x-circled iconography"></i>
 								{{/compare}}
 							{{else}}
-								<i class="fa fa-envelope iconography"></i>
+								<i class="fa fa-{{#if superduper_comment}}envelope{{else}}lock{{/if}} iconography"></i>
 							{{/if}}
 							</div>
 							<div class="entry">
@@ -251,9 +251,25 @@
 	{{#if extra.canComment}}
 		<div class="textarea-wrapper">
 			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
-			<button class="monster-button-success" id="add_comment">
-				{{@root.i18n.portListing.detail.buttons.send}}
-			</button>
+			{{#isSuperDuper}}
+				<div class="btn-group">
+					<button class="btn btn-success" id="add_comment">
+						{{@root.i18n.portListing.detail.buttons.send}}
+					</button>
+					<button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" id="add_private_comment">
+						<li>
+							<a href="javascript:void(0);">{{@root.i18n.portListing.detail.buttons.sendPrivate}}</a>
+						</li>
+					</ul>
+				</div>
+			{{else}}
+				<button class="monster-button-success" id="add_comment">
+					{{@root.i18n.portListing.detail.buttons.send}}
+				</button>
+			{{/isSuperDuper}}
 		</div>
 	{{/if}}
 	</div>

@@ -134,38 +134,45 @@
 }
 
 /********************** STATUS WRAPPER **********************/
+#port_app_container .status-wrapper {
+	i {
+		float: left;
+		color: $primary-color;
+	}
 
-#port_app_container .status-wrapper i {
-	float: left;
-}
+	.content {
+		margin-left: 18px;
+		padding-left: 10px;
+	}
 
-#port_app_container .status-wrapper .content {
-	margin-left: 18px;
-	padding-left: 10px;
-}
+	.status {
+		font-weight: 600;
+		color: $primary-color;
+	}
 
-#port_app_container .status-wrapper .status {
-	font-weight: 600;
-}
+	&.success {
+		i, .status {
+			color: $success-color;
+		}
+	}
 
-#port_app_container .status-wrapper i,
-#port_app_container .status-wrapper .status {
-	color: $primary-color;
-}
+	&.warning {
+		i, .status {
+			color: $warning-color;
+		}
+	}
 
-#port_app_container .status-wrapper.success i,
-#port_app_container .status-wrapper.success .status {
-	color: $success-color;
-}
+	&.error {
+		i, .status {
+			color: $error-color;
+		}
+	}
 
-#port_app_container .status-wrapper.warning i,
-#port_app_container .status-wrapper.warning .status {
-	color: $warning-color;
-}
-
-#port_app_container .status-wrapper.error i,
-#port_app_container .status-wrapper.error .status {
-	color: $error-color;
+	&.danger {
+		i, .status {
+			color: $danger-color;
+		}
+	}
 }
 
 /************************************************************/
