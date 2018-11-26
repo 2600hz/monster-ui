@@ -1624,7 +1624,12 @@ define(function(require) {
 				viewErrors = _.map(groupedErrors, function(errorGroup) {
 					return {
 						message: errorGroup.message,
-						causes: errorGroup.causes.join(', ')
+						causes: _.chain(errorGroup.causes).map(function(cause) {
+							if (_.startsWith(cause, '+')) {
+								return monster.util.formatPhoneNumber(cause);
+							}
+							return cause;
+						}).join(', ').value()
 					};
 				});
 
