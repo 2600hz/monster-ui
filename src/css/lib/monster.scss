@@ -163,30 +163,66 @@ h1 {
 	color: darken($primary-color, 30%);
 	border-color: darken($primary-color, 20%);
 	background: $primary-color;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-secondary {
 	color: $primary-color;
 	border-color: $primary-color;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-neutral {
 	border-color: $input-border-color;
 	color: #555;
 	background: #F9F9F9;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-success {
 	color: darken($success-color, 30%);
 	border-color: darken($success-color, 20%);
 	background: $success-color;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-warning {
 	color: #8f6b00;
 	border-color: #f0b400;
 	background: #f8a506;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-danger {
 	color: #8a1000;
 	border-color: #e01a00;
 	background: #ff3d24;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 
 /**************** EFFECTS ***************/
