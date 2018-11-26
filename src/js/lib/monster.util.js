@@ -1321,6 +1321,112 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 
+	// Options:
+	// range: number. Maximum number of days between start and end dates, or 'monthly'
+	// Set to 'monthly', it will always set the end date to be one month away from the start date (unless it's after "today")
+	// container: jQuery Object. Container of the datepickers
+	function initRangeDatepicker(options) {
+		var container = options.container,
+			range = options.range || 7,
+			initRange = options.initRange || options.range || 1,
+			inputStartDate = container.find('#startDate'),
+			inputEndDate = container.find('#endDate'),
+			initDate = moment(),
+			today = initDate.set({hours: 0, minutes: 0, seconds: 0}),
+			startDate = _.get(
+				options,
+				'startDate',
+				today
+				),
+			endDate = initDate.set({hours: 23, minutes: 59, seconds: 59}),
+			timezone = moment.tz.guess();
+
+		if (options.startDate) {
+			startDate = moment(startDate);
+		} else if (range === 'monthly') {
+			startDate = initDate.subtract(1, 'months');
+		} else {
+			startDate = initDate.subtract(initRange, 'days');
+		}
+
+		monster.ui.datepicker(container.find('#startDate, #endDate'), {
+			beforeShow: customRange,
+			onSelect: customSelect
+		});
+
+		if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+			timezone = monster.apps.auth.currentUser.timezone;
+		} else if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+			timezone = monster.apps.auth.currentAccount.timezone;
+		}
+
+		startDate = startDate.tz(timezone).toDate();
+		endDate = endDate.tz(timezone).toDate();
+
+		inputStartDate.datepicker('setDate', startDate);
+		inputEndDate.datepicker('setDate', endDate);
+
+		// customSelect runs every time the user selects a date in one of the date pickers.
+		// Features:
+		// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or today (the closest to the start date is chosen).
+		// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "today". (we had to do that since the # of days in a month varies)
+		function customSelect(dateText, input) {
+			var dateMin = inputStartDate.datepicker('getDate'),
+				dateMaxRange;
+
+			if (input.id === 'startDate') {
+				dateMaxRange = moment(dateMin);
+
+				if (range === 'monthly') {
+					dateMaxRange = dateMaxRange.add(1, 'months');
+				} else {
+					dateMaxRange = dateMaxRange.add(range, 'days');
+				}
+
+				if (moment(dateMaxRange).isAfter(today)) {
+					dateMaxRange = today;
+				}
+
+				inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange.toDate(), 'date'));
+			}
+		};
+
+		// customRange runs every time the user clicks on a date picker, it will set which days are clickable in the datepicker.
+		// Features:
+		// If I click on the End Date, I shouldn't be able to select a day before the starting date, and I shouldn't be able to select anything after "today"
+		// If I click on the Start date, I should be able to select any day between the 1/1/2011 and "Today"
+		function customRange(input) {
+			var dateMin = inputStartDate.datepicker('getDate'),
+				dateMax;
+
+			if (input.id === 'endDate') {
+				var dateMaxRange = moment(dateMin);
+
+				// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
+				if (range === 'monthly') {
+					dateMaxRange = dateMaxRange.add(1, 'months');
+				} else {
+					dateMaxRange = dateMaxRange.add(range, 'days');
+				}
+
+				// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
+				dateMax = dateMaxRange.toDate();
+
+				if (dateMaxRange.isAfter(today)) {
+					dateMax = today.toDate();
+				}
+			} else if (input.id === 'startDate') {
+				dateMin = moment().set({years: 2011, months: 0, dates: 1, hours: 0, minutes: 0, seconds: 0}).toDate();
+				dateMax = moment().toDate();
+			}
+
+			return {
+				minDate: dateMin,
+				maxDate: dateMax
+			};
+		};
+	}
+
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.gregorianToDate = gregorianToDate;
@@ -1328,6 +1434,7 @@ define(function(require) {
 	util.randomString = randomString;
 	util.toFriendlyDate = toFriendlyDate;
 	util.unixToDate = unixToDate;
+	util.initRangeDatepicker = initRangeDatepicker;
 
 	return util;
 });
