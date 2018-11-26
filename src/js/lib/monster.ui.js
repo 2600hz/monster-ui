@@ -1037,27 +1037,28 @@ define(function(require) {
 			// If I click on the End Date, I shouldn't be able to select a day before the starting date, and I shouldn't be able to select anything after "today"
 			// If I click on the Start date, I should be able to select any day between the 1/1/2011 and "Today"
 			function customRange(input) {
-				var dateMin,
+				var dateMin = inputStartDate.datepicker('getDate'),
 					dateMax;
 
 				if (input.id === 'endDate') {
-					dateMin = inputStartDate.datepicker('getDate');
-
-					var dateMaxRange = new Date(dateMin);
+					var dateMaxRange = moment(dateMin);
 
 					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
 					if (range === 'monthly') {
-						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
+						dateMaxRange = dateMaxRange.add(1, 'months');
 					} else {
-						dateMaxRange.setDate(dateMaxRange.getDate() + range);
+						dateMaxRange = dateMaxRange.add(range, 'days');
 					}
-					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
-					dateMax = dateMaxRange > today ? today : dateMaxRange;
+					dateMax = dateMaxRange.toDate();
+
+					if (dateMaxRange.isAfter(today)) {
+						dateMax = today.toDate();
+					}
 				} else if (input.id === 'startDate') {
-					dateMin = new Date(2011, 0, 0);
-					dateMax = new Date();
+					dateMin = moment().set({years: 2011, months: 0, dates: 1, hours: 0, minutes: 0, seconds: 0}).toDate();
+					dateMax = moment().toDate();
 				}
 
 				return {
