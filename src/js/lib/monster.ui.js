@@ -18,6 +18,8 @@ define(function(require) {
 		Clipboard = require('clipboard'),
 		moment = require('moment');
 
+	require('moment-timezone');
+
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
 			coalesce: function() {
@@ -989,20 +991,30 @@ define(function(require) {
 					'startDate',
 					today
 					),
-				endDate = initDate.set({hours: 23, minutes: 59, seconds: 59}).toDate();
+				endDate = initDate.set({hours: 23, minutes: 59, seconds: 59}),
+				timezone = moment.tz.guess();
 
 			if (options.startDate) {
-				startDate = moment(startDate).toDate();
+				startDate = moment(startDate);
 			} else if (range === 'monthly') {
-				startDate = initDate.subtract(1, 'months').toDate();
+				startDate = initDate.subtract(1, 'months');
 			} else {
-				startDate = initDate.subtract(initRange, 'days').toDate();
+				startDate = initDate.subtract(initRange, 'days');
 			}
 
 			monster.ui.datepicker(container.find('#startDate, #endDate'), {
 				beforeShow: customRange,
 				onSelect: customSelect
 			});
+
+			if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+				timezone = monster.apps.auth.currentUser.timezone;
+			} else if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+				timezone = monster.apps.auth.currentAccount.timezone;
+			}
+
+			startDate = startDate.tz(timezone).toDate();
+			endDate = endDate.tz(timezone).toDate();
 
 			inputStartDate.datepicker('setDate', startDate);
 			inputEndDate.datepicker('setDate', endDate);
