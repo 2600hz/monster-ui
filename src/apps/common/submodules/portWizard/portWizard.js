@@ -16,11 +16,14 @@ define(function(require) {
 		},
 
 		appFlags: {
-			attachments: {
-				mimeTypes: [
-					'application/pdf'
-				],
-				maxSize: 8
+			portWizard: {
+				accountId: undefined,
+				attachments: {
+					mimeTypes: [
+						'application/pdf'
+					],
+					maxSize: 8
+				}
 			}
 		},
 
@@ -57,13 +60,12 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
 									success: function(results) {
 										self.portWizardRequestUpdateAttachment({
 											data: {
-												accountId: args.data.accountId,
 												portRequestId: args.data.request.id,
 												documentName: 'bill.pdf',
 												data: results[0].file
@@ -92,6 +94,8 @@ define(function(require) {
 
 					return template;
 				};
+
+			self.appFlags.portWizard.accountId = args.data.accountId;
 
 			$.extend(true, args, {
 				data: {
@@ -150,7 +154,6 @@ define(function(require) {
 				if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
 					self.portWizardRequestGetAttahcment({
 						data: {
-							accountId: args.data.accountId,
 							portRequestId: args.data.request.id,
 							documentName: 'bill.pdf'
 						},
@@ -473,8 +476,8 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									success: function(results) {
 										var actionsTemplate = $(self.getTemplate({
 											name: 'portInfo-actions',
@@ -914,14 +917,13 @@ define(function(require) {
 							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
 							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-							mimeTypes: self.appFlags.attachments.mimeTypes,
-							maxSize: self.appFlags.attachments.maxSize,
+							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+							maxSize: self.appFlags.portWizard.attachments.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
 										self.portWizardRequestUpdateAttachment({
 											data: {
-												accountId: data.accountId,
 												portRequestId: request.id,
 												documentName: 'form.pdf',
 												data: results[0].file
@@ -930,7 +932,6 @@ define(function(require) {
 									} else {
 										self.portWizardRequestCreateAttachment({
 											data: {
-												accountId: data.accountId,
 												portRequestId: request.id,
 												documentName: 'form.pdf',
 												data: results[0].file
@@ -1125,7 +1126,6 @@ define(function(require) {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
-										accountId: args.data.accountId,
 										portRequestId: requestId,
 										state: 'submitted'
 									},
@@ -1204,7 +1204,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.attachments.mimeTypes)
+										.chain(self.appFlags.portWizard.attachments.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -1221,7 +1221,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.attachments.maxSize
+									variable: self.appFlags.portWizard.attachments.maxSize
 								}
 							})
 						});
@@ -1254,7 +1254,6 @@ define(function(require) {
 
 			self.portWizardRequestCreatePort({
 				data: {
-					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1263,7 +1262,6 @@ define(function(require) {
 							object[key] = function(callback) {
 								self.portWizardRequestCreateAttachment({
 									data: {
-										accountId: args.data.accountId,
 										portRequestId: port.id,
 										documentName: key + '.pdf',
 										data: attachment.file
@@ -1306,7 +1304,6 @@ define(function(require) {
 
 			self.portWizardRequestUpdatePort({
 				data: {
-					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1316,7 +1313,6 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestUpdateAttachment({
 										data: {
-											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1330,7 +1326,6 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestCreateAttachment({
 										data: {
-											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1366,7 +1361,6 @@ define(function(require) {
 			if (args.data.request.hasOwnProperty('id')) {
 				self.portWizardRequestDeletePort({
 					data: {
-						accountId: args.data.accountId,
 						portRequestId: args.data.request.id
 					},
 					success: function() {
@@ -1389,7 +1383,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.create',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1405,7 +1399,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.update',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1421,7 +1415,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.delete',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1437,7 +1431,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.changeState',
 				data: $.extend(true, {
-					accountId: self.accountId,
+					accountId: self.appFlags.portWizard.accountId,
 					reason: ''
 				}, args.data),
 				success: function(data, status) {
@@ -1456,7 +1450,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.createAttachment',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1472,7 +1466,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.getAttachment',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					// `data` is a string representation of the PDF in base 64
@@ -1489,7 +1483,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.updateAttachment',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
