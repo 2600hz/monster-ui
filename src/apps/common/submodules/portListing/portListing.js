@@ -747,6 +747,27 @@ define(function(require) {
 			}
 		},
 
+		portListingHelperPostComment: function(event, $textarea, args, isSuperDuperComment) {
+			var self = this;
+
+			event.preventDefault();
+
+			var comment = $textarea.val();
+
+			if (_.chain(comment).trim().isEmpty().value()) {
+				return;
+			}
+
+			self.portListingHelperAddComment(_.merge({}, args, {
+				data: {
+					comment: comment,
+					isSuperDuperComment: isSuperDuperComment
+				}
+			}));
+
+			$textarea.val('');
+		},
+
 		/**************************************************
 		 *              Data handling helpers             *
 		 **************************************************/
@@ -1083,27 +1104,6 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
-		},
-
-		portListingHelperPostComment: function(event, $textarea, args, isSuperDuperComment) {
-			var self = this;
-
-			event.preventDefault();
-
-			var comment = $textarea.val();
-
-			if (_.chain(comment).trim().isEmpty().value()) {
-				return;
-			}
-
-			self.portListingHelperAddComment(_.merge({}, args, {
-				data: {
-					comment: comment,
-					isSuperDuperComment: isSuperDuperComment
-				}
-			}));
-
-			$textarea.val('');
 		}
 	};
 
