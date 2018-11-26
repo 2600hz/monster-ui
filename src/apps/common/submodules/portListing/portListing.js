@@ -901,7 +901,7 @@ define(function(require) {
 							.chain(payload)
 							.map(function(account) {
 								return _.map(account.port_requests, function(request) {
-									return _.merge({
+									return {
 										account: {
 											id: account.account_id,
 											name: account.account_name
@@ -911,9 +911,11 @@ define(function(require) {
 											winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
 											losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
 										},
+										id: request.id,
+										name: request.name,
 										reference: request.carrier_reference_number,
 										state: request.port_state
-									}, request);
+									};
 								});
 							})
 							.reduce(function(acc, item) {
