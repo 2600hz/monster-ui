@@ -979,23 +979,32 @@ define(function(require) {
 		// Set to 'monthly', it will always set the end date to be one month away from the start date (unless it's after "today")
 		// container: jQuery Object. Container of the datepickers
 		initRangeDatepicker: function(options) {
+			var timezone;
+
+			if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+				timezone = monster.apps.auth.currentUser.timezone;
+			} else if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+				timezone = monster.apps.auth.currentAccount.timezone;
+			} else {
+				timezone = moment.tz.guess();
+			}
+
 			var container = options.container,
 				range = options.range || 7,
 				initRange = options.initRange || options.range || 1,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
-				initDate = moment(),
-				today = initDate.set({hours: 0, minutes: 0, seconds: 0}),
+				initDate = moment().tz(timezone),
+				today = moment().tz(timezone).set({hours: 0, minutes: 0, seconds: 0}),
 				startDate = _.get(
 					options,
 					'startDate',
 					today
 					),
-				endDate = initDate.set({hours: 23, minutes: 59, seconds: 59}),
-				timezone = moment.tz.guess();
+				endDate = moment().tz(timezone).set({hours: 23, minutes: 59, seconds: 59});
 
 			if (options.startDate) {
-				startDate = moment(startDate);
+				startDate = moment(startDate).tz(timezone);
 			} else if (range === 'monthly') {
 				startDate = initDate.subtract(1, 'months');
 			} else {
@@ -1007,17 +1016,8 @@ define(function(require) {
 				onSelect: customSelect
 			});
 
-			if (_.has(monster, 'apps.auth.currentUser.timezone')) {
-				timezone = monster.apps.auth.currentUser.timezone;
-			} else if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
-				timezone = monster.apps.auth.currentAccount.timezone;
-			}
-
-			startDate = startDate.tz(timezone).toDate();
-			endDate = endDate.tz(timezone).toDate();
-
-			inputStartDate.datepicker('setDate', startDate);
-			inputEndDate.datepicker('setDate', endDate);
+			inputStartDate.datepicker('setDate', startDate.toDate());
+			inputEndDate.datepicker('setDate', endDate.toDate());
 
 			// customSelect runs every time the user selects a date in one of the date pickers.
 			// Features:
@@ -1028,15 +1028,15 @@ define(function(require) {
 					dateMaxRange;
 
 				if (input.id === 'startDate') {
-					dateMaxRange = moment(dateMin);
+					dateMaxRange = moment(dateMin).tz(timezone);
 
 					if (range === 'monthly') {
-						dateMaxRange = dateMaxRange.add(1, 'months');
+						dateMaxRange.add(1, 'months');
 					} else {
-						dateMaxRange = dateMaxRange.add(range, 'days');
+						dateMaxRange.add(range, 'days');
 					}
 
-					if (moment(dateMaxRange).isAfter(today)) {
+					if (dateMaxRange.isAfter(today)) {
 						dateMaxRange = today;
 					}
 
@@ -1053,13 +1053,13 @@ define(function(require) {
 					dateMax;
 
 				if (input.id === 'endDate') {
-					var dateMaxRange = moment(dateMin);
+					var dateMaxRange = moment(dateMin).tz(timezone);
 
 					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
 					if (range === 'monthly') {
-						dateMaxRange = dateMaxRange.add(1, 'months');
+						dateMaxRange.add(1, 'months');
 					} else {
-						dateMaxRange = dateMaxRange.add(range, 'days');
+						dateMaxRange.add(range, 'days');
 					}
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
