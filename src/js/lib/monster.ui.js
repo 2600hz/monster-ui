@@ -1003,6 +1003,7 @@ define(function(require) {
 					),
 				endDate = moment().tz(timezone).set({hours: 23, minutes: 59, seconds: 59});
 
+			debugger;
 			if (options.startDate) {
 				startDate = moment(startDate).tz(timezone);
 			} else if (range === 'monthly') {
@@ -1031,9 +1032,9 @@ define(function(require) {
 					dateMaxRange = moment(dateMin).tz(timezone);
 
 					if (range === 'monthly') {
-						dateMaxRange.add(1, 'months');
+						dateMaxRange.add(1, 'months').subtract(1, 'days');
 					} else {
-						dateMaxRange.add(range, 'days');
+						dateMaxRange.add((range - 1), 'days');
 					}
 
 					if (dateMaxRange.isAfter(today)) {
@@ -1053,19 +1054,19 @@ define(function(require) {
 					dateMax;
 
 				if (input.id === 'endDate') {
-					var dateMaxRange = moment(dateMin).tz(timezone);
+					var minMoment = moment(dateMin);
 
 					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
 					if (range === 'monthly') {
-						dateMaxRange.add(1, 'months');
+						minMoment.add(1, 'months').subtract(1, 'days');
 					} else {
-						dateMaxRange.add(range, 'days');
+						minMoment.add((range - 1), 'days');
 					}
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
-					dateMax = dateMaxRange.toDate();
+					dateMax = minMoment.toDate();
 
-					if (dateMaxRange.isAfter(today)) {
+					if (minMoment.isAfter(today)) {
 						dateMax = today.toDate();
 					}
 				} else if (input.id === 'startDate') {
