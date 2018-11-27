@@ -17,6 +17,8 @@ define(function(require) {
 
 		appFlags: {
 			portListing: {
+				parent: undefined,
+				container: undefined,
 				isMonsterApp: undefined,
 				states: [
 					{ value: 'unconfirmed', next: [1, 6] },
@@ -31,122 +33,111 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {Object} args
-		 * @param {Object} args.isMonsterApp
+		 * @param {Boolean} args.isMonsterApp
 		 * @param {jQuery} args.parent
 		 * @param {jQuery} [args.container]
-		 * @param {Object} args.data
 		 */
 		portListingRender: function(args) {
-			var self = this,
-				modal;
+			var self = this;
 
 			self.appFlags.portListing.isMonsterApp = _.isBoolean(args.isMonsterApp)
 				? args.isMonsterApp
 				: false;
 
 			if (self.appFlags.portListing.isMonsterApp) {
-				self.portListingRenderLayout(args);
+				self.appFlags.portListing.parent = args.parent;
+				self.appFlags.portListing.container = args.container;
 			} else {
-				if (args.parent && args.parent.getId()) {
-					modal = args.parent;
-				} else {
-					modal = monster.ui.fullScreenModal(null, {
+				self.appFlags.portListing.parent = _.has(args, 'parent.getId')
+					? args.parent
+					: monster.ui.fullScreenModal(null, {
 						inverseBg: true,
 						cssContentId: 'port_app_container'
 					});
-				}
-
-				self.portListingRenderLayout({
-					parent: modal,
-					container: $('.core-absolute').find('#' + modal.getId() + ' .modal-content'),
-					data: args.data
-				});
+				self.appFlags.portListing.container = $('.core-absolute').find(
+					'#'
+					+ self.appFlags.portListing.parent.getId()
+					+ ' .modal-content'
+				);
 			}
+
+			self.portListingRenderLayout();
 		},
 
 		/**************************************************
 		 *               Templates rendering              *
 		 **************************************************/
 
-		/**
-		 * @param {Object} args
-		 * @param {jQuery} args.container
-		 */
-		portListingRenderLayout: function(args) {
+		portListingRenderLayout: function() {
 			var self = this,
-				container = args.container,
 				template = $(self.getTemplate({
 					name: 'layout',
 					submodule: 'portListing'
 				}));
 
-			container
+			self.appFlags.portListing.container
 				.empty()
 				.append(template);
 
-			self.portListingRenderListing(args);
+			self.portListingRenderListing();
 		},
 
-		/**
-		 * @param {Object} args
-		 * @param {jQuery} args.container
-		 */
-		portListingRenderListing: function(args) {
+		portListingRenderListing: function() {
 			var self = this,
-				container = args.container,
-				initTemplate = function initTemplate(ports) {
+				container = self.appFlags.portListing.container.find('.listing-section-wrapper'),
+				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 						name: 'listing',
 						data: {
-							hasPorts: !_.isEmpty(ports)
+							hasPorts: !_.isEmpty(portRequests)
 						},
 						submodule: 'portListing'
 					}));
 
-					self.portListingRenderListingIncomplete(template, _.assign({}, args, {
-						data: ports
-					}));
-
-					self.portListingRenderListingSubmitted(template, _.assign({}, args, {
-						data: ports
-					}));
-
-					self.portListingBindListingEvents(template, _.merge({}, args, {
-						data: {
-							ports: _.keyBy(ports, 'id')
-						}
-					}));
+					self.portListingRenderListingIncomplete({
+						template: template,
+						portRequests: portRequests
+					});
+					self.portListingRenderListingSubmitted({
+						template: template,
+						portRequests: portRequests
+					});
+					self.portListingBindListingEvents({
+						template: template,
+						portRequests: _.keyBy(portRequests, 'id')
+					});
 
 					return template;
 				};
 
-			monster.ui.insertTemplate(container.find('.listing-section-wrapper'), function(insertTemplateCallback) {
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
 				self.portListingHelperListPorts({
-					success: function(ports) {
-						insertTemplateCallback(initTemplate(ports));
+					success: function(portRequests) {
+						insertTemplateCallback(initTemplate(portRequests));
 					}
 				});
 			});
 		},
 
 		/**
-		 * @param {jQuery} container
-		 * @param {Object} args
-		 * @param {Object} args.data
+		 * @param {jQuery} args.template
+		 * @param {Array} args.portRequests
 		 */
-		portListingRenderListingIncomplete: function(container, args) {
+		portListingRenderListingIncomplete: function(args) {
 			var self = this,
-				initTemplate = function(requests) {
+				container = args.template,
+				portRequests = args.portRequests,
+				initTemplate = function(portRequests) {
 					var template = $(self.getTemplate({
 						name: 'listing-incomplete',
 						data: {
 							isMonsterApp: self.appFlags.portListing.isMonsterApp,
 							requests: _
-								.chain(requests)
-								.filter(function(request) {
-									return _.includes(['unconfirmed', 'rejected'], request.state);
+								.chain(portRequests)
+								.filter(function(portRequest) {
+									return _.includes(['unconfirmed', 'rejected'], portRequest.state);
 								})
+								.cloneDeep()
 								.sortBy('state')
 								.value()
 						},
@@ -165,24 +156,29 @@ define(function(require) {
 			container
 				.find('#incomplete_ports_wrapper')
 				.empty()
-				.append(initTemplate(args.data));
+				.append(initTemplate(portRequests));
 		},
 
 		/**
-		 * @param {jQuery} container
-		 * @param {Object} args
-		 * @param {Object} args.data
+		 * @param {jQuery} args.template
+		 * @param {Array} args.portRequests
 		 */
-		portListingRenderListingSubmitted: function(container, args) {
+		portListingRenderListingSubmitted: function(args) {
 			var self = this,
-				initTemplate = function(requests) {
+				container = args.template,
+				portRequests = args.portRequests,
+				initTemplate = function(portRequests) {
 					var template = $(self.getTemplate({
 						name: 'listing-submitted',
 						data: {
 							isMonsterApp: self.appFlags.portListing.isMonsterApp,
-							requests: _.filter(requests, function(request) {
-								return !_.includes(['unconfirmed', 'rejected'], request.state);
-							})
+							requests: _
+								.chain(portRequests)
+								.filter(function(portRequest) {
+									return !_.includes(['unconfirmed', 'rejected'], portRequest.state);
+								})
+								.cloneDeep()
+								.value()
 						},
 						submodule: 'portListing'
 					}));
@@ -202,7 +198,7 @@ define(function(require) {
 			container
 				.find('#submitted_ports_wrapper')
 				.empty()
-				.append(initTemplate(args.data));
+				.append(initTemplate(portRequests));
 		},
 
 		/**
@@ -407,39 +403,35 @@ define(function(require) {
 		 *                 Events bindings                *
 		 **************************************************/
 
-		/**
-		 * @param {Object} args
-		 * @param {Boolean} args.isMonsterApp
-		 */
-		portListingGlobalCallback: function(args) {
+		portListingGlobalCallback: function() {
 			var self = this;
 
-			if (args.isMonsterApp) {
+			if (self.appFlags.portListing.isMonsterApp) {
 				monster.pub('port.render');
 			} else {
-				self.portListingRender(args);
+				self.portListingRenderLayout();
 			}
 		},
 
 		/**
-		 * @param {jQuery} template
-		 * @param {Object} args
-		 * @param {Object} args.data
-		 * @param {Object} args.data.ports
+		 * @param {jQuery} args.template
+		 * @param {Object} args.portRequests
 		 */
-		portListingBindListingEvents: function(template, args) {
-			var self = this;
+		portListingBindListingEvents: function(args) {
+			var self = this,
+				template = args.template,
+				portRequests = args.portRequests;
 
 			template
 				.find('.port-wizard')
 					.on('click', function(event) {
 						event.preventDefault();
 
-						monster.pub('common.portWizard.render', $.extend(true, args, {
+						monster.pub('common.portWizard.render', {
 							globalCallback: function() {
-								self.portListingGlobalCallback(args);
+								self.portListingGlobalCallback();
 							}
-						}));
+						});
 					});
 
 			template
@@ -471,25 +463,28 @@ define(function(require) {
 				.find('.footable')
 					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
-						var portId = $(this).data('id');
+						var portId = $(this).data('id'),
+							portRequest = portRequests[portId];
 
-						if (args.data.ports[portId].state === 'unconfirmed') {
-							monster.pub('common.portWizard.render', _.extend({}, args, {
+						if (portRequest.state === 'unconfirmed') {
+							monster.pub('common.portWizard.render', {
+								container: self.appFlags.portListing.container,
 								data: {
-									request: args.data.ports[portId]
+									accountId: self.accountId,
+									request: portRequest
 								},
 								globalCallback: function() {
-									self.portListingGlobalCallback(args);
+									self.portListingGlobalCallback();
 								}
-							}));
+							});
 						} else {
-							args.data.port = args.data.ports[portId];
-
-							self.portListingRenderDetail(_.merge(true, {}, args, {
+							self.portListingRenderDetail({
+								container: self.appFlags.portListing.container,
 								data: {
+									port: portRequest,
 									portId: portId
 								}
-							}));
+							});
 						}
 					});
 
@@ -527,7 +522,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portListingRenderLayout(args);
+						self.portListingRenderLayout();
 					});
 
 			template
@@ -975,7 +970,6 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {Object} args
 		 * @param {Function} args.success
 		 */
 		portListingHelperListPorts: function(args) {
