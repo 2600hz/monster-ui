@@ -1252,7 +1252,7 @@ define(function(require) {
 						error: function(parsedError, groupedErrors) {
 							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
 
-							switch (_.head(processedErrors.failedWizardSteps)) {
+							switch (processedErrors.failedWizardStep) {
 								case 'addNumbers':
 									self.portWizardRenderAddNumbers(args);
 									break;
@@ -1644,57 +1644,75 @@ define(function(require) {
 					};
 				});
 
-			if (viewErrors.length === 1) {
-				// If there is only one kind of error, show toast
-				var error = viewErrors[0];
-
-				monster.ui.toast({
-					type: 'error',
-					message: self.getTemplate({
-						name: '!' + error.message,
-						data: {
-							variable: error.causes
-						}
-					}),
-					options: {
-						timeOut: 10000
-					}
-				});
+			if (viewErrors.length !== 1) {
+				// If there is not exactly one kind of error, show dialog
+				monster.ui.alert('error', self.getTemplate({
+					name: 'errorDialog',
+					data: {
+						errors: viewErrors
+					},
+					submodule: 'portWizard'
+				}));
 
 				return;
 			}
 
-			// If there are more than one errors, show dialog
-			monster.ui.alert('error', self.getTemplate({
-				name: 'errorDialog',
-				data: {
-					errors: viewErrors
-				},
-				submodule: 'portWizard'
-			}));
+			// Else (there is only one kind of error) show toast
+			var error = viewErrors[0];
+
+			monster.ui.toast({
+				type: 'error',
+				message: self.getTemplate({
+					name: '!' + error.message,
+					data: {
+						variable: error.causes
+					}
+				}),
+				options: {
+					timeOut: 10000
+				}
+			});
 		},
 
 		portWizardProcessKnownErrors: function(groupedErrors) {
 			var self = this,
 				knownErrorSteps = self.appFlags.portWizard.knownErrors,
-				failedWizardSteps = [];
+				failedWizardStep = null;
 
+			// Iterate wizard steps for known errors
 			_.each(knownErrorSteps, function(knownErrorStep, knownErrorStepKey) {
+				// Iterate error causes within known error step
 				_.each(knownErrorStep, function(knownErrorCauses, knownErrorKey) {
+					// Then check every error group
 					_.each(groupedErrors, function(errorGroup, errorGroupKey) {
+						// If the error group key does not match a known error key,
+						// then continue with the next group
 						if (errorGroupKey !== knownErrorKey) {
 							return;
 						}
 
-						_.each(errorGroup.causes, function(errorGroupCause, i) {
-							if (!_.includes(failedWizardSteps, knownErrorStepKey)) {
-								failedWizardSteps.push(knownErrorStepKey);
+						// If there are not known error causes, the cause does not matter and
+						// does not need any further processing, so just set the failed step
+						if (_.isEmpty(knownErrorCauses)) {
+							if (!failedWizardStep) {
+								failedWizardStep = knownErrorStepKey;
 							}
+							return;
+						}
 
+						// Else, check error causes and process any translation if possible
+						_.each(errorGroup.causes, function(errorGroupCause, i) {
+							// If the cause is not known, skip
 							if (!knownErrorCauses.hasOwnProperty(errorGroupCause)) {
 								return;
 							}
 
+							// Set failed step
+							if (!failedWizardStep) {
+								failedWizardStep = knownErrorStepKey;
+							}
+
+							// Try to get translation for cause
 							var i18nPath = knownErrorCauses[errorGroupCause];
 
 							if (!i18nPath) {
@@ -1714,7 +1732,7 @@ define(function(require) {
 			});
 
 			return {
-				failedWizardSteps: failedWizardSteps,
+				failedWizardStep: failedWizardStep,
 				errorGroups: groupedErrors
 			};
 		}
