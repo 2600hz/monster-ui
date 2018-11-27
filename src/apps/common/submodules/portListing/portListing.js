@@ -30,6 +30,13 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {Object} args.isMonsterApp
+		 * @param {jQuery} args.parent
+		 * @param {jQuery} [args.container]
+		 * @param {Object} args.data
+		 */
 		portListingRender: function(args) {
 			var self = this,
 				modal;
@@ -62,6 +69,10 @@ define(function(require) {
 		 *               Templates rendering              *
 		 **************************************************/
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 */
 		portListingRenderLayout: function(args) {
 			var self = this,
 				container = args.container,
@@ -77,6 +88,10 @@ define(function(require) {
 			self.portListingRenderListing(args);
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 */
 		portListingRenderListing: function(args) {
 			var self = this,
 				container = args.container,
@@ -115,6 +130,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {jQuery} container
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 */
 		portListingRenderListingIncomplete: function(container, args) {
 			var self = this,
 				initTemplate = function(requests) {
@@ -148,6 +168,11 @@ define(function(require) {
 				.append(initTemplate(args.data));
 		},
 
+		/**
+		 * @param {jQuery} container
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 */
 		portListingRenderListingSubmitted: function(container, args) {
 			var self = this,
 				initTemplate = function(requests) {
@@ -180,6 +205,12 @@ define(function(require) {
 				.append(initTemplate(args.data));
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data
+		 * @param {String} args.data.portId
+		 */
 		portListingRenderDetail: function(args) {
 			var self = this,
 				container = args.container,
@@ -265,6 +296,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 * @param {Object} args.data.port
+		 */
 		portListingRenderUpdateStatus: function(args) {
 			var self = this,
 				states = self.appFlags.portListing.states,
@@ -302,6 +338,9 @@ define(function(require) {
 			self.portListingBindUpdateStatusEvents(dialog, args);
 		},
 
+		/**
+		 * @param {jQuery} dialog
+		 */
 		portListingRenderUpdateStatusDefault: function(dialog) {
 			var self = this;
 
@@ -314,6 +353,13 @@ define(function(require) {
 					})));
 		},
 
+		/**
+		 * @param {jQuery} dialog
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 * @param {String} args.data.portId
+		 * @param {Object} args.data.ports
+		 */
 		portListingRenderUpdateStatusScheduled: function(dialog, args) {
 			var self = this,
 				data = args.data,
@@ -339,6 +385,9 @@ define(function(require) {
 					.append(template);
 		},
 
+		/**
+		 * @param {jQuery} dialog
+		 */
 		portListingRenderUpdateStatusRejected: function(dialog) {
 			var self = this;
 
@@ -358,6 +407,10 @@ define(function(require) {
 		 *                 Events bindings                *
 		 **************************************************/
 
+		/**
+		 * @param {Object} args
+		 * @param {Boolean} args.isMonsterApp
+		 */
 		portListingGlobalCallback: function(args) {
 			var self = this;
 
@@ -368,6 +421,12 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 * @param {Object} args.data.ports
+		 */
 		portListingBindListingEvents: function(template, args) {
 			var self = this;
 
@@ -451,6 +510,13 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 * @param {String} args.data.portId
+		 * @param {Object} args.data.port
+		 */
 		portListingBindDetailEvents: function(template, args) {
 			var self = this,
 				portId = args.data.portId,
@@ -570,6 +636,12 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} dialog
+		 * @param {Object} args
+		 * @param {Object} args.data
+		 * @param {String} args.data.portId
+		 */
 		portListingBindUpdateStatusEvents: function(dialog, args) {
 			var self = this;
 
@@ -720,6 +792,10 @@ define(function(require) {
 		 *                   UI helpers                   *
 		 **************************************************/
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 */
 		portListingScrollToBottomOfTimeline: function(args) {
 			setTimeout(function() {
 				var timelinePanel = args.container.find('.timeline-panel'),
@@ -729,6 +805,10 @@ define(function(require) {
 			}, 50);
 		},
 
+		/**
+		 * @param {jQuery} dialog
+		 * @param {String} message
+		 */
 		portListingPopulateReasonField: function(dialog, message) {
 			var self = this,
 				reasons = self.i18n.active().portListing.detail.dialog.reason,
@@ -749,6 +829,13 @@ define(function(require) {
 		 *              Data handling helpers             *
 		 **************************************************/
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data
+		 * @param {String} args.data.comment
+		 * @param {String} args.data.portId
+		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
 				data = args.data,
@@ -807,6 +894,10 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Array} entries
+		 * @return {Array}
+		 */
 		portListingFormatToTimeline: function(entries) {
 			var self = this,
 				comments = entries.filter(function(entry) { return entry.hasOwnProperty('author'); }),
@@ -836,6 +927,10 @@ define(function(require) {
 			return _.sortBy(timeline, 'timestamp');
 		},
 
+		/**
+		 * @param {Array} entries
+		 * @return {Array}
+		 */
 		portListingGenerateTimeline: function(entries) {
 			var self = this,
 				formattedEntries = self.portListingFormatToTimeline(entries),
@@ -854,6 +949,10 @@ define(function(require) {
 			return timeline;
 		},
 
+		/**
+		 * @param {Array} transitions
+		 * @return {Object}
+		 */
 		portListingFormatLastSubmittedTransitions: function(transitions) {
 			var self = this;
 
@@ -863,6 +962,10 @@ define(function(require) {
 			}, {});
 		},
 
+		/**
+		 * @param {String|Number} number
+		 * @return {String|Number}
+		 */
 		portListingFormat2Digits: function(number) {
 			if (typeof number === 'string') {
 				number = parseInt(number);
@@ -871,6 +974,10 @@ define(function(require) {
 			return number < 10 ? '0'.concat(number) : number;
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {Function} args.success
+		 */
 		portListingHelperListPorts: function(args) {
 			var self = this,
 				listAccountPorts = function(callback) {
@@ -935,6 +1042,9 @@ define(function(require) {
 		 *              Requests declarations             *
 		 **************************************************/
 
+		/**
+		 * @param {Function} args.success
+		 */
 		portListingRequestListPort: function(args) {
 			var self = this;
 
@@ -955,6 +1065,9 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 */
 		portListingRequestListDescendantsPorts: function(args) {
 			var self = this;
 
@@ -975,6 +1088,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {Function} args.success
+		 * @param {String} args.data.portRequestId
+		 */
 		portListingRequestGetPort: function(args) {
 			var self = this;
 
@@ -992,6 +1110,12 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 * @param {String} args.data.portRequestId
+		 * @param {String} args.data.state
+		 * @param {Object} args.data.data
+		 */
 		portListingRequestPatchPortState: function(args) {
 			var self = this;
 
@@ -1009,6 +1133,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 * @param {String} args.data.portRequestId
+		 * @param {String} args.data.documentName
+		 */
 		portListingRequestGetAttachment: function(args) {
 			var self = this;
 
@@ -1026,6 +1155,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 * @param {String} args.data.portRequestId
+		 * @param {Array} args.data.data.comments
+		 */
 		portListingRequestCreateComment: function(args) {
 			var self = this;
 
@@ -1043,6 +1177,10 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 * @param {String} args.data.portRequestId
+		 */
 		portListingRequestGetTimeline: function(args) {
 			var self = this;
 
@@ -1060,6 +1198,9 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 */
 		portListingRequestListLastSubmitted: function(args) {
 			var self = this;
 
