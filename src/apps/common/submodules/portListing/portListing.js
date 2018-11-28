@@ -20,6 +20,8 @@ define(function(require) {
 				parent: undefined,
 				container: undefined,
 				isMonsterApp: undefined,
+				accountNames: {},
+				portRequests: [],
 				states: [
 					{ value: 'unconfirmed', next: [1, 6] },
 					{ value: 'submitted', next: [2, 4, 6] },
@@ -103,8 +105,7 @@ define(function(require) {
 						portRequests: portRequests
 					});
 					self.portListingBindListingEvents({
-						template: template,
-						portRequests: _.keyBy(portRequests, 'id')
+						template: template
 					});
 
 					return template;
@@ -133,12 +134,12 @@ define(function(require) {
 						data: {
 							isMonsterApp: self.appFlags.portListing.isMonsterApp,
 							requests: _
-								.chain(portRequests)
+								.chain(self.portListingFormatListingPorts(portRequests))
 								.filter(function(portRequest) {
 									return _.includes(['unconfirmed', 'rejected'], portRequest.state);
 								})
-								.cloneDeep()
 								.sortBy('state')
+								.cloneDeep()
 								.value()
 						},
 						submodule: 'portListing'
@@ -173,7 +174,7 @@ define(function(require) {
 						data: {
 							isMonsterApp: self.appFlags.portListing.isMonsterApp,
 							requests: _
-								.chain(portRequests)
+								.chain(self.portListingFormatListingPorts(portRequests))
 								.filter(function(portRequest) {
 									return !_.includes(['unconfirmed', 'rejected'], portRequest.state);
 								})
@@ -415,12 +416,10 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} args.template
-		 * @param {Object} args.portRequests
 		 */
 		portListingBindListingEvents: function(args) {
 			var self = this,
-				template = args.template,
-				portRequests = args.portRequests;
+				template = args.template;
 
 			template
 				.find('.port-wizard')
@@ -464,7 +463,9 @@ define(function(require) {
 					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
 						var portId = $(this).data('id'),
-							portRequest = portRequests[portId];
+							portRequest = _.find(self.appFlags.portListing.portRequests, {
+								id: portId
+							});
 
 						if (portRequest.state === 'unconfirmed') {
 							monster.pub('common.portWizard.render', {
@@ -995,29 +996,30 @@ define(function(require) {
 			}
 
 			monster.parallel(parallelRequests, function(err, results) {
-				args.success(_
+				self.appFlags.portListing.accountNames = _
+					.chain(results)
+					.map(function(payload) {
+						return _.map(payload, function(account) {
+							return {
+								id: account.account_id,
+								name: account.account_name
+							};
+						});
+					})
+					.reduce(function(acc, item) {
+						return acc.concat(item);
+					}, [])
+					.transform(function(object, account) {
+						object[account.id] = account.name;
+					}, {})
+					.value();
+				self.appFlags.portListing.portRequests = _
 					.chain(results)
 					.map(function(payload) {
 						return _
 							.chain(payload)
 							.map(function(account) {
-								return _.map(account.port_requests, function(request) {
-									return {
-										account: {
-											id: account.account_id,
-											name: account.account_name
-										},
-										amount: _.size(request.numbers),
-										carrier: {
-											winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
-											losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
-										},
-										id: request.id,
-										name: request.name,
-										reference: request.carrier_reference_number,
-										state: request.port_state
-									};
-								});
+								return account.port_requests;
 							})
 							.reduce(function(acc, item) {
 								return acc.concat(item);
@@ -1027,8 +1029,31 @@ define(function(require) {
 					.reduce(function(acc, item) {
 						return acc.concat(item);
 					}, [])
-					.value()
-				);
+					.value();
+
+				args.success(self.appFlags.portListing.portRequests);
+			});
+		},
+
+		portListingFormatListingPorts: function() {
+			var self = this;
+
+			return _.map(self.appFlags.portListing.portRequests, function(request) {
+				return {
+					account: {
+						id: request.account_id,
+						name: self.appFlags.portListing.accountNames[request.account_id]
+					},
+					amount: _.size(request.numbers),
+					carrier: {
+						winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
+						losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
+					},
+					id: request.id,
+					name: request.name,
+					reference: request.carrier_reference_number,
+					state: request.port_state
+				};
 			});
 		},
 
