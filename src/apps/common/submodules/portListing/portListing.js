@@ -559,10 +559,10 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 						self.portListingHelperPostComment({
-							portId: args.data.portId,
+							portRequestId: args.data.portId,
 							container: args.container,
 							commentInput: textarea
-					});
+						});
 					});
 
 			if (!monster.util.isSuperDuper()) {
@@ -575,11 +575,11 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 						self.portListingHelperPostComment({
-							portId: args.data.portId,
+							portRequestId: args.data.portId,
 							container: args.container,
 							commentInput: textarea,
 							isSuperDuperComment: true
-					});
+						});
 					});
 		},
 
@@ -765,7 +765,7 @@ define(function(require) {
 		/**
 		 * Gets the comment text from the specified input, and posts it to the API
 		 * @param  {Object}  args
-		 * @param  {String}  args.portId                 Current Port ID
+		 * @param  {String}  args.portRequestId          Current Port Request ID
 		 * @param  {jQuery}  args.container              Main container
 		 * @param  {jQuery}  args.commentInput           Input element that contains the comment text
 		 * @param  {Boolean} [args.isSuperDuperComment]  Indicates if the comment to be posted is for
@@ -781,9 +781,10 @@ define(function(require) {
 				return;
 			}
 
-			self.portListingHelperAddComment(_.assign({
-				comment: comment
-			}));
+			self.portListingHelperAddComment(
+				_.assign(args, {
+					comment: comment
+				}));
 
 			commentInput.val('');
 		},
@@ -795,7 +796,7 @@ define(function(require) {
 		/**
 		 * Gets the comment text from the specified input, and posts it to the API
 		 * @param  {Object}  args
-		 * @param  {String}  args.portId               Current Port ID
+		 * @param  {String}  args.portRequestId        Current Port Request ID
 		 * @param  {jQuery}  args.container            Main container
 		 * @param  {String}  args.comment              Comment to be added
 		 * @param  {Boolean} args.isSuperDuperComment  Indicates if the comment to be posted is for
@@ -811,7 +812,7 @@ define(function(require) {
 
 			self.portListingRequestCreateComment({
 				data: {
-					portRequestId: args.portId,
+					portRequestId: args.portRequestId,
 					data: {
 						comments: [
 							{
