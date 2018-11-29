@@ -431,7 +431,7 @@ define(function(require) {
 								accountId: self.accountId
 							},
 							globalCallback: function() {
-								self.portListingGlobalCallbacks();
+								self.portListingGlobalCallback();
 							}
 						});
 					});
