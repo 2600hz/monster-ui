@@ -984,5 +984,13 @@
 		"confirmDeleteTitle": "Warning! Are you sure?",
 		"successUpdate": "Your Storage Settings were successfully updated!",
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
+	},
+	"navigationWizard": {
+		"buttons": {
+			"next": "Next",
+			"cancel": "Cancel",
+			"clear": "Clear",
+			"back": "Back"
+		}
 	}
 }

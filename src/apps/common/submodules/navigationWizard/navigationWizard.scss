@@ -1,2 +1,82 @@
 @import "../../../../css/partials/base";
 
+.navigation-wizard .header {
+	border-bottom: 1px solid #c0c0c9;
+	box-shadow: 1px 2px #e5e5e9;
+	padding: 10px 10px 10px 30px;
+}
+
+.navigation-wizard .left-content {
+	float: left;
+	width: 270px;
+	margin-bottom: 20px;
+	border-right: 1px solid #c0c0c9;
+	min-height: 600px;
+}
+
+.navigation-wizard .right-content {
+	background-color: #F0F0F9;
+	margin-bottom: 20px;
+	margin-left: 271px;
+	padding: 15px 15px 0 55px;
+	border-bottom: 1px solid #c0c0c9;
+	min-height: 500px;
+}
+
+.left-content .nav {
+	margin: 25px 10px 0 20px;
+}
+
+.left-content li {
+	margin: 15px 0;
+}
+
+.right-content h3 {
+	font-weight: normal;
+	padding-bottom: 15px;
+}
+
+.navigation-wizard #cancel {
+	float: right;
+	bottom: 38px;
+	right: 25px;
+}
+
+.navigation-wizard .footer {
+	float: right;
+	margin-right: 25px;
+}
+
+.navigation-wizard #clear {
+	padding: 30px;
+	color: black;
+}
+
+.navigation-wizard .actions .back {
+	margin-right: 15px;
+}
+
+.navigation-wizard .hide-content {
+	display: none;
+}
+
+.navigation-wizard .show-content {
+	display: block;
+	font-size: 12px;
+	margin-left: 10px;
+	color: #909099;
+}
+
+.left-content .selected {
+	font-weight: bold;
+	margin-left: 22px;
+}
+
+.nav .circle {
+	color: #22A5FF;
+	float: left;
+	position: relative;
+	right: 22px;
+	top: 5px;
+	font-size: 9px !important;
+}

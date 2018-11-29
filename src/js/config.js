@@ -13,6 +13,10 @@
  * https://docs.2600hz.com/ui/docs/configuration/
  */
 define({
+	api: {
+		'default': 'http://10.69.1.140:8000/v2/',
+		'socket': 'ws://10.69.1.140:5555'
+	},
 	whitelabel: {
 		companyName: '2600Hz',
 		applicationTitle: 'Monster UI',
