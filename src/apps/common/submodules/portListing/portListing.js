@@ -257,7 +257,7 @@ define(function(require) {
 					}
 				}, function(err, results) {
 					insertTemplateCallback(initTemplate(results), function() {
-						self.portListingScrollToBottomOfTimeline(args);
+						self.portListingScrollToBottomOfTimeline(args.container);
 					});
 				});
 			}, {
@@ -557,18 +557,29 @@ define(function(require) {
 			textareaWrapper
 				.find('#add_comment')
 					.on('click', function(event) {
-						self.portListingHelperPostComment(event, textarea, args, false);
+						event.preventDefault();
+						self.portListingHelperPostComment({
+							portId: args.data.portId,
+							container: args.container,
+							commentInput: textarea
+					});
 					});
 
 			if (!monster.util.isSuperDuper()) {
-				this.return;
+				return;
 			}
 
 			// Set event handlers for superduper options
 			textareaWrapper
 				.find('#add_private_comment')
 					.on('click', function(event) {
-						self.portListingHelperPostComment(event, textarea, args, true);
+						event.preventDefault();
+						self.portListingHelperPostComment({
+							portId: args.data.portId,
+							container: args.container,
+							commentInput: textarea,
+							isSuperDuperComment: true
+					});
 					});
 		},
 
@@ -722,9 +733,13 @@ define(function(require) {
 		 *                   UI helpers                   *
 		 **************************************************/
 
-		portListingScrollToBottomOfTimeline: function(args) {
+		/**
+		 * Scrolls the timeline to its bottom
+		 * @param  {jQuery} container  Main container element
+		 */
+		portListingScrollToBottomOfTimeline: function(container) {
 			setTimeout(function() {
-				var timelinePanel = args.container.find('.timeline-panel'),
+				var timelinePanel = container.find('.timeline-panel'),
 					scrollHeight = timelinePanel.prop('scrollHeight');
 
 				timelinePanel.scrollTop(scrollHeight);
@@ -747,34 +762,47 @@ define(function(require) {
 			}
 		},
 
-		portListingHelperPostComment: function(event, $textarea, args, isSuperDuperComment) {
-			var self = this;
+		/**
+		 * Gets the comment text from the specified input, and posts it to the API
+		 * @param  {Object}  args
+		 * @param  {String}  args.portId                 Current Port ID
+		 * @param  {jQuery}  args.container              Main container
+		 * @param  {jQuery}  args.commentInput           Input element that contains the comment text
+		 * @param  {Boolean} [args.isSuperDuperComment]  Indicates if the comment to be posted is for
+		 *                                               super-duper users
+		 */
+		portListingHelperPostComment: function(args) {
+			var self = this,
+				commentInput = args.commentInput;
 
-			event.preventDefault();
-
-			var comment = $textarea.val();
+			var comment = commentInput.val();
 
 			if (_.chain(comment).trim().isEmpty().value()) {
 				return;
 			}
 
-			self.portListingHelperAddComment(_.merge({}, args, {
-				data: {
-					comment: comment,
-					isSuperDuperComment: isSuperDuperComment
-				}
+			self.portListingHelperAddComment(_.assign({
+				comment: comment
 			}));
 
-			$textarea.val('');
+			commentInput.val('');
 		},
 
 		/**************************************************
 		 *              Data handling helpers             *
 		 **************************************************/
 
+		/**
+		 * Gets the comment text from the specified input, and posts it to the API
+		 * @param  {Object}  args
+		 * @param  {String}  args.portId               Current Port ID
+		 * @param  {jQuery}  args.container            Main container
+		 * @param  {String}  args.comment              Comment to be added
+		 * @param  {Boolean} args.isSuperDuperComment  Indicates if the comment to be posted is for
+		 *                                             super-duper users
+		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
-				data = args.data,
 				container = args.container,
 				user = monster.apps.auth.currentUser,
 				now = moment().toDate(),
@@ -783,14 +811,14 @@ define(function(require) {
 
 			self.portListingRequestCreateComment({
 				data: {
-					portRequestId: data.portId,
+					portRequestId: args.portId,
 					data: {
 						comments: [
 							{
 								timestamp: monster.util.dateToGregorian(now),
 								author: author,
-								content: data.comment,
-								superduper_comment: data.isSuperDuperComment
+								content: args.comment,
+								superduper_comment: _.get(args, 'isSuperDuperComment', false)
 							}
 						]
 					}
@@ -827,7 +855,7 @@ define(function(require) {
 								})));
 					}
 
-					self.portListingScrollToBottomOfTimeline(args);
+					self.portListingScrollToBottomOfTimeline(container);
 				}
 			});
 		},
