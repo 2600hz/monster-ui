@@ -23,6 +23,20 @@ define(function(require) {
 						'application/pdf'
 					],
 					maxSize: 8
+				},
+				knownErrors: {
+					addNumbers: {
+						number_is_on_a_port_request_already: {},
+						number_exists_on_the_system_already: {},
+						too_few_properties: {
+							'numbers': 'addNumbers.list.title' // 'field_key': 'i18n.path'
+						}
+					},
+					portNotify: {
+						wrong_format: {
+							'notifications.email.send_to': 'portNotify.email.label'
+						}
+					}
 				}
 			}
 		},
@@ -460,11 +474,13 @@ define(function(require) {
 					return template;
 				};
 
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
-				insertTemplateCallback(initTemplate(), function() {
-					container
-						.find('#email')
-							.focus();
+			container.fadeOut(function() {
+				monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+					insertTemplateCallback(initTemplate(), function() {
+						container
+							.find('#email')
+								.focus();
+					});
 				});
 			});
 		},
@@ -693,9 +709,7 @@ define(function(require) {
 							});
 
 							if (action === 'save') {
-								self.portWizardHelperSavePort($.extend(true, args, {
-									success: args.globalCallback
-								}));
+								self.portWizardHelperSavePort(args, true, false);
 							} else if (action === 'next') {
 								self.portWizardRenderAddNumbers(args);
 							}
@@ -837,9 +851,7 @@ define(function(require) {
 							}
 						});
 
-						self.portWizardHelperSavePort($.extend(true, args, {
-							success: args.globalCallback
-						}));
+						self.portWizardHelperSavePort(args, true, false);
 					});
 
 			container
@@ -1076,9 +1088,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort($.extend(true, args, {
-							success: args.globalCallback
-						}));
+						self.portWizardHelperSavePort(args, true, false);
 					});
 
 			template
@@ -1170,9 +1180,7 @@ define(function(require) {
 						});
 
 						if (action === 'save') {
-							self.portWizardHelperSavePort($.extend(true, args, {
-								success: args.globalCallback
-							}));
+							self.portWizardHelperSavePort(args, true, false);
 						} else if (action === 'next') {
 							self.portWizardRenderSubmitPort(args);
 						}
@@ -1212,7 +1220,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort($.extend(true, args, {
+						var savePortArgs = _.merge({}, args, {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
@@ -1223,11 +1231,10 @@ define(function(require) {
 										args.globalCallback();
 									}
 								});
-							},
-							error: function() {
-								self.portWizardRenderAddNumbers(args);
 							}
-						}));
+						});
+
+						self.portWizardHelperSavePort(savePortArgs, false, true);
 					});
 
 			template
@@ -1331,19 +1338,47 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {Object} args.data.request
+		 * @param  {Function} [args.globalCallback]
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
+		 * @param  {Object} args.data.request
+		 * @param  {Boolean} useGlobalSuccessCallback
+		 * @param  {Boolean} stopErrorPropagation
 		 */
-		portWizardHelperSavePort: function(args) {
+		portWizardHelperSavePort: function(args, useGlobalSuccessCallback, stopErrorPropagation) {
 			var self = this;
 
 			self.portWizardUILoading(args, {
 				title: self.i18n.active().portWizard.loading.title,
 				text: self.i18n.active().portWizard.loading.text,
 				callback: function() {
+					// Add error handler for errors that can be processed
+					var portSavingArgs = _.merge({}, args, {
+						success: useGlobalSuccessCallback ? args.globalCallback : args.success,
+						error: function(parsedError, groupedErrors) {
+							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
+
+							switch (processedErrors.failedWizardStep) {
+								case 'addNumbers':
+									self.portWizardRenderAddNumbers(args);
+									break;
+								case 'portNotify':
+									self.portWizardRenderPortNotify(args);
+									break;
+							}
+
+							self.portWizardShowErrors(processedErrors);
+
+							if (!stopErrorPropagation && args.hasOwnProperty('error')) {
+								args.error(parsedError);
+							}
+						}
+					});
+
 					if (args.data.request.hasOwnProperty('id')) {
-						self.portWizardHelperUpdatePort(args);
+						self.portWizardHelperUpdatePort(portSavingArgs);
 					} else {
-						self.portWizardHelperCreatePort(args);
+						self.portWizardHelperCreatePort(portSavingArgs);
 					}
 				}
 			});
@@ -1393,8 +1428,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
@@ -1464,8 +1499,8 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
@@ -1505,18 +1540,7 @@ define(function(require) {
 		portWizardRequestCreatePort: function(args) {
 			var self = this;
 
-			self.callApi({
-				resource: 'port.create',
-				data: $.extend(true, {
-					accountId: self.appFlags.portWizard.accountId
-				}, args.data),
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError, error, globalHandler) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
+			self.portWizardRequestSavePort('port.create', args);
 		},
 		/**
 		 * @param {Function} args.success
@@ -1526,15 +1550,32 @@ define(function(require) {
 		portWizardRequestUpdatePort: function(args) {
 			var self = this;
 
+			self.portWizardRequestSavePort('port.update', args);
+		},
+		portWizardRequestSavePort: function(resource, args) {
+			var self = this;
+
 			self.callApi({
-				resource: 'port.update',
-				data: $.extend(true, {
-					accountId: self.appFlags.portWizard.accountId
+				resource: resource,
+				data: _.merge({
+					accountId: self.appFlags.portWizard.accountId,
+					generateError: false
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
+					var groupedErrors = self.portWizardGroupSavePortErrors(parsedError, error);
+
+					if (groupedErrors) {
+						args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+						return;
+					}
+
+					globalHandler(error, {
+						generateError: true
+					});
+
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
@@ -1654,6 +1695,205 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		/**************************************************
+		 *             Error handling helpers             *
+		 **************************************************/
+
+		portWizardGroupSavePortErrors: function(parsedError, errorData) {
+			if (errorData.status !== 400) {
+				// Errors cannot be processed
+				return null;
+			}
+
+			var self = this,
+				groupedErrors = {},
+				errorsI18n = self.i18n.active().portWizard.errors;
+
+			_.each(parsedError.data, function(fieldErrors, fieldKey) {
+				var isPhoneNumber = _.startsWith(fieldKey, '+');
+
+				if (typeof fieldErrors === 'string') {
+					return;
+				}
+
+				_.each(fieldErrors, function(errorData, errorDataKey) {
+					var errorKey, errorMessage, errorCause;
+
+					try {
+						// Separate error data depending on the case
+						if (isPhoneNumber) {
+							errorCause = errorData.cause || fieldKey;
+
+							if (errorData.hasOwnProperty('message')) {
+								errorKey = self.portWizardGetErrorKey(errorData.message);
+							} else {
+								errorKey = errorDataKey;
+							}
+
+							errorMessage = errorsI18n[errorKey];
+
+							if (!errorMessage) {
+								if (errorData.hasOwnProperty('message')) {
+									errorMessage
+										= _.capitalize(errorData.message) + ': {{variable}}';
+								} else {
+									errorMessage = errorsI18n.unknown_error;
+								}
+							}
+						} else {
+							errorKey = errorDataKey;
+							errorCause = fieldKey;
+
+							if (errorsI18n.hasOwnProperty(errorDataKey)) {
+								errorMessage = errorsI18n[errorDataKey];
+							} else if (typeof errorData === 'string' || typeof errorData === 'number') {
+								errorMessage = _.capitalize(errorData + '') + ': {{variable}}';
+							} else if (errorData.hasOwnProperty('message')) {
+								errorMessage = _.capitalize(errorData.message) + ': {{variable}}';
+							}
+						}
+					} catch (err) {
+						// In case of exception, skip error entry
+						return false;
+					}
+
+					// If error group already exists, add cause
+					if (groupedErrors.hasOwnProperty(errorKey)) {
+						if (errorCause) {
+							groupedErrors[errorKey].causes.push(errorCause);
+						}
+						return;
+					}
+
+					// Else add new error group
+					groupedErrors[errorKey] = {
+						message: errorMessage,
+						causes: errorCause ? [ errorCause ] : []
+					};
+				});
+			});
+
+			return _.isEmpty(groupedErrors) ? null : groupedErrors;
+		},
+
+		portWizardGetErrorKey: function(errorMessage) {
+			var minIndex = _.chain([':', ';', ',', '.'])
+				.map(function(separator) {
+					return errorMessage.indexOf(separator);
+				}).filter(function(index) {
+					return index > 0;
+				}).min().value();
+
+			return _.snakeCase(errorMessage.slice(0, minIndex));
+		},
+
+		portWizardShowErrors: function(processedErrors) {
+			var self = this,
+				viewErrors = _.map(processedErrors.errorGroups, function(errorGroup) {
+					return {
+						message: errorGroup.message,
+						causes: _.chain(errorGroup.causes).map(function(cause) {
+							if (_.startsWith(cause, '+')) {
+								return monster.util.formatPhoneNumber(cause);
+							}
+							return cause;
+						}).join(', ').value()
+					};
+				});
+
+			if (viewErrors.length !== 1) {
+				// If there is not exactly one kind of error, show dialog
+				monster.ui.alert('error', self.getTemplate({
+					name: 'errorDialog',
+					data: {
+						errors: viewErrors
+					},
+					submodule: 'portWizard'
+				}));
+
+				return;
+			}
+
+			// Else (there is only one kind of error) show toast
+			var error = viewErrors[0];
+
+			monster.ui.toast({
+				type: 'error',
+				message: self.getTemplate({
+					name: '!' + error.message,
+					data: {
+						variable: error.causes
+					}
+				}),
+				options: {
+					timeOut: 10000
+				}
+			});
+		},
+
+		portWizardProcessKnownErrors: function(groupedErrors) {
+			var self = this,
+				knownErrorSteps = self.appFlags.portWizard.knownErrors,
+				failedWizardStep = null;
+
+			// Iterate wizard steps for known errors
+			_.each(knownErrorSteps, function(knownErrorStep, knownErrorStepKey) {
+				// Iterate error causes within known error step
+				_.each(knownErrorStep, function(knownErrorCauses, knownErrorKey) {
+					// Then check every error group
+					_.each(groupedErrors, function(errorGroup, errorGroupKey) {
+						// If the error group key does not match a known error key,
+						// then continue with the next group
+						if (errorGroupKey !== knownErrorKey) {
+							return;
+						}
+
+						// If there are not known error causes, the cause does not matter and
+						// does not need any further processing, so just set the failed step
+						if (_.isEmpty(knownErrorCauses)) {
+							if (!failedWizardStep) {
+								failedWizardStep = knownErrorStepKey;
+							}
+							return;
+						}
+
+						// Else, check error causes and process any translation if possible
+						_.each(errorGroup.causes, function(errorGroupCause, i) {
+							// If the cause is not known, skip
+							if (!knownErrorCauses.hasOwnProperty(errorGroupCause)) {
+								return;
+							}
+
+							// Set failed step
+							if (!failedWizardStep) {
+								failedWizardStep = knownErrorStepKey;
+							}
+
+							// Try to get translation for cause
+							var i18nPath = knownErrorCauses[errorGroupCause];
+
+							if (!i18nPath) {
+								return;
+							}
+
+							var newCause = _.get(self.i18n.active().portWizard, i18nPath);
+
+							if (!newCause) {
+								return;
+							}
+
+							errorGroup.causes[i] = '"' + newCause + '"';
+						});
+					});
+				});
+			});
+
+			return {
+				failedWizardStep: failedWizardStep,
+				errorGroups: groupedErrors
+			};
 		}
 	};
 
