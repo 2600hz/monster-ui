@@ -447,6 +447,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
 				'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages' },
