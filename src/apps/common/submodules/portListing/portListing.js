@@ -796,11 +796,11 @@ define(function(require) {
 		/**
 		 * Gets the comment text from the specified input, and posts it to the API
 		 * @param  {Object}  args
-		 * @param  {String}  args.portRequestId        Current Port Request ID
-		 * @param  {jQuery}  args.container            Main container
-		 * @param  {String}  args.comment              Comment to be added
-		 * @param  {Boolean} args.isSuperDuperComment  Indicates if the comment to be posted is for
-		 *                                             super-duper users
+		 * @param  {String}  args.portRequestId          Current Port Request ID
+		 * @param  {jQuery}  args.container              Main container
+		 * @param  {String}  args.comment                Comment to be added
+		 * @param  {Boolean} [args.isSuperDuperComment]  Indicates if the comment to be posted is
+		 *                                               for super-duper users
 		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
