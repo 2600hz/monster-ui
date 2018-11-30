@@ -995,13 +995,13 @@ define(function(require) {
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
 				initDate = moment().tz(timezone),
-				today = moment().tz(timezone).set({hours: 0, minutes: 0, seconds: 0}),
+				today = moment(initDate).tz(timezone).startOf('day'),
 				startDate = _.get(
 					options,
 					'startDate',
 					today
 					),
-				endDate = moment().tz(timezone).set({hours: 23, minutes: 59, seconds: 59});
+				endDate = moment(initDate).tz(timezone).endOf('day');
 
 			if (options.startDate) {
 				startDate = moment(startDate).tz(timezone);
@@ -1024,25 +1024,27 @@ define(function(require) {
 			// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or today (the closest to the start date is chosen).
 			// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "today". (we had to do that since the # of days in a month varies)
 			function customSelect(dateText, input) {
+				if (input.id !== 'startDate') {
+					return;
+				}
+
 				var dateMin = inputStartDate.datepicker('getDate'),
 					dateMaxRange;
 
-				if (input.id === 'startDate') {
-					dateMaxRange = moment(dateMin).tz(timezone);
+				dateMaxRange = moment(dateMin).tz(timezone);
 
-					if (range === 'monthly') {
-						dateMaxRange.add(1, 'months').subtract(1, 'days');
-					} else {
-						dateMaxRange.add((range - 1), 'days');
-					}
-
-					if (dateMaxRange.isAfter(today)) {
-						dateMaxRange = today;
-					}
-
-					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange.toDate(), 'date'));
+				if (range === 'monthly') {
+					dateMaxRange.add(1, 'months').subtract(1, 'days');
+				} else {
+					dateMaxRange.add((range - 1), 'days');
 				}
-			};
+
+				if (dateMaxRange.isAfter(today)) {
+					dateMaxRange = today;
+				}
+
+				inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange.toDate(), 'date'));
+			}
 
 			// customRange runs every time the user clicks on a date picker, it will set which days are clickable in the datepicker.
 			// Features:
@@ -1063,13 +1065,9 @@ define(function(require) {
 					}
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
-					dateMax = minMoment.toDate();
-
-					if (minMoment.isAfter(today)) {
-						dateMax = today.toDate();
-					}
+					dateMax = minMoment.isAfter(today) ? today.toDate() : minMoment.toDate();
 				} else if (input.id === 'startDate') {
-					dateMin = moment().set({years: 2011, months: 0, dates: 1, hours: 0, minutes: 0, seconds: 0}).toDate();
+					dateMin = moment({years: 2011}).startOf('year').toDate();
 					dateMax = moment().toDate();
 				}
 
