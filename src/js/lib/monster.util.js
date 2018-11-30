@@ -1175,15 +1175,13 @@ define(function(require) {
 		var user = _.isUndefined(pUser)
 			? monster.apps.auth.currentUser
 			: pUser;
-
 		if (_.isNil(user)) {
 			throw new Error('There is no logged in user');
 		}
-
 		return core.getTemplate({
 			name: '!' + core.i18n.active().userFullName,
 			data: {
-				fistName: user.first_name,
+				firstName: user.first_name,
 				lastName: user.last_name
 			}
 		});
