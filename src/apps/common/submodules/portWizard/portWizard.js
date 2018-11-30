@@ -1094,12 +1094,8 @@ define(function(require) {
 						monster.ui.validate($form, {
 							rules: {
 								signee_name: {
-									required: true,
 									minlength: 1,
 									maxlength: 128
-								},
-								signing_date: {
-									required: true
 								}
 							}
 						});
