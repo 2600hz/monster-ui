@@ -16,11 +16,28 @@ define(function(require) {
 		},
 
 		appFlags: {
-			attachments: {
-				mimeTypes: [
-					'application/pdf'
-				],
-				maxSize: 8
+			portWizard: {
+				accountId: undefined,
+				attachments: {
+					mimeTypes: [
+						'application/pdf'
+					],
+					maxSize: 8
+				},
+				knownErrors: {
+					addNumbers: {
+						number_is_on_a_port_request_already: {},
+						number_exists_on_the_system_already: {},
+						too_few_properties: {
+							'numbers': 'addNumbers.list.title' // 'field_key': 'i18n.path'
+						}
+					},
+					portNotify: {
+						wrong_format: {
+							'notifications.email.send_to': 'portNotify.email.label'
+						}
+					}
+				}
 			}
 		},
 
@@ -28,6 +45,11 @@ define(function(require) {
 		 *               Templates rendering              *
 		 **************************************************/
 
+		/*
+		 * @param {jQuery} args.container
+		 * @param {String} args.data.accountId
+		 * @param {String} args.data.request
+		 */
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
@@ -57,13 +79,12 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
 									success: function(results) {
 										self.portWizardRequestUpdateAttachment({
 											data: {
-												accountId: args.data.accountId,
 												portRequestId: args.data.request.id,
 												documentName: 'bill.pdf',
 												data: results[0].file
@@ -93,6 +114,8 @@ define(function(require) {
 					return template;
 				};
 
+			self.appFlags.portWizard.accountId = args.data.accountId;
+
 			$.extend(true, args, {
 				data: {
 					attachments: {},
@@ -112,6 +135,11 @@ define(function(require) {
 			});
 		},
 
+		/*
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.attachment
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderAccountVerification: function(args) {
 			var self = this,
 				container = args.container,
@@ -150,7 +178,6 @@ define(function(require) {
 				if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
 					self.portWizardRequestGetAttahcment({
 						data: {
-							accountId: args.data.accountId,
 							portRequestId: args.data.request.id,
 							documentName: 'bill.pdf'
 						},
@@ -168,6 +195,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.attachments
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderAddNumbers: function(args) {
 			var self = this,
 				container = args.container,
@@ -203,6 +235,10 @@ define(function(require) {
 				});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderAddNumbersList: function(args) {
 			var self = this,
 				container = args.container,
@@ -245,6 +281,10 @@ define(function(require) {
 			self.portWizardBindAddNumbersListEvents(args);
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderAddNumbersPortion: function(args) {
 			var self = this,
 				request = args.data.request,
@@ -279,6 +319,10 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderAddNumbersBtn: function(args) {
 			var self = this,
 				container = args.container,
@@ -298,6 +342,10 @@ define(function(require) {
 					.slideDown();
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderAddNumbersActions: function(args) {
 			var self = this,
 				container = args.container,
@@ -327,6 +375,10 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderUploadForm: function(args) {
 			var self = this,
 				data = args.data,
@@ -374,6 +426,10 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderSignForm: function(args) {
 			var self = this,
 				initTemplate = function initTemplate() {
@@ -397,6 +453,10 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderPortNotify: function(args) {
 			var self = this,
 				container = args.container,
@@ -414,15 +474,21 @@ define(function(require) {
 					return template;
 				};
 
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
-				insertTemplateCallback(initTemplate(), function() {
-					container
-						.find('#email')
-							.focus();
+			container.fadeOut(function() {
+				monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+					insertTemplateCallback(initTemplate(), function() {
+						container
+							.find('#email')
+								.focus();
+					});
 				});
 			});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardRenderSubmitPort: function(args) {
 			var self = this,
 				initTemplate = function initTemplate() {
@@ -450,6 +516,11 @@ define(function(require) {
 		 *                 Events bindings                *
 		 **************************************************/
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Object} args.data.request
+		 * @param {Object} args.data.attachments
+		 */
 		portWizardBindPortInfoEvents: function(template, args) {
 			var self = this,
 				billFileData;
@@ -473,8 +544,8 @@ define(function(require) {
 									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
 									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.attachments.mimeTypes,
-									maxSize: self.appFlags.attachments.maxSize,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									success: function(results) {
 										var actionsTemplate = $(self.getTemplate({
 											name: 'portInfo-actions',
@@ -549,6 +620,11 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Function} args.globalCallback
+		 * @param {Object} args.data.request
+		 */
 		portWizardBindAccountVerificationEvents: function(template, args) {
 			var self = this,
 				formValidationRules = {
@@ -633,9 +709,7 @@ define(function(require) {
 							});
 
 							if (action === 'save') {
-								self.portWizardHelperSavePort($.extend(true, args, {
-									success: args.globalCallback
-								}));
+								self.portWizardHelperSavePort(args, true, false);
 							} else if (action === 'next') {
 								self.portWizardRenderAddNumbers(args);
 							}
@@ -651,6 +725,11 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {Function} args.globalCallback
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardBindAddNumbersEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -772,9 +851,7 @@ define(function(require) {
 							}
 						});
 
-						self.portWizardHelperSavePort($.extend(true, args, {
-							success: args.globalCallback
-						}));
+						self.portWizardHelperSavePort(args, true, false);
 					});
 
 			container
@@ -786,6 +863,10 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.request
+		 */
 		portWizardBindAddNumbersListEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -823,6 +904,9 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 */
 		portWizardBindAddNumbersPortionEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -859,6 +943,9 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} args.container
+		 */
 		portWizardBindAddNumbersActionsEvents: function(args) {
 			var self = this,
 				container = args.container;
@@ -904,6 +991,11 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Function} args.globalCallback
+		 * @param {Object} args.data.request
+		 */
 		portWizardBindUploadFormEvents: function(template, args) {
 			var self = this,
 				$datepicker = template.find('#signing_date'),
@@ -914,14 +1006,13 @@ define(function(require) {
 							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
 							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-							mimeTypes: self.appFlags.attachments.mimeTypes,
-							maxSize: self.appFlags.attachments.maxSize,
+							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+							maxSize: self.appFlags.portWizard.attachments.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
 										self.portWizardRequestUpdateAttachment({
 											data: {
-												accountId: data.accountId,
 												portRequestId: request.id,
 												documentName: 'form.pdf',
 												data: results[0].file
@@ -930,7 +1021,6 @@ define(function(require) {
 									} else {
 										self.portWizardRequestCreateAttachment({
 											data: {
-												accountId: data.accountId,
 												portRequestId: request.id,
 												documentName: 'form.pdf',
 												data: results[0].file
@@ -1021,7 +1111,7 @@ define(function(require) {
 
 							self.portWizardHelperSavePort($.extend(true, args, {
 								success: args.globalCallback
-							}));
+							}), true, false);
 						}
 					});
 
@@ -1062,6 +1152,10 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Object} args
+		 */
 		portWizardBindSignFormEvents: function(template, args) {
 			var self = this;
 
@@ -1082,6 +1176,11 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Function} args.globalCallback
+		 * @param {Object} args.data.request
+		 */
 		portWizardBindPortNotifyEvents: function(template, args) {
 			var self = this,
 				minDate = monster.util.getBusinessDate(4),
@@ -1105,9 +1204,7 @@ define(function(require) {
 						});
 
 						if (action === 'save') {
-							self.portWizardHelperSavePort($.extend(true, args, {
-								success: args.globalCallback
-							}));
+							self.portWizardHelperSavePort(args, true, false);
 						} else if (action === 'next') {
 							self.portWizardRenderSubmitPort(args);
 						}
@@ -1122,6 +1219,10 @@ define(function(require) {
 					});
 		},
 
+		/**
+		 * @param {jQuery} template
+		 * @param {Function} args.globalCallback()
+		 */
 		portWizardBindPortSubmitEvents: function(template, args) {
 			var self = this;
 
@@ -1143,11 +1244,10 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort($.extend(true, args, {
+						var savePortArgs = _.merge({}, args, {
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
-										accountId: args.data.accountId,
 										portRequestId: requestId,
 										state: 'submitted'
 									},
@@ -1155,11 +1255,10 @@ define(function(require) {
 										args.globalCallback();
 									}
 								});
-							},
-							error: function() {
-								self.portWizardRenderAddNumbers(args);
 							}
-						}));
+						});
+
+						self.portWizardHelperSavePort(savePortArgs, false, true);
 					});
 
 			template
@@ -1175,6 +1274,10 @@ define(function(require) {
 		 *                   UI helpers                   *
 		 **************************************************/
 
+		/**
+		 * @param {jQuery} args.container
+		 * @param {Function|Object} loadingData
+		 */
 		portWizardUILoading: function(args, loadingData) {
 			var self = this,
 				container = args.container,
@@ -1210,10 +1313,16 @@ define(function(require) {
 		 *              Data handling helpers             *
 		 **************************************************/
 
+		/**
+		 * @param {Object} portData
+		 */
 		portWizardGetFormType: function(portData) {
 			return portData.ui_flags.type === 'local' ? 'loa' : 'resporg';
 		},
 
+		/*
+		 * @param {Object} errorsList
+		 */
 		portWizardFileUploadErrorsHandler: function(errorsList) {
 			var self = this;
 
@@ -1226,7 +1335,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.attachments.mimeTypes)
+										.chain(self.appFlags.portWizard.attachments.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -1243,7 +1352,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.attachments.maxSize
+									variable: self.appFlags.portWizard.attachments.maxSize
 								}
 							})
 						});
@@ -1252,22 +1361,59 @@ define(function(require) {
 			});
 		},
 
-		portWizardHelperSavePort: function(args) {
+		/**
+		 * @param  {Function} [args.globalCallback]
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
+		 * @param  {Object} args.data.request
+		 * @param  {Boolean} useGlobalSuccessCallback
+		 * @param  {Boolean} stopErrorPropagation
+		 */
+		portWizardHelperSavePort: function(args, useGlobalSuccessCallback, stopErrorPropagation) {
 			var self = this;
 
 			self.portWizardUILoading(args, {
 				title: self.i18n.active().portWizard.loading.title,
 				text: self.i18n.active().portWizard.loading.text,
 				callback: function() {
+					// Add error handler for errors that can be processed
+					var portSavingArgs = _.merge({}, args, {
+						success: useGlobalSuccessCallback ? args.globalCallback : args.success,
+						error: function(parsedError, groupedErrors) {
+							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
+
+							switch (processedErrors.failedWizardStep) {
+								case 'addNumbers':
+									self.portWizardRenderAddNumbers(args);
+									break;
+								case 'portNotify':
+									self.portWizardRenderPortNotify(args);
+									break;
+							}
+
+							self.portWizardShowErrors(processedErrors);
+
+							if (!stopErrorPropagation && args.hasOwnProperty('error')) {
+								args.error(parsedError);
+							}
+						}
+					});
+
 					if (args.data.request.hasOwnProperty('id')) {
-						self.portWizardHelperUpdatePort(args);
+						self.portWizardHelperUpdatePort(portSavingArgs);
 					} else {
-						self.portWizardHelperCreatePort(args);
+						self.portWizardHelperCreatePort(portSavingArgs);
 					}
 				}
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} args.error
+		 * @param {Object} args.data.attachments
+		 * @param {Object} args.data.request
+		 */
 		portWizardHelperCreatePort: function(args) {
 			var self = this,
 				attachments = _.extend({}, args.data.attachments);
@@ -1276,7 +1422,6 @@ define(function(require) {
 
 			self.portWizardRequestCreatePort({
 				data: {
-					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1285,7 +1430,6 @@ define(function(require) {
 							object[key] = function(callback) {
 								self.portWizardRequestCreateAttachment({
 									data: {
-										accountId: args.data.accountId,
 										portRequestId: port.id,
 										documentName: key + '.pdf',
 										data: attachment.file
@@ -1308,12 +1452,18 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
 
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} args.error
+		 * @param {Object} args.data.attachments
+		 * @param {Object} args.data.request
+		 */
 		portWizardHelperUpdatePort: function(args) {
 			var self = this,
 				attachments = _.extend({}, args.data.attachments);
@@ -1328,7 +1478,6 @@ define(function(require) {
 
 			self.portWizardRequestUpdatePort({
 				data: {
-					accountId: args.data.accountId,
 					data: args.data.request
 				},
 				success: function(port) {
@@ -1338,7 +1487,6 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestUpdateAttachment({
 										data: {
-											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1352,7 +1500,6 @@ define(function(require) {
 								object[key] = function(callback) {
 									self.portWizardRequestCreateAttachment({
 										data: {
-											accountId: args.data.accountId,
 											portRequestId: port.id,
 											documentName: key + '.pdf',
 											data: attachment.file
@@ -1376,19 +1523,22 @@ define(function(require) {
 						args.hasOwnProperty('success') && args.success(port.id);
 					}
 				},
-				error: function() {
-					args.hasOwnProperty('error') && args.error();
+				error: function(parsedError, groupedErrors) {
+					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
 				}
 			});
 		},
 
+		/*
+		 * @param {Function} args.globalCallback
+		 * @param {String} args.data.request
+		 */
 		portWizardHelperCancelPort: function(args) {
 			var self = this;
 
 			if (args.data.request.hasOwnProperty('id')) {
 				self.portWizardRequestDeletePort({
 					data: {
-						accountId: args.data.accountId,
 						portRequestId: args.data.request.id
 					},
 					success: function() {
@@ -1405,45 +1555,67 @@ define(function(require) {
 		 **************************************************/
 
 		// Port requests endpoints
+
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} [args.error]
+		 * @param {Object} args.data.data
+		 */
 		portWizardRequestCreatePort: function(args) {
 			var self = this;
 
-			self.callApi({
-				resource: 'port.create',
-				data: $.extend(true, {
-					accountId: self.accountId
-				}, args.data),
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError, error, globalHandler) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
+			self.portWizardRequestSavePort('port.create', args);
 		},
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} [args.error]
+		 * @param {Object} args.data.data
+		 */
 		portWizardRequestUpdatePort: function(args) {
 			var self = this;
 
+			self.portWizardRequestSavePort('port.update', args);
+		},
+		portWizardRequestSavePort: function(resource, args) {
+			var self = this;
+
 			self.callApi({
-				resource: 'port.update',
-				data: $.extend(true, {
-					accountId: self.accountId
+				resource: resource,
+				data: _.merge({
+					accountId: self.appFlags.portWizard.accountId,
+					generateError: false
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
+					var groupedErrors = self.portWizardGroupSavePortErrors(parsedError, error);
+
+					if (groupedErrors) {
+						args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+						return;
+					}
+
+					globalHandler(error, {
+						generateError: true
+					});
+
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		},
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} [args.error]
+		 * @param {String} args.data.portRequestId
+		 */
 		portWizardRequestDeletePort: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.delete',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1453,13 +1625,19 @@ define(function(require) {
 				}
 			});
 		},
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} [args.error]
+		 * @param {String} args.data.portRequestId
+		 * @param {String} args.data.state
+		 */
 		portWizardRequestUpdateState: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.changeState',
 				data: $.extend(true, {
-					accountId: self.accountId,
+					accountId: self.appFlags.portWizard.accountId,
 					reason: ''
 				}, args.data),
 				success: function(data, status) {
@@ -1472,13 +1650,21 @@ define(function(require) {
 		},
 
 		// Attachments endpoints
+
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} [args.error]
+		 * @param {String} args.data.portRequestId
+		 * @param {String} args.data.documentName
+		 * @param {String} args.data.data
+		 */
 		portWizardRequestCreateAttachment: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.createAttachment',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1488,13 +1674,19 @@ define(function(require) {
 				}
 			});
 		},
+		/**
+		 * @param {Function} args.success
+		 * @param {Function} [args.error]
+		 * @param {String} args.data.portRequestId
+		 * @param {String} args.data.documentName
+		 */
 		portWizardRequestGetAttahcment: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.getAttachment',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					// `data` is a string representation of the PDF in base 64
@@ -1505,13 +1697,20 @@ define(function(require) {
 				}
 			});
 		},
+		/**
+		 * @param {Function} [args.success]
+		 * @param {Function} [args.error]
+		 * @param {String} args.data.portRequestId
+		 * @param {String} args.data.documentName
+		 * @param {Object} args.data.data
+		 */
 		portWizardRequestUpdateAttachment: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.updateAttachment',
 				data: $.extend(true, {
-					accountId: self.accountId
+					accountId: self.appFlags.portWizard.accountId
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1520,6 +1719,205 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		/**************************************************
+		 *             Error handling helpers             *
+		 **************************************************/
+
+		portWizardGroupSavePortErrors: function(parsedError, errorData) {
+			if (errorData.status !== 400) {
+				// Errors cannot be processed
+				return null;
+			}
+
+			var self = this,
+				groupedErrors = {},
+				errorsI18n = self.i18n.active().portWizard.errors;
+
+			_.each(parsedError.data, function(fieldErrors, fieldKey) {
+				var isPhoneNumber = _.startsWith(fieldKey, '+');
+
+				if (typeof fieldErrors === 'string') {
+					return;
+				}
+
+				_.each(fieldErrors, function(errorData, errorDataKey) {
+					var errorKey, errorMessage, errorCause;
+
+					try {
+						// Separate error data depending on the case
+						if (isPhoneNumber) {
+							errorCause = errorData.cause || fieldKey;
+
+							if (errorData.hasOwnProperty('message')) {
+								errorKey = self.portWizardGetErrorKey(errorData.message);
+							} else {
+								errorKey = errorDataKey;
+							}
+
+							errorMessage = errorsI18n[errorKey];
+
+							if (!errorMessage) {
+								if (errorData.hasOwnProperty('message')) {
+									errorMessage
+										= _.capitalize(errorData.message) + ': {{variable}}';
+								} else {
+									errorMessage = errorsI18n.unknown_error;
+								}
+							}
+						} else {
+							errorKey = errorDataKey;
+							errorCause = fieldKey;
+
+							if (errorsI18n.hasOwnProperty(errorDataKey)) {
+								errorMessage = errorsI18n[errorDataKey];
+							} else if (typeof errorData === 'string' || typeof errorData === 'number') {
+								errorMessage = _.capitalize(errorData + '') + ': {{variable}}';
+							} else if (errorData.hasOwnProperty('message')) {
+								errorMessage = _.capitalize(errorData.message) + ': {{variable}}';
+							}
+						}
+					} catch (err) {
+						// In case of exception, skip error entry
+						return false;
+					}
+
+					// If error group already exists, add cause
+					if (groupedErrors.hasOwnProperty(errorKey)) {
+						if (errorCause) {
+							groupedErrors[errorKey].causes.push(errorCause);
+						}
+						return;
+					}
+
+					// Else add new error group
+					groupedErrors[errorKey] = {
+						message: errorMessage,
+						causes: errorCause ? [ errorCause ] : []
+					};
+				});
+			});
+
+			return _.isEmpty(groupedErrors) ? null : groupedErrors;
+		},
+
+		portWizardGetErrorKey: function(errorMessage) {
+			var minIndex = _.chain([':', ';', ',', '.'])
+				.map(function(separator) {
+					return errorMessage.indexOf(separator);
+				}).filter(function(index) {
+					return index > 0;
+				}).min().value();
+
+			return _.snakeCase(errorMessage.slice(0, minIndex));
+		},
+
+		portWizardShowErrors: function(processedErrors) {
+			var self = this,
+				viewErrors = _.map(processedErrors.errorGroups, function(errorGroup) {
+					return {
+						message: errorGroup.message,
+						causes: _.chain(errorGroup.causes).map(function(cause) {
+							if (_.startsWith(cause, '+')) {
+								return monster.util.formatPhoneNumber(cause);
+							}
+							return cause;
+						}).join(', ').value()
+					};
+				});
+
+			if (viewErrors.length !== 1) {
+				// If there is not exactly one kind of error, show dialog
+				monster.ui.alert('error', self.getTemplate({
+					name: 'errorDialog',
+					data: {
+						errors: viewErrors
+					},
+					submodule: 'portWizard'
+				}));
+
+				return;
+			}
+
+			// Else (there is only one kind of error) show toast
+			var error = viewErrors[0];
+
+			monster.ui.toast({
+				type: 'error',
+				message: self.getTemplate({
+					name: '!' + error.message,
+					data: {
+						variable: error.causes
+					}
+				}),
+				options: {
+					timeOut: 10000
+				}
+			});
+		},
+
+		portWizardProcessKnownErrors: function(groupedErrors) {
+			var self = this,
+				knownErrorSteps = self.appFlags.portWizard.knownErrors,
+				failedWizardStep = null;
+
+			// Iterate wizard steps for known errors
+			_.each(knownErrorSteps, function(knownErrorStep, knownErrorStepKey) {
+				// Iterate error causes within known error step
+				_.each(knownErrorStep, function(knownErrorCauses, knownErrorKey) {
+					// Then check every error group
+					_.each(groupedErrors, function(errorGroup, errorGroupKey) {
+						// If the error group key does not match a known error key,
+						// then continue with the next group
+						if (errorGroupKey !== knownErrorKey) {
+							return;
+						}
+
+						// If there are not known error causes, the cause does not matter and
+						// does not need any further processing, so just set the failed step
+						if (_.isEmpty(knownErrorCauses)) {
+							if (!failedWizardStep) {
+								failedWizardStep = knownErrorStepKey;
+							}
+							return;
+						}
+
+						// Else, check error causes and process any translation if possible
+						_.each(errorGroup.causes, function(errorGroupCause, i) {
+							// If the cause is not known, skip
+							if (!knownErrorCauses.hasOwnProperty(errorGroupCause)) {
+								return;
+							}
+
+							// Set failed step
+							if (!failedWizardStep) {
+								failedWizardStep = knownErrorStepKey;
+							}
+
+							// Try to get translation for cause
+							var i18nPath = knownErrorCauses[errorGroupCause];
+
+							if (!i18nPath) {
+								return;
+							}
+
+							var newCause = _.get(self.i18n.active().portWizard, i18nPath);
+
+							if (!newCause) {
+								return;
+							}
+
+							errorGroup.causes[i] = '"' + newCause + '"';
+						});
+					});
+				});
+			});
+
+			return {
+				failedWizardStep: failedWizardStep,
+				errorGroups: groupedErrors
+			};
 		}
 	};
 
