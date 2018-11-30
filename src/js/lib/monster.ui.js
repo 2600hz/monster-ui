@@ -1003,7 +1003,6 @@ define(function(require) {
 					),
 				endDate = moment().tz(timezone).set({hours: 23, minutes: 59, seconds: 59});
 
-			debugger;
 			if (options.startDate) {
 				startDate = moment(startDate).tz(timezone);
 			} else if (range === 'monthly') {
