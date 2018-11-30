@@ -1,6 +1,6 @@
-<li class="entry-wrapper">
+<li class="entry-wrapper{{#if isSuperDuperEntry}} danger{{/if}}">
 	<div class="icon-wrapper">
-		<i class="fa fa-envelope iconography"></i>
+		<i class="fa fa-{{#if isSuperDuperEntry}}lock{{else}}envelope{{/if}} iconography"></i>
 	</div>
 	<div class="entry">
 		<div class="title">
