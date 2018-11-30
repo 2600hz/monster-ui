@@ -1153,6 +1153,43 @@ define(function(require) {
 	}
 
 	/**
+	 * Returns the full name of a specific user or, if missing, of the currently
+	 * logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 * @return {String}                   User's full name
+	 */
+	function getUserFullName(pUser) {
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+		var core = monster.apps.core;
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+
+		if (_.isNil(user)) {
+			throw new Error('There is no logged in user');
+		}
+
+		return core.getTemplate({
+			name: '!' + core.i18n.active().userFullName,
+			data: {
+				fistName: user.first_name,
+				lastName: user.last_name
+			}
+		});
+	}
+
+	/**
 	 * Converts a Gregorian timestamp into a Date instance
 	 * @param  {Number} pTimestamp Gregorian timestamp
 	 * @return {Date}           Converted Date instance
@@ -1323,6 +1360,7 @@ define(function(require) {
 
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 	util.randomString = randomString;
