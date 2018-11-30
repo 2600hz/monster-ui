@@ -745,7 +745,8 @@
 				"update": "Update Status",
 				"back": "Back to port requests",
 				"cancel": "Cancel Request",
-				"send": "Send"
+				"send": "Send",
+				"sendPrivate": "Private"
 			},
 			"numbers": {
 				"singular": "Number",

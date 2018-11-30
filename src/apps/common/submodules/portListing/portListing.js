@@ -90,27 +90,47 @@ define(function(require) {
 			var self = this,
 				container = self.appFlags.portListing.container.find('.listing-section-wrapper'),
 				initTemplate = function initTemplate(portRequests) {
-					var template = $(self.getTemplate({
-						name: 'listing',
-						data: {
-							hasPorts: !_.isEmpty(portRequests)
-						},
-						submodule: 'portListing'
-					}));
+					var formatedPortRequests = formatDataToTemplate(portRequests),
+						template = $(self.getTemplate({
+							name: 'listing',
+							data: {
+								hasPorts: !_.isEmpty(formatedPortRequests)
+							},
+							submodule: 'portListing'
+						}));
 
 					self.portListingRenderListingIncomplete({
 						template: template,
-						portRequests: portRequests
+						portRequests: formatedPortRequests
 					});
 					self.portListingRenderListingSubmitted({
 						template: template,
-						portRequests: portRequests
+						portRequests: formatedPortRequests
 					});
 					self.portListingBindListingEvents({
 						template: template
 					});
 
 					return template;
+				},
+				formatDataToTemplate = function formatDataToTemplate(portRequests) {
+					return _.map(portRequests, function(request) {
+						return {
+							account: {
+								id: request.account_id,
+								name: self.appFlags.portListing.accountNames[request.account_id]
+							},
+							amount: _.size(request.numbers),
+							carrier: {
+								winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
+								losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
+							},
+							id: request.id,
+							name: request.name,
+							reference: request.carrier_reference_number,
+							state: request.port_state
+						};
+					});
 				};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
@@ -136,7 +156,7 @@ define(function(require) {
 						data: {
 							isMonsterApp: self.appFlags.portListing.isMonsterApp,
 							requests: _
-								.chain(self.portListingFormatListingPorts(portRequests))
+								.chain(portRequests)
 								.filter(function(portRequest) {
 									return _.includes(['unconfirmed', 'rejected'], portRequest.state);
 								})
@@ -174,7 +194,7 @@ define(function(require) {
 						name: 'listing-submitted',
 						data: {
 							isMonsterApp: self.appFlags.portListing.isMonsterApp,
-							requests: _.filter(self.portListingFormatListingPorts(portRequests), function(portRequest) {
+							requests: _.filter(portRequests, function(portRequest) {
 								return !_.includes(['unconfirmed', 'rejected'], portRequest.state);
 							})
 						},
@@ -511,7 +531,9 @@ define(function(require) {
 				template = args.template,
 				accountId = self.appFlags.portListing.accountId,
 				portRequest = self.appFlags.portListing.portRequest,
-				portRequestId = portRequest.id;
+				portRequestId = portRequest.id,
+				textareaWrapper = template.find('.textarea-wrapper'),
+				textarea = textareaWrapper.find('textarea[name="comment"]');
 
 			template
 				.find('#back')
@@ -609,20 +631,29 @@ define(function(require) {
 					});
 				});
 
-			template
+			textareaWrapper
 				.find('#add_comment')
 					.on('click', function(event) {
 						event.preventDefault();
-
-						var textarea = template.find('textarea[name="comment"]'),
-							comment = textarea.val();
-
-						self.portListingHelperAddComment({
-							comment: comment
+						self.portListingHelperPostComment({
+							portRequestId: portRequestId,
+							commentInput: textarea
 						});
-
-						textarea.val('');
 					});
+
+			if (monster.util.isSuperDuper()) {
+				// Set event handlers for superduper options
+				textareaWrapper
+					.find('#add_private_comment')
+						.on('click', function(event) {
+							event.preventDefault();
+							self.portListingHelperPostComment({
+								portRequestId: portRequestId,
+								commentInput: textarea,
+								isSuperDuperComment: true
+							});
+						});
+			}
 		},
 
 		/**
@@ -829,20 +860,43 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @param  {jQuery}  args.commentInput
+		 * @param  {Boolean} [args.isSuperDuperComment]
+		 */
+		portListingHelperPostComment: function(args) {
+			var self = this,
+				commentInput = args.commentInput,
+				comment = commentInput.val(),
+				isSuperDuperComment = _.get(args, 'isSuperDuperComment', false);
+
+			if (_.chain(comment).trim().isEmpty().value()) {
+				return;
+			}
+			commentInput.val('');
+
+			self.portListingHelperAddComment({
+				comment: comment,
+				isSuperDuperComment: isSuperDuperComment
+			});
+		},
+
 		/**************************************************
 		 *              Data handling helpers             *
 		 **************************************************/
 
 		/**
 		 * @param  {String} args.comment
+		 * @param  {Boolean} args.isSuperDuperComment
 		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
 				comment = args.comment,
+				isSuperDuperComment = args.isSuperDuperComment,
 				container = self.appFlags.portListing.container,
 				user = monster.apps.auth.currentUser,
 				now = moment().toDate(),
-				timestampOfDay = moment().startOf('day').valueOf(),
+				timestampOfDay = moment(now).startOf('day').valueOf(),
 				author = user.first_name + ' ' + user.last_name;
 
 			self.portListingRequestCreateComment({
@@ -853,7 +907,8 @@ define(function(require) {
 							{
 								timestamp: monster.util.dateToGregorian(now),
 								author: author,
-								content: comment
+								content: comment,
+								superduper_comment: isSuperDuperComment
 							}
 						]
 					}
@@ -864,7 +919,8 @@ define(function(require) {
 						formattedComment = {
 							timestamp: moment(monster.util.gregorianToDate(newComment.timestamp)).valueOf(),
 							title: newComment.author,
-							content: newComment.content
+							content: newComment.content,
+							isSuperDuperEntry: newComment.superduper_comment
 						};
 
 					// check if the last entry was created on the same day than today
@@ -914,6 +970,7 @@ define(function(require) {
 						.map(function(comment) {
 							return {
 								content: comment.content,
+								isSuperDuperEntry: _.get(comment, 'superduper_comment', false),
 								timestamp: moment(monster.util.gregorianToDate(comment.timestamp)).valueOf(),
 								title: comment.author
 							};
@@ -1026,32 +1083,6 @@ define(function(require) {
 				self.appFlags.portListing.portRequests = _.keyBy(portRequests, 'id');
 
 				args.success(portRequests);
-			});
-		},
-
-		/**
-		 * @param  {Array} portRequests
-		 * @return {Array}
-		 */
-		portListingFormatListingPorts: function(portRequests) {
-			var self = this;
-
-			return _.map(portRequests, function(request) {
-				return {
-					account: {
-						id: request.account_id,
-						name: self.appFlags.portListing.accountNames[request.account_id]
-					},
-					amount: _.size(request.numbers),
-					carrier: {
-						winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
-						losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
-					},
-					id: request.id,
-					name: request.name,
-					reference: request.carrier_reference_number,
-					state: request.port_state
-				};
 			});
 		},
 
