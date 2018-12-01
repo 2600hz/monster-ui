@@ -993,9 +993,7 @@ define(function(require) {
 						})
 						.value()
 				])
-				.reduce(function(acc, item) {
-					return acc.concat(item);
-				}, [])
+				.flatten()
 				.groupBy(function(entry) {
 					return moment(entry.timestamp).startOf('day').valueOf();
 				})
@@ -1053,14 +1051,10 @@ define(function(require) {
 							.map(function(account) {
 								return account.port_requests;
 							})
-							.reduce(function(acc, item) {
-								return acc.concat(item);
-							}, [])
+							.flatten()
 							.value();
 					})
-					.reduce(function(acc, item) {
-						return acc.concat(item);
-					}, [])
+					.flatten()
 					.value();
 
 				self.appFlags.portListing.accountNames = _
@@ -1073,9 +1067,7 @@ define(function(require) {
 							};
 						});
 					})
-					.reduce(function(acc, item) {
-						return acc.concat(item);
-					}, [])
+					.flatten()
 					.transform(function(object, account) {
 						object[account.id] = account.name;
 					}, {})
