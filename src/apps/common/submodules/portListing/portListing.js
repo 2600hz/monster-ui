@@ -268,7 +268,7 @@ define(function(require) {
 					};
 				};
 
-			self.appFlags.portListing.accountId = self.appFlags.portListing.portRequests[portRequestId].accountId;
+			self.appFlags.portListing.accountId = self.appFlags.portListing.portRequests[portRequestId].account_id;
 			self.appFlags.portListing.portRequest = {};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
@@ -569,6 +569,7 @@ define(function(require) {
 							return function(callback) {
 								self.portListingRequestGetAttachment({
 									data: {
+										accountId: self.appFlags.portListing.accountId,
 										portRequestId: portRequestId,
 										documentName: key
 									},
@@ -762,6 +763,7 @@ define(function(require) {
 							state = formData.state,
 							reason = formData.message,
 							patchRequestData = {
+								accountId: self.appFlags.portListing.accountId,
 								portRequestId: portRequestId,
 								state: state,
 								data: {}
@@ -901,6 +903,7 @@ define(function(require) {
 
 			self.portListingRequestCreateComment({
 				data: {
+					accountId: self.appFlags.portListing.accountId,
 					portRequestId: self.appFlags.portListing.portRequest.id,
 					data: {
 						comments: [
