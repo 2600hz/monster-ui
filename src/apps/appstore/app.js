@@ -311,11 +311,7 @@ define(function(require) {
 					var allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
 						selectedUsers = (allowedUsers === 'specific') ? (monster.ui.getFormData('app_popup_user_list_form').users || []) : app.users;
 
-					selectedUsers = _.reduce(selectedUsers, function(users, id) {
-						return users.concat({
-							id: id
-						});
-					}, []);
+					selectedUsers = _.map(selectedUsers, function(id) { return { id: id }; });
 
 					if (!_.isEqual(allowedUsers, app.allowed_users) || !_.isEqual(selectedUsers, app.users)) {
 						appStorePopUpButtonDisable(false);
