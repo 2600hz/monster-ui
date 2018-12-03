@@ -110,8 +110,12 @@ define(function(require) {
 				return monster.util.friendlyTimer(seconds);
 			},
 
-			getUserFullName: function(pUser, pOptions) {
-				var user = _.isUndefined(pOptions) ? undefined : pUser;
+			getUserFullName: function(pUser) {
+				var args = _.toArray(arguments);
+
+				// Handlebars always adds an additional argument for context
+				// If there is only one argument, it corresponds to this context object
+				var user = (args.length === 1) ? undefined : pUser;
 
 				return monster.util.getUserFullName(user);
 			},

@@ -1161,6 +1161,9 @@ define(function(require) {
 	 * @return {String}                   User's full name
 	 */
 	function getUserFullName(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
 		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
 			throw new TypeError('"user" is not an object');
 		}
@@ -1175,9 +1178,6 @@ define(function(require) {
 		var user = _.isUndefined(pUser)
 			? monster.apps.auth.currentUser
 			: pUser;
-		if (_.isNil(user)) {
-			throw new Error('There is no logged in user');
-		}
 		return core.getTemplate({
 			name: '!' + core.i18n.active().userFullName,
 			data: {
