@@ -532,7 +532,7 @@ define(function(require) {
 								container: self.portListingGet('container'),
 								data: {
 									accountId: portRequest.account_id,
-									request: portRequest
+									portRequestId: portRequestId
 								},
 								globalCallback: function() {
 									self.portListingGlobalCallback();
@@ -591,7 +591,7 @@ define(function(require) {
 							container: self.portListingGet('container'),
 							data: {
 								accountId: accountId,
-								request: portRequest
+								portRequestId: portRequestId
 							},
 							globalCallback: function() {
 								self.portListingGlobalCallback();
@@ -663,7 +663,7 @@ define(function(require) {
 						container: self.portListingGet('container'),
 						data: {
 							accountId: accountId,
-							request: portRequest
+							portRequestId: portRequestId
 						},
 						globalCallback: function() {
 							self.portListingGlobalCallback();
