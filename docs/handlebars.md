@@ -356,13 +356,12 @@ example.html
 {{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}
 ```
 
-[i18n]: internationalization.md
-[i18n_templates]: internationalization.md#in-html-templates
-
-
 #### coalesce
 This helper will return the first non nullish (`null` or `undefined`) element to be found from a list of 2 or more values. If all of them are nullish, then it will return `null`.
 
 ```handlebars
 {{coalesce val1 val2 ... valN}}
 ```
+
+[i18n]: internationalization.md
+[i18n_templates]: internationalization.md#in-html-templates

@@ -23,7 +23,7 @@ define(function(require) {
 				var args = _.toArray(arguments);
 
 				if (args.length < 2) {
-					throw new Error('Handlerbars Helper "coalesce" needs at least 2 parameters');
+					throw new Error('Handlebars Helper "coalesce" needs at least 2 parameters');
 				}
 
 				// Last argument is discarded because it is handlebars' options parameter
@@ -39,7 +39,7 @@ define(function(require) {
 				var operators, result;
 
 				if (arguments.length < 3) {
-					throw new Error('Handlerbars Helper "compare" needs 2 parameters');
+					throw new Error('Handlebars Helper "compare" needs 2 parameters');
 				}
 
 				if (options === undefined) {
@@ -61,7 +61,7 @@ define(function(require) {
 				};
 
 				if (!operators[operator]) {
-					throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
+					throw new Error('Handlebars Helper "compare" doesn\'t know the operator ' + operator);
 				}
 
 				result = operators[operator](lvalue, rvalue);
