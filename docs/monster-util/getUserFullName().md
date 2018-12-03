@@ -21,7 +21,7 @@ A `String` representing the user's full name.
 ## Description
 This method builds the full name of a specific user object, following the [internationalization][i18n] rules that are currently active.
 
-If the `user` object is not provided, the function will get the full name for the current logged in user.
+If `user` is not provided, the method will get the full name for the currently logged in user.
 
 ## Examples
 ### Get a user full name, from an user object
