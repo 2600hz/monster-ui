@@ -110,6 +110,12 @@ define(function(require) {
 				return monster.util.friendlyTimer(seconds);
 			},
 
+			getUserFullName: function(pUser, pOptions) {
+				var user = _.isUndefined(pOptions) ? undefined : pUser;
+
+				return monster.util.getUserFullName(user);
+			},
+
 			ifInArray: function(elem, list, options) {
 				if (list && list.indexOf(elem) > -1) {
 					return options.fn(this);

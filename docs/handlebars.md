@@ -363,5 +363,12 @@ This helper will return the first non nullish (`null` or `undefined`) element to
 {{coalesce val1 val2 ... valN}}
 ```
 
+#### getUserFullName
+This helper will display the full name of the user object passed as argument, following the [internationalization][i18n] rules that are currently active. If no argument is provided, it will return the full name of the user that is currently logged in. The user parameter should be a plain object that has the properties `first_name` and `last_name`.
+
+```handlebars
+{{getUserFullName optionalUserObject}}
+```
+
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
