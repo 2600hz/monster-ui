@@ -1088,7 +1088,27 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort(args, true, false);
+						var formData = monster.ui.getFormData('form_upload_document'),
+							$form = template.find('#form_upload_document');
+
+						monster.ui.validate($form, {
+							rules: {
+								signee_name: {
+									minlength: 1,
+									maxlength: 128
+								}
+							}
+						});
+
+						if (monster.ui.valid($form)) {
+							$.extend(true, args.data.request, formData, {
+								signing_date: monster.util.dateToGregorian($datepicker.datepicker('getDate'))
+							});
+
+							self.portWizardHelperSavePort($.extend(true, args, {
+								success: args.globalCallback
+							}), true, false);
+						}
 					});
 
 			template
