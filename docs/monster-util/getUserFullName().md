@@ -10,7 +10,7 @@ monster.util.getUserFullName([user]);
 ### Parameters
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`user` | | `Object`([#user](#user)) | Current logged in user. | `false`
+`user` | A plain JavaScript object that represents a user. | `Object`([#user](#user)) | `monster.apps.auth.currentUser` | `false`
 
 #### `user`
 A plain JavaScript object that represents a user, which must contain at least the properties `first_name` and `last_name`, which will be used to build the full name string.
