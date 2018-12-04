@@ -61,8 +61,6 @@ define(function(require) {
 				accountId = args.accountId || self.accountId,
 				form = popup_html.find('#cnam');
 
-			console.log(args);
-
 			monster.ui.validate(form, {
 				rules: {
 					'display_name': {
@@ -86,7 +84,6 @@ define(function(require) {
 				if (dataNumber.cnam.display_name === '') {
 					delete dataNumber.cnam.display_name;
 				}
-				console.log(dataNumber);
 
 				monster.waterfall([
 					function(callback) {
@@ -97,7 +94,6 @@ define(function(require) {
 								data: dataNumber
 							},
 							success: function(data) {
-								console.log(data);
 								callback(null, data);
 							},
 							error: function(parsedError) {
@@ -107,7 +103,6 @@ define(function(require) {
 					},
 					function(data, callback) {
 						if (data.hasOwnProperty('data')) {
-							console.log('Data available');
 							callback(null, data);
 							return;
 						}
@@ -121,8 +116,6 @@ define(function(require) {
 							},
 							success: function(data) {
 								callback(null, data);
-								console.log('Data not available, api called');
-								console.log(data);
 							},
 							error: function(parsedError) {
 								callback(parsedError);
@@ -179,8 +172,6 @@ define(function(require) {
 			// The back-end doesn't let us set features anymore, they return
 			// the field based on the key set on that document.
 			delete args.data.data.features;
-
-			console.log(args);
 
 			self.callApi({
 				resource: 'numbers.update',
