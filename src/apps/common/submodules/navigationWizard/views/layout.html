@@ -8,7 +8,8 @@
 		<div class="nav">
 			<ol>
 			{{#each steps}}
-				<span data-id="{{@key}}" class="circle hide-content fa fa-circle"></span>
+				<span data-id="{{@key}}" class="hide-content fa fa-circle"></span>
+				<i data-id="{{@key}}" class="fa fa-check-circle hide-check" aria-hidden="true"></i>
 				<li data-id="{{@key}}">{{this.label}}</li>
 				<span data-id="{{@key}}" class="hide-content">{{this.description}}</span>
 			{{/each}}
@@ -29,9 +30,16 @@
 					<i class="fa fa-arrow-circle-left"></i>
 					{{i18n.navigationWizard.buttons.back}}
 				</button>
-				<button class="monster-button-primary action-button next">
+				<button id="next" class="monster-button-primary action-button">
 					{{i18n.navigationWizard.buttons.next}}
 					<i class="fa fa-arrow-circle-right"></i>
+				</button>
+				<button id="done" class="monster-button-success action-button">
+					{{#unless doneButton}}
+						{{i18n.navigationWizard.buttons.done}}
+					{{else}}
+						{{doneButton}}
+					{{/unless}}
 				</button>
 			</div>
 		</form>

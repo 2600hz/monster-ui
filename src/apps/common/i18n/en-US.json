@@ -990,7 +990,8 @@
 			"next": "Next",
 			"cancel": "Cancel",
 			"clear": "Clear",
-			"back": "Back"
+			"back": "Back",
+			"done": "Done"
 		}
 	}
 }
