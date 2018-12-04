@@ -61,6 +61,8 @@ define(function(require) {
 				accountId = args.accountId || self.accountId,
 				form = popup_html.find('#cnam');
 
+			console.log(args);
+
 			monster.ui.validate(form, {
 				rules: {
 					'display_name': {
@@ -84,38 +86,68 @@ define(function(require) {
 				if (dataNumber.cnam.display_name === '') {
 					delete dataNumber.cnam.display_name;
 				}
+				console.log(dataNumber);
 
-				self.callerIdUpdateNumber({
-					data: {
-						accountId: accountId,
-						phoneNumber: dataNumber.id,
-						data: dataNumber
-					},
-					success: function(data) {
-						monster.ui.toast({
-							type: 'success',
-							message: self.getTemplate({
-								name: '!' + self.i18n.active().callerId.successCnam,
-								data: {
-									phoneNumber: monster.util.formatPhoneNumber(dataNumber.id)
-								}
-							})
+				monster.waterfall([
+					function(callback) {
+						self.callerIdUpdateNumber({
+							data: {
+								accountId: accountId,
+								phoneNumber: dataNumber.id,
+								data: dataNumber
+							},
+							success: function(data) {
+								console.log(data);
+								callback(null, data);
+							},
+							error: function(parsedError) {
+								callback(parsedError);
+							}
 						});
-
-						popup.dialog('destroy').remove();
-
-						if (!data.hasOwnProperty('data')) {
-							// `data` is not returned after update for some numbers, so we
-							// set the phone number data used for the update to prevent errors
-							// in further callbacks that rely on it
-							data.data = dataNumber;
+					},
+					function(data, callback) {
+						if (data.hasOwnProperty('data')) {
+							console.log('Data available');
+							callback(null, data);
+							return;
 						}
 
-						args.hasOwnProperty('success') && args.success(data);
-					},
-					error: function(parsedError) {
-						args.hasOwnProperty('error') && args.error(parsedError);
+						// `data` is not returned after update for some numbers, so we
+						// try to get the phone number data from the API
+						self.callerIdGetNumber({
+							data: {
+								accountId: accountId,
+								phoneNumber: dataNumber.id
+							},
+							success: function(data) {
+								callback(null, data);
+								console.log('Data not available, api called');
+								console.log(data);
+							},
+							error: function(parsedError) {
+								callback(parsedError);
+							}
+						});
 					}
+				], function(err, data) {
+					if (err) {
+						args.hasOwnProperty('error') && args.error(err);
+						return;
+					}
+
+					monster.ui.toast({
+						type: 'success',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().callerId.successCnam,
+							data: {
+								phoneNumber: monster.util.formatPhoneNumber(dataNumber.id)
+							}
+						})
+					});
+
+					popup.dialog('destroy').remove();
+
+					args.hasOwnProperty('success') && args.success(data);
 				});
 			});
 
@@ -140,18 +172,48 @@ define(function(require) {
 		 * @param  {Function} [args.error]           Error callback
 		 */
 		callerIdUpdateNumber: function(args) {
-			var self = this,
-				callApiData = _.merge({}, args.data, {
-					phoneNumber: encodeURIComponent(args.data.phoneNumber)
-				});
+			var self = this;
+
+			args.data.phoneNumber = encodeURIComponent(args.data.phoneNumber);
 
 			// The back-end doesn't let us set features anymore, they return
 			// the field based on the key set on that document.
-			delete callApiData.data.features;
+			delete args.data.data.features;
+
+			console.log(args);
 
 			self.callApi({
 				resource: 'numbers.update',
-				data: callApiData,
+				data: args.data,
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data);
+				},
+				error: function(parsedError) {
+					if (parsedError.error === '402') {
+						return;
+					}
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		/**
+		 * Get a phone number
+		 * @param  {Object}   args
+		 * @param  {Object}   args.data
+		 * @param  {String}   args.data.accountId    Account ID
+		 * @param  {String}   args.data.phoneNumber  Phone number ID
+		 * @param  {Function} [args.success]         Success callback
+		 * @param  {Function} [args.error]           Error callback
+		 */
+		callerIdGetNumber: function(args) {
+			var self = this;
+
+			args.data.phoneNumber = encodeURIComponent(args.data.phoneNumber);
+
+			self.callApi({
+				resource: 'numbers.get',
+				data: args.data,
 				success: function(data) {
 					args.hasOwnProperty('success') && args.success(data);
 				},
