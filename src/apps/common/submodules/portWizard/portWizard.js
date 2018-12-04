@@ -89,6 +89,12 @@ define(function(require) {
 				globalCallback = args.globalCallback,
 				portRequestId = _.get(args, 'data.portRequestId');
 
+			self.portWizardSet({
+				accountId: accountId,
+				container: container,
+				globalCallback: globalCallback
+			});
+
 			monster.parallel({
 				portRequest: function(callback) {
 					if (_.isUndefined(portRequestId)) {
@@ -96,8 +102,11 @@ define(function(require) {
 						return;
 					}
 					self.portWizardRequestGetPort({
-						success: function(data) {
-							callback(null, data.data);
+						data: {
+							portRequestId: portRequestId
+						},
+						success: function(portRequest) {
+							callback(null, portRequest);
 						},
 						error: function() {
 							callback(true);
@@ -110,12 +119,7 @@ define(function(require) {
 					return;
 				}
 
-				self.portWizardSet({
-					accountId: accountId,
-					container: container,
-					globalCallback: globalCallback,
-					portRequest: _.get(results, 'portRequest', {})
-				});
+				self.portWizardSet('portRequest', _.get(results, 'portRequest', {}));
 
 				self.portWizardRenderPortInfo({
 					container: self.portWizardGet('container'),
@@ -161,11 +165,11 @@ define(function(require) {
 							.find('#bill_input')
 								.fileUpload({
 									btnClass: 'monster-button-primary monster-button-small',
-									btnText: self.i18n.active().portWizard.attachments.button,
+									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
-									inputPlaceholder: self.i18n.active().portWizard.attachments.placeholder,
-									mimeTypes: self.appFlags.portWizardattachments.mimeTypes,
-									maxSize: self.appFlags.portWizardattachments.maxSize,
+									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									filesList: [ 'bill.pdf' ],
 									success: function(results) {
 										self.portWizardRequestUpdateAttachment({
@@ -623,11 +627,11 @@ define(function(require) {
 							.find('#bill_input')
 								.fileUpload({
 									btnClass: 'monster-button-primary monster-button-small',
-									btnText: self.i18n.active().portWizard.attachments.button,
+									btnText: self.i18n.active().portWizard.fileUpload.button,
 									inputOnly: true,
-									inputPlaceholder: self.i18n.active().portWizard.attachments.placeholder,
-									mimeTypes: self.appFlags.portWizardattachments.mimeTypes,
-									maxSize: self.appFlags.portWizardattachments.maxSize,
+									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+									maxSize: self.appFlags.portWizard.attachments.maxSize,
 									success: function(results) {
 										var actionsTemplate = $(self.getTemplate({
 											name: 'portInfo-actions',
@@ -1085,11 +1089,11 @@ define(function(require) {
 					var request = data.request,
 						options = {
 							btnClass: 'monster-button-primary monster-button-small',
-							btnText: self.i18n.active().portWizard.attachments.button,
+							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
-							inputPlaceholder: self.i18n.active().portWizard.attachments.placeholder,
-							mimeTypes: self.appFlags.portWizardattachments.mimeTypes,
-							maxSize: self.appFlags.portWizardattachments.maxSize,
+							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+							maxSize: self.appFlags.portWizard.attachments.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
@@ -1413,7 +1417,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.portWizardattachments.mimeTypes)
+										.chain(self.appFlags.portWizard.attachments.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -1430,7 +1434,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.portWizardattachments.maxSize
+									variable: self.appFlags.portWizard.attachments.maxSize
 								}
 							})
 						});
@@ -1657,10 +1661,9 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'port.get',
-				data: {
-					accountId: self.portWizardGet('accountId'),
-					portRequestId: self.portWizardGet('portRequest.id')
-				},
+				data: _.merge({
+					accountId: self.portWizardGet('accountId')
+				}, args.data),
 				success: function(data) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
