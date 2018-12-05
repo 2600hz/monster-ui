@@ -54,11 +54,11 @@ define(function(require) {
 				dataNumber = args.numberData,
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: dataNumber.cnam || {},
+					data: _.get(dataNumber, 'cnam', {}),
 					submodule: 'callerId'
 				})),
 				popup,
-				accountId = args.accountId || self.accountId,
+				accountId = _.get(args, 'accountId', self.accountId),
 				form = popup_html.find('#cnam');
 
 			monster.ui.validate(form, {
