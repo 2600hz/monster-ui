@@ -66,7 +66,7 @@ define(function(require) {
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
 				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
 
-				self.numbersPaintSpare({
+				self.numbersRenderSpare({
 					parent: numbersView,
 					dataNumbers: data
 				});
@@ -564,7 +564,7 @@ define(function(require) {
 
 							self.numbersShowDeletedNumbers(data);
 
-							self.numbersPaintSpare({ parent: parent, dataNumbers: dataNumbers });
+							self.numbersRenderSpare({ parent: parent, dataNumbers: dataNumbers });
 						});
 					});
 				}
@@ -690,7 +690,7 @@ define(function(require) {
 							dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
 						}
 
-						self.numbersPaintSpare({
+						self.numbersRenderSpare({
 							parent: parent,
 							dataNumbers: dataNumbers,
 							callback: function() {
@@ -1058,18 +1058,16 @@ define(function(require) {
 			});
 		},
 
-		numbersPaintSpare: function(args) {
+		numbersRenderSpare: function(args) {
 			var self = this,
-				parent = args.parent,
 				dataNumbers = args.dataNumbers,
-				callback = args.callback,
 				template = $(self.getTemplate({
 					name: 'spare',
 					data: dataNumbers,
 					submodule: 'numbers'
 				}));
 
-			parent
+			args.parent
 				.find('.list-numbers[data-type="spare"]')
 				.empty()
 				.append(template);
@@ -1077,7 +1075,7 @@ define(function(require) {
 			var arrayNumbersSpare = dataNumbers.listAccounts.length ? dataNumbers.listAccounts[0].spareNumbers : [];
 			self.numbersDisplayFeaturesMenu(arrayNumbersSpare, template);
 
-			callback && callback();
+			args.hasOwnProperty('callback') && args.callback();
 		},
 
 		numbersGetData: function(viewType, callback) {
