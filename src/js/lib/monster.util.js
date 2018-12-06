@@ -509,50 +509,6 @@ define(function(require) {
 			}
 		},
 
-		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
-		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, app) {
-			transaction.amount = parseFloat(transaction.amount).toFixed(2);
-
-			if (transaction.hasOwnProperty('executor')) {
-                                var executor = transaction.executor;
-
-                                if (transaction.hasOwnProperty('description') && transaction.description) {
-                                        transaction.friendlyName = transaction.description;
-                                }
-
-                                if (!transaction.friendlyName && executor.module in app.i18n.active().transactions.executors) {
-                                        if (executor.trigger in app.i18n.active().transactions.executors[executor.module]) {
-                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module][executor.trigger];
-                                        } else if ('default' in app.i18n.active().transactions.executors[executor.module]) {
-                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module]['default'];
-                                        }
-                                }
-
-                                if (!transaction.friendlyName) {
-                                        transaction.friendlyName = 'General Transaction';
-                                }
-
-				if (transaction.amount < 0) {
-					transaction.friendlyName = app.i18n.active().transactions.refundText + ' ' + transaction.friendlyName.charAt(0).toLowerCase() + transaction.friendlyName.slice(1);
-				}
-			}
-
-                        transaction.approved = transaction.hasOwnProperty('status') && transaction.status == 'completed';
-
-			if (!transaction.approved) {
-                                if (transaction.hasOwnProperty('bookkeeper') && transaction.bookkeeper.message) {
-                                        transaction.errorMessage = transaction.bookkeeper.message;
-                                } else {
-                                        transaction.errorMessage = transaction.status in app.i18n.active().transactions.statuses ? app.i18n.active().transactions.statuses[transaction.status] : transaction.status;
-                                }
-			}
-
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
-
-			return transaction;
-		},
-
 		accountArrayToTree: function(accountArray, rootAccountId) {
 			var result = {};
 
@@ -1197,6 +1153,41 @@ define(function(require) {
 	}
 
 	/**
+	 * Returns the full name of a specific user or, if missing, of the currently
+	 * logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 * @return {String}                   User's full name
+	 */
+	function getUserFullName(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+		var core = monster.apps.core;
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+		return core.getTemplate({
+			name: '!' + core.i18n.active().userFullName,
+			data: {
+				firstName: user.first_name,
+				lastName: user.last_name
+			}
+		});
+	}
+
+	/**
 	 * Converts a Gregorian timestamp into a Date instance
 	 * @param  {Number} pTimestamp Gregorian timestamp
 	 * @return {Date}           Converted Date instance
@@ -1367,6 +1358,7 @@ define(function(require) {
 
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 	util.randomString = randomString;

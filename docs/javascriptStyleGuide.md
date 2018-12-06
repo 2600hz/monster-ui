@@ -308,7 +308,7 @@ function yup(name, options, args) {
 }
 ```
 
-**[▲ back to otp](#table-of-contents)**
+**[▲ back to top](#table-of-contents)**
 
 
 ## Properties
