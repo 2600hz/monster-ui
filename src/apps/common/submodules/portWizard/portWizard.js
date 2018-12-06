@@ -1368,6 +1368,16 @@ define(function(require) {
 					});
 
 			template
+				.find('#save')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						self.portWizardHelperSavePort(_.merge({}, args, {
+							globalCallback: self.portWizardGet('globalCallback')
+						}), true, false);
+					});
+
+			template
 				.find('.success')
 					.on('click', function(event) {
 						event.preventDefault();
