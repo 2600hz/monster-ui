@@ -49,6 +49,11 @@
 	text-align: left;
 }
 
+#port_wizard .radio-group .monster-invalid {
+	position: absolute;
+	top: -16px;
+}
+
 #port_wizard .control-date {
 	width: 300px;
 	text-align: center;
@@ -160,7 +165,7 @@
 #port_wizard .file-upload-wrapper {
 	width: 380px;
 	margin: 20px auto;
-	padding: 20px 10px 5px;
+	padding: 20px 10px;
 	border: 1px dashed #c0c0c9;
 	border-radius: 2px;
 }

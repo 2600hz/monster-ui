@@ -151,53 +151,6 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
-					if (portRequest.hasOwnProperty('uploads') && portRequest.uploads.hasOwnProperty('bill.pdf')) {
-						var billUploadTemplate = $(self.getTemplate({
-								name: 'portInfo-billUpload',
-								submodule: 'portWizard'
-							})),
-							actionsTemplate = $(self.getTemplate({
-								name: 'portInfo-actions',
-								submodule: 'portWizard'
-							}));
-
-						billUploadTemplate
-							.find('#bill_input')
-								.fileUpload({
-									btnClass: 'monster-button-primary monster-button-small',
-									btnText: self.i18n.active().portWizard.fileUpload.button,
-									inputOnly: true,
-									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
-									maxSize: self.appFlags.portWizard.attachments.maxSize,
-									filesList: [ 'bill.pdf' ],
-									success: function(results) {
-										self.portWizardRequestUpdateAttachment({
-											data: {
-												portRequestId: portRequest.id,
-												documentName: 'bill.pdf',
-												data: results[0].file
-											}
-										});
-									},
-									error: function(errorsList) {
-										self.portWizardFileUploadErrorsHandler(errorsList);
-									}
-								});
-
-						template
-							.find('.bill-upload-wrapper')
-								.append(billUploadTemplate);
-
-						template
-							.find('.actions')
-								.append(actionsTemplate);
-
-						template
-							.find('.bill-upload')
-								.show();
-					}
-
 					self.portWizardBindPortInfoEvents(template, {
 						container: container,
 						data: {
@@ -221,64 +174,95 @@ define(function(require) {
 			});
 		},
 
-		/*
-		 * @param {jQuery} args.container
-		 * @param {Object} args.data.attachment
-		 * @param {Object} args.data.request
+		/**
+		 * @param  {jQuery} args.container
+		 * @param  {Object} args.data.attachment
+		 * @param  {Object} args.data.request
 		 */
-		portWizardRenderAccountVerification: function(args) {
+		portWizardRenderBillUpload: function(args) {
 			var self = this,
 				container = args.container,
-				initTemplate = function initTemplate(billFileData) {
+				request = args.data.request,
+				initTemplate = function initTemplate() {
 					var template = $(self.getTemplate({
-						name: 'accountVerification',
-						data: formatDataToTemplate(args.data.request),
+						name: 'billUpload',
+						data: {
+							request: request
+						},
 						submodule: 'portWizard'
 					}));
 
-					monster.ui.renderPDF(billFileData, template.find('.pdf-container'));
+					self.portWizardRenderBillUploadAccountVerification(template, args);
 
-					self.portWizardBindAccountVerificationEvents(template, args);
+					self.portWizardBindBillUploadEvents(template, args);
+
+					return template;
+				};
+
+			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				if (!_.has(request, ['uploads', 'bill.pdf'])) {
+					insertTemplateCallback(initTemplate());
+					return;
+				}
+				self.portWizardRequestGetAttahcment({
+					data: {
+						portRequestId: request.id,
+						documentName: 'bill.pdf'
+					},
+					success: function(billFileData) {
+						args.data.attachments.bill = {
+							file: billFileData
+						};
+
+						insertTemplateCallback(initTemplate());
+					}
+				});
+			});
+		},
+
+		/*
+		 * @param {jQuery} args.container
+		 * @param {Object} args.data.attachments
+		 * @param {Object} args.data.request
+		 */
+		portWizardRenderBillUploadAccountVerification: function(parentTemplate, args) {
+			var self = this,
+				container = parentTemplate.find('#account_verification'),
+				attachments = args.data.attachments,
+				portRequest = args.data.request,
+				initTemplate = function initTemplate() {
+					var template = $(self.getTemplate({
+						name: 'billUpload-accountVerification',
+						data: formatDataToTemplate(portRequest),
+						submodule: 'portWizard'
+					}));
+
+					monster.ui.renderPDF(attachments.bill.file, template.find('.pdf-container'));
+
+					self.portWizardBindBillUploadAccountVerificationEvents(template, args);
 
 					return template;
 				},
 				formatDataToTemplate = function formatDataToTemplate(request) {
-					var carriers = _.get(monster, 'config.whitelabel.port.carriers'),
-						data = {
-							request: request
-						};
-
-					if (!(_.isUndefined(carriers) || _.isEmpty(carriers))) {
-						data.carriers = carriers;
-					}
-
-					return data;
-				},
-				afterInsertTemplate = function() {
-					container
-						.find('#carrier')
-							.focus();
+					return {
+						carriers: _.get(monster, 'config.whitelabel.port.carriers'),
+						request: request
+					};
 				};
 
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
-				if (args.data.request.hasOwnProperty('uploads') && args.data.request.uploads.hasOwnProperty('bill.pdf')) {
-					self.portWizardRequestGetAttahcment({
-						data: {
-							portRequestId: args.data.request.id,
-							documentName: 'bill.pdf'
-						},
-						success: function(billFileData) {
-							args.data.attachments.bill = {
-								file: billFileData
-							};
-
-							insertTemplateCallback(initTemplate(billFileData), afterInsertTemplate);
-						}
+			if (
+				_.has(attachments, 'bill.file')
+				&& _.get(portRequest, 'ui_flags.validation', false)
+			) {
+				monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+					insertTemplateCallback(initTemplate(), undefined, function() {
+						parentTemplate.find('.actions').show();
 					});
-				} else {
-					insertTemplateCallback(initTemplate(args.data.attachments.bill.file), afterInsertTemplate);
-				}
-			});
+				});
+			} else {
+				container.empty();
+				parentTemplate.find('.actions').hide();
+			}
 		},
 
 		/**
@@ -609,93 +593,163 @@ define(function(require) {
 		 */
 		portWizardBindPortInfoEvents: function(template, args) {
 			var self = this,
-				billFileData;
+				$form = template.find('#form_port_info');
 
-			template
-				.on('change', '.numbers-type', function(event) {
-					event.preventDefault();
-
-					var billUploadTemplate;
-
-					if (template.find('.bill-upload-wrapper').is(':empty')) {
-						billUploadTemplate = $(self.getTemplate({
-							name: 'portInfo-billUpload',
-							submodule: 'portWizard'
-						})).css('display', 'none');
-
-						billUploadTemplate
-							.find('#bill_input')
-								.fileUpload({
-									btnClass: 'monster-button-primary monster-button-small',
-									btnText: self.i18n.active().portWizard.fileUpload.button,
-									inputOnly: true,
-									inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-									mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
-									maxSize: self.appFlags.portWizard.attachments.maxSize,
-									success: function(results) {
-										var actionsTemplate = $(self.getTemplate({
-											name: 'portInfo-actions',
-											submodule: 'portWizard'
-										})).css('display', 'none');
-
-										if (template.find('.portInfo-success').length < 1) {
-											billFileData = results[0];
-
-											template
-												.find('.actions')
-													.prepend(actionsTemplate);
-
-											template
-												.find('.portInfo-success')
-													.fadeIn();
-										}
-									},
-									error: function(errorsList) {
-										self.portWizardFileUploadErrorsHandler(errorsList);
-									}
-								});
-
-						template
-							.find('.bill-upload-wrapper')
-								.append(billUploadTemplate);
-
-						template
-							.find('.bill-upload')
-								.fadeIn();
+			monster.ui.validate($form, {
+				rules: {
+					name: {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'ui_flags.type': {
+						required: true
 					}
-				});
+				}
+			});
 
 			template
 				.on('click', '.portInfo-success', function(event) {
+					if (!monster.ui.valid($form)) {
+						return;
+					}
 					event.preventDefault();
 
-					var $form = template.find('#form_port_info'),
-						formData = monster.ui.getFormData('form_port_info');
+					_.merge(args.data, {
+						request: monster.ui.getFormData('form_port_info')
+					});
 
-					monster.ui.validate($form, {
-						rules: {
-							name: {
-								required: true,
-								minlength: 1,
-								maxlength: 128
-							},
-							'type': {
-								required: true
-							}
+					self.portWizardRenderBillUpload(args);
+				});
+
+			template
+				.find('.cancel')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						self.portWizardHelperCancelPort();
+					});
+		},
+
+		/**
+		 * @param  {jQuery} template
+		 * @param  {Object} args.data.attachments
+		 * @param  {Object} args.data.request
+		 */
+		portWizardBindBillUploadEvents: function(template, args) {
+			var self = this,
+				formValidationRules = {
+					'bill.name': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.street_number': {
+						required: true,
+						digits: true,
+						minlength: 1,
+						maxlength: 8
+					},
+					'bill.street_address': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.street_type': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.locality': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'bill.region': {
+						required: true,
+						minlength: 2,
+						maxlength: 2
+					},
+					'bill.postal_code': {
+						required: true,
+						digits: true,
+						minlength: 5,
+						maxlength: 5
+					},
+					'bill.account_number': {
+						required: true,
+						maxlength: 128
+					},
+					'bill.pin': {
+						maxlength: 6
+					},
+					'bill.btn': {
+						required: true,
+						maxlength: 20
+					}
+				};
+
+			template
+				.find('#bill_input')
+					.fileUpload({
+						btnClass: 'monster-button-primary monster-button-small',
+						btnText: self.i18n.active().portWizard.fileUpload.button,
+						inputOnly: true,
+						inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
+						mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
+						maxSize: self.appFlags.portWizard.attachments.maxSize,
+						filesList: _.has(args.data.request, ['uploads', 'bill.pdf'])
+							? ['bill.pdf']
+							: [],
+						success: function(results) {
+							_.merge(args.data.attachments, {
+								bill: results[0]
+							});
+							self.portWizardRenderBillUploadAccountVerification(template, args);
+						},
+						error: function(errorsList) {
+							self.portWizardFileUploadErrorsHandler(errorsList);
 						}
 					});
 
-					if (monster.ui.valid($form)) {
-						_.merge(args.data, {
-							request: formData,
-							attachments: {
-								bill: billFileData
-							}
+			template
+				.find('#validation')
+					.on('change', function(event) {
+						event.preventDefault();
+
+						var isChecked = $(this).is(':checked');
+
+						_.set(args.data.request, 'ui_flags.validation', isChecked);
+
+						self.portWizardRenderBillUploadAccountVerification(template, args);
+					});
+
+			template
+				.find('.next')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var $form = template.find('#form_account_verification'),
+							formData = monster.ui.getFormData('form_account_verification'),
+							btn = formData.bill.btn
+								? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus')
+								: '';
+
+						monster.ui.validate($form, {
+							rules: formValidationRules
 						});
 
-						self.portWizardRenderAccountVerification(args);
-					}
-				});
+						if (monster.ui.valid($form)) {
+							_.merge(args.data.request, {
+								ui_flags: formData.ui_flags,
+								bill: _.assign(formData.bill, {
+									btn: btn
+								})
+							});
+
+							self.portWizardRenderAddNumbers(args);
+						}
+					});
 
 			template
 				.find('.cancel')
@@ -711,7 +765,7 @@ define(function(require) {
 		 * @param {Function} args.globalCallback
 		 * @param {Object} args.data.request
 		 */
-		portWizardBindAccountVerificationEvents: function(template, args) {
+		portWizardBindBillUploadAccountVerificationEvents: function(template, args) {
 			var self = this,
 				formValidationRules = {
 					'bill.name': {
@@ -773,14 +827,6 @@ define(function(require) {
 							$form = template.find('#form_account_verification'),
 							formData = monster.ui.getFormData('form_account_verification'),
 							btn = formData.bill.btn ? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus') : '';
-
-						if (action === 'next') {
-							_.merge(formValidationRules, {
-								'ui_flags.validation': {
-									required: true
-								}
-							});
-						}
 
 						monster.ui.validate($form, {
 							rules: formValidationRules
