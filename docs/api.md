@@ -72,7 +72,7 @@ listDevices: function(callback) {
 			callback && callback(devices);
 		},
 		error: function(response) {
-			monster.ui.alert('BOOM, it doesn't work. I bet it's a French guy who coded this API.');
+			monster.ui.alert('BOOM, it doesn\'t work. I bet it\'s a French guy who coded this API.');
 		}
 	});
 }
@@ -134,7 +134,7 @@ listDevices: function(callback) {
 			callback && callback(devices);
 		},
 		error: function(response) {
-			monster.ui.alert('BOOM, it doesn't work. This wouldn't have happened if a French guy coded this API.');
+			monster.ui.alert('BOOM, it doesn\'t work. This wouldn\'t have happened if a French guy coded this API.');
 		}
 	});
 }
