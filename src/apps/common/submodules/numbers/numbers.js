@@ -60,9 +60,9 @@ define(function(require) {
 						name: 'used',
 						data: data,
 						submodule: 'numbers'
-					}));
+					})),
+					arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 
-				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
 				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
 
@@ -1065,14 +1065,14 @@ define(function(require) {
 					name: 'spare',
 					data: dataNumbers,
 					submodule: 'numbers'
-				}));
+				})),
+				arrayNumbersSpare = dataNumbers.listAccounts.length ? dataNumbers.listAccounts[0].spareNumbers : [];
 
 			args.parent
 				.find('.list-numbers[data-type="spare"]')
 				.empty()
 				.append(template);
 
-			var arrayNumbersSpare = dataNumbers.listAccounts.length ? dataNumbers.listAccounts[0].spareNumbers : [];
 			self.numbersDisplayFeaturesMenu(arrayNumbersSpare, template);
 
 			args.hasOwnProperty('callback') && args.callback();
