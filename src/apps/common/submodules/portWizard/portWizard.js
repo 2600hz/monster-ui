@@ -205,19 +205,24 @@ define(function(require) {
 				};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+				var fileName = 'bill.pdf';
+
 				monster.waterfall([
 					function(callback) {
-						if (!_.has(request, ['uploads', 'bill.pdf'])) {
+						if (!_.has(request, ['uploads', fileName])) {
 							callback(null);
 							return;
 						}
 						self.portWizardRequestGetAttahcment({
 							data: {
 								portRequestId: request.id,
-								documentName: 'bill.pdf'
+								documentName: fileName
 							},
 							success: function(fileData) {
-								_.set(args, 'data.attachments.bill.file', fileData);
+								_.set(args, 'data.attachments.bill', {
+									file: fileData,
+									name: fileName
+								});
 
 								callback(null);
 							}
@@ -1414,45 +1419,60 @@ define(function(require) {
 		 */
 		portWizardHelperCreatePort: function(args) {
 			var self = this,
-				attachments = _.extend({}, args.data.attachments);
+				attachments = args.data.attachments;
 
-			delete args.data.request.extra;
-
-			self.portWizardRequestCreatePort({
-				data: {
-					data: args.data.request
+			monster.waterfall([
+				function(callback) {
+					self.portWizardRequestCreatePort({
+						data: {
+							data: args.data.request
+						},
+						success: function(portRequest) {
+							callback(null, portRequest);
+						},
+						error: function(parsedError, error) {
+							callback({
+								parsedError: parsedError,
+								error: error
+							});
+						}
+					});
 				},
-				success: function(port) {
-					if (!_.isEmpty(attachments)) {
-						_.each(attachments, function(attachment, key, object) {
-							object[key] = function(callback) {
-								self.portWizardRequestCreateAttachment({
-									data: {
-										portRequestId: port.id,
-										documentName: key + '.pdf',
-										data: attachment.file
-									},
-									success: function() {
-										callback(null);
-									}
-								});
-							};
-						});
-
-						monster.series(attachments, function(err, results) {
-							if (err) {
-								args.hasOwnProperty('error') && args.error();
-							} else {
-								args.hasOwnProperty('success') && args.success(port.id);
-							}
-						});
-					} else {
-						args.hasOwnProperty('success') && args.success(port.id);
+				function(portRequest, callback) {
+					if (_.isEmpty(attachments)) {
+						callback(null, portRequest);
+						return;
 					}
-				},
-				error: function(parsedError, groupedErrors) {
-					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+					monster.series(_.map(attachments, function(attachment, file) {
+						return function(seriesCallback) {
+							self.portWizardRequestCreateAttachment({
+								data: {
+									portRequestId: portRequest.id,
+									documentName: file + '.pdf',
+									data: attachment.file
+								},
+								success: function() {
+									seriesCallback(null);
+								},
+								error: function() {
+									seriesCallback(true);
+								}
+							});
+						};
+					}), function(err, results) {
+						if (err) {
+							callback({});
+							return;
+						}
+						callback(null, portRequest.id);
+					});
 				}
+			], function(err, portRequestId) {
+				if (!_.isNull(err)) {
+					args.error(err.parsedError, err.error);
+					return;
+				}
+				args.success(portRequestId);
 			});
 		},
 
