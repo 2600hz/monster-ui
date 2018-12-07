@@ -1549,16 +1549,30 @@ define(function(require) {
 				globalCallback = self.portWizardGet('globalCallback'),
 				portRequestId = self.portWizardGet('portRequest.id');
 
-			monster.waterfall([
+			monster.parallel([
 				function(callback) {
 					if (_.isUndefined(portRequestId)) {
 						callback(null);
 						return;
 					}
-
 					self.portWizardRequestDeletePort({
 						data: {
 							portRequestId: portRequestId
+						},
+						success: function() {
+							callback(null);
+						}
+					});
+				},
+				function(callback) {
+					if (!_.isUndefined(portRequestId)) {
+						callback(null);
+						return;
+					}
+					self.portWizardRequestUpdateState({
+						data: {
+							portRequestId: portRequestId,
+							state: 'canceled'
 						},
 						success: function() {
 							callback(null);
@@ -1677,8 +1691,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.changeState',
 				data: _.merge({
-					accountId: self.portWizardGet('accountId'),
-					reason: ''
+					accountId: self.portWizardGet('accountId')
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
