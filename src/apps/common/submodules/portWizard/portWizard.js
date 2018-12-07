@@ -25,6 +25,7 @@ define(function(require) {
 				},
 				knownErrors: {
 					addNumbers: {
+						number_is_being_ported_for_a_different_account: {},
 						number_is_on_a_port_request_already: {},
 						number_exists_on_the_system_already: {},
 						too_few_properties: {
@@ -1395,6 +1396,8 @@ define(function(require) {
 							self.portWizardRenderAddNumbers(args);
 						} else if (processedErrors.failedWizardStep === 'portNotify') {
 							self.portWizardRenderPortNotify(args);
+						} else {
+							self.portWizardRenderPortInfo(args);
 						}
 
 						self.portWizardShowErrors(processedErrors);
