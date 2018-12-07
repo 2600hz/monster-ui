@@ -113,17 +113,23 @@ define(function(require) {
 						}
 					});
 				}
-			}, function(err, results) {
+			}, function(err, result) {
 				if (err) {
 					globalCallback();
 					return;
 				}
+				var portRequest = _.merge({
+					ui_flags: {},
+					numbers: {}
+				}, _.get(result, 'portRequest', {}));
 
-				self.portWizardSet('portRequest', _.get(results, 'portRequest', {}));
+				self.portWizardSet('attachments', {});
+				self.portWizardSet('portRequest', portRequest);
 
 				self.portWizardRenderPortInfo({
 					container: self.portWizardGet('container'),
 					data: {
+						attachments: self.portWizardGet('attachments'),
 						request: self.portWizardGet('portRequest')
 					}
 				});
@@ -136,11 +142,13 @@ define(function(require) {
 
 		/**
 		 * @param  {jQuery} args.container
+		 * @param  {Object} args.data.attachments
 		 * @param  {Object} args.data.request
 		 */
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
+				attachments = args.data.attachments,
 				portRequest = args.data.request,
 				initTemplate = function initTemplate() {
 					var template = $(self.getTemplate({
@@ -154,11 +162,8 @@ define(function(require) {
 					self.portWizardBindPortInfoEvents(template, {
 						container: container,
 						data: {
-							attachments: {},
-							request: _.merge({}, portRequest, {
-								ui_flags: {},
-								numbers: {}
-							})
+							attachments: attachments,
+							request: portRequest
 						}
 					});
 
@@ -200,22 +205,26 @@ define(function(require) {
 				};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
-				if (!_.has(request, ['uploads', 'bill.pdf'])) {
-					insertTemplateCallback(initTemplate());
-					return;
-				}
-				self.portWizardRequestGetAttahcment({
-					data: {
-						portRequestId: request.id,
-						documentName: 'bill.pdf'
-					},
-					success: function(billFileData) {
-						args.data.attachments.bill = {
-							file: billFileData
-						};
+				monster.waterfall([
+					function(callback) {
+						if (!_.has(request, ['uploads', 'bill.pdf'])) {
+							callback(null);
+							return;
+						}
+						self.portWizardRequestGetAttahcment({
+							data: {
+								portRequestId: request.id,
+								documentName: 'bill.pdf'
+							},
+							success: function(fileData) {
+								_.set(args, 'data.attachments.bill.file', fileData);
 
-						insertTemplateCallback(initTemplate());
+								callback(null);
+							}
+						});
 					}
+				], function() {
+					insertTemplateCallback(initTemplate());
 				});
 			});
 		},
@@ -238,8 +247,6 @@ define(function(require) {
 					}));
 
 					monster.ui.renderPDF(attachments.bill.file, template.find('.pdf-container'));
-
-					self.portWizardBindBillUploadAccountVerificationEvents(template, args);
 
 					return template;
 				},
@@ -748,102 +755,6 @@ define(function(require) {
 							});
 
 							self.portWizardRenderAddNumbers(args);
-						}
-					});
-
-			template
-				.find('.cancel')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						self.portWizardHelperCancelPort();
-					});
-		},
-
-		/**
-		 * @param {jQuery} template
-		 * @param {Object} args.data.request
-		 */
-		portWizardBindBillUploadAccountVerificationEvents: function(template, args) {
-			var self = this,
-				formValidationRules = {
-					'bill.name': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.street_number': {
-						required: true,
-						digits: true,
-						minlength: 1,
-						maxlength: 8
-					},
-					'bill.street_address': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.street_type': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.locality': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.region': {
-						required: true,
-						minlength: 2,
-						maxlength: 2
-					},
-					'bill.postal_code': {
-						required: true,
-						digits: true,
-						minlength: 5,
-						maxlength: 5
-					},
-					'bill.account_number': {
-						required: true,
-						maxlength: 128
-					},
-					'bill.pin': {
-						maxlength: 6
-					},
-					'bill.btn': {
-						required: true,
-						maxlength: 20
-					}
-				};
-
-			template
-				.find('.next')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						var action = $(this).data('action'),
-							$form = template.find('#form_account_verification'),
-							formData = monster.ui.getFormData('form_account_verification'),
-							btn = formData.bill.btn ? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus') : '';
-
-						monster.ui.validate($form, {
-							rules: formValidationRules
-						});
-
-						if (monster.ui.valid($form)) {
-							_.merge(args.data.request, {
-								ui_flags: formData.ui_flags,
-								bill: _.assign(formData.bill, {
-									btn: btn
-								})
-							});
-
-							if (action === 'save') {
-								self.portWizardHelperSavePort(args);
-							} else if (action === 'next') {
-								self.portWizardRenderAddNumbers(args);
-							}
 						}
 					});
 
@@ -1618,6 +1529,7 @@ define(function(require) {
 
 		portWizardHelperCancelPort: function() {
 			var self = this,
+				globalCallback = self.portWizardGet('globalCallback'),
 				portRequestId = self.portWizardGet('portRequest.id');
 
 			monster.waterfall([
@@ -1637,7 +1549,7 @@ define(function(require) {
 					});
 				}
 			], function() {
-				self.portWizardGet('globalCallback')();
+				globalCallback();
 			});
 		},
 
