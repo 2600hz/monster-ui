@@ -762,7 +762,6 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback
 		 * @param {Object} args.data.request
 		 */
 		portWizardBindBillUploadAccountVerificationEvents: function(template, args) {
@@ -858,7 +857,6 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {Function} args.globalCallback
 		 * @param {jQuery} args.container
 		 * @param {Object} args.data.request
 		 */
@@ -1125,7 +1123,6 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback
 		 * @param {Object} args.data.request
 		 */
 		portWizardBindUploadFormEvents: function(template, args) {
@@ -1237,9 +1234,7 @@ define(function(require) {
 								signing_date: monster.util.dateToGregorian($datepicker.datepicker('getDate'))
 							});
 
-							self.portWizardHelperSavePort(_.merge(args, {
-								success: args.globalCallback
-							}), true, false);
+							self.portWizardHelperSavePort(args, true, false);
 						}
 					});
 
@@ -1306,7 +1301,6 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback
 		 * @param {Object} args.data.request
 		 */
 		portWizardBindPortNotifyEvents: function(template, args) {
@@ -1349,10 +1343,11 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback()
+		 * @param {Object} args
 		 */
 		portWizardBindPortSubmitEvents: function(template, args) {
-			var self = this;
+			var self = this,
+				globalCallback = self.portWizardGet('globalCallback');
 
 			template
 				.find('.conditions')
@@ -1372,9 +1367,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort(_.merge({}, args, {
-							globalCallback: self.portWizardGet('globalCallback')
-						}), true, false);
+						self.portWizardHelperSavePort(args, true, false);
 					});
 
 			template
@@ -1390,7 +1383,7 @@ define(function(require) {
 										state: 'submitted'
 									},
 									success: function() {
-										args.globalCallback();
+										globalCallback();
 									}
 								});
 							}
@@ -1500,7 +1493,6 @@ define(function(require) {
 		},
 
 		/**
-		 * @param  {Function} [args.globalCallback]
 		 * @param  {Function} [args.success]
 		 * @param  {Function} [args.error]
 		 * @param  {Object} args.data.request
@@ -1508,7 +1500,8 @@ define(function(require) {
 		 * @param  {Boolean} stopErrorPropagation
 		 */
 		portWizardHelperSavePort: function(args, useGlobalSuccessCallback, stopErrorPropagation) {
-			var self = this;
+			var self = this,
+				globalCallback = self.portWizardGet('globalCallback');
 
 			self.portWizardUILoading(args, {
 				title: self.i18n.active().portWizard.loading.title,
@@ -1516,7 +1509,7 @@ define(function(require) {
 				callback: function() {
 					// Add error handler for errors that can be processed
 					var portSavingArgs = _.merge({}, args, {
-						success: useGlobalSuccessCallback ? args.globalCallback : args.success,
+						success: useGlobalSuccessCallback ? globalCallback : args.success,
 						error: function(parsedError, groupedErrors) {
 							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
 
