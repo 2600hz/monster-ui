@@ -1401,45 +1401,6 @@ define(function(require) {
 		},
 
 		/**************************************************
-		 *                   UI helpers                   *
-		 **************************************************/
-
-		/**
-		 * @param {jQuery} args.container
-		 * @param {Function|Object} loadingData
-		 */
-		portWizardUILoading: function(args, loadingData) {
-			var self = this,
-				container = args.container,
-				callback = _.isFunction(loadingData) ? loadingData : loadingData.callback,
-				dataToTemplate = _.isFunction(loadingData) ? {} : loadingData,
-				template = self.getTemplate({
-					name: 'loading',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				});
-
-			if (container.is(':empty')) {
-				container
-					.hide(0, function() {
-						$(this)
-							.append(template)
-							.fadeIn();
-					});
-			} else {
-				container
-					.fadeOut(function() {
-						$(this)
-							.empty()
-							.append(template)
-							.fadeIn();
-					});
-			}
-
-			callback();
-		},
-
-		/**************************************************
 		 *              Data handling helpers             *
 		 **************************************************/
 
@@ -1499,44 +1460,38 @@ define(function(require) {
 		 */
 		portWizardHelperSavePort: function(args) {
 			var self = this,
+				container = self.portWizardGet('container'),
 				globalCallback = self.portWizardGet('globalCallback'),
-				stopErrorPropagation = _.get(args, 'stopErrorPropagation', false);
+				stopErrorPropagation = _.get(args, 'stopErrorPropagation', false),
+				method = _.has(args, 'data.request.id')
+					? 'portWizardHelperUpdatePort'
+					: 'portWizardHelperCreatePort';
 
-			self.portWizardUILoading(args, {
-				title: self.i18n.active().portWizard.loading.title,
-				text: self.i18n.active().portWizard.loading.text,
-				callback: function() {
-					// Add error handler for errors that can be processed
-					var portSavingArgs = _.merge({}, args, {
-						success: _.isFunction(args.success)
-							? args.success
-							: globalCallback,
-						error: function(parsedError, groupedErrors) {
-							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
+			monster.ui.insertTemplate(container, function() {
+				self[method](_.merge({}, args, {
+					success: _.isFunction(args.success)
+						? args.success
+						: globalCallback,
+					error: function(parsedError, groupedErrors) {
+						var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
 
-							switch (processedErrors.failedWizardStep) {
-								case 'addNumbers':
-									self.portWizardRenderAddNumbers(args);
-									break;
-								case 'portNotify':
-									self.portWizardRenderPortNotify(args);
-									break;
-							}
-
-							self.portWizardShowErrors(processedErrors);
-
-							if (!stopErrorPropagation && args.hasOwnProperty('error')) {
-								args.error(parsedError);
-							}
+						if (processedErrors.failedWizardStep === 'addNumbers') {
+							self.portWizardRenderAddNumbers(args);
+						} else if (processedErrors.failedWizardStep === 'portNotify') {
+							self.portWizardRenderPortNotify(args);
 						}
-					});
 
-					if (args.data.request.hasOwnProperty('id')) {
-						self.portWizardHelperUpdatePort(portSavingArgs);
-					} else {
-						self.portWizardHelperCreatePort(portSavingArgs);
+						self.portWizardShowErrors(processedErrors);
+
+						if (!stopErrorPropagation && _.isFunction(args.error)) {
+							args.error(parsedError);
+						}
 					}
-				}
+				}));
+			}, {
+				cssId: 'port_wizard',
+				title: self.i18n.active().portWizard.loading.title,
+				text: self.i18n.active().portWizard.loading.text
 			});
 		},
 
