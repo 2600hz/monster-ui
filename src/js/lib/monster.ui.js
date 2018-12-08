@@ -448,6 +448,7 @@ define(function(require) {
 				dataToTemplate = {
 					hasBackground: options.hasBackground,
 					cssClass: options.cssClass,
+					cssId: options.cssId,
 					title: options.title,
 					text: options.text
 				},
