@@ -25,6 +25,7 @@ define(function(require) {
 				},
 				knownErrors: {
 					addNumbers: {
+						number_is_being_ported_for_a_different_account: {},
 						number_is_on_a_port_request_already: {},
 						number_exists_on_the_system_already: {},
 						too_few_properties: {
@@ -113,17 +114,23 @@ define(function(require) {
 						}
 					});
 				}
-			}, function(err, results) {
+			}, function(err, result) {
 				if (err) {
 					globalCallback();
 					return;
 				}
+				var portRequest = _.merge({
+					ui_flags: {},
+					numbers: {}
+				}, _.get(result, 'portRequest', {}));
 
-				self.portWizardSet('portRequest', _.get(results, 'portRequest', {}));
+				self.portWizardSet('attachments', {});
+				self.portWizardSet('portRequest', portRequest);
 
 				self.portWizardRenderPortInfo({
 					container: self.portWizardGet('container'),
 					data: {
+						attachments: self.portWizardGet('attachments'),
 						request: self.portWizardGet('portRequest')
 					}
 				});
@@ -136,11 +143,13 @@ define(function(require) {
 
 		/**
 		 * @param  {jQuery} args.container
+		 * @param  {Object} args.data.attachments
 		 * @param  {Object} args.data.request
 		 */
 		portWizardRenderPortInfo: function(args) {
 			var self = this,
 				container = args.container,
+				attachments = args.data.attachments,
 				portRequest = args.data.request,
 				initTemplate = function initTemplate() {
 					var template = $(self.getTemplate({
@@ -154,11 +163,8 @@ define(function(require) {
 					self.portWizardBindPortInfoEvents(template, {
 						container: container,
 						data: {
-							attachments: {},
-							request: _.merge({}, portRequest, {
-								ui_flags: {},
-								numbers: {}
-							})
+							attachments: attachments,
+							request: portRequest
 						}
 					});
 
@@ -200,22 +206,31 @@ define(function(require) {
 				};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
-				if (!_.has(request, ['uploads', 'bill.pdf'])) {
-					insertTemplateCallback(initTemplate());
-					return;
-				}
-				self.portWizardRequestGetAttahcment({
-					data: {
-						portRequestId: request.id,
-						documentName: 'bill.pdf'
-					},
-					success: function(billFileData) {
-						args.data.attachments.bill = {
-							file: billFileData
-						};
+				var fileName = 'bill.pdf';
 
-						insertTemplateCallback(initTemplate());
+				monster.waterfall([
+					function(callback) {
+						if (!_.has(request, ['uploads', fileName])) {
+							callback(null);
+							return;
+						}
+						self.portWizardRequestGetAttahcment({
+							data: {
+								portRequestId: request.id,
+								documentName: fileName
+							},
+							success: function(fileData) {
+								_.set(args, 'data.attachments.bill', {
+									file: fileData,
+									name: fileName
+								});
+
+								callback(null);
+							}
+						});
 					}
+				], function() {
+					insertTemplateCallback(initTemplate());
 				});
 			});
 		},
@@ -238,8 +253,6 @@ define(function(require) {
 					}));
 
 					monster.ui.renderPDF(attachments.bill.file, template.find('.pdf-container'));
-
-					self.portWizardBindBillUploadAccountVerificationEvents(template, args);
 
 					return template;
 				},
@@ -761,104 +774,6 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback
-		 * @param {Object} args.data.request
-		 */
-		portWizardBindBillUploadAccountVerificationEvents: function(template, args) {
-			var self = this,
-				formValidationRules = {
-					'bill.name': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.street_number': {
-						required: true,
-						digits: true,
-						minlength: 1,
-						maxlength: 8
-					},
-					'bill.street_address': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.street_type': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.locality': {
-						required: true,
-						minlength: 1,
-						maxlength: 128
-					},
-					'bill.region': {
-						required: true,
-						minlength: 2,
-						maxlength: 2
-					},
-					'bill.postal_code': {
-						required: true,
-						digits: true,
-						minlength: 5,
-						maxlength: 5
-					},
-					'bill.account_number': {
-						required: true,
-						maxlength: 128
-					},
-					'bill.pin': {
-						maxlength: 6
-					},
-					'bill.btn': {
-						required: true,
-						maxlength: 20
-					}
-				};
-
-			template
-				.find('.next')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						var action = $(this).data('action'),
-							$form = template.find('#form_account_verification'),
-							formData = monster.ui.getFormData('form_account_verification'),
-							btn = formData.bill.btn ? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus') : '';
-
-						monster.ui.validate($form, {
-							rules: formValidationRules
-						});
-
-						if (monster.ui.valid($form)) {
-							_.merge(args.data.request, {
-								ui_flags: formData.ui_flags,
-								bill: _.assign(formData.bill, {
-									btn: btn
-								})
-							});
-
-							if (action === 'save') {
-								self.portWizardHelperSavePort(args, true, false);
-							} else if (action === 'next') {
-								self.portWizardRenderAddNumbers(args);
-							}
-						}
-					});
-
-			template
-				.find('.cancel')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						self.portWizardHelperCancelPort();
-					});
-		},
-
-		/**
-		 * @param {Function} args.globalCallback
 		 * @param {jQuery} args.container
 		 * @param {Object} args.data.request
 		 */
@@ -983,7 +898,7 @@ define(function(require) {
 							}
 						});
 
-						self.portWizardHelperSavePort(args, true, false);
+						self.portWizardHelperSavePort(args);
 					});
 
 			container
@@ -1125,7 +1040,6 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback
 		 * @param {Object} args.data.request
 		 */
 		portWizardBindUploadFormEvents: function(template, args) {
@@ -1237,9 +1151,7 @@ define(function(require) {
 								signing_date: monster.util.dateToGregorian($datepicker.datepicker('getDate'))
 							});
 
-							self.portWizardHelperSavePort(_.merge(args, {
-								success: args.globalCallback
-							}), true, false);
+							self.portWizardHelperSavePort(args);
 						}
 					});
 
@@ -1306,7 +1218,6 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback
 		 * @param {Object} args.data.request
 		 */
 		portWizardBindPortNotifyEvents: function(template, args) {
@@ -1332,7 +1243,7 @@ define(function(require) {
 						});
 
 						if (action === 'save') {
-							self.portWizardHelperSavePort(args, true, false);
+							self.portWizardHelperSavePort(args);
 						} else if (action === 'next') {
 							self.portWizardRenderSubmitPort(args);
 						}
@@ -1349,10 +1260,11 @@ define(function(require) {
 
 		/**
 		 * @param {jQuery} template
-		 * @param {Function} args.globalCallback()
+		 * @param {Object} args
 		 */
 		portWizardBindPortSubmitEvents: function(template, args) {
-			var self = this;
+			var self = this,
+				globalCallback = self.portWizardGet('globalCallback');
 
 			template
 				.find('.conditions')
@@ -1372,9 +1284,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort(_.merge({}, args, {
-							globalCallback: self.portWizardGet('globalCallback')
-						}), true, false);
+						self.portWizardHelperSavePort(args);
 					});
 
 			template
@@ -1382,7 +1292,8 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var savePortArgs = _.merge({}, args, {
+						self.portWizardHelperSavePort(_.merge({}, args, {
+							stopErrorPropagation: true,
 							success: function(requestId) {
 								self.portWizardRequestUpdateState({
 									data: {
@@ -1390,13 +1301,11 @@ define(function(require) {
 										state: 'submitted'
 									},
 									success: function() {
-										args.globalCallback();
+										globalCallback();
 									}
 								});
 							}
-						});
-
-						self.portWizardHelperSavePort(savePortArgs, false, true);
+						}));
 					});
 
 			template
@@ -1406,45 +1315,6 @@ define(function(require) {
 
 						self.portWizardHelperCancelPort();
 					});
-		},
-
-		/**************************************************
-		 *                   UI helpers                   *
-		 **************************************************/
-
-		/**
-		 * @param {jQuery} args.container
-		 * @param {Function|Object} loadingData
-		 */
-		portWizardUILoading: function(args, loadingData) {
-			var self = this,
-				container = args.container,
-				callback = _.isFunction(loadingData) ? loadingData : loadingData.callback,
-				dataToTemplate = _.isFunction(loadingData) ? {} : loadingData,
-				template = self.getTemplate({
-					name: 'loading',
-					data: dataToTemplate,
-					submodule: 'portWizard'
-				});
-
-			if (container.is(':empty')) {
-				container
-					.hide(0, function() {
-						$(this)
-							.append(template)
-							.fadeIn();
-					});
-			} else {
-				container
-					.fadeOut(function() {
-						$(this)
-							.empty()
-							.append(template)
-							.fadeIn();
-					});
-			}
-
-			callback();
 		},
 
 		/**************************************************
@@ -1500,49 +1370,47 @@ define(function(require) {
 		},
 
 		/**
-		 * @param  {Function} [args.globalCallback]
 		 * @param  {Function} [args.success]
 		 * @param  {Function} [args.error]
 		 * @param  {Object} args.data.request
-		 * @param  {Boolean} useGlobalSuccessCallback
-		 * @param  {Boolean} stopErrorPropagation
+		 * @param  {Boolean} [args.stopErrorPropagation]
 		 */
-		portWizardHelperSavePort: function(args, useGlobalSuccessCallback, stopErrorPropagation) {
-			var self = this;
+		portWizardHelperSavePort: function(args) {
+			var self = this,
+				container = self.portWizardGet('container'),
+				globalCallback = self.portWizardGet('globalCallback'),
+				stopErrorPropagation = _.get(args, 'stopErrorPropagation', false),
+				method = _.has(args, 'data.request.id')
+					? 'portWizardHelperUpdatePort'
+					: 'portWizardHelperCreatePort';
 
-			self.portWizardUILoading(args, {
-				title: self.i18n.active().portWizard.loading.title,
-				text: self.i18n.active().portWizard.loading.text,
-				callback: function() {
-					// Add error handler for errors that can be processed
-					var portSavingArgs = _.merge({}, args, {
-						success: useGlobalSuccessCallback ? args.globalCallback : args.success,
-						error: function(parsedError, groupedErrors) {
-							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
+			monster.ui.insertTemplate(container, function() {
+				self[method](_.merge({}, args, {
+					success: _.isFunction(args.success)
+						? args.success
+						: globalCallback,
+					error: function(parsedError, groupedErrors) {
+						var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
 
-							switch (processedErrors.failedWizardStep) {
-								case 'addNumbers':
-									self.portWizardRenderAddNumbers(args);
-									break;
-								case 'portNotify':
-									self.portWizardRenderPortNotify(args);
-									break;
-							}
-
-							self.portWizardShowErrors(processedErrors);
-
-							if (!stopErrorPropagation && args.hasOwnProperty('error')) {
-								args.error(parsedError);
-							}
+						if (processedErrors.failedWizardStep === 'addNumbers') {
+							self.portWizardRenderAddNumbers(args);
+						} else if (processedErrors.failedWizardStep === 'portNotify') {
+							self.portWizardRenderPortNotify(args);
+						} else {
+							self.portWizardRenderPortInfo(args);
 						}
-					});
 
-					if (args.data.request.hasOwnProperty('id')) {
-						self.portWizardHelperUpdatePort(portSavingArgs);
-					} else {
-						self.portWizardHelperCreatePort(portSavingArgs);
+						self.portWizardShowErrors(processedErrors);
+
+						if (!stopErrorPropagation && _.isFunction(args.error)) {
+							args.error(parsedError);
+						}
 					}
-				}
+				}));
+			}, {
+				cssId: 'port_wizard',
+				title: self.i18n.active().portWizard.loading.title,
+				text: self.i18n.active().portWizard.loading.text
 			});
 		},
 
@@ -1554,45 +1422,60 @@ define(function(require) {
 		 */
 		portWizardHelperCreatePort: function(args) {
 			var self = this,
-				attachments = _.extend({}, args.data.attachments);
+				attachments = args.data.attachments;
 
-			delete args.data.request.extra;
-
-			self.portWizardRequestCreatePort({
-				data: {
-					data: args.data.request
+			monster.waterfall([
+				function(callback) {
+					self.portWizardRequestCreatePort({
+						data: {
+							data: args.data.request
+						},
+						success: function(portRequest) {
+							callback(null, portRequest);
+						},
+						error: function(parsedError, error) {
+							callback({
+								parsedError: parsedError,
+								error: error
+							});
+						}
+					});
 				},
-				success: function(port) {
-					if (!_.isEmpty(attachments)) {
-						_.each(attachments, function(attachment, key, object) {
-							object[key] = function(callback) {
-								self.portWizardRequestCreateAttachment({
-									data: {
-										portRequestId: port.id,
-										documentName: key + '.pdf',
-										data: attachment.file
-									},
-									success: function() {
-										callback(null);
-									}
-								});
-							};
-						});
-
-						monster.series(attachments, function(err, results) {
-							if (err) {
-								args.hasOwnProperty('error') && args.error();
-							} else {
-								args.hasOwnProperty('success') && args.success(port.id);
-							}
-						});
-					} else {
-						args.hasOwnProperty('success') && args.success(port.id);
+				function(portRequest, callback) {
+					if (_.isEmpty(attachments)) {
+						callback(null, portRequest);
+						return;
 					}
-				},
-				error: function(parsedError, groupedErrors) {
-					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+					monster.series(_.map(attachments, function(attachment, file) {
+						return function(seriesCallback) {
+							self.portWizardRequestCreateAttachment({
+								data: {
+									portRequestId: portRequest.id,
+									documentName: file + '.pdf',
+									data: attachment.file
+								},
+								success: function() {
+									seriesCallback(null);
+								},
+								error: function() {
+									seriesCallback(true);
+								}
+							});
+						};
+					}), function(err, results) {
+						if (err) {
+							callback({});
+							return;
+						}
+						callback(null, portRequest.id);
+					});
 				}
+			], function(err, portRequestId) {
+				if (!_.isNull(err)) {
+					args.error(err.parsedError, err.error);
+					return;
+				}
+				args.success(portRequestId);
 			});
 		},
 
@@ -1604,80 +1487,69 @@ define(function(require) {
 		 */
 		portWizardHelperUpdatePort: function(args) {
 			var self = this,
-				attachments = _.extend({}, args.data.attachments);
+				attachments = args.data.attachments,
+				portRequest = args.data.request;
 
-			_.each(attachments, function(attachment, key, object) {
-				if (!attachment.hasOwnProperty('name')) {
-					delete object[key];
-				}
-			});
-
-			delete args.data.request.extra;
-
-			self.portWizardRequestUpdatePort({
-				data: {
-					data: args.data.request
+			monster.series([
+				function(callback) {
+					self.portWizardRequestUpdatePort({
+						data: {
+							data: portRequest
+						},
+						success: function() {
+							callback(null);
+						},
+						error: function(parsedError, error) {
+							callback({
+								parsedError: parsedError,
+								error: error
+							});
+						}
+					});
 				},
-				success: function(port) {
-					if (!_.isEmpty(attachments)) {
-						_.each(attachments, function(attachment, key, object) {
-							if (args.data.request.uploads.hasOwnProperty(key + '.pdf')) {
-								object[key] = function(callback) {
-									self.portWizardRequestUpdateAttachment({
-										data: {
-											portRequestId: port.id,
-											documentName: key + '.pdf',
-											data: attachment.file
-										},
-										success: function() {
-											callback(null);
-										}
-									});
-								};
-							} else {
-								object[key] = function(callback) {
-									self.portWizardRequestCreateAttachment({
-										data: {
-											portRequestId: port.id,
-											documentName: key + '.pdf',
-											data: attachment.file
-										},
-										success: function() {
-											callback(null);
-										}
-									});
-								};
-							}
-						});
-
-						monster.series(attachments, function(err, results) {
-							if (err) {
-								args.hasOwnProperty('error') && args.error();
-							} else {
-								args.hasOwnProperty('success') && args.success(port.id);
-							}
-						});
-					} else {
-						args.hasOwnProperty('success') && args.success(port.id);
+				function(callback) {
+					if (_.isEmpty(attachments)) {
+						callback(null);
+						return;
 					}
-				},
-				error: function(parsedError, groupedErrors) {
-					args.hasOwnProperty('error') && args.error(parsedError, groupedErrors);
+					monster.series(_.map(attachments, function(attachment, type) {
+						var fileName = type + '.pdf',
+							method = _.has(portRequest, ['uploads', fileName])
+								? 'portWizardRequestUpdateAttachment'
+								: 'portWizardRequestCreateAttachment';
+
+						return function(seriesCallback) {
+							self[method]({
+								data: {
+									portRequestId: portRequest.id,
+									documentName: fileName,
+									data: attachment.file
+								},
+								success: function() {
+									seriesCallback(null);
+								},
+								error: function() {
+									seriesCallback({});
+								}
+							});
+						};
+					}), callback);
 				}
+			], function(err) {
+				if (!_.isNull(err)) {
+					args.error(err.parsedError, err.error);
+					return;
+				}
+				args.success(portRequest.id);
 			});
 		},
 
 		portWizardHelperCancelPort: function() {
 			var self = this,
-				portRequestId = self.portWizardGet('portRequest.id');
-
-			monster.waterfall([
-				function(callback) {
-					if (_.isUndefined(portRequestId)) {
-						callback(null);
-						return;
-					}
-
+				globalCallback = self.portWizardGet('globalCallback'),
+				portRequestId = self.portWizardGet('portRequest.id'),
+				portRequestState = self.portWizardGet('portRequest.port_state'),
+				deletePortRequest = function(callback) {
 					self.portWizardRequestDeletePort({
 						data: {
 							portRequestId: portRequestId
@@ -1686,9 +1558,28 @@ define(function(require) {
 							callback(null);
 						}
 					});
-				}
-			], function() {
-				self.portWizardGet('globalCallback')();
+				},
+				cancelPortRequest = function(callback) {
+					self.portWizardRequestUpdateState({
+						data: {
+							portRequestId: portRequestId,
+							state: 'canceled'
+						},
+						success: function() {
+							callback(null);
+						}
+					});
+				},
+				parallelRequests = [];
+
+			if (portRequestState === 'unconfirmed') {
+				parallelRequests.push(deletePortRequest);
+			} else if (portRequestState !== 'unconfirmed') {
+				parallelRequests.push(cancelPortRequest);
+			}
+
+			monster.parallel(parallelRequests, function() {
+				globalCallback();
 			});
 		},
 
@@ -1799,8 +1690,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.changeState',
 				data: _.merge({
-					accountId: self.portWizardGet('accountId'),
-					reason: ''
+					accountId: self.portWizardGet('accountId')
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);

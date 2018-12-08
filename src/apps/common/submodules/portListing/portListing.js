@@ -509,9 +509,6 @@ define(function(require) {
 						if (filter === 'all') {
 							filtering.removeFilter('byState');
 							filtering.removeFilter('byScheduleDate');
-						} else if (filter === 'today') {
-							filtering.removeFilter('byState');
-							filtering.addFilter('byScheduleDate', 'scheduledtoday', column);
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
@@ -837,7 +834,9 @@ define(function(require) {
 								patchRequestData.data.reference_number = formData.reference_number;
 							}
 
-							patchRequestData.reason = reason ? encodeURIComponent(reason) : '';
+							if (_.isEmpty(reason)) {
+								patchRequestData.reason = encodeURIComponent(reason);
+							}
 
 							self.portListingRequestPatchPortState({
 								data: patchRequestData,
