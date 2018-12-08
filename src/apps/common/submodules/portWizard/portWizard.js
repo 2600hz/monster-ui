@@ -1547,14 +1547,9 @@ define(function(require) {
 		portWizardHelperCancelPort: function() {
 			var self = this,
 				globalCallback = self.portWizardGet('globalCallback'),
-				portRequestId = self.portWizardGet('portRequest.id');
-
-			monster.parallel([
-				function(callback) {
-					if (_.isUndefined(portRequestId)) {
-						callback(null);
-						return;
-					}
+				portRequestId = self.portWizardGet('portRequest.id'),
+				portRequestState = self.portWizardGet('portRequest.port_state'),
+				deletePortRequest = function(callback) {
 					self.portWizardRequestDeletePort({
 						data: {
 							portRequestId: portRequestId
@@ -1564,11 +1559,7 @@ define(function(require) {
 						}
 					});
 				},
-				function(callback) {
-					if (!_.isUndefined(portRequestId)) {
-						callback(null);
-						return;
-					}
+				cancelPortRequest = function(callback) {
 					self.portWizardRequestUpdateState({
 						data: {
 							portRequestId: portRequestId,
@@ -1578,8 +1569,16 @@ define(function(require) {
 							callback(null);
 						}
 					});
-				}
-			], function() {
+				},
+				parallelRequests = [];
+
+			if (portRequestState === 'unconfirmed') {
+				parallelRequests.push(deletePortRequest);
+			} else if (portRequestState !== 'unconfirmed') {
+				parallelRequests.push(cancelPortRequest);
+			}
+
+			monster.parallel(parallelRequests, function() {
 				globalCallback();
 			});
 		},
