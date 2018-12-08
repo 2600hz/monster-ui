@@ -509,9 +509,6 @@ define(function(require) {
 						if (filter === 'all') {
 							filtering.removeFilter('byState');
 							filtering.removeFilter('byScheduleDate');
-						} else if (filter === 'today') {
-							filtering.removeFilter('byState');
-							filtering.addFilter('byScheduleDate', 'scheduledtoday', column);
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
