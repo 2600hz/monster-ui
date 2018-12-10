@@ -77,7 +77,7 @@ define(function(require) {
 					return;
 				}
 
-				_.extend(dataNumber, {
+				_.assign(dataNumber, {
 					cnam: monster.ui.getFormData('cnam')
 				});
 
