@@ -1574,7 +1574,7 @@ define(function(require) {
 
 			if (portRequestState === 'unconfirmed') {
 				parallelRequests.push(deletePortRequest);
-			} else if (portRequestState !== 'unconfirmed') {
+			} else if (!_.isUndefined(portRequestId)) {
 				parallelRequests.push(cancelPortRequest);
 			}
 
