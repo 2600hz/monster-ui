@@ -26,7 +26,7 @@ define(function(require) {
 			var self = this,
 				argsCommon = {
 					success: function(numberData) {
-						self.callerIdRender(_.assign({
+						self.callerIdRender(_.merge({
 							numberData: numberData,
 							accountId: args.accountId
 						}, args.callbacks));
