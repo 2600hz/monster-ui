@@ -1,6 +1,5 @@
 import gulp from 'gulp';
 import { create } from 'browser-sync';
-import 'babel-polyfill';
 import require from './gulp/tasks/require.js';
 import writeVersion from './gulp/tasks/write-version.js';
 import { lint, minifyJs, minifyJsApp } from './gulp/tasks/javascript.js';

@@ -44,6 +44,7 @@
     "gulp-wrap": "^0.14.0",
     "handlebars": "^4.0.11",
     "requirejs": "^2.3.5",
+    "semver": "^5.6.0",
     "vinyl-paths": "^2.1.0",
     "yargs-parser": "^10.1.0"
   }

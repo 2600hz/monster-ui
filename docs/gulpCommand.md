@@ -10,10 +10,10 @@
 ## Synopsis
 
 ```
-gulp                        [--pro=<name>]
-gulp build-dev              [--pro=<name>]
-gulp build-prod             [--pro=<name>]
-gulp build-app --app=<name> [--pro]
+gulp                        [--pro=<name>] [--require ./.babelregister.js]
+gulp build-dev              [--pro=<name>] [--require ./.babelregister.js]
+gulp build-prod             [--pro=<name>] [--require ./.babelregister.js]
+gulp build-app --app=<name> [--pro]        [--require ./.babelregister.js]
 ```
 
 ## Description
@@ -43,3 +43,11 @@ To build an app independently, you will need to clone it inside the `/src/app` f
 ###### `--pro=<name>`
 
 Some applications might have a pro version. If that is the case and you want to build it with the 'pro' assets, you need to set the `pro` option and specify the name of the application.
+
+###### `--require ./.babelregister.js`
+
+This option [forcefully loads](https://github.com/babel/babel/issues/4082) the list of globs that specify the files to be compiled by [Babel](https://babeljs.io/), from `.babelrc.js`. It is particularly needed when you are using a Node version lower than 6.0.0, in order to process some node modules that use unsupported ES2015+ syntax:
+
+```
+gulp --require ./.babelregister.js
+```
