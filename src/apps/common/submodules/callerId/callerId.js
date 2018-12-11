@@ -12,11 +12,24 @@ define(function(require) {
 			'common.callerId.renderPopup': 'callerIdEdit'
 		},
 
+		/**
+		 * Show Caller ID edit options for a phone number
+		 * @param  {Object}   args
+		 * @param  {Object}   [args.accountId]          Account ID
+		 * @param  {String}   args.phoneNumber          Phone number whose caller ID data will
+		 *                                              be edited
+		 * @param  {Object}   [args.callbacks]          Callback functions
+		 * @param  {Function} [args.callbacks.success]  Success callback
+		 * @param  {Function} [args.callbacks.error]    Error callback
+		 */
 		callerIdEdit: function(args) {
 			var self = this,
 				argsCommon = {
-					success: function(dataNumber) {
-						self.callerIdRender(dataNumber, args.accountId, args.callbacks);
+					success: function(numberData) {
+						self.callerIdRender(_.merge({
+							numberData: numberData,
+							accountId: args.accountId
+						}, args.callbacks));
 					},
 					number: args.phoneNumber
 				};
@@ -28,15 +41,24 @@ define(function(require) {
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		callerIdRender: function(dataNumber, pAccountId, callbacks) {
+		/**
+		 * Render Caller ID pop-up
+		 * @param  {Object}   args
+		 * @param  {Object}   args.numberData   Phone number data
+		 * @param  {String}   [args.accountId]  Account ID
+		 * @param  {Function} [args.success]    Success callback
+		 * @param  {Function} [args.error]      Error callback
+		 */
+		callerIdRender: function(args) {
 			var self = this,
+				dataNumber = args.numberData,
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: dataNumber.cnam || {},
+					data: _.get(dataNumber, 'cnam', {}),
 					submodule: 'callerId'
 				})),
 				popup,
-				accountId = pAccountId || self.accountId,
+				accountId = _.get(args, 'accountId', self.accountId),
 				form = popup_html.find('#cnam');
 
 			monster.ui.validate(form, {
@@ -51,36 +73,75 @@ define(function(require) {
 			popup_html.find('.save').on('click', function(ev) {
 				ev.preventDefault();
 
-				if (monster.ui.valid(form)) {
-					var cnamFormData = monster.ui.getFormData('cnam');
+				if (!monster.ui.valid(form)) {
+					return;
+				}
 
-					_.extend(dataNumber, { cnam: cnamFormData });
+				_.assign(dataNumber, {
+					cnam: monster.ui.getFormData('cnam')
+				});
 
-					if (cnamFormData.display_name === '') {
-						delete dataNumber.cnam.display_name;
+				if (dataNumber.cnam.display_name === '') {
+					delete dataNumber.cnam.display_name;
+				}
+
+				monster.waterfall([
+					function(callback) {
+						self.callerIdUpdateNumber({
+							data: {
+								accountId: accountId,
+								phoneNumber: dataNumber.id,
+								data: dataNumber
+							},
+							success: function(data) {
+								callback(null, data);
+							},
+							error: function(parsedError) {
+								callback(parsedError);
+							}
+						});
+					},
+					function(data, callback) {
+						if (data.hasOwnProperty('data')) {
+							callback(null, data);
+							return;
+						}
+
+						// `data` is not returned after update for some numbers, so we
+						// try to get the phone number data from the API
+						self.callerIdGetNumber({
+							data: {
+								accountId: accountId,
+								phoneNumber: dataNumber.id
+							},
+							success: function(data) {
+								callback(null, data);
+							},
+							error: function(parsedError) {
+								callback(parsedError);
+							}
+						});
+					}
+				], function(err, data) {
+					if (err) {
+						args.hasOwnProperty('error') && args.error(err);
+						return;
 					}
 
-					self.callerIdUpdateNumber(dataNumber.id, accountId, dataNumber,
-						function(data) {
-							monster.ui.toast({
-								type: 'success',
-								message: self.getTemplate({
-									name: '!' + self.i18n.active().callerId.successCnam,
-									data: {
-										phoneNumber: monster.util.formatPhoneNumber(data.data.id)
-									}
-								})
-							});
+					monster.ui.toast({
+						type: 'success',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().callerId.successCnam,
+							data: {
+								phoneNumber: monster.util.formatPhoneNumber(dataNumber.id)
+							}
+						})
+					});
 
-							popup.dialog('destroy').remove();
+					popup.dialog('destroy').remove();
 
-							callbacks.success && callbacks.success(data);
-						},
-						function(data) {
-							callbacks.error && callbacks.error(data);
-						}
-					);
-				}
+					args.hasOwnProperty('success') && args.success(data);
+				});
 			});
 
 			popup_html.find('.cancel-link').on('click', function(e) {
@@ -93,28 +154,62 @@ define(function(require) {
 			});
 		},
 
-		callerIdUpdateNumber: function(phoneNumber, accountId, data, success, error) {
+		/**
+		 * Update a phone number
+		 * @param  {Object}   args
+		 * @param  {Object}   args.data
+		 * @param  {String}   args.data.accountId    Account ID
+		 * @param  {String}   args.data.phoneNumber  Phone number ID
+		 * @param  {Object}   args.data.data         Phone number data to be updated
+		 * @param  {Function} [args.success]         Success callback
+		 * @param  {Function} [args.error]           Error callback
+		 */
+		callerIdUpdateNumber: function(args) {
 			var self = this;
 
-			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
-			delete data.features;
+			args.data.phoneNumber = encodeURIComponent(args.data.phoneNumber);
+
+			// The back-end doesn't let us set features anymore, they return
+			// the field based on the key set on that document.
+			delete args.data.data.features;
 
 			self.callApi({
 				resource: 'numbers.update',
-				data: {
-					accountId: accountId,
-					phoneNumber: encodeURIComponent(phoneNumber),
-					data: data
+				data: args.data,
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data);
 				},
-				success: function(_data, status) {
-					if (typeof success === 'function') {
-						success(_data);
+				error: function(parsedError) {
+					if (parsedError.error === '402') {
+						return;
 					}
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		/**
+		 * Get a phone number
+		 * @param  {Object}   args
+		 * @param  {Object}   args.data
+		 * @param  {String}   args.data.accountId    Account ID
+		 * @param  {String}   args.data.phoneNumber  Phone number ID
+		 * @param  {Function} [args.success]         Success callback
+		 * @param  {Function} [args.error]           Error callback
+		 */
+		callerIdGetNumber: function(args) {
+			var self = this;
+
+			args.data.phoneNumber = encodeURIComponent(args.data.phoneNumber);
+
+			self.callApi({
+				resource: 'numbers.get',
+				data: args.data,
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data);
 				},
-				error: function(_data, status) {
-					if (typeof error === 'function') {
-						error(_data);
-					}
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
 		}
