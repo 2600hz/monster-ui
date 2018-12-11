@@ -17,12 +17,6 @@ define(function(require) {
 
 		appFlags: {
 			portListing: {
-				parent: undefined,
-				container: undefined,
-				isMonsterApp: undefined,
-				accountNames: {},
-				portRequest: {},
-				portRequests: [],
 				states: [
 					{ value: 'unconfirmed', next: [1, 6] },
 					{ value: 'submitted', next: [2, 4, 6] },
@@ -36,33 +30,79 @@ define(function(require) {
 		},
 
 		/**
+		 * Store getter
+		 * @param  {Array|String} [path]
+		 * @param  {*} [defaultValue]
+		 * @return {*}
+		 */
+		portListingGet: function(path, defaultValue) {
+			var self = this,
+				store = ['_store', 'portListing'];
+			return _.get(
+				self,
+				_.isUndefined(path)
+					? store
+					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+				defaultValue
+			);
+		},
+
+		/**
+		 * Store setter
+		 * @param  {Array|String} [path]
+		 * @param  {*} [value]
+		 */
+		portListingSet: function(path, value) {
+			var self = this,
+				hasValue = _.toArray(arguments).length === 2,
+				store = ['_store', 'portListing'];
+			_.set(
+				self,
+				hasValue
+					? _.flatten([store, _.isString(path) ? path.split('.') : path])
+					: store,
+				hasValue ? value : path
+			);
+		},
+
+		/**
 		 * @param  {Boolean} args.isMonsterApp
-		 * @param  {jQuery} args.parent
+		 * @param  {jQuery} [args.parent]
 		 * @param  {jQuery} [args.container]
 		 */
 		portListingRender: function(args) {
-			var self = this;
+			var self = this,
+				isMonsterApp = _.isBoolean(args.isMonsterApp)
+					? args.isMonsterApp
+					: false,
+				container,
+				parent;
 
-			self.appFlags.portListing.isMonsterApp = _.isBoolean(args.isMonsterApp)
-				? args.isMonsterApp
-				: false;
-
-			if (self.appFlags.portListing.isMonsterApp) {
-				self.appFlags.portListing.parent = args.parent;
-				self.appFlags.portListing.container = args.container;
+			if (isMonsterApp) {
+				parent = args.parent;
+				container = args.container;
 			} else {
-				self.appFlags.portListing.parent = _.has(args, 'parent.getId')
+				parent = _.has(args, 'parent.getId')
 					? args.parent
 					: monster.ui.fullScreenModal(null, {
 						inverseBg: true,
 						cssContentId: 'port_app_container'
 					});
-				self.appFlags.portListing.container = $('.core-absolute').find(
+				container = $('.core-absolute').find(
 					'#'
-					+ self.appFlags.portListing.parent.getId()
+					+ parent.getId()
 					+ ' .modal-content'
 				);
 			}
+
+			self.portListingSet({
+				accountNamesById: {},
+				container: container,
+				isMonsterApp: isMonsterApp,
+				parent: parent,
+				portRequest: {},
+				portRequestsById: {}
+			});
 
 			self.portListingRenderLayout();
 		},
@@ -73,7 +113,7 @@ define(function(require) {
 
 		portListingRenderLayout: function() {
 			var self = this,
-				container = self.appFlags.portListing.container,
+				container = self.portListingGet('container'),
 				template = $(self.getTemplate({
 					name: 'layout',
 					submodule: 'portListing'
@@ -88,7 +128,7 @@ define(function(require) {
 
 		portListingRenderListing: function() {
 			var self = this,
-				container = self.appFlags.portListing.container.find('.listing-section-wrapper'),
+				container = self.portListingGet('container').find('.listing-section-wrapper'),
 				initTemplate = function initTemplate(portRequests) {
 					var formatedPortRequests = formatDataToTemplate(portRequests),
 						template = $(self.getTemplate({
@@ -118,7 +158,7 @@ define(function(require) {
 						return {
 							account: {
 								id: request.account_id,
-								name: self.appFlags.portListing.accountNames[request.account_id]
+								name: self.portListingGet(['accountNamesById', request.account_id])
 							},
 							amount: _.size(request.numbers),
 							carrier: {
@@ -154,7 +194,7 @@ define(function(require) {
 					var template = $(self.getTemplate({
 						name: 'listing-incomplete',
 						data: {
-							isMonsterApp: self.appFlags.portListing.isMonsterApp,
+							isMonsterApp: self.portListingGet('isMonsterApp'),
 							requests: _
 								.chain(portRequests)
 								.filter(function(portRequest) {
@@ -193,7 +233,7 @@ define(function(require) {
 					var template = $(self.getTemplate({
 						name: 'listing-submitted',
 						data: {
-							isMonsterApp: self.appFlags.portListing.isMonsterApp,
+							isMonsterApp: self.portListingGet('isMonsterApp'),
 							requests: _.filter(portRequests, function(portRequest) {
 								return !_.includes(['unconfirmed', 'rejected'], portRequest.state);
 							})
@@ -224,7 +264,7 @@ define(function(require) {
 		 */
 		portListingRenderDetail: function(args) {
 			var self = this,
-				container = self.appFlags.portListing.container,
+				container = self.portListingGet('container'),
 				portRequestId = args.portRequestId,
 				initTemplate = function initTemplate(results) {
 					var template = $(self.getTemplate({
@@ -268,15 +308,14 @@ define(function(require) {
 					};
 				};
 
-			self.appFlags.portListing.accountId = self.appFlags.portListing.portRequests[portRequestId].accountId;
-			self.appFlags.portListing.portRequest = {};
+			self.portListingSet('accountId', self.portListingGet(['portRequestsById', portRequestId]).account_id);
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
 				monster.parallel({
 					portRequest: function(callback) {
 						self.portListingRequestGetPort({
 							data: {
-								accountId: self.appFlags.portListing.accountId,
+								accountId: self.portListingGet('accountId'),
 								portRequestId: portRequestId
 							},
 							success: function(portData) {
@@ -287,7 +326,7 @@ define(function(require) {
 					transitions: function(callback) {
 						self.portListingRequestListLastSubmitted({
 							data: {
-								accountId: self.appFlags.portListing.accountId
+								accountId: self.portListingGet('accountId')
 							},
 							success: function(transitions) {
 								callback(null, transitions);
@@ -297,7 +336,7 @@ define(function(require) {
 					timeline: function(callback) {
 						self.portListingRequestGetTimeline({
 							data: {
-								accountId: self.appFlags.portListing.accountId,
+								accountId: self.portListingGet('accountId'),
 								portRequestId: portRequestId
 							},
 							success: function(timelineData) {
@@ -306,7 +345,7 @@ define(function(require) {
 						});
 					}
 				}, function(err, results) {
-					self.appFlags.portListing.portRequest = results.portRequest;
+					self.portListingSet('portRequest', results.portRequest);
 
 					insertTemplateCallback(initTemplate(results), undefined, function() {
 						self.portListingScrollToBottomOfTimeline();
@@ -319,7 +358,7 @@ define(function(require) {
 
 		portListingRenderUpdateStatus: function() {
 			var self = this,
-				portRequest = self.appFlags.portListing.portRequest,
+				portRequest = self.portListingGet('portRequest'),
 				states = self.appFlags.portListing.states,
 				stateInfo = _.find(states, { value: portRequest.port_state }),
 				template = $(self.getTemplate({
@@ -377,7 +416,7 @@ define(function(require) {
 		portListingRenderUpdateStatusScheduled: function(args) {
 			var self = this,
 				dialog = args.dialog,
-				portRequest = self.appFlags.portListing.portRequest,
+				portRequest = self.portListingGet('portRequest'),
 				template = $(self.getTemplate({
 					name: 'updateStatus-scheduled',
 					submodule: 'portListing'
@@ -426,7 +465,7 @@ define(function(require) {
 		portListingGlobalCallback: function() {
 			var self = this;
 
-			if (self.appFlags.portListing.isMonsterApp) {
+			if (self.portListingGet('isMonsterApp')) {
 				monster.pub('port.render');
 			} else {
 				self.portListingRenderLayout();
@@ -446,7 +485,7 @@ define(function(require) {
 						event.preventDefault();
 
 						monster.pub('common.portWizard.render', {
-							container: self.appFlags.portListing.container,
+							container: self.portListingGet('container'),
 							data: {
 								accountId: self.accountId
 							},
@@ -463,16 +502,13 @@ define(function(require) {
 
 						var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering),
 							filter = $(this).prop('href').split('#')[1],
-							column = self.appFlags.portListing.isMonsterApp
+							column = self.portListingGet('isMonsterApp')
 								? [2]
 								: [1];
 
 						if (filter === 'all') {
 							filtering.removeFilter('byState');
 							filtering.removeFilter('byScheduleDate');
-						} else if (filter === 'today') {
-							filtering.removeFilter('byState');
-							filtering.addFilter('byScheduleDate', 'scheduledtoday', column);
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
@@ -486,14 +522,14 @@ define(function(require) {
 					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
 						var portRequestId = $(this).data('id'),
-							portRequest = self.appFlags.portListing.portRequests[portRequestId];
+							portRequest = self.portListingGet(['portRequestsById', portRequestId]);
 
 						if (portRequest.port_state === 'unconfirmed') {
 							monster.pub('common.portWizard.render', {
-								container: self.appFlags.portListing.container,
+								container: self.portListingGet('container'),
 								data: {
 									accountId: portRequest.account_id,
-									request: portRequest
+									portRequestId: portRequestId
 								},
 								globalCallback: function() {
 									self.portListingGlobalCallback();
@@ -529,8 +565,8 @@ define(function(require) {
 		portListingBindDetailEvents: function(args) {
 			var self = this,
 				template = args.template,
-				accountId = self.appFlags.portListing.accountId,
-				portRequest = self.appFlags.portListing.portRequest,
+				accountId = self.portListingGet('accountId'),
+				portRequest = self.portListingGet('portRequest'),
 				portRequestId = portRequest.id,
 				textareaWrapper = template.find('.textarea-wrapper'),
 				textarea = textareaWrapper.find('textarea[name="comment"]');
@@ -549,10 +585,10 @@ define(function(require) {
 						event.preventDefault();
 
 						monster.pub('common.portWizard.render', {
-							container: self.appFlags.portListing.container,
+							container: self.portListingGet('container'),
 							data: {
 								accountId: accountId,
-								request: portRequest
+								portRequestId: portRequestId
 							},
 							globalCallback: function() {
 								self.portListingGlobalCallback();
@@ -569,6 +605,7 @@ define(function(require) {
 							return function(callback) {
 								self.portListingRequestGetAttachment({
 									data: {
+										accountId: self.portListingGet('accountId'),
 										portRequestId: portRequestId,
 										documentName: key
 									},
@@ -620,10 +657,10 @@ define(function(require) {
 					event.preventDefault();
 
 					monster.pub('common.portWizard.render', {
-						container: self.appFlags.portListing.container,
+						container: self.portListingGet('container'),
 						data: {
 							accountId: accountId,
-							request: portRequest
+							portRequestId: portRequestId
 						},
 						globalCallback: function() {
 							self.portListingGlobalCallback();
@@ -662,7 +699,7 @@ define(function(require) {
 		portListingBindUpdateStatusEvents: function(args) {
 			var self = this,
 				dialog = args.dialog,
-				portRequest = self.appFlags.portListing.portRequest,
+				portRequest = self.portListingGet('portRequest'),
 				portRequestId = portRequest.id;
 
 			dialog
@@ -762,6 +799,7 @@ define(function(require) {
 							state = formData.state,
 							reason = formData.message,
 							patchRequestData = {
+								accountId: self.portListingGet('accountId'),
 								portRequestId: portRequestId,
 								state: state,
 								data: {}
@@ -796,7 +834,9 @@ define(function(require) {
 								patchRequestData.data.reference_number = formData.reference_number;
 							}
 
-							patchRequestData.reason = reason ? encodeURIComponent(reason) : '';
+							if (_.isEmpty(reason)) {
+								patchRequestData.reason = encodeURIComponent(reason);
+							}
 
 							self.portListingRequestPatchPortState({
 								data: patchRequestData,
@@ -826,7 +866,7 @@ define(function(require) {
 
 		portListingScrollToBottomOfTimeline: function() {
 			var self = this,
-				container = self.appFlags.portListing.container,
+				container = self.portListingGet('container'),
 				timelinePanel = container.find('.timeline-panel'),
 				scrollHeight = timelinePanel.prop('scrollHeight');
 
@@ -893,7 +933,7 @@ define(function(require) {
 			var self = this,
 				comment = args.comment,
 				isSuperDuperComment = args.isSuperDuperComment,
-				container = self.appFlags.portListing.container,
+				container = self.portListingGet('container'),
 				user = monster.apps.auth.currentUser,
 				now = moment().toDate(),
 				timestampOfDay = moment(now).startOf('day').valueOf(),
@@ -901,7 +941,8 @@ define(function(require) {
 
 			self.portListingRequestCreateComment({
 				data: {
-					portRequestId: self.appFlags.portListing.portRequest.id,
+					accountId: self.portListingGet('accountId'),
+					portRequestId: self.portListingGet('portRequest.id'),
 					data: {
 						comments: [
 							{
@@ -993,9 +1034,7 @@ define(function(require) {
 						})
 						.value()
 				])
-				.reduce(function(acc, item) {
-					return acc.concat(item);
-				}, [])
+				.flatten()
 				.groupBy(function(entry) {
 					return moment(entry.timestamp).startOf('day').valueOf();
 				})
@@ -1040,7 +1079,7 @@ define(function(require) {
 				},
 				parallelRequests = [listAccountPorts];
 
-			if (self.appFlags.portListing.isMonsterApp) {
+			if (self.portListingGet('isMonsterApp')) {
 				parallelRequests.push(listDescendantsPorts);
 			}
 
@@ -1053,17 +1092,13 @@ define(function(require) {
 							.map(function(account) {
 								return account.port_requests;
 							})
-							.reduce(function(acc, item) {
-								return acc.concat(item);
-							}, [])
+							.flatten()
 							.value();
 					})
-					.reduce(function(acc, item) {
-						return acc.concat(item);
-					}, [])
+					.flatten()
 					.value();
 
-				self.appFlags.portListing.accountNames = _
+				self.portListingSet('accountNamesById', _
 					.chain(results)
 					.map(function(payload) {
 						return _.map(payload, function(account) {
@@ -1073,14 +1108,13 @@ define(function(require) {
 							};
 						});
 					})
-					.reduce(function(acc, item) {
-						return acc.concat(item);
-					}, [])
+					.flatten()
 					.transform(function(object, account) {
 						object[account.id] = account.name;
 					}, {})
-					.value();
-				self.appFlags.portListing.portRequests = _.keyBy(portRequests, 'id');
+					.value()
+				);
+				self.portListingSet('portRequestsById', _.keyBy(portRequests, 'id'));
 
 				args.success(portRequests);
 			});

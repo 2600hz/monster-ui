@@ -246,11 +246,13 @@ define(function(require) {
 								}
 							}
 						})),
-						rightContainer = template.find('.right-container');
+						rightContainer = template.find('.right-container'),
+						isActive = true;
 
 					if (!app.hasOwnProperty('allowed_users') || (app.allowed_users === 'specific' && (app.users || []).length === 0)) {
 						rightContainer.find('#app_switch').prop('checked', false);
 						rightContainer.find('.permissions-bloc').hide();
+						isActive = false;
 					} else if (app.allowed_users === 'admins') {
 						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
 					} else if (app.users && app.users.length > 0) {
@@ -266,7 +268,7 @@ define(function(require) {
 								}));
 					}
 
-					self.bindPopupEvents(template, app, appstoreData);
+					self.bindPopupEvents(template, app, isActive);
 
 					rightContainer.find('.selected-users-number').html(selectedUsersLength);
 					rightContainer.find('.total-users-number').html(users.length);
@@ -278,7 +280,7 @@ define(function(require) {
 			});
 		},
 
-		bindPopupEvents: function(parent, app, appstoreData) {
+		bindPopupEvents: function(parent, app, isActive) {
 			var self = this,
 				userList = parent.find('.user-list'),
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
@@ -299,11 +301,37 @@ define(function(require) {
 							errorCallback && errorCallback();
 						}
 					});
+				},
+
+				appStorePopUpButtonDisable = function(disabled) {
+					parent.find('#appstore_popup_save').prop('disabled', disabled);
+				},
+
+				appStorePopUpDirtyCheck = function() {
+					var allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
+						selectedUsers = (allowedUsers === 'specific') ? (monster.ui.getFormData('app_popup_user_list_form').users || []) : app.users;
+
+					selectedUsers = _.map(selectedUsers, function(id) { return { id: id }; });
+
+					if (!_.isEqual(allowedUsers, app.allowed_users) || !_.isEqual(selectedUsers, app.users)) {
+						appStorePopUpButtonDisable(false);
+					} else {
+						appStorePopUpButtonDisable(true);
+					}
 				};
 
 			parent.find('#app_switch').on('change', function() {
-				if ($(this).is(':checked')) {
+				var appSwitch = $(this).is(':checked');
+
+				if (appSwitch !== isActive) {
+					appStorePopUpButtonDisable(false);
+				} else {
+					appStorePopUpButtonDisable(true);
+				}
+
+				if (appSwitch) {
 					parent.find('.permissions-bloc').slideDown();
+					appStorePopUpDirtyCheck();
 				} else {
 					parent.find('.permissions-bloc').slideUp();
 				}
@@ -316,6 +344,8 @@ define(function(require) {
 				} else {
 					parent.find('.permissions-link').hide();
 				}
+
+				appStorePopUpDirtyCheck();
 			});
 
 			parent.find('#app_popup_select_users_link').on('click', function(e) {
@@ -386,6 +416,8 @@ define(function(require) {
 				} else {
 					monster.ui.alert(self.i18n.active().alerts.noUserSelected);
 				}
+
+				appStorePopUpDirtyCheck();
 			});
 
 			parent.find('#appstore_popup_cancel').on('click', function() {

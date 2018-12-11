@@ -56,25 +56,20 @@ define(function(require) {
 						data: data,
 						submodule: 'numbers'
 					})),
-					spareView = $(self.getTemplate({
-						name: 'spare',
-						data: data,
-						submodule: 'numbers'
-					})),
 					usedView = $(self.getTemplate({
 						name: 'used',
 						data: data,
 						submodule: 'numbers'
-					}));
+					})),
+					arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 
-				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
-
-				var arrayNumbersSpare = data.listAccounts.length ? data.listAccounts[0].spareNumbers : [];
-				self.numbersDisplayFeaturesMenu(arrayNumbersSpare, spareView);
-
-				numbersView.find('.list-numbers[data-type="spare"]').append(spareView);
 				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
+
+				self.numbersRenderSpare({
+					parent: numbersView,
+					dataNumbers: data
+				});
 
 				self.numbersBindEvents(numbersView, data);
 
@@ -569,20 +564,7 @@ define(function(require) {
 
 							self.numbersShowDeletedNumbers(data);
 
-							self.numbersPaintSpare(parent, dataNumbers, function() {
-								// var template = self.getTemplate({
-								// 	name: '!' + self.i18n.active().numbers.successDelete,
-								// 	data: {
-								// 		count: countDelete
-								// 	},
-								// 	submodule: 'numbers'
-								// });
-
-								// monster.ui.toast({
-								// 	type: 'success',
-								// 	message: template
-								// });
-							});
+							self.numbersRenderSpare({ parent: parent, dataNumbers: dataNumbers });
 						});
 					});
 				}
@@ -708,23 +690,27 @@ define(function(require) {
 							dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
 						}
 
-						self.numbersPaintSpare(parent, dataNumbers, function() {
-							var dataTemplate = {
-									count: countMove,
-									accountName: accountName
-								},
-								template = self.getTemplate({
-									name: '!' + self.i18n.active().numbers.successMove,
-									data: dataTemplate,
-									submodule: 'numbers'
+						self.numbersRenderSpare({
+							parent: parent,
+							dataNumbers: dataNumbers,
+							callback: function() {
+								var dataTemplate = {
+										count: countMove,
+										accountName: accountName
+									},
+									template = self.getTemplate({
+										name: '!' + self.i18n.active().numbers.successMove,
+										data: dataTemplate,
+										submodule: 'numbers'
+									});
+
+								dialogTemplate.parent().parent().remove();
+
+								monster.ui.toast({
+									type: 'success',
+									message: template
 								});
-
-							dialogTemplate.parent().parent().remove();
-
-							monster.ui.toast({
-								type: 'success',
-								message: template
-							});
+							}
 						});
 					});
 				});
@@ -1072,20 +1058,24 @@ define(function(require) {
 			});
 		},
 
-		numbersPaintSpare: function(parent, dataNumbers, callback) {
+		numbersRenderSpare: function(args) {
 			var self = this,
+				dataNumbers = args.dataNumbers,
 				template = $(self.getTemplate({
 					name: 'spare',
 					data: dataNumbers,
 					submodule: 'numbers'
-				}));
+				})),
+				arrayNumbersSpare = dataNumbers.listAccounts.length ? dataNumbers.listAccounts[0].spareNumbers : [];
 
-			parent
+			args.parent
 				.find('.list-numbers[data-type="spare"]')
 				.empty()
 				.append(template);
 
-			callback && callback();
+			self.numbersDisplayFeaturesMenu(arrayNumbersSpare, template);
+
+			args.hasOwnProperty('callback') && args.callback();
 		},
 
 		numbersGetData: function(viewType, callback) {

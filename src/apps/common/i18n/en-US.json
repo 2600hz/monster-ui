@@ -810,7 +810,7 @@
 				"text2": "This proof of your account and ownership is required by law."
 			},
 			"buttons": {
-				"next": "Upload Phone Bill"
+				"next": "Next"
 			}
 		},
 		"accountVerification": {

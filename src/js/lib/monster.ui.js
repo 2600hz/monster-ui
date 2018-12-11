@@ -26,7 +26,7 @@ define(function(require) {
 				var args = _.toArray(arguments);
 
 				if (args.length < 2) {
-					throw new Error('Handlerbars Helper "coalesce" needs at least 2 parameters');
+					throw new Error('Handlebars Helper "coalesce" needs at least 2 parameters');
 				}
 
 				// Last argument is discarded because it is handlebars' options parameter
@@ -42,7 +42,7 @@ define(function(require) {
 				var operators, result;
 
 				if (arguments.length < 3) {
-					throw new Error('Handlerbars Helper "compare" needs 2 parameters');
+					throw new Error('Handlebars Helper "compare" needs 2 parameters');
 				}
 
 				if (options === undefined) {
@@ -64,7 +64,7 @@ define(function(require) {
 				};
 
 				if (!operators[operator]) {
-					throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
+					throw new Error('Handlebars Helper "compare" doesn\'t know the operator ' + operator);
 				}
 
 				result = operators[operator](lvalue, rvalue);
@@ -111,6 +111,16 @@ define(function(require) {
 
 			friendlyTimer: function(seconds) {
 				return monster.util.friendlyTimer(seconds);
+			},
+
+			getUserFullName: function(pUser) {
+				var args = _.toArray(arguments);
+
+				// Handlebars always adds an additional argument for context
+				// If there is only one argument, it corresponds to this context object
+				var user = (args.length === 1) ? undefined : pUser;
+
+				return monster.util.getUserFullName(user);
 			},
 
 			ifInArray: function(elem, list, options) {
@@ -438,6 +448,7 @@ define(function(require) {
 				dataToTemplate = {
 					hasBackground: options.hasBackground,
 					cssClass: options.cssClass,
+					cssId: options.cssId,
 					title: options.title,
 					text: options.text
 				},
