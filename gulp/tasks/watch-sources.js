@@ -1,6 +1,9 @@
+import del from 'del';
 import gulp from 'gulp';
 import cache from 'gulp-cached';
 import sass from 'gulp-sass';
+import _ from 'lodash';
+import path from 'path';
 import { src, dist } from '../paths.js';
 
 const watchSass = server =>
@@ -38,11 +41,28 @@ const watchJson = server =>
 		.pipe(server.reload({stream:true}));
 
 const watchSources = server => {
-	gulp.watch(src + '/**/*.scss', watchSass(server));
-	gulp.watch(src + '/**/*.css', watchCss(server));
-	gulp.watch(src + '/**/*.html', watchHtml(server));
-	gulp.watch(src + '/**/*.js', watchJs(server));
-	gulp.watch(src + '/**/*.json', watchJson(server));
+	var watchers = {
+		scss: gulp.watch(src + '/**/*.scss', watchSass(server)),
+		css: gulp.watch(src + '/**/*.css', watchCss(server)),
+		html: gulp.watch(src + '/**/*.html', watchHtml(server)),
+		js: gulp.watch(src + '/**/*.js', watchJs(server)),
+		json: gulp.watch(src + '/**/*.json', watchJson(server))
+	};
+
+	_.each(watchers, watcher => {
+		watcher.on('unlink', filePath => {
+			var filePathFromSrc = path.relative(path.resolve(src), filePath),
+				destFilePath = path.resolve(dist, filePathFromSrc);
+
+			if (filePath.endsWith('.scss')) {
+				destFilePath = destFilePath.replace(/\.scss$/, ".css");
+			}
+
+			del.sync(destFilePath);
+
+			server.reload();
+		})
+	});
 }
 
 export default watchSources;
