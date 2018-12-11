@@ -1,38 +1,48 @@
 import gulp from 'gulp';
 import cache from 'gulp-cached';
 import sass from 'gulp-sass';
-import { src, dist } from './gulp/paths.js';
+import { src, dist } from '../paths.js';
 
-export const watchSass = server =>
+const watchSass = server =>
 	() => gulp
 		.src(src + '/**/*.scss')
 		.pipe(sass().on('error', sass.logError))
 		.pipe(gulp.dest(dist))
 		.pipe(server.stream());
 
-export const watchCss = server =>
+const watchCss = server =>
 	() => gulp
 		.src(src + '/**/*.css')
 		.pipe(gulp.dest(dist))
 		.pipe(server.stream());
 
-export const watchJs = server =>
+const watchJs = server =>
 	() => gulp
 		.src(src + '/**/*.js')
 		.pipe(cache('js'))
 		.pipe(gulp.dest(dist))
-		.pipe(server.stream());
+		.pipe(server.reload({stream:true}));
 
-export const watchHtml = server =>
+const watchHtml = server =>
 	() => gulp
 		.src(src + '/**/*.html')
 		.pipe(cache('html'))
 		.pipe(gulp.dest(dist))
-		.pipe(server.stream());
+		.pipe(server.reload({stream:true}));
 
-export const watchJson = server =>
+const watchJson = server =>
 	() => gulp
 		.src(src + '/**/*.json')
 		.pipe(cache('json'))
 		.pipe(gulp.dest(dist))
-		.pipe(server.stream());
+		.pipe(server.reload({stream:true}));
+
+const watchSources = server => {
+	gulp.watch(src + '/**/*.scss', watchSass(server));
+	gulp.watch(src + '/**/*.css', watchCss(server));
+	gulp.watch(src + '/**/*.html', watchHtml(server));
+	gulp.watch(src + '/**/*.js', watchJs(server));
+	gulp.watch(src + '/**/*.json', watchJson(server));
+}
+
+export default watchSources;

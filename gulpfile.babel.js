@@ -15,9 +15,7 @@ import {
 	moveDistDev,
 	moveFilesToTmp
 } from './gulp/tasks/clean-move.js';
-import {
-	watchSass, watchCss, watchHtml, watchJs, watchJson
-} from './gulp/tasks/watch-sources'
+import watchSources from './gulp/tasks/watch-sources'
 
 const server = create();
 
@@ -27,16 +25,8 @@ const serve = done => {
 			baseDir: './dist'
 		}
 	});
-	watchFiles();
+	watchSources(server);
 	done();
-}
-
-const watchFiles = () => {
-	gulp.watch(src + '/**/*.scss', watchSass(server));
-	gulp.watch(src + '/**/*.css', watchCss(server));
-	gulp.watch(src + '/**/*.html', watchHtml(server));
-	gulp.watch(src + '/**/*.js', watchJs(server));
-	gulp.watch(src + '/**/*.json', watchJson(server));
 }
 
 const buildProd = gulp.series(
