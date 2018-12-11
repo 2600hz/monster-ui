@@ -3,6 +3,36 @@ import del from 'del';
 import vinylPaths from 'vinyl-paths';
 import { dist, distDev, src, tmp } from '../paths.js';
 
+const cleanDist = () => gulp
+	.src(dist, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
+
+const cleanDistDev = () => gulp
+	.src(distDev, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
+
+const moveBuiltFilesToDist = () => gulp
+	.src([
+		tmp + '/**/*',
+		'!' + tmp + '**/*.scss'
+	])
+	.pipe(gulp.dest(dist));
+
+const moveDistFilesToDev = () => gulp
+	.src(dist + '/**/*')
+	.pipe(gulp.dest(distDev));
+
+const moveSrcFilesToTmp = () => gulp
+	.src(src + '/**/*')
+	.pipe(gulp.dest(tmp));
+
+
 export const cleanTmp = () => gulp
 	.src(tmp, {
 		allowEmpty: true,
@@ -18,9 +48,7 @@ export const cleanTmp = () => gulp
  */
 export const moveFilesToTmp = gulp.series(
 	cleanTmp,
-	() => gulp
-		.src(src + '/**/*')
-		.pipe(gulp.dest(tmp))
+	moveSrcFilesToTmp
 );
 
 /**
@@ -28,15 +56,8 @@ export const moveFilesToTmp = gulp.series(
  * moveDistDev
  */
 export const moveDistDev = gulp.series(
-	() => gulp
-		.src(distDev, {
-			allowEmpty: true,
-			read: false
-		})
-		.pipe(vinylPaths(del)),
-	() => gulp
-		.src(dist + '/**/*')
-		.pipe(gulp.dest(distDev))
+	cleanDistDev,
+	moveDistFilesToDev
 );
 
 /**
@@ -47,17 +68,7 @@ export const moveDistDev = gulp.series(
  * Moves tmp to dist and removes tmp after that
  */
 export const cleanFolders = gulp.series(
-	() => gulp
-		.src(dist, {
-			allowEmpty: true,
-			read: false
-		})
-		.pipe(vinylPaths(del)),
-	() => gulp
-		.src([
-			tmp + '/**/*',
-			'!' + tmp + '**/*.scss'
-		])
-		.pipe(gulp.dest(dist)),
+	cleanDist,
+	moveBuiltFilesToDist,
 	cleanTmp
 );
