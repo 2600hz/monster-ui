@@ -53,7 +53,7 @@ const compileTemplates = () => gulp
 				);
 			} else {
 				newName = splits[splits.length - 3].concat(
-					'._main',
+					'._main.',
 					splits[splits.length - 1]
 				);
 			}
