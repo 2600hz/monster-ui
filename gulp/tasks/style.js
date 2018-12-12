@@ -14,6 +14,16 @@ const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
 	tmp + '/css/style.css'
 ]);
 
+const concatAllCss = () => gulp
+	.src(concatCssPaths)
+	.pipe(concatCss(concatName))
+	.pipe(gulp.dest(cssDest));
+
+const minifyCss = () => gulp
+	.src(cssDest + concatName)
+	.pipe(cleanCss())
+	.pipe(gulp.dest(cssDest));
+
 /**
  * concatAllCss
  * minifyCss
@@ -21,14 +31,8 @@ const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
  * Takes all the apps provided up top and concatenate and minify them
  */
 export const css = gulp.series(
-	() => gulp
-		.src(concatCssPaths)
-		.pipe(concatCss(concatName))
-		.pipe(gulp.dest(cssDest)),
-	() => gulp
-		.src(cssDest + concatName)
-		.pipe(cleanCss())
-		.pipe(gulp.dest(cssDest))
+	concatAllCss,
+	minifyCss
 );
 
 /**

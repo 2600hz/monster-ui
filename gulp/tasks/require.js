@@ -115,6 +115,23 @@ const getConfigRequire = () => ({
 		]
 });
 
+const buildRequire = done => {
+	rjs.optimize(getConfigRequire(), function(buildResponse){
+		done();
+	}, done);
+};
+
+const moveRequire = () => gulp
+	.src(require  + '/**/*')
+	.pipe(gulp.dest(tmp));
+
+const cleanRequire = () => gulp
+	.src(require, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
+
 /**
  * buildRequire
  * cleanTmp
@@ -127,19 +144,8 @@ const getConfigRequire = () => ({
  * modules, but focusing on the specific app
  */
 export default gulp.series(
-	 done => {
-		rjs.optimize(getConfigRequire(), function(buildResponse){
-			done();
-		}, done);
-	},
+	buildRequire,
 	cleanTmp,
-	() => gulp
-		.src(require  + '/**/*')
-		.pipe(gulp.dest(tmp)),
-	() => gulp
-		.src(require, {
-			allowEmpty: true,
-			read: false
-		})
-		.pipe(vinylPaths(del))
+	moveRequire,
+	cleanRequire
 );

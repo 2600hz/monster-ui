@@ -63,6 +63,14 @@ const compileTemplates = () => gulp
 	.pipe(concat(pathsTemplates[mode].concatName))
 	.pipe(gulp.dest(pathsTemplates[mode].dest));
 
+const concatTemplatesWhole = () => gulp
+	.src([
+		pathsTemplates.whole.dest + 'templates.js',
+		pathsTemplates.whole.dest + pathsTemplates.whole.concatName
+	])
+	.pipe(concat('templates.js'))
+	.pipe(gulp.dest(pathsTemplates.whole.dest));
+
 const cleanTemplates = () => gulp
 	.src([
 		...pathsTemplates[mode].src,
@@ -82,13 +90,7 @@ const cleanTemplates = () => gulp
  */
 export const templates = gulp.series(
 	compileTemplates,
-	() => gulp
-		.src([
-			pathsTemplates.whole.dest + 'templates.js',
-			pathsTemplates.whole.dest + pathsTemplates.whole.concatName
-		])
-		.pipe(concat('templates.js'))
-		.pipe(gulp.dest(pathsTemplates.whole.dest)),
+	concatTemplatesWhole,
 	cleanTemplates
 );
 
