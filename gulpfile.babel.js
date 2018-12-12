@@ -25,6 +25,10 @@ const serve = done => {
 			baseDir: './dist'
 		}
 	});
+	done();
+}
+
+const watch = done => {
 	watchSources(server);
 	done();
 }
@@ -64,7 +68,7 @@ const buildApp = gulp.series(
 gulp.task('build-app', buildApp);
 
 gulp.task('build-dev', buildDev);
-gulp.task('serve-dev', gulp.series(buildDev, serve));
+gulp.task('serve-dev', gulp.series(buildDev, serve, watch));
 
 gulp.task('build-prod', buildProd);
 gulp.task('serve-prod', gulp.series(buildProd, serve));
