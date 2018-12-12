@@ -95,7 +95,7 @@ export const templates = gulp.series(
 );
 
 /**
- * compuileTemplates
+ * compileTemplates
  * concatJsApp
  * cleamTemplates
  *
