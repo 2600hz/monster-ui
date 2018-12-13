@@ -1,5 +1,5 @@
 import gulp from 'gulp';
-import { writeFileSync, write } from 'fs';
+import { writeFileSync } from 'fs';
 import { tmp } from '../paths';
 import { version } from '../../package.json';
 

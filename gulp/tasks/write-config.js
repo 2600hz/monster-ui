@@ -1,6 +1,5 @@
 import gulp from 'gulp';
 import fs from 'fs';
-import jeditor from 'gulp-json-editor';
 import { app, tmp } from '../paths.js';
 import {
 	env,
