@@ -1,3 +1,5 @@
+title: Coding standards (Advanced)
+
 # 2600hz JavaScript Style Guide() {
 
 *Freely inspired from [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript)*
@@ -306,7 +308,7 @@ function yup(name, options, args) {
 }
 ```
 
-**[▲ back to otp](#table-of-contents)**
+**[▲ back to top](#table-of-contents)**
 
 
 ## Properties

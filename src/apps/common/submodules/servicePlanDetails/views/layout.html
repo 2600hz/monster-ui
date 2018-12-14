@@ -19,10 +19,10 @@
 			</div>
 			<div class="charges">
 				{{#compare this.rate ">" 0}}
-				<div>{{@root.i18n.servicePlanDetails.keys.rate}}: {{@root.i18n.currencyUsed}}{{formatPrice this.rate}}</div>
+				<div>{{@root.i18n.servicePlanDetails.keys.rate}}: {{formatPrice this.rate}}</div>
 				{{/compare}}
 				{{#compare this.activation_charge ">" 0}}
-				<div>{{@root.i18n.servicePlanDetails.keys.activation_charge}}: {{@root.i18n.currencyUsed}}{{formatPrice this.activation_charge}}</div>
+				<div>{{@root.i18n.servicePlanDetails.keys.activation_charge}}: {{formatPrice this.activation_charge}}</div>
 				{{/compare}}
 				{{#compare this.minimum ">" 0}}
 				<div>{{@root.i18n.servicePlanDetails.keys.minimum}}: {{formatPrice this.minimum}}</div>
@@ -30,7 +30,7 @@
 			</div>
 			<div class="exceptions">
 			{{#if this.exceptions.length}}
-				{{@root.i18n.servicePlanDetails.keys.exceptions}}: 
+				{{@root.i18n.servicePlanDetails.keys.exceptions}}:
 				{{#each this.exceptions}}
 					{{#if @index}}, {{/if}}{{this}}
 				{{/each}}

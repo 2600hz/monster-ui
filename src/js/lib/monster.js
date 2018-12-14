@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		async = require('async'),
 		card = require('card'),
-		config = require('config'),
 		Cookies = require('cookies'),
 		ddslick = require('ddslick'),
 		fileupload = require('fileupload'),
@@ -234,14 +233,20 @@ define(function(require) {
 			error: []
 		},
 
-		config: function() {
-			if (!config.hasOwnProperty('api') || !config.api.hasOwnProperty('default')) {
-				config.api = config.api || {};
-				config.api.default = window.location.protocol + '//' + window.location.hostname + ':8000/v2/';
-			}
-
+		config: (function(config) {
+			var getValue = function(node, key, check, preset) {
+				return node.hasOwnProperty(key) && check(node[key])
+					? node[key]
+					: preset;
+			};
+			config.api = getValue(config, 'api', _.isObject, {});
+			config.api.default = getValue(config.api, 'default', _.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/');
+			config.currencyCode = getValue(config, 'currencyCode', _.isString, 'USD');
+			config.whitelabel = getValue(config, 'whitelabel', _.isObject, {});
+			config.whitelabel.disableNumbersFeatures = getValue(config.whitelabel, 'disableNumbersFeatures', _.isBoolean, false);
+			config.developerFlags = getValue(config, 'developerFlags', _.isObject, {});
 			return config;
-		}(),
+		}(require('config'))),
 
 		cookies: {
 			set: function set(key, value, options) {
@@ -370,17 +375,19 @@ define(function(require) {
 			} else if ((errorNumber === 400 || errorNumber === 413) && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
-					if (typeof fieldErrors !== 'string') {
-						_.each(fieldErrors, function(fieldError, fieldErrorKey) {
-							if (typeof fieldError === 'string' || typeof fieldError === 'number') {
-								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
-							} else if (fieldErrorKey in errorsI18n.invalidData) {
-								errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
-							} else if ('message' in fieldError) {
-								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
-							}
-						});
+					if (typeof fieldErrors === 'string') {
+						return;
 					}
+
+					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
+						if (typeof fieldError === 'string' || typeof fieldError === 'number') {
+							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
+						} else if (fieldErrorKey in errorsI18n.invalidData) {
+							errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
+						} else if ('message' in fieldError) {
+							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
+						}
+					});
 				});
 			} else if ((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
 				var errMsg = '';

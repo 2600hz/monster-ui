@@ -15,15 +15,34 @@ define(function(require) {
 		footable = require('footable'),
 		mousetrap = require('mousetrap'),
 		Drop = require('drop'),
-		Clipboard = require('clipboard');
+		Clipboard = require('clipboard'),
+		moment = require('moment');
+
+	require('moment-timezone');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
+			coalesce: function() {
+				var args = _.toArray(arguments);
+
+				if (args.length < 2) {
+					throw new Error('Handlebars Helper "coalesce" needs at least 2 parameters');
+				}
+
+				// Last argument is discarded because it is handlebars' options parameter
+				for (var i = 0; i < args.length - 1; i++) {
+					if (!_.isNil(args[i])) {
+						return args[i];
+					}
+				}
+				return null;
+			},
+
 			compare: function(lvalue, operator, rvalue, options) {
 				var operators, result;
 
 				if (arguments.length < 3) {
-					throw new Error('Handlerbars Helper "compare" needs 2 parameters');
+					throw new Error('Handlebars Helper "compare" needs 2 parameters');
 				}
 
 				if (options === undefined) {
@@ -45,7 +64,7 @@ define(function(require) {
 				};
 
 				if (!operators[operator]) {
-					throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
+					throw new Error('Handlebars Helper "compare" doesn\'t know the operator ' + operator);
 				}
 
 				result = operators[operator](lvalue, rvalue);
@@ -78,8 +97,12 @@ define(function(require) {
 				return monster.util.formatPhoneNumber(phoneNumber);
 			},
 
-			formatPrice: function(price, decimals) {
-				return monster.util.formatPrice(price, decimals);
+			formatPrice: function(price, decimals, withCurrency) {
+				return monster.util.formatPrice({
+					price: price,
+					digits: decimals,
+					withCurrency: withCurrency
+				});
 			},
 
 			formatVariableToDisplay: function(variable) {
@@ -88,6 +111,16 @@ define(function(require) {
 
 			friendlyTimer: function(seconds) {
 				return monster.util.friendlyTimer(seconds);
+			},
+
+			getUserFullName: function(pUser) {
+				var args = _.toArray(arguments);
+
+				// Handlebars always adds an additional argument for context
+				// If there is only one argument, it corresponds to this context object
+				var user = (args.length === 1) ? undefined : pUser;
+
+				return monster.util.getUserFullName(user);
 			},
 
 			ifInArray: function(elem, list, options) {
@@ -356,10 +389,14 @@ define(function(require) {
 	 * - open myaccount submodule
 	 * - absolute container if isPersistent
 	 * - current app
-	 * @param  {Boolean} isPersistent Keep it open when switching apps
+	 * @param  {Boolean} pIsPersistent Indicates whether or not to persist the
+	 *                                 dialog when switching app contexts
 	 * @return {jQuery}               Container of the dialog
 	 */
-	function getDialogAppendTo(isPersistent) {
+	function getDialogAppendTo(pIsPersistent) {
+		var isPersistent = _.isBoolean(pIsPersistent)
+			? pIsPersistent
+			: false;
 		var $coreWrapper = $('.core-wrapper'),
 			$coreContent = $coreWrapper.find('.core-content'),
 			$coreAbsolute = $coreWrapper.find('.core-absolute'),
@@ -411,6 +448,7 @@ define(function(require) {
 				dataToTemplate = {
 					hasBackground: options.hasBackground,
 					cssClass: options.cssClass,
+					cssId: options.cssId,
 					title: options.title,
 					text: options.text
 				},
@@ -678,6 +716,9 @@ define(function(require) {
 		},
 
 		dialog: function(content, options) {
+			var isPersistent = _.has(options, 'isPersistent')
+				? options.isPersistent
+				: false;
 			var dialog = $('<div />').append(content),
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
@@ -698,7 +739,7 @@ define(function(require) {
 
 			//Unoverridable options
 			var strictOptions = {
-					appendTo: getDialogAppendTo(options.isPersistent),
+					appendTo: getDialogAppendTo(isPersistent),
 					show: { effect: 'fade', duration: 200 },
 					hide: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
@@ -753,33 +794,39 @@ define(function(require) {
 			var self = this,
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
-				formatData = function(data) {
-					var renderData = [];
-
-					$.each(data, function(categoryName, category) {
-						if (categoryName !== 'activation_charges') {
-							$.each(category, function(itemName, item) {
-								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
-								if (monthlyCharges > 0) {
-									renderData.push({
-										service: i18n.services.hasOwnProperty(itemName) ? i18n.services[itemName] : itemName.replace(/_/, ' '),
-										rate: item.rate.toFixed(2) || 0,
-										quantity: item.quantity || 0,
-										discount: discount > 0 ? parseFloat(discount).toFixed(2) : 0,
-										monthlyCharges: monthlyCharges
-									});
-								}
-							});
-						}
-					});
-
-					return renderData;
+				formatData = function(invoices) {
+					return {
+						showBookkeeper: _.size(invoices) > 1,
+						invoices: _.map(invoices, function(invoice) {
+							return {
+								bookkeeper: _.capitalize(invoice.bookkeeper.type),
+								items: _
+									.chain(invoice.items)
+									.filter(function(item) {
+										return item.quantity > 0;
+									})
+									.map(function(item) {
+										return {
+											service: _.has(i18n.services, item.item)
+												? i18n.services[item.item]
+												: monster.util.formatVariableToDisplay(item.item),
+											quantity: item.quantity || 0,
+											rate: item.rate || 0,
+											discount: item.discount > 0
+												? item.discount
+												: 0,
+											monthlyCharges: item.total
+										};
+									})
+									.orderBy('monthlyCharges', 'desc')
+									.value()
+							};
+						})
+					};
 				},
-				charges = data.activation_charges ? data.activation_charges.toFixed(2) : 0,
-				template = $(monster.template(coreApp, 'dialog-charges', {
-					activation_charges: charges,
-					charges: formatData(data)
+				template = $(coreApp.getTemplate({
+					name: 'dialog-charges',
+					data: formatData(data)
 				}));
 
 			return self.confirm(template, callbackOk, callbackCancel, {
@@ -943,83 +990,96 @@ define(function(require) {
 		// Set to 'monthly', it will always set the end date to be one month away from the start date (unless it's after "today")
 		// container: jQuery Object. Container of the datepickers
 		initRangeDatepicker: function(options) {
-			var self = this,
-				container = options.container,
+			var timezone;
+
+			if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+				timezone = monster.apps.auth.currentUser.timezone;
+			} else if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+				timezone = monster.apps.auth.currentAccount.timezone;
+			} else {
+				timezone = moment.tz.guess();
+			}
+
+			var container = options.container,
 				range = options.range || 7,
 				initRange = options.initRange || options.range || 1,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
-				now = new Date(),
-				today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+				initDate = moment().tz(timezone),
+				today = moment(initDate).tz(timezone).startOf('day'),
+				startDate = _.get(
+					options,
+					'startDate',
+					today
+					),
+				endDate = moment(initDate).tz(timezone).endOf('day');
 
-			if (range === 'monthly') {
-				startDate.setMonth(startDate.getMonth() - 1);
+			if (options.startDate) {
+				startDate = moment(startDate).tz(timezone);
+			} else if (range === 'monthly') {
+				startDate = initDate.subtract(1, 'months');
 			} else {
-				startDate.setDate(startDate.getDate() - initRange);
+				startDate = initDate.subtract(initRange, 'days');
 			}
-			startDate.setDate(startDate.getDate() + 1);
 
 			monster.ui.datepicker(container.find('#startDate, #endDate'), {
 				beforeShow: customRange,
 				onSelect: customSelect
 			});
 
-			inputStartDate.datepicker('setDate', startDate);
-			inputEndDate.datepicker('setDate', endDate);
+			inputStartDate.datepicker('setDate', startDate.toDate());
+			inputEndDate.datepicker('setDate', endDate.toDate());
 
 			// customSelect runs every time the user selects a date in one of the date pickers.
 			// Features:
 			// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or today (the closest to the start date is chosen).
 			// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "today". (we had to do that since the # of days in a month varies)
 			function customSelect(dateText, input) {
-				var dateMin = inputStartDate.datepicker('getDate');
-
-				if (input.id === 'startDate') {
-					var dateMaxRange = new Date(dateMin);
-
-					if (range === 'monthly') {
-						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
-					} else {
-						dateMaxRange.setDate(dateMaxRange.getDate() + range);
-					}
-					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
-
-					if (dateMaxRange > today) {
-						dateMaxRange = today;
-					}
-
-					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange, 'date'));
+				if (input.id !== 'startDate') {
+					return;
 				}
-			};
+
+				var dateMin = inputStartDate.datepicker('getDate'),
+					dateMaxRange;
+
+				dateMaxRange = moment(dateMin).tz(timezone);
+
+				if (range === 'monthly') {
+					dateMaxRange.add(1, 'months').subtract(1, 'days');
+				} else {
+					dateMaxRange.add((range - 1), 'days');
+				}
+
+				if (dateMaxRange.isAfter(today)) {
+					dateMaxRange = today;
+				}
+
+				inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange.toDate(), 'date'));
+			}
 
 			// customRange runs every time the user clicks on a date picker, it will set which days are clickable in the datepicker.
 			// Features:
 			// If I click on the End Date, I shouldn't be able to select a day before the starting date, and I shouldn't be able to select anything after "today"
 			// If I click on the Start date, I should be able to select any day between the 1/1/2011 and "Today"
 			function customRange(input) {
-				var dateMin,
+				var dateMin = inputStartDate.datepicker('getDate'),
 					dateMax;
 
 				if (input.id === 'endDate') {
-					dateMin = inputStartDate.datepicker('getDate');
-
-					var dateMaxRange = new Date(dateMin);
+					var minMoment = moment(dateMin);
 
 					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
 					if (range === 'monthly') {
-						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
+						minMoment.add(1, 'months').subtract(1, 'days');
 					} else {
-						dateMaxRange.setDate(dateMaxRange.getDate() + range);
+						minMoment.add((range - 1), 'days');
 					}
-					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
-					dateMax = dateMaxRange > today ? today : dateMaxRange;
+					dateMax = minMoment.isAfter(today) ? today.toDate() : minMoment.toDate();
 				} else if (input.id === 'startDate') {
-					dateMin = new Date(2011, 0, 0);
-					dateMax = new Date();
+					dateMin = moment({years: 2011}).startOf('year').toDate();
+					dateMax = moment().toDate();
 				}
 
 				return {

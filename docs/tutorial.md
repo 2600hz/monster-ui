@@ -1,3 +1,5 @@
+title: Tutorial
+
 # Tutorial: Create your own Monster-UI app
 The goal of this tutorial is to help any developer who wants to build an application for the Monster-UI.
 At the end of this tutorial, you will have a Monster-UI app created, that you will be able to add to your UI via the app store, and that will allow you to search for phone numbers in a specific area code.

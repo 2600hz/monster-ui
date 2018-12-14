@@ -16,9 +16,28 @@ define(function(require) {
 
 		appFlags: {
 			balance: {
+				customLedgers: {
+					'recurring': {
+						format: 'balanceFormatRecurringDataTable',
+						table: 'recurring-table',
+						rows: 'recurring-rows'
+					},
+					'per-minute-voip': {
+						format: 'balanceFormatPerMinuteDataTable',
+						table: 'per-minute-voip-table',
+						rows: 'per-minute-voip-rows'
+					},
+					'mobile_data': {
+						format: 'balanceFormatMobileDataTable',
+						table: 'mobile-table',
+						rows: 'mobile-rows'
+					}
+				},
 				digits: {
 					availableCreditsBadge: 2,
 					callChargesBadge: 3,
+					genericTableAmount: 2,
+					recurringTableAmount: 2,
 					perMinuteTableAmount: 4
 				},
 				range: 'monthly'
@@ -29,10 +48,13 @@ define(function(require) {
 			var self = this;
 
 			if (!args.hasOwnProperty('except') || args.except !== 'balance') {
-				self.balanceGet(function(data) {
+				self.balanceGet(function(balance) {
 					var argsBadge = {
 						module: 'balance',
-						data: self.i18n.active().currencyUsed + parseFloat(data.data.balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+						data: monster.util.formatPrice({
+							price: balance,
+							digits: self.appFlags.balance.digits.availableCreditsBadge
+						}),
 						callback: args.callback
 					};
 
@@ -47,8 +69,8 @@ define(function(require) {
 
 			monster.parallel({
 				balance: function(callback) {
-					self.balanceGet(function(data) {
-						var amount = parseFloat(data.data.balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge);
+					self.balanceGet(function(balance) {
+						var amount = parseFloat(balance).toFixed(self.appFlags.balance.digits.availableCreditsBadge);
 
 						callback(null, amount);
 					});
@@ -57,14 +79,20 @@ define(function(require) {
 				monster.pub('myaccount.UIRestrictionsCompatibility', {
 					restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 					callback: function(uiRestrictions) {
-						var renderData = $.extend(true, {}, { uiRestrictions: uiRestrictions, amount: results.balance });
+						var renderData = $.extend(true, {}, {
+							currencySymbol: monster.util.getCurrencySymbol(),
+							uiRestrictions: uiRestrictions,
+							amount: results.balance
+						});
 
 						renderData.uiRestrictions.balance.show_header = (renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false) ? false : true;
 
 						var balance = $(self.getTemplate({ name: 'layout', data: renderData, submodule: 'balance' })),
 							args = {
 								module: 'balance',
-								data: self.i18n.active().currencyUsed + renderData.amount
+								data: monster.util.formatPrice({
+									price: renderData.amount
+								})
 							};
 
 						self.balanceBindEvents(balance, renderData.uiRestrictions.balance.show_credit);
@@ -153,7 +181,10 @@ define(function(require) {
 					}
 
 					// We now divide by 1 because the amount returned is negative
-					formattedData.totalCharges = parseFloat(ledger.amount / -1).toFixed(self.appFlags.balance.digits.callChargesBadge);
+					formattedData.totalCharges = monster.util.formatPrice({
+						price: ledger.amount / -1,
+						digits: self.appFlags.balance.digits.callChargesBadge
+					});
 				}
 
 				if (data.globalLedgers.hasOwnProperty('mobile_data')) {
@@ -183,14 +214,8 @@ define(function(require) {
 					});
 				},
 				balance: function(callback) {
-					self.callApi({
-						resource: 'balance.get',
-						data: {
-							accountId: self.accountId
-						},
-						success: function(data) {
-							callback(null, data.data);
-						}
+					self.balanceGet(function(data) {
+						callback(null, data);
 					});
 				}
 			}, function(err, results) {
@@ -202,7 +227,7 @@ define(function(require) {
 
 		balanceFormatDialogData: function(data) {
 			var self = this,
-				amount = (data.balance.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
+				amount = (data.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
 
@@ -228,6 +253,7 @@ define(function(require) {
 			}
 
 			var templateData = {
+				currencySymbol: monster.util.getCurrencySymbol(),
 				amount: amount,
 				threshold: thresholdData,
 				topup: topupData
@@ -248,6 +274,12 @@ define(function(require) {
 						data: parseFloat(data.amount).toFixed(self.appFlags.balance.digits.availableCreditsBadge)
 					};
 
+				addCreditDialog
+					.find('#amount')
+						.mask('#0.00', {
+							reverse: true
+						});
+
 				monster.pub('myaccount.updateMenu', dataUpdate);
 
 				popup = monster.ui.dialog(addCreditDialog, {
@@ -264,79 +296,92 @@ define(function(require) {
 			});
 		},
 
-		balanceFormatMobileDataTable: function(dataRequest, showCredits) {
-			var self = this,
-				data = {
-					transactions: []
+		balanceFormatMobileDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(item) {
+				return {
+					amount: item.amount,
+					name: item.account.name,
+					phoneNumber: item.source.id,
+					timestamp: _.get(
+						item,
+						'period.end',
+						_.get(item, 'period.start', undefined)
+					),
+					usage: item.usage
 				};
-
-			_.each(dataRequest.ledger.data, function(transaction) {
-				data.transactions.push(transaction);
 			});
-
-			return data;
 		},
 
-		balanceFormatPerMinuteDataTable: function(dataRequest, showCredits) {
-			var self = this,
-				data = {
-					transactions: [],
-					showCredits: showCredits
+		balanceFormatPerMinuteDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(item) {
+				var fromField = monster.util.formatPhoneNumber(item.metadata.from.replace(/@.*/, '') || ''),
+					toField = monster.util.formatPhoneNumber(item.metadata.to.replace(/@.*/, '') || ''),
+					callerIdNumber = monster.util.formatPhoneNumber(item.metadata.caller_id_number || ''),
+					calleeIdNumber = monster.util.formatPhoneNumber(item.metadata.callee_id_number || '');
+				return {
+					amount: {
+						value: item.amount,
+						digits: self.appFlags.balance.digits.perMinuteTableAmount
+					},
+					calleeNumber: calleeIdNumber !== toField
+						? callerIdNumber
+						: '',
+					callerNumber: callerIdNumber !== fromField
+						? callerIdNumber
+						: '',
+					callId: item.id,
+					direction: _.get(item, 'metadata.direction', 'inbound'),
+					from: fromField,
+					minutes: _.has(item, 'usage.quantity')
+						? Math.ceil(parseInt(item.usage.quantity) / 60)
+						: -1,
+					name: item.account.name,
+					timestamp: item.period.start,
+					to: toField
 				};
-
-			_.each(dataRequest.ledger.data, function(v) {
-				v.metadata = v.metadata || {
-					to: '-',
-					from: '-'
-				};
-
-				v.metadata.call = { direction: v.metadata.direction || 'inbound', call_id: v.call_id };
-
-				var duration = self.i18n.active().balance.active_call,
-					accountName = v.account.name,
-					friendlyAmount = self.i18n.active().currencyUsed + parseFloat(v.amount).toFixed(self.appFlags.balance.digits.perMinuteTableAmount),
-					fromField = monster.util.formatPhoneNumber(v.metadata.from.replace(/@.*/, '') || ''),
-					toField = monster.util.formatPhoneNumber(v.metadata.to.replace(/@.*/, '') || ''),
-					callerIdNumber = monster.util.formatPhoneNumber(v.metadata.caller_id_number || ''),
-					calleeIdNumber = monster.util.formatPhoneNumber(v.metadata.callee_id_number || '');
-
-				if (v.usage && v.usage.hasOwnProperty('quantity')) {
-					duration = Math.ceil((parseInt(v.usage.quantity)) / 60);
-				}
-
-				var obj = {
-					direction: v.metadata.call.direction,
-					callId: v.id,
-					timestamp: v.period.start,
-					fromField: fromField,
-					toField: toField,
-					accountName: accountName,
-					duration: duration,
-					friendlyAmount: friendlyAmount
-				};
-
-				if (callerIdNumber !== fromField) {
-					obj.callerIdNumber = callerIdNumber;
-				}
-
-				if (calleeIdNumber !== toField) {
-					obj.calleeIdNumber = calleeIdNumber;
-				}
-
-				data.transactions.push(obj);
 			});
+		},
 
-			return data;
+		balanceFormatRecurringDataTable: function(data) {
+			var self = this;
+			return _
+				.chain(data)
+				.filter('metadata.item.billable')
+				.map(function(value) {
+					var item = value.metadata.item;
+					return {
+						timestamp: value.period.start,
+						name: item.name || item.category + '/' + item.item,
+						description: value.description,
+						rate: {
+							value: item.rate || 0,
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						},
+						quantity: item.billable || 0,
+						discount: {
+							value: _.get(item, 'discounts.total', undefined),
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						},
+						charges: {
+							value: item.total,
+							digits: self.appFlags.balance.digits.recurringTableAmount
+						}
+					};
+				})
+				.value();
 		},
 
 		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
 			var self = this,
-				customLedgers = {
-					'per-minute-voip': 'per-minute-voip-table',
-					'mobile_data': 'mobile-table'
-				},
-				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName] : 'generic-table',
-				template = $(self.getTemplate({ name: templateName, submodule: 'balance', data: { showCredits: showCredits } })),
+				template = $(self.getTemplate({
+					name: _.get(self.appFlags.balance.customLedgers, ledgerName + '.table', 'generic-table'),
+					data: {
+						showCredits: showCredits
+					},
+					submodule: 'balance'
+				})),
 				fromDate = parent.find('input.filter-from').datepicker('getDate'),
 				toDate = parent.find('input.filter-to').datepicker('getDate');
 
@@ -362,52 +407,44 @@ define(function(require) {
 
 		balanceGenericGetRows: function(ledgerName, template, filters, showCredits, callback) {
 			var self = this,
-				customLedgers = {
-					'per-minute-voip': {
-						rowsTemplate: 'per-minute-voip-rows',
-						formatFunction: 'balanceFormatPerMinuteDataTable'
-					},
-					'mobile_data': {
-						rowsTemplate: 'mobile-rows',
-						formatFunction: 'balanceFormatMobileDataTable'
-					}
-				},
-				templateName = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].rowsTemplate : 'generic-rows',
-				formatFunction = customLedgers.hasOwnProperty(ledgerName) ? customLedgers[ledgerName].formatFunction : 'balanceFormatGenericDataTable';
+				customLedger = _.get(self.appFlags.balance.customLedgers, ledgerName, {}),
+				formatFunction = _.get(customLedger, 'format', 'balanceFormatGenericDataTable');
 
 			self.balanceGetDataPerLedger(ledgerName, template, function(data) {
-				var formattedData = self[formatFunction](data, showCredits),
-					$rows = $(self.getTemplate({ name: templateName, data: formattedData, submodule: 'balance' }));
+				var formattedData = {
+						showCredits: showCredits,
+						transactions: self[formatFunction](data.ledger.data)
+					},
+					$rows = $(self.getTemplate({
+						name: _.get(customLedger, 'rows', 'generic-rows'),
+						data: formattedData,
+						submodule: 'balance'
+					}));
+
+				monster.ui.tooltips($rows);
 
 					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
 				callback && callback($rows, data.ledger);
 			}, filters);
 		},
 
-		balanceFormatGenericDataTable: function(dataRequest, showCredits) {
-			var self = this,
-				data = {
-					transactions: [],
-					showCredits: showCredits
+		balanceFormatGenericDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(item) {
+				return {
+					amount: {
+						value: item.amount,
+						digits: self.appFlags.balance.digits.genericTableAmount
+					},
+					description: item.description,
+					name: item.account.name,
+					timestamp: _.get(
+						item,
+						'period.end',
+						_.get(item, 'period.start', undefined)
+					)
 				};
-
-			_.each(dataRequest.ledger.data, function(v) {
-				v.extra = {};
-
-				if (v.hasOwnProperty('period')) {
-					if (v.period.hasOwnProperty('end')) {
-						v.extra.date = v.period.end;
-					} else if (v.period.hasOwnProperty('start')) {
-						v.extra.date = v.period.start;
-					}
-				} else {
-					v.extra.date = undefined;
-				}
-
-				data.transactions.push(v);
 			});
-
-			return data;
 		},
 
 		balanceGetData: function(filters, webhookId, callback) {
@@ -474,7 +511,7 @@ define(function(require) {
 									tabAnimationInProgress = true;
 
 									parent.find('.add-credits-content-wrapper.active')
-											.fadeOut(function() {
+											.fadeOut(250, function() {
 												parent
 													.find('.navbar-menu-item-link.active')
 													.removeClass('active');
@@ -484,7 +521,7 @@ define(function(require) {
 
 												parent
 													.find(event.target.hash)
-														.fadeIn(function() {
+														.fadeIn(250, function() {
 															$(this)
 																.addClass('active');
 
@@ -518,38 +555,83 @@ define(function(require) {
 						}
 					});
 
-			parent.find('#add_credit').on('click', function(ev) {
-				ev.preventDefault();
+			parent
+				.find('#add_credit')
+					.on('click', function(event) {
+						event.preventDefault();
 
-				var creditsToAdd = parseFloat(parent.find('#amount').val().replace(',', '.'));
+						var $this = $(this),
+							creditsToAdd = parseFloat(parent.find('#amount').val());
 
-				if (creditsToAdd) {
-					self.balanceAddCredits(creditsToAdd,
-						function() {
+						if (_.isNaN(creditsToAdd)) {
+							monster.ui.toast({
+								type: 'warning',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().myAccountApp.balance.toast.warning.invalidTopup,
+									data: {
+										value: creditsToAdd
+									}
+								})
+							});
+							return;
+						}
+
+						$this.prop('disabled', true);
+
+						monster.series([
+							function(callback) {
+								self.balanceRequestTopup({
+									data: {
+										data: {
+											amount: creditsToAdd
+										}
+									},
+									success: function() {
+										callback(null);
+									},
+									error: function(data) {
+										callback(data);
+									}
+								});
+							},
+							function(callback) {
+								if (!_.isFunction(params.callback)) {
+									callback(null);
+									return;
+								}
+								self.balanceGet(function(balance) {
+									params.callback(balance);
+									callback(null);
+								});
+							}
+						], function(err, results) {
+							if (err) {
+								monster.ui.toast({
+									type: 'error',
+									message: self.getTemplate({
+										name: '!' + self.i18n.active().myAccountApp.balance.toast.error.topup,
+										data: {
+											reason: err.bookkeeper.results.message
+										}
+									})
+								});
+								$this.prop('disabled', false);
+								return;
+							}
 							monster.ui.toast({
 								type: 'success',
 								message: self.getTemplate({
 									name: '!' + self.i18n.active().balance.creditsAdded,
 									data: {
-										amount: self.i18n.active().currencyUsed + creditsToAdd
+										amount: monster.util.formatPrice({
+											price: creditsToAdd
+										})
 									}
 								})
 							});
-
-							if (typeof params.callback === 'function') {
-								self.balanceGet(function(data) {
-									params.callback(data.data.balance);
-									parent.dialog('close');
-								});
-							} else {
-								parent.dialog('close');
-							}
-						}
-					);
-				} else {
-					monster.ui.alert(self.i18n.active().balance.invalidAmount);
-				}
-			});
+							parent.dialog('close');
+						});
+					});
 
 			thresholdAlertsSwitch
 				.on('change', function() {
@@ -690,15 +772,17 @@ define(function(require) {
 			template.find('#add_credits').on('click', function() {
 				var args = {
 					callback: function(amount) {
-						var formattedAmount = parseFloat(amount).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
-							newAmount = self.i18n.active().currencyUsed + formattedAmount,
+						var newAmount = monster.util.formatPrice({
+								price: amount,
+								digits: self.appFlags.balance.digits.availableCreditsBadge
+							}),
 							argsEvent = {
 								module: 'balance',
 								data: newAmount
 							};
 
 						monster.pub('myaccount.updateMenu', argsEvent);
-						template.find('#amount').html(formattedAmount);
+						template.find('#amount').html(newAmount);
 					}
 				};
 
@@ -884,6 +968,7 @@ define(function(require) {
 					filters: filters
 				},
 				success: function(data) {
+					delete data.data['kazoo-rollover'];
 					callback && callback(data.data);
 				}
 			});
@@ -898,6 +983,7 @@ define(function(require) {
 					accountId: self.accountId
 				},
 				success: function(data) {
+					delete data.data['kazoo-rollover'];
 					callback && callback(data.data);
 				}
 			});
@@ -941,12 +1027,12 @@ define(function(require) {
 			var self = this;
 
 			self.callApi({
-				resource: 'balance.get',
+				resource: 'ledgers.total',
 				data: {
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					success && success(data, status);
+					success && success(data.data.amount, status);
 				},
 				error: function(data, status) {
 					error && error(data, status);
@@ -954,29 +1040,26 @@ define(function(require) {
 			});
 		},
 
-		balanceAddCredits: function(credits, success, error) {
-			var self = this,
-				data = {
-					amount: credits
-				};
-
-			self.balanceUpdateRecharge(data, success, error);
-		},
-
-		balanceUpdateRecharge: function(data, success, error) {
+		balanceRequestTopup: function(args) {
 			var self = this;
 
 			self.callApi({
-				resource: 'balance.add',
-				data: {
+				resource: 'services.topup',
+				data: _.merge({
 					accountId: self.accountId,
-					data: data
-				},
+					generateError: false
+				}, args.data),
 				success: function(data, status) {
-					success && success(data, status);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
-				error: function(data, status) {
-					error && error(data, status);
+				error: function(parsedError, error, globalHandler) {
+					if (error.status !== 500) {
+						globalHandler(parsedError, {
+							generateError: true
+						});
+						return;
+					}
+					args.hasOwnProperty('error') && args.error(parsedError.data);
 				}
 			});
 		}

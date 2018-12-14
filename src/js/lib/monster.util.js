@@ -8,6 +8,17 @@ define(function(require) {
 	require('moment-timezone');
 		//momentTimezone = require('moment-timezone');
 
+	var supportedCurrencyCodes = {
+		USD: {
+			symbol: '$',
+			position: 'ante'
+		},
+		EUR: {
+			symbol: '€',
+			position: 'post'
+		}
+	};
+
 	var util = {
 
 		/**
@@ -37,64 +48,6 @@ define(function(require) {
 			}
 		},
 
-		getMomentFormat: function(pFormat, pUser) {
-			var self = this,
-				format = pFormat || 'dateTime',
-				user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
-				userHourFormat = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? '12h' : '24h',
-				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
-				dateFormats = {
-					'dmy': 'DD/MM/YYYY',
-					'mdy': 'MM/DD/YYYY',
-					'ymd': 'YYYY/MM/DD'
-				},
-				hourFormats = {
-					'12h': 'hh',
-					'24h': 'HH'
-				},
-				// map of moment formats
-				shortcuts = {
-					shortDateTime: dateFormats[userDateFormat].replace('YYYY', 'YY') + ' ' + hourFormats[userHourFormat] + ':mm',
-					dateTime: dateFormats[userDateFormat] + ' - ' + hourFormats[userHourFormat] + ':mm:ss',
-					shortDate: dateFormats[userDateFormat].replace('YYYY', 'YY'),
-					shortTime: '' + hourFormats[userHourFormat] + ':mm',
-					time: '' + hourFormats[userHourFormat] + ':mm:ss',
-					calendarDate: (userDateFormat === 'mdy' ? 'MMMM DD' : 'DD MMMM') + ', YYYY',
-					date: dateFormats[userDateFormat]
-				},
-				momentFormat = shortcuts[format];
-
-			// If user wants to see the 12 hour mode, and the date format selected includes the time, then we show AM / PM
-			if (userHourFormat === '12h' && ['shortDateTime', 'dateTime', 'shortTime', 'time'].indexOf(format) >= 0) {
-				momentFormat += ' A';
-			}
-
-			return momentFormat;
-		},
-
-		toFriendlyDate: function(pDate, format, pUser, pIsGregorian, tz) {
-			// If Date is undefined, then we return an empty string.
-			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
-			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			var friendlyDate = '';
-
-			if (typeof pDate !== 'undefined') {
-				var self = this,
-					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
-					// date can be either a JS Date or a gregorian timestamp
-					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
-					momentFormat = self.getMomentFormat(format, pUser);
-
-				if (tz) {
-					friendlyDate = moment(date).tz(tz).format(momentFormat);
-				} else {
-					friendlyDate = moment(date).format(momentFormat);
-				}
-			}
-
-			return friendlyDate;
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -113,20 +66,6 @@ define(function(require) {
 			return new Date(dateString.replace(regex, dateFormats[format]));
 		},
 
-		gregorianToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				formattedResponse = new Date((timestamp - 62167219200) * 1000);
-			}
-
-			return formattedResponse;
-		},
-
 		dateToGregorian: function(date) {
 			var formattedResponse;
 
@@ -141,7 +80,7 @@ define(function(require) {
 		},
 
 		getModbID: function(id, timestamp) {
-			var jsDate = monster.util.gregorianToDate(timestamp),
+			var jsDate = gregorianToDate(timestamp),
 				UTCYear = jsDate.getUTCFullYear() + '',
 				UTCMonth = jsDate.getUTCMonth() + 1,
 				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
@@ -156,30 +95,6 @@ define(function(require) {
 			}
 
 			return modbString;
-		},
-
-		unixToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				// Sometimes unix times are defined with more precision, such as with the /legs API which returns channel created time in microsec, so we need to remove this extra precision to use the standard JS constructor
-				while (timestamp > 9999999999999) {
-					timestamp /= 1000;
-				}
-
-				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
-				if (timestamp < 10000000000) {
-					timestamp *= 1000;
-				}
-
-				formattedResponse = new Date(timestamp);
-			}
-
-			return formattedResponse;
 		},
 
 		dateToUnix: function(date) {
@@ -288,17 +203,6 @@ define(function(require) {
 			return format;
 		},
 
-		randomString: function(length, _chars) {
-			var chars = _chars || '23456789abcdefghjkmnpqrstuvwxyz',
-				randomString = '';
-
-			for (var i = length; i > 0; i--) {
-				randomString += chars.charAt(Math.floor(Math.random() * chars.length));
-			}
-
-			return randomString;
-		},
-
 		cmp: function(a, b) {
 			return (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
@@ -344,14 +248,6 @@ define(function(require) {
 			}
 
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
-		},
-
-		formatPrice: function(value, pDecimals) {
-			var decimals = parseInt(pDecimals),
-				decimalCount = decimals >= 0 ? decimals : 2,
-				roundedValue = Math.round(Number(value) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
-
-			return roundedValue.toFixed(parseInt(value) === value && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
 		},
 
 		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
@@ -611,74 +507,6 @@ define(function(require) {
 			} else {
 				callback && callback();
 			}
-		},
-
-		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
-		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, app) {
-			transaction.hasAddOns = false;
-
-			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-			if (transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') && !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
-				var mapDiscounts = {};
-				_.each(transaction.metadata.discounts, function(discount) {
-					mapDiscounts[discount.id] = discount;
-				});
-
-				transaction.hasAddOns = true;
-				transaction.services = [];
-
-				$.each(transaction.metadata.add_ons, function(k, addOn) {
-					var discount = 0,
-						discountName = 'discount_' + addOn.id,
-						discountItem;
-
-					if (mapDiscounts.hasOwnProperty('discountName')) {
-						discountItem = mapDiscounts[discountName];
-						discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
-					}
-
-					addOn.amount = parseFloat(addOn.amount).toFixed(2);
-					addOn.quantity = parseFloat(addOn.quantity);
-					addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
-
-					transaction.services.push({
-						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
-						rate: addOn.amount,
-						quantity: addOn.quantity,
-						discount: discount > 0 ? '-' + app.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
-						monthly_charges: addOn.monthly_charges
-					});
-				});
-
-				transaction.services.sort(function(a, b) {
-					return parseFloat(a.rate) <= parseFloat(b.rate);
-				});
-			}
-
-			transaction.amount = parseFloat(transaction.amount).toFixed(2);
-
-			if (transaction.hasOwnProperty('code')) {
-				transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
-
-				if (transaction.type === 'credit') {
-					transaction.friendlyName += ' ' + app.i18n.active().transactions.refundText;
-				}
-			}
-
-			// If status is missing or among the following list, the transaction is approved
-			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized', 'settled', 'settlement_confirmed', 'submitted_for_settlement'].indexOf(transaction.status) >= 0;
-
-			if (!transaction.approved) {
-				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;
-			}
-
-			// Our API return created but braintree returns created_at
-			transaction.created = transaction.created_at || transaction.created;
-
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
-
-			return transaction;
 		},
 
 		accountArrayToTree: function(accountArray, rootAccountId) {
@@ -991,28 +819,6 @@ define(function(require) {
 			return result.length > 1 ? result : result[0];
 		},
 
-		/**
-		 * Determine if a number feature is enalbed on the current account
-		 * @param  {String} feature Number feature to check if it is enabled (e.g. e911, cnam)
-		 * @param  {Object} account Optional account object to check from
-		 * @return {Boolean}        Boolean indicating if the feature is enabled or not
-		 */
-		isNumberFeatureEnabled: function(feature, account) {
-			var self = this,
-				accountToCheck = account || monster.apps.auth.currentAccount,
-				hasNumbersFeatures = accountToCheck.hasOwnProperty('numbers_features');
-
-			if (hasNumbersFeatures) {
-				if (accountToCheck.numbers_features[feature + '_enabled']) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}
-		},
-
 		// Check if the object is parsable or not
 		isJSON: function(obj) {
 			var self = this;
@@ -1215,6 +1021,349 @@ define(function(require) {
 			printLogs();
 		}
 	};
+
+	/**
+	 * Decimal and currency formatting for prices
+	 * @param  {Object}  args
+	 * @param  {Number}  args.price        Price to format (number or string
+	 *                                     representation of a number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the
+	 *                                     decimal point.
+	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
+	 * @return {String}                    String representation of `price`.
+	 *
+	 * If `digits` is not specified, integers will have no digits and floating
+	 * numbers with at least one significant number after the decimal point
+	 * will have two digits.
+	 */
+	function formatPrice(args) {
+		var price = Number(args.price);
+		var digits = parseInt(args.digits);
+		var withCurrency = _.isBoolean(args.withCurrency)
+			? args.withCurrency
+			: true;
+		var digitsCount = digits >= 0
+			? digits
+			: 2;
+		var roundedPrice = Math.round(price * Math.pow(10, digitsCount)) / Math.pow(10, digitsCount);
+		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(digits) || digits < 0) ? 0 : digitsCount);
+		var addCurrency = function(value) {
+			var currencyCode = monster.config.hasOwnProperty('currencyCode')
+				? monster.config.currencyCode
+				: 'USD';
+			var codeData = supportedCurrencyCodes[currencyCode];
+			var ret;
+			if (_.isUndefined(codeData)) {
+				throw new Error('Currency code ' + currencyCode + ' is not supported.');
+			} else {
+				if (codeData.position === 'ante') {
+					ret = codeData.symbol + fixedPrice;
+				} else if (codeData.position === 'post') {
+					ret = fixedPrice + ' ' + codeData.symbol;
+				}
+			}
+			return ret;
+		};
+		return withCurrency
+			? addCurrency(fixedPrice)
+			: fixedPrice;
+	}
+
+	/**
+	 * Return the symbol of the currency used
+	 * @return {String} Symbol of currency
+	 */
+	function getCurrencySymbol() {
+		var currencyCode = monster.config.hasOwnProperty('currencyCode')
+			? monster.config.currencyCode
+			: 'USD';
+		var codeData = supportedCurrencyCodes[currencyCode];
+		if (_.isUndefined(codeData)) {
+			throw new Error('Currency code ' + currencyCode + ' is not supported');
+		}
+		return codeData.symbol;
+	}
+
+	/**
+	 * Determine the date format from a specific or current user's settings
+	 * @private
+	 * @param  {String} pFormat Specific format for the user
+	 * @param  {Object} pUser   Specific user to get format from
+	 * @return {String}         Computed representation of the format
+	 */
+	function getMomentFormat(pFormat, pUser) {
+		var format = _.isString(pFormat)
+			? pFormat
+			: 'dateTime';
+		var user = _.isObject(pUser)
+			? pUser
+			: _.get(monster, 'apps.auth.currentUser', {});
+		var hourFormat = _.get(user, 'ui_flags.twelve_hours_mode', false)
+			? '12h'
+			: '24h';
+		var dateFormat = _.get(user, 'ui_flags.date_format', 'mdy');
+		var dateFormats = {
+			dmy: 'DD/MM/YYYY',
+			mdy: 'MM/DD/YYYY',
+			ymd: 'YYYY/MM/DD'
+		};
+		var hourFormats = {
+			'12h': 'hh',
+			'24h': 'HH'
+		};
+		var shortcuts = {
+			calendarDate: (dateFormat === 'mdy'
+				? 'MMMM DD'
+				: 'DD MMMM'
+			) + ', YYYY',
+			date: dateFormats[dateFormat],
+			dateTime: dateFormats[dateFormat]
+				.concat(
+					' - ',
+					hourFormats[hourFormat],
+					':mm:ss'
+				),
+			shortDate: dateFormats[dateFormat].replace('YYYY', 'YY'),
+			shortDateTime: dateFormats[dateFormat]
+				.replace('YYYY', 'YY')
+				.concat(
+					' ',
+					hourFormats[hourFormat],
+					':mm'
+				),
+			shortTime: '' + hourFormats[hourFormat] + ':mm',
+			time: '' + hourFormats[hourFormat] + ':mm:ss'
+		};
+		if (!_.includes(_.keys(shortcuts), format)) {
+			throw new Error('`format` must be one of '.concat(
+				_.keys(shortcuts).join(', '),
+				' or undefined'
+			));
+		}
+		if (hourFormat === '12h'
+			&& _.includes([
+				'shortDateTime',
+				'dateTime',
+				'shortTime',
+				'time'
+			], format)) {
+			return shortcuts[format] + ' A';
+		}
+		return shortcuts[format];
+	}
+
+	/**
+	 * Returns the full name of a specific user or, if missing, of the currently
+	 * logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 * @return {String}                   User's full name
+	 */
+	function getUserFullName(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+		var core = monster.apps.core;
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+		return core.getTemplate({
+			name: '!' + core.i18n.active().userFullName,
+			data: {
+				firstName: user.first_name,
+				lastName: user.last_name
+			}
+		});
+	}
+
+	/**
+	 * Converts a Gregorian timestamp into a Date instance
+	 * @param  {Number} pTimestamp Gregorian timestamp
+	 * @return {Date}           Converted Date instance
+	 */
+	function gregorianToDate(pTimestamp) {
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		return new Date((_.floor(timestamp) - 62167219200) * 1000);
+	}
+
+	/**
+	 * Determine if a specific number feature is enabled on the current account
+	 * @param  {String}  feature  Feature to check (e.g. e911, cnam)
+	 * @param  {Object}  pAccount Account object to check from (optional)
+	 * @return {Boolean}          Indicate whether or not the feature is enabled
+	 *
+	 * The check is made against a flag in the account document but it can be
+	 * overridden by a flag in `config.js/whitelabel.disableNumbersFeatures`. If
+	 * none of those flags are set, it will return `true` by default.
+	 */
+	function isNumberFeatureEnabled(feature, pAccount) {
+		return monster.config.whitelabel.disableNumbersFeatures
+			? false
+			: _.get(
+				pAccount || monster.apps.auth.currentAccount,
+				'numbers_features.'.concat(
+					feature,
+					'_enabled'
+				),
+				true
+			);
+	}
+
+	/**
+	 * Generates a string of `length` random characters chosen from either a
+	 * preset or a custom string of characters.
+	 * @param  {Number} length  Number of characters to include.
+	 * @param  {String} pPreset Characters to choose from.
+	 * @return {String}         A string of random characters.
+	 */
+	function randomString(length, pPreset) {
+		if (!_.isNumber(length)) {
+			throw new TypeError('"length" is not a string');
+		}
+		if (_.isNaN(length)) {
+			throw new TypeError('"length" is NaN');
+		}
+		if (!_.isUndefined(pPreset) && !_.isString(pPreset)) {
+			throw new TypeError('"preset" is not a string');
+		}
+		if (!_.isUndefined(pPreset) && pPreset.length === 0) {
+			throw new TypeError('"preset" is an empty string');
+		}
+		var input = _.isUndefined(pPreset)
+			? 'safe'
+			: pPreset;
+		var presets = {
+			alpha: '1234567890abcdefghijklmnopqrstuvwxyz',
+			hex: '1234567890abcdef',
+			letters: 'abcdefghijklmnopqrstuvwxyz',
+			numerals: '1234567890',
+			safe: '23456789abcdefghjkmnpqrstuvwxyz'
+		};
+		var preset = _
+			.chain(presets)
+			.get(input, input)
+			.shuffle()
+			.value();
+		var upper = preset.length - 1;
+		var getRandomItem = function() {
+			var isUpper = _.sample([true, false]);
+			var item = preset[_.random(upper)];
+			return _[isUpper ? 'toUpper' : 'toLower'](item);
+		};
+		return length === 0
+			? ''
+			: _.chain(0)
+				.range(length)
+				.map(getRandomItem)
+				.join('')
+				.value();
+	}
+
+	/**
+	 * Formats a Gregorian/Unix timestamp or Date instances into a String
+	 * representation of the corresponding date.
+	 * @param  {Date|String} pDate   Representation of the date to format.
+	 * @param  {String} pFormat      Tokens to format the date with.
+	 * @param  {Object} pUser        Specific user to use for formatting.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
+	 *                                gregorian format.
+	 * @param  {String} tz           Timezone to format the date with.
+	 * @return {String}              Representation of the formatted date.
+	 *
+	 * If pDate is undefined then return an empty string. Useful for form which
+	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
+	 * would display NaN/NaN/NaN in Firefox for example.
+	 *
+	 * By default, the timezone of the specified or logged in user will be used
+	 * to format the date. If that timezone is not set, then the account
+	 * timezone will be used. If not set, the browser’s timezone will be used as
+	 * a last resort.
+	 */
+	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, tz) {
+		if (_.isUndefined(pDate)) {
+			return '';
+		}
+		var isGregorian = _.isBoolean(pIsGregorian)
+			? pIsGregorian
+			: true;
+		var date = _.isDate(pDate)
+			? pDate
+			: isGregorian
+				? gregorianToDate(pDate)
+				: unixToDate(pDate);
+		var format = getMomentFormat(pFormat, pUser);
+		if (!_.isNull(moment.tz.zone(tz))) {
+			return moment(date).tz(tz).format(format);
+		}
+		if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+			return moment(date)
+				.tz(monster.apps.auth.currentUser.timezone)
+				.format(format);
+		}
+		if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+			return moment(date)
+				.tz(monster.apps.auth.currentAccount.timezone)
+				.format(format);
+		}
+		return moment(date).tz(moment.tz.guess()).format(format);
+	}
+
+	/**
+	 * Converts a Unix timestamp into a Date instance
+	 * @param  {Number} pTimestamp Unix timestamp
+	 * @return {Date}           Converted Date instance
+	 *
+	 * Sometimes Unix times are defined with more precision, such as with the
+	 * /legs API which returns channel created time in microseconds, so we need
+	 * need to remove this extra precision to use the Date constructor.
+	 *
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
+	 * get milliseconds in order to use the Date constructor.
+	 */
+	function unixToDate(pTimestamp) {
+		var max = 9999999999999;
+		var min = 10000000000;
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		while (timestamp > max || timestamp < min) {
+			if (timestamp > max) {
+				timestamp /= 1000;
+			}
+			if (timestamp < min) {
+				timestamp *= 1000;
+			}
+		}
+		return new Date(timestamp);
+	}
+
+	util.formatPrice = formatPrice;
+	util.getCurrencySymbol = getCurrencySymbol;
+	util.getUserFullName = getUserFullName;
+	util.gregorianToDate = gregorianToDate;
+	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
+	util.randomString = randomString;
+	util.toFriendlyDate = toFriendlyDate;
+	util.unixToDate = unixToDate;
 
 	return util;
 });

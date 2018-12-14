@@ -1,3 +1,5 @@
+title: Adding I18n to your application
+
 # Adding i18n to your application
 
 * [Create the i18n files](#create-the-i18n-files)
@@ -11,7 +13,7 @@
 
 Every single label or message in your application that may be read by an end-user should use the i18n system. You should never type in plain English directly in your HTML or JavaScript files, even if you're currently releasing your app in only one language.
 
-In this document, you will learn how to properly use the i18n system in Monster-UI. 
+In this document, you will learn how to properly use the i18n system in Monster-UI.
 
 ### Create the i18n files
 

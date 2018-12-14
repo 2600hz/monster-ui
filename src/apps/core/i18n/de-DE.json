@@ -80,7 +80,7 @@
 	"download": "Herunterladen",
 	"enabled": "Aktiviert",
 	"endDate": "Ende:",
-	"examplePhoneNumber": "+1 (415) 482-9912",
+	"examplePhoneNumber": "+49 (123) 4567890",
 	"filter": "Filter",
 	"info": "Infos",
 	"next": "Weiter",
@@ -169,7 +169,6 @@
 		"americanEnglish": "Englisch (en-US)",
 		"frenchFrench": "Französisch (fr-FR)",
 		"russianRussian": "Russisch (ru-RU)",
-		"germanGerman": "Deutsch (de-DE)",
 		"__comment": "Spanisch zur Sprachauswahlliste in Mein Account hinzugefügt",
 		"__version": "v3.22",
 		"spainSpanish": "Spanisch (es-ES)"

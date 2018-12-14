@@ -281,7 +281,7 @@
 		"confirmInfoMsg2": "Your on-file credit card will immediately be charged for recurring services. Charges will be pro-rated for your billing cycle.",
 		"vanitySearchLabel": "Search a Local or Tollfree Vanity Number:",
 		"vanitySearchInfo1": "You can search for any combination of numbers or letters.",
-		"vanitySearchInfo2": "If you can not find a specific number then feel free to send us a request. We can look through all the databases and see if we can get you the number you want. There would be a onetime $20 fee for requesting a special number.",
+		"vanitySearchInfo2": "If you can not find a specific number then feel free to send us a request. We can look through all the databases and see if we can get you the number you want.",
 		"sendRequest": "Send us a request",
 		"to": "to",
 		"partialPurchaseFailure": "Sorry, the following numbers could not be purchased:",
@@ -548,6 +548,9 @@
 				"add": "Invite Participants"
 			}
 		},
+		"conferenceActions": {
+			"kick": "All users have been removed from the conference"
+		},
 		"moderators": "Moderators",
 		"participants": "Participants",
 		"userActions": {
@@ -595,6 +598,7 @@
 			"unknownUser": "Unknown User",
 			"unknownCarrier": "Unknown Carrier",
 			"portInfo": {
+				"account": "Account",
 				"winningCarrier": "Winning Carrier",
 				"refNumber": "Reference Number",
 				"name": "Request Name",
@@ -622,7 +626,7 @@
 			"hint": "Viewing"
 		},
 		"listing": {
-			"title": "Incomplete Requests - Saved for Later",
+			"title": "Saved for Later/Rejected Requests",
 			"customSelect": {
 				"byStatus": "View by Status",
 				"forToday": "Scheduled for Today",
@@ -678,8 +682,8 @@
 							"text": "This means that the phone number(s) attempting to be ported are in a non-portable status with the current carrier."
 						},
 						"porting_main_btn_follow": {
-							"label": "Porting Main BTN Follow",
-							"text": "Porting BTN.  Must provide an alternate BTN from remaining numbers"
+							"label": "Porting Main BTN",
+							"text": "Porting BTN. Must provide an alternate BTN from remaining numbers on account."
 						},
 						"passcode_pin_requried_or_invalid": {
 							"label": "Passcode/PIN Required or Invalid",
@@ -741,7 +745,8 @@
 				"update": "Update Status",
 				"back": "Back to port requests",
 				"cancel": "Cancel Request",
-				"send": "Send"
+				"send": "Send",
+				"sendPrivate": "Private"
 			},
 			"numbers": {
 				"singular": "Number",
@@ -794,19 +799,18 @@
 			},
 			"numbersType": {
 				"text1": "What type of number will you be requesting to port?",
-				"text2": "(All numbers in a port request must be the same format).",
 				"label": {
 					"local": "U.S. Local Numbers",
 					"tollFree": "U.S. Toll-free Numbers"
 				}
 			},
 			"verifyOwner": {
-				"title": "We will need to verify ownership of the numbers you wish to port.",
-				"text1": "To do this, you will need to upload a recent (within 30 days) bill from your carrier which contains the numbers you want to port.",
+				"title": "We need to verify ownership of the numbers you wish to port.",
+				"text1": "As is required by law, please upload a bill that you have received within the last 30 days as proof that these are your numbers.",
 				"text2": "This proof of your account and ownership is required by law."
 			},
 			"buttons": {
-				"next": "Upload Phone Bill"
+				"next": "Next"
 			}
 		},
 		"accountVerification": {
@@ -817,8 +821,8 @@
 				"text": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
 				"label": {
 					"carrier": "Carrier",
-					"accountName": "Name on Account",
-					"billingAddress": "Billing Address",
+					"accountName": "Account Name on Bill",
+					"billingAddress": "Service Address",
 					"billVerification": "Recent Bill Verification",
 					"acknowledgeBill": "I acknowledge the date on this bill is within the last 30 days",
 					"accountNumber": "Account Number",
@@ -826,7 +830,9 @@
 					"btn": "BTN"
 				},
 				"placeholder": {
-					"street": "1234 Street Name",
+					"streetNumber": "Street Number",
+					"streetName": "Street Name",
+					"streetType": "Street Type",
 					"city": "City",
 					"state": "State",
 					"zip": "ZIP Code"
@@ -837,12 +843,13 @@
 			}
 		},
 		"addNumbers": {
-			"title": "Now we can establish what numbers you would like to port.",
-			"text1": "Input the desired number you wish to port, or input a larger batch of numbers from your bill by separating each number with a single space.",
-			"text2": "You can copy/paste larger batches of numbers, but no other other characters besides numbers and spaces are accepted.",
+			"title": "Enter the numbers you wish to port from the bill.",
+			"text1": "To avoid delays ensure you only enter {{variable}} that belong to the bill you uploaded.",
+			"text2": "If you wish you can add multiple numbers at once by separating them by a single space.",
+			"text3": "Enter each number without any parentheses, dashes or spaces.",
 			"textarea": {
 				"link": "Add More Numbers",
-				"legend": "Input Numbers to Port",
+				"legend": "Numbers to Port from Bill",
 				"button": "Add Numbers"
 			},
 			"list": {
@@ -850,9 +857,9 @@
 				"text": "You have not added any numbers to your port request yet."
 			},
 			"portion": {
-				"errorMessage": "It looks like you selected you current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
+				"errorMessage": "It looks like you selected your current account's BTN as a number to be ported. This will cause this port request to be denied from the carrier unless you specify the nature of these numbers below.",
 				"text1": "Do these numbers make up the entire current account per your bill?",
-				"text2": "Or do these numbers male up only a select portion of numbers?",
+				"text2": "Or do these numbers make up only a select portion of numbers?",
 				"selection": {
 					"full": "Full Account Port",
 					"portion": "Portion Of Numbers"
@@ -866,8 +873,8 @@
 			"buttons": {
 				"next": {
 					"manual": {
-						"loa": "Next - LoA Form (Manual LoA, no e-sign)",
-						"resporg": "Next - RespOrg Form (Manual RespOrg, no e-sign)"
+						"loa": "Next - LoA Form",
+						"resporg": "Next - RespOrg Form"
 					},
 					"eSign": {
 						"loa": "Next - LoA Form (E-sign enabled on account)",
@@ -882,8 +889,7 @@
 			"link": "Learn more about {{variable}}'s' here.",
 			"download": {
 				"title": "Step 1",
-				"text": "Download your {{variable}}",
-				"button": "Download Pre-filled {{variable}}"
+				"button": "Download {{variable}}"
 			},
 			"doubleCheck": {
 				"title": "Step 2",
@@ -893,6 +899,12 @@
 				"title": "Step 3",
 				"text": "Upload your {{variable}} form",
 				"format": ".pdf format ONLY"
+			},
+			"signee": {
+				"label": {
+					"name": "Signee Name",
+					"date": "Signing Date"
+				}
 			},
 			"button": "Next - Notifications & Scheduling"
 		},
@@ -939,6 +951,16 @@
 				}
 			},
 			"button": "Submit This Port Request"
+		},
+		"errorDialog": {
+			"label": "The port request has some problems that need to be addressed before submit:"
+		},
+		"errors": {
+			"number_is_on_a_port_request_already": "One or more phone numbers are already included in port requests: {{variable}}",
+			"number_exists_on_the_system_already": "One or more phone numbers already exist in the system: {{variable}}",
+			"too_few_properties": "Insufficient data at: {{variable}}",
+			"unknown_error": "Unknown error at: {{variable}}",
+			"wrong_format": "Invalid data at: {{variable}}"
 		}
 	},
 
@@ -976,5 +998,26 @@
 		"confirmDeleteTitle": "Warning! Are you sure?",
 		"successUpdate": "Your Storage Settings were successfully updated!",
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
+	},
+
+	"__comment": "UI-3147: Migrate Smart PBX user deletion to common submodule",
+	"__version": "4.3",
+	"deleteSmartUser": {
+		"__comment": "UI-2138: Delete User new Dialog",
+		"__version": "3.22",
+		"deleteDialog": {
+			"title": "Remove {{ name }} from the system",
+			"headerAdmin": "You're about to delete an ADMIN! Deleting an admin will delete his user, voicemail boxes and unassign his devices. It will also prevent them from managing this UI. Do you want to continue?",
+			"headerUser": "Deleting a user will delete this user and his Voicemail Box, and unassign the devices and numbers that were assigned to this user. Do you want to continue?",
+			"deleteUser": "Delete",
+			"deleteUserName": "Delete \"{{variable}}\"",
+			"proceed": "Proceed",
+			"deleteDevices": "Also remove this user's devices from the system",
+			"deleteDevicesHelp": "If you leave this option unchecked, we'll just unassign these devices and they will show up in the list of Spare Devices",
+			"__comment": "UI-2467: also remove conferences when deleting a user from smartpbx",
+			"__version": "4.0",
+			"deleteConferences": "Also remove this user's conferences from the system",
+			"deleteConferencesHelp": "If you leave this option unchecked, you won't be able to use the user's conference number anywhere else, as it will still be used by that conference."
+		}
 	}
 }

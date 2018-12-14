@@ -3,6 +3,10 @@ import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
 import { app, src, tmp } from '../paths.js';
 
+const handleUglifyError = error => {
+	console.error(JSON.stringify(error, null, 4));
+};
+
 /**
  * Minifies js/main.js, we don't use the optimizer from requirejs as we don't
  * want to minify config.js
@@ -12,7 +16,7 @@ export const minifyJs = () => gulp
 		tmp + '/js/main.js',
 		tmp + '/js/templates.js'
 	])
-	.pipe(uglify())
+	.pipe(uglify().on('error', handleUglifyError))
 	.pipe(gulp.dest(tmp + '/js/'));
 
 /**
@@ -20,7 +24,7 @@ export const minifyJs = () => gulp
  */
 export const minifyJsApp = () => gulp
 	.src(app + 'app.js')
-	.pipe(uglify())
+	.pipe(uglify().on('error', handleUglifyError))
 	.pipe(gulp.dest(app));
 
 /**

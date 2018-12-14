@@ -4,7 +4,7 @@
 			<div class="add-credits-header-text pull-left">
 				{{i18n.balance.addCreditPopup.creditBalance}}
 			</div>
-			<div class="add-credits-header-balance pull-right">{{ i18n.currencyUsed }}{{amount}}</div>
+			<div class="add-credits-header-balance pull-right">{{formatPrice amount}}</div>
 		</div>
 	</div>
 	<nav class="add-credits-menu-wrapper monster-navbar">
@@ -32,7 +32,7 @@
 				{{i18n.balance.addCreditPopup.manageCredits.text}}
 			</div>
 			<label for="amount">
-				{{ i18n.currencyUsed }} 
+				{{ currencySymbol }}
 				<input type="text" pattern="\d+(\.\d{2})?" class="span2" id="amount" name="amount" placeholder="{{i18n.balance.addCreditPopup.manageCredits.placeholder}}">
 			</label>
 		</div>
@@ -57,7 +57,7 @@
 				<label for="threshold_alerts_amount">
 					{{i18n.balance.addCreditPopup.thresholdAlerts.labels.notifyMe}}
 					<span class="currency-container">
-						{{ i18n.currencyUsed }}
+						{{ currencySymbol }}
 						<input type="text" pattern="\d+(\.\d{2})?" class="span2" id="threshold_alerts_amount" name="threshold_alerts_amount" placeholder="{{i18n.balance.addCreditPopup.thresholdAlerts.placeholder}}" value="{{threshold.threshold}}">
 					</span>
 				</label>
@@ -84,14 +84,14 @@
 				<label for="auto_recharge_threshold">
 					{{i18n.balance.addCreditPopup.autoRecharge.labels.balanceFalls}}
 					<span class="currency-container">
-						{{ i18n.currencyUsed }}
+						{{ currencySymbol }}
 						<input type="text" pattern="\d+(\.\d{2})?" class="span2" id="auto_recharge_threshold" name="auto_recharge_threshold" placeholder="{{i18n.balance.addCreditPopup.autoRecharge.placeholders.balanceFalls}}" value="{{topup.threshold}}">
 					</span>
 				</label>
 				<label for="auto_recharge_amount">
 					{{i18n.balance.addCreditPopup.autoRecharge.labels.rechargeAccount}}
 					<span class="currency-container">
-						{{ i18n.currencyUsed }}
+						{{ currencySymbol }}
 						<input type="text" pattern="\d+(\.\d{2})?" class="span2" id="auto_recharge_amount" name="auto_recharge_amount" placeholder="{{i18n.balance.addCreditPopup.autoRecharge.placeholders.rechargeAccount}}" value="{{topup.amount}}">
 						</span>
 				</label>

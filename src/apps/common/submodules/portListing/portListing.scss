@@ -1,85 +1,12 @@
 @import '../../../../css/partials/base';
 
 /************************************************************/
-/********************** FILTERING PANEL *********************/
-/************************************************************/
-
-#port_app_container .filtering-section-wrapper {
-	float: left;
-}
-
-#port_app_container .filtering-section-wrapper .account-info {
-	padding: 20px 15px 15px;
-	border-right: 1px solid $panel-border-color;
-	background-color: $white;
-}
-
-#port_app_container .filtering-section-wrapper .account-info .title {
-	font-weight: 600;
-}
-
-#port_app_container .filtering-section-wrapper .account-info .hint {
-	font-size: 13px;
-	margin-top: 10px;
-	color: $manatee;
-}
-
-#port_app_container .filtering-section-wrapper .account-info .name {
-	font-size: 22px;
-	margin-top: 2px;
-}
-
-/***************** OVERRIDE ACCOUNT BROWSER *****************/
-
-#port_app_container .account-browser-container {
-	border-color: $panel-border-color;
-	background-color: transparent;
-}
-
-#port_app_container .account-browser-container .search-box {
-	padding: 5px 10px;
-	border-color: $panel-border-color;
-	border-top: solid 1px $panel-border-color;
-}
-
-#port_app_container .account-browser-container .search-box i {
-	color: $manatee;
-}
-
-#port_app_container .account-browser-container .search-query {
-	width: 190px;
-	border: none;
-	background-color: transparent;
-	box-shadow: none;
-}
-
-#port_app_container .account-browser-container .account-list-container {
-	background-color: $white;
-}
-
-#port_app_container .account-browser-container .account-link,
-#port_app_container .account-browser-container .account-search-link,
-#port_app_container .account-browser-container .account-list-element > div {
-	background-color: transparent;
-	background-image: none;
-}
-
-#port_app_container .account-browser-container .account-list-element > div:hover i {
-	color: $primary-color;
-}
-
-/************************************************************/
 /*********************** LISTING PANEL **********************/
 /************************************************************/
 
 #port_app_container .listing-section-wrapper {
 	padding: 40px 20px;
-}
-
-#port_app_container .listing-section-wrapper.with-filter {
-	overflow-y: auto;
-	margin-left: 240px;
-	padding: 40px 40px 0;
+	background-color: #F0F0F9;
 }
 
 #port_app_container .listing-section h4.title {
@@ -132,7 +59,7 @@
 	color: $manatee;
 }
 
-#port_app_container #unconfirmed_ports_listing tbody {
+#port_app_container #incomplete_ports_listing tbody {
 	background-color: transparent;
 }
 
@@ -207,38 +134,39 @@
 }
 
 /********************** STATUS WRAPPER **********************/
+#port_app_container .status-wrapper {
+	i {
+		float: left;
+		color: $primary-color;
+	}
 
-#port_app_container .status-wrapper i {
-	float: left;
-}
+	.content {
+		margin-left: 18px;
+		padding-left: 10px;
+	}
 
-#port_app_container .status-wrapper .content {
-	margin-left: 18px;
-	padding-left: 10px;
-}
+	.status {
+		font-weight: 600;
+		color: $primary-color;
+	}
 
-#port_app_container .status-wrapper .status {
-	font-weight: 600;
-}
+	&.success {
+		i, .status {
+			color: $success-color;
+		}
+	}
 
-#port_app_container .status-wrapper i,
-#port_app_container .status-wrapper .status {
-	color: $primary-color;
-}
+	&.warning {
+		i, .status {
+			color: $warning-color;
+		}
+	}
 
-#port_app_container .status-wrapper.success i,
-#port_app_container .status-wrapper.success .status {
-	color: $success-color;
-}
-
-#port_app_container .status-wrapper.warning i,
-#port_app_container .status-wrapper.warning .status {
-	color: $warning-color;
-}
-
-#port_app_container .status-wrapper.error i,
-#port_app_container .status-wrapper.error .status {
-	color: $error-color;
+	&.error {
+		i, .status {
+			color: $error-color;
+		}
+	}
 }
 
 /************************************************************/
@@ -465,10 +393,6 @@
 	color: $panel-border-color;
 }
 
-#port_app_container .timeline-panel .entry-wrapper:not(:first-child) {
-	margin-top: 25px;
-}
-
 #port_app_container .timeline-panel .entry {
 	margin-left: 56px;
 	padding: 15px 20px;
@@ -516,68 +440,97 @@
 	flex-grow: 100;
 }
 
-#port_app_container .timeline-panel .entry-wrapper.status .icon-wrapper {
-	border-color: $primary-color;
-	background-color: $primary-color;
-}
+#port_app_container .timeline-panel .entry-wrapper {
+	&:not(:first-child) {
+		margin-top: 25px;
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.status .iconography {
-	color: #fff;
-}
+	&.status {
+		.icon-wrapper {
+			border-color: $primary-color;
+			background-color: $primary-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.status .entry .title {
-	color: $primary-color;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.success .icon-wrapper {
-	border-color: $success-color;
-	background-color: $success-color;
-}
+		.entry .title {
+			color: $primary-color;
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.success .iconography {
-	color: #fff;
-}
+	&.success {
+		.icon-wrapper {
+			border-color: $success-color;
+			background-color: $success-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.success .entry {
-	border-color: $success-color;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.success .entry .title {
-	color: $success-color;
-}
+		.entry {
+			border-color: $success-color;
+			.title {
+				color: $success-color;
+			}
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .icon-wrapper {
-	border-color: #f0b400;
-	background-color: #f0b400;
-}
+	&.warning {
+		.icon-wrapper {
+			border-color: #f0b400;
+			background-color: #f0b400;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .iconography {
-	color: #fff;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .entry {
-	border-color: #f0b400;
-}
+		.entry {
+			border-color: #f0b400;
+			.title {
+				color: #f0b400;
+			}
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.warning .entry .title {
-	color: #f0b400;
-}
+	&.error {
+		.icon-wrapper {
+			border-color: $error-color;
+			background-color: $error-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.error .icon-wrapper {
-	border-color: $error-color;
-	background-color: $error-color;
-}
+		.iconography {
+			color: #fff;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.error .iconography {
-	color: #fff;
-}
+		.entry {
+			border-color: $error-color;
+			.title {
+				color: $error-color;
+			}
+		}
+	}
 
-#port_app_container .timeline-panel .entry-wrapper.error .entry {
-	border-color: $error-color;
-}
+	&.danger {
+		.icon-wrapper {
+			border-color: $danger-color;
+			background-color: $danger-color;
+		}
 
-#port_app_container .timeline-panel .entry-wrapper.error .entry .title {
-	color: $error-color;
+		.iconography {
+			color: #fff;
+		}
+
+		.entry {
+			border-color: $danger-color;
+			.title {
+				color: $danger-color;
+			}
+		}
+	}
 }
 
 /*********************** STATUS POPUP ***********************/

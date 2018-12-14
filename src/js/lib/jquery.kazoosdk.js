@@ -62,15 +62,6 @@
 				'getLink': { verb: 'GET', url: 'accounts/{accountId}/auth/links/{auth_id}' },
 				'impersonate': { verb: 'PUT', url: 'accounts/{accountId}/users/{userId}/user_auth' }
 			},
-			balance: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-				'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
-				'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
-				'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
-				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit' }
-			},
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
@@ -164,7 +155,7 @@
 			},
 			faxes: {
 				'send': { verb: 'PUT', url: 'accounts/{accountId}/faxes' },
-				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: "multipart/mixed" },
+				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: 'multipart/mixed' },
 
 				'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog' },
 				'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}' },
@@ -214,7 +205,10 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
 				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' },
-				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' }
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
+				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
+				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
@@ -280,7 +274,8 @@
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
 				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
 				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' },
-				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' }
+				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
@@ -303,7 +298,7 @@
 				'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
 				'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 				'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}' },
-				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}?reason={reason}' },
+				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' },
 				'listComments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
 				'getComment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
 				'addComment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
@@ -399,6 +394,11 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
 			},
+			services: {
+				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
+				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
+			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
 				'add': { verb: 'PUT', url: 'accounts/{accountId}/storage' },
@@ -430,6 +430,9 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets' }
 			},
+			transactions: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
+			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
@@ -445,6 +448,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
 				'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages' },

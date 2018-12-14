@@ -15,8 +15,7 @@
 				{{i18n.portWizard.uploadForm.download.title}}
 			</h4>
 			<span class="label-button">
-				{{replaceVar i18n.portWizard.uploadForm.download.text type.compact}}
-				<a class="pull-right" href="{{formLink}}" target="_blank">
+				<a href="{{formLink}}" target="_blank">
 					<button class="monster-button-primary">
 						{{replaceVar i18n.portWizard.uploadForm.download.button type.compact}}
 					</button>
@@ -46,6 +45,24 @@
 					<input id="form_input" type="file" name="form">
 				</div>
 			</div>
+			<form class="form-horizontal" id="form_upload_document">
+				<div class="control-group">
+					<label for="signee_name" class="control-label">
+						{{i18n.portWizard.uploadForm.signee.label.name}}
+					</label>
+					<div class="controls">
+						<input type="text" id="signee_name" name="signee_name" value="{{request.signee_name}}">
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="signing_date" class="control-label">
+						{{i18n.portWizard.uploadForm.signee.label.date}}
+					</label>
+					<div class="controls">
+						<input type="text" id="signing_date" name="signing_date" readonly="true" class="input-small">
+					</div>
+				</div>
+			</form>
 		</li>
 	</ul>
 	<div class="actions-wrapper">

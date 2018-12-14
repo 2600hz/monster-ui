@@ -1,14 +1,6 @@
-# Monster UI
+# [Monster UI](https://docs.2600hz.com/ui/) &middot; [![GitHub license](https://img.shields.io/badge/license-MPL%201.1-blue.svg)](LICENSE) [![CircleCI branch](https://img.shields.io/circleci/project/github/2600hz/monster-ui/master.svg)](https://circleci.com/gh/2600hz/monster-ui)
 
-* [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Install](#install)
-    - [Configure](#configure)
-    - [Build](#build)
-* [Using Docker](#using-docker)
-* [Contributing](#contributing)
-* [Authors](#authors)
-* [License](#license)
+The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
 ## Getting Started
 
@@ -45,20 +37,15 @@ npm install
 In order for the UI to load the data from your server, we need to specify which API to use. To do so, open the `config.js` file located in `src/js/` folder and add the URL of your server as the value of the `default` property.
 
 ```javascript
-define(function(require) {
-
-  return {
+define({
     api: {
-      // The default API URL defines what API is used to log in to your back-end
-      default: 'http://my.server.url/' // could be formatted like http://api.server.net:8000/v2/
-
-      ...
-    },
-
-    ...
-  };
+    	'default': 'http://my.kazoo.server/'
+    }
+  }
 });
 ```
+
+*For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration/)*.
 
 ### Build
 
@@ -88,6 +75,12 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 ./serve.sh no-update
 ```
 
+## Documentation
+
+You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/ui/).
+
+The documentation is stored on this repository (`/docs`) which allows you to easily improve it or add new pages when making PRs against the core of Monster UI.
+
 ## Contributing
 
 1. [Fork it!](https://github.com/2600hz/monster-ui/fork)
@@ -100,7 +93,6 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 
 [2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
 
-* [**Jean-Roch Maitre**](https://github.com/JRMaitre)
 * [**Joris Tirado**](https://github.com/azefiel)
 
 See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participate in this project.
