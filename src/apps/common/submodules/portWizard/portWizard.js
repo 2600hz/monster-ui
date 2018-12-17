@@ -37,8 +37,7 @@ define(function(require) {
 							'notifications.email.send_to': 'portNotify.email.label'
 						}
 					}
-				},
-				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']
+				}
 			}
 		},
 
@@ -260,10 +259,7 @@ define(function(require) {
 				formatDataToTemplate = function formatDataToTemplate(request) {
 					return {
 						carriers: _.get(monster, 'config.whitelabel.port.carriers'),
-						request: request,
-						cardinalDirections: self.appFlags.portWizard.cardinalDirections,
-						selectedPreDir: _.get(request, 'bill.street_pre_dir', false),
-						selectedPostDir: _.get(request, 'bill.street_post_dir', false)
+						request: request
 					};
 				};
 

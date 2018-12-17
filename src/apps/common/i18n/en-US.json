@@ -835,10 +835,7 @@
 					"streetType": "Street Type",
 					"city": "City",
 					"state": "State",
-					"zip": "ZIP Code",
-					"preDir": "Street Pre-Direction",
-					"postDir": "Street Post-Direction",
-					"address": "Address Line 2"
+					"zip": "ZIP Code"
 				}
 			},
 			"buttons": {

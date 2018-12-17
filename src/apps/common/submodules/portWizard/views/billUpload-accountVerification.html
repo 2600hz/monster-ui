@@ -40,26 +40,9 @@
 				{{i18n.portWizard.accountVerification.form.label.billingAddress}}
 			</label>
 			<div class="controls-list">
-				<select name="bill.street_pre_dir">
-					{{#select selectedPreDir}}
-						<option value="none">{{i18n.portWizard.accountVerification.form.placeholder.preDir}}</option>
-						{{#each cardinalDirections}}
-							<option value="{{this}}">{{this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
 				<input type="text" name="bill.street_number" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.streetNumber}}" value="{{request.bill.street_number}}">
 				<input type="text" name="bill.street_address" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.streetName}}" value="{{request.bill.street_address}}">
 				<input type="text" name="bill.street_type" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.streetType}}" value="{{request.bill.street_type}}">
-				<select name="bill.street_post_dir">
-					{{#select selectedPostDir}}
-						<option value="none">{{i18n.portWizard.accountVerification.form.placeholder.postDir}}</option>
-						{{#each cardinalDirections}}
-							<option value="{{this}}">{{this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<input type="text" name="bill.address" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.address}}" value="{{request.bill.address}}">
 				<input type="text" name="bill.locality" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.city}}" value="{{request.bill.locality}}">
 				<input type="text" name="bill.region" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.state}}" value="{{request.bill.region}}">
 				<input type="text" name="bill.postal_code" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.zip}}" value="{{request.bill.postal_code}}">
