@@ -838,7 +838,7 @@
 					"zip": "ZIP Code",
 					"preDir": "Street Pre-Direction",
 					"postDir": "Street Post-Direction",
-					"address": "Address Line 2"
+					"extended_address": "Address Line 2"
 				}
 			},
 			"buttons": {

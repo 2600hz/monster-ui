@@ -262,8 +262,8 @@ define(function(require) {
 						carriers: _.get(monster, 'config.whitelabel.port.carriers'),
 						request: request,
 						cardinalDirections: self.appFlags.portWizard.cardinalDirections,
-						selectedPreDir: _.get(request, 'bill.street_pre_dir', false),
-						selectedPostDir: _.get(request, 'bill.street_post_dir', false)
+						selectedPreDir: _.get(request, 'bill.street_pre_dir', ''),
+						selectedPostDir: _.get(request, 'bill.street_post_dir', '')
 					};
 				};
 
