@@ -551,33 +551,23 @@ define(function(require) {
 						parsedError = $.parseJSON(error.responseText);
 					}
 
-					if (error.status === 402) {
+					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
 						// Handle the "Payment Required" status
-
-						// If we have a 402 after the charges have been accepted/rejected,
-						// handle the error callback as required originally
-						if (typeof requestOptions.acceptCharges !== 'undefined') {
-							requestOptions.preventCallbackError = requestOptions.originalPreventCallbackError;
-							return;
-						}
-
-						// Else, handle the charges notification here
-						var parsedError = error;
+						var parsedError = error,
+							originalPreventCallbackError = requestOptions.preventCallbackError;
 
 						if ('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
-						// Store current preventCallbackError value...
-						requestOptions.originalPreventCallbackError = requestOptions.preventCallbackError;
-
-						// ...and prevent the execution of the custom error callback, as it is a
+						// Prevent the execution of the custom error callback, as it is a
 						// charges notification that will be handled here
 						requestOptions.preventCallbackError = true;
 
 						// Notify the user about the charges
 						monster.ui.charges(parsedError.data, function() {
 							requestOptions.acceptCharges = true;
+							requestOptions.preventCallbackError = originalPreventCallbackError;
 							monster.kazooSdk.request(requestOptions);
 						}, function() {
 							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
