@@ -1048,42 +1048,79 @@ define(function(require) {
 				.value();
 		},
 
+		portListingRequestByType: function(callback, type) {
+			var self = this;
+
+			self.portListingRequestListPort({
+				data: {
+					filters: {
+						paginate: false,
+						by_type: type
+					}
+				},
+				success: function(ports) {
+					callback(null, ports);
+				}
+			});
+		},
+
+		portlistingRequestDescendantsByType: function(callback, type) {
+			var self = this;
+
+			self.portListingRequestListDescendantsPorts({
+				data: {
+					filters: {
+						paginate: false,
+						by_type: type
+					}
+				},
+				success: function(ports) {
+					callback(null, ports);
+				}
+			});
+		},
+
 		/**
 		 * @param  {Function} args.success
 		 */
 		portListingHelperListPorts: function(args) {
 			var self = this,
-				listAccountPorts = function(callback) {
-					self.portListingRequestListPort({
-						data: {
-							filters: {
-								paginate: false
-							}
-						},
-						success: function(ports) {
-							callback(null, ports);
-						}
-					});
+				listSuspendedAccountPorts = function(callback) {
+					self.portListingRequestByType(callback, 'suspended');
 				},
-				listDescendantsPorts = function(callback) {
-					self.portListingRequestListDescendantsPorts({
-						data: {
-							filters: {
-								paginate: false
-							}
-						},
-						success: function(ports) {
-							callback(null, ports);
-						}
-					});
+				listSuspendedDescendantsPorts = function(callback) {
+					self.portlistingRequestDescendantsByType(callback, 'suspended');
 				},
-				parallelRequests = [listAccountPorts];
+				listProgressingAccountPorts = function(callback) {
+					self.portListingRequestByType(callback, 'progressing');
+				},
+				listProgressingDescendantsPorts = function(callback) {
+					self.portlistingRequestDescendantsByType(callback, 'progressing');
+				},
+				parallelRequests = [listSuspendedAccountPorts];
 
 			if (self.portListingGet('isMonsterApp')) {
-				parallelRequests.push(listDescendantsPorts);
+				parallelRequests.push(listSuspendedDescendantsPorts);
 			}
 
-			monster.parallel(parallelRequests, function(err, results) {
+			monster.parallel({
+				suspendedPostRequestList: function(callback) {
+					monster.parallel([
+						listSuspendedAccountPorts,
+						listSuspendedDescendantsPorts
+					], function(err, suspendedPorts) {
+						callback(null, suspendedPorts);
+					});
+				},
+				progressingPostRequestList: function(callback) {
+					monster.parallel([
+						listProgressingAccountPorts,
+						listProgressingDescendantsPorts
+					], function(err, progressingPorts) {
+						callback(null, progressingPorts);
+					});
+				}
+			}, function(error, results) {
 				var portRequests = _
 					.chain(results)
 					.map(function(payload) {
