@@ -130,47 +130,27 @@ define(function(require) {
 			var self = this,
 				container = self.portListingGet('container').find('.listing-section-wrapper'),
 				initTemplate = function initTemplate(portRequests) {
-					var formatedPortRequests = formatDataToTemplate(portRequests),
-						template = $(self.getTemplate({
-							name: 'listing',
-							data: {
-								hasPorts: !_.isEmpty(formatedPortRequests)
-							},
-							submodule: 'portListing'
-						}));
+					var template = $(self.getTemplate({
+						name: 'listing',
+						data: {
+							hasPorts: !_.isEmpty(portRequests)
+						},
+						submodule: 'portListing'
+					}));
 
 					self.portListingRenderListingIncomplete({
 						template: template,
-						portRequests: formatedPortRequests
+						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'suspendedList', []))
 					});
 					self.portListingRenderListingSubmitted({
 						template: template,
-						portRequests: formatedPortRequests
+						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
 					});
 					self.portListingBindListingEvents({
 						template: template
 					});
 
 					return template;
-				},
-				formatDataToTemplate = function formatDataToTemplate(portRequests) {
-					return _.map(portRequests, function(request) {
-						return {
-							account: {
-								id: request.account_id,
-								name: self.portListingGet(['accountNamesById', request.account_id])
-							},
-							amount: _.size(request.numbers),
-							carrier: {
-								winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
-								losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
-							},
-							id: request.id,
-							name: request.name,
-							reference: request.carrier_reference_number,
-							state: request.port_state
-						};
-					});
 				};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
@@ -1055,7 +1035,7 @@ define(function(require) {
 				data: {
 					filters: {
 						paginate: false,
-						by_type: type
+						by_types: type
 					}
 				},
 				success: function(ports) {
@@ -1071,12 +1051,34 @@ define(function(require) {
 				data: {
 					filters: {
 						paginate: false,
-						by_type: type
+						by_types: type
 					}
 				},
 				success: function(ports) {
 					callback(null, ports);
 				}
+			});
+		},
+
+		portFormatDataToTemplate: function formatDataToTemplate(portRequests) {
+			var self = this;
+
+			return _.map(portRequests, function(request) {
+				return {
+					account: {
+						id: request.account_id,
+						name: self.portListingGet(['accountNamesById', request.account_id])
+					},
+					amount: _.size(request.numbers),
+					carrier: {
+						winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
+						losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
+					},
+					id: request.id,
+					name: request.name,
+					reference: request.carrier_reference_number,
+					state: request.port_state
+				};
 			});
 		},
 
@@ -1097,16 +1099,52 @@ define(function(require) {
 				listProgressingDescendantsPorts = function(callback) {
 					self.portlistingRequestDescendantsByType(callback, 'progressing');
 				},
-				parallelRequests = [listSuspendedAccountPorts, listProgressingAccountPorts];
+				parallelSuspendedRequests = [listSuspendedAccountPorts],
+				parallelProgressingRequests = [listProgressingAccountPorts];
 
 			if (self.portListingGet('isMonsterApp')) {
-				parallelRequests.push(listSuspendedDescendantsPorts);
-				parallelRequests.push(listProgressingDescendantsPorts);
+				parallelSuspendedRequests.push(listSuspendedDescendantsPorts);
+				parallelProgressingRequests.push(listProgressingDescendantsPorts);
 			}
 
-			monster.parallel(parallelRequests, function(error, results) {
-				var portRequests = _
+			monster.parallel({
+				suspendedList: function(callback) {
+					monster.parallel(parallelSuspendedRequests, function(err, suspendedPorts) {
+						callback(null, suspendedPorts);
+					});
+				},
+				progressingList: function(callback) {
+					monster.parallel(parallelProgressingRequests, function(err, progressingPorts) {
+						callback(null, progressingPorts);
+					});
+				}
+			}, function(error, results) {
+				self.portListingSet('accountNamesById', _
 					.chain(results)
+					.map(function(requests) {
+						return _
+							.chain(requests)
+							.map(function(payload) {
+								return _.map(payload, function(account) {
+									return {
+										id: account.account_id,
+										name: account.account_name
+									};
+								});
+							})
+							.flatten()
+							.transform(function(object, account) {
+								object[account.id] = account.name;
+							}, {})
+							.value();
+					})
+					.flatten()
+					.value()
+				);
+
+				_.each(results, function(request, requestKey, requestObject) {
+					requestObject[requestKey] = _
+					.chain(request)
 					.map(function(payload) {
 						return _
 							.chain(payload)
@@ -1118,26 +1156,10 @@ define(function(require) {
 					})
 					.flatten()
 					.value();
+				});
 
-				self.portListingSet('accountNamesById', _
-					.chain(results)
-					.map(function(payload) {
-						return _.map(payload, function(account) {
-							return {
-								id: account.account_id,
-								name: account.account_name
-							};
-						});
-					})
-					.flatten()
-					.transform(function(object, account) {
-						object[account.id] = account.name;
-					}, {})
-					.value()
-				);
-				self.portListingSet('portRequestsById', _.keyBy(portRequests, 'id'));
-
-				args.success(portRequests);
+				self.portListingSet('portRequestsById', _.keyBy(_.chain(results).map(i => i).flatten().value(), 'id'));
+				args.success(results);
 			});
 		},
 
