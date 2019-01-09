@@ -142,6 +142,7 @@ define(function(require) {
 						template: template,
 						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'suspendedList', []))
 					});
+
 					self.portListingRenderListingSubmitted({
 						template: template,
 						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
@@ -495,8 +496,11 @@ define(function(require) {
 								: [1];
 
 						if (filter === 'all') {
-							filtering.removeFilter('byState');
 							filtering.removeFilter('byScheduleDate');
+							filtering.addFilter('byState', '-completed AND -canceled', column);
+						} else if (filter === 'completed') {
+							filtering.removeFilter('byScheduleDate');
+							filtering.addFilter('byState', 'completed OR canceled', column);
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
