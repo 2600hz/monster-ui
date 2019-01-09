@@ -1099,23 +1099,29 @@ define(function(require) {
 				listProgressingDescendantsPorts = function(callback) {
 					self.portlistingRequestDescendantsByType(callback, 'progressing');
 				},
+				listCompletedAccountPorts = function(callback) {
+					self.portListingRequestByType(callback, 'completed');
+				},
+				listCompletedDescendantsPorts = function(callback) {
+					self.portlistingRequestDescendantsByType(callback, 'completed');
+				},
 				parallelSuspendedRequests = [listSuspendedAccountPorts],
-				parallelProgressingRequests = [listProgressingAccountPorts];
+				parallelProgressingRequests = [listProgressingAccountPorts, listCompletedAccountPorts];
 
 			if (self.portListingGet('isMonsterApp')) {
 				parallelSuspendedRequests.push(listSuspendedDescendantsPorts);
-				parallelProgressingRequests.push(listProgressingDescendantsPorts);
+				parallelProgressingRequests.push(listProgressingDescendantsPorts, listCompletedDescendantsPorts);
 			}
 
 			monster.parallel({
 				suspendedList: function(callback) {
-					monster.parallel(parallelSuspendedRequests, function(err, suspendedPorts) {
-						callback(null, suspendedPorts);
+					monster.parallel(parallelSuspendedRequests, function(err, portRequests) {
+						callback(null, portRequests);
 					});
 				},
 				progressingList: function(callback) {
-					monster.parallel(parallelProgressingRequests, function(err, progressingPorts) {
-						callback(null, progressingPorts);
+					monster.parallel(parallelProgressingRequests, function(err, portRequests) {
+						callback(null, portRequests);
 					});
 				}
 			}, function(error, results) {
