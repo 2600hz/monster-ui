@@ -221,7 +221,15 @@ define(function(require) {
 						submodule: 'portListing'
 					}));
 
-					monster.ui.footable(template.find('#submitted_ports_listing'));
+					monster.ui.footable(template.find('#submitted_ports_listing'), {
+						filtering: {
+							filters: [{
+								name: 'byState',
+								query: '-completed AND -canceled',
+								columns: self.portListingGet('isMonsterApp') ? [2] : [1]
+							}]
+						}
+					});
 
 					template
 						.find('#submitted_ports_listing .footable-filtering .form-inline')
