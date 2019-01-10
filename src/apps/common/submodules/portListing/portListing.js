@@ -145,7 +145,7 @@ define(function(require) {
 
 					self.portListingRenderListingSubmitted({
 						template: template,
-						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
+						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'submittedList', []))
 					});
 					self.portListingBindListingEvents({
 						template: template
@@ -1131,7 +1131,7 @@ define(function(require) {
 						callback(null, portRequests);
 					});
 				},
-				progressingList: function(callback) {
+				submittedList: function(callback) {
 					monster.parallel(parallelProgressingRequests, function(err, portRequests) {
 						callback(null, portRequests);
 					});
