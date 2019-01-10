@@ -1120,11 +1120,11 @@ define(function(require) {
 					self.portlistingRequestDescendantsByType(callback, 'completed');
 				},
 				parallelSuspendedRequests = [listSuspendedAccountPorts],
-				parallelProgressingRequests = [listProgressingAccountPorts, listCompletedAccountPorts];
+				parallelSubmittedRequests = [listProgressingAccountPorts, listCompletedAccountPorts];
 
 			if (self.portListingGet('isMonsterApp')) {
 				parallelSuspendedRequests.push(listSuspendedDescendantsPorts);
-				parallelProgressingRequests.push(listProgressingDescendantsPorts, listCompletedDescendantsPorts);
+				parallelSubmittedRequests.push(listProgressingDescendantsPorts, listCompletedDescendantsPorts);
 			}
 
 			monster.parallel({
@@ -1134,7 +1134,7 @@ define(function(require) {
 					});
 				},
 				submittedList: function(callback) {
-					monster.parallel(parallelProgressingRequests, function(err, portRequests) {
+					monster.parallel(parallelSubmittedRequests, function(err, portRequests) {
 						callback(null, portRequests);
 					});
 				}
