@@ -25,7 +25,9 @@ define(function(require) {
 					{ value: 'rejected', next: [1, 5, 6] },
 					{ value: 'completed', next: [] },
 					{ value: 'canceled', next: [] }
-				]
+				],
+				completedFilter: 'completed OR canceled',
+				completedFilterExclude: '-completed AND -canceled'
 			}
 		},
 
@@ -226,7 +228,7 @@ define(function(require) {
 						filtering: {
 							filters: [{
 								name: 'byState',
-								query: '-completed AND -canceled',
+								query: self.appFlags.portListing.completedFilterExclude,
 								columns: self.portListingGet('isMonsterApp') ? [2] : [1]
 							}]
 						}
@@ -497,10 +499,10 @@ define(function(require) {
 
 						if (filter === 'all') {
 							filtering.removeFilter('byScheduleDate');
-							filtering.addFilter('byState', '-completed AND -canceled', column);
+							filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
 						} else if (filter === 'completed') {
 							filtering.removeFilter('byScheduleDate');
-							filtering.addFilter('byState', 'completed OR canceled', column);
+							filtering.addFilter('byState', self.appFlags.portListing.completedFilter, column);
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
