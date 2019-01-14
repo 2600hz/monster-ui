@@ -82,7 +82,10 @@ define(function(require) {
 						var renderData = $.extend(true, {}, {
 							currencySymbol: monster.util.getCurrencySymbol(),
 							uiRestrictions: uiRestrictions,
-							amount: results.balance
+							amount: monster.util.formatPrice({
+								price: results.balance,
+								digits: self.appFlags.balance.digits.availableCreditsBadge
+							})
 						});
 
 						renderData.uiRestrictions.balance.show_header = (renderData.uiRestrictions.balance.show_credit === false && renderData.uiRestrictions.balance.show_minutes === false) ? false : true;
@@ -90,9 +93,7 @@ define(function(require) {
 						var balance = $(self.getTemplate({ name: 'layout', data: renderData, submodule: 'balance' })),
 							args = {
 								module: 'balance',
-								data: monster.util.formatPrice({
-									price: renderData.amount
-								})
+								data: renderData.amount
 							};
 
 						self.balanceBindEvents(balance, renderData.uiRestrictions.balance.show_credit);
