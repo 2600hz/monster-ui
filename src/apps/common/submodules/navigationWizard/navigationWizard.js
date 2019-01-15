@@ -109,6 +109,22 @@ define(function(require) {
 
 						thisArg[args.cancel](args);
 					});
+
+			template
+				.find('#clear')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var queue = args.data,
+							step = args.steps[currentStep],
+							formattedData = _.merge({}, args, {
+								data: step.default
+							});
+
+						//re-render template with default values
+						self.setSelected(currentStep, formattedData);
+						self.generateTemplate(currentStep, formattedData);
+					});
 		},
 
 		setSelected: function(currentStep, args) {
