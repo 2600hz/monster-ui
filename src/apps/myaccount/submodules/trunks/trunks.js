@@ -102,16 +102,19 @@ define(function(require) {
 
 						updateData = $.extend(true, dataLimits.data, updateData);
 
-						self.trunksUpdateLimits(updateData, function(_data) {
-							var argsMenu = {
-								module: self.name,
-								key: 'inbound',
-								data: updateData.inbound_trunks
-							};
+						self.trunksUpdateLimits({
+							limits: updateData,
+							success: function(_data) {
+								var argsMenu = {
+									module: self.name,
+									key: 'inbound',
+									data: updateData.inbound_trunks
+								};
 
-							monster.pub('myaccount.updateMenu', argsMenu);
-							self.trunksRenderInbound();
-							//TODO toastr saved
+								monster.pub('myaccount.updateMenu', argsMenu);
+								self.trunksRenderInbound();
+								//TODO toastr saved
+							}
 						});
 					});
 				});
@@ -174,15 +177,18 @@ define(function(require) {
 
 						updateData = $.extend(true, dataLimits.data, updateData);
 
-						self.trunksUpdateLimits(updateData, function(_data) {
-							var argsMenu = {
-								module: self.name,
-								data: updateData.outbound_trunks,
-								key: 'outbound'
-							};
+						self.trunksUpdateLimits({
+							limits: updateData,
+							success: function(_data) {
+								var argsMenu = {
+									module: self.name,
+									data: updateData.outbound_trunks,
+									key: 'outbound'
+								};
 
-							monster.pub('myaccount.updateMenu', argsMenu);
-							self.trunksRenderOutbound();
+								monster.pub('myaccount.updateMenu', argsMenu);
+								self.trunksRenderOutbound();
+							}
 						});
 					});
 				});
@@ -244,15 +250,18 @@ define(function(require) {
 
 						updateData = $.extend(true, dataLimits.data, updateData);
 
-						self.trunksUpdateLimits(updateData, function(_data) {
-							var argsMenu = {
-								module: self.name,
-								data: updateData.twoway_trunks,
-								key: 'twoway'
-							};
+						self.trunksUpdateLimits({
+							limits: updateData,
+							success: function(_data) {
+								var argsMenu = {
+									module: self.name,
+									data: updateData.twoway_trunks,
+									key: 'twoway'
+								};
 
-							monster.pub('myaccount.updateMenu', argsMenu);
-							self.trunksRenderTwoway();
+								monster.pub('myaccount.updateMenu', argsMenu);
+								self.trunksRenderTwoway();
+							}
 						});
 					});
 				});
@@ -283,28 +292,30 @@ define(function(require) {
 			});
 		},
 
-		trunksUpdateLimits: function(limits, success, error) {
+		/**
+		 * Update trunk limits
+		 * @param  {Object}   args
+		 * @param  {Object}   args.limits     Trunk limits
+		 * @param  {Function} [args.success]  Success callback
+		 * @param  {Function} [args.error]    Error callback
+		 */
+		trunksUpdateLimits: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'limits.update',
 				data: {
 					accountId: self.accountId,
-					data: limits,
-					generateError: false
+					data: args.limits
 				},
 				success: function(data, status) {
-					success && success(data, status);
+					args.hasOwnProperty('success') && args.success(data, status);
 				},
-				error: function(data, status, globalHandler) {
-					if (data.httpErrorStatus !== 402) {
-						globalHandler(data, { generateError: true });
-
-						error && error(data, status);
-					}
+				error: function(data, status) {
+					args.hasOwnProperty('error') && args.error(data, status);
 				},
 				onChargesCancelled: function(data, status) {
-					error && error(data, status);
+					args.hasOwnProperty('error') && args.error(data, status);
 				}
 			});
 		}
