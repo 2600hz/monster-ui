@@ -346,6 +346,10 @@
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
 			},
+			qubicleDashboards: {
+				'getOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' }
+			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/recordings/{resourceId}' },
