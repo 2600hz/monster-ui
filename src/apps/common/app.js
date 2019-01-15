@@ -9,6 +9,7 @@ define(function(require) {
 		'carrierSelector',
 		'chooseModel',
 		'conferenceViewer',
+		'deleteSmartUser',
 		'e911',
 		'extensionTools',
 		'failover',

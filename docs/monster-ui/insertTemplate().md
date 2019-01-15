@@ -20,7 +20,8 @@ Key | Description | Type | Default | Required
 `title` | Title displayed in the loading view. | `String` | | `false`
 `text` | Text displayed in the loading view. | `String` | | `false`
 `duration` | Duration of the fadeIn animation for the inserted template. | `Number` | `250` | `false`
-`cssCLass` | Custom CSS classes for the loading view. | `String` | `app-content` | `false`
+`cssClass` | Custom CSS classes for the loading view. | `String` | `app-content` | `false`
+`cssId` | Custom CSS id for the loading view. | `String` | | `false`
 `hasBackground` | Show the loading spinner/text/title without any background if set to `false` (overridden by `cssClass`). | `Boolean` | `true` | `false`
 
 ## Description

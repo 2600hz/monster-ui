@@ -274,7 +274,8 @@
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
 				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
 				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' },
-				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' }
+				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
@@ -297,7 +298,7 @@
 				'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
 				'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 				'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}' },
-				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}?reason={reason}' },
+				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' },
 				'listComments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
 				'getComment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
 				'addComment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
@@ -394,8 +395,11 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
 			},
 			services: {
+				'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/services' },
+				'bulkChange': { verb: 'POST', url: 'accounts/{accountId}/services/' },
 				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
+				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
 				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
 			},
 			storage: {
@@ -447,6 +451,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
 				'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages' },
