@@ -277,9 +277,9 @@ define(function(require) {
 
 				addCreditDialog
 					.find('input#amount')
-					.mask('#0.00', {
-						reverse: true
-					});
+						.mask('#0.00', {
+							reverse: true
+						});
 
 				monster.pub('myaccount.updateMenu', dataUpdate);
 
