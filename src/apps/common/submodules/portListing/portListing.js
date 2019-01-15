@@ -145,9 +145,9 @@ define(function(require) {
 						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'suspendedList', []))
 					});
 
-					self.portListingRenderListingSubmitted({
+					self.portListingRenderListingProgressing({
 						template: template,
-						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'submittedList', []))
+						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
 					});
 					self.portListingBindListingEvents({
 						template: template
@@ -208,7 +208,7 @@ define(function(require) {
 		 * @param  {jQuery} args.template
 		 * @param  {Array} args.portRequests
 		 */
-		portListingRenderListingSubmitted: function(args) {
+		portListingRenderListingProgressing: function(args) {
 			var self = this,
 				container = args.template,
 				portRequests = args.portRequests,
@@ -217,22 +217,12 @@ define(function(require) {
 						name: 'listing-submitted',
 						data: {
 							isMonsterApp: self.portListingGet('isMonsterApp'),
-							requests: _.filter(portRequests, function(portRequest) {
-								return !_.includes(['unconfirmed', 'rejected'], portRequest.state);
-							})
+							requests: portRequests
 						},
 						submodule: 'portListing'
 					}));
 
-					monster.ui.footable(template.find('#submitted_ports_listing'), {
-						filtering: {
-							filters: [{
-								name: 'byState',
-								query: self.appFlags.portListing.completedFilterExclude,
-								columns: self.portListingGet('isMonsterApp') ? [2] : [1]
-							}]
-						}
-					});
+					monster.ui.footable(template.find('#submitted_ports_listing'));
 
 					template
 						.find('#submitted_ports_listing .footable-filtering .form-inline')
@@ -1113,18 +1103,12 @@ define(function(require) {
 				listProgressingDescendantsPorts = function(callback) {
 					self.portlistingRequestDescendantsByType(callback, 'progressing');
 				},
-				listCompletedAccountPorts = function(callback) {
-					self.portListingRequestByType(callback, 'completed');
-				},
-				listCompletedDescendantsPorts = function(callback) {
-					self.portlistingRequestDescendantsByType(callback, 'completed');
-				},
 				parallelSuspendedRequests = [listSuspendedAccountPorts],
-				parallelSubmittedRequests = [listProgressingAccountPorts, listCompletedAccountPorts];
+				parallelProgressingRequests = [listProgressingAccountPorts];
 
 			if (self.portListingGet('isMonsterApp')) {
 				parallelSuspendedRequests.push(listSuspendedDescendantsPorts);
-				parallelSubmittedRequests.push(listProgressingDescendantsPorts, listCompletedDescendantsPorts);
+				parallelProgressingRequests.push(listProgressingDescendantsPorts);
 			}
 
 			monster.parallel({
@@ -1133,8 +1117,8 @@ define(function(require) {
 						callback(null, portRequests);
 					});
 				},
-				submittedList: function(callback) {
-					monster.parallel(parallelSubmittedRequests, function(err, portRequests) {
+				progressingList: function(callback) {
+					monster.parallel(parallelProgressingRequests, function(err, portRequests) {
 						callback(null, portRequests);
 					});
 				}
