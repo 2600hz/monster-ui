@@ -13,14 +13,13 @@ define(function(require) {
 			'myaccount.refreshBadges': '_trunksRefreshBadges'
 		},
 
-		_trunksRenderContent: function(args) {
-			var self = this;
-			if (args.key === 'inbound') {
-				self.trunksRenderInbound(args.callback);
-			} else if (args.key === 'outbound') {
-				self.trunksRenderOutbound(args.callback);
-			} else if (args.key === 'twoway') {
-				self.trunksRenderTwoway(args.callback);
+		appFlags: {
+			trunks: {
+				amounts: {
+					inbound: 6.99,
+					outbound: 29.99,
+					twoway: 29.99
+				}
 			}
 		},
 
@@ -54,220 +53,101 @@ define(function(require) {
 			});
 		},
 
-		trunksRenderInbound: function(callback) {
-			var self = this;
+		/**
+		 * Renders the trunking limits view
+		 * @param  {Object}    args
+		 * @param  {('inbound'|'outbound'|'twoway')} args.trunkType  Trunk type
+		 * @param  {Function}  [args.callback]  Callback
+		 */
+		_trunksRenderContent: function(args) {
+			var self = this,
+				trunkType = args.key;
 
 			self.trunksGetLimits(function(data) {
-				var amountInbound = 6.99,
-					inbound = data.data.inbound_trunks || 0,
-					totalAmountInbound = amountInbound * inbound,
+				var amount = self.appFlags.trunks.amounts[trunkType],
+					trunkValuePropName = trunkType + '_trunks',
+					trunksValue = _.get(data.data, trunkValuePropName, 0),
+					totalAmount = amount * trunksValue,
 					dataTemplate = {
-						value: inbound,
-						trunkType: 'inbound'
+						value: trunksValue,
+						trunkType: trunkType
 					},
-					trunksInboundView = $(self.getTemplate({
+					trunksView = $(self.getTemplate({
 						name: 'layout',
 						data: dataTemplate,
 						submodule: 'trunks'
 					}));
 
-				monster.ui.tooltips(trunksInboundView);
+				monster.ui.tooltips(trunksView);
 
-				trunksInboundView.find('#slider_trunks').slider({
+				trunksView.find('#slider_trunks').slider({
 					min: 0,
 					max: 100,
 					range: 'min',
-					value: data.data.inbound_trunks > 0 ? data.data.inbound_trunks : 0,
+					value: trunksValue > 0 ? trunksValue : 0,
 					slide: function(event, ui) {
-						trunksInboundView.find('.slider-value').html(ui.value);
-						totalAmountInbound = ui.value * amountInbound;
-						trunksInboundView.find('.total-amount .total-amount-value').html(totalAmountInbound.toFixed(2));
+						trunksView.find('.slider-value').html(ui.value);
+						totalAmount = ui.value * amount;
 
-						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_trunks .ui-slider-handle').css('left'));
+						trunksView.find('.total-amount .total-amount-value').html(totalAmount.toFixed(2));
+
+						trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
 					},
-					change: function(event) {
-						trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_trunks .ui-slider-handle').css('left'));
+					change: function() {
+						trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
 					}
 				});
 
-				trunksInboundView.find('.update-limits').on('click', function(e) {
+				trunksView.find('.update-limits').on('click', function(e) {
 					e.preventDefault();
 
 					self.trunksGetLimits(function(dataLimits) {
-						var updateData = {
-							inbound_trunks: trunksInboundView.find('#slider_trunks').slider('value'),
-							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-						};
+						var updateData;
 
-						updateData = $.extend(true, dataLimits.data, updateData);
+						switch (trunkType) {
+							case 'inbound':
+								updateData = _.merge(dataLimits.data, {
+									inbound_trunks: trunksView.find('#slider_trunks').slider('value'),
+									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+								});
+								break;
+							case 'outbound':
+								updateData = _.merge(dataLimits.data, {
+									outbound_trunks: trunksView.find('#slider_trunks').slider('value'),
+									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
+									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+								});
+								break;
+							case 'twoway':
+								updateData = _.merge(dataLimits.data, {
+									twoway_trunks: trunksView.find('#slider_trunks').slider('value'),
+									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
+								});
+								break;
+						}
 
 						self.trunksUpdateLimits({
 							limits: updateData,
 							success: function(_data) {
 								var argsMenu = {
 									module: self.name,
-									key: 'inbound',
-									data: updateData.inbound_trunks
+									data: _.get(updateData, trunkValuePropName),
+									key: trunkType
 								};
 
 								monster.pub('myaccount.updateMenu', argsMenu);
-								self.trunksRenderInbound();
+								self._trunksRenderContent({ key: trunkType });
 								//TODO toastr saved
 							}
 						});
 					});
 				});
 
-				monster.pub('myaccount.renderSubmodule', trunksInboundView);
+				monster.pub('myaccount.renderSubmodule', trunksView);
 
-				trunksInboundView.find('.slider-value').css('left', trunksInboundView.find('#slider_trunks .ui-slider-handle').css('left'));
+				trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
 
-				callback && callback();
-			});
-		},
-
-		trunksRenderOutbound: function(callback) {
-			var self = this;
-
-			self.trunksGetLimits(function(data) {
-				var amountOutbound = 29.99,
-					outbound = data.data.outbound_trunks || 0,
-					totalAmountOutbound = amountOutbound * outbound,
-					dataTemplate = {
-						value: outbound,
-						trunkType: 'outbound'
-					},
-					trunksOutboundView = $(self.getTemplate({
-						name: 'layout',
-						data: dataTemplate,
-						submodule: 'trunks'
-					}));
-
-				monster.ui.tooltips(trunksOutboundView);
-
-				trunksOutboundView.find('#slider_trunks').slider({
-					min: 0,
-					max: 100,
-					range: 'min',
-					value: data.data.outbound_trunks > 0 ? data.data.outbound_trunks : 0,
-					slide: function(event, ui) {
-						trunksOutboundView.find('.slider-value').html(ui.value);
-						totalAmountOutbound = ui.value * amountOutbound;
-
-						trunksOutboundView.find('.total-amount .total-amount-value').html(totalAmountOutbound.toFixed(2));
-
-						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_trunks .ui-slider-handle').css('left'));
-					},
-					change: function(event) {
-						trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_trunks .ui-slider-handle').css('left'));
-					}
-				});
-
-				trunksOutboundView.find('.update-limits').on('click', function(e) {
-					e.preventDefault();
-
-					self.trunksGetLimits(function(dataLimits) {
-						var updateData = {
-							outbound_trunks: trunksOutboundView.find('#slider_trunks').slider('value'),
-							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
-							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-						};
-
-						updateData = $.extend(true, dataLimits.data, updateData);
-
-						self.trunksUpdateLimits({
-							limits: updateData,
-							success: function(_data) {
-								var argsMenu = {
-									module: self.name,
-									data: updateData.outbound_trunks,
-									key: 'outbound'
-								};
-
-								monster.pub('myaccount.updateMenu', argsMenu);
-								self.trunksRenderOutbound();
-							}
-						});
-					});
-				});
-
-				monster.pub('myaccount.renderSubmodule', trunksOutboundView);
-
-				trunksOutboundView.find('.slider-value').css('left', trunksOutboundView.find('#slider_trunks .ui-slider-handle').css('left'));
-
-				callback && callback();
-			});
-		},
-
-		trunksRenderTwoway: function(callback) {
-			var self = this;
-
-			self.trunksGetLimits(function(data) {
-				var amountTwoway = 29.99,
-					twoway = data.data.twoway_trunks || 0,
-					totalAmountTwoway = amountTwoway * twoway,
-					dataTemplate = {
-						value: twoway,
-						trunkType: 'twoway'
-					},
-					trunksTwowayView = $(self.getTemplate({
-						name: 'layout',
-						data: dataTemplate,
-						submodule: 'trunks'
-					}));
-
-				monster.ui.tooltips(trunksTwowayView);
-
-				trunksTwowayView.find('#slider_trunks').slider({
-					min: 0,
-					max: 100,
-					range: 'min',
-					value: data.data.twoway_trunks > 0 ? data.data.twoway_trunks : 0,
-					slide: function(event, ui) {
-						trunksTwowayView.find('.slider-value').html(ui.value);
-						totalAmountTwoway = ui.value * amountTwoway;
-
-						trunksTwowayView.find('.total-amount .total-amount-value').html(totalAmountTwoway.toFixed(2));
-
-						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_trunks .ui-slider-handle').css('left'));
-					},
-					change: function(event) {
-						trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_trunks .ui-slider-handle').css('left'));
-					}
-				});
-
-				trunksTwowayView.find('.update-limits').on('click', function(e) {
-					e.preventDefault();
-
-					self.trunksGetLimits(function(dataLimits) {
-						var updateData = {
-							twoway_trunks: trunksTwowayView.find('#slider_trunks').slider('value'),
-							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
-						};
-
-						updateData = $.extend(true, dataLimits.data, updateData);
-
-						self.trunksUpdateLimits({
-							limits: updateData,
-							success: function(_data) {
-								var argsMenu = {
-									module: self.name,
-									data: updateData.twoway_trunks,
-									key: 'twoway'
-								};
-
-								monster.pub('myaccount.updateMenu', argsMenu);
-								self.trunksRenderTwoway();
-							}
-						});
-					});
-				});
-
-				monster.pub('myaccount.renderSubmodule', trunksTwowayView);
-
-				trunksTwowayView.find('.slider-value').css('left', trunksTwowayView.find('#slider_trunks .ui-slider-handle').css('left'));
-
-				callback && callback();
+				args.hasOwnProperty('callback') && args.callback();
 			});
 		},
 
