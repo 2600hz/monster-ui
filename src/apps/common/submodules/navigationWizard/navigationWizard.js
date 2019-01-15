@@ -14,9 +14,7 @@ define(function(require) {
 
 		navigationWizardRender: function(args) {
 			var self = this,
-				thisArg = args.thisArg,
 				container = args.container,
-				steps = args.steps,
 				currentStep = 0,
 				layout = $(self.getTemplate({
 					name: 'layout',
@@ -36,7 +34,6 @@ define(function(require) {
 					.append(layout);
 
 				self.generateTemplate(currentStep, args);
-
 			} else {
 				throw new Error('A container must be provided.');
 			}
@@ -44,12 +41,8 @@ define(function(require) {
 
 		navigationWizardBindEvents: function(args) {
 			var self = this,
-				container = args.container,
 				thisArg = args.thisArg,
 				template = args.template,
-				steps = args.steps,
-				removeCallback = args.removeCallback,
-				afterCallback = args.afterCallback,
 				currentStep = 0;
 
 			self.setSelected(currentStep, args);
@@ -93,9 +86,9 @@ define(function(require) {
 						var result = self.utilForTemplate(currentStep, args);
 
 						if (result.valid === true) {
-							thisArg[args.done](args);				
+							thisArg[args.done](args);
 						}
-			});
+					});
 
 			//Clicking on the menu item
 			template
@@ -116,44 +109,34 @@ define(function(require) {
 
 						thisArg[args.cancel](args);
 					});
-
-			template
-				.find('#clear')
-				.on('click', function(event) {
-					event.preventDefault();
-
-					//it still needs work
-					console.log('clear');					
-				});
-
 		},
 
 		setSelected: function(currentStep, args) {
 			var self = this,
 				template = args.template,
 				steps = args.steps;
-			
-				template
-					.find('.right-content')
-					.empty()
-					.append(steps[currentStep].template);
 
-				template
-					.find('li')
+			template
+				.find('.right-content')
+					.empty()
+						.append(steps[currentStep].template);
+
+			template
+				.find('li')
 					.removeClass('selected');
 
-				template
-					.find('.nav span')
+			template
+				.find('.nav span')
 					.addClass('hide-content')
-					.removeClass('show-content');
+						.removeClass('show-content');
 
-				template
-					.find('span[data-id="' + currentStep + '"]')
+			template
+				.find('span[data-id="' + currentStep + '"]')
 					.addClass('show-content')
-					.removeClass('hide-content');
+						.removeClass('hide-content');
 
-				template
-					.find('li[data-id="' + currentStep + '"]')
+			template
+				.find('li[data-id="' + currentStep + '"]')
 					.addClass('selected');
 
 			//Hide back button in the first page
@@ -181,7 +164,7 @@ define(function(require) {
 
 			thisArg[template](args);
 		},
-		
+
 		utilForTemplate: function(currentStep, args) {
 			var self = this,
 				thisArg = args.thisArg,
