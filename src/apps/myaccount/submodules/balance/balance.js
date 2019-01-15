@@ -276,10 +276,10 @@ define(function(require) {
 					};
 
 				addCreditDialog
-					.find('#amount')
-						.mask('#0.00', {
-							reverse: true
-						});
+					.find('input#amount')
+					.mask('#0.00', {
+						reverse: true
+					});
 
 				monster.pub('myaccount.updateMenu', dataUpdate);
 
@@ -562,7 +562,7 @@ define(function(require) {
 						event.preventDefault();
 
 						var $this = $(this),
-							creditsToAdd = parseFloat(parent.find('#amount').val());
+							creditsToAdd = parseFloat(parent.find('input#amount').val());
 
 						if (_.isNaN(creditsToAdd)) {
 							monster.ui.toast({
