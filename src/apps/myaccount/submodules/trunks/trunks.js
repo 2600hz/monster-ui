@@ -96,13 +96,17 @@ define(function(require) {
 							};
 
 							monster.pub('myaccount.updateMenu', argsMenu);
-							self.trunksRender({ key: trunkType });
 
-							monster.ui.toast({
-								type: 'success',
-								message: self.getTemplate({
-									name: '!' + self.i18n.active().trunks.saveSuccessMessage
-								})
+							self.trunksRender({
+								key: trunkType,
+								callback: function() {
+									monster.ui.toast({
+										type: 'success',
+										message: self.getTemplate({
+											name: '!' + self.i18n.active().trunks.saveSuccessMessage
+										})
+									});
+								}
 							});
 						});
 					});
