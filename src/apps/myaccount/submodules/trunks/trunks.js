@@ -15,12 +15,7 @@ define(function(require) {
 
 		appFlags: {
 			trunks: {
-				types: [ 'inbound', 'outbound', 'twoway' ],
-				amounts: {
-					inbound: 6.99,
-					outbound: 29.99,
-					twoway: 29.99
-				}
+				types: [ 'inbound', 'outbound', 'twoway' ]
 			}
 		},
 
@@ -54,10 +49,8 @@ define(function(require) {
 
 			self.trunksGetLimits({
 				success: function(data) {
-					var amount = self.appFlags.trunks.amounts[trunkType],
-						trunkValuePropName = trunkType + '_trunks',
+					var trunkValuePropName = trunkType + '_trunks',
 						trunksValue = _.get(data.data, trunkValuePropName, 0),
-						totalAmount = amount * trunksValue,
 						dataTemplate = {
 							value: trunksValue,
 							trunkType: trunkType
@@ -77,9 +70,6 @@ define(function(require) {
 						value: trunksValue > 0 ? trunksValue : 0,
 						slide: function(event, ui) {
 							trunksView.find('.slider-value').html(ui.value);
-							totalAmount = ui.value * amount;
-
-							trunksView.find('.total-amount .total-amount-value').html(totalAmount.toFixed(2));
 
 							trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
 						},
