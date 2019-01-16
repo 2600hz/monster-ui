@@ -55,30 +55,32 @@ define(function(require) {
 							value: trunksValue,
 							trunkType: trunkType
 						},
-						trunksView = $(self.getTemplate({
+						$trunksView = $(self.getTemplate({
 							name: 'layout',
 							data: dataTemplate,
 							submodule: 'trunks'
-						}));
+						})),
+						$slider = $trunksView.find('#slider_trunks'),
+						$sliderValue = $trunksView.find('.slider-value');
 
-					monster.ui.tooltips(trunksView);
+					monster.ui.tooltips($trunksView);
 
-					trunksView.find('#slider_trunks').slider({
+					$slider.slider({
 						min: 0,
 						max: 100,
 						range: 'min',
 						value: trunksValue > 0 ? trunksValue : 0,
 						slide: function(event, ui) {
-							trunksView.find('.slider-value').html(ui.value);
+							$sliderValue.html(ui.value);
 
-							trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
+							$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
 						},
 						change: function() {
-							trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
+							$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
 						}
 					});
 
-					trunksView.find('.update-limits').on('click', function(e) {
+					$trunksView.find('.update-limits').on('click', function(e) {
 						e.preventDefault();
 
 						self.trunksGetLimits({
@@ -88,7 +90,7 @@ define(function(require) {
 									twoway_trunks: _.get(data, 'data.twoway_trunks', 0)
 								};
 
-								updateData[trunkValuePropName] = trunksView.find('#slider_trunks').slider('value');
+								updateData[trunkValuePropName] = $trunksView.find('#slider_trunks').slider('value');
 
 								self.trunksUpdateLimits({
 									limits: _.merge(dataLimits.data, updateData),
@@ -108,9 +110,9 @@ define(function(require) {
 						});
 					});
 
-					monster.pub('myaccount.renderSubmodule', trunksView);
+					monster.pub('myaccount.renderSubmodule', $trunksView);
 
-					trunksView.find('.slider-value').css('left', trunksView.find('#slider_trunks .ui-slider-handle').css('left'));
+					$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
 
 					args.hasOwnProperty('callback') && args.callback();
 				}
