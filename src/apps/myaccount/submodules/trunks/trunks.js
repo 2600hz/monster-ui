@@ -27,7 +27,7 @@ define(function(require) {
 				success: function(dataLimits) {
 					_.each(self.appFlags.trunks.types, function(trunkType) {
 						monster.pub('myaccount.updateMenu', {
-							module: 'trunks',
+							module: self.name,
 							key: trunkType,
 							data: _.get(dataLimits.data, trunkType + '_trunks', 0),
 							callback: args.callback
@@ -83,30 +83,45 @@ define(function(require) {
 					$trunksView.find('.update-limits').on('click', function(e) {
 						e.preventDefault();
 
-						self.trunksGetLimits({
-							success: function(dataLimits) {
+						monster.waterfall([
+							function(callback) {
+								self.trunksGetLimits({
+									success: function(dataLimits) {
+										callback(null, dataLimits);
+									}
+								});
+							},
+							function(dataLimits, callback) {
 								var updateData = {
 									inbound_trunks: _.get(data, 'data.inbound_trunks', 0),
 									twoway_trunks: _.get(data, 'data.twoway_trunks', 0)
 								};
 
-								updateData[trunkValuePropName] = $trunksView.find('#slider_trunks').slider('value');
+								updateData[trunkValuePropName] = $slider.slider('value');
 
 								self.trunksUpdateLimits({
 									limits: _.merge(dataLimits.data, updateData),
 									success: function(_data) {
-										var argsMenu = {
-											module: self.name,
-											data: _.get(updateData, trunkValuePropName),
-											key: trunkType
-										};
-
-										monster.pub('myaccount.updateMenu', argsMenu);
-										self._trunksRenderContent({ key: trunkType });
-										//TODO toastr saved
+										callback(null, updateData);
 									}
 								});
 							}
+						], function(err, updateData) {
+							var argsMenu = {
+								module: self.name,
+								data: _.get(updateData, trunkValuePropName),
+								key: trunkType
+							};
+
+							monster.pub('myaccount.updateMenu', argsMenu);
+							self._trunksRenderContent({ key: trunkType });
+
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().trunks.saveSuccessMessage
+								})
+							});
 						});
 					});
 

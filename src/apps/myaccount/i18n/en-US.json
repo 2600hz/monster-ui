@@ -201,7 +201,8 @@
 			"inbound": "The number of Inbound trunks defines how many simultaneous calls you can receive to your phone system.",
 			"outbound": "The number of Outbound trunks defines how many concurrent external calls you can place at one time.",
 			"twoway": "The number of Two-way trunks defines how many concurrent calls your platform can handle at one time."
-		}
+		},
+		"saveSuccessMessage": "The trunking limit has been updated successfully!"
 	},
 
 	"balance" : {
