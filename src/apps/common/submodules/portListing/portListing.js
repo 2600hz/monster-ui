@@ -149,6 +149,7 @@ define(function(require) {
 						template: template,
 						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
 					});
+
 					self.portListingBindListingEvents({
 						template: template
 					});
@@ -491,8 +492,9 @@ define(function(require) {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
 						} else if (filter === 'completed') {
-							filtering.removeFilter('byScheduleDate');
-							filtering.addFilter('byState', self.appFlags.portListing.completedFilter, column);
+							self.portListingRenderSubmittedTable({
+								container: template
+							});
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
@@ -541,6 +543,45 @@ define(function(require) {
 							}
 						});
 					});
+		},
+
+		/**
+		 * @param {Object} args
+		 * @param {}
+		 */
+		portListingRenderSubmittedTable: function(args) {
+			var self = this,
+				listCompletedAccountPorts = function(callback) {
+					self.portListingRequestByType(callback, 'completed');
+				},
+				listCompletedDescendantsPorts = function(callback) {
+					self.portlistingRequestDescendantsByType(callback, 'completed');
+				},
+				parallelCompletedRequests = [listCompletedAccountPorts];
+
+			if (self.portListingGet('isMonsterApp')) {
+				parallelCompletedRequests.push(listCompletedDescendantsPorts);
+			}
+
+			monster.parallel({
+				completedList: function(callback) {
+					monster.parallel(parallelCompletedRequests, function(err, results) {
+						callback(null, results);
+					});
+				}
+			}, function(error, results) {
+				self.portListingSetters(results);
+				var portRequests = self.flattenResults(results);
+
+				self.portListingRenderListingProgressing({
+					template: args.container,
+					portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'completedList', []))
+				});
+
+				self.portListingBindListingEvents({
+					template: args.container
+				});
+			});
 		},
 
 		/**
@@ -1124,7 +1165,6 @@ define(function(require) {
 				}
 			}, function(error, results) {
 				self.portListingSetters(results);
-				self.portListingSetters(results);
 				args.success(self.flattenResults(results));
 			});
 		},
@@ -1148,18 +1188,18 @@ define(function(require) {
 					.flatMap(results, function(requests) {
 						return _
 						.flatMap(function(payload) {
-								return _.map(payload, function(account) {
-									return {
-										id: account.account_id,
+							return _.map(payload, function(account) {
+								return {
+									id: account.account_id,
 									name: account.account_name,
 									requests: account.port_requests
-									};
-								});
+								};
+							});
 						});
 					});
 
 			self.portListingSet('accountNamesById', _.transform(flattenResults, function(object, account) {
-								object[account.id] = account.name;
+				object[account.id] = account.name;
 			}));
 
 			self.portListingSet('portRequestsById', _.keyBy(_.flatMap(flattenResults, function(account) { return account.requests; }), 'id'));
