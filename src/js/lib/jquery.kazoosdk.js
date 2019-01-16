@@ -123,6 +123,10 @@
 			contactList: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 			},
+			dashboards: {
+				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
+				'getQueueOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_overview' }
+			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
@@ -345,10 +349,6 @@
 			},
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
-			},
-			qubicleDashboards: {
-				'getOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_overview' },
-				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' }
 			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
