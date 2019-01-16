@@ -482,25 +482,31 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering),
-							filter = $(this).prop('href').split('#')[1],
-							column = self.portListingGet('isMonsterApp')
-								? [2]
-								: [1];
+						var filter = $(this).prop('href').split('#')[1],
+							byType = $(this).data('type'),
+							column = self.portListingGet('isMonsterApp') ? [2] : [1],
+							filteringBy = template.attr('data-filtering-by');
+
+						if (filteringBy !== byType) {
+							self.portListingRenderSubmittedTable({
+								container: template,
+								byType: byType
+							});
+						}
+
+						var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering);
 
 						if (filter === 'all') {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
-						} else if (filter === 'completed') {
-							self.portListingRenderSubmittedTable({
-								container: template
-							});
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
 						}
 
 						filtering.filter();
+
+						template.attr('data-filtering-by', byType);
 					});
 
 			template
@@ -551,11 +557,12 @@ define(function(require) {
 		 */
 		portListingRenderSubmittedTable: function(args) {
 			var self = this,
+				byType = args.byType,
 				listCompletedAccountPorts = function(callback) {
-					self.portListingRequestByType(callback, 'completed');
+					self.portListingRequestByType(callback, byType);
 				},
 				listCompletedDescendantsPorts = function(callback) {
-					self.portlistingRequestDescendantsByType(callback, 'completed');
+					self.portlistingRequestDescendantsByType(callback, byType);
 				},
 				parallelCompletedRequests = [listCompletedAccountPorts];
 
@@ -1184,19 +1191,17 @@ define(function(require) {
 		 */
 		portListingSetters: function(results) {
 			var self = this,
-				flattenResults = _
-					.flatMap(results, function(requests) {
-						return _
-						.flatMap(function(payload) {
-							return _.map(payload, function(account) {
-								return {
-									id: account.account_id,
-									name: account.account_name,
-									requests: account.port_requests
-								};
-							});
+				flattenResults = _.flatMap(results, function(requests) {
+					return _.flatMap(requests, function(payload) {
+						return _.map(payload, function(account) {
+							return {
+								id: account.account_id,
+								name: account.account_name,
+								requests: account.port_requests
+							};
 						});
 					});
+				});
 
 			self.portListingSet('accountNamesById', _.transform(flattenResults, function(object, account) {
 				object[account.id] = account.name;
