@@ -66,14 +66,17 @@ define(function(require) {
 						e.preventDefault();
 
 						monster.waterfall([
-							function(callback) {
+							function(waterfallCallback) {
 								self.trunksGetLimits({
 									success: function(dataLimits) {
-										callback(null, dataLimits);
+										waterfallCallback(null, dataLimits);
+									},
+									error: function() {
+										waterfallCallback(true);
 									}
 								});
 							},
-							function(dataLimits, callback) {
+							function(dataLimits, waterfallCallback) {
 								var updateData = {
 									inbound_trunks: _.get(data, 'inbound_trunks', 0),
 									twoway_trunks: _.get(data, 'twoway_trunks', 0)
@@ -84,29 +87,39 @@ define(function(require) {
 								self.trunksUpdateLimits({
 									limits: _.merge(dataLimits, updateData),
 									success: function() {
-										callback(null, updateData);
+										waterfallCallback(null, updateData);
+									},
+									error: function() {
+										waterfallCallback(true);
+									}
+								});
+							},
+							function(updateData, waterfallCallback) {
+								var argsMenu = {
+									module: self.name,
+									data: _.get(updateData, trunkValuePropName),
+									key: trunkType
+								};
+
+								monster.pub('myaccount.updateMenu', argsMenu);
+
+								self.trunksRender({
+									key: trunkType,
+									callback: function() {
+										waterfallCallback(null);
 									}
 								});
 							}
-						], function(err, updateData) {
-							var argsMenu = {
-								module: self.name,
-								data: _.get(updateData, trunkValuePropName),
-								key: trunkType
-							};
+						], function(err) {
+							if (err) {
+								return;
+							}
 
-							monster.pub('myaccount.updateMenu', argsMenu);
-
-							self.trunksRender({
-								key: trunkType,
-								callback: function() {
-									monster.ui.toast({
-										type: 'success',
-										message: self.getTemplate({
-											name: '!' + self.i18n.active().trunks.saveSuccessMessage
-										})
-									});
-								}
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().trunks.saveSuccessMessage
+								})
 							});
 						});
 					});
