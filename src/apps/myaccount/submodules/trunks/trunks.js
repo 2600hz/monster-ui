@@ -29,7 +29,7 @@ define(function(require) {
 						monster.pub('myaccount.updateMenu', {
 							module: self.name,
 							key: trunkType,
-							data: _.get(dataLimits.data, trunkType + '_trunks', 0),
+							data: _.get(dataLimits, trunkType + '_trunks', 0),
 							callback: args.callback
 						});
 					});
@@ -50,7 +50,7 @@ define(function(require) {
 			self.trunksGetLimits({
 				success: function(data) {
 					var trunkValuePropName = trunkType + '_trunks',
-						trunksValue = _.get(data.data, trunkValuePropName, 0),
+						trunksValue = _.get(data, trunkValuePropName, 0),
 						dataTemplate = {
 							value: trunksValue,
 							trunkType: trunkType
@@ -93,15 +93,15 @@ define(function(require) {
 							},
 							function(dataLimits, callback) {
 								var updateData = {
-									inbound_trunks: _.get(data, 'data.inbound_trunks', 0),
-									twoway_trunks: _.get(data, 'data.twoway_trunks', 0)
+									inbound_trunks: _.get(data, 'inbound_trunks', 0),
+									twoway_trunks: _.get(data, 'twoway_trunks', 0)
 								};
 
 								updateData[trunkValuePropName] = $slider.slider('value');
 
 								self.trunksUpdateLimits({
-									limits: _.merge(dataLimits.data, updateData),
-									success: function(_data) {
+									limits: _.merge(dataLimits, updateData),
+									success: function() {
 										callback(null, updateData);
 									}
 								});
@@ -151,7 +151,7 @@ define(function(require) {
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data, status);
+					args.hasOwnProperty('success') && args.success(data.data, status);
 				},
 				error: function(data, status) {
 					args.hasOwnProperty('error') && args.error(data, status);
@@ -176,7 +176,7 @@ define(function(require) {
 					data: args.limits
 				},
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data, status);
+					args.hasOwnProperty('success') && args.success(data.data, status);
 				},
 				error: function(data, status) {
 					args.hasOwnProperty('error') && args.error(data, status);
