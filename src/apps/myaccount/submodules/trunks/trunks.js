@@ -102,32 +102,15 @@ define(function(require) {
 					e.preventDefault();
 
 					self.trunksGetLimits(function(dataLimits) {
-						var updateData;
+						var updateData = {
+							inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
+							twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
+						};
 
-						switch (trunkType) {
-							case 'inbound':
-								updateData = _.merge(dataLimits.data, {
-									inbound_trunks: trunksView.find('#slider_trunks').slider('value'),
-									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-								});
-								break;
-							case 'outbound':
-								updateData = _.merge(dataLimits.data, {
-									outbound_trunks: trunksView.find('#slider_trunks').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0,
-									twoway_trunks: 'data' in data ? data.data.twoway_trunks || 0 : 0
-								});
-								break;
-							case 'twoway':
-								updateData = _.merge(dataLimits.data, {
-									twoway_trunks: trunksView.find('#slider_trunks').slider('value'),
-									inbound_trunks: 'data' in data ? data.data.inbound_trunks || 0 : 0
-								});
-								break;
-						}
+						updateData[trunkValuePropName] = trunksView.find('#slider_trunks').slider('value');
 
 						self.trunksUpdateLimits({
-							limits: updateData,
+							limits: _.merge(dataLimits.data, updateData),
 							success: function(_data) {
 								var argsMenu = {
 									module: self.name,
