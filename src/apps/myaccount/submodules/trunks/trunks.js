@@ -9,8 +9,8 @@ define(function(require) {
 		},
 
 		subscribe: {
-			'myaccount.trunks.renderContent': '_trunksRenderContent',
-			'myaccount.refreshBadges': '_trunksRefreshBadges'
+			'myaccount.trunks.renderContent': 'trunksRender',
+			'myaccount.refreshBadges': 'trunksRefreshBadges'
 		},
 
 		appFlags: {
@@ -19,31 +19,13 @@ define(function(require) {
 			}
 		},
 
-		_trunksRefreshBadges: function(args) {
-			var self = this;
-
-			// We can't do the except logic for trunks, because we need to update the 2 other tabs anyway, and they're all using the same API
-			self.trunksGetLimits({
-				success: function(dataLimits) {
-					_.each(self.appFlags.trunks.types, function(trunkType) {
-						monster.pub('myaccount.updateMenu', {
-							module: self.name,
-							key: trunkType,
-							data: _.get(dataLimits, trunkType + '_trunks', 0),
-							callback: args.callback
-						});
-					});
-				}
-			});
-		},
-
 		/**
 		 * Renders the trunking limits view
 		 * @param  {Object}                          args
 		 * @param  {('inbound'|'outbound'|'twoway')} args.key         Trunk type
 		 * @param  {Function}                        [args.callback]  Callback
 		 */
-		_trunksRenderContent: function(args) {
+		trunksRender: function(args) {
 			var self = this,
 				trunkType = args.key;
 
@@ -114,7 +96,7 @@ define(function(require) {
 							};
 
 							monster.pub('myaccount.updateMenu', argsMenu);
-							self._trunksRenderContent({ key: trunkType });
+							self.trunksRender({ key: trunkType });
 
 							monster.ui.toast({
 								type: 'success',
@@ -130,6 +112,24 @@ define(function(require) {
 					$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
 
 					args.hasOwnProperty('callback') && args.callback();
+				}
+			});
+		},
+
+		trunksRefreshBadges: function(args) {
+			var self = this;
+
+			// We can't do the except logic for trunks, because we need to update the 2 other tabs anyway, and they're all using the same API
+			self.trunksGetLimits({
+				success: function(dataLimits) {
+					_.each(self.appFlags.trunks.types, function(trunkType) {
+						monster.pub('myaccount.updateMenu', {
+							module: self.name,
+							key: trunkType,
+							data: _.get(dataLimits, trunkType + '_trunks', 0),
+							callback: args.callback
+						});
+					});
 				}
 			});
 		},
