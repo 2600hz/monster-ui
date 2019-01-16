@@ -1123,48 +1123,46 @@ define(function(require) {
 					});
 				}
 			}, function(error, results) {
-				self.portListingSet('accountNamesById', _
-					.chain(results)
-					.map(function(requests) {
+				self.portListingSetters(results);
+				self.portListingSetters(results);
+				args.success(self.flattenResults(results));
+			});
+		},
+
+		flattenResults: function(results) {
+			return _.each(results, function(request, requestKey, requestObject) {
+				requestObject[requestKey] = _.flatMap(request, function(payload) {
+					return _.flatMap(payload, function(account) {
+						return account.port_requests;
+					});
+				});
+			});
+		},
+
+		/**
+		 * @param { Array } results
+		 */
+		portListingSetters: function(results) {
+			var self = this,
+				flattenResults = _
+					.flatMap(results, function(requests) {
 						return _
-							.chain(requests)
-							.map(function(payload) {
+						.flatMap(function(payload) {
 								return _.map(payload, function(account) {
 									return {
 										id: account.account_id,
-										name: account.account_name
+									name: account.account_name,
+									requests: account.port_requests
 									};
 								});
-							})
-							.flatten()
-							.transform(function(object, account) {
+						});
+					});
+
+			self.portListingSet('accountNamesById', _.transform(flattenResults, function(object, account) {
 								object[account.id] = account.name;
-							}, {})
-							.value();
-					})
-					.flatten()
-					.value()
-				);
+			}));
 
-				_.each(results, function(request, requestKey, requestObject) {
-					requestObject[requestKey] = _
-					.chain(request)
-					.map(function(payload) {
-						return _
-							.chain(payload)
-							.map(function(account) {
-								return account.port_requests;
-							})
-							.flatten()
-							.value();
-					})
-					.flatten()
-					.value();
-				});
-
-				self.portListingSet('portRequestsById', _.keyBy(_.chain(results).map(i => i).flatten().value(), 'id'));
-				args.success(results);
-			});
+			self.portListingSet('portRequestsById', _.keyBy(_.flatMap(flattenResults, function(account) { return account.requests; }), 'id'));
 		},
 
 		/**************************************************
