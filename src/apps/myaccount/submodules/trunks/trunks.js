@@ -69,7 +69,10 @@ define(function(require) {
 
 					monster.pub('myaccount.renderSubmodule', template);
 
-					template.find('.slider-value').css('left', template.find('#slider_trunks').find('.ui-slider-handle').css('left'));
+					self.trunksUpdateSliderValuePosition({
+						slider: template.find('#slider_trunks'),
+						sliderValue: template.find('.slider-value')
+					});
 
 					args.hasOwnProperty('callback') && args.callback();
 				}
@@ -119,10 +122,16 @@ define(function(require) {
 				.on('slide', function(event, ui) {
 					sliderValue.html(ui.value);
 
-					sliderValue.css('left', slider.find('.ui-slider-handle').css('left'));
+					self.trunksUpdateSliderValuePosition({
+						slider: slider,
+						sliderValue: sliderValue
+					});
 				})
 				.on('change', function() {
-					sliderValue.css('left', slider.find('.ui-slider-handle').css('left'));
+					self.trunksUpdateSliderValuePosition({
+						slider: slider,
+						sliderValue: sliderValue
+					});
 				});
 
 			template.find('.update-limits').on('click', function(e) {
@@ -160,8 +169,8 @@ define(function(require) {
 		 * Update a trunk limit
 		 * @param  {Object}    args
 		 * @param  {Number}    args.trunksLimit  Trunks limit to be applied
-		 * @param  {Function}  args.success      Success callback
-		 * @param  {Function}  args.error        Error callback
+		 * @param  {Function}  [args.success]    Success callback
+		 * @param  {Function}  [args.error]      Error callback
 		 */
 		trunksHelperUpdateTrunkLimit: function(args) {
 			var self = this;
@@ -213,6 +222,20 @@ define(function(require) {
 		 */
 		trunksGetLimitPropertyName: function(trunkType) {
 			return trunkType + '_trunks';
+		},
+
+		/**
+		 * Updates slider value element position
+		 * @param  {Object} args
+		 * @param  {JQuery} args.slider       Slider JQuery object
+		 * @param  {JQuery} args.sliderValue  Slider value JQuery object
+		 */
+		trunksUpdateSliderValuePosition: function(args) {
+			args.sliderValue
+				.css('left',
+					args.slider
+						.find('.ui-slider-handle')
+						.css('left'));
 		},
 
 		/**
