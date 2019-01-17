@@ -236,6 +236,7 @@ define(function(require) {
 				};
 
 			container
+				.attr('data-filtering-by', 'progressing')
 				.find('#submitted_ports_wrapper')
 				.empty()
 				.append(initTemplate(portRequests));
