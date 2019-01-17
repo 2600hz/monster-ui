@@ -25,9 +25,7 @@ define(function(require) {
 					{ value: 'rejected', next: [1, 5, 6] },
 					{ value: 'completed', next: [] },
 					{ value: 'canceled', next: [] }
-				],
-				completedFilter: 'completed OR canceled',
-				completedFilterExclude: '-completed AND -canceled'
+				]
 			}
 		},
 
@@ -140,16 +138,16 @@ define(function(require) {
 						submodule: 'portListing'
 					}));
 
-					self.portListingRenderListingIncomplete({
-						template: template,
-						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'suspendedList', []))
-					});
-
 					template.attr('data-filtering-by', 'progressing');
 
-					self.portListingRenderListingProgressing({
+					self.portListingRenderListingIncomplete({
 						template: template,
-						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
+						portRequests: self.portListingFormatDataToTemplate(_.get(portRequests, 'suspendedList', []))
+					});
+
+					self.portListingRenderListingSubmitted({
+						template: template,
+						portRequests: self.portListingFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
 					});
 
 					self.portListingBindListingEvents({
@@ -211,7 +209,7 @@ define(function(require) {
 		 * @param  {jQuery} args.template
 		 * @param  {Array} args.portRequests
 		 */
-		portListingRenderListingProgressing: function(args) {
+		portListingRenderListingSubmitted: function(args) {
 			var self = this,
 				container = args.template,
 				portRequests = args.portRequests,
@@ -499,15 +497,17 @@ define(function(require) {
 							portListingFootableFilters = function(callback) {
 								var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering);
 
-								if (filter === 'all') {
-									filtering.removeFilter('byScheduleDate');
-									filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
-								} else if (filter === 'completed') {
-									filtering.removeFilter('byScheduleDate');
-									filtering.removeFilter('byState');
-								} else {
-									filtering.removeFilter('byScheduleDate');
-									filtering.addFilter('byState', filter, column);
+								switch (filter) {
+									case 'all':
+									case 'completed':
+										filtering.removeFilter('byScheduleDate');
+										filtering.removeFilter('byState');
+										break;
+
+									default:
+										filtering.removeFilter('byScheduleDate');
+										filtering.addFilter('byState', filter, column);
+										break;
 								}
 
 								filtering.filter();
@@ -595,11 +595,11 @@ define(function(require) {
 				}
 			}, function(error, results) {
 				self.portListingSetters(results);
-				var portRequests = self.flattenResults(results);
+				var portRequests = self.portlistingFlattenResults(results);
 
-				self.portListingRenderListingProgressing({
+				self.portListingRenderListingSubmitted({
 					template: args.container,
-					portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'completedList', []))
+					portRequests: self.portListingFormatDataToTemplate(_.get(portRequests, 'completedList', []))
 				});
 
 				self.portListingBindListingEvents({
@@ -1131,7 +1131,7 @@ define(function(require) {
 			});
 		},
 
-		portFormatDataToTemplate: function formatDataToTemplate(portRequests) {
+		portListingFormatDataToTemplate: function formatDataToTemplate(portRequests) {
 			var self = this;
 
 			return _.map(portRequests, function(request) {
@@ -1191,11 +1191,11 @@ define(function(require) {
 				}
 			}, function(error, results) {
 				self.portListingSetters(results);
-				args.success(self.flattenResults(results));
+				args.success(self.portlistingFlattenResults(results));
 			});
 		},
 
-		flattenResults: function(results) {
+		portlistingFlattenResults: function(results) {
 			return _.each(results, function(request, requestKey, requestObject) {
 				requestObject[requestKey] = _.flatMap(request, function(payload) {
 					return _.flatMap(payload, function(account) {
