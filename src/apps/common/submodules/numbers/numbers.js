@@ -1159,7 +1159,7 @@ define(function(require) {
 				error: function(data, status, globalHandler) {
 					if (data.error === '400' && data.hasOwnProperty('data') && data.data.hasOwnProperty('error')) {
 						callback && callback(data.data);
-					} else if (data.error !== '402') {
+					} else {
 						globalHandler(data, { generateError: true });
 					}
 				}
@@ -1179,9 +1179,7 @@ define(function(require) {
 					success && success(data.data);
 				},
 				error: function(data) {
-					if (data.error !== '402') {
-						error && error(data);
-					}
+					error && error(data);
 				}
 			});
 		},
@@ -1210,7 +1208,7 @@ define(function(require) {
 				error: function(data, status, globalHandler) {
 					if (data.error === '400' && data.hasOwnProperty('data') && data.data.hasOwnProperty('error')) {
 						success && success(data.data);
-					} else if (data.error !== '402') {
+					} else {
 						globalHandler(data, { generateError: true });
 					}
 				}
@@ -1230,9 +1228,7 @@ define(function(require) {
 					success && success(data.data);
 				},
 				error: function(data) {
-					if (data.error !== '402') {
-						error && error(data);
-					}
+					error && error(data);
 				}
 			});
 		},
