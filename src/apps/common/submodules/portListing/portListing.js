@@ -145,6 +145,8 @@ define(function(require) {
 						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'suspendedList', []))
 					});
 
+					template.attr('data-filtering-by', 'progressing');
+
 					self.portListingRenderListingProgressing({
 						template: template,
 						portRequests: self.portFormatDataToTemplate(_.get(portRequests, 'progressingList', []))
@@ -236,7 +238,6 @@ define(function(require) {
 				};
 
 			container
-				.attr('data-filtering-by', 'progressing')
 				.find('#submitted_ports_wrapper')
 				.empty()
 				.append(initTemplate(portRequests));
@@ -500,6 +501,9 @@ define(function(require) {
 						if (filter === 'all') {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
+						} else if (filter === 'completed') {
+							filtering.removeFilter('byScheduleDate');
+							filtering.removeFilter('byState');
 						} else {
 							filtering.removeFilter('byScheduleDate');
 							filtering.addFilter('byState', filter, column);
