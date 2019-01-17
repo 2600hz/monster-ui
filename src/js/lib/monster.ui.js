@@ -91,6 +91,10 @@ define(function(require) {
 				return data.value + ' ' + data.unit.symbol;
 			},
 
+			formatMacAddress: function(macAddress) {
+				return monster.util.formatMacAddress(macAddress);
+			},
+
 			formatPhoneNumber: function(phoneNumber) {
 				phoneNumber = (phoneNumber || '').toString();
 
