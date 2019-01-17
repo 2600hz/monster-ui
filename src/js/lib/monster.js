@@ -552,14 +552,22 @@ define(function(require) {
 					}
 
 					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						var parsedError = error;
+						// Handle the "Payment Required" status
+						var parsedError = error,
+							originalPreventCallbackError = requestOptions.preventCallbackError;
 
 						if ('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
+						// Prevent the execution of the custom error callback, as it is a
+						// charges notification that will be handled here
+						requestOptions.preventCallbackError = true;
+
+						// Notify the user about the charges
 						monster.ui.charges(parsedError.data, function() {
 							requestOptions.acceptCharges = true;
+							requestOptions.preventCallbackError = originalPreventCallbackError;
 							monster.kazooSdk.request(requestOptions);
 						}, function() {
 							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
