@@ -1220,13 +1220,14 @@ define(function(require) {
 							};
 						});
 					});
-				});
+				}),
+				portRequestsById = _.keyBy(_.flatMap(flattenResults, function(account) { return account.requests; }), 'id');
 
 			self.portListingSet('accountNamesById', _.transform(flattenResults, function(object, account) {
 				object[account.id] = account.name;
 			}));
 
-			self.portListingSet('portRequestsById', _.keyBy(_.flatMap(flattenResults, function(account) { return account.requests; }), 'id'));
+			self.portListingSet('portRequestsById', _.merge(portRequestsById, self.portListingGet(['portRequestsById'])));
 		},
 
 		/**************************************************
