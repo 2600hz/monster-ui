@@ -179,13 +179,7 @@ define(function(require) {
 						name: 'listing-incomplete',
 						data: {
 							isMonsterApp: self.portListingGet('isMonsterApp'),
-							requests: _
-								.chain(portRequests)
-								.filter(function(portRequest) {
-									return _.includes(['unconfirmed', 'rejected'], portRequest.state);
-								})
-								.sortBy('state')
-								.value()
+							requests: _.sortBy(portRequests, 'state')
 						},
 						submodule: 'portListing'
 					}));
