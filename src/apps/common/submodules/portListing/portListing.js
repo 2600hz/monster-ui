@@ -487,29 +487,41 @@ define(function(require) {
 						var filter = $(this).prop('href').split('#')[1],
 							byType = $(this).data('type'),
 							column = self.portListingGet('isMonsterApp') ? [2] : [1],
-							filteringBy = template.attr('data-filtering-by');
+							filteringBy = template.attr('data-filtering-by'),
+							filterRequests = [],
+							getRequiredPortRequests = function(callback) {
+								self.portListingRenderSubmittedTable({
+									container: template,
+									byType: byType,
+									success: callback
+								});
+							},
+							portListingFootableFilters = function(callback) {
+								var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering);
+
+								if (filter === 'all') {
+									filtering.removeFilter('byScheduleDate');
+									filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
+								} else if (filter === 'completed') {
+									filtering.removeFilter('byScheduleDate');
+									filtering.removeFilter('byState');
+								} else {
+									filtering.removeFilter('byScheduleDate');
+									filtering.addFilter('byState', filter, column);
+								}
+
+								filtering.filter();
+
+								callback(null);
+							};
 
 						if (filteringBy !== byType) {
-							self.portListingRenderSubmittedTable({
-								container: template,
-								byType: byType
-							});
+							filterRequests.push(getRequiredPortRequests);
 						}
 
-						var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering);
+						filterRequests.push(portListingFootableFilters);
 
-						if (filter === 'all') {
-							filtering.removeFilter('byScheduleDate');
-							filtering.addFilter('byState', self.appFlags.portListing.completedFilterExclude, column);
-						} else if (filter === 'completed') {
-							filtering.removeFilter('byScheduleDate');
-							filtering.removeFilter('byState');
-						} else {
-							filtering.removeFilter('byScheduleDate');
-							filtering.addFilter('byState', filter, column);
-						}
-
-						filtering.filter();
+						monster.waterfall(filterRequests);
 
 						template.attr('data-filtering-by', byType);
 					});
@@ -593,6 +605,8 @@ define(function(require) {
 				self.portListingBindListingEvents({
 					template: args.container
 				});
+
+				args.success(null);
 			});
 		},
 
