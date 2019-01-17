@@ -115,8 +115,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var queue = args.data,
-							step = args.steps[currentStep],
+						var step = args.steps[currentStep],
 							formattedData = _.merge({}, args, {
 								data: step.default
 							});
