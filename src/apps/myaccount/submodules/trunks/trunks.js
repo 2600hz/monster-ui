@@ -15,7 +15,8 @@ define(function(require) {
 
 		appFlags: {
 			trunks: {
-				types: [ 'inbound', 'outbound', 'twoway' ]
+				allTypes: [ 'inbound', 'outbound', 'twoway' ],
+				currentType: null
 			}
 		},
 
@@ -27,123 +28,72 @@ define(function(require) {
 		 */
 		trunksRender: function(args) {
 			var self = this,
-				trunkType = args.key;
-
-			self.trunksGetLimits({
-				success: function(data) {
-					var trunkValuePropName = trunkType + '_trunks',
-						trunksValue = _.get(data, trunkValuePropName, 0),
+				initTemplate = function initTemplate(dataLimits) {
+					var trunksValue = _.get(
+							dataLimits,
+							self.appFlags.trunks.currentType,
+							0),
 						dataTemplate = {
 							value: trunksValue,
-							trunkType: trunkType
+							trunkType: self.appFlags.trunks.currentType
 						},
-						$trunksView = $(self.getTemplate({
+						template = $(self.getTemplate({
 							name: 'layout',
 							data: dataTemplate,
 							submodule: 'trunks'
-						})),
-						$slider = $trunksView.find('#slider_trunks'),
-						$sliderValue = $trunksView.find('.slider-value');
+						}));
 
-					monster.ui.tooltips($trunksView);
+					monster.ui.tooltips(template);
 
-					$slider.slider({
+					template.find('#slider_trunks').slider({
 						min: 0,
 						max: 100,
 						range: 'min',
-						value: trunksValue > 0 ? trunksValue : 0,
-						slide: function(event, ui) {
-							$sliderValue.html(ui.value);
-
-							$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
-						},
-						change: function() {
-							$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
-						}
+						value: trunksValue > 0 ? trunksValue : 0
 					});
 
-					$trunksView.find('.update-limits').on('click', function(e) {
-						e.preventDefault();
+					return template;
+				};
 
-						monster.waterfall([
-							function(waterfallCallback) {
-								self.trunksGetLimits({
-									success: function(dataLimits) {
-										waterfallCallback(null, dataLimits);
-									},
-									error: function() {
-										waterfallCallback(true);
-									}
-								});
-							},
-							function(dataLimits, waterfallCallback) {
-								var updateData = {
-									inbound_trunks: _.get(data, 'inbound_trunks', 0),
-									twoway_trunks: _.get(data, 'twoway_trunks', 0)
-								};
+			self.appFlags.trunks.currentType = args.key;
 
-								updateData[trunkValuePropName] = $slider.slider('value');
+			self.trunksGetLimits({
+				success: function(dataLimits) {
+					var template = initTemplate(dataLimits);
 
-								self.trunksUpdateLimits({
-									limits: _.merge(dataLimits, updateData),
-									success: function() {
-										waterfallCallback(null, updateData);
-									},
-									error: function() {
-										waterfallCallback(true);
-									}
-								});
-							},
-							function(updateData, waterfallCallback) {
-								var argsMenu = {
-									module: self.name,
-									data: _.get(updateData, trunkValuePropName),
-									key: trunkType
-								};
-
-								monster.pub('myaccount.updateMenu', argsMenu);
-
-								self.trunksRender({
-									key: trunkType,
-									callback: function() {
-										waterfallCallback(null);
-									}
-								});
-							}
-						], function(err) {
-							if (err) {
-								return;
-							}
-
-							monster.ui.toast({
-								type: 'success',
-								message: self.getTemplate({
-									name: '!' + self.i18n.active().trunks.saveSuccessMessage
-								})
-							});
-						});
+					self.trunksBindEvents({
+						template: template,
+						dataLimits: dataLimits
 					});
 
-					monster.pub('myaccount.renderSubmodule', $trunksView);
+					monster.pub('myaccount.renderSubmodule', template);
 
-					$sliderValue.css('left', $slider.find('.ui-slider-handle').css('left'));
+					template.find('.slider-value').css('left', template.find('#slider_trunks').find('.ui-slider-handle').css('left'));
 
 					args.hasOwnProperty('callback') && args.callback();
 				}
 			});
 		},
 
+		/**
+		 * Refresh trunking limit badges on menu
+		 * @param  {Object}   args
+		 * @param  {Function} args.callback  Callback for each menu update action
+		 */
 		trunksRefreshBadges: function(args) {
 			var self = this;
 
 			// We can't do the except logic for trunks, because we need to update the 2 other tabs anyway, and they're all using the same API
 			self.trunksGetLimits({
 				success: function(dataLimits) {
-					_.each(self.appFlags.trunks.types, function(trunkType) {
+					_.each(self.appFlags.trunks.allTypes, function(trunkType) {
 						monster.pub('myaccount.updateMenu', {
 							module: self.name,
 							key: trunkType,
-							data: _.get(dataLimits, trunkType + '_trunks', 0),
+							data: _.get(
+								dataLimits,
+								self.trunksGetLimitPropertyName(trunkType),
+								0),
 							callback: args.callback
 						});
 					});
@@ -151,7 +101,118 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Bind template content events
+		 * @param  {Object} args
+		 * @param  {JQuery} args.template    Template to bind
+		 * @param  {Object} args.dataLimits  Limits data
+		 */
+		trunksBindEvents: function(args) {
+			var self = this,
+				trunkType = self.appFlags.trunks.currentType,
+				template = args.template,
+				slider = template.find('#slider_trunks'),
+				sliderValue = template.find('.slider-value');
+
+			slider
+				.on('slide', function(event, ui) {
+					sliderValue.html(ui.value);
+
+					sliderValue.css('left', slider.find('.ui-slider-handle').css('left'));
+				})
+				.on('change', function() {
+					sliderValue.css('left', slider.find('.ui-slider-handle').css('left'));
+				});
+
+			template.find('.update-limits').on('click', function(e) {
+				var trunksNewLimit = slider.slider('value');
+
+				e.preventDefault();
+
+				self.trunksHelperUpdateTrunkLimit({
+					trunksLimit: trunksNewLimit,
+					trunkType: trunkType,
+					success: function() {
+						monster.pub('myaccount.updateMenu', {
+							module: self.name,
+							data: trunksNewLimit,
+							key: trunkType
+						});
+
+						self.trunksRender({
+							key: trunkType,
+							callback: function() {
+								monster.ui.toast({
+									type: 'success',
+									message: self.getTemplate({
+										name: '!' + self.i18n.active().trunks.saveSuccessMessage
+									})
+								});
+							}
+						});
+					}
+				});
+			});
+		},
+
+		/**
+		 * Update a trunk limit
+		 * @param  {Object}    args
+		 * @param  {Number}    args.trunksLimit  Trunks limit to be applied
+		 * @param  {Function}  args.success      Success callback
+		 * @param  {Function}  args.error        Error callback
+		 */
+		trunksHelperUpdateTrunkLimit: function(args) {
+			var self = this;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.trunksGetLimits({
+						success: function(dataLimits) {
+							waterfallCallback(null, dataLimits);
+						},
+						error: function() {
+							waterfallCallback(true);
+						}
+					});
+				},
+				function(dataLimits, waterfallCallback) {
+					var trunksLimitPropName = self.trunksGetLimitPropertyName(self.appFlags.trunks.currentType),
+						updateData = {
+							inbound_trunks: _.get(dataLimits, 'inbound_trunks', 0),
+							twoway_trunks: _.get(dataLimits, 'twoway_trunks', 0)
+						};
+
+					updateData[trunksLimitPropName] = args.trunksLimit;
+
+					self.trunksUpdateLimits({
+						limits: _.merge(dataLimits, updateData),
+						success: function() {
+							waterfallCallback(null);
+						},
+						error: function() {
+							waterfallCallback(true);
+						}
+					});
+				}
+			], function(err) {
+				if (err) {
+					args.hasOwnProperty('error') && args.error(err);
+				} else {
+					args.hasOwnProperty('success') && args.success();
+				}
+			});
+		},
+
 		// Utils
+
+		/**
+		 * Gets the property name corresponding to the specified trunk type
+		 * @param  {('inbound'|'outbound'|'twoway')}} trunkType  Trunk type
+		 */
+		trunksGetLimitPropertyName: function(trunkType) {
+			return trunkType + '_trunks';
+		},
 
 		/**
 		 * Get limits from API
