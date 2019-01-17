@@ -29,13 +29,14 @@ define(function(require) {
 		trunksRender: function(args) {
 			var self = this,
 				initTemplate = function initTemplate(dataLimits) {
-					var trunksValue = _.get(
+					var trunkType = self.appFlags.trunks.currentType,
+						trunksValue = _.get(
 							dataLimits,
-							self.appFlags.trunks.currentType,
+							self.trunksGetLimitPropertyName(trunkType),
 							0),
 						dataTemplate = {
 							value: trunksValue,
-							trunkType: self.appFlags.trunks.currentType
+							trunkType: trunkType
 						},
 						template = $(self.getTemplate({
 							name: 'layout',
