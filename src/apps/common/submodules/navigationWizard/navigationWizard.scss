@@ -10,7 +10,6 @@
 	float: left;
 	width: 270px;
 	margin-bottom: 20px;
-	border-right: 1px solid #c0c0c9;
 	min-height: 600px;
 }
 
@@ -20,6 +19,7 @@
 	margin-left: 271px;
 	padding: 15px 15px 0 55px;
 	border-bottom: 1px solid #c0c0c9;
+	border-left: 1px solid #c0c0c9;
 	min-height: 500px;
 }
 
@@ -31,11 +31,6 @@
 	margin: 15px 0;
 }
 
-.right-content h3 {
-	font-weight: normal;
-	padding-bottom: 15px;
-}
-
 .navigation-wizard #cancel {
 	float: right;
 	bottom: 38px;
@@ -43,8 +38,16 @@
 }
 
 .navigation-wizard .footer {
-	float: right;
 	margin-right: 25px;
+	border-left: 1px solid #c0c0c9;
+	margin-left: 271px;
+	padding: 15px 15px 30px 0;
+	position: relative;
+	bottom: 20px;
+}
+
+.navigation-wizard .footer .actions {
+	float: right;
 }
 
 .navigation-wizard #clear {
