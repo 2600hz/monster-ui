@@ -32,49 +32,48 @@ define(function(require) {
 					var trunkType = self.appFlags.trunks.currentType,
 						trunksValue = _.get(
 							dataLimits,
-							self.trunksGetLimitPropertyName(trunkType),
+							self.trunksGenerateLimitPropertyName(trunkType),
 							0),
 						dataTemplate = {
 							value: trunksValue,
 							trunkType: trunkType
 						},
-						template = $(self.getTemplate({
+						$template = $(self.getTemplate({
 							name: 'layout',
 							data: dataTemplate,
 							submodule: 'trunks'
-						}));
+						})),
+						$slider = $template.find('#slider_trunks');
 
-					monster.ui.tooltips(template);
+					monster.ui.tooltips($template);
 
-					template.find('#slider_trunks').slider({
+					$slider.slider({
 						min: 0,
 						max: 100,
 						range: 'min',
 						value: trunksValue > 0 ? trunksValue : 0
 					});
 
-					return template;
+					self.trunksUpdateSliderValuePosition({
+						slider: $slider,
+						sliderValue: $template.find('.slider-value')
+					});
+
+					self.trunksBindEvents({
+						template: $template,
+						dataLimits: dataLimits
+					});
+
+					return $template;
 				};
 
 			self.appFlags.trunks.currentType = args.key;
 
-			self.trunksGetLimits({
+			self.trunksRequestGetLimits({
 				success: function(dataLimits) {
-					var template = initTemplate(dataLimits);
+					monster.pub('myaccount.renderSubmodule', initTemplate(dataLimits));
 
-					self.trunksBindEvents({
-						template: template,
-						dataLimits: dataLimits
-					});
-
-					monster.pub('myaccount.renderSubmodule', template);
-
-					self.trunksUpdateSliderValuePosition({
-						slider: template.find('#slider_trunks'),
-						sliderValue: template.find('.slider-value')
-					});
-
-					args.hasOwnProperty('callback') && args.callback();
+					_.has(args, 'callback') && args.callback();
 				}
 			});
 		},
@@ -88,15 +87,14 @@ define(function(require) {
 			var self = this;
 
 			// We can't do the except logic for trunks, because we need to update the 2 other tabs anyway, and they're all using the same API
-			self.trunksGetLimits({
+			self.trunksRequestGetLimits({
 				success: function(dataLimits) {
 					_.each(self.appFlags.trunks.allTypes, function(trunkType) {
 						monster.pub('myaccount.updateMenu', {
-							module: self.name,
 							key: trunkType,
 							data: _.get(
 								dataLimits,
-								self.trunksGetLimitPropertyName(trunkType),
+								self.trunksGenerateLimitPropertyName(trunkType),
 								0),
 							callback: args.callback
 						});
@@ -108,43 +106,42 @@ define(function(require) {
 		/**
 		 * Bind template content events
 		 * @param  {Object} args
-		 * @param  {JQuery} args.template    Template to bind
+		 * @param  {jQuery} args.template    Template to bind
 		 * @param  {Object} args.dataLimits  Limits data
 		 */
 		trunksBindEvents: function(args) {
 			var self = this,
 				trunkType = self.appFlags.trunks.currentType,
-				template = args.template,
-				slider = template.find('#slider_trunks'),
-				sliderValue = template.find('.slider-value');
+				$template = args.template,
+				$slider = $template.find('#slider_trunks'),
+				$sliderValue = $template.find('.slider-value');
 
-			slider
+			$slider
 				.on('slide', function(event, ui) {
-					sliderValue.html(ui.value);
+					$sliderValue.html(ui.value);
 
 					self.trunksUpdateSliderValuePosition({
-						slider: slider,
-						sliderValue: sliderValue
+						slider: $slider,
+						sliderValue: $sliderValue
 					});
 				})
 				.on('change', function() {
 					self.trunksUpdateSliderValuePosition({
-						slider: slider,
-						sliderValue: sliderValue
+						slider: $slider,
+						sliderValue: $sliderValue
 					});
 				});
 
-			template.find('.update-limits').on('click', function(e) {
-				var trunksNewLimit = slider.slider('value');
-
+			$template.find('.update-limits').on('click', function(e) {
 				e.preventDefault();
+
+				var trunksNewLimit = $slider.slider('value');
 
 				self.trunksHelperUpdateTrunkLimit({
 					trunksLimit: trunksNewLimit,
 					trunkType: trunkType,
 					success: function() {
 						monster.pub('myaccount.updateMenu', {
-							module: self.name,
 							data: trunksNewLimit,
 							key: trunkType
 						});
@@ -177,7 +174,7 @@ define(function(require) {
 
 			monster.waterfall([
 				function(waterfallCallback) {
-					self.trunksGetLimits({
+					self.trunksRequestGetLimits({
 						success: function(dataLimits) {
 							waterfallCallback(null, dataLimits);
 						},
@@ -187,7 +184,7 @@ define(function(require) {
 					});
 				},
 				function(dataLimits, waterfallCallback) {
-					var trunksLimitPropName = self.trunksGetLimitPropertyName(self.appFlags.trunks.currentType),
+					var trunksLimitPropName = self.trunksGenerateLimitPropertyName(self.appFlags.trunks.currentType),
 						updateData = {
 							inbound_trunks: _.get(dataLimits, 'inbound_trunks', 0),
 							twoway_trunks: _.get(dataLimits, 'twoway_trunks', 0)
@@ -195,21 +192,29 @@ define(function(require) {
 
 					updateData[trunksLimitPropName] = args.trunksLimit;
 
-					self.trunksUpdateLimits({
-						limits: _.merge(dataLimits, updateData),
+					self.trunksRequestUpdateLimits({
+						data: {
+							data: _.merge({}, dataLimits, updateData)
+						},
 						success: function() {
 							waterfallCallback(null);
 						},
 						error: function() {
 							waterfallCallback(true);
+						},
+						onChargesCancelled: function() {
+							waterfallCallback('cancelled');
 						}
 					});
 				}
 			], function(err) {
+				if (err === 'cancelled') {
+					return;
+				}
 				if (err) {
-					args.hasOwnProperty('error') && args.error(err);
+					_.has(args, 'error') && args.error(err);
 				} else {
-					args.hasOwnProperty('success') && args.success();
+					_.has(args, 'success') && args.success();
 				}
 			});
 		},
@@ -220,20 +225,23 @@ define(function(require) {
 		 * Gets the property name corresponding to the specified trunk type
 		 * @param  {('inbound'|'outbound'|'twoway')}} trunkType  Trunk type
 		 */
-		trunksGetLimitPropertyName: function(trunkType) {
+		trunksGenerateLimitPropertyName: function(trunkType) {
 			return trunkType + '_trunks';
 		},
 
 		/**
 		 * Updates slider value element position
 		 * @param  {Object} args
-		 * @param  {JQuery} args.slider       Slider JQuery object
-		 * @param  {JQuery} args.sliderValue  Slider value JQuery object
+		 * @param  {jQuery} args.slider       Slider jQuery object
+		 * @param  {jQuery} args.sliderValue  Slider value jQuery object
 		 */
 		trunksUpdateSliderValuePosition: function(args) {
-			args.sliderValue
+			var $slider = args.slider,
+				$sliderValue = args.sliderValue;
+
+			$sliderValue
 				.css('left',
-					args.slider
+					$slider
 						.find('.ui-slider-handle')
 						.css('left'));
 		},
@@ -244,7 +252,7 @@ define(function(require) {
 		 * @param  {Function} [args.success]  Success callback
 		 * @param  {Function} [args.error]    Error callback
 		 */
-		trunksGetLimits: function(args) {
+		trunksRequestGetLimits: function(args) {
 			var self = this;
 
 			self.callApi({
@@ -253,10 +261,10 @@ define(function(require) {
 					accountId: self.accountId
 				},
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data, status);
+					_.has(args, 'success') && args.success(data.data, status);
 				},
 				error: function(data, status) {
-					args.hasOwnProperty('error') && args.error(data, status);
+					_.has(args, 'error') && args.error(data, status);
 				}
 			});
 		},
@@ -264,27 +272,28 @@ define(function(require) {
 		/**
 		 * Update limits
 		 * @param  {Object}   args
-		 * @param  {Object}   args.limits     Trunk limits
-		 * @param  {Function} [args.success]  Success callback
-		 * @param  {Function} [args.error]    Error callback
+		 * @param  {Object}   args.data
+		 * @param  {Object}   args.data.data             Limits data
+		 * @param  {Function} [args.success]             Success callback
+		 * @param  {Function} [args.error]               Error callback
+		 * @param  {Function} [args.onChargesCancelled]  On charges cancelled callback
 		 */
-		trunksUpdateLimits: function(args) {
+		trunksRequestUpdateLimits: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'limits.update',
-				data: {
-					accountId: self.accountId,
-					data: args.limits
-				},
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data, status);
+					_.has(args, 'success') && args.success(data.data, status);
 				},
 				error: function(data, status) {
-					args.hasOwnProperty('error') && args.error(data, status);
+					_.has(args, 'error') && args.error(data, status);
 				},
 				onChargesCancelled: function(data, status) {
-					args.hasOwnProperty('error') && args.error(data, status);
+					_.has(args, 'onChargesCancelled') && args.onChargesCancelled(data, status);
 				}
 			});
 		}
