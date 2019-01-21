@@ -76,13 +76,13 @@ define(function(require) {
 
 			self.appFlags.trunks.currentType = args.key;
 
-			if (_.isEmpty(dataLimits)) {
+			if (_.isUndefined(dataLimits)) {
 				self.trunksRequestGetLimits({
 					success: renderSubmodule
 				});
+			} else {
+				renderSubmodule(dataLimits);
 			}
-
-			renderSubmodule(dataLimits);
 		},
 
 		/**
