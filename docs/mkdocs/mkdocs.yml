@@ -52,6 +52,7 @@ pages:
     - 'docs/monster-util/canAddExternalNumbers().md'
     - 'docs/monster-util/canImpersonate().md'
     - 'docs/monster-util/dateToGregorian().md'
+    - 'docs/monster-util/formatMacAddress().md'
     - 'docs/monster-util/formatPhoneNumber().md'
     - 'docs/monster-util/formatPrice().md'
     - 'docs/monster-util/formatVariableToDisplay().md'

@@ -545,20 +545,6 @@ define(function(require) {
 			return result;
 		},
 
-		formatMacAddress: function(pMacAddress) {
-			var regex = /[^0-9a-fA-F]/g,
-				macAddress = pMacAddress.replace(regex, ''),
-				formattedMac = '';
-
-			if (macAddress.length === 12) {
-				_.each(macAddress.split(''), function(char, idx) {
-					formattedMac += (idx % 2 === 0 && idx !== 0 ? ':' : '') + macAddress[idx];
-				});
-			}
-
-			return formattedMac;
-		},
-
 		getDefaultRangeDates: function(pRange) {
 			var self = this,
 				range = pRange || 7,
@@ -1023,6 +1009,26 @@ define(function(require) {
 	};
 
 	/**
+	 * Formats a string into a string representation of a MAC address, using
+	 * colons as separator.
+	 * @param  {String} macAddress   String to format as MAC address.
+	 * @return {String}              String representation of a MAC address.
+	 */
+	function formatMacAddress(macAddress) {
+		if (!_.isString(macAddress)) {
+			throw new TypeError('"macAddress" is not a string');
+		}
+		var matches = macAddress
+			.toLowerCase()
+			.replace(/[^0-9a-f]/g, '')
+			.match(/[0-9a-f]{2}/g);
+
+		return !_.isNull(matches) && _.size(matches) >= 6
+			? matches.slice(0, 6).join(':')
+			: '';
+	}
+
+	/**
 	 * Decimal and currency formatting for prices
 	 * @param  {Object}  args
 	 * @param  {Number}  args.price        Price to format (number or string
@@ -1356,6 +1362,7 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 
+	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.getUserFullName = getUserFullName;
