@@ -68,7 +68,7 @@ define(function(require) {
 
 					return $template;
 				},
-				renderSubmodule = function(dataLimits) {
+				renderSubmodule = function renderSubmodule(dataLimits) {
 					monster.pub('myaccount.renderSubmodule', initTemplate(dataLimits));
 
 					_.has(args, 'callback') && args.callback();
