@@ -24,10 +24,12 @@ define(function(require) {
 		 * Renders the trunking limits view
 		 * @param  {Object}                          args
 		 * @param  {('inbound'|'outbound'|'twoway')} args.key         Trunk type
+		 * @param  {Object}                          [args.data]      Optional limits data
 		 * @param  {Function}                        [args.callback]  Callback
 		 */
 		trunksRender: function(args) {
 			var self = this,
+				dataLimits = args.data,
 				initTemplate = function initTemplate(dataLimits) {
 					var trunkType = self.appFlags.trunks.currentType,
 						trunksValue = _.get(
@@ -65,28 +67,34 @@ define(function(require) {
 					});
 
 					return $template;
+				},
+				renderSubmodule = function(dataLimits) {
+					monster.pub('myaccount.renderSubmodule', initTemplate(dataLimits));
+
+					_.has(args, 'callback') && args.callback();
 				};
 
 			self.appFlags.trunks.currentType = args.key;
 
-			self.trunksRequestGetLimits({
-				success: function(dataLimits) {
-					monster.pub('myaccount.renderSubmodule', initTemplate(dataLimits));
+			if (_.isEmpty(dataLimits)) {
+				self.trunksRequestGetLimits({
+					success: renderSubmodule
+				});
+			}
 
-					_.has(args, 'callback') && args.callback();
-				}
-			});
+			renderSubmodule(dataLimits);
 		},
 
 		/**
 		 * Refresh trunking limit badges on menu
 		 * @param  {Object}   args
-		 * @param  {Function} args.callback  Callback for each menu update action
+		 * @param  {Function} [args.callback]  Callback for each menu update action
 		 */
 		trunksRefreshBadges: function(args) {
 			var self = this;
 
-			// We can't do the except logic for trunks, because we need to update the 2 other tabs anyway, and they're all using the same API
+			// We can't do the except logic for trunks, because we need to update the 2 other
+			// tabs anyway, and they're all using the same API
 			self.trunksRequestGetLimits({
 				success: function(dataLimits) {
 					_.each(self.appFlags.trunks.allTypes, function(trunkType) {
@@ -140,7 +148,7 @@ define(function(require) {
 				self.trunksHelperUpdateTrunkLimit({
 					trunksLimit: trunksNewLimit,
 					trunkType: trunkType,
-					success: function() {
+					success: function(dataLimits) {
 						monster.pub('myaccount.updateMenu', {
 							data: trunksNewLimit,
 							key: trunkType
@@ -148,6 +156,7 @@ define(function(require) {
 
 						self.trunksRender({
 							key: trunkType,
+							data: dataLimits,
 							callback: function() {
 								monster.ui.toast({
 									type: 'success',
@@ -196,8 +205,8 @@ define(function(require) {
 						data: {
 							data: _.merge({}, dataLimits, updateData)
 						},
-						success: function() {
-							waterfallCallback(null);
+						success: function(dataLimits) {
+							waterfallCallback(null, dataLimits);
 						},
 						error: function() {
 							waterfallCallback(true);
@@ -207,14 +216,14 @@ define(function(require) {
 						}
 					});
 				}
-			], function(err) {
+			], function(err, dataLimits) {
 				if (err === 'cancelled') {
 					return;
 				}
 				if (err) {
 					_.has(args, 'error') && args.error(err);
 				} else {
-					_.has(args, 'success') && args.success();
+					_.has(args, 'success') && args.success(dataLimits);
 				}
 			});
 		},
@@ -222,7 +231,7 @@ define(function(require) {
 		// Utils
 
 		/**
-		 * Gets the property name corresponding to the specified trunk type
+		 * Generate the property name corresponding to the specified trunk type
 		 * @param  {('inbound'|'outbound'|'twoway')}} trunkType  Trunk type
 		 */
 		trunksGenerateLimitPropertyName: function(trunkType) {
@@ -230,7 +239,7 @@ define(function(require) {
 		},
 
 		/**
-		 * Updates slider value element position
+		 * Update slider value element position
 		 * @param  {Object} args
 		 * @param  {jQuery} args.slider       Slider jQuery object
 		 * @param  {jQuery} args.sliderValue  Slider value jQuery object
