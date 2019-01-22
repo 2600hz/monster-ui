@@ -1187,7 +1187,7 @@ define(function(require) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(data, status, globalHandler) {
-					if (data.error !== '402' && typeof data.data !== 'string') {
+					if (typeof data.data !== 'string') {
 						args.error && args.error(data.data);
 					}
 				},
