@@ -180,9 +180,6 @@ define(function(require) {
 					args.hasOwnProperty('success') && args.success(data);
 				},
 				error: function(parsedError) {
-					if (parsedError.error === '402') {
-						return;
-					}
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});

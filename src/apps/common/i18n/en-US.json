@@ -616,7 +616,7 @@
 				"submitted": "Port Requested",
 				"pending": "Submitted to Carrier",
 				"scheduled": "Scheduled by Carrier",
-				"completed": "Successful",
+				"completed": "Completed",
 				"rejected": "Rejected - Action Required",
 				"canceled": "Canceled"
 			}
@@ -630,7 +630,7 @@
 			"customSelect": {
 				"byStatus": "View by Status",
 				"forToday": "Scheduled for Today",
-				"all": "All Port Requests"
+				"all": "Active Port Requests"
 			},
 			"button": "New Port Request",
 			"empty": {
