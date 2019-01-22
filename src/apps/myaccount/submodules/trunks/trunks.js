@@ -29,7 +29,6 @@ define(function(require) {
 		 */
 		trunksRender: function(args) {
 			var self = this,
-				dataLimits = args.data,
 				initTemplate = function initTemplate(dataLimits) {
 					var trunkType = self.appFlags.trunks.currentType,
 						trunksValue = _.get(
@@ -62,27 +61,32 @@ define(function(require) {
 					});
 
 					self.trunksBindEvents({
-						template: $template,
-						dataLimits: dataLimits
+						template: $template
 					});
 
 					return $template;
-				},
-				renderSubmodule = function renderSubmodule(dataLimits) {
-					monster.pub('myaccount.renderSubmodule', initTemplate(dataLimits));
-
-					_.has(args, 'callback') && args.callback();
 				};
 
 			self.appFlags.trunks.currentType = args.key;
 
-			if (_.isUndefined(dataLimits)) {
-				self.trunksRequestGetLimits({
-					success: renderSubmodule
-				});
-			} else {
-				renderSubmodule(dataLimits);
-			}
+			monster.waterfall([
+				function(callback) {
+					if (_.has(args, 'data')) {
+						callback(null, args.data);
+						return;
+					}
+
+					self.trunksRequestGetLimits({
+						success: function(dataLimits) {
+							callback(null, dataLimits);
+						}
+					});
+				}
+			], function(err, dataLimits) {
+				monster.pub('myaccount.renderSubmodule', initTemplate(dataLimits));
+
+				_.has(args, 'callback') && args.callback();
+			});
 		},
 
 		/**
@@ -115,7 +119,6 @@ define(function(require) {
 		 * Bind template content events
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template    Template to bind
-		 * @param  {Object} args.dataLimits  Limits data
 		 */
 		trunksBindEvents: function(args) {
 			var self = this,
@@ -145,10 +148,17 @@ define(function(require) {
 
 				var trunksNewLimit = $slider.slider('value');
 
-				self.trunksHelperUpdateTrunkLimit({
-					trunksLimit: trunksNewLimit,
-					trunkType: trunkType,
-					success: function(dataLimits) {
+				monster.waterfall([
+					function(callback) {
+						self.trunksHelperUpdateTrunkLimit({
+							trunksLimit: trunksNewLimit,
+							trunkType: trunkType,
+							success: function(dataLimits) {
+								callback(null, dataLimits);
+							}
+						});
+					},
+					function(dataLimits, callback) {
 						monster.pub('myaccount.updateMenu', {
 							data: trunksNewLimit,
 							key: trunkType
@@ -158,15 +168,17 @@ define(function(require) {
 							key: trunkType,
 							data: dataLimits,
 							callback: function() {
-								monster.ui.toast({
-									type: 'success',
-									message: self.getTemplate({
-										name: '!' + self.i18n.active().trunks.saveSuccessMessage
-									})
-								});
+								callback(null, dataLimits);
 							}
 						});
 					}
+				], function(err, dataLimits) {
+					monster.ui.toast({
+						type: 'success',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().trunks.saveSuccessMessage
+						})
+					});
 				});
 			});
 		},
