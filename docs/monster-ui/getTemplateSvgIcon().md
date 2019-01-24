@@ -16,7 +16,7 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `id` | ID of the icon to be rendered. | `String` | | `false`
-`cssClass` | Custom CSS classes to be applied to the SVG tag. | `String` | `svg-icon` | `false`
+`cssClass` | Custom CSS classes to be applied to the SVG tag. | `String` | `svg-icon <icon-id-prefix>` | `false`
 
 ### Return value
 A `String` representing the SVG icon template.
@@ -25,17 +25,17 @@ A `String` representing the SVG icon template.
 * `"args" is not a plain object`: `args` is not a plain JavaScript object
 * `"args.id" is undefined`: Icon `id` was not provided
 * `"args.id" is not a string`: `id` was provided, but is not a `String` value
-* `"args.cssClass" is not a string`: `cssClass` was provided, but is not a `String` value
+* `"args.cssClass" is not a string`: `cssClass` was provided, but it is not a `String` value
 
 ## Description
 
-The `monster.ui.getTemplateSvgIcon()` method allows you to get a template to render an [SVG icon][svgIcons] simply by specifying the ID of the icon, and optionally any CSS classes to be applied.
+The `monster.ui.getTemplateSvgIcon()` method allows you to get a template to render an [SVG icon][svgIcons] simply by specifying the ID of the icon, and optionally any CSS classes to be applied. If no CSS classes are provided, the class `svg-icon` is set by default, along with a class that matches the icon ID prefix.
 
 ## Examples
 ### Get a template for a specific SVG icon:
 ```javascript
 monster.ui.getTemplateSvgIcon({ id: 'telicon2--phone-outbound' });
-// output: <svg class="svg-icon"><use xlink:href="#tellicon--phone-outbound" ⁄></svg>
+// output: <svg class="svg-icon telicon2"><use xlink:href="#tellicon--phone-outbound" ⁄></svg>
 ```
 ### Get a template, applying custom CSS classes:
 ```javascript
