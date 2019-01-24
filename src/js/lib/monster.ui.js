@@ -279,6 +279,15 @@ define(function(require) {
 				return stringValue.replace(/{{variable}}/g, variable);
 			},
 
+			renderSvgIcon: function(id, className) {
+				var template = monster.ui.getTemplateSvgIcon({
+					id: id,
+					className: _.isString(className) ? className : undefined
+				});
+
+				return new Handlebars.SafeString(template);
+			},
+
 			select: function(value, options) {
 				var $el = $('<select />').html(options.fn(this));
 				if (!_.isArray(value)) {
@@ -3094,6 +3103,33 @@ define(function(require) {
 	};
 
 	/**
+	 * Get handlebars templateto render an SVG icon
+	 * @param  {Object} args
+	 * @param  {String} args.id                    Icon ID
+	 * @param  {String} [args.className=svg-icon]  CSS class or classes to be applied to the SVG tag
+	 */
+	function getTemplateSvgIcon(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (!_.has(args, 'id') || _.isUndefined(args.id)) {
+			throw TypeError('"args.id" is undefined');
+		}
+		if (!_.isString(args.id)) {
+			throw TypeError('"args.id" is not a string');
+		}
+		if (_.has(args.className) && !_.isString(args.className)) {
+			throw TypeError('"args.className" is not a string');
+		}
+		var templateData = {
+			iconId: args.id,
+			className: _.get(args, 'className', 'svg-icon')
+		};
+
+		return monster.template(monster.apps.core, 'monster-svg-icon', templateData);
+	}
+
+	/**
 	 * Wrapper for toast notification library
 	 * @param  {Object} args
 	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
@@ -3118,6 +3154,7 @@ define(function(require) {
 	initialize();
 
 	ui.toast = toast;
+	ui.getTemplateSvgIcon = getTemplateSvgIcon;
 
 	return ui;
 });

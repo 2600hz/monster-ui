@@ -1,12 +1,12 @@
 .svg-icon {
-	/* Default size for icons 16px = 1rem */
-	height: 1rem;
-	width: 1rem;
+	/* Default size for icons 16px = 1em */
+	height: 1.125em;
+	width: 1.125em;
 
 	/* Control position and alignment */
 	display: inline-block;
 	line-height: inherit;
-	vertical-align: middle;
+	vertical-align: -0.225em;
 
 	/* Let the icon take whatever color the parent has */
 	fill: currentColor;
