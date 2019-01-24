@@ -188,9 +188,11 @@
 		"trunks": "Trunks",
 		"twoWayCalling": "Appels sortants",
 		"updateLimits": "Mettre à jour",
-		"helpTwoway": "Ceci contrôle le nombre d'appels sortants simultanés que votre système permet.",
-		"helpInbound": "Ceci contrôle le nombre d'appels entrants simultanés que votre système permet.",
-		"monthlyCharges": "Frais mensuels"
+		"monthlyCharges": "Frais mensuels",
+		"help": {
+			"inbound": "Ceci contrôle le nombre d'appels entrants simultanés que votre système permet.",
+			"twoway": "Ceci contrôle le nombre d'appels sortants simultanés que votre système permet."
+		}
 	},
 
 	"isMasquerading": {
