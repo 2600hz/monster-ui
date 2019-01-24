@@ -275,17 +275,17 @@ define(function(require) {
 				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
-			replaceVar: function(stringValue, variable) {
-				return stringValue.replace(/{{variable}}/g, variable);
-			},
-
-			renderSvgIcon: function(id, className) {
+			renderSvgIcon: function(id, cssClass) {
 				var template = monster.ui.getTemplateSvgIcon({
 					id: id,
-					className: _.isString(className) ? className : undefined
+					cssClass: _.isString(cssClass) ? cssClass : undefined
 				});
 
 				return new Handlebars.SafeString(template);
+			},
+
+			replaceVar: function(stringValue, variable) {
+				return stringValue.replace(/{{variable}}/g, variable);
 			},
 
 			select: function(value, options) {
@@ -3104,9 +3104,10 @@ define(function(require) {
 
 	/**
 	 * Get handlebars templateto render an SVG icon
-	 * @param  {Object} args
-	 * @param  {String} args.id                    Icon ID
-	 * @param  {String} [args.className=svg-icon]  CSS class or classes to be applied to the SVG tag
+	 * @param   {Object} args
+	 * @param   {String} args.id                   Icon ID
+	 * @param   {String} [args.cssClass=svg-icon]  CSS classes to be applied to the SVG tag
+	 * @return  {String}                           SVG icon template
 	 */
 	function getTemplateSvgIcon(args) {
 		if (!_.isPlainObject(args)) {
@@ -3118,12 +3119,14 @@ define(function(require) {
 		if (!_.isString(args.id)) {
 			throw TypeError('"args.id" is not a string');
 		}
-		if (_.has(args.className) && !_.isString(args.className)) {
-			throw TypeError('"args.className" is not a string');
+		if (_.has(args.cssClass) && !_.isString(args.cssClass)) {
+			throw TypeError('"args.cssClass" is not a string');
 		}
+		var iconId = args.id;
+		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
 		var templateData = {
-			iconId: args.id,
-			className: _.get(args, 'className', 'svg-icon')
+			iconId: iconId,
+			cssClass: _.get(args, 'cssClass', 'svg-icon ' + iconPrefix)
 		};
 
 		return monster.template(monster.apps.core, 'monster-svg-icon', templateData);

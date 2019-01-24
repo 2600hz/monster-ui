@@ -1,4 +1,17 @@
 .svg-icon {
+	&.g-drive {
+		/* Default size for icons 16px = 1em */
+		width: 6.429em;	// Scaled based on main symbol's viewBox size: 200×1.125em÷35
+	}
+
+	&.aws {
+		width: 2.97em;	// Scaled based on main symbol's viewBox size: 132×1.125em÷50
+	}
+
+	&.sso-linkedin {
+		width: 0.984em;	// Scaled based on main symbol's viewBox size: 448×1.125em÷512
+	}
+
 	/* Default size for icons 16px = 1em */
 	height: 1.125em;
 	width: 1.125em;
