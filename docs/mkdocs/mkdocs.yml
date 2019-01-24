@@ -35,6 +35,7 @@ pages:
     - 'docs/monster-ui/dialog().md'
     - 'docs/monster-ui/generateAppLayout().md'
     - 'docs/monster-ui/getFormData().md'
+    - 'docs/monster-ui/getTemplateSvgIcon().md'
     - 'docs/monster-ui/highlight().md'
     - 'docs/monster-ui/insertTemplate().md'
     - 'docs/monster-ui/loadTab().md'
@@ -78,6 +79,7 @@ pages:
       - 'docs/monster-util/dataFlags/add().md'
       - 'docs/monster-util/dataFlags/destroy().md'
       - 'docs/monster-util/dataFlags/get().md'
+  - 'docs/svgIcons.md'
 - 'Contributing':
   - 'docs/codingStandards.md'
   - 'docs/javascriptStyleGuide.md'

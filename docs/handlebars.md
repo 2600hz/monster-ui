@@ -23,6 +23,7 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
   - [monsterSignalIndicator](#monstersignalindicator)
   - [monsterSwitch](#monsterswitch)
   - [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
+  - [renderSvgIcon(#rendersvgicon)]
   - [replaceVar](#replacevar)
   - [toFriendlyDate](#tofriendlydate)
   - [toLowerCase](#tolowercase)
@@ -291,6 +292,19 @@ Second argument is optional and let you define a className that will be added to
 {{#monsterText 'question'}} Is Monster Awesome?{{/monsterText}}
 ```
 
+#### renderSvgIcon
+This helper makes easy to render an [SVG icon from the included collections][svgIcons], by only specifying its ID.
+
+```handlebars
+{{renderSvgIcon "telicon2--phone-outbound"}}
+```
+
+Optionally, a `String` of CSS class names can be provided as a second parameter, to customize how to display the icon.
+
+```handlebars
+{{renderSvgIcon "g-drive--color" "my-icon-class icon-large"}}
+```
+
 #### replaceVar
 This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
 You can see a very good example about this helper [here][i18n_templates].
@@ -382,3 +396,4 @@ Test 3
 
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
+[svgIcons]: svgIcons.md
