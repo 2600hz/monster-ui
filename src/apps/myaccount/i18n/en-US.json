@@ -183,21 +183,26 @@
 		"trunks": "Trunks",
 		"twoWayCalling": "Unlimited Two-way Trunks",
 		"updateLimits": "Update Limits",
-		"helpTwoway": "The number of Two-way trunks defines how many concurrent calls your platform can handle at one time.",
-		"helpInbound": "The number of Inbound trunks defines how many simultaneous calls you can receive to your phone system.",
 		"monthlyCharges": "Monthly Charges",
 		"__comment": "UI-664: Adding the real twoway sliders",
 		"__version": "v3.19_s2",
 		"twowayTitle": "Twoway Trunking Limits",
 		"twoway": "Two-way",
 		"outboundCalling": "Unlimited Outbound Trunks",
-		"helpOutbound": "The number of Outbound trunks defines how many concurrent external calls you can place at one time.",
 		"__comment": "UI-1014: Redesign of MyAccount",
 		"__version": "v3.20_s1",
 		"currentLimit": "Current Limit",
-		"exampleTwoway": "EXAMPLE: 10 Two-way Trunks would allow your system to handle 6 inbound calls and 4 outbound calls at the same time.",
-		"exampleInbound": "EXAMPLE: 5 Inbound Trunks allow your platform to handle 5 simultaneous incoming calls",
-		"exampleOutbound": "EXAMPLE: 10 Outbound Trunks allow your platform to handle 10 simultaneous calls to external numbers"
+		"example": {
+			"inbound": "EXAMPLE: 5 Inbound Trunks allow your platform to handle 5 simultaneous incoming calls",
+			"outbound": "EXAMPLE: 10 Outbound Trunks allow your platform to handle 10 simultaneous calls to external numbers",
+			"twoway": "EXAMPLE: 10 Two-way Trunks would allow your system to handle 6 inbound calls and 4 outbound calls at the same time."
+		},
+		"help": {
+			"inbound": "The number of Inbound trunks defines how many simultaneous calls you can receive to your phone system.",
+			"outbound": "The number of Outbound trunks defines how many concurrent external calls you can place at one time.",
+			"twoway": "The number of Two-way trunks defines how many concurrent calls your platform can handle at one time."
+		},
+		"saveSuccessMessage": "The trunking limit has been updated successfully!"
 	},
 
 	"balance" : {

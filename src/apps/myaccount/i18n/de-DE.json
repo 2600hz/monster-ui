@@ -167,21 +167,25 @@
 		"trunks": "Trunks",
 		"twoWayCalling": "Unbegrenzte Trunks bidirektional",
 		"updateLimits": "Limits aktualisieren",
-		"helpTwoway": "Die Anzahl der bidirektionalen Trunks legt fest, wie viele Anrufe gleichzeitig Ihre Plattform bewältigen kann.",
-		"helpInbound": "Die Anzahl der Trunks in Eingangsrichtung legt fest, wie viele Anrufe gleichzeitig in Ihrem Telefonsystem eingehen können.",
 		"monthlyCharges": "Monatliche Kosten",
 		"__comment": "UI-664: Hinzufügen der echten bidirektionalen Schieberegler",
 		"__version": "v3.19_s2",
 		"twowayTitle": "Limits für bidirektionales Trunking",
 		"twoway": "Bidirektional",
 		"outboundCalling": "Unbegrenzte Trunks in Ausgangsrichtung",
-		"helpOutbound": "Die Anzahl der Trunks in Ausgangsrichtung legt fest, wie viele externe Anrufe Sie gleichzeitig vornehmen können.",
 		"__comment": "UI-1014: Neudesign von Mein Account",
 		"__version": "v3.20_s1",
 		"currentLimit": "Aktuelles Limit",
-		"exampleTwoway": "BEISPIEL: Bei 10 Trunks bidirektional wäre Ihr System in der Lage, 6 eingehende Anrufe und 4 ausgehende Anrufe gleichzeitig zu bewältigen.",
-		"exampleInbound": "BEISPIEL: Bei 5 Trunks in Eingangsrichtung wäre Ihre Plattform in der Lage, 5 gleichzeitig eingehende Anrufe zu bewältigen",
-		"exampleOutbound": "BEISPIEL: Bei 10 Trunks in Ausgangsrichtung wäre Ihre Plattform in der Lage, 10 Anrufe an externe Nummern gleichzeitig zu bewältigen"
+		"example": {
+			"inbound": "BEISPIEL: Bei 5 Trunks in Eingangsrichtung wäre Ihre Plattform in der Lage, 5 gleichzeitig eingehende Anrufe zu bewältigen",
+			"outbound": "BEISPIEL: Bei 10 Trunks in Ausgangsrichtung wäre Ihre Plattform in der Lage, 10 Anrufe an externe Nummern gleichzeitig zu bewältigen",
+			"twoway": "BEISPIEL: Bei 10 Trunks bidirektional wäre Ihr System in der Lage, 6 eingehende Anrufe und 4 ausgehende Anrufe gleichzeitig zu bewältigen."
+		},
+		"help": {
+			"inbound": "Die Anzahl der Trunks in Eingangsrichtung legt fest, wie viele Anrufe gleichzeitig in Ihrem Telefonsystem eingehen können.",
+			"outbound": "Die Anzahl der Trunks in Ausgangsrichtung legt fest, wie viele externe Anrufe Sie gleichzeitig vornehmen können.",
+			"twoway": "Die Anzahl der bidirektionalen Trunks legt fest, wie viele Anrufe gleichzeitig Ihre Plattform bewältigen kann."
+		}
 	},
 
 	"balance" : {

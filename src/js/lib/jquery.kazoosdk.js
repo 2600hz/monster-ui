@@ -375,12 +375,13 @@
 				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/security/attempts/{attemptId}' }
 			},
 			servicePlan: {
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_plans' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
 				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'removeMany': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'addManyOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/override' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 				'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
@@ -388,15 +389,7 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 				'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 				'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' },
-				'getFields': { verb: 'GET', url: 'service_plans/editable' }
-			},
-			servicePlanner: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_planner' },
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
+				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 			},
 			services: {
 				'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/services' },
@@ -404,7 +397,8 @@
 				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
 				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
-				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
+				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
+				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
