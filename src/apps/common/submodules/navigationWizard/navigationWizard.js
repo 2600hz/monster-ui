@@ -4,10 +4,6 @@ define(function(require) {
 		monster = require('monster');
 
 	var navigationWizard = {
-		requests: {
-
-		},
-
 		subscribe: {
 			'common.navigationWizard.render': 'navigationWizardRender'
 		},
@@ -33,7 +29,7 @@ define(function(require) {
 					.empty()
 					.append(layout);
 
-				self.generateTemplate(currentStep, args);
+				self.navigationWizardGenerateTemplate(currentStep, args);
 			} else {
 				throw new Error('A container must be provided.');
 			}
@@ -45,8 +41,8 @@ define(function(require) {
 				template = args.template,
 				currentStep = 0;
 
-			self.setSelected(currentStep, args);
-			self.generateTemplate(currentStep, args);
+			self.navigationWizardSetSelected(currentStep, args);
+			self.navigationWizardGenerateTemplate(currentStep, args);
 
 			//Clicking next on the menu item
 			template
@@ -54,7 +50,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.utilForTemplate(currentStep, args);
+						var result = self.navigationWizardUtilForTemplate(currentStep, args);
 
 						if (result.valid === true) {
 							//display checkbox
@@ -72,8 +68,8 @@ define(function(require) {
 							});
 
 							currentStep += 1;
-							self.setSelected(currentStep, args);
-							self.generateTemplate(currentStep, args);
+							self.navigationWizardSetSelected(currentStep, args);
+							self.navigationWizardGenerateTemplate(currentStep, args);
 						}
 					});
 
@@ -83,7 +79,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.utilForTemplate(currentStep, args);
+						var result = self.navigationWizardUtilForTemplate(currentStep, args);
 
 						if (result.valid === true) {
 							thisArg[args.done](args);
@@ -98,8 +94,8 @@ define(function(require) {
 
 						currentStep -= 1;
 
-						self.setSelected(currentStep, args);
-						self.generateTemplate(currentStep, args);
+						self.navigationWizardSetSelected(currentStep, args);
+						self.navigationWizardGenerateTemplate(currentStep, args);
 					});
 
 			//Clicking on cancel
@@ -122,12 +118,12 @@ define(function(require) {
 							});
 
 						//re-render template with default values
-						self.setSelected(currentStep, formattedData);
-						self.generateTemplate(currentStep, formattedData);
+						self.navigationWizardSetSelected(currentStep, formattedData);
+						self.navigationWizardGenerateTemplate(currentStep, formattedData);
 					});
 		},
 
-		setSelected: function(currentStep, args) {
+		navigationWizardSetSelected: function(currentStep, args) {
 			var self = this,
 				template = args.template,
 				steps = args.steps;
@@ -183,7 +179,7 @@ define(function(require) {
 			}
 		},
 
-		generateTemplate: function(currentStep, args) {
+		navigationWizardGenerateTemplate: function(currentStep, args) {
 			var self = this,
 				thisArg = args.thisArg,
 				steps = args.steps,
@@ -192,7 +188,7 @@ define(function(require) {
 			thisArg[template](args);
 		},
 
-		utilForTemplate: function(currentStep, args) {
+		navigationWizardUtilForTemplate: function(currentStep, args) {
 			var self = this,
 				thisArg = args.thisArg,
 				steps = args.steps,
