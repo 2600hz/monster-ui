@@ -97,6 +97,7 @@ define(function(require) {
 						event.preventDefault();
 
 						currentStep -= 1;
+
 						self.setSelected(currentStep, args);
 						self.generateTemplate(currentStep, args);
 					});
@@ -153,6 +154,17 @@ define(function(require) {
 			template
 				.find('li[data-id="' + currentStep + '"]')
 					.addClass('selected');
+
+			//hide clear button if it's not a form
+			if (steps[currentStep].default) {
+				template
+					.find('#clear')
+						.show();
+			} else {
+				template
+					.find('#clear')
+						.hide();
+			}
 
 			//Hide back button in the first page
 			if (currentStep === 0) {
