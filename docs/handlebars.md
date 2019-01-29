@@ -23,7 +23,8 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
   - [monsterSignalIndicator](#monstersignalindicator)
   - [monsterSwitch](#monsterswitch)
   - [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
-  - [renderSvgIcon(#rendersvgicon)]
+  - [renderSvgIcon](#rendersvgicon)
+  - [telicon](#telicon)
   - [replaceVar](#replacevar)
   - [toFriendlyDate](#tofriendlydate)
   - [toLowerCase](#tolowercase)
@@ -303,6 +304,19 @@ Optionally, a `String` of CSS class names can be provided as a second parameter,
 
 ```handlebars
 {{renderSvgIcon "g-drive--color" "my-icon-class icon-large"}}
+```
+
+### telicon
+This helper is pretty similar to `renderSvgIcon`, but just works for `telicon` icons, that means, you don't need to specify the `telicon2` prefix.
+
+```handlebars
+{{telicon "phone-outbound"}}
+```
+
+Optionally, a `String` of CSS class names can be provided as a second parameter, to customize how to display the icon.
+
+```handlebars
+{{telicon "phone-outbound" "my-icon-class icon-large"}}
 ```
 
 #### replaceVar

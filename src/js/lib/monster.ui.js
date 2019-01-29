@@ -284,6 +284,19 @@ define(function(require) {
 				return new Handlebars.SafeString(template);
 			},
 
+			telicon: function(id, cssClass) {
+				if (!_.startsWith(id, 'telicon2--')) {
+					id = 'telicon2--' + id;
+				}
+
+				var template = monster.ui.getTemplateSvgIcon({
+					id: id,
+					cssClass: _.isString(cssClass) ? cssClass : undefined
+				});
+
+				return new Handlebars.SafeString(template);
+			},
+
 			replaceVar: function(stringValue, variable) {
 				return stringValue.replace(/{{variable}}/g, variable);
 			},
