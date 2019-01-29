@@ -3116,7 +3116,7 @@ define(function(require) {
 	};
 
 	/**
-	 * Get handlebars templateto render an SVG icon
+	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
 	 * @param   {String} args.id                   Icon ID
 	 * @param   {String} [args.cssClass=svg-icon]  CSS classes to be applied to the SVG tag
@@ -3126,7 +3126,7 @@ define(function(require) {
 		if (!_.isPlainObject(args)) {
 			throw TypeError('"args" is not a plain object');
 		}
-		if (!_.has(args, 'id') || _.isUndefined(args.id)) {
+		if (!_.has(args, 'id')) {
 			throw TypeError('"args.id" is undefined');
 		}
 		if (!_.isString(args.id)) {
