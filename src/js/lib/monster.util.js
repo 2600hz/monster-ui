@@ -1159,6 +1159,24 @@ define(function(require) {
 	}
 
 	/**
+	 * Gets the available features for a phone number
+	 * @param {Object} number  Phone number object, which contains the features details
+	 */
+	function getNumberFeatures(number) {
+		var featuresNumber;
+
+		if (number.hasOwnProperty('features_available') && number.features_available.length) {
+			featuresNumber = number.features_available;
+		} else if (number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
+			featuresNumber = number._read_only.features_available;
+		} else {
+			featuresNumber = [];
+		}
+
+		return featuresNumber;
+	}
+
+	/**
 	 * Returns the full name of a specific user or, if missing, of the currently
 	 * logged in user.
 	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
@@ -1365,6 +1383,7 @@ define(function(require) {
 	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
