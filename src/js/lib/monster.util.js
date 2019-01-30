@@ -1163,6 +1163,13 @@ define(function(require) {
 	 * @param {Object} number  Phone number object, which contains the features details
 	 */
 	function getNumberFeatures(number) {
+		if (_.isNil(number)) {
+			throw new Error('"number" is null or undefined');
+		}
+		if (!_.isPlainObject(number)) {
+			throw new TypeError('"number" is not an object');
+		}
+
 		var featuresNumber;
 
 		if (number.hasOwnProperty('features_available') && number.features_available.length) {

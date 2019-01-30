@@ -60,6 +60,7 @@ pages:
     - 'docs/monster-util/getUrlVars().md'
     - 'docs/monster-util/getAuthToken().md'
     - 'docs/monster-util/getFormatPhoneNumber().md'
+    - 'docs/monster-util/getNumberFeatures().md'
     - 'docs/monster-util/getUserFullName().md'
     - 'docs/monster-util/gregorianToDate().md'
     - 'docs/monster-util/isAdmin().md'
