@@ -698,7 +698,7 @@ define(function(require) {
 						maxlength: 128
 					},
 					'bill.pin': {
-						maxlength: 6
+						maxlength: 15
 					},
 					'bill.btn': {
 						required: true,
