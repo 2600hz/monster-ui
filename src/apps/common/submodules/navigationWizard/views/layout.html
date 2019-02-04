@@ -1,0 +1,48 @@
+<div id="navigation_wizard_wrapper">
+	<div class="header">
+		<h4>{{title}}</h4>
+		<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
+	</div>
+
+	<div class="left-content">
+		<div class="nav">
+			<ol>
+			{{#each steps}}
+				<span data-id="{{@key}}" class="hide-content fa fa-circle"></span>
+				<i data-id="{{@key}}" class="fa fa-check-circle hide-check" aria-hidden="true"></i>
+				<li data-id="{{@key}}">{{this.label}}</li>
+				<span data-id="{{@key}}" class="hide-content">{{this.description}}</span>
+			{{/each}}
+			</ol>
+		</div>
+	</div>
+
+	<div class="right-content">
+	</div>
+
+	<div class="footer">
+		<form class="input-container form-row" id="form_navigation_buttons">
+			<div class="actions">
+				<a href="javascript:void(0);" id="clear">
+					{{i18n.navigationWizard.buttons.clear}}
+				</a>
+				<button class="monster-button back">
+					<i class="fa fa-arrow-circle-left"></i>
+					{{i18n.navigationWizard.buttons.back}}
+				</button>
+				<button id="next" class="monster-button-primary action-button">
+					{{i18n.navigationWizard.buttons.next}}
+					<i class="fa fa-arrow-circle-right"></i>
+				</button>
+				<button id="done" class="monster-button-success action-button">
+					{{#unless doneButton}}
+						{{i18n.navigationWizard.buttons.done}}
+					{{else}}
+						{{doneButton}}
+					{{/unless}}
+				</button>
+			</div>
+		</form>
+
+	</div>
+</div>
