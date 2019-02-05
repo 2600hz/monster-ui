@@ -9,13 +9,13 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
   - [coalesce](#coalesce)
   - [compare](#compare)
   - [debug](#debug)
-  - [ifInArray](#ifinarray)
-  - [isPrivLevelAdmin](#isprivleveladmin)
-  - [isSuperDuper](#issuperduper)
   - [formatMacAddress](#formatmacaddress)
   - [formatPhoneNumber](#formatphonenumber)
   - [formatPrice](#formatprice)
   - [getUserFullName](#getuserfullname)
+  - [ifInArray](#ifinarray)
+  - [isPrivLevelAdmin](#isprivleveladmin)
+  - [isSuperDuper](#issuperduper)
   - [monsterCheckbox](#monstercheckbox)
   - [monsterNumberWrapper](#monsternumberwrapper)
   - [monsterPanelText](#monsterpaneltext)
@@ -23,9 +23,9 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
   - [monsterSignalIndicator](#monstersignalindicator)
   - [monsterSwitch](#monsterswitch)
   - [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
-  - [renderSvgIcon](#rendersvgicon)
-  - [telicon](#telicon)
   - [replaceVar](#replacevar)
+  - [svgIcon](#svgicon)
+  - [telicon](#telicon)
   - [toFriendlyDate](#tofriendlydate)
   - [toLowerCase](#tolowercase)
   - [tryI18n](#tryi18n)
@@ -111,33 +111,6 @@ example.html
 {{/each}}
 ```
 
-#### ifInArray
-This helper will check if an array contains a specific value and display the related HTML.
-
-example.html
-```handlebars
-<input type="checkbox"{{#ifInArray 'VP8' media.video.codecs}} checked="checked"{{/ifInArray}} value="{{codec}}"/>
-```
-Here we tick the checkbox depending on the 'VP8' video codec being in the list of available codecs.
-
-#### isPrivLevelAdmin
-This is a predetermined conditional helper letting you render content only if the privilege level of the user logged in or passed as argument is `admin`.
-
-```handlebars
-{{#isPrivLevelAdmin optionalUserObject}}
-...
-{{/isPrivLevelAdmin}}
-```
-
-#### isSuperDuper
-This is a predetermined conditional helper letting you render content only if the account logged in or passed as argument has the `superduper_admin` flag set to `true`.
-
-```handlebars
-{{#isSuperDuper optionalAccountObject}}
-...
-{{/isSuperDuper}}
-```
-
 #### formatMacAddress
 The formatMacAddress helper formats a string into a string representation of a MAC address, using colons as separator.
 
@@ -182,6 +155,33 @@ This helper will display the full name of the user object passed as argument, fo
 
 ```handlebars
 {{getUserFullName optionalUserObject}}
+```
+
+#### ifInArray
+This helper will check if an array contains a specific value and display the related HTML.
+
+example.html
+```handlebars
+<input type="checkbox"{{#ifInArray 'VP8' media.video.codecs}} checked="checked"{{/ifInArray}} value="{{codec}}"/>
+```
+Here we tick the checkbox depending on the 'VP8' video codec being in the list of available codecs.
+
+#### isPrivLevelAdmin
+This is a predetermined conditional helper letting you render content only if the privilege level of the user logged in or passed as argument is `admin`.
+
+```handlebars
+{{#isPrivLevelAdmin optionalUserObject}}
+...
+{{/isPrivLevelAdmin}}
+```
+
+#### isSuperDuper
+This is a predetermined conditional helper letting you render content only if the account logged in or passed as argument has the `superduper_admin` flag set to `true`.
+
+```handlebars
+{{#isSuperDuper optionalAccountObject}}
+...
+{{/isSuperDuper}}
 ```
 
 #### monsterCheckbox
@@ -293,21 +293,25 @@ Second argument is optional and let you define a className that will be added to
 {{#monsterText 'question'}} Is Monster Awesome?{{/monsterText}}
 ```
 
-#### renderSvgIcon
-This helper makes easy to render an [SVG icon from the included collections][svgIcons], by only specifying its ID.
+#### replaceVar
+This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
+You can see a very good example about this helper [here][i18n_templates].
+
+#### svgIcon
+This helper makes it easy to render [SVG icons from collections supported by Monster UI][svgIcons] by only requiring you to specify an icon ID.
 
 ```handlebars
-{{renderSvgIcon "telicon2--phone-outbound"}}
+{{svgIcon "telicon2--phone-outbound"}}
 ```
 
 Optionally, a `String` of CSS class names can be provided as a second parameter, to customize how to display the icon.
 
 ```handlebars
-{{renderSvgIcon "g-drive--color" "my-icon-class icon-large"}}
+{{svgIcon "g-drive--color" "my-icon-class icon-large"}}
 ```
 
 ### telicon
-This helper is pretty similar to `renderSvgIcon`, but just works for `telicon` icons, that means, you don't need to specify the `telicon2` prefix.
+This helper is a wrapper over `svgIcon` and allows you to render telicon icons by specifying an icon ID stripped of the `telicon2` prefix.
 
 ```handlebars
 {{telicon "phone-outbound"}}
@@ -318,10 +322,6 @@ Optionally, a `String` of CSS class names can be provided as a second parameter,
 ```handlebars
 {{telicon "phone-outbound" "my-icon-class icon-large"}}
 ```
-
-#### replaceVar
-This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
-You can see a very good example about this helper [here][i18n_templates].
 
 #### toFriendlyDate
 This helper allows you to display time in a customizable format. It take a mandatory Gregorian timestamp in parameter and returns a formatted date:

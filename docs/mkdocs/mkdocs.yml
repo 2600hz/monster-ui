@@ -35,7 +35,7 @@ pages:
     - 'docs/monster-ui/dialog().md'
     - 'docs/monster-ui/generateAppLayout().md'
     - 'docs/monster-ui/getFormData().md'
-    - 'docs/monster-ui/getTemplateSvgIcon().md'
+    - 'docs/monster-ui/getSvgIconTemplate().md'
     - 'docs/monster-ui/highlight().md'
     - 'docs/monster-ui/insertTemplate().md'
     - 'docs/monster-ui/loadTab().md'

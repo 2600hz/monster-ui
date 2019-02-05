@@ -15,7 +15,7 @@ Key | Description | Type | Default | Required
 #### args
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`id` | ID of the icon to be rendered. | `String` | | `false`
+`id` | Symbol ID of the icon to be rendered. | `String` | | `false`
 `cssClass` | Custom CSS classes to be applied to the SVG tag. | `String` | `svg-icon <icon-id-prefix>` | `false`
 
 ### Return value
@@ -23,8 +23,7 @@ A `String` representing the SVG icon template.
 
 ### Errors
 * `"args" is not a plain object`: `args` is not a plain JavaScript object
-* `"args.id" is undefined`: Icon `id` was not provided
-* `"args.id" is not a string`: `id` was provided, but is not a `String` value
+* `"args.id" is not a string`: `id` is not a `String` value
 * `"args.cssClass" is not a string`: `cssClass` was provided, but it is not a `String` value
 
 ## Description

@@ -275,8 +275,8 @@ define(function(require) {
 				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
-			renderSvgIcon: function(id, cssClass) {
-				var template = monster.ui.getTemplateSvgIcon({
+			svgIcon: function(id, cssClass) {
+				var template = monster.ui.getSvgIconTemplate({
 					id: id,
 					cssClass: _.isString(cssClass) ? cssClass : undefined
 				});
@@ -289,7 +289,7 @@ define(function(require) {
 					id = 'telicon2--' + id;
 				}
 
-				var template = monster.ui.getTemplateSvgIcon({
+				var template = monster.ui.getSvgIconTemplate({
 					id: id,
 					cssClass: _.isString(cssClass) ? cssClass : undefined
 				});
@@ -3122,12 +3122,9 @@ define(function(require) {
 	 * @param   {String} [args.cssClass=svg-icon]  CSS classes to be applied to the SVG tag
 	 * @return  {String}                           SVG icon template
 	 */
-	function getTemplateSvgIcon(args) {
+	function getSvgIconTemplate(args) {
 		if (!_.isPlainObject(args)) {
 			throw TypeError('"args" is not a plain object');
-		}
-		if (!_.has(args, 'id')) {
-			throw TypeError('"args.id" is undefined');
 		}
 		if (!_.isString(args.id)) {
 			throw TypeError('"args.id" is not a string');
@@ -3170,7 +3167,7 @@ define(function(require) {
 	initialize();
 
 	ui.toast = toast;
-	ui.getTemplateSvgIcon = getTemplateSvgIcon;
+	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	return ui;
 });
