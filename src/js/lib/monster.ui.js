@@ -3118,9 +3118,9 @@ define(function(require) {
 	/**
 	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
-	 * @param   {String} args.id                   Icon ID
-	 * @param   {String} [args.cssClass=svg-icon]  CSS classes to be applied to the SVG tag
-	 * @return  {String}                           SVG icon template
+	 * @param   {String} args.id            Icon ID
+	 * @param   {String} [args.attributes]  Attributes to be added to the SVG tag
+	 * @return  {String}                    SVG icon template
 	 */
 	function getSvgIconTemplate(args) {
 		if (!_.isPlainObject(args)) {
@@ -3129,14 +3129,21 @@ define(function(require) {
 		if (!_.isString(args.id)) {
 			throw TypeError('"args.id" is not a string');
 		}
-		if (_.has(args.cssClass) && !_.isString(args.cssClass)) {
-			throw TypeError('"args.cssClass" is not a string');
-		}
 		var iconId = args.id;
 		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
+		var attributes = _.get(args, 'attributes', {});
+		attributes.class
+			= _.chain(attributes)
+				.get('class', '')
+				.split(' ')
+				.merge([ 'svg-icon', iconPrefix ])
+				.uniq()
+				.join(' ')
+				.value();
+
 		var templateData = {
 			iconId: iconId,
-			cssClass: _.get(args, 'cssClass', 'svg-icon ' + iconPrefix)
+			cssClass: attributes.class	// TODO: Handle any attribute
 		};
 
 		return monster.template(monster.apps.core, 'monster-svg-icon', templateData);
