@@ -16,19 +16,23 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `id` | Symbol ID of the icon to be rendered. | `String` | | `false`
-`cssClass` | Custom CSS classes to be applied to the SVG tag. | `String` | `svg-icon <icon-id-prefix>` | `false`
+`attributes` | A Javascript plain object that contains attributes to be added to the SVG tag. | `Object` | | `false`
 
 ### Return value
 A `String` representing the SVG icon template.
 
 ### Errors
 * `"args" is not a plain object`: `args` is not a plain JavaScript object
-* `"args.id" is not a string`: `id` is not a `String` value
-* `"args.cssClass" is not a string`: `cssClass` was provided, but it is not a `String` value
+* `"id" is not a string`: `id` is not a `String` value
+* `"attributes" is not a plain object`: `attributes` is present, but is not a plain JavaScript object
 
 ## Description
 
-The `monster.ui.getTemplateSvgIcon()` method allows you to get a template to render an [SVG icon][svgIcons] simply by specifying the ID of the icon, and optionally any CSS classes to be applied. If no CSS classes are provided, the class `svg-icon` is set by default, along with a class that matches the icon ID prefix.
+The `monster.ui.getTemplateSvgIcon()` method allows you to get a template to render an [SVG icon][svgIcons] simply by specifying the ID of the icon, and optionally any attributes to be added to the SVG class.
+
+These attributes should be provided as a plain Javascript object, where each `key` correspond to the attribute name, and the `value` to the attribute's value. It is worth to mention that the value should be of type `String` to be rendered properly; otherwise, an unexpected value may be assigned to the attribute.
+
+The class `svg-icon` is set by default, along with a class that matches the icon ID prefix. If a `class` attribute is provided, these classes are appended to its collection, if they are not present already.
 
 ## Examples
 ### Get a template for a specific SVG icon:
@@ -38,8 +42,15 @@ monster.ui.getTemplateSvgIcon({ id: 'telicon2--phone-outbound' });
 ```
 ### Get a template, applying custom CSS classes:
 ```javascript
-monster.ui.getTemplateSvgIcon({ id: 'g-drive--color', cssClass: 'my-icon-class icon-large' });
-// output: <svg class="my-icon-class icon-large"><use xlink:href="#g-drive--color" ⁄></svg>
+monster.ui.getTemplateSvgIcon({
+  id: 'g-drive--color',
+  attributes: {
+    class: 'my-icon-class icon-large',
+    'data-tooltip': 'Click here',
+    disabled: "true"
+  }
+});
+// output: <svg class="my-icon-class icon-large svg-icon telicon2" data-tooltip="Click here" disabled="true"><use xlink:href="#g-drive--color" ⁄></svg>
 ```
 
 [svgIcons]: ../svgIcons.md

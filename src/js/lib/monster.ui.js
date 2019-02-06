@@ -3127,7 +3127,10 @@ define(function(require) {
 			throw TypeError('"args" is not a plain object');
 		}
 		if (!_.isString(args.id)) {
-			throw TypeError('"args.id" is not a string');
+			throw TypeError('"id" is not a string');
+		}
+		if (_.has(args, 'attributes') && !_.isPlainObject(args.attributes)) {
+			throw TypeError('"attributes" is not a plain object');
 		}
 		var iconId = args.id;
 		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));

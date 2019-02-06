@@ -302,12 +302,13 @@ This helper makes it easy to render [SVG icons from collections supported by Mon
 
 ```handlebars
 {{svgIcon "telicon2--phone-outbound"}}
+
 ```
 
-Optionally, a `String` of CSS class names can be provided as a second parameter, to customize how to display the icon.
+Optionally, additional HTML attributes can be provided to further customize the SVG tag.
 
 ```handlebars
-{{svgIcon "g-drive--color" "my-icon-class icon-large"}}
+{{svgIcon "g-drive--color" class="my-icon-class icon-large" data-tooltip="Click here" disabled="true"}}
 ```
 
 ### telicon
@@ -317,10 +318,10 @@ This helper is a wrapper over `svgIcon` and allows you to render telicon icons b
 {{telicon "phone-outbound"}}
 ```
 
-Optionally, a `String` of CSS class names can be provided as a second parameter, to customize how to display the icon.
+Like `svgIcon`, additional HTML attributes can be provided to the SVG tag.
 
 ```handlebars
-{{telicon "phone-outbound" "my-icon-class icon-large"}}
+{{telicon "phone-outbound" style="display:block;" data-label="Click here"}}
 ```
 
 #### toFriendlyDate
