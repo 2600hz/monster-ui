@@ -275,23 +275,23 @@ define(function(require) {
 				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
-			svgIcon: function(id, cssClass) {
+			svgIcon: function(id, options) {
 				var template = monster.ui.getSvgIconTemplate({
 					id: id,
-					cssClass: _.isString(cssClass) ? cssClass : undefined
+					attributes: options.hash
 				});
 
 				return new Handlebars.SafeString(template);
 			},
 
-			telicon: function(id, cssClass) {
+			telicon: function(id, options) {
 				if (!_.startsWith(id, 'telicon2--')) {
 					id = 'telicon2--' + id;
 				}
 
 				var template = monster.ui.getSvgIconTemplate({
 					id: id,
-					cssClass: _.isString(cssClass) ? cssClass : undefined
+					attributes: options.hash
 				});
 
 				return new Handlebars.SafeString(template);
@@ -3136,14 +3136,14 @@ define(function(require) {
 			= _.chain(attributes)
 				.get('class', '')
 				.split(' ')
-				.merge([ 'svg-icon', iconPrefix ])
+				.union([ 'svg-icon', iconPrefix ])
 				.uniq()
 				.join(' ')
 				.value();
 
 		var templateData = {
 			iconId: iconId,
-			cssClass: attributes.class	// TODO: Handle any attribute
+			attributes: attributes
 		};
 
 		return monster.template(monster.apps.core, 'monster-svg-icon', templateData);
