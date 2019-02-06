@@ -1159,28 +1159,22 @@ define(function(require) {
 	}
 
 	/**
-	 * Gets the available features for a phone number
-	 * @param {Object} number  Phone number object, which contains the features details
+	 * Returns the available features for a Kazoo phone number
+	 * @param  {Object} number  Phone number object, which contains the features details
+	 * @return {String[]}       Number's available features
 	 */
 	function getNumberFeatures(number) {
-		if (_.isNil(number)) {
-			throw new Error('"number" is null or undefined');
-		}
 		if (!_.isPlainObject(number)) {
 			throw new TypeError('"number" is not an object');
 		}
-
-		var featuresNumber;
-
-		if (number.hasOwnProperty('features_available') && number.features_available.length) {
-			featuresNumber = number.features_available;
-		} else if (number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
-			featuresNumber = number._read_only.features_available;
-		} else {
-			featuresNumber = [];
+		if (!_.has(number, 'features_available') && !_.has(number, '_read_only.features_available')) {
+			throw new Error('"number" does not represent a Kazoo phone number');
 		}
-
-		return featuresNumber;
+		var numberFeatures = _.get(number, 'features_available', []);
+		if (_.isEmpty(numberFeatures)) {
+			numberFeatures = _.get(number, '_read_only.features_available', []);
+		}
+		return numberFeatures;
 	}
 
 	/**
