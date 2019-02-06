@@ -203,17 +203,6 @@ define(function(require) {
 			return format;
 		},
 
-		randomString: function(length, _chars) {
-			var chars = _chars || '23456789abcdefghjkmnpqrstuvwxyz',
-				randomString = '';
-
-			for (var i = length; i > 0; i--) {
-				randomString += chars.charAt(Math.floor(Math.random() * chars.length));
-			}
-
-			return randomString;
-		},
-
 		cmp: function(a, b) {
 			return (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
@@ -520,50 +509,6 @@ define(function(require) {
 			}
 		},
 
-		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
-		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, app) {
-			transaction.amount = parseFloat(transaction.amount).toFixed(2);
-
-			if (transaction.hasOwnProperty('executor')) {
-                                var executor = transaction.executor;
-
-                                if (transaction.hasOwnProperty('description') && transaction.description) {
-                                        transaction.friendlyName = transaction.description;
-                                }
-
-                                if (!transaction.friendlyName && executor.module in app.i18n.active().transactions.executors) {
-                                        if (executor.trigger in app.i18n.active().transactions.executors[executor.module]) {
-                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module][executor.trigger];
-                                        } else if ('default' in app.i18n.active().transactions.executors[executor.module]) {
-                                                transaction.friendlyName = app.i18n.active().transactions.executors[executor.module]['default'];
-                                        }
-                                }
-
-                                if (!transaction.friendlyName) {
-                                        transaction.friendlyName = 'General Transaction';
-                                }
-
-				if (transaction.amount < 0) {
-					transaction.friendlyName = app.i18n.active().transactions.refundText + ' ' + transaction.friendlyName.charAt(0).toLowerCase() + transaction.friendlyName.slice(1);
-				}
-			}
-
-                        transaction.approved = transaction.hasOwnProperty('status') && transaction.status == 'completed';
-
-			if (!transaction.approved) {
-                                if (transaction.hasOwnProperty('bookkeeper') && transaction.bookkeeper.message) {
-                                        transaction.errorMessage = transaction.bookkeeper.message;
-                                } else {
-                                        transaction.errorMessage = transaction.status in app.i18n.active().transactions.statuses ? app.i18n.active().transactions.statuses[transaction.status] : transaction.status;
-                                }
-			}
-
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
-
-			return transaction;
-		},
-
 		accountArrayToTree: function(accountArray, rootAccountId) {
 			var result = {};
 
@@ -598,20 +543,6 @@ define(function(require) {
 			});
 
 			return result;
-		},
-
-		formatMacAddress: function(pMacAddress) {
-			var regex = /[^0-9a-fA-F]/g,
-				macAddress = pMacAddress.replace(regex, ''),
-				formattedMac = '';
-
-			if (macAddress.length === 12) {
-				_.each(macAddress.split(''), function(char, idx) {
-					formattedMac += (idx % 2 === 0 && idx !== 0 ? ':' : '') + macAddress[idx];
-				});
-			}
-
-			return formattedMac;
 		},
 
 		getDefaultRangeDates: function(pRange) {
@@ -1078,6 +1009,26 @@ define(function(require) {
 	};
 
 	/**
+	 * Formats a string into a string representation of a MAC address, using
+	 * colons as separator.
+	 * @param  {String} macAddress   String to format as MAC address.
+	 * @return {String}              String representation of a MAC address.
+	 */
+	function formatMacAddress(macAddress) {
+		if (!_.isString(macAddress)) {
+			throw new TypeError('"macAddress" is not a string');
+		}
+		var matches = macAddress
+			.toLowerCase()
+			.replace(/[^0-9a-f]/g, '')
+			.match(/[0-9a-f]{2}/g);
+
+		return !_.isNull(matches) && _.size(matches) >= 6
+			? matches.slice(0, 6).join(':')
+			: '';
+	}
+
+	/**
 	 * Decimal and currency formatting for prices
 	 * @param  {Object}  args
 	 * @param  {Number}  args.price        Price to format (number or string
@@ -1208,6 +1159,41 @@ define(function(require) {
 	}
 
 	/**
+	 * Returns the full name of a specific user or, if missing, of the currently
+	 * logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 * @return {String}                   User's full name
+	 */
+	function getUserFullName(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+		var core = monster.apps.core;
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+		return core.getTemplate({
+			name: '!' + core.i18n.active().userFullName,
+			data: {
+				firstName: user.first_name,
+				lastName: user.last_name
+			}
+		});
+	}
+
+	/**
 	 * Converts a Gregorian timestamp into a Date instance
 	 * @param  {Number} pTimestamp Gregorian timestamp
 	 * @return {Date}           Converted Date instance
@@ -1243,6 +1229,56 @@ define(function(require) {
 				),
 				true
 			);
+	}
+
+	/**
+	 * Generates a string of `length` random characters chosen from either a
+	 * preset or a custom string of characters.
+	 * @param  {Number} length  Number of characters to include.
+	 * @param  {String} pPreset Characters to choose from.
+	 * @return {String}         A string of random characters.
+	 */
+	function randomString(length, pPreset) {
+		if (!_.isNumber(length)) {
+			throw new TypeError('"length" is not a string');
+		}
+		if (_.isNaN(length)) {
+			throw new TypeError('"length" is NaN');
+		}
+		if (!_.isUndefined(pPreset) && !_.isString(pPreset)) {
+			throw new TypeError('"preset" is not a string');
+		}
+		if (!_.isUndefined(pPreset) && pPreset.length === 0) {
+			throw new TypeError('"preset" is an empty string');
+		}
+		var input = _.isUndefined(pPreset)
+			? 'safe'
+			: pPreset;
+		var presets = {
+			alpha: '1234567890abcdefghijklmnopqrstuvwxyz',
+			hex: '1234567890abcdef',
+			letters: 'abcdefghijklmnopqrstuvwxyz',
+			numerals: '1234567890',
+			safe: '23456789abcdefghjkmnpqrstuvwxyz'
+		};
+		var preset = _
+			.chain(presets)
+			.get(input, input)
+			.shuffle()
+			.value();
+		var upper = preset.length - 1;
+		var getRandomItem = function() {
+			var isUpper = _.sample([true, false]);
+			var item = preset[_.random(upper)];
+			return _[isUpper ? 'toUpper' : 'toLower'](item);
+		};
+		return length === 0
+			? ''
+			: _.chain(0)
+				.range(length)
+				.map(getRandomItem)
+				.join('')
+				.value();
 	}
 
 	/**
@@ -1326,10 +1362,13 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 
+	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
+	util.randomString = randomString;
 	util.toFriendlyDate = toFriendlyDate;
 	util.unixToDate = unixToDate;
 

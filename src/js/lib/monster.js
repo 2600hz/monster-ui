@@ -375,17 +375,19 @@ define(function(require) {
 			} else if ((errorNumber === 400 || errorNumber === 413) && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
-					if (typeof fieldErrors !== 'string') {
-						_.each(fieldErrors, function(fieldError, fieldErrorKey) {
-							if (typeof fieldError === 'string' || typeof fieldError === 'number') {
-								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
-							} else if (fieldErrorKey in errorsI18n.invalidData) {
-								errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
-							} else if ('message' in fieldError) {
-								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
-							}
-						});
+					if (typeof fieldErrors === 'string') {
+						return;
 					}
+
+					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
+						if (typeof fieldError === 'string' || typeof fieldError === 'number') {
+							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
+						} else if (fieldErrorKey in errorsI18n.invalidData) {
+							errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
+						} else if ('message' in fieldError) {
+							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
+						}
+					});
 				});
 			} else if ((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
 				var errMsg = '';
@@ -550,14 +552,22 @@ define(function(require) {
 					}
 
 					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						var parsedError = error;
+						// Handle the "Payment Required" status
+						var parsedError = error,
+							originalPreventCallbackError = requestOptions.preventCallbackError;
 
 						if ('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
+						// Prevent the execution of the custom error callback, as it is a
+						// charges notification that will be handled here
+						requestOptions.preventCallbackError = true;
+
+						// Notify the user about the charges
 						monster.ui.charges(parsedError.data, function() {
 							requestOptions.acceptCharges = true;
+							requestOptions.preventCallbackError = originalPreventCallbackError;
 							monster.kazooSdk.request(requestOptions);
 						}, function() {
 							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();

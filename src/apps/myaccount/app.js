@@ -311,7 +311,7 @@ define(function(require) {
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
-							name: args && args.name || monster.apps.auth.currentUser.first_name + ' ' + monster.apps.auth.currentUser.last_name,
+							name: args && args.name || monster.util.getUserFullName(),
 							showMyaccount: showMyaccount
 						},
 						navHtml = $(self.getTemplate({

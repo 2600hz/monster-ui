@@ -1,0 +1,104 @@
+@import "../../../../css/partials/base";
+
+#navigation_wizard_wrapper .header {
+	border-bottom: 1px solid #c0c0c9;
+	box-shadow: 1px 2px #e5e5e9;
+	padding: 10px 10px 10px 30px;
+}
+
+#navigation_wizard_wrapper .left-content {
+	float: left;
+	width: 270px;
+	margin-bottom: 20px;
+	min-height: 600px;
+}
+
+#navigation_wizard_wrapper .right-content {
+	background-color: #F9F9F9;
+	margin-bottom: 20px;
+	margin-left: 271px;
+	padding: 15px 15px 0 55px;
+	border-bottom: 1px solid #c0c0c9;
+	border-left: 1px solid #c0c0c9;
+	min-height: 500px;
+}
+
+#navigation_wizard_wrapper .left-content .nav {
+	margin: 25px 10px 0 20px;
+}
+
+#navigation_wizard_wrapper .left-content li {
+	margin: 15px 0;
+}
+
+#navigation_wizard_wrapper #cancel {
+	float: right;
+	bottom: 38px;
+	right: 25px;
+}
+
+#navigation_wizard_wrapper .footer {
+	margin-right: 25px;
+	border-left: 1px solid #c0c0c9;
+	margin-left: 271px;
+	padding: 15px 15px 30px 0;
+	position: relative;
+	bottom: 20px;
+}
+
+#navigation_wizard_wrapper .footer .actions {
+	float: right;
+}
+
+#navigation_wizard_wrapper .footer .fa {
+	margin-left: 8px;
+}
+
+#navigation_wizard_wrapper #clear {
+	padding: 30px;
+	color: black;
+}
+
+#navigation_wizard_wrapper .actions .back {
+	margin-right: 15px;
+}
+
+#navigation_wizard_wrapper .hide-content, #navigation_wizard_wrapper .hide-check {
+	display: none;
+}
+
+#navigation_wizard_wrapper .show-content {
+	display: block;
+	font-size: 12px;
+	margin-left: 10px;
+	color: #909099;
+}
+
+#navigation_wizard_wrapper .left-content .selected, #navigation_wizard_wrapper .left-content .done {
+	margin-left: 22px;
+}
+
+#navigation_wizard_wrapper .left-content .selected {
+	font-weight: bold !important;
+}
+
+#navigation_wizard_wrapper .left-content .done {
+	font-weight: normal;
+}
+
+#navigation_wizard_wrapper .nav .fa {
+	float: left;
+	position: relative;
+	right: 22px;
+	top: 5px;
+}
+
+#navigation_wizard_wrapper .nav .fa-circle {
+	color: #22A5FF;
+	font-size: 9px !important;
+}
+
+#navigation_wizard_wrapper .nav .fa-check-circle {
+	color: #14e715;
+}
+

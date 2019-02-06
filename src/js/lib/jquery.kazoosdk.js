@@ -123,6 +123,10 @@
 			contactList: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 			},
+			dashboards: {
+				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
+				'getQueueOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_overview' }
+			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
@@ -274,7 +278,8 @@
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
 				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
 				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' },
-				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' }
+				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
@@ -297,7 +302,7 @@
 				'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
 				'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 				'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}' },
-				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}?reason={reason}' },
+				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' },
 				'listComments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
 				'getComment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
 				'addComment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
@@ -370,12 +375,13 @@
 				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/security/attempts/{attemptId}' }
 			},
 			servicePlan: {
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_plans' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
 				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'removeMany': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'addManyOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/override' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 				'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
@@ -383,20 +389,16 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 				'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 				'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' },
-				'getFields': { verb: 'GET', url: 'service_plans/editable' }
-			},
-			servicePlanner: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_planner' },
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
+				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 			},
 			services: {
+				'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/services' },
+				'bulkChange': { verb: 'POST', url: 'accounts/{accountId}/services/' },
 				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
-				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' }
+				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
+				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
+				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
@@ -447,6 +449,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
 				'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages' },
