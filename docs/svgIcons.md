@@ -20,7 +20,7 @@ Monster UI includes 4 SVG icon collections:
   * `sso-linkedin--color`: LinkedIn color
   * `sso-linkedin--grey`: LinkedIn grey
 4. [Telicon Icons v2][telicon]
-  A third party SVG icon system for Monster UI. The list of icons is available at [its official website][telicon2iconlist]. To use the icons via Monster helpers, you should prefix the ID with `telicon2--`. For example, if you want to render the icon `phone-outbound`, the ID to be used inside Monster will be `telicon2--phone-outbound`.
+  A third party SVG icon system for Monster UI. The list of icons is available on [the official website][telicon2iconlist]. To use these icons in Monster UI, you can use the dedicated `telicon` Handlebars helper: `{{telicon "phone-outbound"}}`.
 
 [telicon]: https://joshsanders.github.io/telicon/
 [telicon2iconlist]: https://joshsanders.github.io/telicon/icon-sheet.html

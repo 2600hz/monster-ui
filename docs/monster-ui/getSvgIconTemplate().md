@@ -8,11 +8,8 @@ monster.ui.getSvgIconTemplate(args);
 ```
 
 ### Parameters
-Key | Description | Type | Default | Required
-:-: | --- | :-: | :-: | :-:
-`args` | Arguments to indicate how to render the SVG icon. | `Object`([#/args](#args)) | | `false`
+`args` is a `Object` parameter with the following properties:
 
-#### args
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `id` | Symbol ID of the icon to be rendered. | `String` | | `false`
@@ -24,7 +21,7 @@ A `String` representing the SVG icon template.
 ### Errors
 * `"args" is not a plain object`: `args` is not a plain JavaScript object
 * `"id" is not a string`: `id` is not a `String` value
-* `"attributes" is not a plain object`: `attributes` is present, but is not a plain JavaScript object
+* `"attributes" is not a plain object`: `attributes` is not a plain JavaScript object
 
 ## Description
 
@@ -45,7 +42,7 @@ monster.ui.getSvgIconTemplate({ id: 'telicon2--phone-outbound' });
 monster.ui.getSvgIconTemplate({
   id: 'g-drive--color',
   attributes: {
-    class: 'my-icon-class icon-large',
+    'class': 'my-icon-class icon-large',
     'data-tooltip': 'Click here',
     disabled: "true"
   }
