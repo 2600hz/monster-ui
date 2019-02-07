@@ -276,25 +276,21 @@ define(function(require) {
 			},
 
 			svgIcon: function(id, options) {
-				var template = monster.ui.getSvgIconTemplate({
-					id: id,
-					attributes: options.hash
-				});
-
-				return new Handlebars.SafeString(template);
+				return new Handlebars.SafeString(
+					monster.ui.getSvgIconTemplate({
+						id: id,
+						attributes: options.hash
+					})
+				);
 			},
 
 			telicon: function(id, options) {
-				if (!_.startsWith(id, 'telicon2--')) {
-					id = 'telicon2--' + id;
-				}
-
-				var template = monster.ui.getSvgIconTemplate({
-					id: id,
-					attributes: options.hash
-				});
-
-				return new Handlebars.SafeString(template);
+				return new Handlebars.SafeString(
+					monster.ui.getSvgIconTemplate({
+						id: _.startsWith(id, 'telicon2--') ? id : 'telicon2--' + id,
+						attributes: options.hash
+					})
+				);
 			},
 
 			replaceVar: function(stringValue, variable) {
@@ -3135,21 +3131,18 @@ define(function(require) {
 		var iconId = args.id;
 		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
 		var attributes = _.get(args, 'attributes', {});
-		attributes.class
-			= _.chain(attributes)
-				.get('class', '')
-				.split(' ')
-				.union([ 'svg-icon', iconPrefix ])
-				.uniq()
-				.join(' ')
-				.value();
+		attributes.class = _
+			.chain(attributes)
+			.get('class', '')
+			.split(' ')
+			.union(['svg-icon', iconPrefix])
+			.join(' ')
+			.value();
 
-		var templateData = {
+		return monster.template(monster.apps.core, 'monster-svg-icon', {
 			iconId: iconId,
 			attributes: attributes
-		};
-
-		return monster.template(monster.apps.core, 'monster-svg-icon', templateData);
+		});
 	}
 
 	/**
