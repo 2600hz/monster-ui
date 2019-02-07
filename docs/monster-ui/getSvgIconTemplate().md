@@ -1,10 +1,10 @@
-title: getTemplateSvgIcon()
+title: getSvgIconTemplate()
 
-# monster.ui.getTemplateSvgIcon()
+# monster.ui.getSvgIconTemplate()
 
 ## Syntax
 ```javascript
-monster.ui.getTemplateSvgIcon(args);
+monster.ui.getSvgIconTemplate(args);
 ```
 
 ### Parameters
@@ -28,7 +28,7 @@ A `String` representing the SVG icon template.
 
 ## Description
 
-The `monster.ui.getTemplateSvgIcon()` method allows you to get a template to render an [SVG icon][svgIcons] simply by specifying the ID of the icon, and optionally any attributes to be added to the SVG class.
+The `monster.ui.getSvgIconTemplate()` method allows you to get a template to render an [SVG icon][svgIcons] simply by specifying the ID of the icon, and optionally any attributes to be added to the SVG class.
 
 These attributes should be provided as a plain Javascript object, where each `key` correspond to the attribute name, and the `value` to the attribute's value. It is worth to mention that the value should be of type `String` to be rendered properly; otherwise, an unexpected value may be assigned to the attribute.
 
@@ -37,12 +37,12 @@ The class `svg-icon` is set by default, along with a class that matches the icon
 ## Examples
 ### Get a template for a specific SVG icon:
 ```javascript
-monster.ui.getTemplateSvgIcon({ id: 'telicon2--phone-outbound' });
+monster.ui.getSvgIconTemplate({ id: 'telicon2--phone-outbound' });
 // output: <svg class="svg-icon telicon2"><use xlink:href="#tellicon--phone-outbound" ⁄></svg>
 ```
 ### Get a template, applying custom CSS classes:
 ```javascript
-monster.ui.getTemplateSvgIcon({
+monster.ui.getSvgIconTemplate({
   id: 'g-drive--color',
   attributes: {
     class: 'my-icon-class icon-large',
