@@ -47,7 +47,7 @@ monster.ui.getSvgIconTemplate({
     disabled: "true"
   }
 });
-// output: <svg class="my-icon-class icon-large svg-icon telicon2" data-tooltip="Click here" disabled="true"><use xlink:href="#g-drive--color" ⁄></svg>
+// output: <svg class="my-icon-class icon-large svg-icon g-drive" data-tooltip="Click here" disabled="true"><use xlink:href="#g-drive--color" ⁄></svg>
 ```
 
 [svgIcons]: ../svgIcons.md
