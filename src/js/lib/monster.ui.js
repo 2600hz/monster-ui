@@ -3134,11 +3134,10 @@ define(function(require) {
 		attributes.class = _
 			.chain(attributes)
 			.get('class', '')
-			.split(/\s+/g)	// Split by one or more whitespaces
-			.filter(function(className) {
-				return className.length > 0;	// Filter empty strings due to leading or trailing whitespaces, or empty string
-			})
+			.split(/\s+/g)      // Split by one or more whitespaces
+			.reject(_.isEmpty)  // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
 			.union(['svg-icon', iconPrefix])
+			.uniq()
 			.join(' ')
 			.value();
 
