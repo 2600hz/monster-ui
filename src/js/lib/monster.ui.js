@@ -3137,7 +3137,6 @@ define(function(require) {
 			.split(/\s+/g)      // Split by one or more whitespaces
 			.reject(_.isEmpty)  // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
 			.union(['svg-icon', iconPrefix])
-			.uniq()
 			.join(' ')
 			.value();
 
