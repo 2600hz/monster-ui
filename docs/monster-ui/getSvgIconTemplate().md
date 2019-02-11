@@ -12,7 +12,7 @@ monster.ui.getSvgIconTemplate(args);
 
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`id` | Symbol ID of the icon to be rendered. | `String` | | `false`
+`id` | Symbol ID of the icon to be rendered. | `String` | | `true`
 `attributes` | A Javascript plain object that contains attributes to be added to the SVG tag. | `Object` | | `false`
 
 ### Return value
