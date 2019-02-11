@@ -275,6 +275,24 @@ define(function(require) {
 				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
+			svgIcon: function(id, options) {
+				return new Handlebars.SafeString(
+					monster.ui.getSvgIconTemplate({
+						id: id,
+						attributes: options.hash
+					})
+				);
+			},
+
+			telicon: function(id, options) {
+				return new Handlebars.SafeString(
+					monster.ui.getSvgIconTemplate({
+						id: _.startsWith(id, 'telicon2--') ? id : 'telicon2--' + id,
+						attributes: options.hash
+					})
+				);
+			},
+
 			replaceVar: function(stringValue, variable) {
 				return stringValue.replace(/{{variable}}/g, variable);
 			},
@@ -3094,6 +3112,41 @@ define(function(require) {
 	};
 
 	/**
+	 * Get handlebars template to render an SVG icon
+	 * @param   {Object} args
+	 * @param   {String} args.id            Icon ID
+	 * @param   {String} [args.attributes]  Attributes to be added to the SVG tag
+	 * @return  {String}                    SVG icon template
+	 */
+	function getSvgIconTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (!_.isString(args.id)) {
+			throw TypeError('"id" is not a string');
+		}
+		if (_.has(args, 'attributes') && !_.isPlainObject(args.attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		var iconId = args.id;
+		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
+		var attributes = _.get(args, 'attributes', {});
+		attributes.class = _
+			.chain(attributes)
+			.get('class', '')
+			.split(/\s+/g)      // Split by one or more whitespaces
+			.reject(_.isEmpty)  // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
+			.union(['svg-icon', iconPrefix])
+			.join(' ')
+			.value();
+
+		return monster.template(monster.apps.core, 'monster-svg-icon', {
+			iconId: iconId,
+			attributes: attributes
+		});
+	}
+
+	/**
 	 * Wrapper for toast notification library
 	 * @param  {Object} args
 	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
@@ -3118,6 +3171,7 @@ define(function(require) {
 	initialize();
 
 	ui.toast = toast;
+	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	return ui;
 });
