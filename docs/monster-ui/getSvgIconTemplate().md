@@ -35,7 +35,7 @@ The class `svg-icon` is set by default, along with a class that matches the icon
 ### Get a template for a specific SVG icon:
 ```javascript
 monster.ui.getSvgIconTemplate({ id: 'telicon2--phone-outbound' });
-// output: <svg class="svg-icon telicon2"><use xlink:href="#tellicon--phone-outbound" ⁄></svg>
+// output: <svg class="svg-icon telicon2"><use xlink:href="#telicon2--phone-outbound" ⁄></svg>
 ```
 ### Get a template, applying custom CSS classes:
 ```javascript
