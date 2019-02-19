@@ -16,6 +16,10 @@ define(function(require) {
 		EUR: {
 			symbol: '€',
 			position: 'post'
+		},
+		GBP: {
+			symbol: '£',
+			position: 'ante'
 		}
 	};
 
