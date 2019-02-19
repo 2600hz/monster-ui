@@ -435,6 +435,49 @@ define(function(require) {
 		}
 	}
 
+	/**
+	 * Show a loading view if a request starts before inoking the callback
+	 * to insert a template in the container once all requests finish
+	 * @param  {jQuey Object}   $container target where to insert the template
+	 * @param  {Function} callback   callback sending the template
+	 * @param  {Object}   pOptions   loading view options
+	 */
+	function legacyInsertTemplate($container, callback, pOptions) {
+		var coreApp = monster.apps.core;
+		var options = $.extend(true, {
+			hasBackground: true,
+			title: coreApp.i18n.active().insertTemplate.title,
+			text: coreApp.i18n.active().insertTemplate.text,
+			duration: 250
+		}, pOptions);
+		var dataToTemplate = {
+			hasBackground: options.hasBackground,
+			cssClass: options.cssClass,
+			cssId: options.cssId,
+			title: options.title,
+			text: options.text
+		};
+		var loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate);
+		var appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
+			$container
+				.empty()
+				.hide()
+				.append(template)
+				.fadeIn(options.duration, function() {
+					fadeInCallback && fadeInCallback();
+				});
+
+			insertTemplateCallback && insertTemplateCallback();
+		};
+
+		callback(appendTemplate);
+
+		// Only insert the loading template if a request is in progress
+		if (monster.apps.core.request.active) {
+			appendTemplate(loadingTemplate);
+		}
+	}
+
 	var ui = {
 
 		/**
@@ -450,49 +493,6 @@ define(function(require) {
 				}, pOptions);
 
 			$target.chosen(options);
-		},
-
-		/**
-		 * Show a loading view if a request starts before inoking the callback
-		 * to insert a template in the container once all requests finish
-		 * @param  {jQuey Object}   $container target where to insert the template
-		 * @param  {Function} callback   callback sending the template
-		 * @param  {Object}   pOptions   loading view options
-		 */
-		insertTemplate: function($container, callback, pOptions) {
-			var coreApp = monster.apps.core,
-				options = $.extend(true, {
-					hasBackground: true,
-					title: coreApp.i18n.active().insertTemplate.title,
-					text: coreApp.i18n.active().insertTemplate.text,
-					duration: 250
-				}, pOptions),
-				dataToTemplate = {
-					hasBackground: options.hasBackground,
-					cssClass: options.cssClass,
-					cssId: options.cssId,
-					title: options.title,
-					text: options.text
-				},
-				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
-					$container
-						.empty()
-						.hide()
-						.append(template)
-						.fadeIn(options.duration, function() {
-							fadeInCallback && fadeInCallback();
-						});
-
-					insertTemplateCallback && insertTemplateCallback();
-				};
-
-			callback(appendTemplate);
-
-			// Only insert the loading template if a request is in progress
-			if (monster.apps.core.request.active) {
-				appendTemplate(loadingTemplate);
-			}
 		},
 
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
@@ -3146,6 +3146,62 @@ define(function(require) {
 		});
 	}
 
+	function insertTemplate($container, args) {
+		if (_.isFunction(args)) {
+			return legacyInsertTemplate(
+				_.toArray(arguments)[0],
+				_.toArray(arguments)[1],
+				_.toArray(arguments)[2]
+			);
+		}
+		var coreApp = monster.apps.core;
+		var template = args.template;
+		var async = args.async;
+		var afterInsert = args.done;
+		var afterAnimate = args.after;
+		var options = _.merge({
+			duration: 200,
+			hasBackground: true,
+			text: undefined,
+			title: undefined
+		}, args.options || {});
+		var loadingTemplate = $(coreApp.getTemplate({
+			name: 'monster-insertTemplate',
+			data: _.pick(options, [
+				'cssClass',
+				'cssId',
+				'hasBackground',
+				'text',
+				'title'
+			])
+		}));
+		var appendTemplate = function appendTemplate(tpl) {
+			$container
+				.hide()
+				.empty()
+				.append(tpl)
+				.fadeIn(options.duration, function() {
+					afterAnimate && afterAnimate.apply(null, arguments);
+				});
+
+			afterInsert && afterInsert.apply(null, arguments);
+		};
+
+		if (_.isFunction(async)) {
+			async(appendTemplate);
+
+			if (monster.apps.core.request.active) {
+				$container
+					.hide()
+					.empty()
+					.append(loadingTemplate)
+					.fadeIn(options.duration);
+			}
+		} else if (template instanceof jQuery) {
+			appendTemplate(template);
+		}
+	}
+
 	/**
 	 * Wrapper for toast notification library
 	 * @param  {Object} args
@@ -3170,8 +3226,9 @@ define(function(require) {
 
 	initialize();
 
-	ui.toast = toast;
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+	ui.insertTemplate = insertTemplate;
+	ui.toast = toast;
 
 	return ui;
 });
