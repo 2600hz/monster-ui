@@ -125,7 +125,8 @@
 			},
 			dashboards: {
 				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
-				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' }
+				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
@@ -349,9 +350,6 @@
 			},
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
-			},
-			recipientPerformance: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
