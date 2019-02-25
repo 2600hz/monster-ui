@@ -8,17 +8,6 @@ define(function(require) {
 	require('moment-timezone');
 		//momentTimezone = require('moment-timezone');
 
-	var supportedCurrencyCodes = {
-		USD: {
-			symbol: '$',
-			position: 'ante'
-		},
-		EUR: {
-			symbol: '€',
-			position: 'post'
-		}
-	};
-
 	var util = {
 
 		/**
@@ -1139,7 +1128,7 @@ define(function(require) {
 			var currencyCode = monster.config.hasOwnProperty('currencyCode')
 				? monster.config.currencyCode
 				: 'USD';
-			var codeData = supportedCurrencyCodes[currencyCode];
+			var codeData = monster.supportedCurrencyCodes[currencyCode];
 			var ret;
 			if (_.isUndefined(codeData)) {
 				throw new Error('Currency code ' + currencyCode + ' is not supported.');
@@ -1165,7 +1154,7 @@ define(function(require) {
 		var currencyCode = monster.config.hasOwnProperty('currencyCode')
 			? monster.config.currencyCode
 			: 'USD';
-		var codeData = supportedCurrencyCodes[currencyCode];
+		var codeData = monster.supportedCurrencyCodes[currencyCode];
 		if (_.isUndefined(codeData)) {
 			throw new Error('Currency code ' + currencyCode + ' is not supported');
 		}
