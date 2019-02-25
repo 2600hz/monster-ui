@@ -118,23 +118,20 @@ define(function() {
 					switch (params.resource) {
 						case 'account.update':
 						case 'account.patch':
-							if (params.data.accountId === monster.apps.auth.currentAccount.id) {
-								successCallback = function(data, status) {
+							successCallback = function(data, status) {
+								if (params.data.accountId === monster.apps.auth.currentAccount.id) {
 									monster.apps.auth.currentAccount = data.data;
 									monster.pub('auth.currentAccountUpdated', data.data);
+								}
 
-									params.success && params.success(data, status);
-								};
-							}
-
-							if (params.data.accountId === monster.apps.auth.originalAccount.id) {
-								successCallback = function(data, status) {
+								if (params.data.accountId === monster.apps.auth.originalAccount.id) {
 									monster.apps.auth.originalAccount = data.data;
 									monster.pub('auth.originalAccountUpdated', data.data);
+								}
 
-									params.success && params.success(data, status);
-								};
-							}
+								params.success && params.success(data, status);
+							};
+
 							break;
 
 						case 'user.list':
