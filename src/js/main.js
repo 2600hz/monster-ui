@@ -100,6 +100,7 @@ require([
 ], function($, monster) {
 	$.support.cors = true;
 
+	monster.initConfig();
 	monster.initSDK();
 
 	require([

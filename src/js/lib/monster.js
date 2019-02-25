@@ -13,6 +13,38 @@ define(function(require) {
 		postal = require('postal'),
 		reqwest = require('reqwest');
 
+	var supportedCurrencyCodes = {
+		USD: {
+			symbol: '$',
+			position: 'ante'
+		},
+		EUR: {
+			symbol: '€',
+			position: 'post'
+		},
+		GBP: {
+			symbol: '£',
+			position: 'ante'
+		}
+	};
+
+	var defaultConfig = {
+		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
+		currencyCode: [_.isString, 'USD', _.keys(supportedCurrencyCodes)],
+		'developerFlags.showAllCallflows': [_.isBoolean, false],
+		'developerFlags.showJsErrors': [_.isBoolean, false],
+		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
+		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
+		'whitelabel.allowAccessList': [_.isBoolean, false],
+		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
+		'whitelabel.hideAppStore': [_.isBoolean, false],
+		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
+		'whitelabel.hideNewAccountCreation': [_.isBoolean, false],
+		'whitelabel.logoutTimer': [_.isNumber, 15],
+		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
+		'whitelabel.useDropdownApploader': [_.isBoolean, false]
+	};
+
 	var _privateFlags = {
 		lockRetryAttempt: false,
 		retryFunctions: [],
@@ -232,21 +264,6 @@ define(function(require) {
 		logs: {
 			error: []
 		},
-
-		config: (function(config) {
-			var getValue = function(node, key, check, preset) {
-				return node.hasOwnProperty(key) && check(node[key])
-					? node[key]
-					: preset;
-			};
-			config.api = getValue(config, 'api', _.isObject, {});
-			config.api.default = getValue(config.api, 'default', _.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/');
-			config.currencyCode = getValue(config, 'currencyCode', _.isString, 'USD');
-			config.whitelabel = getValue(config, 'whitelabel', _.isObject, {});
-			config.whitelabel.disableNumbersFeatures = getValue(config.whitelabel, 'disableNumbersFeatures', _.isBoolean, false);
-			config.developerFlags = getValue(config, 'developerFlags', _.isObject, {});
-			return config;
-		}(require('config'))),
 
 		cookies: {
 			set: function set(key, value, options) {
@@ -634,6 +651,39 @@ define(function(require) {
 			return md5(string);
 		}
 	};
+
+	function initConfig() {
+		var config = require('config'),
+			getValue = function(value, path) {
+				var existingValue = _.get(config, path);
+				var isExistingValueValid = value[0](existingValue);
+				var hasEnum = !_.isUndefined(value[2]);
+				var matchesEnum = hasEnum && _.includes(value[2], existingValue);
+				var presetValue = _.cloneDeep(value[1]);
+
+				if (hasEnum) {
+					return matchesEnum ? existingValue : presetValue;
+				}
+				if (isExistingValueValid) {
+					return existingValue;
+				}
+				return presetValue;
+			};
+
+		_.forEach(defaultConfig, function(value, path) {
+			_.set(
+				config,
+				path,
+				getValue(value, path)
+			);
+		});
+
+		_.set(monster, 'config', config);
+	}
+
+	monster.supportedCurrencyCodes = supportedCurrencyCodes;
+
+	monster.initConfig = initConfig;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager
