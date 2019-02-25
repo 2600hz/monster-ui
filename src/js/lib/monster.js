@@ -14,16 +14,16 @@ define(function(require) {
 		reqwest = require('reqwest');
 
 	var supportedCurrencyCodes = {
-		USD: {
-			symbol: '$',
-			position: 'ante'
-		},
 		EUR: {
 			symbol: '€',
 			position: 'post'
 		},
 		GBP: {
 			symbol: '£',
+			position: 'ante'
+		},
+		USD: {
+			symbol: '$',
 			position: 'ante'
 		}
 	};
@@ -652,23 +652,26 @@ define(function(require) {
 		}
 	};
 
+	/**
+	 * Set missing/incorrect config.js properties required by the UI to function properly.
+	 */
 	function initConfig() {
-		var config = require('config'),
-			getValue = function(value, path) {
-				var existingValue = _.get(config, path);
-				var isExistingValueValid = value[0](existingValue);
-				var hasEnum = !_.isUndefined(value[2]);
-				var matchesEnum = hasEnum && _.includes(value[2], existingValue);
-				var presetValue = _.cloneDeep(value[1]);
+		var config = require('config');
+		var getValue = function(value, path) {
+			var existingValue = _.get(config, path);
+			var isExistingValueValid = value[0](existingValue);
+			var hasEnum = !_.isUndefined(value[2]);
+			var matchesEnum = hasEnum && _.includes(value[2], existingValue);
+			var presetValue = _.cloneDeep(value[1]);
 
-				if (hasEnum) {
-					return matchesEnum ? existingValue : presetValue;
-				}
-				if (isExistingValueValid) {
-					return existingValue;
-				}
-				return presetValue;
-			};
+			if (hasEnum) {
+				return matchesEnum ? existingValue : presetValue;
+			}
+			if (isExistingValueValid) {
+				return existingValue;
+			}
+			return presetValue;
+		};
 
 		_.forEach(defaultConfig, function(value, path) {
 			_.set(
