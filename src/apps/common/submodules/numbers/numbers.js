@@ -26,6 +26,10 @@ define(function(require) {
 			var self = this;
 
 			_.each(arrayNumbers, function(number) {
+				if (number.state === 'port_in' || number.used_by === 'mobile') {
+					return;
+				}
+
 				var numberDiv = parent.find('[data-phonenumber="' + number.phoneNumber + '"]'),
 					args = {
 						target: numberDiv.find('.number-options'),
