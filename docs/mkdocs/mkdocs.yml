@@ -80,6 +80,7 @@ pages:
   - 'docs/codingStandards.md'
   - 'docs/javascriptStyleGuide.md'
   - 'docs/linting.md'
+  - 'docs/gitignore.md'
   - 'Documentation templates':
     - 'docs/skeleton/method().md'
     - 'docs/skeleton/object.md'
