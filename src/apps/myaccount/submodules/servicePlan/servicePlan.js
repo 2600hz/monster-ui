@@ -49,13 +49,13 @@ define(function(require) {
 						items: _
 							.chain(invoice.items)
 							.filter(function(item) {
-								return item.quantity > 0;
+								return item.billable > 0;
 							})
 							.map(function(item) {
 								return {
 									name: item.name || item.category + '/' + item.item,
 									rate: item.rate || 0,
-									quantity: item.quantity || 0,
+									quantity: item.billable || 0,
 									discount: _.has(item, 'discounts.total')
 										? '- ' + monster.util.formatPrice({
 											price: item.discounts.total

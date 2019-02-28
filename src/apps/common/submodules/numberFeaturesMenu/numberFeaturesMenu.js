@@ -15,7 +15,7 @@ define(function(require) {
 			var self = this,
 				numberData = args.numberData,
 				phoneNumber = numberData.hasOwnProperty('phoneNumber') ? numberData.phoneNumber : numberData.id,
-				features = self.numberFeaturesMenuGetFeatures(numberData),
+				features = monster.util.getNumberFeatures(numberData),
 				template = $(self.getTemplate({
 					name: 'dropdown',
 					data: {
@@ -27,21 +27,6 @@ define(function(require) {
 			self.numberFeaturesMenuBindEvents(template, phoneNumber, args.afterUpdate);
 
 			args.target.append(template);
-		},
-
-		numberFeaturesMenuGetFeatures: function(number) {
-			var self = this,
-				featuresNumber;
-
-			if (number.hasOwnProperty('features_available') && number.features_available.length) {
-				featuresNumber = number.features_available;
-			} else if (number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
-				featuresNumber = number._read_only.features_available;
-			} else {
-				featuresNumber = [];
-			}
-
-			return featuresNumber;
 		},
 
 		numberFeaturesMenuBindEvents: function(template, phoneNumber, afterUpdate) {

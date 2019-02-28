@@ -1,0 +1,32 @@
+<div class="table-wrapper">
+	<table id="transactions_grid" class="monster-table footable">
+		<thead>
+			<tr>
+				<th>
+					{{@root.i18n.balance.dateColumn}}
+				</th>
+				<th data-sortable="false"></th>
+				<th>
+					{{@root.i18n.servicePlan.serviceTitle}}
+				</th>
+			{{#if @root.showCredits}}
+				<th>
+					{{@root.i18n.servicePlan.rateTitle}}
+				</th>
+			{{/if}}
+				<th>
+					{{@root.i18n.servicePlan.quantityTitle}}
+				</th>
+			{{#if @root.showCredits}}
+				<th>
+					{{@root.i18n.servicePlan.discount}}
+				</th>
+				<th>
+					{{@root.i18n.servicePlan.monthlyChargesTitle}}
+				</th>
+			{{/if}}
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>

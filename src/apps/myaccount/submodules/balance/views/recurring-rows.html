@@ -1,0 +1,33 @@
+{{#each transactions}}
+	<tr class="transaction-row">
+		<td data-sort-type="{{timestamp}}">
+			{{toFriendlyDate timestamp}}
+		</td>
+		<td>
+			<a data-toggle="tooltip" title="{{description}}">
+				<i class="fa fa-question-circle"></i>
+			</a>
+		</td>
+		<td>
+			{{name}}
+		</td>
+	{{#if @root.showCredits}}
+		<td data-sort-value="{{rate.value}}">
+			{{formatPrice rate.value rate.digits}}
+		</td>
+	{{/if}}
+		<td data-sort-value="{{quantity}}">
+			{{quantity}}
+		</td>
+	{{#if @root.showCredits}}
+		<td data-sort-value="{{discount.value}}">
+		{{#if discount.value}}
+			- {{formatPrice discount.value discount.digits}}
+		{{/if}}
+		</td>
+		<td data-sort-value="{{charges.value}}">
+			{{formatPrice charges.value charges.digits}}
+		</td>
+	{{/if}}
+	</tr>
+{{/each}}

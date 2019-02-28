@@ -6,6 +6,11 @@
 	border: 1px solid #c0c0c9;
 	border-radius: 2px;
 	background-color: #fff;
+	.controls-list {
+		select:not(:first-child) {
+			margin-top: 20px;
+		}
+	}
 }
 
 #port_wizard .row-fluid {
@@ -47,6 +52,11 @@
 	width: 500px;
 	margin: 0 auto;
 	text-align: left;
+}
+
+#port_wizard .radio-group .monster-invalid {
+	position: absolute;
+	top: -16px;
 }
 
 #port_wizard .control-date {
@@ -143,6 +153,11 @@
 	line-height: 34px;
 }
 
+#port_wizard .steps span.label-button button {
+	display: block;
+	margin: 0 auto;
+}
+
 #port_wizard .steps .item:not(:first-child) {
 	margin-top: 50px;
 }
@@ -154,8 +169,8 @@
 
 #port_wizard .file-upload-wrapper {
 	width: 380px;
-	margin: 0 auto;
-	padding: 20px 10px 5px;
+	margin: 20px auto;
+	padding: 20px 10px;
 	border: 1px dashed #c0c0c9;
 	border-radius: 2px;
 }
@@ -366,4 +381,8 @@
 
 #port_wizard .monster-checkbox .monster-invalid {
 	bottom: -16px;
+}
+
+#port_wizard_error_dialog {
+	text-align: left;
 }

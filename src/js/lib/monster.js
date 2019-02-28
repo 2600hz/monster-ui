@@ -13,6 +13,38 @@ define(function(require) {
 		postal = require('postal'),
 		reqwest = require('reqwest');
 
+	var supportedCurrencyCodes = {
+		EUR: {
+			symbol: '€',
+			position: 'post'
+		},
+		GBP: {
+			symbol: '£',
+			position: 'ante'
+		},
+		USD: {
+			symbol: '$',
+			position: 'ante'
+		}
+	};
+
+	var defaultConfig = {
+		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
+		currencyCode: [_.isString, 'USD', _.keys(supportedCurrencyCodes)],
+		'developerFlags.showAllCallflows': [_.isBoolean, false],
+		'developerFlags.showJsErrors': [_.isBoolean, false],
+		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
+		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
+		'whitelabel.allowAccessList': [_.isBoolean, false],
+		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
+		'whitelabel.hideAppStore': [_.isBoolean, false],
+		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
+		'whitelabel.hideNewAccountCreation': [_.isBoolean, false],
+		'whitelabel.logoutTimer': [_.isNumber, 15],
+		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
+		'whitelabel.useDropdownApploader': [_.isBoolean, false]
+	};
+
 	var _privateFlags = {
 		lockRetryAttempt: false,
 		retryFunctions: [],
@@ -233,21 +265,6 @@ define(function(require) {
 			error: []
 		},
 
-		config: (function(config) {
-			var getValue = function(node, key, check, preset) {
-				return node.hasOwnProperty(key) && check(node[key])
-					? node[key]
-					: preset;
-			};
-			config.api = getValue(config, 'api', _.isObject, {});
-			config.api.default = getValue(config.api, 'default', _.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/');
-			config.currencyCode = getValue(config, 'currencyCode', _.isString, 'USD');
-			config.whitelabel = getValue(config, 'whitelabel', _.isObject, {});
-			config.whitelabel.disableNumbersFeatures = getValue(config.whitelabel, 'disableNumbersFeatures', _.isBoolean, false);
-			config.developerFlags = getValue(config, 'developerFlags', _.isObject, {});
-			return config;
-		}(require('config'))),
-
 		cookies: {
 			set: function set(key, value, options) {
 				Cookies.set(key, value, options);
@@ -375,17 +392,19 @@ define(function(require) {
 			} else if ((errorNumber === 400 || errorNumber === 413) && 'data' in parsedError) {
 				errorMessage = errorsI18n.invalidData.errorLabel;
 				_.each(parsedError.data, function(fieldErrors, fieldKey) {
-					if (typeof fieldErrors !== 'string') {
-						_.each(fieldErrors, function(fieldError, fieldErrorKey) {
-							if (typeof fieldError === 'string' || typeof fieldError === 'number') {
-								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
-							} else if (fieldErrorKey in errorsI18n.invalidData) {
-								errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
-							} else if ('message' in fieldError) {
-								errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
-							}
-						});
+					if (typeof fieldErrors === 'string') {
+						return;
 					}
+
+					_.each(fieldErrors, function(fieldError, fieldErrorKey) {
+						if (typeof fieldError === 'string' || typeof fieldError === 'number') {
+							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError;
+						} else if (fieldErrorKey in errorsI18n.invalidData) {
+							errorMessage += '<br/>' + monster.template(monster.apps.core, '!' + errorsI18n.invalidData[fieldErrorKey], { field: fieldKey, value: fieldError.target });
+						} else if ('message' in fieldError) {
+							errorMessage += '<br/>"' + fieldKey + '": ' + fieldError.message;
+						}
+					});
 				});
 			} else if ((errorNumber === 409 || errorNumber === 500) && 'data' in parsedError) {
 				var errMsg = '';
@@ -550,14 +569,22 @@ define(function(require) {
 					}
 
 					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						var parsedError = error;
+						// Handle the "Payment Required" status
+						var parsedError = error,
+							originalPreventCallbackError = requestOptions.preventCallbackError;
 
 						if ('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
+						// Prevent the execution of the custom error callback, as it is a
+						// charges notification that will be handled here
+						requestOptions.preventCallbackError = true;
+
+						// Notify the user about the charges
 						monster.ui.charges(parsedError.data, function() {
 							requestOptions.acceptCharges = true;
+							requestOptions.preventCallbackError = originalPreventCallbackError;
 							monster.kazooSdk.request(requestOptions);
 						}, function() {
 							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
@@ -624,6 +651,42 @@ define(function(require) {
 			return md5(string);
 		}
 	};
+
+	/**
+	 * Set missing/incorrect config.js properties required by the UI to function properly.
+	 */
+	function initConfig() {
+		var config = require('config');
+		var getValue = function(value, path) {
+			var existingValue = _.get(config, path);
+			var isExistingValueValid = value[0](existingValue);
+			var hasEnum = !_.isUndefined(value[2]);
+			var matchesEnum = hasEnum && _.includes(value[2], existingValue);
+			var presetValue = _.cloneDeep(value[1]);
+
+			if (hasEnum) {
+				return matchesEnum ? existingValue : presetValue;
+			}
+			if (isExistingValueValid) {
+				return existingValue;
+			}
+			return presetValue;
+		};
+
+		_.forEach(defaultConfig, function(value, path) {
+			_.set(
+				config,
+				path,
+				getValue(value, path)
+			);
+		});
+
+		_.set(monster, 'config', config);
+	}
+
+	monster.supportedCurrencyCodes = supportedCurrencyCodes;
+
+	monster.initConfig = initConfig;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager

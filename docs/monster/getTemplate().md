@@ -18,13 +18,13 @@ Key | Description | Type | Default | Required
 `submodule` | Name of the submodule, used to find the template to load | `String` | `undefined` | `false`
 `raw` | When set to `true`, Handlebars will not compile the template and it will be sent as is. | `Boolean` | `false` | `false`
 `ignoreCache` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
-`ignoreSpaces` | When set to `true`, request the template even if it was already loaded. | `Boolean` | `false` | `false`
+`ignoreSpaces` | When set to `true`, carriage return, linefeed, tab, whitespace will not be trimmed from the template. | `Boolean` | `false` | `false`
 
 ### Return value
 A `String` representation of the template.
 
 ## Description
-The `monster.template()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.
+The `monster.getTemplate()` method allows you to request templates simply by specifying the name of the desired template. You can also pass data to the template with the `data` parameter.
 
 You can use the same getTemplate method and bypass the app property by using `this.getTemplate(args)` within the right scope in an app.
 

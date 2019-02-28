@@ -114,6 +114,7 @@
 	"unexpectedError": "An unexpected error happened, please try again!",
 	"update": "Update",
 	"upload": "Upload",
+	"userFullName": "{{firstName}} {{lastName}}",
 	"validation": {
 		"defaultRules": {
 			"required": "This field is required.",

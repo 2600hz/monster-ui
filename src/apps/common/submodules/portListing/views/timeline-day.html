@@ -2,35 +2,5 @@
 	<div class="date">
 		{{toFriendlyDate timestamp 'calendarDate' undefined false}}
 	</div>
-	<ul class="entries">
-	{{#each entries}}
-		<li class="entry-wrapper">
-			<div class="icon-wrapper">
-				<i class="fa fa-envelope iconography"></i>
-			</div>
-			<div class="entry">
-				<div class="title">
-				{{#if title}}
-					{{title}}
-				{{else}}
-					{{@root.i18n.portListing.misc.unknownUser}}
-				{{/if}}
-				</div>
-				<div class="time">
-					{{toFriendlyDate timestamp 'time' undefined false}}
-				</div>
-			{{#if content}}
-				<div class="content">
-					{{content}}
-				{{#if needFix}}
-					<button class="monster-button-primary fix-port-request">
-						{{@root.i18n.portListing.detail.buttons.fix}}
-					</button>
-				{{/if}}
-				</div>
-			{{/if}}
-			</div>
-		</li>
-	{{/each}}
-	</ul>
+	<ul class="entries"></ul>
 </li>
