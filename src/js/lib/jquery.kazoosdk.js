@@ -125,7 +125,8 @@
 			},
 			dashboards: {
 				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
-				'getQueueOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_overview' }
+				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
@@ -398,7 +399,8 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
 				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
 				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
-				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' }
+				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' },
+				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },

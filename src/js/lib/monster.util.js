@@ -8,21 +8,6 @@ define(function(require) {
 	require('moment-timezone');
 		//momentTimezone = require('moment-timezone');
 
-	var supportedCurrencyCodes = {
-		USD: {
-			symbol: '$',
-			position: 'ante'
-		},
-		EUR: {
-			symbol: '€',
-			position: 'post'
-		},
-		GBP: {
-			symbol: '£',
-			position: 'ante'
-		}
-	};
-
 	var util = {
 
 		/**
@@ -1061,7 +1046,7 @@ define(function(require) {
 			var currencyCode = monster.config.hasOwnProperty('currencyCode')
 				? monster.config.currencyCode
 				: 'USD';
-			var codeData = supportedCurrencyCodes[currencyCode];
+			var codeData = monster.supportedCurrencyCodes[currencyCode];
 			var ret;
 			if (_.isUndefined(codeData)) {
 				throw new Error('Currency code ' + currencyCode + ' is not supported.');
@@ -1087,7 +1072,7 @@ define(function(require) {
 		var currencyCode = monster.config.hasOwnProperty('currencyCode')
 			? monster.config.currencyCode
 			: 'USD';
-		var codeData = supportedCurrencyCodes[currencyCode];
+		var codeData = monster.supportedCurrencyCodes[currencyCode];
 		if (_.isUndefined(codeData)) {
 			throw new Error('Currency code ' + currencyCode + ' is not supported');
 		}
@@ -1160,6 +1145,25 @@ define(function(require) {
 			return shortcuts[format] + ' A';
 		}
 		return shortcuts[format];
+	}
+
+	/**
+	 * Returns the available features for a Kazoo phone number
+	 * @param  {Object} number  Phone number object, which contains the features details
+	 * @return {String[]}       Number's available features
+	 */
+	function getNumberFeatures(number) {
+		if (!_.isPlainObject(number)) {
+			throw new TypeError('"number" is not an object');
+		}
+		if (!_.has(number, 'features_available') && !_.has(number, '_read_only.features_available')) {
+			throw new Error('"number" does not represent a Kazoo phone number');
+		}
+		var numberFeatures = _.get(number, 'features_available', []);
+		if (_.isEmpty(numberFeatures)) {
+			numberFeatures = _.get(number, '_read_only.features_available', []);
+		}
+		return numberFeatures;
 	}
 
 	/**
@@ -1369,6 +1373,7 @@ define(function(require) {
 	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
