@@ -65,12 +65,65 @@ define(function(require) {
 			);
 		},
 
+		portListingRender: function(args) {
+			var self = this,
+				subTabs = [
+					{
+						text: 'Suspended',
+						callback: self.portListingRenderLayout,
+						id: 'suspended'
+					},
+					{
+						text: 'Progressing',
+						callback: self.portListingRenderLayout,
+						id: 'progressing'
+					},
+					{
+						text: 'Completed',
+						callback: self.portListingRenderLayout,
+						id: 'completed'
+					}
+				],
+				tabs = [
+					{
+						text: 'Account',
+						id: 'account',
+						menus: [{
+							tabs: subTabs
+						}]
+					},
+					{
+						text: 'Agent',
+						menus: [{
+							tabs: subTabs
+						}],
+						id: 'agent'
+					},
+					{
+						text: 'Descendants',
+						menus: [{
+							tabs: subTabs
+						}],
+						id: 'descendants'
+					}
+				];
+
+			monster.ui.generateAppLayout(self, {
+				menus: [
+					{
+						tabs: monster.util.isMasquerading() ? subTabs : tabs
+					}
+				],
+				forceNavbar: true
+			});
+		},
+
 		/**
 		 * @param  {Boolean} args.isMonsterApp
 		 * @param  {jQuery} [args.parent]
 		 * @param  {jQuery} [args.container]
 		 */
-		portListingRender: function(args) {
+		portListingRenderAnt: function(args) {
 			var self = this,
 				isMonsterApp = _.isBoolean(args.isMonsterApp)
 					? args.isMonsterApp
@@ -104,26 +157,31 @@ define(function(require) {
 				portRequestsById: {}
 			});
 
-			self.portListingRenderLayout();
+			self.portListingRenderLayout(args);
 		},
 
 		/**************************************************
 		 *               Templates rendering              *
 		 **************************************************/
 
-		portListingRenderLayout: function() {
+		portListingRenderLayout: function(args) {
+			console.log('args', args);
 			var self = this,
-				container = self.portListingGet('container'),
+				parent = args.container,
 				template = $(self.getTemplate({
 					name: 'layout',
 					submodule: 'portListing'
 				}));
 
-			container
-				.empty()
-				.append(template);
+			parent
+				.fadeOut(function() {
+					$(this)
+						.empty()
+						.append(template)
+						.fadeIn();
+				});
 
-			self.portListingRenderListing();
+			//self.portListingRenderListing();
 		},
 
 		portListingRenderListing: function() {
