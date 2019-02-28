@@ -170,6 +170,10 @@ define(function(require) {
 						if (e911Count > 1) {
 							delete dataNumber.e911;
 
+							_.remove(dataNumber.features, function(feature) {
+								return feature === 'e911';
+							});
+
 							self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 								success: function(data) {
 									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
