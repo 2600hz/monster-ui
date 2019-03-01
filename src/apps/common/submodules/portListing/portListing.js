@@ -262,6 +262,11 @@ define(function(require) {
 							.find({ id: portRequestId })
 							.get('transition')
 							.value(),
+						numbers = _.get(
+							portRequest,
+							'ported_numbers',
+							_.get(portRequest, 'numbers')
+						),
 						unactionableStatuses = ['canceled', 'completed'];
 
 					return _.merge({
@@ -272,8 +277,8 @@ define(function(require) {
 								timestamp: lastSubmitted.timestamp,
 								submitter: monster.util.getUserFullName(lastSubmitted.authorization.user)
 							},
-						numbers: portRequest.numbers,
-						numbersAmount: _.size(portRequest.numbers),
+						numbers: numbers,
+						numbersAmount: _.size(numbers),
 						timeline: self.portListingFormatEntriesToTimeline(results.timeline)
 					}, _.pick(portRequest, [
 						'carrier',
