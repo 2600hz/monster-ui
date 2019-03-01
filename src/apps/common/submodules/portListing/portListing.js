@@ -884,8 +884,8 @@ define(function(require) {
 								patchRequestData.data.reference_number = formData.reference_number;
 							}
 
-							if (_.isEmpty(reason)) {
-								patchRequestData.reason = encodeURIComponent(reason);
+							if (!_.isEmpty(reason)) {
+								patchRequestData.data.reason = reason;
 							}
 
 							self.portListingRequestPatchPortState({
