@@ -67,13 +67,23 @@ define(function(require) {
 			);
 		},
 
-		portListingRenderLayout: function() {
+		/**
+		 * @param  {Boolean} args.isMonsterApp
+		 * @param  {jQuery} [args.parent]
+		 * @param  {jQuery} [args.container]
+		 */
+		portListingRender: function(args) {
 			var self = this,
+				isMonsterApp = _.isBoolean(args.isMonsterApp)
+					? args.isMonsterApp
+					: false,
+				parent,
+				container,
 				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
 					return {
-						text: self.i18n.active().portListing.tabs.subtabs[tab],
+						text: self.i18n.active().portListing.subtabs[tab],
 						id: tab,
-						callback: self.portListingRenderTable
+						callback: self.portListingRenderListing
 					};
 				}),
 				tabs = _.map(self.appFlags.portListing.tabs, function(tab) {
@@ -85,27 +95,6 @@ define(function(require) {
 						}]
 					};
 				});
-
-			monster.ui.generateAppLayout(self, {
-				menus: [
-					{
-						tabs: monster.util.isMasquerading() ? subTabs : tabs
-					}
-				],
-				forceNavbar: true
-			});
-		},
-
-		/**
-		 * @param  {Boolean} args.isMonsterApp
-		 * @param  {jQuery} [args.parent]
-		 * @param  {jQuery} [args.container]
-		 */
-		portListingRender: function(args) {
-			var self = this,
-				isMonsterApp = _.isBoolean(args.isMonsterApp) ? args.isMonsterApp : false,
-				parent,
-				container;
 
 			if (isMonsterApp) {
 				parent = args.parent;
@@ -133,33 +122,21 @@ define(function(require) {
 				portRequestsById: {}
 			});
 
-			self.portListingRenderLayout(args);
+			monster.ui.generateAppLayout(self, {
+				menus: [
+					{
+						tabs: monster.util.isMasquerading() || !monster.util.isReseller() ? subTabs : tabs
+					}
+				]
+			});
 		},
 
 		/**************************************************
 		 *               Templates rendering              *
 		 **************************************************/
-
-		portListingRenderTable: function(args) {
+		portListingRenderListing: function(args) {
 			var self = this,
 				container = args.container,
-				template = $(self.getTemplate({
-					name: 'listing-table',
-					submodule: 'portListing'
-				}));
-
-			container
-				.fadeOut(function() {
-					$(this)
-						.empty()
-						.append(template)
-						.fadeIn();
-				});
-		},
-
-		portListingRenderListing: function() {
-			var self = this,
-				container = self.portListingGet('container').find('.listing-section-wrapper'),
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 						name: 'listing',
