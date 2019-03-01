@@ -25,7 +25,9 @@ define(function(require) {
 					{ value: 'rejected', next: [1, 5, 6] },
 					{ value: 'completed', next: [] },
 					{ value: 'canceled', next: [] }
-				]
+				],
+				tabs: ['account', 'agent', 'descendants'],
+				subtabs: ['suspended', 'progressing', 'completed']
 			}
 		},
 
@@ -75,8 +77,24 @@ define(function(require) {
 				isMonsterApp = _.isBoolean(args.isMonsterApp)
 					? args.isMonsterApp
 					: false,
-				container,
-				parent;
+				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
+					return {
+						text: self.i18n.active().portListing.tabs[tab],
+						id: tab,
+						callback: self.portListingRenderListing
+					};
+				}),
+				tabs = _.map(self.appFlags.portListing.tabs, function(tab) {
+					return {
+						text: self.i18n.active().portListing.tabs[tab],
+						id: tab,
+						menus: [{
+							tabs: subTabs
+						}]
+					};
+				}),
+				parent,
+				container;
 
 			if (isMonsterApp) {
 				parent = args.parent;
@@ -104,31 +122,21 @@ define(function(require) {
 				portRequestsById: {}
 			});
 
-			self.portListingRenderLayout();
+			monster.ui.generateAppLayout(self, {
+				menus: [
+					{
+						tabs: monster.util.isMasquerading() || !monster.util.isReseller() ? subTabs : tabs
+					}
+				]
+			});
 		},
 
 		/**************************************************
 		 *               Templates rendering              *
 		 **************************************************/
-
-		portListingRenderLayout: function() {
+		portListingRenderListing: function(args) {
 			var self = this,
-				container = self.portListingGet('container'),
-				template = $(self.getTemplate({
-					name: 'layout',
-					submodule: 'portListing'
-				}));
-
-			container
-				.empty()
-				.append(template);
-
-			self.portListingRenderListing();
-		},
-
-		portListingRenderListing: function() {
-			var self = this,
-				container = self.portListingGet('container').find('.listing-section-wrapper'),
+				container = args.container,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 						name: 'listing',
