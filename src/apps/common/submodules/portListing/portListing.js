@@ -713,29 +713,28 @@ define(function(require) {
 					});
 				});
 
-			textareaWrapper
-				.find('#add_comment')
+			template
+				.find('.add-comment')
 					.on('click', function(event) {
 						event.preventDefault();
-						self.portListingHelperPostComment({
-							portRequestId: portRequestId,
-							commentInput: textarea
+						if (_.chain(textarea.val()).trim().isEmpty().value()) {
+							return;
+						}
+						var isPrivate = _.get($(this).data(), 'is_private', false),
+							comment = textarea.val(),
+							$buttons = textareaWrapper.find('button');
+
+						textarea.val('');
+						$buttons.prop('disabled', 'disabled');
+
+						self.portListingHelperAddComment({
+							callback: function() {
+								$buttons.prop('disabled', false);
+							},
+							comment: comment,
+							isSuperDuperComment: monster.util.isSuperDuper() && isPrivate
 						});
 					});
-
-			if (monster.util.isSuperDuper()) {
-				// Set event handlers for superduper options
-				textareaWrapper
-					.find('#add_private_comment')
-						.on('click', function(event) {
-							event.preventDefault();
-							self.portListingHelperPostComment({
-								portRequestId: portRequestId,
-								commentInput: textarea,
-								isSuperDuperComment: true
-							});
-						});
-			}
 		},
 
 		/**
@@ -945,37 +944,18 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * @param  {jQuery}  args.commentInput
-		 * @param  {Boolean} [args.isSuperDuperComment]
-		 */
-		portListingHelperPostComment: function(args) {
-			var self = this,
-				commentInput = args.commentInput,
-				comment = commentInput.val(),
-				isSuperDuperComment = _.get(args, 'isSuperDuperComment', false);
-
-			if (_.chain(comment).trim().isEmpty().value()) {
-				return;
-			}
-			commentInput.val('');
-
-			self.portListingHelperAddComment({
-				comment: comment,
-				isSuperDuperComment: isSuperDuperComment
-			});
-		},
-
 		/**************************************************
 		 *              Data handling helpers             *
 		 **************************************************/
 
 		/**
+		 * @param  {Function} args.callback
 		 * @param  {String} args.comment
 		 * @param  {Boolean} args.isSuperDuperComment
 		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
+				callback = args.callback,
 				comment = args.comment,
 				isSuperDuperComment = args.isSuperDuperComment,
 				container = self.portListingGet('container'),
@@ -1031,6 +1011,8 @@ define(function(require) {
 							})));
 
 					self.portListingScrollToBottomOfTimeline();
+
+					callback && callback();
 				}
 			});
 		},

@@ -253,20 +253,20 @@
 			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
 			{{#isSuperDuper}}
 				<div class="btn-group">
-					<button class="monster-button-success" id="add_comment">
+					<button type="button" class="monster-button-success add-comment">
 						{{@root.i18n.portListing.detail.buttons.send}}
 					</button>
 					<button class="monster-button-success dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu" id="add_private_comment">
+					<ul class="dropdown-menu">
 						<li>
-							<a href="javascript:void(0);">{{@root.i18n.portListing.detail.buttons.sendPrivate}}</a>
+							<a class="add-comment" data-is_private="true">{{@root.i18n.portListing.detail.buttons.sendPrivate}}</a>
 						</li>
 					</ul>
 				</div>
 			{{else}}
-				<button class="monster-button-success" id="add_comment">
+				<button type="button" class="monster-button-success add-comment">
 					{{@root.i18n.portListing.detail.buttons.send}}
 				</button>
 			{{/isSuperDuper}}
