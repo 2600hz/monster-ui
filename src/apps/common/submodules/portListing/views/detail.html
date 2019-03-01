@@ -156,11 +156,10 @@
 		</div>
 		<div class="numbers-section">
 			<div class="title">
-				{{numbersAmount}}
 			{{#compare numbersAmount '===' 1}}
-				{{@root.i18n.portListing.detail.numbers.singular}}
+				{{replaceVar @root.i18n.portListing.detail.numbers.singular numbersAmount}}
 			{{else}}
-				{{@root.i18n.portListing.detail.numbers.plural}}
+				{{replaceVar @root.i18n.portListing.detail.numbers.plural numbersAmount}}
 			{{/compare}}
 			</div>
 			<div class="search-box">
