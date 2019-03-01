@@ -14,12 +14,16 @@ define(function(require) {
 		},
 
 		/**
-		 * Fetch alerts from API, resets component to default state (hide dropdown and show notifications count if any)
-		 * @param  {Object} args
+		 * Fetch alerts from API into the notifications dropdown, and resets component to default
+		 * state (hide dropdown and show notifications count if any)
+		 * @param  {Object}   args
+		 * @param  {jQUery}   args.container            Dropdown container
+		 * @param  {Object}   [args.callbacks]          Optional callbacks
+		 * @param  {Function} [args.callbacks.success]  Success callback
 		 */
 		notificationsRender: function(args) {
 			var self = this,
-				container = args.container,
+				$container = args.container,
 				initTemplate = function initTemplate(notificationsData) {
 					var formattedNotifications = self.notificationsFormatData({
 							data: notificationsData
@@ -69,8 +73,29 @@ define(function(require) {
 			// TODO
 		},
 
+		/**
+		 * Formats the notification data received from the API, into UI categories
+		 * @param    {Object}   args
+		 * @param    {Object[]} args.data  Array of notifications
+		 * @returns  {Object}              Grouped notifications by UI categories
+		 */
 		notificationsFormatData: function(args) {
+			var self = this;
 
+			return _.chain(args.data)
+				.groupBy(function(notification) {
+					var notificationType;
+
+					if (notification.clearable) {
+						notificationType = 'manual';
+					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], notification.category)) {
+						notificationType = 'system';
+					} else {
+						notificationType = 'apps';
+					}
+
+					return notificationType;
+				}).value();
 		},
 
 		/**
@@ -80,9 +105,17 @@ define(function(require) {
 		 */
 		notificationsBindEvents: function(args) {
 			var self = this,
-				template = args.template;
+				$template = args.template;
+
+			// TODO
 		},
 
+		/**
+		 * Request alerts list from API
+		 * @param  {Object}   args
+		 * @param  {Function} [args.success]  Success callback
+		 * @param  {Function} [args.error]    Error callback
+		 */
 		notificationsRequestListAlerts: function(args) {
 			var self = this;
 
