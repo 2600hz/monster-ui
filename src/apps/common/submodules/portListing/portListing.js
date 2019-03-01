@@ -260,28 +260,34 @@ define(function(require) {
 						lastSubmitted = _
 							.chain(results.transitions)
 							.find({ id: portRequestId })
-							.get('transition', undefined)
+							.get('transition')
 							.value(),
-						unactionableStatuses = [ 'canceled', 'completed' ];
+						numbers = _.get(
+							portRequest,
+							'ported_numbers',
+							_.get(portRequest, 'numbers')
+						),
+						unactionableStatuses = ['canceled', 'completed'];
 
-					return {
-						isUpdatable: !_.includes(unactionableStatuses, portRequest.port_state),
-						port: _.merge({}, portRequest, {
-							extra: {
-								canComment: !_.includes(unactionableStatuses, portRequest.port_state),
-								numbersAmount: _.size(portRequest.numbers),
-								timeline: self.portListingFormatEntriesToTimeline(results.timeline),
-								lastSubmitted: _.isUndefined(lastSubmitted)
-									? undefined
-									: {
-										timestamp: lastSubmitted.timestamp,
-										submitter: lastSubmitted.authorization.user.first_name
-											+ ' '
-											+ lastSubmitted.authorization.user.last_name
-									}
-							}
-						})
-					};
+					return _.merge({
+						isUpdateable: !_.includes(unactionableStatuses, portRequest.port_state),
+						lastSubmitted: _.isUndefined(lastSubmitted)
+							? undefined
+							: {
+								timestamp: lastSubmitted.timestamp,
+								submitter: monster.util.getUserFullName(lastSubmitted.authorization.user)
+							},
+						numbers: numbers,
+						numbersAmount: _.size(numbers),
+						timeline: self.portListingFormatEntriesToTimeline(results.timeline)
+					}, _.pick(portRequest, [
+						'carrier',
+						'name',
+						'port_state',
+						'reference_number',
+						'scheduled_date',
+						'winning_carrier'
+					]));
 				};
 
 			self.portListingSet('accountId', self.portListingGet(['portRequestsById', portRequestId]).account_id);
