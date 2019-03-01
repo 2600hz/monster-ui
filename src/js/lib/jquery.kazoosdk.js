@@ -38,6 +38,9 @@
 				'promote': { verb: 'PUT', url: 'accounts/{accountId}/reseller' },
 				'demote': { verb: 'DELETE', url: 'accounts/{accountId}/reseller' }
 			},
+			alert: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/alerts' }
+			},
 			apiKey: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/api_key' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/api_key' }
