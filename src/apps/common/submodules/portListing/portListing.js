@@ -81,7 +81,7 @@ define(function(require) {
 				container,
 				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
 					return {
-						text: self.i18n.active().portListing.subtabs[tab],
+						text: self.i18n.active().portListing.tabs[tab],
 						id: tab,
 						callback: self.portListingRenderListing
 					};
