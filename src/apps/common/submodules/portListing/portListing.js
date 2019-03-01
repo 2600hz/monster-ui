@@ -25,7 +25,9 @@ define(function(require) {
 					{ value: 'rejected', next: [1, 5, 6] },
 					{ value: 'completed', next: [] },
 					{ value: 'canceled', next: [] }
-				]
+				],
+				tabs: ['account', 'agent', 'descendants'],
+				subtabs: ['suspended', 'progressing', 'completed']
 			}
 		},
 
@@ -65,48 +67,24 @@ define(function(require) {
 			);
 		},
 
-		portListingRender: function(args) {
+		portListingRenderLayout: function() {
 			var self = this,
-				subTabs = [
-					{
-						text: 'Suspended',
-						callback: self.portListingRenderLayout,
-						id: 'suspended'
-					},
-					{
-						text: 'Progressing',
-						callback: self.portListingRenderLayout,
-						id: 'progressing'
-					},
-					{
-						text: 'Completed',
-						callback: self.portListingRenderLayout,
-						id: 'completed'
-					}
-				],
-				tabs = [
-					{
-						text: 'Account',
-						id: 'account',
+				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
+					return {
+						text: self.i18n.active().portListing.tabs.subtabs[tab],
+						id: tab,
+						callback: self.portListingRenderTable
+					};
+				}),
+				tabs = _.map(self.appFlags.portListing.tabs, function(tab) {
+					return {
+						text: self.i18n.active().portListing.tabs[tab],
+						id: tab,
 						menus: [{
 							tabs: subTabs
 						}]
-					},
-					{
-						text: 'Agent',
-						menus: [{
-							tabs: subTabs
-						}],
-						id: 'agent'
-					},
-					{
-						text: 'Descendants',
-						menus: [{
-							tabs: subTabs
-						}],
-						id: 'descendants'
-					}
-				];
+					};
+				});
 
 			monster.ui.generateAppLayout(self, {
 				menus: [
@@ -123,13 +101,11 @@ define(function(require) {
 		 * @param  {jQuery} [args.parent]
 		 * @param  {jQuery} [args.container]
 		 */
-		portListingRenderAnt: function(args) {
+		portListingRender: function(args) {
 			var self = this,
-				isMonsterApp = _.isBoolean(args.isMonsterApp)
-					? args.isMonsterApp
-					: false,
-				container,
-				parent;
+				isMonsterApp = _.isBoolean(args.isMonsterApp) ? args.isMonsterApp : false,
+				parent,
+				container;
 
 			if (isMonsterApp) {
 				parent = args.parent;
@@ -164,12 +140,11 @@ define(function(require) {
 		 *               Templates rendering              *
 		 **************************************************/
 
-		portListingRenderLayout: function(args) {
-			console.log('args', args);
+		portListingRenderTable: function(args) {
 			var self = this,
 				parent = args.container,
 				template = $(self.getTemplate({
-					name: 'layout',
+					name: 'listing-table',
 					submodule: 'portListing'
 				}));
 
@@ -180,8 +155,6 @@ define(function(require) {
 						.append(template)
 						.fadeIn();
 				});
-
-			//self.portListingRenderListing();
 		},
 
 		portListingRenderListing: function() {
