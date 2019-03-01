@@ -749,8 +749,8 @@
 				"sendPrivate": "Private"
 			},
 			"numbers": {
-				"singular": "Number",
-				"plural": "Numbers"
+				"singular": "{{variable}} Number",
+				"plural": "{{variable}} Numbers"
 			},
 			"textarea": {
 				"placeholder": "New Message..."

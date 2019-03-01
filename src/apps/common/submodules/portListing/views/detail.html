@@ -9,19 +9,19 @@
 					</span>
 				</a>
 				<div class="title">
-					{{port.name}}
+					{{name}}
 				</div>
 			</div>
 			<div>
 				<form class="monster-form form-horizontal">
-				{{#if port.extra.lastSubmitted}}
+				{{#if lastSubmitted}}
 					<div class="control-group">
 						<label class="control-label">
 							{{i18n.portListing.misc.portInfo.dateSubmitted}}
 						</label>
 						<div class="controls">
 							<span class="text">
-								{{toFriendlyDate port.extra.lastSubmitted.timestamp date}}
+								{{toFriendlyDate lastSubmitted.timestamp date}}
 							</span>
 						</div>
 					</div>
@@ -31,7 +31,7 @@
 						</label>
 						<div class="controls">
 							<div class="text">
-								{{port.extra.lastSubmitted.submitter}}
+								{{lastSubmitted.submitter}}
 							</div>
 						</div>
 					</div>
@@ -42,34 +42,34 @@
 						</label>
 						<div class="controls">
 							<span class="text">
-							{{#if port.carrier}}
-								{{port.carrier}}
+							{{#if carrier}}
+								{{carrier}}
 							{{else}}
 								{{i18n.portListing.misc.unknownCarrier}}
 							{{/if}}
 							</span>
 						</div>
 					</div>
-				{{#if port.winning_carrier}}
+				{{#if winning_carrier}}
 					<div class="control-group">
 						<label class="control-label">
 							{{i18n.portListing.misc.portInfo.winningCarrier}}
 						</label>
 						<div class="controls">
 							<span class="text">
-								{{port.winning_carrier}}
+								{{winning_carrier}}
 							</span>
 						</div>
 					</div>
 				{{/if}}
-				{{#if port.reference_number}}
+				{{#if reference_number}}
 					<div class="control-group">
 						<label class="control-label">
 							{{i18n.portListing.misc.portInfo.refNumber}}
 						</label>
 						<div class="controls">
 							<span class="text">
-								{{port.reference_number}}
+								{{reference_number}}
 							</span>
 						</div>
 					</div>
@@ -87,68 +87,66 @@
 			{{/isSuperDuper}}
 			</div>
 			<div>
-			{{#with port}}
-				<div class="monster-statuses">
-					<div class="node small {{#compare port_state '===' 'completed'}}success{{else}}in-progress{{/compare}}">
-						<div class="iconography">
-							<i class="icon-telicon-prioritize"></i>
-						</div>
-						<div class="status">
-							{{@root.i18n.portListing.misc.status.submitted}}
-						</div>
+			<div class="monster-statuses">
+				<div class="node small {{#compare port_state '===' 'completed'}}success{{else}}in-progress{{/compare}}">
+					<div class="iconography">
+						<i class="icon-telicon-prioritize"></i>
 					</div>
-					<div class="node small{{#compare port_state '===' 'pending'}} in-progress{{/compare}}{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} in-progress{{/compare}}{{#compare port_state '===' 'canceled'}} in-progress{{/compare}}">
-						<div class="iconography">
-							<i class="icon-telicon-porting"></i>
-						</div>
-						<div class="status">
-							{{@root.i18n.portListing.misc.status.pending}}
-						</div>
-					</div>
-					<div class="node small{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} warning{{/compare}}{{#compare port_state '===' 'canceled'}} error{{/compare}}">
-						<div class="iconography">
-						{{#compare port_state '===' 'rejected'}}
-							<i class="icon-telicon-warning"></i>
-						{{else}}
-						{{#compare port_state '===' 'canceled'}}
-							<i class="icon-telicon-x-circled"></i>
-						{{else}}
-							<i class="icon-telicon-calendar"></i>
-						{{/compare}}
-						{{/compare}}
-						</div>
-						<div class="status">
-						{{#compare port_state '===' 'rejected'}}
-							{{@root.i18n.portListing.misc.status.rejected}}
-						{{else}}
-						{{#compare port_state '===' 'canceled'}}
-							{{@root.i18n.portListing.misc.status.canceled}}
-						{{else}}
-							{{@root.i18n.portListing.misc.status.scheduled}}
-						{{/compare}}
-						{{/compare}}
-						{{#compare port_state '===' 'scheduled'}}
-							<br>
-							<span class="detail">
-								({{toFriendlyDate scheduled_date}})
-							</span>
-						{{/compare}}
-						</div>
-					</div>
-					<div class="node{{#compare port_state '===' 'completed'}} success{{/compare}}">
-						<div class="iconography">
-							<i class="icon-telicon-check-circle"></i>
-						</div>
-						<div class="status">
-							{{@root.i18n.portListing.misc.status.completed}}
-						</div>
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.submitted}}
 					</div>
 				</div>
-			{{/with}}
+				<div class="node small{{#compare port_state '===' 'pending'}} in-progress{{/compare}}{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} in-progress{{/compare}}{{#compare port_state '===' 'canceled'}} in-progress{{/compare}}">
+					<div class="iconography">
+						<i class="icon-telicon-porting"></i>
+					</div>
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.pending}}
+					</div>
+				</div>
+				<div class="node small{{#compare port_state '===' 'scheduled'}} in-progress{{/compare}}{{#compare port_state '===' 'completed'}} success{{/compare}}{{#compare port_state '===' 'rejected'}} warning{{/compare}}{{#compare port_state '===' 'canceled'}} error{{/compare}}">
+					<div class="iconography">
+					{{#compare port_state '===' 'rejected'}}
+						<i class="icon-telicon-warning"></i>
+					{{else}}
+					{{#compare port_state '===' 'canceled'}}
+						<i class="icon-telicon-x-circled"></i>
+					{{else}}
+						<i class="icon-telicon-calendar"></i>
+					{{/compare}}
+					{{/compare}}
+					</div>
+					<div class="status">
+					{{#compare port_state '===' 'rejected'}}
+						{{@root.i18n.portListing.misc.status.rejected}}
+					{{else}}
+					{{#compare port_state '===' 'canceled'}}
+						{{@root.i18n.portListing.misc.status.canceled}}
+					{{else}}
+						{{@root.i18n.portListing.misc.status.scheduled}}
+					{{/compare}}
+					{{/compare}}
+					{{#compare port_state '===' 'scheduled'}}
+						<br>
+						<span class="detail">
+							({{toFriendlyDate scheduled_date}})
+						</span>
+					{{/compare}}
+					</div>
+				</div>
+				<div class="node{{#compare port_state '===' 'completed'}} success{{/compare}}">
+					<div class="iconography">
+						<i class="icon-telicon-check-circle"></i>
+					</div>
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.completed}}
+					</div>
+				</div>
+			</div>
 			</div>
 		{{#isSuperDuper}}
 			<div>
-			{{#if isUpdatable}}
+			{{#if isUpdateable}}
 				<button class="monster-button-primary" id="update_status">
 					{{i18n.portListing.detail.buttons.update}}
 				</button>
@@ -157,13 +155,11 @@
 		{{/isSuperDuper}}
 		</div>
 		<div class="numbers-section">
-		{{#with port}}
 			<div class="title">
-				{{extra.numbersAmount}}
-			{{#compare extra.numbersAmount '===' 1}}
-				{{@root.i18n.portListing.detail.numbers.singular}}
+			{{#compare numbersAmount '===' 1}}
+				{{replaceVar @root.i18n.portListing.detail.numbers.singular numbersAmount}}
 			{{else}}
-				{{@root.i18n.portListing.detail.numbers.plural}}
+				{{replaceVar @root.i18n.portListing.detail.numbers.plural numbersAmount}}
 			{{/compare}}
 			</div>
 			<div class="search-box">
@@ -177,22 +173,20 @@
 				</li>
 			{{/each}}
 			</ul>
-		{{/with}}
 		</div>
 	</div>
-{{#with port}}
-	<div class="timeline-panel-wrapper justify-content-{{#if extra.canComment}}end{{else}}start{{/if}}">
+	<div class="timeline-panel-wrapper justify-content-{{#if isUpdateable}}end{{else}}start{{/if}}">
 		<div class="timeline-panel">
 			<ul class="timeline">
-		{{#if extra.timeline}}
-			{{#each extra.timeline}}
+		{{#if timeline}}
+			{{#each timeline}}
 				<li class="day" data-timestamp="{{timestamp}}">
 					<div class="date">
 						{{toFriendlyDate timestamp 'calendarDate' undefined false}}
 					</div>
 					<ul class="entries">
 					{{#each entries}}
-						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{else}}{{#if isSuperDuperEntry}} danger{{/if}}{{/if}}">
+						<li class="entry-wrapper{{#if status}} status{{#compare status '===' 'rejected'}} warning{{/compare}}{{#compare status '===' 'completed'}} success{{/compare}}{{#compare status '===' 'canceled'}} error{{/compare}}{{else}}{{#if isPrivate}} danger{{/if}}{{/if}}">
 							<div class="icon-wrapper">
 							{{#if status}}
 								{{#compare status '===' 'submitted'}}
@@ -214,7 +208,7 @@
 									<i class="icon-telicon-x-circled iconography"></i>
 								{{/compare}}
 							{{else}}
-								<i class="fa fa-{{#if isSuperDuperEntry}}lock{{else}}envelope{{/if}} iconography"></i>
+								<i class="fa fa-{{#if isPrivate}}lock{{else}}envelope{{/if}} iconography"></i>
 							{{/if}}
 							</div>
 							<div class="entry">
@@ -248,30 +242,29 @@
 		{{/if}}
 			</ul>
 		</div>
-	{{#if extra.canComment}}
+	{{#if isUpdateable}}
 		<div class="textarea-wrapper">
 			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
 			{{#isSuperDuper}}
 				<div class="btn-group">
-					<button class="monster-button-success" id="add_comment">
+					<button type="button" class="monster-button-success add-comment">
 						{{@root.i18n.portListing.detail.buttons.send}}
 					</button>
 					<button class="monster-button-success dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu" id="add_private_comment">
+					<ul class="dropdown-menu">
 						<li>
-							<a href="javascript:void(0);">{{@root.i18n.portListing.detail.buttons.sendPrivate}}</a>
+							<a class="add-comment" data-is_private="true">{{@root.i18n.portListing.detail.buttons.sendPrivate}}</a>
 						</li>
 					</ul>
 				</div>
 			{{else}}
-				<button class="monster-button-success" id="add_comment">
+				<button type="button" class="monster-button-success add-comment">
 					{{@root.i18n.portListing.detail.buttons.send}}
 				</button>
 			{{/isSuperDuper}}
 		</div>
 	{{/if}}
 	</div>
-{{/with}}
 </div>

@@ -268,28 +268,34 @@ define(function(require) {
 						lastSubmitted = _
 							.chain(results.transitions)
 							.find({ id: portRequestId })
-							.get('transition', undefined)
+							.get('transition')
 							.value(),
-						unactionableStatuses = [ 'canceled', 'completed' ];
+						numbers = _.get(
+							portRequest,
+							'ported_numbers',
+							_.get(portRequest, 'numbers')
+						),
+						unactionableStatuses = ['canceled', 'completed'];
 
-					return {
-						isUpdatable: !_.includes(unactionableStatuses, portRequest.port_state),
-						port: _.merge({}, portRequest, {
-							extra: {
-								canComment: !_.includes(unactionableStatuses, portRequest.port_state),
-								numbersAmount: _.size(portRequest.numbers),
-								timeline: self.portListingFormatEntriesToTimeline(results.timeline),
-								lastSubmitted: _.isUndefined(lastSubmitted)
-									? undefined
-									: {
-										timestamp: lastSubmitted.timestamp,
-										submitter: lastSubmitted.authorization.user.first_name
-											+ ' '
-											+ lastSubmitted.authorization.user.last_name
-									}
-							}
-						})
-					};
+					return _.merge({
+						isUpdateable: !_.includes(unactionableStatuses, portRequest.port_state),
+						lastSubmitted: _.isUndefined(lastSubmitted)
+							? undefined
+							: {
+								timestamp: lastSubmitted.timestamp,
+								submitter: monster.util.getUserFullName(lastSubmitted.authorization.user)
+							},
+						numbers: numbers,
+						numbersAmount: _.size(numbers),
+						timeline: self.portListingFormatEntriesToTimeline(results.timeline)
+					}, _.pick(portRequest, [
+						'carrier',
+						'name',
+						'port_state',
+						'reference_number',
+						'scheduled_date',
+						'winning_carrier'
+					]));
 				};
 
 			self.portListingSet('accountId', self.portListingGet(['portRequestsById', portRequestId]).account_id);
@@ -721,29 +727,28 @@ define(function(require) {
 					});
 				});
 
-			textareaWrapper
-				.find('#add_comment')
+			template
+				.find('.add-comment')
 					.on('click', function(event) {
 						event.preventDefault();
-						self.portListingHelperPostComment({
-							portRequestId: portRequestId,
-							commentInput: textarea
+						if (_.chain(textarea.val()).trim().isEmpty().value()) {
+							return;
+						}
+						var isPrivate = _.get($(this).data(), 'is_private', false),
+							comment = textarea.val(),
+							$buttons = textareaWrapper.find('button');
+
+						textarea.val('');
+						$buttons.prop('disabled', 'disabled');
+
+						self.portListingHelperAddComment({
+							callback: function() {
+								$buttons.prop('disabled', false);
+							},
+							comment: comment,
+							isPrivate: monster.util.isSuperDuper() && isPrivate
 						});
 					});
-
-			if (monster.util.isSuperDuper()) {
-				// Set event handlers for superduper options
-				textareaWrapper
-					.find('#add_private_comment')
-						.on('click', function(event) {
-							event.preventDefault();
-							self.portListingHelperPostComment({
-								portRequestId: portRequestId,
-								commentInput: textarea,
-								isSuperDuperComment: true
-							});
-						});
-			}
 		},
 
 		/**
@@ -887,8 +892,8 @@ define(function(require) {
 								patchRequestData.data.reference_number = formData.reference_number;
 							}
 
-							if (_.isEmpty(reason)) {
-								patchRequestData.reason = encodeURIComponent(reason);
+							if (!_.isEmpty(reason)) {
+								patchRequestData.data.reason = reason;
 							}
 
 							self.portListingRequestPatchPortState({
@@ -953,39 +958,20 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * @param  {jQuery}  args.commentInput
-		 * @param  {Boolean} [args.isSuperDuperComment]
-		 */
-		portListingHelperPostComment: function(args) {
-			var self = this,
-				commentInput = args.commentInput,
-				comment = commentInput.val(),
-				isSuperDuperComment = _.get(args, 'isSuperDuperComment', false);
-
-			if (_.chain(comment).trim().isEmpty().value()) {
-				return;
-			}
-			commentInput.val('');
-
-			self.portListingHelperAddComment({
-				comment: comment,
-				isSuperDuperComment: isSuperDuperComment
-			});
-		},
-
 		/**************************************************
 		 *              Data handling helpers             *
 		 **************************************************/
 
 		/**
+		 * @param  {Function} args.callback
 		 * @param  {String} args.comment
-		 * @param  {Boolean} args.isSuperDuperComment
+		 * @param  {Boolean} args.isPrivate
 		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
+				callback = args.callback,
 				comment = args.comment,
-				isSuperDuperComment = args.isSuperDuperComment,
+				isPrivate = args.isPrivate,
 				container = self.portListingGet('container'),
 				user = monster.apps.auth.currentUser,
 				now = moment().toDate(),
@@ -1002,7 +988,7 @@ define(function(require) {
 								timestamp: monster.util.dateToGregorian(now),
 								author: author,
 								content: comment,
-								superduper_comment: isSuperDuperComment
+								is_private: isPrivate
 							}
 						]
 					}
@@ -1014,7 +1000,7 @@ define(function(require) {
 							timestamp: moment(monster.util.gregorianToDate(newComment.timestamp)).valueOf(),
 							title: newComment.author,
 							content: newComment.content,
-							isSuperDuperEntry: newComment.superduper_comment
+							isPrivate: newComment.is_private
 						};
 
 					// check if the last entry was created on the same day than today
@@ -1039,6 +1025,8 @@ define(function(require) {
 							})));
 
 					self.portListingScrollToBottomOfTimeline();
+
+					callback && callback();
 				}
 			});
 		},
@@ -1064,7 +1052,11 @@ define(function(require) {
 						.map(function(comment) {
 							return {
 								content: comment.content,
-								isSuperDuperEntry: _.get(comment, 'superduper_comment', false),
+								isPrivate: _.get(
+									comment,
+									'is_private',
+									_.get(comment, 'superduper_comment', false)
+								),
 								timestamp: moment(monster.util.gregorianToDate(comment.timestamp)).valueOf(),
 								title: comment.author
 							};
