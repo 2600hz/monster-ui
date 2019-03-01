@@ -732,7 +732,7 @@ define(function(require) {
 								$buttons.prop('disabled', false);
 							},
 							comment: comment,
-							isSuperDuperComment: monster.util.isSuperDuper() && isPrivate
+							isPrivate: monster.util.isSuperDuper() && isPrivate
 						});
 					});
 		},
@@ -951,13 +951,13 @@ define(function(require) {
 		/**
 		 * @param  {Function} args.callback
 		 * @param  {String} args.comment
-		 * @param  {Boolean} args.isSuperDuperComment
+		 * @param  {Boolean} args.isPrivate
 		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
 				callback = args.callback,
 				comment = args.comment,
-				isSuperDuperComment = args.isSuperDuperComment,
+				isPrivate = args.isPrivate,
 				container = self.portListingGet('container'),
 				user = monster.apps.auth.currentUser,
 				now = moment().toDate(),
@@ -974,7 +974,7 @@ define(function(require) {
 								timestamp: monster.util.dateToGregorian(now),
 								author: author,
 								content: comment,
-								superduper_comment: isSuperDuperComment
+								is_private: isPrivate
 							}
 						]
 					}
@@ -986,7 +986,7 @@ define(function(require) {
 							timestamp: moment(monster.util.gregorianToDate(newComment.timestamp)).valueOf(),
 							title: newComment.author,
 							content: newComment.content,
-							isSuperDuperEntry: newComment.superduper_comment
+							isPrivate: newComment.is_private
 						};
 
 					// check if the last entry was created on the same day than today
@@ -1038,7 +1038,11 @@ define(function(require) {
 						.map(function(comment) {
 							return {
 								content: comment.content,
-								isSuperDuperEntry: _.get(comment, 'superduper_comment', false),
+								isPrivate: _.get(
+									comment,
+									'is_private',
+									_.get(comment, 'superduper_comment', false)
+								),
 								timestamp: moment(monster.util.gregorianToDate(comment.timestamp)).valueOf(),
 								title: comment.author
 							};
