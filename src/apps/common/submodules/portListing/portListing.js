@@ -77,8 +77,6 @@ define(function(require) {
 				isMonsterApp = _.isBoolean(args.isMonsterApp)
 					? args.isMonsterApp
 					: false,
-				parent,
-				container,
 				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
 					return {
 						text: self.i18n.active().portListing.tabs[tab],
@@ -94,7 +92,9 @@ define(function(require) {
 							tabs: subTabs
 						}]
 					};
-				});
+				}),
+				parent,
+				container;
 
 			if (isMonsterApp) {
 				parent = args.parent;
