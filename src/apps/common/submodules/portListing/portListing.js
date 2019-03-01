@@ -142,13 +142,13 @@ define(function(require) {
 
 		portListingRenderTable: function(args) {
 			var self = this,
-				parent = args.container,
+				container = args.container,
 				template = $(self.getTemplate({
 					name: 'listing-table',
 					submodule: 'portListing'
 				}));
 
-			parent
+			container
 				.fadeOut(function() {
 					$(this)
 						.empty()
