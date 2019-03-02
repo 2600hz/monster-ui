@@ -1,3 +1,23 @@
+var type = 'dev';
+// var type = 'prod';
+var kazoo;
+var provisioner;
+var socket;
+var socketWebphone;
+var kazooClusterId;
+if (type === 'dev') {
+	kazoo = 'https://sandbox.2600hz.com:8443/v2/';
+	provisioner = 'https://provisioner.sandbox.2600hz.com/';
+	socket = 'wss://sandbox.2600hz.com:5443';
+	socketWebphone = 'wss://sandbox.2600hz.com:5065';
+	kazooClusterId = 'aa2b36ac6a5edb290159cd1298283322';
+} else if (type === 'prod') {
+	kazoo = '//ui.zswitch.net/v2/';
+	provisioner = '//p3.zswitch.net/';
+	socket = 'wss://api.zswitch.net:5443';
+	socketWebphone = 'wss://proxy.zswitch.net:5065';
+	kazooClusterId = '8a901bea1d3297ef7d4c8d34809472c2';
+}
 /**
  * This file lets you connect your different backend services to Monster UI and
  * exposes other settings like whitelabeling that can be set for the entire UI.
@@ -13,7 +33,18 @@
  * https://docs.2600hz.com/ui/docs/configuration/
  */
 define({
+	kazooClusterId: kazooClusterId,
+	api: {
+		'default': kazoo,
+		provisioner: provisioner,
+		socket: socket,
+		socketWebphone: socketWebphone
+	},
+	developerFlags: {
+		showAllCallflows: true
+	},
 	whitelabel: {
+		logoutTimer: 0,
 		companyName: '2600Hz',
 		applicationTitle: 'Monster UI',
 		callReportEmail: 'support@2600hz.com',

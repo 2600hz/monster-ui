@@ -124,7 +124,7 @@ require([
 			templates
 		) {
 		monster.apps = apps;
-		monster.routing = routing;
+		monster.routing = routing.getInstance();
 		monster.socket = socket;
 		monster.timezone = timezone;
 		monster.ua = ua;
@@ -132,7 +132,6 @@ require([
 		monster.util = util;
 		monster.webphone = webphone;
 
-		monster.routing.init();
 		monster.util.setDefaultLanguage();
 
 		monster.loadBuildConfig(function() {

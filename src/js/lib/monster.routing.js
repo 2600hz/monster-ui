@@ -5,6 +5,8 @@ define(function(require) {
 	var monster = require('monster');
 	var $ = require('jquery');
 
+	var instance;
+
 	function addDefaultRoutes() {
 		var appWhitelist = {
 			appstore: {
@@ -63,6 +65,13 @@ define(function(require) {
 		Hasher.changed.add(onEvent);
 		Hasher.init();
 		Crossroads.ignoreState = true;
+
+		return {
+			goTo: goTo,
+			hasMatch: hasMatch,
+			parseHash: parseHash,
+			updateHash: updateHash
+		};
 	}
 
 	function isAccountIDMasqueradable(id) {
@@ -93,9 +102,11 @@ define(function(require) {
 	}
 
 	function renderApp(appName) {
-		if (!(appName === 'appstore'
+		if (
+			!(appName === 'appstore'
 			|| !monster.util.isMasquerading()
-			|| monster.appsStore[appName].masqueradable === true)) {
+			|| monster.appsStore[appName].masqueradable === true)
+		) {
 			monster.ui.toast({
 				type: 'error',
 				message: monster.apps.core.i18n.active().appMasqueradingError
@@ -118,10 +129,11 @@ define(function(require) {
 	}
 
 	return {
-		goTo: goTo,
-		hasMatch: hasMatch,
-		init: init,
-		parseHash: parseHash,
-		updateHash: updateHash
+		getInstance: function() {
+			if (_.isUndefined(instance)) {
+				instance = init();
+			}
+			return instance;
+		}
 	};
 });
