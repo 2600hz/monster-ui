@@ -16,7 +16,20 @@ define(function(require) {
 		 * Trigger the alerts pulling process from API.
 		 */
 		alertsRender: function() {
-			var self = this;
+			var self = this,
+				initTemplate = function initTemplate(alerts) {
+					var alertsCount = alerts.length,
+						dataTemplate = {
+							alertsCount: alertsCount === 0 ? '' : alertsCount > 9 ? '9+' : alertsCount.toString()
+						},
+						$template = $(self.getTemplate({
+							name: 'nav',
+							data: dataTemplate,
+							submodule: 'alerts'
+						}));
+
+					return $template;
+				};
 
 			monster.waterfall([
 				function(callback) {
@@ -29,8 +42,17 @@ define(function(require) {
 						}
 					});
 				}
-			], function(err, data) {
-				// TODO: Alerts pulled
+			], function(err, alerts) {
+				var $navLinks = $('#main_topbar_nav'),
+					$topbarAlert = $navLinks.find('#main_topbar_alert'),
+					templateAlerts = err ? [] : alerts,
+					$template = initTemplate(templateAlerts);
+
+				if ($topbarAlert.length === 0) {
+					$template.insertBefore($navLinks.find('#main_topbar_signout'));
+				} else {
+					$topbarAlert.replaceWith($template);
+				}
 			});
 		},
 
