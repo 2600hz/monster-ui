@@ -16,15 +16,12 @@
 				<th data-type="number">
 					{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
 				</th>
-				{{!-- <th>
-					{{toUpperCase i18n.portListing.misc.portInfo.dateSubmitted}}
-				</th> --}}
 				<th>
 					{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
 				</th>
-				{{!-- <th>
-					{{toUpperCase i18n.portListing.misc.portInfo.submitter}}
-				</th> --}}
+				<th>
+					{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -47,11 +44,10 @@
 					</a>
 				</td>
 			{{/if}}
-				{{!-- <td data-filter-value="{{state}}{{#if extra.isScheduledToday}} scheduledtoday{{/if}}" data-sort-value="{{ tryI18n @root.i18n.portListing.misc.status state }}{{#compare state '===' 'scheduled'}}-{{scheduled_date}}{{/compare}}"> --}}
 				<td data-filter-value="{{state}}" data-sort-value="{{ tryI18n @root.i18n.portListing.misc.status state }}">
 				{{#compare state '===' 'submitted'}}
 					<div class="status-wrapper">
-						<i class="icon-telicon-prioritize"></i>
+						{{telicon "list-prioritize"}}
 						<div class="content">
 							<div class="status">
 								{{@root.i18n.portListing.misc.status.submitted}}
@@ -61,7 +57,7 @@
 				{{/compare}}
 				{{#compare state '===' 'pending'}}
 					<div class="status-wrapper">
-						<i class="icon-telicon-porting"></i>
+						{{telicon "porting"}}
 						<div class="content">
 							<div class="status">
 								{{@root.i18n.portListing.misc.status.pending}}
@@ -71,7 +67,7 @@
 				{{/compare}}
 				{{#compare state '===' 'scheduled'}}
 					<div class="status-wrapper">
-						<i class="icon-telicon-calendar"></i>
+						{{telicon "calendar"}}
 						<div class="content">
 							<div class="status">
 								{{@root.i18n.portListing.misc.status.scheduled}}
@@ -84,7 +80,7 @@
 				{{/compare}}
 				{{#compare state '===' 'completed'}}
 					<div class="status-wrapper success">
-						<i class="icon-telicon-check-circle"></i>
+						{{telicon "check--circle-o"}}
 						<div class="content">
 							<div class="status">
 								{{@root.i18n.portListing.misc.status.completed}}
@@ -94,7 +90,7 @@
 				{{/compare}}
 				{{#compare state '===' 'rejected'}}
 					<div class="status-wrapper warning">
-						<i class="icon-telicon-warning"></i>
+						{{telicon "warning--triangle-o"}}
 						<div class="content">
 							<div class="status">
 								{{@root.i18n.portListing.misc.status.rejected}}
@@ -104,10 +100,20 @@
 				{{/compare}}
 				{{#compare state '===' 'canceled'}}
 					<div class="status-wrapper error">
-						<i class="icon-telicon-x-circled"></i>
+						{{telicon "x--circle"}}
 						<div class="content">
 							<div class="status">
 								{{@root.i18n.portListing.misc.status.canceled}}
+							</div>
+						</div>
+					</div>
+				{{/compare}}
+				{{#compare state '===' 'unconfirmed'}}
+					<div class="status-wrapper">
+						{{telicon "refresh-alt"}}
+						<div class="content">
+							<div class="status">
+								{{@root.i18n.portListing.misc.status.unconfirmed}}
 							</div>
 						</div>
 					</div>
@@ -116,15 +122,12 @@
 				<td>
 					{{amount}}
 				</td>
-				{{!-- <td data-sort-value="{{extra.lastSubmitted.timestamp}}">
-					{{toFriendlyDate extra.lastSubmitted.timestamp 'date'}}
-				</td> --}}
 				<td>
 					{{carrier.winning}}
 				</td>
-				{{!-- <td>
-					{{extra.lastSubmitted.submitter}}
-				</td> --}}
+				<td>
+					{{carrier.losing}}
+				</td>
 			</tr>
 		{{/each}}
 		</tbody>
