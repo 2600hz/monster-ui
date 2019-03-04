@@ -428,55 +428,6 @@ define(function(require) {
 					});
 
 			template
-				.find('.custom-select li a')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						var filter = $(this).prop('href').split('#')[1],
-							byType = $(this).data('type'),
-							column = self.portListingGet('isMonsterApp') ? [2] : [1],
-							filteringBy = template.attr('data-filtering-by'),
-							filterRequests = [],
-							getRequiredPortRequests = function(callback) {
-								self.portListingRenderSubmittedTable({
-									container: template,
-									byType: byType,
-									success: callback
-								});
-							},
-							portListingFootableFilters = function(callback) {
-								var filtering = FooTable.get('#submitted_ports_listing').use(FooTable.Filtering);
-
-								switch (filter) {
-									case 'all':
-									case 'completed':
-										filtering.removeFilter('byScheduleDate');
-										filtering.removeFilter('byState');
-										break;
-
-									default:
-										filtering.removeFilter('byScheduleDate');
-										filtering.addFilter('byState', filter, column);
-										break;
-								}
-
-								filtering.filter();
-
-								callback(null);
-							};
-
-						if (filteringBy !== byType) {
-							filterRequests.push(getRequiredPortRequests);
-						}
-
-						filterRequests.push(portListingFootableFilters);
-
-						monster.waterfall(filterRequests);
-
-						template.attr('data-filtering-by', byType);
-					});
-
-			template
 				.find('.footable')
 					.on('click', '.listing-item', function(event) {
 						event.preventDefault();
@@ -1046,6 +997,7 @@ define(function(require) {
 					}
 				},
 				success: function(ports) {
+					self.portListingSetters(ports);
 					args.success(self.portlistingFlattenResults(ports));
 				}
 			});
@@ -1062,6 +1014,7 @@ define(function(require) {
 					}
 				},
 				success: function(ports) {
+					self.portListingSetters(ports);
 					args.success(self.portlistingFlattenResults(ports));
 				}
 			});
