@@ -151,7 +151,7 @@ define(function(require) {
 							name: 'ports-listing',
 							data: {
 								isMonsterApp: self.portListingGet('isMonsterApp'),
-								requests: _.sortBy(portRequests, 'state')
+								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state')
 							},
 							submodule: 'portListing'
 						}));
@@ -183,39 +183,6 @@ define(function(require) {
 					}
 				});
 			});
-		},
-
-		/**
-		 * @param  {jQuery} args.template
-		 * @param  {Array} args.portRequests
-		 */
-		portListingRenderListingTable: function(args) {
-			var self = this,
-				container = args.template,
-				portRequests = args.portRequests,
-				initTemplate = function(portRequests) {
-					var template = $(self.getTemplate({
-						name: 'ports-listing',
-						data: {
-							isMonsterApp: self.portListingGet('isMonsterApp'),
-							requests: _.sortBy(portRequests, 'state')
-						},
-						submodule: 'portListing'
-					}));
-
-					monster.ui.footable(template.find('#ports_listing'), {
-						filtering: {
-							enabled: false
-						}
-					});
-
-					return template;
-				};
-
-			container
-				.find('#ports_listing_wrapper')
-				.empty()
-				.append(initTemplate(portRequests));
 		},
 
 		/**
