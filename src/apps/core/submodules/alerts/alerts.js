@@ -20,7 +20,7 @@ define(function(require) {
 				initTemplate = function initTemplate(alerts) {
 					var alertsCount = alerts.length,
 						dataTemplate = {
-							alertsCount: alertsCount === 0 ? '' : alertsCount > 9 ? '9+' : alertsCount.toString()
+							alertsCount: alertsCount === 0 ? null : alertsCount > 9 ? '9+' : alertsCount.toString()
 						},
 						$template = $(self.getTemplate({
 							name: 'nav',
@@ -29,6 +29,8 @@ define(function(require) {
 						}));
 
 					monster.ui.tooltips($template);
+
+					// TODO: Bind events. For UI-3319, clicking the topbar icon should clear the badge that shows the notification count.
 
 					return $template;
 				};
