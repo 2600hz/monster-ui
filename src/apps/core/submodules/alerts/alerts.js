@@ -30,7 +30,7 @@ define(function(require) {
 					});
 				}
 			], function(err, data) {
-				console.log('%cAlerts pulled', 'background-color: black; color: yellow');
+				// TODO: Alerts pulled
 			});
 		},
 
