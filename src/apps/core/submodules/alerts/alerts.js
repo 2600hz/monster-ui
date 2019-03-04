@@ -3,31 +3,31 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var notifications = {
+	var alerts = {
 		// Defines API requests not included in the SDK
 		requests: {},
 
 		/**
-		 * Formats the notification data received from the API, into UI categories
+		 * Formats the alert data received from the API, into UI categories
 		 * @param    {Object}   args
-		 * @param    {Object[]} args.data  Array of notifications
-		 * @returns  {Object}              Grouped notifications by UI categories
+		 * @param    {Object[]} args.data  Array of alerts
+		 * @returns  {Object}              Grouped alerts by UI categories
 		 */
-		notificationsFormatData: function(args) {
+		alertsFormatData: function(args) {
 			var self = this;
 
-			return _.groupBy(args.data, function(notification) {
-				var notificationType;
+			return _.groupBy(args.data, function(alert) {
+				var alertType;
 
-				if (notification.clearable) {
-					notificationType = 'manual';
-				} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], notification.category)) {
-					notificationType = 'system';
+				if (alert.clearable) {
+					alertType = 'manual';
+				} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], alert.category)) {
+					alertType = 'system';
 				} else {
-					notificationType = 'apps';
+					alertType = 'apps';
 				}
 
-				return notificationType;
+				return alertType;
 			}).value();
 		},
 
@@ -37,7 +37,7 @@ define(function(require) {
 		 * @param  {Function} [args.success]  Success callback
 		 * @param  {Function} [args.error]    Error callback
 		 */
-		notificationsRequestListAlerts: function(args) {
+		alertsRequestListAlerts: function(args) {
 			var self = this;
 
 			self.callApi({
@@ -55,5 +55,5 @@ define(function(require) {
 		}
 	};
 
-	return notifications;
+	return alerts;
 });

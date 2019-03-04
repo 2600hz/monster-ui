@@ -4,7 +4,7 @@ define(function(require) {
 		monster = require('monster');
 
 	var appSubmodules = [
-		'notifications'
+		'alerts'
 	];
 
 	require(_.map(appSubmodules, function(name) {
