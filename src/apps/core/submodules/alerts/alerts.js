@@ -43,7 +43,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'alert.list',
 				data: {
-					accountId: self.accountId
+					accountId: monster.apps.auth.currentAccount.id
 				},
 				success: function(data, status) {
 					_.has(args, 'success') && args.success(data.data, status);
