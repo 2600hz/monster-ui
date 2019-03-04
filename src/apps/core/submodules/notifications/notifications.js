@@ -20,6 +20,7 @@ define(function(require) {
 		 * @param  {jQUery}   args.container            Dropdown container
 		 * @param  {Object}   [args.callbacks]          Optional callbacks
 		 * @param  {Function} [args.callbacks.success]  Success callback
+		 * @param  {Function} [args.callbacks.error]    Success callback
 		 */
 		notificationsRender: function(args) {
 			var self = this,
@@ -46,6 +47,13 @@ define(function(require) {
 				function(callback) {
 					self.notificationsHideDropdown();
 
+					if ($container) {
+						callback();
+					} else {
+						callback(ReferenceError('The "container" arg is required to load the account browser.'));
+					}
+				},
+				function(callback) {
 					self.notificationsRequestListAlerts({
 						success: function(data) {
 							callback(null, data);
@@ -54,13 +62,18 @@ define(function(require) {
 							callback(parsedError);
 						}
 					});
+				},
+				function(data, callback) {
+					$container
+						.empty()
+						.append(initTemplate(data));
+
+					callback(null);
 				}
-			], function(err, data) {
+			], function(err) {
 				if (err) {
 					_.has(args, 'callbacks.error') && args.callbacks.error(err);
 				} else {
-					initTemplate(data);
-
 					_.has(args, 'callbacks.success') && args.callbacks.success();
 				}
 			});
@@ -82,20 +95,19 @@ define(function(require) {
 		notificationsFormatData: function(args) {
 			var self = this;
 
-			return _.chain(args.data)
-				.groupBy(function(notification) {
-					var notificationType;
+			return _.groupBy(args.data, function(notification) {
+				var notificationType;
 
-					if (notification.clearable) {
-						notificationType = 'manual';
-					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], notification.category)) {
-						notificationType = 'system';
-					} else {
-						notificationType = 'apps';
-					}
+				if (notification.clearable) {
+					notificationType = 'manual';
+				} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], notification.category)) {
+					notificationType = 'system';
+				} else {
+					notificationType = 'apps';
+				}
 
-					return notificationType;
-				}).value();
+				return notificationType;
+			}).value();
 		},
 
 		/**
@@ -127,8 +139,8 @@ define(function(require) {
 				success: function(data, status) {
 					_.has(args, 'success') && args.success(data.data, status);
 				},
-				error: function(data, status) {
-					_.has(args, 'error') && args.error(data, status);
+				error: function(parsedError) {
+					_.has(args, 'error') && args.error(parsedError);
 				}
 			});
 		}
