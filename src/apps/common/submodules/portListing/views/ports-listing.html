@@ -16,12 +16,21 @@
 				<th data-type="number">
 					{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
 				</th>
-				<th>
-					{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
-				</th>
-				<th>
-					{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
-				</th>
+				{{#compare type '===' 'suspended'}}
+					<td>
+						{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
+					</td>
+				{{/compare}}
+				{{#compare type '===' 'progressing'}}
+					<td>
+						{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
+					</td>
+				{{/compare}}
+				{{#compare type '===' 'completed'}}
+					<td>
+						{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
+					</td>
+				{{/compare}}
 			</tr>
 		</thead>
 		<tbody>
@@ -122,12 +131,21 @@
 				<td>
 					{{amount}}
 				</td>
-				<td>
-					{{carrier.winning}}
-				</td>
-				<td>
-					{{carrier.losing}}
-				</td>
+				{{#compare @root.type '===' 'suspended'}}
+					<td>
+						{{carrier.losing}}
+					</td>
+				{{/compare}}
+				{{#compare @root.type '===' 'progressing'}}
+					<td>
+						{{carrier.winning}}
+					</td>
+				{{/compare}}
+				{{#compare @root.type '===' 'completed'}}
+					<td>
+						{{carrier.winning}}
+					</td>
+				{{/compare}}
 			</tr>
 		{{/each}}
 		</tbody>

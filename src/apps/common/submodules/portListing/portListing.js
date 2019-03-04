@@ -151,7 +151,8 @@ define(function(require) {
 							name: 'ports-listing',
 							data: {
 								isMonsterApp: self.portListingGet('isMonsterApp'),
-								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state')
+								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state'),
+								type: selectedSubTab ? selectedSubTab : selectedTab
 							},
 							submodule: 'portListing'
 						}));
