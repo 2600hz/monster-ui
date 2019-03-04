@@ -28,6 +28,8 @@ define(function(require) {
 							submodule: 'alerts'
 						}));
 
+					monster.ui.tooltips($template);
+
 					return $template;
 				};
 

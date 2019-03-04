@@ -1014,5 +1014,11 @@
 		"content1": "The WebSockets Connection is not working.",
 		"content2": "Please check that your Internet connection and your firewall are working as expected, as we can not display the current application without a proper connection to the WebSockets server.",
 		"content3": "We'll automatically refresh the application once the connection works properly..."
+	},
+
+	"alerts": {
+		"alertToggle": {
+			"toggleTooltip": "Notifications"
+		}
 	}
 }
