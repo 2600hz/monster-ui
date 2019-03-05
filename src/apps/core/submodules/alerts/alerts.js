@@ -107,28 +107,42 @@ define(function(require) {
 		 */
 		alertsFormatData: function(args) {
 			var self = this,
-				data = args.data;
+				data = args.data,
+				sortOrder = {
+					manual: '1',
+					system: '2'
+				};
 
 			if (_.isEmpty(data)) {
-				return {};
+				return [];
 			}
 
 			return _.chain(data)
-				.filter(function(alert) {
-					return _.has(alert, 'category');
+				.each(function(alert) {
+					if (_.has(alert, 'metadata') && _.isEmpty(alert.metadata)) {
+						delete alert.metadata;
+					}
 				})
 				.groupBy(function(alert) {
-					var alertType;
+					var alertType,
+						category = alert.category;
 
 					if (alert.clearable) {
 						alertType = 'manual';
-					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], alert.category)) {
+					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], category)) {
 						alertType = 'system';
 					} else {
-						alertType = 'apps';
+						alertType = alert.category.substring(0, category.indexOf('_'));
 					}
 
 					return alertType;
+				}).map(function(alerts, type) {
+					return {
+						type: type,
+						alerts: alerts
+					};
+				}).sortBy(function(alertGroup) {
+					return _.get(sortOrder, alertGroup.type, '3' + alertGroup.type);
 				}).value();
 		},
 

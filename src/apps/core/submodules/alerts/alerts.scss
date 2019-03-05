@@ -23,15 +23,31 @@
 		padding: 4px 16px 4px 16px;
 		font-size: 12px;
 		letter-spacing: 0.4px;
-		font-weight: 500;
+		font-weight: 600;
 		text-transform: uppercase;
 	}
 
 	.alert-toggle-item {
-		background: #2E2E32;
+		background: $shark2;
 		box-shadow: inset 0 -1px 0 0 $woodsmoke,
 		inset 0 1px 0 0 $woodsmoke;
-		height: 122px;
-		width: 440px;
+		padding: 12px;
+
+		h1 {
+			color: $white;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 18px;
+			margin: 0px;
+		}
+
+		h2 {
+			color: $french-gray2;
+			font-size: 12px;
+			font-weight: normal;
+			letter-spacing: 0;
+			line-height: 12px;
+			margin: 0px;
+		}
 	}
 }

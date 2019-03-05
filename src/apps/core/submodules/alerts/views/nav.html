@@ -8,11 +8,18 @@
 	<div id="main_topbar_alert_toggle_container" class="topbar-toggle-container">
 		{{#each alerts}}
 			<div class="alert-toggle-header">
-				{{ tryI18n ../i18n.alerts.alertToggle.alertTypes @key }}
+				{{ tryI18n ../i18n.alerts.alertToggle.alertTypes type }}
 			</div>
-			{{#each this}}
+			{{#each alerts}}
 				<div class="alert-toggle-item">
-					Item
+					<h1>{{title}}</h1>
+					<h2>
+						{{#if metadata}}
+							Metadata goes here!
+						{{else}}
+							&nbsp;
+						{{/if}}
+					</h2>
 					{{debug}}
 				</div>
 			{{/each}}
