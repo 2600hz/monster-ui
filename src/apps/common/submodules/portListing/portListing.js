@@ -69,6 +69,13 @@ define(function(require) {
 		},
 
 		/**
+		 * Check if the user is marquerading or is a reseller
+		 */
+		portListingCheckProfile: function() {
+			return monster.util.isMasquerading() || !monster.util.isReseller();
+		},
+
+		/**
 		 * @param  {Boolean} args.isMonsterApp
 		 * @param  {jQuery} [args.parent]
 		 * @param  {jQuery} [args.container]
@@ -97,9 +104,17 @@ define(function(require) {
 				parent,
 				container;
 
+			monster.ui.generateAppLayout(self, {
+				menus: [
+					{
+						tabs: self.portListingCheckProfile() ? subTabs : tabs
+					}
+				]
+			});
+
 			if (isMonsterApp) {
 				parent = args.parent;
-				container = args.container;
+				container = $('#common_app_container .app-content-wrapper');
 			} else {
 				parent = _.has(args, 'parent.getId')
 					? args.parent
@@ -122,14 +137,6 @@ define(function(require) {
 				portRequest: {},
 				portRequestsById: {}
 			});
-
-			monster.ui.generateAppLayout(self, {
-				menus: [
-					{
-						tabs: monster.util.isMasquerading() ? subTabs : tabs //monster.util.isMasquerading() || !monster.util.isReseller() ? subTabs : tabs
-					}
-				]
-			});
 		},
 
 		/**************************************************
@@ -138,11 +145,12 @@ define(function(require) {
 		portListingRenderListing: function(args) {
 			var self = this,
 				container = args.container,
-				tab = args.parent.find('nav.app-navbar a.active'),
+				parent = args.parent,
+				tab = parent.find('nav.app-navbar a.active'),
 				selectedTab = tab.data('id'),
 				selectedTabId = tab.data('tab_id'),
-				selectedSubTab = args.parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"]').hasClass('active')
-					? args.parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"] a.active').data('id')
+				selectedSubTab = parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"]').hasClass('active')
+					? parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"] a.active').data('id')
 					: self.appFlags.portListing.defaultType,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
@@ -157,7 +165,7 @@ define(function(require) {
 							data: {
 								isMonsterApp: self.portListingGet('isMonsterApp'),
 								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state'),
-								type: selectedSubTab ? selectedSubTab : selectedTab
+								type: self.portListingCheckProfile() ? selectedTab : selectedSubTab
 							},
 							submodule: 'portListing'
 						}));
@@ -179,7 +187,7 @@ define(function(require) {
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
 				self.portListingHelperListPorts({
 					tab: selectedTab,
-					type: selectedSubTab ? selectedSubTab : selectedTab,
+					type: self.portListingCheckProfile() ? selectedTab : selectedSubTab,
 					success: function(portRequests) {
 						insertTemplateCallback(initTemplate(portRequests));
 					}
@@ -192,7 +200,7 @@ define(function(require) {
 		 */
 		portListingRenderDetail: function(args) {
 			var self = this,
-				container = args.container,
+				container = self.portListingGet('container'),
 				portRequestId = args.portRequestId,
 				initTemplate = function initTemplate(results) {
 					var template = $(self.getTemplate({
@@ -449,8 +457,7 @@ define(function(require) {
 							});
 						} else {
 							self.portListingRenderDetail({
-								portRequestId: portRequestId,
-								container: template
+								portRequestId: portRequestId
 							});
 						}
 					});
@@ -531,7 +538,10 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portListingRenderLayout();
+						self.portListingRenderListing({
+							parent: self.portListingGet('parent'),
+							container: self.portListingGet('container')
+						});
 					});
 
 			template
