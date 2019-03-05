@@ -480,48 +480,6 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {Object} args
-		 * @param {}
-		 */
-		portListingRenderSubmittedTable: function(args) {
-			var self = this,
-				byType = args.byType,
-				listCompletedAccountPorts = function(callback) {
-					self.portListingRequestByType(callback, byType);
-				},
-				listCompletedDescendantsPorts = function(callback) {
-					self.portlistingRequestDescendantsByType(callback, byType);
-				},
-				parallelCompletedRequests = [listCompletedAccountPorts];
-
-			if (self.portListingGet('isMonsterApp')) {
-				parallelCompletedRequests.push(listCompletedDescendantsPorts);
-			}
-
-			monster.parallel({
-				completedList: function(callback) {
-					monster.parallel(parallelCompletedRequests, function(err, results) {
-						callback(null, results);
-					});
-				}
-			}, function(error, results) {
-				self.portListingSetters(results);
-				var portRequests = self.portlistingFlattenResults(results);
-
-				self.portListingRenderListingSubmitted({
-					template: args.container,
-					portRequests: self.portListingFormatDataToTemplate(_.get(portRequests, 'completedList', []))
-				});
-
-				self.portListingBindListingEvents({
-					template: args.container
-				});
-
-				args.success(null);
-			});
-		},
-
-		/**
 		 * @param  {jQuery} args.template
 		 */
 		portListingBindDetailEvents: function(args) {
