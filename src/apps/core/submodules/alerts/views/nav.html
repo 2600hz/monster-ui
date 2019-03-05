@@ -5,7 +5,7 @@
 			<span class="badge danger">{{alertCount}}</span>
 		{{/if}}
 	</a>
-	<div id="main_topbar_alert_toggle_container">
+	<div id="main_topbar_alert_toggle_container" class="topbar-toggle-container">
 		{{#each alerts}}
 			<div class="alert-toggle-header">
 				{{ tryI18n ../i18n.alerts.alertToggle.alertTypes @key }}

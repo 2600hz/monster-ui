@@ -45,6 +45,11 @@ body,
 			color: $primary-color;
 		}
 	}
+
+	.topbar-toggle-container {
+		position: absolute;
+		z-index: 21; /* 1 more than myAccount */
+	}
 }
 
 .core-topbar .main-links {
@@ -243,11 +248,6 @@ body,
 }
 .core-topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
 	display: none;
-}
-
-.core-topbar #main_topbar_account_toggle_container {
-	position: absolute;
-	z-index: 21; /* 1 more than myAccount */
 }
 
 .core-topbar #main_topbar_account_toggle_container .account-browser-container {
