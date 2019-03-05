@@ -86,8 +86,13 @@ define(function(require) {
 			var self = this,
 				$template = args.template;
 
-			$template.find('#main_topbar_alert_link').on('click', function() {
-				$(this).find('.badge')
+			$template.find('#main_topbar_alert_link').on('click', function(e) {
+				e.preventDefault();
+
+				var $this = $(this);
+
+				$this.parent().toggleClass('open');
+				$this.find('.badge')
 					.fadeOut(250, function() {
 						$(this).remove();
 					});

@@ -1,0 +1,22 @@
+@import "../../../../css/partials/base";
+
+#main_topbar_alert_toggle_container {
+	margin-top: 8px;
+
+	&::before {
+		width: 1px;
+		float: right;
+		display: block;
+		content: '';
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		border-bottom: 5px solid $woodsmoke;
+		margin-top: -5px;
+	}
+
+	.alert-toggle-header {
+		background-color: $woodsmoke;
+		color: $manatee;
+		font-weight: 600;
+	}
+}

@@ -1017,6 +1017,13 @@
 	},
 
 	"alerts": {
-		"topbarTooltip": "Notifications"
+		"topbarTooltip": "Notifications",
+		"alertToggle": {
+			"alertTypes": {
+				"manual": "Manual",
+				"system": "System",
+				"port": "Porting"
+			}
+		}
 	}
 }
