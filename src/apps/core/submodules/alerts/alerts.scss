@@ -2,6 +2,10 @@
 
 #main_topbar_alert_toggle_container {
 	margin-top: 8px;
+	margin-left:-356px;
+	margin-right: -27px;
+	position: absolute;
+	z-index: 21;
 
 	&::before {
 		width: 1px;
@@ -12,11 +16,24 @@
 		border-right: 5px solid transparent;
 		border-bottom: 5px solid $woodsmoke;
 		margin-top: -5px;
+		margin-right: 50px;
 	}
 
 	.alert-toggle-header {
 		background-color: $woodsmoke;
 		color: $manatee;
-		font-weight: 600;
+		padding: 4px 16px 4px 16px;
+		font-size: 12px;
+		letter-spacing: 0.4px;
+		font-weight: 500;
+		text-transform: uppercase;
+	}
+
+	.alert-toggle-item {
+		background: #2E2E32;
+		box-shadow: inset 0 -1px 0 0 $woodsmoke,
+		inset 0 1px 0 0 $woodsmoke;
+		height: 122px;
+		width: 440px;
 	}
 }

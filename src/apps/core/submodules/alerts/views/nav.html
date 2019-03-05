@@ -10,6 +10,12 @@
 			<div class="alert-toggle-header">
 				{{ tryI18n ../i18n.alerts.alertToggle.alertTypes @key }}
 			</div>
+			{{#each this}}
+				<div class="alert-toggle-item">
+					Item
+					{{debug}}
+				</div>
+			{{/each}}
 		{{/each}}
 	</div>
 </li>
