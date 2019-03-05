@@ -127,10 +127,17 @@ body,
 	}
 }
 .core-topbar .nav > li {
-	border-left: 1px solid #202029;
 	float: left;
 	height: 100%;
 	text-decoration: none;
+
+	& > a {
+		border-left: 1px solid #202029;
+	}
+
+	&.open > a {
+		background-color: #202029;
+	}
 }
 .core-topbar .links.cell {
 	padding: 10px 20px;
@@ -231,7 +238,7 @@ body,
 }
 
 .core-topbar #main_topbar_account_toggle.open {
-	background-color: #202029;
+	background-color: $shark;
 }
 .core-topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
 	display: none;
