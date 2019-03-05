@@ -27,7 +27,8 @@ define(function(require) {
 					{ value: 'canceled', next: [] }
 				],
 				tabs: ['account', 'agent', 'descendants'],
-				subtabs: ['suspended', 'progressing', 'completed']
+				subtabs: ['suspended', 'progressing', 'completed'],
+				defaultType: 'suspended'
 			}
 		},
 
@@ -137,8 +138,12 @@ define(function(require) {
 		portListingRenderListing: function(args) {
 			var self = this,
 				container = args.container,
-				selectedTab = args.parent.find('nav.app-navbar a.active').data('id'),
-				selectedSubTab = args.parent.find('nav.app-subnav.active a.active').data('id'),
+				tab = args.parent.find('nav.app-navbar a.active'),
+				selectedTab = tab.data('id'),
+				selectedTabId = tab.data('tab_id'),
+				selectedSubTab = args.parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"]').hasClass('active')
+					? args.parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"] a.active').data('id')
+					: self.appFlags.portListing.defaultType,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 							name: 'listing',
@@ -157,11 +162,7 @@ define(function(require) {
 							submodule: 'portListing'
 						}));
 
-					monster.ui.footable(templateList.find('#ports_listing'), {
-						filtering: {
-							enabled: false
-						}
-					});
+					monster.ui.footable(templateList.find('#ports_listing'));
 
 					template
 						.find('#ports_listing_wrapper')
@@ -191,7 +192,7 @@ define(function(require) {
 		 */
 		portListingRenderDetail: function(args) {
 			var self = this,
-				container = self.portListingGet('container'),
+				container = args.container,
 				portRequestId = args.portRequestId,
 				initTemplate = function initTemplate(results) {
 					var template = $(self.getTemplate({
@@ -448,7 +449,8 @@ define(function(require) {
 							});
 						} else {
 							self.portListingRenderDetail({
-								portRequestId: portRequestId
+								portRequestId: portRequestId,
+								container: template
 							});
 						}
 					});
@@ -1076,16 +1078,12 @@ define(function(require) {
 		 */
 		portListingSetters: function(results) {
 			var self = this,
-				flattenResults = _.flatMap(results, function(requests) {
-					return _.flatMap(requests, function(payload) {
-						return _.map(payload, function(account) {
-							return {
-								id: account.account_id,
-								name: account.account_name,
-								requests: account.port_requests
-							};
-						});
-					});
+				flattenResults = _.map(results, function(account) {
+					return {
+						id: account.account_id,
+						name: account.account_name,
+						requests: account.port_requests
+					};
 				}),
 				portRequestsById = _.keyBy(_.flatMap(flattenResults, function(account) { return account.requests; }), 'id');
 
