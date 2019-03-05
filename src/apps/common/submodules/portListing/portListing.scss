@@ -517,11 +517,10 @@
 	&.danger {
 		.icon-wrapper {
 			border-color: $danger-color;
-			background-color: $danger-color;
 		}
 
 		.iconography {
-			color: #fff;
+			color: $danger-color;
 		}
 
 		.entry {

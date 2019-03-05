@@ -749,12 +749,20 @@
 				"sendPrivate": "Private"
 			},
 			"numbers": {
-				"singular": "Number",
-				"plural": "Numbers"
+				"singular": "{{variable}} Number",
+				"plural": "{{variable}} Numbers"
 			},
 			"textarea": {
 				"placeholder": "New Message..."
 			}
+		},
+		"tabs": {
+			"account": "Account",
+			"agent": "Agent",
+			"descendants": "Descendants",
+			"suspended": "Suspended",
+			"progressing": "Progressing",
+			"completed": "Completed"
 		}
 	},
 
