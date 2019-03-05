@@ -31,6 +31,7 @@ define(function(require) {
 					monster.ui.tooltips($template);
 
 					// TODO: Bind events. For UI-3319, clicking the topbar icon should clear the badge that shows the notification count.
+					self.alertsBindEvents({ template: $template });
 
 					return $template;
 				};
@@ -57,6 +58,20 @@ define(function(require) {
 				} else {
 					$topbarAlert.replaceWith($template);
 				}
+			});
+		},
+
+		/**
+		 * Bind template content events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Template to bind
+		 */
+		alertsBindEvents: function(args) {
+			var self = this,
+				$template = args.template;
+
+			$template.find('#main_topbar_alert_toggle_link').on('click', function() {
+				$(this).find('.topbar-badge').fadeOut(250);
 			});
 		},
 
