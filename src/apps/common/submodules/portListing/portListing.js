@@ -27,8 +27,7 @@ define(function(require) {
 					{ value: 'canceled', next: [] }
 				],
 				tabs: ['account', 'agent', 'descendants'],
-				subtabs: ['suspended', 'progressing', 'completed'],
-				defaultType: 'suspended'
+				subtabs: ['suspended', 'progressing', 'completed']
 			}
 		},
 
