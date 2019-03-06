@@ -145,11 +145,9 @@ define(function(require) {
 		 **************************************************/
 		portListingRenderListing: function(args) {
 			var self = this,
-				container = args.container,
-				parent = args.parent,
 				type = args.type,
-				tab = parent.find('nav.app-navbar a.active'),
-				selectedTab = tab.data('id'),
+				activeTab = args.parent.find('nav.app-navbar a.active').data('id'),
+				tab = self.portListingCheckProfile() ? activeTab : type,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 							name: 'listing',
@@ -163,7 +161,7 @@ define(function(require) {
 							data: {
 								isMonsterApp: self.portListingGet('isMonsterApp'),
 								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state'),
-								type: self.portListingCheckProfile() ? selectedTab : type
+								type: tab
 							},
 							submodule: 'portListing'
 						}));
@@ -182,10 +180,10 @@ define(function(require) {
 					return template;
 				};
 
-			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
+			monster.ui.insertTemplate(args.container, function(insertTemplateCallback) {
 				self.portListingHelperListPorts({
-					tab: selectedTab,
-					type: self.portListingCheckProfile() ? selectedTab : type,
+					tab: activeTab,
+					type: tab,
 					success: function(portRequests) {
 						insertTemplateCallback(initTemplate(portRequests));
 					}
