@@ -187,11 +187,14 @@ define(function(require) {
 
 					if (alert.clearable) {
 						alertType = 'manual';
+						alert.iconPath = monster.util.getAppIconPath('websockets');
 					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], category)) {
 						alertType = 'system';
 					} else {
 						alertType = category;
+						alert.iconPath = monster.util.getAppIconPath(category);
 					}
+					console.log(_.merge({}, { alertType: alertType }, alert));
 
 					return alertType;
 				}).map(function(alerts, type) {

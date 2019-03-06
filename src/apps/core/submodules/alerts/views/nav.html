@@ -12,17 +12,17 @@
 			</div>
 			{{#each alerts}}
 				<div class="alert-toggle-item">
+					<div class="icon" {{#if icon}}style="background-image:url({{iconPath}})"{{/if}}></div>
 					<h1>{{title}}</h1>
+				{{#if metadata}}
 					<h2>
-						{{#if metadata}}
-							{{#each metadata}}
-								{{ tryI18n @root.i18n.alerts.alertToggle.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
-							{{/each}}
-						{{else}}
-							&nbsp;
-						{{/if}}
+						{{#each metadata}}
+							{{ tryI18n @root.i18n.alerts.alertToggle.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
+						{{/each}}
 					</h2>
+				{{/if}}
 					<p>{{message}}</p>
+					<div class="clearfix"></div>
 				</div>
 			{{/each}}
 		{{/each}}
