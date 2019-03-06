@@ -7,27 +7,29 @@
 	</a>
 	<div id="main_topbar_alert_toggle_container" class="topbar-toggle-container">
 		{{#each alertGroups}}
-			<div class="alert-toggle-header">
-				{{ tryI18n @root.i18n.alerts.alertToggle.alertTypes type }}
-			</div>
-			{{#each alerts}}
-				<div class="alert-toggle-item">
-					<div class="icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
-					<h1>{{title}}</h1>
-				{{#if metadata}}
-					<h2>
-						{{#each metadata}}
-							{{ tryI18n @root.i18n.alerts.alertToggle.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
-						{{/each}}
-					</h2>
-				{{/if}}
-					<p>{{message}}</p>
-				{{#if clearable}}
-					<button class="button-clear">{{@root.i18n.alerts.alertToggle.clearButton}}</button>
-				{{/if}}
-					<div class="clearfix"></div>
+			<div class="alert-toggle-group">
+				<div class="alert-toggle-header">
+					{{ tryI18n @root.i18n.alerts.alertToggle.alertTypes type }}
 				</div>
-			{{/each}}
+				{{#each alerts}}
+					<div class="alert-toggle-item">
+						<div class="icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
+						<h1>{{title}}</h1>
+					{{#if metadata}}
+						<h2>
+							{{#each metadata}}
+								{{ tryI18n @root.i18n.alerts.alertToggle.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
+							{{/each}}
+						</h2>
+					{{/if}}
+						<p>{{message}}</p>
+					{{#if clearable}}
+						<button class="button-clear">{{@root.i18n.alerts.alertToggle.clearButton}}</button>
+					{{/if}}
+						<div class="clearfix"></div>
+					</div>
+				{{/each}}
+			</div>
 		{{/each}}
 	</div>
 </li>
