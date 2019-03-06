@@ -6,21 +6,23 @@
 		{{/if}}
 	</a>
 	<div id="main_topbar_alert_toggle_container" class="topbar-toggle-container">
-		{{#each alerts}}
+		{{#each alertGroups}}
 			<div class="alert-toggle-header">
-				{{ tryI18n ../i18n.alerts.alertToggle.alertTypes type }}
+				{{ tryI18n @root.i18n.alerts.alertToggle.alertTypes type }}
 			</div>
 			{{#each alerts}}
 				<div class="alert-toggle-item">
 					<h1>{{title}}</h1>
 					<h2>
 						{{#if metadata}}
-							Metadata goes here!
+							{{#each metadata}}
+								{{ tryI18n @root.i18n.alerts.alertToggle.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
+							{{/each}}
 						{{else}}
 							&nbsp;
 						{{/if}}
 					</h2>
-					{{debug}}
+					<p>{{message}}</p>
 				</div>
 			{{/each}}
 		{{/each}}

@@ -1023,6 +1023,9 @@
 				"manual": "Manual",
 				"system": "System",
 				"port": "Porting"
+			},
+			"metadata": {
+				"current_balance": "Current balance"
 			}
 		}
 	}
