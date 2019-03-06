@@ -1,29 +1,29 @@
 @import "../../../../css/partials/base";
 
 #main_topbar_alert_toggle_container {
+	width: 440px;
 	margin-top: 8px;
 	margin-left:-356px;
-	width: 440px;
 
 	&::before {
-		width: 1px;
-		float: right;
 		display: block;
-		content: '';
+		float: right;
+		width: 1px;
+		margin-top: -5px;
+		margin-right: 50px;
 		border-left: 5px solid transparent;
 		border-right: 5px solid transparent;
 		border-bottom: 5px solid $woodsmoke;
-		margin-top: -5px;
-		margin-right: 50px;
+		content: '';
 	}
 
 	.alert-toggle-header {
-		background-color: $woodsmoke;
+		padding: 4px 16px;
 		color: $manatee;
-		padding: 4px 16px 4px 16px;
+		background-color: $woodsmoke;
 		font-size: 12px;
-		letter-spacing: 0.4px;
 		font-weight: 600;
+		letter-spacing: 0.4px;
 		text-transform: uppercase;
 
 		&:first-child {
@@ -32,65 +32,61 @@
 	}
 
 	.alert-toggle-item {
+		padding: 12px 16px;
 		background: $shark2;
 		box-shadow: inset 0 -1px 0 0 $woodsmoke,
 		inset 0 1px 0 0 $woodsmoke;
-		padding: 12px 16px;
-		color: $white;
 
 		&:last-child {
 			border-radius: 0 0 2px 2px;
 		}
 
+		* {
+			margin-left: 48px;
+			margin-right: 0;
+			margin-bottom: 0;
+			color: $white;
+			font-size: 12px;
+			font-weight: normal;
+			line-height: 12px;
+		}
+
 		.icon {
-			margin-top: 2px;
+			float: left;
 			width: 32px;
 			height: 32px;
-			float: left;
+			margin-top: 2px;
+			margin-left: 0px;
 			background: url('/css/assets/defaultAppIcon.png') no-repeat center;
 			background-size: contain;
 		}
 
 		h1 {
+			margin-top: 0;
 			font-size: 14px;
 			font-weight: 600;
 			line-height: 18px;
-			margin: 0 0 0 48px;
-			color: $white;
 		}
 
 		h2, p {
-			font-size: 12px;
-			font-weight: normal;
 			letter-spacing: 0;
-			line-height: 12px;
-			margin-left: 48px;
 		}
 
 		h2 {
-			color: $french-gray2;
-			margin-bottom: 0;
 			margin-top: 4px;
-			margin-right: 0;
+			color: $french-gray2;
 		}
 
 		p {
-			margin-bottom: 0;
 			margin-top: 12px;
-			margin-right: 0;
 		}
 
 		.button-clear {
-			color: $white;
-			padding: 8px 12px;
-			font-size: 12px;
-			font-weight: normal;
-			line-height: 12px;
-			background-color: $midgray2;
-			border-radius: 2px;
-			border:none;
 			margin-top: 12px;
-			margin-left: 48px;
+			padding: 8px 12px;
+			background-color: $midgray2;
+			border:none;
+			border-radius: 2px;
 		}
 	}
 }
