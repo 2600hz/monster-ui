@@ -20,7 +20,9 @@ define(function(require) {
 							i18nKey: 'current_balance',
 							valueType: 'price'
 						}
-					},
+					}
+					/*
+					// Format data can also be defined per category
 					categories: {
 						low_balance: {
 							available: {
@@ -29,6 +31,7 @@ define(function(require) {
 							}
 						}
 					}
+					*/
 				}
 			}
 		},
@@ -177,22 +180,24 @@ define(function(require) {
 					return {
 						title: alertData.title,
 						metadata: metadata,
-						message: alert.message,
+						message: alertData.message,
 						category: category
 					};
 				})
 				.groupBy(function(alert) {
-					var alertType,
-						category = alert.category;
+					var category = alert.category,
+						alertType,
+						dashIndex;
 
 					if (alert.clearable) {
 						alertType = 'manual';
-						alert.iconPath = monster.util.getAppIconPath('websockets');
+						alert.iconPath = monster.util.getAppIconPath({ name: 'websockets' });
 					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], category)) {
 						alertType = 'system';
 					} else {
-						alertType = category;
-						alert.iconPath = monster.util.getAppIconPath(category);
+						dashIndex = category.indexOf('_');
+						alertType = category.substring(0, dashIndex > 0 ? dashIndex : category.length);
+						alert.iconPath = monster.util.getAppIconPath({ name: alertType });
 					}
 					console.log(_.merge({}, { alertType: alertType }, alert));
 
