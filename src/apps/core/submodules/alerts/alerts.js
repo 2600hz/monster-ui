@@ -7,6 +7,33 @@ define(function(require) {
 		// Defines API requests not included in the SDK
 		requests: {},
 
+		// Define the events available for other apps
+		subscribe: {
+			'core.alerts.refresh': 'alertsRender'
+		},
+
+		/**
+		 * Trigger the alerts pulling process from API.
+		 */
+		alertsRender: function() {
+			var self = this;
+
+			monster.waterfall([
+				function(callback) {
+					self.alertsRequestListAlerts({
+						success: function(data) {
+							callback(null, data);
+						},
+						error: function(parsedError) {
+							callback(parsedError);
+						}
+					});
+				}
+			], function(err, data) {
+				// TODO: Alerts pulled
+			});
+		},
+
 		/**
 		 * Formats the alert data received from the API, into UI categories
 		 * @param    {Object}   args
