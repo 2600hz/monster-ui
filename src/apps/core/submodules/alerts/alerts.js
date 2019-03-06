@@ -96,7 +96,7 @@ define(function(require) {
 				}
 
 				return alertType;
-			}).value();
+			});
 		},
 
 		/**
