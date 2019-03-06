@@ -1025,9 +1025,11 @@
 				"provisioner": "Advanced Provisioner",
 				"port": "Porting"
 			},
+			"clearButton": "Clear",
 			"metadata": {
 				"current_balance": "Current balance"
-			}
+			},
+			"toggleTooltip": "Notifications"
 		}
 	}
 }

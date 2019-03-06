@@ -181,7 +181,8 @@ define(function(require) {
 						title: alertData.title,
 						metadata: metadata,
 						message: alertData.message,
-						category: category
+						category: category,
+						clearable: alertData.clearable
 					};
 				})
 				.groupBy(function(alert) {
@@ -199,7 +200,6 @@ define(function(require) {
 						alertType = category.substring(0, dashIndex > 0 ? dashIndex : category.length);
 						alert.iconPath = monster.util.getAppIconPath({ name: alertType });
 					}
-					console.log(_.merge({}, { alertType: alertType }, alert));
 
 					return alertType;
 				}).map(function(alerts, type) {

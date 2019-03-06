@@ -22,6 +22,9 @@
 					</h2>
 				{{/if}}
 					<p>{{message}}</p>
+				{{#if clearable}}
+					<button class="button-clear">{{@root.i18n.alerts.alertToggle.clearButton}}</button>
+				{{/if}}
 					<div class="clearfix"></div>
 				</div>
 			{{/each}}
