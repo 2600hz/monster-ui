@@ -89,7 +89,9 @@ define(function(require) {
 					return {
 						text: self.i18n.active().portListing.tabs[tab],
 						id: tab,
-						callback: self.portListingRenderListing
+						callback: function(args) {
+							self.portListingRenderListing(_.merge(args, { type: tab }));
+						}
 					};
 				}),
 				tabs = _.map(self.appFlags.portListing.tabs, function(tab) {
@@ -146,12 +148,9 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				parent = args.parent,
+				type = args.type,
 				tab = parent.find('nav.app-navbar a.active'),
 				selectedTab = tab.data('id'),
-				selectedTabId = tab.data('tab_id'),
-				selectedSubTab = parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"]').hasClass('active')
-					? parent.find('nav.app-subnav[data-tab_id="' + selectedTabId + '"] a.active').data('id')
-					: self.appFlags.portListing.defaultType,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 							name: 'listing',
@@ -165,7 +164,7 @@ define(function(require) {
 							data: {
 								isMonsterApp: self.portListingGet('isMonsterApp'),
 								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state'),
-								type: self.portListingCheckProfile() ? selectedTab : selectedSubTab
+								type: self.portListingCheckProfile() ? selectedTab : type
 							},
 							submodule: 'portListing'
 						}));
@@ -187,12 +186,14 @@ define(function(require) {
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
 				self.portListingHelperListPorts({
 					tab: selectedTab,
-					type: self.portListingCheckProfile() ? selectedTab : selectedSubTab,
+					type: self.portListingCheckProfile() ? selectedTab : type,
 					success: function(portRequests) {
 						insertTemplateCallback(initTemplate(portRequests));
 					}
 				});
 			});
+
+			self.portListingSet('type', type);
 		},
 
 		/**
@@ -498,7 +499,8 @@ define(function(require) {
 
 						self.portListingRenderListing({
 							parent: self.portListingGet('parent'),
-							container: self.portListingGet('container')
+							container: self.portListingGet('container'),
+							type: self.portListingGet('type')
 						});
 					});
 
