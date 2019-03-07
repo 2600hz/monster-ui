@@ -71,7 +71,12 @@ define(function(require) {
 				$template = args.template;
 
 			$template.find('#main_topbar_alert_toggle_link').on('click', function() {
-				$(this).find('.topbar-badge').fadeOut(250);
+				$(this).find('.badge').fadeOut({
+					duration: 250,
+					complete: function() {
+						$(this).remove();
+					}
+				});
 			});
 		},
 
