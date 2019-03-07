@@ -375,6 +375,8 @@ define(function(require) {
 					except: module
 				});
 			}
+
+			monster.pub('core.alerts.refresh');
 		},
 
 		bindEvents: function(container) {
