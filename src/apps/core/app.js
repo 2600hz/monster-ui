@@ -303,6 +303,11 @@ define(function(require) {
 				}, params));
 			});
 
+			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
+			$('.core-wrapper').on('click', '#monster_content', function() {
+				$('#main_topbar_nav>.open').removeClass('open');
+			});
+
 			// Different functionality depending on whether default apploader or dropdown apploader to be opened
 			var eventType = monster.config.whitelabel.useDropdownApploader ? 'mouseover' : 'click';
 			container.find('#main_topbar_apploader_link').on(eventType, function(e) {
@@ -313,15 +318,6 @@ define(function(require) {
 			container.find('#main_topbar_account_toggle_link').on('click', function(e) {
 				e.preventDefault();
 				self.toggleAccountToggle();
-			});
-
-			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
-			$('.core-wrapper').on('click', '#monster_content', function() {
-				var $accountToggle = $('#main_topbar_account_toggle');
-
-				if ($accountToggle.hasClass('open')) {
-					$accountToggle.removeClass('open');
-				}
 			});
 
 			container.find('#main_topbar_account_toggle').on('click', '.home-account-link', function() {
