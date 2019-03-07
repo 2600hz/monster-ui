@@ -38,7 +38,14 @@ body,
 
 .core-topbar {
 	height: 62px;
+
+	.open .links {
+		i, svg {
+			color: $primary-color;
+		}
+	}
 }
+
 .core-topbar .main-links {
 	height: inherit;
 }
@@ -50,16 +57,26 @@ body,
 .core-topbar .links {
 	line-height: 62px;
 	display: inline-block;
-	color: #c0c0c9;
-}
-.core-topbar .links:hover,
-.core-topbar .links:focus {
-	cursor: pointer;
-	background: transparent;
-}
-.core-topbar .links i {
-	vertical-align: middle;
-	color: #c0c0c9;
+	color: $french-gray;
+
+	&:hover, &:focus {
+		cursor: pointer;
+		background: transparent;
+	}
+
+	i {
+		font-size: 16px;
+		vertical-align: middle;
+	}
+
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	i, svg {
+		color: $french-gray;
+	}
 }
 .core-topbar .links .inline-text {
 	display: inline-block;
@@ -80,10 +97,9 @@ body,
 	padding: 0 20px;
 	position: relative;
 
-	.topbar-badge {
+	.badge {
 		// Colors
-		background-color: $danger-color;
-		color: $badge-foreground-color;
+		color: $woodsmoke;
 
 		// Text
 		font-size: 12px;
@@ -93,6 +109,7 @@ body,
 
 		// Shape
 		border-radius: 10px;
+		box-shadow: -1px 1px 0 0 $shark2;
 
 		// Size
 		height: 20px;
@@ -101,8 +118,12 @@ body,
 		// Position
 		padding: 0px 6px;
 		position: absolute;
-		right: 6px;
+		right: 5px;
 		top: 14px;
+
+		&.danger {
+			background-color: $danger-color;
+		}
 	}
 }
 .core-topbar .nav > li {
@@ -156,6 +177,7 @@ body,
 }
 .core-topbar .links:hover,
 .core-topbar .links:hover i,
+.core-topbar .links:hover svg,
 .core-topbar #main_topbar_current_app_name:hover,
 .core-topbar #main_topbar_myaccount_masquerade_label {
 	color: $primary-color;
@@ -210,9 +232,6 @@ body,
 
 .core-topbar #main_topbar_account_toggle.open {
 	background-color: #202029;
-}
-.core-topbar #main_topbar_account_toggle.open #main_topbar_account_toggle_link i {
-	color: $primary-color;
 }
 .core-topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
 	display: none;
