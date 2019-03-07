@@ -12,7 +12,7 @@
 					{{ tryI18n @root.i18n.alerts.alertToggle.alertTypes type }}
 				</div>
 				{{#each alerts}}
-					<div class="alert-toggle-item">
+					<div class="alert-toggle-item" data-alert_id="{{id}}">
 						<div class="icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
 						<h1>{{title}}</h1>
 					{{#if metadata}}

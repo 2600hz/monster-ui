@@ -59,7 +59,10 @@ define(function(require) {
 
 					monster.ui.tooltips($template);
 
-					self.alertsBindEvents({ template: $template });
+					self.alertsBindEvents({
+						template: $template,
+						alerts: alertGroups
+					});
 
 					return $template;
 				},
@@ -104,12 +107,14 @@ define(function(require) {
 
 		/**
 		 * Bind template content events
-		 * @param  {Object} args
-		 * @param  {jQuery} args.template  Template to bind
+		 * @param  {Object}   args
+		 * @param  {jQuery}   args.template  Template to bind
+		 * @param  {Object[]} args.alerts    Alerts
 		 */
 		alertsBindEvents: function(args) {
 			var self = this,
-				$template = args.template;
+				$template = args.template,
+				alerts = args.alerts;
 
 			$template.find('#main_topbar_alert_link').on('click', function(e) {
 				e.preventDefault();
@@ -126,10 +131,13 @@ define(function(require) {
 			$template.find('#main_topbar_alert_toggle_container .alert-toggle-item .button-clear').on('click', function(e) {
 				e.preventDefault();
 
-				var $item = $(this).closest('.alert-toggle-item'),
-					hasSiblings = $item.siblings('.alert-toggle-item').length > 0,
-					$alertGroup = $item.parent(),
-					$elementToRemove = hasSiblings ? $item : $alertGroup;
+				var $alertItem = $(this).closest('.alert-toggle-item'),
+					alertId = $alertItem.data('alert_id'),
+					hasSiblings = $alertItem.siblings('.alert-toggle-item').length > 0,
+					$alertGroup = $alertItem.parent(),
+					$elementToRemove = hasSiblings ? $alertItem : $alertGroup;
+
+				_.remove(alerts, { id: alertId });
 
 				$elementToRemove.slideUp({
 					duration: 200,
@@ -194,6 +202,7 @@ define(function(require) {
 							}, []);
 
 					return {
+						id: alertData.id,
 						title: alertData.title,
 						metadata: metadata,
 						message: alertData.message,
