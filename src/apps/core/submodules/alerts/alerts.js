@@ -9,6 +9,7 @@ define(function(require) {
 
 		// Define the events available for other apps
 		subscribe: {
+			'core.alerts.hideDropdown': 'alertsHideDropdown',
 			'core.alerts.refresh': 'alertsRender'
 		},
 
@@ -32,7 +33,8 @@ define(function(require) {
 						}
 					}
 					*/
-				}
+				},
+				template: null
 			}
 		},
 
@@ -57,12 +59,11 @@ define(function(require) {
 							submodule: 'alerts'
 						}));
 
+					self.appFlags.alerts.template = $template;
+
 					monster.ui.tooltips($template);
 
-					self.alertsBindEvents({
-						template: $template,
-						alerts: alertGroups
-					});
+					self.alertsBindEvents();
 
 					return $template;
 				},
@@ -78,14 +79,8 @@ define(function(require) {
 					}
 				};
 
-			monster.waterfall([
-				function(callback) {
-					// Display notifications topbar element without alerts
-					renderTemplate();
-					callback(null);
-				},
-				function(callback) {
-					// Get alerts from API
+			monster.parallel({
+				alerts: function(callback) {
 					self.alertsRequestListAlerts({
 						success: function(data) {
 							callback(null, data);
@@ -94,29 +89,48 @@ define(function(require) {
 							callback(parsedError);
 						}
 					});
-				}
-			], function(err, alerts) {
+				},
+				render: function(callback) {
+					if (self.appFlags.alerts.template) {
+						self.alertsHideDropdown();
+					}
+
+					// Display notifications topbar element without alerts
+					renderTemplate();
+					callback(null, true);
+				},
+			}, function(err, results) {
 				if (err) {
 					return;
 				}
 
 				// If there is no error, re-render topbar element with alerts
-				renderTemplate(alerts);
+				renderTemplate(results.alerts);
 			});
 		},
 
 		/**
-		 * Bind template content events
-		 * @param  {Object}   args
-		 * @param  {jQuery}   args.template  Template to bind
-		 * @param  {Object[]} args.alerts    Alerts
+		 * Hide notifications dropdown from the DOM
 		 */
-		alertsBindEvents: function(args) {
+		alertsHideDropdown: function() {
 			var self = this,
-				$template = args.template,
-				alerts = args.alerts;
+				$template = self.appFlags.alerts.template;
 
-			$template.find('#main_topbar_alert_link').on('click', function(e) {
+			if (!$template) {
+				throw new ReferenceError('The notifications template has not been loaded yet.');
+			}
+
+			$template.removeClass('open');
+		},
+
+		/**
+		 * Bind template content events
+		 */
+		alertsBindEvents: function() {
+			var self = this,
+				$template = self.appFlags.alerts.template;
+
+			self.appFlags.alerts.template.find('#main_topbar_alert_link').on('click', function(e) {
 				e.preventDefault();
 
 				var $this = $(this);
@@ -132,12 +146,9 @@ define(function(require) {
 				e.preventDefault();
 
 				var $alertItem = $(this).closest('.alert-toggle-item'),
-					alertId = $alertItem.data('alert_id'),
 					hasSiblings = $alertItem.siblings('.alert-toggle-item').length > 0,
 					$alertGroup = $alertItem.parent(),
 					$elementToRemove = hasSiblings ? $alertItem : $alertGroup;
-
-				_.remove(alerts, { id: alertId });
 
 				$elementToRemove.slideUp({
 					duration: 200,
@@ -149,7 +160,7 @@ define(function(require) {
 		},
 
 		/**
-		 * Formats the alert data received from the API, into UI categories
+		 * Formats the alert data received from the API, into UI category groups
 		 * @param    {Object}   args
 		 * @param    {Object[]} args.data  Array of alerts
 		 * @returns  {Object}              Grouped alerts by UI categories
