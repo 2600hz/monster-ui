@@ -35,7 +35,8 @@ define(function(require) {
 			'core.initializeShortcuts': 'initializeShortcuts',
 			'socket.connected': 'refreshIfWebSocketsApp',
 			'socket.disconnected': 'onSocketDisconnected',
-			'core.showWarningDisconnectedSockets': 'showWarningSockets'
+			'core.showWarningDisconnectedSockets': 'showWarningSockets',
+			'core.hideTopbarDropdowns': 'hideTopbarDropdowns'
 		},
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
@@ -305,7 +306,12 @@ define(function(require) {
 
 			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
 			$('.core-wrapper').on('click', '#monster_content', function() {
-				$('#main_topbar_nav>.open').removeClass('open');
+				self.hideTopbarDropdowns();
+			});
+
+			// Hide dropdowns on click of any topbar link click
+			container.find('.core-topbar .links').on('click', function() {
+				self.hideTopbarDropdowns({ except: $(this).attr('id') });
 			});
 
 			// Different functionality depending on whether default apploader or dropdown apploader to be opened
@@ -930,6 +936,22 @@ define(function(require) {
 
 			if (args.hasOwnProperty('callback')) {
 				args.callback && args.callback();
+			}
+		},
+
+		/**
+		 * Hide topbar dropdowns
+		 * @param  {Object} [args]
+		 * @param  {String} [args.except]  ID of any element that does not want to be hidden
+		 */
+		hideTopbarDropdowns: function(args) {
+			var except = _.get(args, 'except');
+
+			if (except !== 'main_topbar_account_toggle') {
+				$('#main_topbar_account_toggle').removeClass('open');
+			}
+			if (except !== 'main_topbar_alert') {
+				monster.pub('core.alerts.hideDropdown');
 			}
 		}
 	};

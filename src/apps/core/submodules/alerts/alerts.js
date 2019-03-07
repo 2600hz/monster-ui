@@ -133,13 +133,20 @@ define(function(require) {
 			self.appFlags.alerts.template.find('#main_topbar_alert_link').on('click', function(e) {
 				e.preventDefault();
 
-				var $this = $(this);
+				var $this = $(this),
+					$parent = $this.parent();
 
-				$this.parent().toggleClass('open');
 				$this.find('.badge')
 					.fadeOut(250, function() {
 						$(this).remove();
 					});
+
+				if ($parent.hasClass('open')) {
+					self.alertsHideDropdown();
+				} else {
+					monster.pub('core.hideTopbarDropdowns', { except: 'main_topbar_alert' });
+					$parent.addClass('open');
+				}
 			});
 
 			$template.find('#main_topbar_alert_toggle_container .alert-toggle-item .button-clear').on('click', function(e) {
