@@ -130,7 +130,7 @@ define(function(require) {
 			var self = this,
 				$template = self.appFlags.alerts.template;
 
-			self.appFlags.alerts.template.find('#main_topbar_alert_link').on('click', function(e) {
+			self.appFlags.alerts.template.find('#main_topbar_alerts_link').on('click', function(e) {
 				e.preventDefault();
 
 				var $this = $(this),
@@ -144,16 +144,16 @@ define(function(require) {
 				if ($parent.hasClass('open')) {
 					self.alertsHideDropdown();
 				} else {
-					monster.pub('core.hideTopbarDropdowns', { except: 'main_topbar_alert' });
+					monster.pub('core.hideTopbarDropdowns', { except: 'main_topbar_alerts' });
 					$parent.addClass('open');
 				}
 			});
 
-			$template.find('#main_topbar_alert_toggle_container .alert-toggle-item .button-clear').on('click', function(e) {
+			$template.find('#main_topbar_alerts_container .alert-item .button-clear').on('click', function(e) {
 				e.preventDefault();
 
-				var $alertItem = $(this).closest('.alert-toggle-item'),
-					hasSiblings = $alertItem.siblings('.alert-toggle-item').length > 0,
+				var $alertItem = $(this).closest('.alert-item'),
+					hasSiblings = $alertItem.siblings('.alert-item').length > 0,
 					$alertGroup = $alertItem.parent(),
 					$elementToRemove = hasSiblings ? $alertItem : $alertGroup;
 

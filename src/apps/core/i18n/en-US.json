@@ -1017,19 +1017,16 @@
 	},
 
 	"alerts": {
-		"topbarTooltip": "Notifications",
-		"alertToggle": {
-			"alertTypes": {
-				"manual": "Manual",
-				"system": "System",
-				"provisioner": "Advanced Provisioner",
-				"port": "Porting"
-			},
-			"clearButton": "Clear",
-			"metadata": {
-				"current_balance": "Current balance"
-			},
-			"toggleTooltip": "Notifications"
-		}
+		"alertTypes": {
+			"manual": "Manual",
+			"system": "System",
+			"provisioner": "Advanced Provisioner",
+			"port": "Porting"
+		},
+		"clearButton": "Clear",
+		"metadata": {
+			"current_balance": "Current balance"
+		},
+		"topbarTooltip": "Notifications"
 	}
 }
