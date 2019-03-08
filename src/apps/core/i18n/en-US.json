@@ -1024,9 +1024,9 @@
 			"port": "Porting"
 		},
 		"clearButton": "Clear",
+		"dropdownTitle": "Notifications",
 		"metadata": {
 			"current_balance": "Current balance"
-		},
-		"topbarTooltip": "Notifications"
+		}
 	}
 }
