@@ -16,6 +16,7 @@
 		margin-top: 8px;
 		margin-left:-356px;
 		background-color: $woodsmoke;
+		font-size: 14px;
 
 		&::before {
 			display: block;
@@ -36,12 +37,13 @@
 			box-shadow: 0 1px 0 0 $midgray2;
 			color: $french-gray2;
 			padding: 12px 16px;
-			font-size: 14px;
 			font-weight: 600;
 			line-height: 14px;
 		}
 
 		.dropdown-body {
+			color: $manatee;
+
 			.alert-group{
 				&:last-child .alert-item  {
 					border-radius: 0 0 2px 2px;
@@ -49,7 +51,6 @@
 
 				.alert-header {
 					padding: 4px 16px;
-					color: $manatee;
 					font-size: 12px;
 					font-weight: 600;
 					letter-spacing: 0.4px;
@@ -109,6 +110,21 @@
 						border:none;
 						border-radius: 2px;
 					}
+				}
+			}
+
+			.alert-group-empty {
+				display: none;
+				box-sizing: border-box;
+				height: 50px;
+				padding: 18px 16px;
+				background-color: $shark2;
+				border-radius: 0 0 2px 2px;
+				font-style: italic;
+				line-height: 14px;
+
+				&:first-child {
+					display: block;
 				}
 			}
 		}

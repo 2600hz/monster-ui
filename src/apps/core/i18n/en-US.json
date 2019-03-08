@@ -1027,6 +1027,7 @@
 		"dropdownTitle": "Notifications",
 		"metadata": {
 			"current_balance": "Current balance"
-		}
+		},
+		"noAlerts": "No new notifications"
 	}
 }
