@@ -306,8 +306,12 @@ define(function(require) {
 				}, params));
 			});
 
-			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
-			$('.core-wrapper').on('click', '#monster_content', function() {
+			// Hide dropdowns when clicking anywhere outside the topbar nav links
+			$(document).on('click', function(e) {
+				if ($(e.target).closest('#main_topbar_nav').length > 0) {
+					return;
+				}
+				e.stopPropagation();
 				self.hideTopbarDropdowns();
 			});
 
