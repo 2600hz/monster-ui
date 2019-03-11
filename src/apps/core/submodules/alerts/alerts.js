@@ -159,9 +159,9 @@ define(function(require) {
 				e.preventDefault();
 
 				var $alertItem = $(this).closest('.alert-item'),
-					hasSiblings = $alertItem.siblings('.alert-item').length > 0,
+					itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
 					$alertGroup = $alertItem.parent(),
-					$elementToRemove = hasSiblings ? $alertItem : $alertGroup;
+					$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
 
 				$elementToRemove.slideUp({
 					duration: 200,
@@ -169,6 +169,12 @@ define(function(require) {
 						$elementToRemove.remove();
 					}
 				});
+
+				if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
+					$alertGroup.siblings('.alert-group-empty').slideDown({
+						duration: 200
+					});
+				}
 			});
 
 			$(window).on('resize', function() {
@@ -199,10 +205,12 @@ define(function(require) {
 			}
 
 			return _.chain(data)
+				.filter(function(alert) {
+					return _.has(alert, 'category');
+				})
 				.map(function(alert) {
-					var alertData = _.get(alert, 'value', alert),
-						category = alertData.category,
-						metadata = _.reduce(alertData.metadata,
+					var category = alert.category,
+						metadata = _.reduce(alert.metadata,
 							function(metadataArray, value, key) {
 								var formatData = _.get(
 									metadataFormat.categories,
@@ -232,12 +240,12 @@ define(function(require) {
 							}, []);
 
 					return {
-						id: alertData.id,
-						title: alertData.title,
+						id: alert.id,
+						title: alert.title,
 						metadata: metadata,
-						message: alertData.message,
+						message: alert.message,
 						category: category,
-						clearable: Math.random() >= 0.5	//alertData.clearable
+						clearable: alert.clearable
 					};
 				})
 				.groupBy(function(alert) {
