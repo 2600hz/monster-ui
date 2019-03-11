@@ -50,12 +50,6 @@ body,
 		position: absolute;
 		z-index: 21; /* 1 more than myAccount */
 	}
-
-	.open .links {
-		i, svg {
-			color: $primary-color;
-		}
-	}
 }
 
 .core-topbar .main-links {
@@ -144,11 +138,11 @@ body,
 	text-decoration: none;
 
 	& > a {
-		border-left: 1px solid #202029;
+		border-left: 1px solid $shark;
 	}
 
 	&.open > a {
-		background-color: #202029;
+		background-color: $shark;
 	}
 }
 .core-topbar .links.cell {
@@ -257,7 +251,7 @@ body,
 }
 
 .core-topbar #main_topbar_account_toggle_container .account-browser-container {
-	background-color: #202029;
+	background-color: $shark;
 	width: 220px;
 	padding: 1px;
 	border-right: none;

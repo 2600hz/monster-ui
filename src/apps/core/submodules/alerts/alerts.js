@@ -39,14 +39,14 @@ define(function(require) {
 		},
 
 		/**
-		 * Trigger the alerts pulling process from API.
+		 * Trigger the alerts pulling process from API
 		 */
 		alertsRender: function() {
 			var self = this,
 				initTemplate = function initTemplate(alerts) {
 					var alertGroups = self.alertsFormatData({ data: alerts }),
 						alertCount = _.reduce(alertGroups, function(count, alertGroup) {
-							return count + alertGroup.length;
+							return count + alertGroup.alerts.length;
 						}, 0),
 						dataTemplate = {
 							showAlertCount: alertCount > 0,
@@ -73,7 +73,7 @@ define(function(require) {
 				},
 				renderTemplate = function renderTemplate(alerts) {
 					var $navLinks = $('#main_topbar_nav'),
-						$topbarAlert = $navLinks.find('#main_topbar_alert'),
+						$topbarAlert = $navLinks.find('#main_topbar_alerts'),
 						$template = initTemplate(alerts);
 
 					if ($topbarAlert.length === 0) {
@@ -121,22 +121,21 @@ define(function(require) {
 				$template = self.appFlags.alerts.template;
 
 			if (!$template) {
-				throw new ReferenceError('The notifications template has not been loaded yet.');
+				throw new ReferenceError('The notifications template has not been loaded.');
 			}
 
 			$template.removeClass('open');
 		},
 
 		/**
-		 * Bind template content events
+		 * Bind template events
 		 */
 		alertsBindEvents: function() {
 			var self = this,
 				$template = self.appFlags.alerts.template,
-				$alertsContainer = $template.find('#main_topbar_alerts_container'),
-				$dropdownBody = $alertsContainer.find('.dropdown-body');
+				$alertsContainer = $template.find('#main_topbar_alerts_container');
 
-			self.appFlags.alerts.template.find('#main_topbar_alerts_link').on('click', function(e) {
+			$template.find('#main_topbar_alerts_link').on('click', function(e) {
 				e.preventDefault();
 
 				var $this = $(this),
@@ -179,7 +178,7 @@ define(function(require) {
 
 			$(window).on('resize', function() {
 				self.alertsSetDropdownBodyMaxHeight({
-					dropdownBody: $dropdownBody
+					dropdownBody: $alertsContainer.find('.dropdown-body')
 				});
 			});
 		},
@@ -283,19 +282,21 @@ define(function(require) {
 		alertsSetDropdownBodyMaxHeight: function(args) {
 			var self = this,
 				$dropdownBody = args.dropdownBody,
-				estimatedMaxHeight = $(window).height() - 136;
+				maxHeight = $(window).height() - 136;	// To expand dropdown up until it reaches
+														// 24px (1.5rem) from viewport bottom
+														// (112px top + 24px bottom)
 
-			if (estimatedMaxHeight < 200) {
-				estimatedMaxHeight = 200;
+			if (maxHeight < 200) {
+				maxHeight = 200;
 			}
 
 			$dropdownBody.css({
-				maxHeight: estimatedMaxHeight + 'px'
+				maxHeight: maxHeight + 'px'
 			});
 		},
 
 		/**
-		 * Request alerts list from API
+		 * Request alerts list for current account to API
 		 * @param  {Object}   args
 		 * @param  {Function} [args.success]  Success callback
 		 * @param  {Function} [args.error]    Error callback

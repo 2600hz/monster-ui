@@ -315,7 +315,7 @@ define(function(require) {
 				self.hideTopbarDropdowns();
 			});
 
-			// Hide dropdowns on click of any topbar link click
+			// Hide dropdowns on click at any topbar link
 			container.find('.core-topbar .links').on('click', function() {
 				self.hideTopbarDropdowns({ except: $(this).attr('id') });
 			});
