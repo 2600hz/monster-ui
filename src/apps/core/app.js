@@ -164,6 +164,8 @@ define(function(require) {
 					label: self.i18n.active().controlCenter
 				};
 
+				myaccount.icon = monster.util.getAppIconPath(myaccount);
+
 				monster.ui.formatIconApp(myaccount);
 
 				if (currentApp.is(':empty')) {
