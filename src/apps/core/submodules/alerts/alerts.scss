@@ -43,6 +43,7 @@
 
 		.dropdown-body {
 			color: $manatee;
+			overflow-y: auto;
 
 			.alert-group{
 				&:last-child .alert-item  {

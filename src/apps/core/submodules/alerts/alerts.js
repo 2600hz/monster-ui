@@ -61,6 +61,10 @@ define(function(require) {
 
 					self.appFlags.alerts.template = $template;
 
+					self.alertsSetDropdownBodyMaxHeight({
+						dropdownBody: $template.find('.dropdown-body')
+					});
+
 					monster.ui.tooltips($template);
 
 					self.alertsBindEvents();
@@ -128,7 +132,9 @@ define(function(require) {
 		 */
 		alertsBindEvents: function() {
 			var self = this,
-				$template = self.appFlags.alerts.template;
+				$template = self.appFlags.alerts.template,
+				$alertsContainer = $template.find('#main_topbar_alerts_container'),
+				$dropdownBody = $alertsContainer.find('.dropdown-body');
 
 			self.appFlags.alerts.template.find('#main_topbar_alerts_link').on('click', function(e) {
 				e.preventDefault();
@@ -149,7 +155,7 @@ define(function(require) {
 				}
 			});
 
-			$template.find('#main_topbar_alerts_container .alert-item .button-clear').on('click', function(e) {
+			$alertsContainer.find('.alert-item .button-clear').on('click', function(e) {
 				e.preventDefault();
 
 				var $alertItem = $(this).closest('.alert-item'),
@@ -162,6 +168,12 @@ define(function(require) {
 					complete: function() {
 						$elementToRemove.remove();
 					}
+				});
+			});
+
+			$(window).on('resize', function() {
+				self.alertsSetDropdownBodyMaxHeight({
+					dropdownBody: $dropdownBody
 				});
 			});
 		},
@@ -253,6 +265,25 @@ define(function(require) {
 				}).sortBy(function(alertGroup) {
 					return _.get(sortOrder, alertGroup.type) + alertGroup.type;
 				}).value();
+		},
+
+		/**
+		 * Set max-height for dropdown body, based on viewport size
+		 * @param  {Object} args
+		 * @param  {jQuery} args.dropdownBody  JQuery object for dropdown body
+		 */
+		alertsSetDropdownBodyMaxHeight: function(args) {
+			var self = this,
+				$dropdownBody = args.dropdownBody,
+				estimatedMaxHeight = $(window).height() - 136;
+
+			if (estimatedMaxHeight < 200) {
+				estimatedMaxHeight = 200;
+			}
+
+			$dropdownBody.css({
+				maxHeight: estimatedMaxHeight + 'px'
+			});
 		},
 
 		/**
