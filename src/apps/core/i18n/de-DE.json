@@ -1,4 +1,7 @@
 {
+	"mediaUploadDisclosure": {
+		"text": "Das Hochladen von Audiodateien erfolgt in Ihrer eigenen Verantwortung! Bitte stellen Sie sicher, dass sie die notwendigen Rechte zur entsprechenden Nutzung besitzen!"
+	},
 	"poweredBy": "Powered by ",
 	"error": "Fehler",
 	"olderVersion": "Die Daten, die Sie zu aktualisieren versuchen, wurden anscheinend außerhalb dieser UI erstellt. Dennoch fortfahren?",
