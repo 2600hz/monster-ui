@@ -89,19 +89,23 @@ define(function(require) {
 		alertsFormatData: function(args) {
 			var self = this;
 
-			return _.groupBy(args.data, function(alert) {
-				var alertType;
+			return _.chain(args.data)
+				.filter(function(alert) {
+					return _.has(alert, 'category');
+				})
+				.groupBy(function(alert) {
+					var alertType;
 
-				if (alert.clearable) {
-					alertType = 'manual';
-				} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], alert.category)) {
-					alertType = 'system';
-				} else {
-					alertType = 'apps';
-				}
+					if (alert.clearable) {
+						alertType = 'manual';
+					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], alert.category)) {
+						alertType = 'system';
+					} else {
+						alertType = 'apps';
+					}
 
-				return alertType;
-			});
+					return alertType;
+				}).value();
 		},
 
 		/**
