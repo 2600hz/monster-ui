@@ -310,7 +310,7 @@
 	"__version": "v3.20_s0",
 	"refresh": "Aktualisieren",
 
-	"__comment": "UI-1177: In Hauptnummer besser „Zuweisung aufheben“ anstatt „Entfernen“ sagen",
+	"__comment": "UI-1177: In Hauptrufnummer besser „Zuweisung aufheben“ anstatt „Entfernen“ sagen",
 	"__version": "v3.20_s2",
 	"unassign": "Zuweisung aufheben",
 
@@ -520,7 +520,7 @@
 	"__version": "3.20",
 	"invalidCredentialsMessage": "Ihre Sitzung ist abgelaufen. Schließen Sie dieses Pop-up-Fenster, um zurück auf die Anmeldeseite zu gelangen.",
 
-	"__comment": "UI-901: Zusammenfassung über Löschung von Nummern hinzugefügt",
+	"__comment": "UI-901: Zusammenfassung über Löschung von Rufnummern hinzugefügt",
 	"__version": "3.20",
 	"monsterResults": {
 		"titles": {
@@ -697,8 +697,8 @@
 		"title": "Noch mehr Ergebnisse sind in der Datenbank verfügbar",
 		"help": "Diese Tabelle verwendet Daten aus einer Datenbank, in der Nachschlagevorgänge kostenintensiv sind. Die Daten, die von dieser Tabelle dargestellt werden, bilden nur eine kleine Teilmenge der verfügbaren Daten. Wenn Sie trotzdem mehr Daten haben möchten, klicken Sie auf „Mehr laden“. Oder klicken Sie auf „Alle laden“, wenn Sie sämtliche Daten abrufen möchten. Bei großen Datenbanken kann dieser Vorgang mehrere Minuten in Anspruch nehmen.",
 		"allDataLoaded": "Sie haben sämtliche Zeilen geladen, die für diese Tabelle zur Verfügung stehen. Daher sind Lade-Schaltflächen nun deaktiviert.",
-		"empty": "Keine Ergebnisse. Klicken Sie auf die oben gezeigten Lade-Schaltflächen, um die Suche auszuweiten.",
-		"emptyForSure": "Keine Ergebnisse.",
+		"empty": "keine Einträge. Klicken Sie auf die oben gezeigten Lade-Schaltflächen, um die Suche auszuweiten.",
+		"emptyForSure": "keine Einträge",
 		"entireDataSetLoaded": "Alle verfügbaren Daten wurden geladen."
 	},
 
