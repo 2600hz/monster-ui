@@ -36,10 +36,27 @@ define(function(require) {
 					self.alertsBindEvents({ template: $template });
 
 					return $template;
+				},
+				renderTemplate = function renderTemplate(alerts) {
+					var $navLinks = $('#main_topbar_nav'),
+						$topbarAlert = $navLinks.find('#main_topbar_alert'),
+						$template = initTemplate(alerts);
+
+					if ($topbarAlert.length === 0) {
+						$template.insertBefore($navLinks.find('#main_topbar_signout'));
+					} else {
+						$topbarAlert.replaceWith($template);
+					}
 				};
 
 			monster.waterfall([
 				function(callback) {
+					// Display notifications topbar element without alerts
+					renderTemplate();
+					callback(null);
+				},
+				function(callback) {
+					// Get alerts from API
 					self.alertsRequestListAlerts({
 						success: function(data) {
 							callback(null, data);
@@ -50,16 +67,12 @@ define(function(require) {
 					});
 				}
 			], function(err, alerts) {
-				var $navLinks = $('#main_topbar_nav'),
-					$topbarAlert = $navLinks.find('#main_topbar_alert'),
-					templateAlerts = err ? [] : alerts,
-					$template = initTemplate(templateAlerts);
-
-				if ($topbarAlert.length === 0) {
-					$template.insertBefore($navLinks.find('#main_topbar_signout'));
-				} else {
-					$topbarAlert.replaceWith($template);
+				if (err) {
+					return;
 				}
+
+				// If there is no error, re-render topbar element with alerts
+				renderTemplate(alerts);
 			});
 		},
 
