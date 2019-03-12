@@ -1,4 +1,7 @@
 {
+	"mediaUploadDisclosure": {
+		"text": "Uploading audio files is your own responsibility! Please make sure that you have the necessary rights to use it!"
+	},
 	"poweredBy": "Powered by ",
 	"error": "Error",
 	"olderVersion": "It appears that the data you're updating was created outside of this UI, would you like to proceed anyway?",
