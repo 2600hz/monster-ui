@@ -18,7 +18,10 @@ define(function(require) {
 		alertsRender: function() {
 			var self = this,
 				initTemplate = function initTemplate(alerts) {
-					var alertsCount = alerts.length,
+					var alertGroups = alerts ? self.alertsFormatData({ data: alerts }) : {},
+						alertsCount = _.reduce(alertGroups, function(count, alertGroup) {
+							return count + alertGroup.length;
+						}, 0),
 						dataTemplate = {
 							alertsCount: alertsCount === 0 ? null : alertsCount > 9 ? '9+' : alertsCount.toString()
 						},
