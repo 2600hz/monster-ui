@@ -455,34 +455,6 @@ define(function(require) {
 			}
 		},
 
-		/* Set the language to start the application.
-			By default will take the value from the cookie,
-			or if it doesn't exist, it will take the value from the config.js,
-			or if it's not set it will fall back to the language of the browser.
-			In last resort it will set it to 'en-US' if nothing is set above
-		*/
-		setDefaultLanguage: function() {
-			var languages = [
-					'de-DE',
-					'en-US',
-					'es-ES',
-					'fr-FR',
-					'nl-NL',
-					'ru-RU'
-				],
-				browserLanguage = _.find(languages, function(lang) {
-					return lang.indexOf(navigator.language) > -1;
-				}),
-				cookieLanguage = monster.cookies.has('monster-auth') ? monster.cookies.getJson('monster-auth').language : undefined,
-				defaultLanguage = browserLanguage || 'en-US';
-
-			monster.config.whitelabel.language = cookieLanguage || monster.config.whitelabel.language || defaultLanguage;
-
-			// Normalize the language to always be capitalized after the hyphen (ex: en-us -> en-US, fr-FR -> fr-FR)
-			// Will normalize bad input from the config.js or cookie data coming directly from the database
-			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/, function(a) { return a.toUpperCase(); });
-		},
-
 		checkVersion: function(obj, callback) {
 			var self = this,
 				i18n = monster.apps.core.i18n.active();
@@ -1032,51 +1004,46 @@ define(function(require) {
 	 * will have two digits.
 	 */
 	function formatPrice(args) {
-		var price = Number(args.price);
-		var digits = parseInt(args.digits);
-		var withCurrency = _.isBoolean(args.withCurrency)
-			? args.withCurrency
-			: true;
-		var digitsCount = digits >= 0
-			? digits
-			: 2;
-		var roundedPrice = Math.round(price * Math.pow(10, digitsCount)) / Math.pow(10, digitsCount);
-		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(digits) || digits < 0) ? 0 : digitsCount);
-		var addCurrency = function(value) {
-			var currencyCode = monster.config.hasOwnProperty('currencyCode')
-				? monster.config.currencyCode
-				: 'USD';
-			var codeData = monster.supportedCurrencyCodes[currencyCode];
-			var ret;
-			if (_.isUndefined(codeData)) {
-				throw new Error('Currency code ' + currencyCode + ' is not supported.');
-			} else {
-				if (codeData.position === 'ante') {
-					ret = codeData.symbol + fixedPrice;
-				} else if (codeData.position === 'post') {
-					ret = fixedPrice + ' ' + codeData.symbol;
-				}
-			}
-			return ret;
-		};
-		return withCurrency
-			? addCurrency(fixedPrice)
-			: fixedPrice;
+		if (
+			_.isNaN(args.price)
+			|| (!_.isNumber(args.price) && _.isNaN(_.toNumber(args.price)))
+		) {
+			throw new TypeError('"price" is not a valid number or not castable into a number');
+		}
+		if (
+			!_.isUndefined(args.digits)
+			&& (!_.isInteger(args.digits) || args.digits < 0)
+		) {
+			throw new TypeError('"digits" is not a positive integer');
+		}
+		if (!_.isUndefined(args.withCurrency) && !_.isBoolean(args.withCurrency)) {
+			throw new TypeError('"withCurrency" is not a boolean');
+		}
+		var price = _.toNumber(args.price);
+		var digits = _.get(args, 'digits', 2);
+		var withCurrency = _.get(args, 'withCurrency', true);
+		var roundedPrice = _.round(price, digits);
+
+		return roundedPrice.toLocaleString(monster.config.whitelabel.language, {
+			style: withCurrency ? 'currency' : 'decimal',
+			currency: monster.config.currencyCode,
+			minimumFractionDigits: _.isInteger(price) && !_.has(args, 'digits') ? 0 : digits
+		});
 	}
 
 	/**
-	 * Return the symbol of the currency used
+	 * Return the symbol of the currency used through the UI
 	 * @return {String} Symbol of currency
 	 */
 	function getCurrencySymbol() {
-		var currencyCode = monster.config.hasOwnProperty('currencyCode')
-			? monster.config.currencyCode
-			: 'USD';
-		var codeData = monster.supportedCurrencyCodes[currencyCode];
-		if (_.isUndefined(codeData)) {
-			throw new Error('Currency code ' + currencyCode + ' is not supported');
-		}
-		return codeData.symbol;
+		var base = NaN;
+
+		return base
+			.toLocaleString(monster.defaultLanguage, {
+				style: 'currency',
+				currency: monster.config.currencyCode
+			})
+			.replace('NaN', '');
 	}
 
 	/**

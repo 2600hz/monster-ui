@@ -103,6 +103,8 @@ require([
 	monster.initConfig();
 	monster.initSDK();
 
+	monster.setDefaultLanguage();
+
 	require([
 		'monster-apps',
 		'monster-routing',
@@ -132,8 +134,6 @@ require([
 		monster.ui = ui;
 		monster.util = util;
 		monster.webphone = webphone;
-
-		monster.util.setDefaultLanguage();
 
 		monster.loadBuildConfig(function() {
 			monster.apps.load('core', function(app) {
