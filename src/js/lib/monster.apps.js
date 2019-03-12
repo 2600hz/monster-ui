@@ -328,9 +328,11 @@ define(function() {
 							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
 						}
 
-						if (params.hasOwnProperty('onChargesCancelled')) {
-							apiSettings.onChargesCancelled = params.onChargesCancelled;
-						}
+						_.merge(apiSettings,
+							_.pick(params, [
+								'onChargesCancelled',
+								'preventRequestEvents'
+							]));
 
 						return monster.kazooSdk[module][method](apiSettings);
 					}

@@ -555,10 +555,14 @@ define(function(require) {
 			self.kazooSdk = $.getKazooSdk({
 				apiRoot: monster.config.api.default,
 				onRequestStart: function(request, requestOptions) {
-					monster.pub('monster.requestStart');
+					if (!_.get(requestOptions, 'preventRequestEvents', false)) {
+						monster.pub('monster.requestStart');
+					}
 				},
 				onRequestEnd: function(request, requestOptions) {
-					monster.pub('monster.requestEnd');
+					if (!_.get(requestOptions, 'preventRequestEvents', false)) {
+						monster.pub('monster.requestEnd');
+					}
 				},
 				onRequestError: function(error, requestOptions) {
 					var parsedError = error,

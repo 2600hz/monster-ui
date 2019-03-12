@@ -122,6 +122,7 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'alert.list',
+				preventRequestEvents: true,
 				data: {
 					accountId: monster.apps.auth.currentAccount.id
 				},
