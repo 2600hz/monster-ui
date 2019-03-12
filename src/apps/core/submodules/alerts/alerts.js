@@ -33,7 +33,6 @@ define(function(require) {
 
 					monster.ui.tooltips($template);
 
-					// TODO: Bind events. For UI-3319, clicking the topbar icon should clear the badge that shows the notification count.
 					self.alertsBindEvents({ template: $template });
 
 					return $template;
