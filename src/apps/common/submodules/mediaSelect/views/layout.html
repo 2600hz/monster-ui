@@ -33,5 +33,13 @@
 		<input type="file" class="upload-input" accept="audio/*">
 		<button type="button" class="monster-button-success non-fixed upload-action upload-submit"><i class="fa fa-upload"></i></button>
 		<button type="button" class="monster-button-danger non-fixed upload-action upload-cancel"><i class="fa fa-times"></i></button>
+	{{#if showMediaUploadDisclosure}}
+		<div>
+			<br>
+			{{#monsterPanelText i18n.mediaUploadDisclosure.title "info" "fill-width"}}
+				{{i18n.mediaUploadDisclosure.text}}
+			{{/monsterPanelText}}
+		</div>
+	{{/if}}
 	</div>
 </div>
