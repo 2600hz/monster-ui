@@ -1156,14 +1156,10 @@ define(function(require) {
 		if (!_.isPlainObject(number)) {
 			throw new TypeError('"number" is not an object');
 		}
-		if (!_.has(number, 'features_available') && !_.has(number, '_read_only.features_available')) {
-			throw new Error('"number" does not represent a Kazoo phone number');
-		}
 		var numberFeatures = _.get(number, 'features_available', []);
-		if (_.isEmpty(numberFeatures)) {
-			numberFeatures = _.get(number, '_read_only.features_available', []);
-		}
-		return numberFeatures;
+		return _.isEmpty(numberFeatures)
+			? _.get(number, '_read_only.features_available', [])
+			: numberFeatures;
 	}
 
 	/**
