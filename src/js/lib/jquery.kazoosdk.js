@@ -126,6 +126,7 @@
 			dashboards: {
 				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
 				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getRecipientOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/recipient_overview' },
 				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
 			device: {
