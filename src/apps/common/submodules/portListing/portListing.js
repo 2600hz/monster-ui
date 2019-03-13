@@ -103,9 +103,25 @@ define(function(require) {
 					};
 				}),
 				parent,
-				container;
+				container,
+				modalParent;
+
+			if (!isMonsterApp) {
+				modalParent = _.has(args, 'parent.getId')
+					? args.parent
+					: monster.ui.fullScreenModal(null, {
+						inverseBg: true,
+						cssContentId: 'port_app_container'
+					});
+				parent = $('.core-absolute').find(
+						'#'
+						+ modalParent.getId()
+						+ ' .modal-content'
+					);
+			}
 
 			monster.ui.generateAppLayout(self, {
+				parent: parent,
 				menus: [
 					{
 						tabs: self.portListingCheckProfile() ? subTabs : tabs
@@ -117,16 +133,10 @@ define(function(require) {
 				parent = args.parent;
 				container = $('#common_app_container .app-content-wrapper');
 			} else {
-				parent = _.has(args, 'parent.getId')
-					? args.parent
-					: monster.ui.fullScreenModal(null, {
-						inverseBg: true,
-						cssContentId: 'port_app_container'
-					});
 				container = $('.core-absolute').find(
 					'#'
-					+ parent.getId()
-					+ ' .modal-content'
+					+ modalParent.getId()
+					+ ' .modal-content #common_app_container .app-content-wrapper'
 				);
 			}
 
@@ -147,7 +157,7 @@ define(function(require) {
 			var self = this,
 				type = args.type,
 				activeTab = args.parent.find('nav.app-navbar a.active').data('id'),
-				tab = self.portListingCheckProfile() ? activeTab : type,
+				tab = self.portListingCheckProfile() ? (activeTab || type) : type,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
 							name: 'listing',
@@ -190,8 +200,6 @@ define(function(require) {
 					}
 				});
 			});
-
-			self.portListingSet('type', type);
 		},
 
 		/**
