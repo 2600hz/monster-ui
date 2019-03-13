@@ -2057,7 +2057,7 @@ define(function(require) {
 			var self = this,
 				args = pArgs || {},
 				menus = thisArg.appFlags._layout.menus,
-				parent = $('#monster_content'),
+				parent = thisArg.appFlags._layout.parent || $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				appContent = parent.find('.app-content-wrapper'),
 				menuId = $tab.parents('.navbar-menu').data('menu_id'),
@@ -2220,7 +2220,7 @@ define(function(require) {
 		 */
 		generateAppNavbar: function(thisArg) {
 			var self = this,
-				parent = $('#monster_content'),
+				parent = thisArg.appFlags._layout.parent || $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				menus = thisArg.appFlags._layout.menus,
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
@@ -2282,7 +2282,7 @@ define(function(require) {
 		 */
 		generateAppLayout: function(thisArg, args) {
 			var self = this,
-				parent = $('#monster_content'),
+				parent = args.parent || $('#monster_content'),
 				tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
 				context = (function(args, tabs) {
 					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
