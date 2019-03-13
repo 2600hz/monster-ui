@@ -178,360 +178,374 @@
 /************************ DETAIL VIEW ***********************/
 /************************************************************/
 
-#common_app_container #port_detail_view {
-	display: flex;
-	width: 100%;
-	height: 100%;
-}
+.modal-content,
+#common_app_container {
+	#port_detail_view {
+		display: flex;
+		width: 100%;
+		height: 100%;
 
-/************************ INFO PANEL ************************/
+		.textarea-wrapper {
+			display: flex;
+			min-height: 34px;
+			margin-top: 50px;
+			padding: 20px;
+			border: 1px solid $panel-border-color;
+			border-radius: 2px;
+			background-color: $white;
 
-#common_app_container .info-panel {
-	display: flex;
-	width: 600px;
-}
+			textarea {
+				margin: 0;
+				margin-right: 25px;
+				resize: none;
+				border: 0;
+				background-color: transparent;
+				box-shadow: none;
 
-#common_app_container .info-panel > div {
-	padding: 20px;
-	border-right: 1px solid $panel-border-color;
-	background-color: $white;
-}
-
-#common_app_container .info-panel > div:not(:last-child) {
-	z-index: 1;
-	box-shadow: 1px 5px 5px 0 $background-off-color;
-}
-
-#common_app_container .info-panel .port-section {
-	overflow-y: auto;
-	max-width: 300px;
-
-	flex-grow: 10;
-}
-
-#common_app_container .info-panel .port-section > div:first-child a {
-	display: flex;
-
-	align-items: center;
-}
-
-#common_app_container .info-panel .port-section > div:first-child a,
-#common_app_container .info-panel .port-section > div:first-child a i {
-	color: $manatee;
-}
-
-#common_app_container .info-panel .port-section > div:first-child a:hover,
-#common_app_container .info-panel .port-section > div:first-child a:hover i {
-	color: $primary-color;
-}
-
-#common_app_container .info-panel .port-section > div:first-child .title {
-	font-size: 20px;
-	font-weight: 600;
-	margin-top: 15px;
-}
-
-#common_app_container .info-panel .port-section > div:not(:first-child) {
-	margin-top: 20px;
-	padding-top: 20px;
-	border-top: 1px solid $panel-border-color;
-}
-#common_app_container .info-panel .port-section .monster-form {
-	margin-bottom: 0;
-}
-
-#common_app_container .info-panel .port-section .monster-form .control-group {
-	margin-bottom: 0;
-}
-
-#common_app_container .info-panel .port-section .monster-form .control-label {
-	width: 140px;
-	text-align: left;
-}
-
-#common_app_container .info-panel .port-section .monster-form .controls {
-	font-weight: 600;
-	margin-left: 150px;
-}
-
-#common_app_container .info-panel .port-section .monster-form .controls .text {
-	display: inline-block;
-	margin-bottom: 5px;
-	padding-top: 5px;
-}
-
-#common_app_container .info-panel .port-section .admin-links {
-	margin-top: 20px;
-}
-
-#common_app_container .info-panel .port-section .admin-links a {
-	display: inline-block;
-	color: $primary-color;
-}
-
-#common_app_container .info-panel .port-section .admin-links a:not(:first-child) {
-	margin-top: 5px;
-}
-
-#common_app_container .info-panel .monster-statuses .node.in-progress .status {
-	position: relative;
-	color: $primary-color;
-}
-
-#common_app_container .info-panel .monster-statuses .node.in-progress .status .detail {
-	font-weight: normal;
-	position: absolute;
-	color: $manatee;
-}
-
-#common_app_container .info-panel .numbers-section {
-	display: flex;
-	flex-direction: column;
-}
-
-#common_app_container .info-panel .numbers-section .title {
-	font-weight: 600;
-}
-
-#common_app_container .info-panel .numbers-section .search-box {
-	position: relative;
-	margin-top: 10px;
-}
-
-#common_app_container .info-panel .numbers-section .search-box i {
-	position: absolute;
-	top: 50%;
-	margin: 0;
-	transform: translate(50%, -50%);
-	color: $manatee;
-}
-
-#common_app_container .info-panel .numbers-section .search-box input {
-	border-radius: 2px;
-	box-shadow: none;
-}
-
-#common_app_container .info-panel .numbers-section .numbers-listing {
-	overflow-y: auto;
-	margin: 20px 0 0 0;
-	list-style: none;
-}
-
-#common_app_container .info-panel .numbers-section .numbers-listing li {
-	display: flex;
-	flex-direction: row-reverse;
-	margin-top: 5px;
-}
-
-/********************** TIMELINE PANEL **********************/
-
-#common_app_container .timeline-panel-wrapper {
-	display: flex;
-	flex-direction: column;
-	width: calc(100% - 616px);
-	padding: 30px 20px;
-}
-
-#common_app_container .timeline-panel-wrapper.justify-content-start {
-	justify-content: flex-start;
-}
-
-#common_app_container .timeline-panel-wrapper.justify-content-end {
-	justify-content: flex-end;
-}
-
-#common_app_container .timeline-panel {
-	overflow-y: auto;
-	width: 100%;
-	padding-bottom: 1px;
-}
-
-#common_app_container .timeline-panel .timeline {
-	margin: 0;
-	list-style: none;
-}
-
-#common_app_container .timeline-panel .day {
-	position: relative;
-	margin-top: 50px;
-	padding-top: 50px;
-	border-top: 1px solid $panel-border-color;
-}
-
-#common_app_container .timeline-panel .day:first-child {
-	margin-top: 20px;
-}
-
-#common_app_container .timeline-panel .date {
-	font-weight: 600;
-	position: absolute;
-	top: -16px;
-	left: 50%;
-	padding: 5px 10px;
-	transform: translate(-50%, 0);
-	color: $manatee;
-	border: 1px solid $panel-border-color;
-	border-radius: 2px;
-	background-color: $background-primary-color;
-	box-shadow: 0 0 10px 0 $mischka;
-}
-
-#common_app_container .timeline-panel .entries {
-	margin: 0;
-	list-style: none;
-}
-
-#common_app_container .timeline-panel .icon-wrapper {
-	position: relative;
-	display: flex;
-	float: left;
-	width: 34px;
-	height: 34px;
-	border: 1px solid $panel-border-color;
-	border-radius: 50%;
-
-	align-items: center;
-	justify-content: center;
-}
-
-#common_app_container .timeline-panel .icon-wrapper .iconography {
-	color: $panel-border-color;
-}
-
-#common_app_container .timeline-panel .entry {
-	margin-left: 56px;
-	padding: 15px 20px;
-	border: 1px solid $panel-border-color;
-	border-radius: 2px;
-	background-color: $white;
-}
-
-#common_app_container .timeline-panel .entry .title {
-	font-weight: bold;
-}
-
-#common_app_container .timeline-panel .entry .time {
-	font-size: 13px;
-	color: $manatee;
-}
-
-#common_app_container .timeline-panel .entry .content {
-	margin-top: 10px;
-}
-
-#common_app_container .timeline-panel .entry .content button {
-	display: block;
-	margin-top: 15px;
-}
-
-#common_app_container #port_detail_view .textarea-wrapper {
-	display: flex;
-	min-height: 34px;
-	margin-top: 50px;
-	padding: 20px;
-	border: 1px solid $panel-border-color;
-	border-radius: 2px;
-	background-color: $white;
-}
-
-#common_app_container #port_detail_view .textarea-wrapper textarea {
-	margin: 0;
-	margin-right: 25px;
-	resize: none;
-	border: 0;
-	background-color: transparent;
-	box-shadow: none;
-
-	flex-grow: 100;
-}
-
-#common_app_container .timeline-panel .entry-wrapper {
-	&:not(:first-child) {
-		margin-top: 25px;
-	}
-
-	&.status {
-		.icon-wrapper {
-			border-color: $primary-color;
-			background-color: $primary-color;
-		}
-
-		.iconography {
-			color: #fff;
-		}
-
-		.entry .title {
-			color: $primary-color;
-		}
-	}
-
-	&.success {
-		.icon-wrapper {
-			border-color: $success-color;
-			background-color: $success-color;
-		}
-
-		.iconography {
-			color: #fff;
-		}
-
-		.entry {
-			border-color: $success-color;
-			.title {
-				color: $success-color;
+				flex-grow: 100;
 			}
 		}
 	}
 
-	&.warning {
-		.icon-wrapper {
-			border-color: #f0b400;
-			background-color: #f0b400;
+	/************************ INFO PANEL ************************/
+
+	.info-panel {
+		display: flex;
+		width: 600px;
+
+		.port-section {
+			overflow-y: auto;
+			max-width: 300px;
+
+			flex-grow: 10;
+
+			.monster-form {
+				margin-bottom: 0;
+
+				.control-group {
+					margin-bottom: 0;
+				}
+
+				.control-label {
+					width: 140px;
+					text-align: left;
+				}
+
+				.controls {
+					font-weight: 600;
+					margin-left: 150px;
+
+					.text {
+						display: inline-block;
+						margin-bottom: 5px;
+						padding-top: 5px;
+					}
+				}
+			}
+
+			.admin-links {
+				margin-top: 20px;
+
+				a {
+					display: inline-block;
+					color: $primary-color;
+
+					&:not(:first-child) {
+						margin-top: 5px;
+					}
+				}
+			}
 		}
 
-		.iconography {
-			color: #fff;
+		.port-section > div {
+			&:first-child {
+				a {
+					display: flex;
+					align-items: center;
+					color: $manatee;
+
+					i {
+						color: $manatee;
+					}
+
+					&:hover {
+						color: $primary-color;
+
+						i {
+							color: $primary-color;
+						}
+					}
+				}
+
+				.title {
+					font-size: 20px;
+					font-weight: 600;
+					margin-top: 15px;
+				}
+			}
+
+			&:not(:first-child) {
+				margin-top: 20px;
+				padding-top: 20px;
+				border-top: 1px solid $panel-border-color;
+			}
 		}
 
-		.entry {
-			border-color: #f0b400;
+		.monster-statuses .node {
+			&.in-progress {
+				.status {
+					position: relative;
+					color: $primary-color;
+
+					.detail {
+						font-weight: normal;
+						position: absolute;
+						color: $manatee;
+					}
+				}
+			}
+		}
+
+		.numbers-section {
+			display: flex;
+			flex-direction: column;
+
 			.title {
-				color: #f0b400;
+				font-weight: 600;
+			}
+
+			.search-box {
+				position: relative;
+				margin-top: 10px;
+
+				input {
+					border-radius: 2px;
+					box-shadow: none;
+				}
+
+				i {
+					position: absolute;
+					top: 50%;
+					margin: 0;
+					transform: translate(50%, -50%);
+					color: $manatee;
+				}
+			}
+
+			.numbers-listing {
+				overflow-y: auto;
+				margin: 20px 0 0 0;
+				list-style: none;
+
+				li {
+					display: flex;
+					flex-direction: row-reverse;
+					margin-top: 5px;
+				}
 			}
 		}
 	}
 
-	&.error {
-		.icon-wrapper {
-			border-color: $error-color;
-			background-color: $error-color;
-		}
+	.info-panel > div {
+		padding: 20px;
+		border-right: 1px solid $panel-border-color;
+		background-color: $white;
 
-		.iconography {
-			color: #fff;
-		}
-
-		.entry {
-			border-color: $error-color;
-			.title {
-				color: $error-color;
-			}
+		&:not(:last-child) {
+			z-index: 1;
+			box-shadow: 1px 5px 5px 0 $background-off-color;
 		}
 	}
 
-	&.danger {
-		.icon-wrapper {
-			border-color: $danger-color;
+	/********************** TIMELINE PANEL **********************/
+
+	.timeline-panel-wrapper {
+		display: flex;
+		flex-direction: column;
+		width: calc(100% - 616px);
+		padding: 30px 20px;
+
+		&.justify-content-start {
+			justify-content: flex-start;
 		}
 
-		.iconography {
-			color: $danger-color;
+		&.justify-content-end {
+			justify-content: flex-end;
 		}
 
-		.entry {
-			border-color: $danger-color;
-			.title {
-				color: $danger-color;
+		.timeline-panel {
+			overflow-y: auto;
+			width: 100%;
+			padding-bottom: 1px;
+
+			.entry-wrapper {
+				&:not(:first-child) {
+					margin-top: 25px;
+				}
+
+				&.status {
+					.icon-wrapper {
+						border-color: $primary-color;
+						background-color: $primary-color;
+					}
+
+					.iconography {
+						color: #fff;
+					}
+
+					.entry .title {
+						color: $primary-color;
+					}
+				}
+
+				&.success {
+					.icon-wrapper {
+						border-color: $success-color;
+						background-color: $success-color;
+					}
+
+					.iconography {
+						color: #fff;
+					}
+
+					.entry {
+						border-color: $success-color;
+						.title {
+							color: $success-color;
+						}
+					}
+				}
+
+				&.warning {
+					.icon-wrapper {
+						border-color: #f0b400;
+						background-color: #f0b400;
+					}
+
+					.iconography {
+						color: #fff;
+					}
+
+					.entry {
+						border-color: #f0b400;
+						.title {
+							color: #f0b400;
+						}
+					}
+				}
+
+				&.error {
+					.icon-wrapper {
+						border-color: $error-color;
+						background-color: $error-color;
+					}
+
+					.iconography {
+						color: #fff;
+					}
+
+					.entry {
+						border-color: $error-color;
+						.title {
+							color: $error-color;
+						}
+					}
+				}
+
+				&.danger {
+					.icon-wrapper {
+						border-color: $danger-color;
+					}
+
+					.iconography {
+						color: $danger-color;
+					}
+
+					.entry {
+						border-color: $danger-color;
+						.title {
+							color: $danger-color;
+						}
+					}
+				}
+			}
+
+			.timeline {
+				margin: 0;
+				list-style: none;
+			}
+
+			.day {
+				position: relative;
+				margin-top: 50px;
+				padding-top: 50px;
+				border-top: 1px solid $panel-border-color;
+
+				&:first-child {
+					margin-top: 20px;
+				}
+			}
+
+			.date {
+				font-weight: 600;
+				position: absolute;
+				top: -16px;
+				left: 50%;
+				padding: 5px 10px;
+				transform: translate(-50%, 0);
+				color: $manatee;
+				border: 1px solid $panel-border-color;
+				border-radius: 2px;
+				background-color: $background-primary-color;
+				box-shadow: 0 0 10px 0 $mischka;
+			}
+
+			.entries {
+				margin: 0;
+				list-style: none;
+			}
+
+			.icon-wrapper {
+				position: relative;
+				display: flex;
+				float: left;
+				width: 34px;
+				height: 34px;
+				border: 1px solid $panel-border-color;
+				border-radius: 50%;
+
+				align-items: center;
+				justify-content: center;
+
+				.iconography {
+					color: $panel-border-color;
+				}
+			}
+
+			.entry {
+				margin-left: 56px;
+				padding: 15px 20px;
+				border: 1px solid $panel-border-color;
+				border-radius: 2px;
+				background-color: $white;
+
+				.title {
+					font-weight: bold;
+				}
+
+				.time {
+					font-size: 13px;
+					color: $manatee;
+				}
+
+				.content {
+					margin-top: 10px;
+
+					button {
+						display: block;
+						margin-top: 15px;
+					}
+				}
 			}
 		}
 	}
