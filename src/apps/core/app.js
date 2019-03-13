@@ -953,10 +953,10 @@ define(function(require) {
 		hideTopbarDropdowns: function(args) {
 			var except = _.get(args, 'except');
 
-			if (except !== 'main_topbar_account_toggle') {
+			if (except !== 'main_topbar_account_toggle_link') {
 				$('#main_topbar_account_toggle').removeClass('open');
 			}
-			if (except !== 'main_topbar_alert') {
+			if (except !== 'main_topbar_alerts_link') {
 				monster.pub('core.alerts.hideDropdown');
 			}
 		}

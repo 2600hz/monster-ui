@@ -102,7 +102,7 @@ define(function(require) {
 					// Display notifications topbar element without alerts
 					renderTemplate();
 					callback(null, true);
-				},
+				}
 			}, function(err, results) {
 				if (err) {
 					return;
@@ -149,7 +149,7 @@ define(function(require) {
 				if ($parent.hasClass('open')) {
 					self.alertsHideDropdown();
 				} else {
-					monster.pub('core.hideTopbarDropdowns', { except: 'main_topbar_alerts' });
+					monster.pub('core.hideTopbarDropdowns', { except: 'main_topbar_alerts_link' });
 					$parent.addClass('open');
 				}
 			});
