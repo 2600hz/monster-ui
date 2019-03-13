@@ -403,7 +403,7 @@ define(function(require) {
 
 					// If the user or the account we're logged into has a language settings, and if it's different than
 					var loadCustomLanguage = function(language, callback) {
-						if (language !== monster.config.whitelabel.language && language !== monster.apps.defaultLanguage) {
+						if (language !== monster.config.whitelabel.language && language !== monster.defaultLanguage) {
 							monster.apps.loadLocale(monster.apps.core, language, function() {
 								monster.apps.loadLocale(self, language, function() {
 									monster.config.whitelabel.language = language;
