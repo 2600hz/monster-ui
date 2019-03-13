@@ -40,6 +40,7 @@ define(function(require) {
 		'whitelabel.language': [_.isString, defaultLanguage, supportedLanguages],
 		'whitelabel.logoutTimer': [_.isNumber, 15],
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
+		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
 		'whitelabel.useDropdownApploader': [_.isBoolean, false]
 	};
 

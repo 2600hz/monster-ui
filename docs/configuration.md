@@ -74,6 +74,7 @@ Key | Description | Type | Default | Required
 `nav.logout` | Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior | `Object` | | `false`
 `port` | | `Object`([#/port](#port)) | | `false`
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
+`showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 
 #### `port`
