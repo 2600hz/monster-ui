@@ -101,11 +101,13 @@ define(function(require) {
 				return monster.util.formatPhoneNumber(phoneNumber);
 			},
 
-			formatPrice: function(price, decimals, withCurrency) {
+			formatPrice: function() {
+				var args = _.toArray(arguments);
+
 				return monster.util.formatPrice({
-					price: price,
-					digits: decimals,
-					withCurrency: withCurrency
+					price: _.size(args) >= 2 ? args[0] : 0,
+					digits: _.size(args) >= 3 ? args[1] : undefined,
+					withCurrency: _.size(args) >= 4 ? args[2] : undefined
 				});
 			},
 

@@ -13,24 +13,21 @@ define(function(require) {
 		postal = require('postal'),
 		reqwest = require('reqwest');
 
-	var supportedCurrencyCodes = {
-		EUR: {
-			symbol: '€',
-			position: 'post'
-		},
-		GBP: {
-			symbol: '£',
-			position: 'ante'
-		},
-		USD: {
-			symbol: '$',
-			position: 'ante'
-		}
-	};
+	var defaultCurrencyCode = 'USD';
+	var defaultLanguage = 'en-US';
+
+	var supportedLanguages = [
+		'de-DE',
+		'en-US',
+		'es-ES',
+		'fr-FR',
+		'nl-NL',
+		'ru-RU'
+	];
 
 	var defaultConfig = {
 		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
-		currencyCode: [_.isString, 'USD', _.keys(supportedCurrencyCodes)],
+		currencyCode: [isCurrencyCodeValid, defaultCurrencyCode],
 		'developerFlags.showAllCallflows': [_.isBoolean, false],
 		'developerFlags.showJsErrors': [_.isBoolean, false],
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
@@ -40,6 +37,7 @@ define(function(require) {
 		'whitelabel.hideAppStore': [_.isBoolean, false],
 		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
 		'whitelabel.hideNewAccountCreation': [_.isBoolean, false],
+		'whitelabel.language': [_.isString, defaultLanguage, supportedLanguages],
 		'whitelabel.logoutTimer': [_.isNumber, 15],
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
@@ -685,9 +683,45 @@ define(function(require) {
 		_.set(monster, 'config', config);
 	}
 
-	monster.supportedCurrencyCodes = supportedCurrencyCodes;
+	/**
+	 * Validates `code` against ISO 4217 currency codes
+	 * @private
+	 * @param  {String}  code
+	 * @return {Boolean}      Whether or not `code` is a valid currency code.
+	 */
+	function isCurrencyCodeValid(code) {
+		var base = NaN;
+		try {
+			base.toLocaleString(defaultLanguage, {
+				style: 'currency',
+				currency: code
+			});
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Set the language on application startup.
+	 *
+	 * If the `monster-auth` cookie exists, the language defined in it will take precedence.
+	 * When no cookie, the language will default to the UI's default language set by initConfig().
+	 */
+	function setDefaultLanguage() {
+		var language = _.get(monster.cookies.getJson('monster-auth'), 'language');
+
+		if (_.isUndefined(language)) {
+			return;
+		}
+
+		_.set(monster.config.whitelabel, 'language', language);
+	}
+
+	monster.defaultLanguage = defaultLanguage;
 
 	monster.initConfig = initConfig;
+	monster.setDefaultLanguage = setDefaultLanguage;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager
