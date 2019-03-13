@@ -311,7 +311,7 @@ define(function() {
 					if (cancelCall) {
 						return errorCallback && errorCallback();
 					} else {
-						var apiSettings = $.extend({
+						var apiSettings = _.assignIn({
 							authToken: params.authToken || app.getAuthToken(),
 							apiRoot: params.apiUrl || app.apiUrl,
 							uiMetadata: {
@@ -321,18 +321,15 @@ define(function() {
 							},
 							success: successCallback,
 							error: errorCallback,
-							headers: {}
-						}, params.data);
+							headers: {},
+							requestEventParams: _.pick(params, 'bypassProgressIndicator')
+						},
+						params.data,
+						_.pick(params, 'onChargesCancelled'));
 
-						if (monster.config.hasOwnProperty('kazooClusterId')) {
+						if (_.has(monster.config, 'kazooClusterId')) {
 							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
 						}
-
-						_.merge(apiSettings,
-							_.pick(params, [
-								'onChargesCancelled',
-								'preventRequestEvents'
-							]));
 
 						return monster.kazooSdk[module][method](apiSettings);
 					}

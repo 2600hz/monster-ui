@@ -291,12 +291,16 @@ define(function(require) {
 			};
 
 			/* Only subscribe to the requestStart and End event when the spinner is loaded */
-			monster.sub('monster.requestStart', function() {
-				self.onRequestStart(spinner);
+			monster.sub('monster.requestStart', function(params) {
+				self.onRequestStart(_.merge({
+					spinner: spinner
+				}, params));
 			});
 
-			monster.sub('monster.requestEnd', function() {
-				self.onRequestEnd(spinner);
+			monster.sub('monster.requestEnd', function(params) {
+				self.onRequestEnd(_.merge({
+					spinner: spinner
+				}, params));
 			});
 
 			// Different functionality depending on whether default apploader or dropdown apploader to be opened
@@ -651,9 +655,15 @@ define(function(require) {
 			});
 		},
 
-		onRequestStart: function($spinner) {
+		onRequestStart: function(args) {
 			var self = this,
-				waitTime = 250;
+				waitTime = 250,
+				$spinner = args.spinner;
+
+			// If indicated, bypass progress indicator display/hide process
+			if (_.get(args, 'bypassProgressIndicator', false)) {
+				return;
+			}
 
 			self.request.counter++;
 
@@ -675,9 +685,15 @@ define(function(require) {
 			}, waitTime);
 		},
 
-		onRequestEnd: function($spinner) {
+		onRequestEnd: function(args) {
 			var self = this,
-				waitTime = 50;
+				waitTime = 50,
+				$spinner = args.spinner;
+
+			// If indicated, bypass progress indicator display/hide process
+			if (_.get(args, 'bypassProgressIndicator', false)) {
+				return;
+			}
 
 			self.request.counter--;
 
