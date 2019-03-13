@@ -185,6 +185,7 @@ define(function(require) {
 					tab: activeTab,
 					type: tab,
 					success: function(portRequests) {
+						self.portListingSet('type', type);
 						insertTemplateCallback(initTemplate(portRequests));
 					}
 				});
