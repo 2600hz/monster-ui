@@ -1017,8 +1017,6 @@
 	},
 
 	"alerts": {
-		"alertToggle": {
-			"toggleTooltip": "Notifications"
-		}
+		"topbarTooltip": "Notifications"
 	}
 }

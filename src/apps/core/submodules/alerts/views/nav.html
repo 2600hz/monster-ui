@@ -1,8 +1,8 @@
 <li id="main_topbar_alert">
-	<a href="javascript:void(0);" class="links" id="main_topbar_alert_toggle_link" data-original-title="{{i18n.alerts.alertToggle.toggleTooltip}}" data-placement="bottom" data-toggle="tooltip">
+	<a href="javascript:void(0);" class="links" id="main_topbar_alert_link" data-title="{{i18n.alerts.topbarTooltip}}" data-placement="bottom" data-toggle="tooltip">
 		{{telicon "bell"}}
-		{{#if alertsCount}}
-			<span class="badge danger">{{alertsCount}}</span>
+		{{#if showAlertCount}}
+			<span class="badge danger">{{alertCount}}</span>
 		{{/if}}
 	</a>
 </li>

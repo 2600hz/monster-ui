@@ -18,12 +18,13 @@ define(function(require) {
 		alertsRender: function() {
 			var self = this,
 				initTemplate = function initTemplate(alerts) {
-					var alertGroups = alerts ? self.alertsFormatData({ data: alerts }) : {},
-						alertsCount = _.reduce(alertGroups, function(count, alertGroup) {
+					var alertGroups = self.alertsFormatData({ data: alerts }),
+						alertCount = _.reduce(alertGroups, function(count, alertGroup) {
 							return count + alertGroup.length;
 						}, 0),
 						dataTemplate = {
-							alertsCount: alertsCount === 0 ? null : alertsCount > 9 ? '9+' : alertsCount.toString()
+							showAlertCount: alertCount > 0,
+							alertCount: alertCount > 9 ? '9+' : alertCount.toString()
 						},
 						$template = $(self.getTemplate({
 							name: 'nav',
@@ -85,13 +86,11 @@ define(function(require) {
 			var self = this,
 				$template = args.template;
 
-			$template.find('#main_topbar_alert_toggle_link').on('click', function() {
-				$(this).find('.badge').fadeOut({
-					duration: 250,
-					complete: function() {
+			$template.find('#main_topbar_alert_link').on('click', function() {
+				$(this).find('.badge')
+					.fadeOut(250, function() {
 						$(this).remove();
-					}
-				});
+					});
 			});
 		},
 
@@ -102,9 +101,14 @@ define(function(require) {
 		 * @returns  {Object}              Grouped alerts by UI categories
 		 */
 		alertsFormatData: function(args) {
-			var self = this;
+			var self = this,
+				data = args.data;
 
-			return _.chain(args.data)
+			if (_.isEmpty(data)) {
+				return {};
+			}
+
+			return _.chain(data)
 				.filter(function(alert) {
 					return _.has(alert, 'category');
 				})
