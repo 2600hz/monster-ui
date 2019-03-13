@@ -13,11 +13,17 @@ monster.util.formatPrice(args);
 Key | Description | Type | Default | Required
 --- | --- | --- | --- | ---
 `price` | Price to format (number or string representation of a number). | `Number`, `String` | | `true`
-`decimals` | Number of digits to appear after the decimal point (if not specified, integers will have no digits and floating numbers with at least one significant number after the decimal point will have two digits). | `Number` | `2` | `false`
-`withCurrency` | Hide/show currency symbol. | `Boolean` | `true` | `false`
+`digits` | Number of digits to appear after the decimal point (if not specified, integers will have no digits and floating numbers with at least one significant number after the decimal point will have two digits). | `Number` | `2` | `false`
+`withCurrency` | Whether or not to show the currency symbol. | `Boolean` | `true` | `false`
 
 ### Return value
 A `String` representation of `price` showing the specified number of digits as well as the currency symbol.
+
+### Errors
+
+* `"price" is not a valid number or not castable into a number`: `price` is `NaN`, of a type other than `Number` and not castable into a valid `Number`
+* `"digits" is not a positive integer`: `digits` is defined but not a positive `Number` integer
+* `"withCurrency" is not a boolean`: `withCurrency` is defined but not of type `Boolean`
 
 ## Description
 The `monster.util.formatPrice()` method is used to easily format prices.
@@ -53,15 +59,15 @@ monster.util.formatPrice({
 // output: "$5.500"
 
 monster.util.formatPrice({
-	price: 5.5555,
+	price: -5.5555,
 	digits: 3
 });
-// output: "$5.556"
+// output: "-$5.556"
 ```
 ### Format prices without currency
 ```javascript
 monster.util.formatPrice({
-	price: 5.000,
+	price: 5.001,
 	withCurrency: false
 });
 // output: "5.00"
