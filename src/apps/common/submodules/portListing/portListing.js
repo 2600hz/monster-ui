@@ -253,7 +253,8 @@ define(function(require) {
 							},
 						numbers: numbers,
 						numbersAmount: _.size(numbers),
-						timeline: self.portListingFormatEntriesToTimeline(results.timeline)
+						timeline: self.portListingFormatEntriesToTimeline(results.timeline),
+						allowPrivate: monster.util.isSuperDuper() || monster.util.isPortAuthority(_.get(portRequest, 'port_authority', null))
 					}, _.pick(portRequest, [
 						'carrier',
 						'name',
@@ -1054,6 +1055,7 @@ define(function(require) {
 
 			switch (args.tab) {
 				case 'account':
+				default:
 					self.portListingRequestByType(args);
 					break;
 				case 'agent':
