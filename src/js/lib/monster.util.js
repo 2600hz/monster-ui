@@ -263,6 +263,13 @@ define(function(require) {
 			return isSuperDuper;
 		},
 
+		// Validate if the given port authority ID matches with the current account ID
+		isPortAuthority: function(portAuthorityID, pAccount) {
+			var account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			return portAuthorityID === account.id;
+		},
+
 		// We only let super duper admins impersonate users from subaccounts. If you're not a super duper admin, or if you're using the account you logged in with, you shouldn't have access to impersonating.
 		canImpersonate: function(accountId) {
 			var self = this,
