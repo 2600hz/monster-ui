@@ -999,6 +999,22 @@ define(function(require) {
 			});
 		},
 
+		portListingRequestByAgent: function(args) {
+			var self = this;
+
+			self.portListingRequestListAgentPorts({
+				data: {
+					filters: {
+						paginate: false
+					}
+				},
+				success: function(ports) {
+					self.portListingSetters(ports);
+					args.success(self.portlistingFlattenResults(ports));
+				}
+			});
+		},
+
 		portListingFormatDataToTemplate: function formatDataToTemplate(portRequests) {
 			var self = this;
 
@@ -1030,13 +1046,14 @@ define(function(require) {
 			var self = this;
 
 			switch (args.tab) {
+				case 'account':
+					self.portListingRequestByType(args);
+					break;
+				case 'agent':
+					self.portListingRequestByAgent(args);
+					break;
 				case 'descendants':
 					self.portlistingRequestDescendantsByType(args);
-					break;
-				case 'account':
-				case 'agent':
-				default:
-					self.portListingRequestByType(args);
 					break;
 			}
 		},
@@ -1096,13 +1113,37 @@ define(function(require) {
 		},
 
 		/**
+		 * @param  {Object} args.data
 		 * @param  {Function} args.success
+		 * @param  {Function} args.error
 		 */
 		portListingRequestListDescendantsPorts: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'port.listDescendants',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		/**
+		 * @param  {Object} args.data
+		 * @param  {Function} args.success
+		 * @param  {Function} args.error
+		 */
+		portListingRequestListAgentPorts: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.listPortAuthority',
 				data: _.merge({
 					accountId: self.accountId
 				}, args.data),
