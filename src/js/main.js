@@ -25,9 +25,7 @@ require.config({
 		'isotope': 'js/vendor/jquery.isotope.min',
 		'jquery': 'js/vendor/jquery-1.9.1.min',
 		'jqueryui': 'js/vendor/jquery-ui-1.10.3.custom.min',
-		'jspdf': 'js/vendor/jspdf.min',
 		'jstz': 'js/vendor/jstz.min',
-		'html2canvas': 'js/vendor/html2canvas.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'libphonenumber': 'js/vendor/libphonenumber-js.min',
@@ -79,7 +77,6 @@ require.config({
 		'footable-sort': ['footable'],
 		'hasher': ['signals'],
 		'jqueryui': ['jquery'],
-		'jspdf': ['html2canvas'],
 		'kazoo': {
 			'exports': 'kazoo'
 		},
