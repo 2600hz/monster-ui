@@ -8,6 +8,10 @@ define(function(require) {
 			'common.navigationWizard.render': 'navigationWizardRender'
 		},
 
+		appFlags: {
+			currentStep: 0
+		},
+
 		navigationWizardRender: function(args) {
 			var self = this,
 				container = args.container,
@@ -21,6 +25,8 @@ define(function(require) {
 					},
 					submodule: 'navigationWizard'
 				}));
+
+			self.appFlags.currentStep = currentStep;
 
 			if (container) {
 				self.navigationWizardBindEvents($.extend({ template: layout }, args));
@@ -39,28 +45,22 @@ define(function(require) {
 			var self = this,
 				thisArg = args.thisArg,
 				template = args.template,
-				currentStep = 0;
+				currentStep = self.appFlags.currentStep;
 
 			self.navigationWizardSetSelected(currentStep, args);
 			self.navigationWizardGenerateTemplate(currentStep, args);
 
-			//Clicking next on the menu item
+			//Clicking the next button
 			template
 				.find('#next')
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate(currentStep, args);
+						var currentStep = self.appFlags.currentStep,
+							result = self.navigationWizardUtilForTemplate(currentStep, args);
 
 						if (result.valid === true) {
-							//display checkbox
-							template
-								.find('i[data-id="' + currentStep + '"]')
-								.removeClass('hide-check');
-
-							template
-								.find('li[data-id="' + currentStep + '"]')
-								.addClass('done');
+							self.navigationWizardSetPreviousSelected(currentStep, args);
 
 							//merge data
 							args = _.merge({}, args, {
@@ -68,29 +68,35 @@ define(function(require) {
 							});
 
 							currentStep += 1;
+
 							self.navigationWizardSetSelected(currentStep, args);
 							self.navigationWizardGenerateTemplate(currentStep, args);
 						}
 					});
 
-			//Clicking next on the menu item
+			//Clicking the done/complete button
 			template
 				.find('#done')
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate(currentStep, args);
+						var result = self.navigationWizardUtilForTemplate(currentStep, args),
+							currentStep = self.appFlags.currentStep;
 
 						if (result.valid === true) {
 							thisArg[args.done](args);
 						}
 					});
 
-			//Clicking on the menu item
+			//Clicking the back button
 			template
 				.find('.back')
 					.on('click', function(event) {
 						event.preventDefault();
+
+						var currentStep = self.appFlags.currentStep;
+
+						self.navigationWizardSetPreviousSelected(currentStep, args);
 
 						currentStep -= 1;
 
@@ -98,7 +104,7 @@ define(function(require) {
 						self.navigationWizardGenerateTemplate(currentStep, args);
 					});
 
-			//Clicking on cancel
+			//Clicking the cancel button
 			template
 				.find('#cancel')
 					.on('click', function(event) {
@@ -107,12 +113,14 @@ define(function(require) {
 						thisArg[args.cancel](args);
 					});
 
+			//Clicking the clear link
 			template
 				.find('#clear')
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var step = args.steps[currentStep],
+						var currentStep = self.appFlags.currentStep,
+							step = args.steps[currentStep],
 							formattedData = _.merge({}, args, {
 								data: step.default
 							});
@@ -121,6 +129,29 @@ define(function(require) {
 						self.navigationWizardSetSelected(currentStep, formattedData);
 						self.navigationWizardGenerateTemplate(currentStep, formattedData);
 					});
+
+			//Clicking on the menu item
+			template
+				.on('click', '.completed', function(event) {
+					//make sure we display page as previously selected
+					self.navigationWizardSetPreviousSelected(self.appFlags.currentStep, args);
+
+					//set new template and menu items to reflect that
+					var currentStep = $(this).data('id');
+
+					self.navigationWizardSetSelected(currentStep, args);
+					self.navigationWizardGenerateTemplate(currentStep, args);
+				});
+		},
+
+		navigationWizardSetPreviousSelected: function(currentStep, args) {
+			var self = this,
+				template = args.template;
+
+			template
+				.find('div.step[data-id="' + currentStep + '"]')
+					.removeClass('selected')
+						.addClass('completed');
 		},
 
 		navigationWizardSetSelected: function(currentStep, args) {
@@ -128,28 +159,17 @@ define(function(require) {
 				template = args.template,
 				steps = args.steps;
 
+			self.appFlags.currentStep = currentStep;
+
 			template
 				.find('.right-content')
 					.empty()
 						.append(steps[currentStep].template);
 
 			template
-				.find('li')
-					.removeClass('selected');
-
-			template
-				.find('.nav span')
-					.addClass('hide-content')
-						.removeClass('show-content');
-
-			template
-				.find('span[data-id="' + currentStep + '"]')
-					.addClass('show-content')
-						.removeClass('hide-content');
-
-			template
-				.find('li[data-id="' + currentStep + '"]')
-					.addClass('selected');
+				.find('.step[data-id="' + currentStep + '"]')
+					.removeClass('completed')
+						.addClass('selected');
 
 			//hide clear button if it's not a form
 			if (steps[currentStep].default) {
@@ -185,6 +205,7 @@ define(function(require) {
 				steps = args.steps,
 				template = steps[currentStep].template;
 
+			self.appFlags.currentStep = currentStep;
 			thisArg[template](args);
 		},
 
