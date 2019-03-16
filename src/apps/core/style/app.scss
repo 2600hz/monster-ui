@@ -693,6 +693,10 @@ body,
 	color: #fff;
 }
 
+.modal-full-screen-wrapper.inverse-bg .close-modal:hover {
+	color: $primary-color;
+}
+
 /* Choice Picker */
 #monster_choices_selector_wrapper {
 	display: block;
