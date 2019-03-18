@@ -106,7 +106,12 @@ define(function(require) {
 				container,
 				modalParent;
 
-			if (!isMonsterApp) {
+			/**
+			 * Getting parent container before render, because is needed by the layout.
+			 */
+			if (isMonsterApp) {
+				parent = args.parent;
+			} else {
 				modalParent = _.has(args, 'parent.getId')
 					? args.parent
 					: monster.ui.fullScreenModal(null, {
@@ -129,8 +134,10 @@ define(function(require) {
 				]
 			});
 
+			/**
+			 * Getting container after layout render, because selectors already exist.
+			 */
 			if (isMonsterApp) {
-				parent = args.parent;
 				container = $('#common_app_container .app-content-wrapper');
 			} else {
 				container = $('.core-absolute').find(
