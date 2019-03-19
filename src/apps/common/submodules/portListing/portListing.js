@@ -990,10 +990,7 @@ define(function(require) {
 
 			self.portListingRequestListPort({
 				data: {
-					filters: {
-						paginate: false,
-						by_types: args.type
-					}
+					filters: args.filters
 				},
 				success: function(ports) {
 					self.portListingSetters(ports);
@@ -1061,9 +1058,25 @@ define(function(require) {
 		 * @param  {Function} args.success
 		 * @param  {String} args.tab
 		 * @param  {String} args.status
+		 * @param  {Object} args.filters
 		 */
 		portListingHelperListPorts: function(args) {
-			var self = this;
+			var self = this,
+				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range),
+				fromDate = args.fromDate ? args.fromDate : dates.from,
+				toDate = args.toDate ? args.toDate : dates.to,
+				filters = {
+					paginate: false,
+					by_types: args.type
+				};
+
+			if (args.type === 'completed') {
+				args.filters = _.merge(filters, {
+					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+					created_to: monster.util.dateToEndOfGregorianDay(toDate)
+				},
+				args.filters);
+			}
 
 			switch (args.tab) {
 				case 'account':
