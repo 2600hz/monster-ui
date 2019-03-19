@@ -1012,7 +1012,7 @@ define(function(require) {
 		}
 		if (
 			!_.isUndefined(args.digits)
-			&& (!_.isInteger(args.digits) || args.digits < 0)
+			&& (!_.isNumber(args.digits) || (!_.isInteger(args.digits) || args.digits < 0))
 		) {
 			throw new TypeError('"digits" is not a positive integer');
 		}
@@ -1022,13 +1022,13 @@ define(function(require) {
 		var price = _.toNumber(args.price);
 		var digits = _.get(args, 'digits', 2);
 		var withCurrency = _.get(args, 'withCurrency', true);
-		var roundedPrice = _.round(price, digits);
-
-		return roundedPrice.toLocaleString(monster.config.whitelabel.language, {
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
 			style: withCurrency ? 'currency' : 'decimal',
 			currency: monster.config.currencyCode,
 			minimumFractionDigits: _.isInteger(price) && !_.has(args, 'digits') ? 0 : digits
 		});
+
+		return formatter.format(price);
 	}
 
 	/**
@@ -1037,13 +1037,12 @@ define(function(require) {
 	 */
 	function getCurrencySymbol() {
 		var base = NaN;
+		var formatter = new Intl.NumberFormat(monster.defaultLanguage, {
+			style: 'currency',
+			currency: monster.config.currencyCode
+		});
 
-		return base
-			.toLocaleString(monster.defaultLanguage, {
-				style: 'currency',
-				currency: monster.config.currencyCode
-			})
-			.replace('NaN', '');
+		return formatter.format(base).replace('NaN', '');
 	}
 
 	/**

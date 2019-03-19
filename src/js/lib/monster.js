@@ -690,9 +690,8 @@ define(function(require) {
 	 * @return {Boolean}      Whether or not `code` is a valid currency code.
 	 */
 	function isCurrencyCodeValid(code) {
-		var base = NaN;
 		try {
-			base.toLocaleString(defaultLanguage, {
+			Intl.NumberFormat(defaultLanguage, {
 				style: 'currency',
 				currency: code
 			});

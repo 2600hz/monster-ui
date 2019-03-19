@@ -79,22 +79,38 @@ define(function(require) {
 		},
 
 		/**
-		 * @param  {jQuery} args.container
-		 * @param  {String} args.data.accountId
-		 * @param  {Function} args.globalCallback
+		 * @param  {jQuery} [args.container]
+		 * @param  {String} [args.data.accountId]
+		 * @param  {Function} [args.globalCallback]
 		 * @param  {Object} [args.data.portRequestId]
 		 */
 		portWizardRender: function(args) {
 			var self = this,
-				accountId = args.data.accountId,
-				container = args.container,
-				globalCallback = args.globalCallback,
-				portRequestId = _.get(args, 'data.portRequestId');
+				accountId = _.get(args, 'data.accountId', self.accountId),
+				globalCallback = _.get(args, 'globalCallback', function() {}),
+				portRequestId = _.get(args, 'data.portRequestId'),
+				container,
+				callback;
+
+			if (args.container instanceof jQuery) {
+				container = args.container;
+				callback = globalCallback;
+			} else {
+				var modal = monster.ui.fullScreenModal(null, {
+					inverseBg: true
+				});
+				container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content');
+				callback = function() {
+					modal.close();
+
+					globalCallback();
+				};
+			}
 
 			self.portWizardSet({
 				accountId: accountId,
 				container: container,
-				globalCallback: globalCallback
+				globalCallback: callback
 			});
 
 			monster.parallel({
@@ -117,7 +133,7 @@ define(function(require) {
 				}
 			}, function(err, result) {
 				if (err) {
-					globalCallback();
+					callback();
 					return;
 				}
 				var portRequest = _.merge({
