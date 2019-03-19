@@ -76,10 +76,14 @@ define(function(require) {
 						if (result.valid === true) {
 							self.navigationWizardSetPreviousSelected(currentStep, args, stepsCompleted);
 
-							//merge data
-							args = _.merge({}, args, {
-								data: result.data
-							});
+							if (result.data) {
+								//merge data
+								args = _.merge({}, args, {
+									data: result.data
+								});
+							} else if (result.args) {
+								args = result.args;
+							}
 
 							stepsCompleted.push(currentStep);
 							self.appFlags.stepsCompleted = stepsCompleted;
@@ -97,8 +101,8 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate(currentStep, args),
-							currentStep = self.appFlags.currentStep;
+						var currentStep = self.appFlags.currentStep,
+							result = self.navigationWizardUtilForTemplate(currentStep, args);
 
 						if (result.valid === true) {
 							thisArg[args.done](args);
@@ -158,8 +162,6 @@ define(function(require) {
 
 					self.navigationWizardSetSelected(currentStep, args, stepsCompleted);
 					self.navigationWizardGenerateTemplate(currentStep, args);
-
-					console.log(args);
 				});
 		},
 
