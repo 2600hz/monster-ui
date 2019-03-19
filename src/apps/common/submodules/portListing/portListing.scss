@@ -180,6 +180,12 @@
 
 .modal-content,
 #common_app_container {
+	.listing-section {
+		.port-listing-actions {
+			position: relative;
+			margin-bottom: 15px;
+		}
+	}
 	#port_detail_view {
 		display: flex;
 		width: 100%;

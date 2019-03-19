@@ -27,7 +27,8 @@ define(function(require) {
 					{ value: 'canceled', next: [] }
 				],
 				tabs: ['account', 'agent', 'descendants'],
-				subtabs: ['suspended', 'progressing', 'completed']
+				subtabs: ['suspended', 'progressing', 'completed'],
+				range: 'monthly'
 			}
 		},
 
@@ -427,7 +428,25 @@ define(function(require) {
 		 */
 		portListingBindListingEvents: function(args) {
 			var self = this,
-				template = args.template;
+				template = args.template,
+				optionsDatePicker = {
+					container: template,
+					range: self.appFlags.portListing.range
+				},
+				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range),
+				fromDate = dates.from,
+				toDate = dates.to;
+
+			monster.ui.initRangeDatepicker(optionsDatePicker);
+
+			template.find('#startDate').datepicker('setDate', fromDate);
+			template.find('#endDate').datepicker('setDate', toDate);
+
+			template
+				.find('.port-filter')
+					.on('click', function(event) {
+						event.preventDefault();
+					});
 
 			template
 				.find('.port-wizard')
