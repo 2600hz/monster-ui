@@ -180,10 +180,20 @@
 
 .modal-content,
 #common_app_container {
-	.listing-section {
-		.port-listing-actions {
-			position: relative;
-			margin-bottom: 15px;
+	.port-listing-actions {
+		display: flex;
+		align-items: center;
+		position: relative;
+		margin-bottom: 15px;
+
+		input[type='text'] {
+			cursor: pointer;
+			background-color: #f0f0f9;
+			border-radius: 2px;
+			box-shadow: none;
+			text-align: center;
+			width: 80px;
+			margin: 0 0 0 5px;
 		}
 	}
 	#port_detail_view {

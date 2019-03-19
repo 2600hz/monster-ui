@@ -1,5 +1,4 @@
-{{#if hasPorts}}
-<div class="monster-table-wrapper listing-section">
+<div class="monster-table-wrapper">
 	<div class="monster-table-header port-listing-actions clearfix">
 		<button class="monster-button-primary port-wizard">
 			{{i18n.portListing.listing.button}}
@@ -17,6 +16,9 @@
 			{{ i18n.filter }}
 		</button>
 	</div>
+</div>
+{{#if hasPorts}}
+<div class="monster-table-wrapper listing-section">
 	<div id="ports_listing_wrapper"></div>
 </div>
 {{else}}
@@ -28,8 +30,5 @@
 	<p class="text">
 		{{i18n.portListing.listing.empty.text}}
 	</p>
-	<button class="monster-button-primary port-wizard">
-		{{i18n.portListing.listing.button}}
-	</button>
 </div>
 {{/if}}
