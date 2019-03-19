@@ -951,6 +951,12 @@ define(function(require) {
 		 * @param  {String} [args.except]  ID of any element that does not want to be hidden
 		 */
 		hideTopbarDropdowns: function(args) {
+			if (!monster.util.isLoggedIn()) {
+				// If user is not logged in, there is no menu displayed, so there is no need
+				// to hide topbar dropdowns
+				return;
+			}
+
 			var except = _.get(args, 'except');
 
 			if (except !== 'main_topbar_account_toggle_link') {
