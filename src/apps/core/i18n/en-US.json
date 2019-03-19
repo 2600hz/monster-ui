@@ -1,4 +1,16 @@
 {
+	"monthPicker": {
+		"backTo": "Back to",
+		"buttonText": "Open Month Picker",
+		"jumpYears": "Jump Years",
+		"next12Years": "Jump Forward 12 Years",
+		"nextLabel": "Next",
+		"nextYear": "Next Year",
+		"prev12Years": "Jump Back 12 Years",
+		"prevLabel": "Prev",
+		"prevYear": "Previous Year",
+		"year": "Year"
+	},
 	"mediaUploadDisclosure": {
 		"text": "Uploading audio files is your own responsibility! Please make sure that you have the necessary rights to use it!"
 	},
