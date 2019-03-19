@@ -161,28 +161,19 @@ define(function(require) {
 				tab = self.portListingCheckProfile() ? (activeTab || type) : type,
 				initTemplate = function initTemplate(portRequests) {
 					var template = $(self.getTemplate({
-							name: 'listing',
-							data: {
-								hasPorts: !_.isEmpty(portRequests)
-							},
-							submodule: 'portListing'
-						})),
-						templateList = $(self.getTemplate({
-							name: 'ports-listing',
-							data: {
-								isMonsterApp: self.portListingGet('isMonsterApp'),
-								requests: _.sortBy(self.portListingFormatDataToTemplate(portRequests), 'state'),
-								type: tab
-							},
-							submodule: 'portListing'
-						}));
+						name: 'listing',
+						data: {
+							hasPorts: !_.isEmpty(portRequests),
+							type: type === 'completed'
+						},
+						submodule: 'portListing'
+					}));
 
-					monster.ui.footable(templateList.find('#ports_listing'));
-
-					template
-						.find('#ports_listing_wrapper')
-						.empty()
-						.append(templateList);
+					self.portListingRenderTableList({
+						template: template,
+						tab: tab,
+						portRequests: portRequests
+					});
 
 					self.portListingBindListingEvents({
 						template: template
@@ -196,11 +187,37 @@ define(function(require) {
 					tab: activeTab,
 					type: tab,
 					success: function(portRequests) {
+						self.portListingSet('tab', activeTab);
 						self.portListingSet('type', type);
 						insertTemplateCallback(initTemplate(portRequests));
 					}
 				});
 			});
+		},
+
+		/**
+		 * @param {Object} args.template
+		 * @param {String} args.type
+		 * @param {String} args.portRequests
+		 */
+		portListingRenderTableList: function(args) {
+			var self = this,
+				templateList = $(self.getTemplate({
+					name: 'ports-listing',
+					data: {
+						isMonsterApp: self.portListingGet('isMonsterApp'),
+						requests: _.sortBy(self.portListingFormatDataToTemplate(args.portRequests), 'state'),
+						type: args.type
+					},
+					submodule: 'portListing'
+				}));
+
+			monster.ui.footable(templateList.find('#ports_listing'));
+
+			args.template
+				.find('#ports_listing_wrapper')
+				.empty()
+				.append(templateList);
 		},
 
 		/**
@@ -446,6 +463,24 @@ define(function(require) {
 				.find('.port-filter')
 					.on('click', function(event) {
 						event.preventDefault();
+						var fromDate = template.find('input.filter-from').datepicker('getDate'),
+							toDate = template.find('input.filter-to').datepicker('getDate'),
+							tab = self.portListingGet('tab'),
+							type = self.portListingGet('type');
+
+						self.portListingHelperListPorts({
+							tab: tab,
+							type: type,
+							fromDate: fromDate,
+							toDate: toDate,
+							success: function(portRequests) {
+								self.portListingRenderTableList({
+									template: self.portListingGet('container'),
+									tab: type,
+									portRequests: portRequests
+								});
+							}
+						});
 					});
 
 			template
@@ -1004,10 +1039,7 @@ define(function(require) {
 
 			self.portListingRequestListDescendantsPorts({
 				data: {
-					filters: {
-						paginate: false,
-						by_types: args.type
-					}
+					filters: args.filters
 				},
 				success: function(ports) {
 					self.portListingSetters(ports);
@@ -1021,9 +1053,7 @@ define(function(require) {
 
 			self.portListingRequestListAgentPorts({
 				data: {
-					filters: {
-						paginate: false
-					}
+					filters: args.filters
 				},
 				success: function(ports) {
 					self.portListingSetters(ports);
@@ -1063,8 +1093,8 @@ define(function(require) {
 		portListingHelperListPorts: function(args) {
 			var self = this,
 				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range),
-				fromDate = args.fromDate ? args.fromDate : dates.from,
-				toDate = args.toDate ? args.toDate : dates.to,
+				fromDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'fromDate', dates.from)),
+				toDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'toDate', dates.to)),
 				filters = {
 					paginate: false,
 					by_types: args.type
@@ -1072,10 +1102,9 @@ define(function(require) {
 
 			if (args.type === 'completed') {
 				args.filters = _.merge(filters, {
-					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-					created_to: monster.util.dateToEndOfGregorianDay(toDate)
-				},
-				args.filters);
+					created_from: fromDate,
+					created_to: toDate
+				});
 			}
 
 			switch (args.tab) {

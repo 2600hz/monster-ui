@@ -1,3 +1,4 @@
+{{#if type}}
 <div class="monster-table-wrapper">
 	<div class="monster-table-header port-listing-actions clearfix">
 		<button class="monster-button-primary port-wizard">
@@ -17,6 +18,8 @@
 		</button>
 	</div>
 </div>
+{{/if}}
+
 {{#if hasPorts}}
 <div class="monster-table-wrapper listing-section">
 	<div id="ports_listing_wrapper"></div>
@@ -30,5 +33,10 @@
 	<p class="text">
 		{{i18n.portListing.listing.empty.text}}
 	</p>
+	{{#unless type}}
+	<button class="monster-button-primary port-wizard">
+		{{i18n.portListing.listing.button}}
+	</button>
+	{{/unless}}
 </div>
 {{/if}}
