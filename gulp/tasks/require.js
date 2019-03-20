@@ -66,6 +66,7 @@ var getConfigRequire = function(mode, app) {
 			'monster-ui',
 			'monster-util',
 			'monster-webphone',
+			'monthpicker',
 			'mousetrap',
 			'papaparse',
 			'pdfjs-dist/build/pdf',
