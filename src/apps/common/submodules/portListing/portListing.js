@@ -171,7 +171,7 @@ define(function(require) {
 
 					self.portListingRenderTableList({
 						template: template,
-						tab: tab,
+						type: tab,
 						portRequests: portRequests
 					});
 
@@ -195,6 +195,27 @@ define(function(require) {
 			});
 		},
 
+		portListingGenericRows: function(type, callback) {
+			var self = this;
+
+			self.portlistingRequestDescendantsByType({
+				type: type,
+				success: function(data) {
+					var $rows = $(self.getTemplate({
+						name: 'generic-rows',
+						data: {
+							requests: self.portlistingFlattenResults(data)
+						},
+						submodule: 'portListing'
+					}));
+
+					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
+					callback && callback($rows, data);
+				}
+			});
+
+		},
+
 		/**
 		 * @param {Object} args.template
 		 * @param {String} args.type
@@ -210,9 +231,25 @@ define(function(require) {
 						type: args.type
 					},
 					submodule: 'portListing'
-				}));
+				})),
+				footableParams = {};
 
-			monster.ui.footable(templateList.find('#ports_listing'));
+			if (args.type === 'completed') {
+				footableParams = {
+					getData: function(filters, callback) {
+						self.portListingGenericRows(args.type, callback);
+					},
+					backendPagination: {
+						enabled: true,
+						allowLoadAll: false
+					},
+					afterInitialized: function() {
+						args.template.find('#ports_listing_wrapper').empty().append(templateList);
+					}
+				};
+			}
+
+			monster.ui.footable(templateList.find('#ports_listing'), footableParams);
 
 			args.template
 				.find('#ports_listing_wrapper')
@@ -476,7 +513,7 @@ define(function(require) {
 							success: function(portRequests) {
 								self.portListingRenderTableList({
 									template: self.portListingGet('container'),
-									tab: type,
+									type: type,
 									portRequests: portRequests
 								});
 							}
@@ -1043,7 +1080,7 @@ define(function(require) {
 				},
 				success: function(ports) {
 					self.portListingSetters(ports);
-					args.success(self.portlistingFlattenResults(ports));
+					args.success(ports);
 				}
 			});
 		},
