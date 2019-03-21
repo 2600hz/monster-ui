@@ -112,7 +112,6 @@ define(function(require) {
 					};
 				}),
 				parent,
-				container,
 				modalParent;
 
 			self.portListingSet('isMonsterApp', isMonsterApp);
@@ -139,25 +138,6 @@ define(function(require) {
 					}
 				]
 			});
-
-			if (isMonsterApp) {
-				parent = args.parent;
-				container = $('#common_app_container .app-content-wrapper');
-			} else {
-				container = $('.core-absolute').find(
-					'#'
-					+ modalParent.getId()
-					+ ' .modal-content #common_app_container .app-content-wrapper'
-				);
-			}
-
-			self.portListingSet({
-				accountNamesById: {},
-				container: container,
-				parent: parent,
-				portRequest: {},
-				portRequestsById: {}
-			});
 		},
 
 		/**************************************************
@@ -176,14 +156,22 @@ define(function(require) {
 					submodule: 'portListing'
 				}));
 
-			self.portListingBindListingEvents({
-				template: template
-			});
-
 			self.portListingRenderTableList({
 				template: template,
 				tab: tab,
 				type: type
+			});
+
+			self.portListingSet({
+				accountNamesById: {},
+				container: args.container,
+				parent: args.parent,
+				portRequest: {},
+				portRequestsById: {}
+			});
+
+			self.portListingBindListingEvents({
+				template: template
 			});
 
 			args.container.empty().html(template).show();
@@ -230,6 +218,10 @@ define(function(require) {
 						args.template.find('.port-top-button').hide();
 						args.template.find('#ports_listing_wrapper').empty().append(templateEmpty);
 					}
+
+					self.portListingBindTableEvents({
+						template: args.template
+					});
 				}
 			});
 		},
@@ -255,10 +247,8 @@ define(function(require) {
 							submodule: 'portListing'
 						}));
 
-					self.portListingSet({
-						tab: tab,
-						hasPorts: hasPorts
-					});
+					self.portListingSet('hasPorts', hasPorts);
+					self.portListingSet('tab', tab);
 
 					args.callback && args.callback($rows, data);
 				}
@@ -503,6 +493,30 @@ define(function(require) {
 
 			template.find('#startDate').datepicker('setDate', fromDate);
 			template.find('#endDate').datepicker('setDate', toDate);
+
+			template
+				.find('.port-wizard')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						monster.pub('common.portWizard.render', {
+							container: self.portListingGet('container'),
+							data: {
+								accountId: self.accountId
+							},
+							globalCallback: function() {
+								self.portListingGlobalCallback();
+							}
+						});
+					});
+		},
+
+		/**
+		 * @param  {jQuery} args.template
+		 */
+		portListingBindTableEvents: function(args) {
+			var self = this,
+				template = args.template;
 
 			template
 				.find('.port-filter')
