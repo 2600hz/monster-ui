@@ -471,7 +471,11 @@ define(function(require) {
 			if (self.portListingGet('isMonsterApp')) {
 				monster.pub('port.render');
 			} else {
-				self.portListingRenderLayout();
+				self.portListingRenderListing({
+					parent: self.portListingGet('parent'),
+					container: self.portListingGet('container'),
+					type: self.portListingGet('type')
+				});
 			}
 		},
 
