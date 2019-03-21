@@ -168,30 +168,25 @@ define(function(require) {
 				type = args.type,
 				tab = args.parent.find('nav.app-navbar a.active').data('id'),
 				type = self.portListingCheckProfile() ? (tab || type) : type,
-				initTemplate = function initTemplate(callback) {
-					var template = $(self.getTemplate({
-						name: 'listing',
-						data: {
-							type: self.portListingIsTypeCompleted(type)
-						},
-						submodule: 'portListing'
-					}));
+				template = $(self.getTemplate({
+					name: 'listing',
+					data: {
+						type: self.portListingIsTypeCompleted(type)
+					},
+					submodule: 'portListing'
+				}));
 
-					self.portListingBindListingEvents({
-						template: template
-					});
-
-					self.portListingRenderTableList({
-						template: template,
-						tab: tab,
-						type: type,
-						callback: callback
-					});
-				};
-
-			monster.ui.insertTemplate(args.container, function(insertTemplateCallback) {
-				initTemplate(insertTemplateCallback);
+			self.portListingBindListingEvents({
+				template: template
 			});
+
+			self.portListingRenderTableList({
+				template: template,
+				tab: tab,
+				type: type
+			});
+
+			args.container.empty().html(template).show();
 		},
 
 		/**
@@ -213,38 +208,30 @@ define(function(require) {
 					name: 'ports-listing-empty',
 					data: {},
 					submodule: 'portListing'
-				})),
-				footableParams = {
-					getData: function(filters, callback) {
-						self.portListingGenericRows({
-							tab: args.tab,
-							type: args.type,
-							isMonsterApp: self.portListingGet('isMonsterApp'),
-							callback: callback
-						});
-					},
-					backendPagination: {
-						enabled: self.portListingIsTypeCompleted(args.type),
-						allowLoadAll: false
-					},
-					afterInitialized: function() {
-						if (self.portListingGet('hasPorts')) {
-							args.template.find('#ports_listing_wrapper').empty().append(templateList);
-						} else {
-							args.template.find('.port-top-button').hide();
-							args.template.find('#ports_listing_wrapper').empty().append(templateEmpty);
-						}
+				}));
 
-						args.callback(args.template);
+			monster.ui.footable(templateList.find('#ports_listing'), {
+				getData: function(filters, callback) {
+					self.portListingGenericRows({
+						tab: args.tab,
+						type: args.type,
+						isMonsterApp: self.portListingGet('isMonsterApp'),
+						callback: callback
+					});
+				},
+				backendPagination: {
+					enabled: self.portListingIsTypeCompleted(args.type),
+					allowLoadAll: false
+				},
+				afterInitialized: function() {
+					if (self.portListingGet('hasPorts')) {
+						args.template.find('#ports_listing_wrapper').empty().append(templateList);
+					} else {
+						args.template.find('.port-top-button').hide();
+						args.template.find('#ports_listing_wrapper').empty().append(templateEmpty);
 					}
-				};
-
-			monster.ui.footable(templateList.find('#ports_listing'), footableParams);
-
-			args.template
-				.find('#ports_listing_wrapper')
-				.empty()
-				.append(templateList);
+				}
+			});
 		},
 
 		portListingGenericRows: function(args) {
