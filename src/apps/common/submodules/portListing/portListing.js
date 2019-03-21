@@ -97,7 +97,6 @@ define(function(require) {
 						text: self.i18n.active().portListing.tabs[tab],
 						id: tab,
 						callback: function(args) {
-							self.portListingSet('type', tab);
 							self.portListingRenderListing(_.merge(args, { type: tab }));
 						}
 					};
@@ -167,7 +166,8 @@ define(function(require) {
 				container: args.container,
 				parent: args.parent,
 				portRequest: {},
-				portRequestsById: {}
+				portRequestsById: {},
+				type: type
 			});
 
 			self.portListingBindListingEvents({
@@ -184,11 +184,14 @@ define(function(require) {
 		 */
 		portListingRenderTableList: function(args) {
 			var self = this,
+				type = args.type,
+				template = args.template,
+				tab = args.tab,
 				templateList = $(self.getTemplate({
 					name: 'ports-listing',
 					data: {
 						isMonsterApp: self.portListingGet('isMonsterApp'),
-						type: args.type
+						type: type
 					},
 					submodule: 'portListing'
 				})),
@@ -201,22 +204,22 @@ define(function(require) {
 			monster.ui.footable(templateList.find('#ports_listing'), {
 				getData: function(filters, callback) {
 					self.portListingGenericRows({
-						tab: args.tab,
-						type: args.type,
+						tab: tab,
+						type: type,
 						isMonsterApp: self.portListingGet('isMonsterApp'),
 						callback: callback
 					});
 				},
 				backendPagination: {
-					enabled: self.portListingIsTypeCompleted(args.type),
+					enabled: self.portListingIsTypeCompleted(type),
 					allowLoadAll: false
 				},
 				afterInitialized: function() {
 					if (self.portListingGet('hasPorts')) {
-						args.template.find('#ports_listing_wrapper').empty().append(templateList);
+						template.find('#ports_listing_wrapper').empty().append(templateList);
 					} else {
-						args.template.find('.port-top-button').hide();
-						args.template.find('#ports_listing_wrapper').empty().append(templateEmpty);
+						template.find('.port-top-button').hide();
+						template.find('#ports_listing_wrapper').empty().append(templateEmpty);
 					}
 
 					self.portListingBindTableEvents({
@@ -1106,7 +1109,7 @@ define(function(require) {
 				},
 				success: function(ports) {
 					self.portListingSetters(ports);
-					args.success(ports);
+					args.success(self.portlistingFlattenResults(ports));
 				}
 			});
 		},
