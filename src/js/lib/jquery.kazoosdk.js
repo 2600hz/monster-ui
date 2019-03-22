@@ -355,6 +355,20 @@
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
 			},
+			qubicleSkills: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skills' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'post': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'put': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skills' }
+			},
+			qubicleSkillRules: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skill_rules/{skillId}' },
+				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skill_rules' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skill_rules/{skillId}' },
+				'post': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skill_rules/{skillId}' },
+				'put': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skill_rules' }
+			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/recordings/{resourceId}' },
