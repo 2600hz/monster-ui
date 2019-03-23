@@ -69,6 +69,8 @@ var getConfigRequire = function(mode, app) {
 			'papaparse',
 			'pdfjs-dist/build/pdf',
 			'pdfjs-dist/build/pdf.worker',
+			'pdfmake',
+			'pdfmakelib',
 			'popup-redirect',
 			'postal',
 			'randomColor',

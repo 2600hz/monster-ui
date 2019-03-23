@@ -49,6 +49,8 @@ require.config({
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
+		'pdfmakelib': 'js/vendor/pdfmake/pdfmake.min',
+		'pdfmake': 'js/vendor/pdfmake/vfs_fonts',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'randomColor': 'js/vendor/randomColor',
@@ -86,6 +88,13 @@ require.config({
 			'exports': '_'
 		},
 		'moment-timezone': ['moment'],
+		pdfmakelib: {
+			exports: 'pdfMake'
+		},
+		pdfmake: {
+			deps: ['pdfmakelib'],
+			exports: 'pdfMake'
+		},
 		'touch-punch': ['jqueryui']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
