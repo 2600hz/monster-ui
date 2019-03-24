@@ -70,7 +70,6 @@ var getConfigRequire = function(mode, app) {
 			'pdfjs-dist/build/pdf',
 			'pdfjs-dist/build/pdf.worker',
 			'pdfmake',
-			'pdfmakelib',
 			'popup-redirect',
 			'postal',
 			'randomColor',
@@ -83,11 +82,14 @@ var getConfigRequire = function(mode, app) {
 			'toastr',
 			'touch-punch',
 			'validate',
+			'vfs_fonts',
 			'wysiwyg'
 		],
 		librariesToExcludeFromWhole = [
 			'pdfjs-dist/build/pdf',
-			'pdfjs-dist/build/pdf.worker'
+			'pdfjs-dist/build/pdf.worker',
+			'pdfmake',
+			'vfs_fonts'
 		],
 		standardFilesToExclude = [
 			'config',
