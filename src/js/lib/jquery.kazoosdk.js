@@ -337,7 +337,8 @@
 				'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
 				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' },
-				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' }
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' },
+				'updateSessions': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/sessions/{sessionId}' }
 			},
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
