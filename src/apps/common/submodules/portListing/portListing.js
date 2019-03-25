@@ -238,14 +238,15 @@ define(function(require) {
 				tab: tab,
 				type: type,
 				success: function(data) {
-					var hasPorts = !_.isEmpty(data),
+					var requests = data.data,
+						hasPorts = !_.isEmpty(requests),
 						$rows = $(self.getTemplate({
 							name: 'generic-rows',
 							data: {
 								isMonsterApp: args.isMonsterApp,
 								type: type,
 								hasPorts: hasPorts,
-								requests: _.sortBy(self.portListingFormatDataToTemplate(data), 'state')
+								requests: _.sortBy(self.portListingFormatDataToTemplate(requests), 'state')
 							},
 							submodule: 'portListing'
 						}));
@@ -1094,7 +1095,7 @@ define(function(require) {
 					filters: args.filters
 				},
 				success: function(ports) {
-					self.portListingSetters(ports);
+					self.portListingSetters(ports.data);
 					args.success(self.portlistingFlattenResults(ports));
 				}
 			});
@@ -1190,10 +1191,12 @@ define(function(require) {
 		},
 
 		portlistingFlattenResults: function(results) {
-			return _.flatMap(results, function(payload) {
-				return _.flatMap(payload.port_requests, function(account) {
-					return account;
-				});
+			return _.assign({}, results, {
+				data: _.flatMap(results.data, function(payload) {
+					return _.flatMap(payload.port_requests, function(account) {
+						return account;
+					});
+				})
 			});
 		},
 
@@ -1235,7 +1238,7 @@ define(function(require) {
 					accountId: self.accountId
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
+					args.hasOwnProperty('success') && args.success(data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1257,7 +1260,7 @@ define(function(require) {
 					accountId: self.accountId
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
+					args.hasOwnProperty('success') && args.success(data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1279,7 +1282,7 @@ define(function(require) {
 					accountId: self.accountId
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
+					args.hasOwnProperty('success') && args.success(data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
