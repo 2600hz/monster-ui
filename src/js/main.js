@@ -21,12 +21,10 @@ require.config({
 		'handlebars': 'js/vendor/handlebars-v4.0.5',
 		'hasher': 'js/vendor/hasher.min',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
-		'html2canvas': 'js/vendor/html2canvas',
 		'introJs': 'js/vendor/intro.min',
 		'isotope': 'js/vendor/jquery.isotope.min',
 		'jquery': 'js/vendor/jquery-1.9.1.min',
 		'jqueryui': 'js/vendor/jquery-ui-1.10.3.custom.min',
-		'jspdf': 'js/vendor/jspdf.min',
 		'jstz': 'js/vendor/jstz.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
@@ -51,6 +49,8 @@ require.config({
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
+		'pdfmake': 'js/vendor/pdfmake/build/pdfmake.min',
+		'vfs_fonts': 'js/vendor/pdfmake/build/vfs_fonts',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'randomColor': 'js/vendor/randomColor',
@@ -88,7 +88,8 @@ require.config({
 			'exports': '_'
 		},
 		'moment-timezone': ['moment'],
-		'touch-punch': ['jqueryui']
+		'touch-punch': ['jqueryui'],
+		vfs_fonts: ['pdfmake']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
 });

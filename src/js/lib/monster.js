@@ -33,6 +33,8 @@ define(function(require) {
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
 		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
 		'whitelabel.allowAccessList': [_.isBoolean, false],
+		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
+		'whitelabel.companyName': [_.isString, '2600Hz'],
 		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
 		'whitelabel.hideAppStore': [_.isBoolean, false],
 		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
