@@ -311,7 +311,7 @@ define(function() {
 					if (cancelCall) {
 						return errorCallback && errorCallback();
 					} else {
-						var apiSettings = _.assignIn({
+						var apiSettings = _.assignIn({	// lodash#assignIn is used here to have a shallow merge (only top level properties)
 							authToken: params.authToken || app.getAuthToken(),
 							apiRoot: params.apiUrl || app.apiUrl,
 							uiMetadata: {

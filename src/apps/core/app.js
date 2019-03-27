@@ -658,10 +658,11 @@ define(function(require) {
 		onRequestStart: function(args) {
 			var self = this,
 				waitTime = 250,
-				$spinner = args.spinner;
+				$spinner = args.spinner,
+				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
 
 			// If indicated, bypass progress indicator display/hide process
-			if (_.get(args, 'bypassProgressIndicator', false)) {
+			if (bypassProgressIndicator) {
 				return;
 			}
 
@@ -688,10 +689,11 @@ define(function(require) {
 		onRequestEnd: function(args) {
 			var self = this,
 				waitTime = 50,
-				$spinner = args.spinner;
+				$spinner = args.spinner,
+				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
 
 			// If indicated, bypass progress indicator display/hide process
-			if (_.get(args, 'bypassProgressIndicator', false)) {
+			if (bypassProgressIndicator) {
 				return;
 			}
 

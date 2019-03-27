@@ -50,13 +50,13 @@ define(function(require) {
 					}
 				};
 
-			monster.waterfall([
-				function(callback) {
+			monster.series({
+				render: function(callback) {
 					// Display notifications topbar element without alerts
 					renderTemplate();
 					callback(null);
 				},
-				function(callback) {
+				alerts: function(callback) {
 					// Get alerts from API
 					self.alertsRequestListAlerts({
 						success: function(data) {
@@ -67,13 +67,13 @@ define(function(require) {
 						}
 					});
 				}
-			], function(err, alerts) {
+			}, function(err, results) {
 				if (err) {
 					return;
 				}
 
 				// If there is no error, re-render topbar element with alerts
-				renderTemplate(alerts);
+				renderTemplate(results.alerts);
 			});
 		},
 
