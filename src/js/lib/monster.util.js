@@ -1025,7 +1025,7 @@ define(function(require) {
 		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
 			style: withCurrency ? 'currency' : 'decimal',
 			currency: monster.config.currencyCode,
-			minimumFractionDigits: _.isInteger(price) && !_.has(args, 'digits') ? 0 : digits
+			minimumFractionDigits: digits
 		});
 
 		return formatter.format(price);
