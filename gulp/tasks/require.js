@@ -41,12 +41,10 @@ var getConfigRequire = function(mode, app) {
 			'handlebars',
 			'hasher',
 			'hotkeys',
-			'html2canvas',
 			'introJs',
 			'isotope',
 			'jquery',
 			'jqueryui',
-			'jspdf',
 			'jstz',
 			'kazoo',
 			'kazoosdk',
@@ -71,6 +69,7 @@ var getConfigRequire = function(mode, app) {
 			'papaparse',
 			'pdfjs-dist/build/pdf',
 			'pdfjs-dist/build/pdf.worker',
+			'pdfmake',
 			'popup-redirect',
 			'postal',
 			'randomColor',
@@ -83,11 +82,14 @@ var getConfigRequire = function(mode, app) {
 			'toastr',
 			'touch-punch',
 			'validate',
+			'vfs_fonts',
 			'wysiwyg'
 		],
 		librariesToExcludeFromWhole = [
 			'pdfjs-dist/build/pdf',
-			'pdfjs-dist/build/pdf.worker'
+			'pdfjs-dist/build/pdf.worker',
+			'pdfmake',
+			'vfs_fonts'
 		],
 		standardFilesToExclude = [
 			'config',
