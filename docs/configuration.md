@@ -56,6 +56,7 @@ Key | Description | Type | Default | Required
 `additionalLoggedApps.[]` | Name of the app to side load | `String` | | `false`
 `allowAccessList` | If set to true, will allow the user to modify access_lists from the account settings page. | `Boolean` | `false` | `false`
 `applicationTitle` | Application title, displayed in the browser tab | `String` | | `false`
+`bookkeepers` | | `Object`([#bookkeepers](#bookkeepers)) | | `false`
 `callReportEmail` | E-mail address used to report calls in SmartPBX's Call Logs. "Report Call" link won't be displayed if no address is specified. This address can either be set here in the config file, or through the Branding app. | `String` | | `false`
 `companyName` | Company Name, used in many places in the UI | `String` | | `false`
 `disableNumbersFeatures` | Indicates whether or not number features (e.g. e911, cnam) are configurable through the UI. | `Boolean` | `false` |`false`
@@ -76,6 +77,14 @@ Key | Description | Type | Default | Required
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
 `showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
+
+#### `bookkeepers`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`braintree` | Whether or not bookkeeping transactions can be performed through Braintree. | `Boolean` | `true` | `false`
+`kazoo` | Whether or not bookkeeping transactions can be performed through Kazoo. | `Boolean` | `true` | `false`
+`http` | Whether or not bookkeeping transactions can be performed through HTTP. | `Boolean` | `true` | `false`
 
 #### `port`
 
