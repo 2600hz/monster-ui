@@ -1032,6 +1032,41 @@ define(function(require) {
 	}
 
 	/**
+	 * Returns a list of bookkeepers available for Monster UI
+	 * @return {Array} List of bookkeepers availalbe
+	 */
+	function getBookkeepers() {
+		var i18n = monster.apps.core.i18n.active().bookkeepers;
+
+		return _.flatten([
+			[
+				{
+					label: i18n.default,
+					value: 'default'
+				}
+			],
+			_.chain(monster.config.whitelabel.bookkeepers)
+				.map(function(isEnabled, bookkeeper) {
+					return {
+						bookkeeper: bookkeeper,
+						isEnabled: isEnabled
+					};
+				})
+				.filter('isEnabled')
+				.map(function(item) {
+					var value = _.get(item, 'bookkeeper');
+
+					return {
+						label: _.get(i18n, value, _.startCase(value)),
+						value: value
+					};
+				})
+				.sortBy('label')
+				.value()
+		]);
+	}
+
+	/**
 	 * Return the symbol of the currency used through the UI
 	 * @return {String} Symbol of currency
 	 */
@@ -1334,6 +1369,7 @@ define(function(require) {
 
 	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
+	util.getBookkeepers = getBookkeepers;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;
