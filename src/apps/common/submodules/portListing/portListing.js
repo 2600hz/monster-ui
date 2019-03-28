@@ -254,7 +254,7 @@ define(function(require) {
 						numbers: numbers,
 						numbersAmount: _.size(numbers),
 						timeline: self.portListingFormatEntriesToTimeline(results.timeline),
-						allowPrivate: monster.util.isSuperDuper() || monster.util.isPortAuthority(_.get(portRequest, 'port_authority', null))
+						allowPrivate: monster.util.isSuperDuper() || self.isPortAuthority(_.get(portRequest, 'port_authority', null))
 					}, _.pick(portRequest, [
 						'carrier',
 						'name',
@@ -801,6 +801,13 @@ define(function(require) {
 		/**************************************************
 		 *                   UI helpers                   *
 		 **************************************************/
+
+		// Validate if the given port authority ID matches with the current account ID
+		isPortAuthority: function(portAuthorityID, pAccount) {
+			var account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			return portAuthorityID === account.id;
+		},
 
 		portListingScrollToBottomOfTimeline: function() {
 			var self = this,
