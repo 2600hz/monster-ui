@@ -247,7 +247,7 @@ define(function(require) {
 						numbers: numbers,
 						numbersAmount: _.size(numbers),
 						timeline: self.portListingFormatEntriesToTimeline(results.timeline),
-						allowPrivate: monster.util.isSuperDuper() || self.isPortAuthority(_.get(portRequest, 'port_authority', null))
+						allowPrivate: monster.util.isSuperDuper() || _.get(portRequest, 'port_authority', null) === self.accountId
 					}, _.pick(portRequest, [
 						'carrier',
 						'name',
@@ -795,13 +795,6 @@ define(function(require) {
 		 *                   UI helpers                   *
 		 **************************************************/
 
-		// Validate if the given port authority ID matches with the current account ID
-		isPortAuthority: function(portAuthorityID, pAccount) {
-			var account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			return portAuthorityID === account.id;
-		},
-
 		portListingScrollToBottomOfTimeline: function() {
 			var self = this,
 				container = self.portListingGet('container'),
@@ -973,7 +966,7 @@ define(function(require) {
 				.value();
 		},
 
-		portListingRequestByType: function(args) {
+		portListingGetRequestsByType: function(args) {
 			var self = this;
 
 			self.portListingRequestListPort({
@@ -990,7 +983,7 @@ define(function(require) {
 			});
 		},
 
-		portlistingRequestDescendantsByType: function(args) {
+		portlistingGetRequestsDescendantsByType: function(args) {
 			var self = this;
 
 			self.portListingRequestListDescendantsPorts({
@@ -1007,7 +1000,7 @@ define(function(require) {
 			});
 		},
 
-		portListingRequestByAgent: function(args) {
+		portListingGetRequestsByAgent: function(args) {
 			var self = this;
 
 			self.portListingRequestListAgentPorts({
@@ -1056,13 +1049,13 @@ define(function(require) {
 			switch (args.tab) {
 				case 'account':
 				default:
-					self.portListingRequestByType(args);
+					self.portListingGetRequestsByType(args);
 					break;
 				case 'agent':
-					self.portListingRequestByAgent(args);
+					self.portListingGetRequestsByAgent(args);
 					break;
 				case 'descendants':
-					self.portlistingRequestDescendantsByType(args);
+					self.portlistingGetRequestsDescendantsByType(args);
 					break;
 			}
 		},
