@@ -1054,15 +1054,15 @@ define(function(require) {
 			var self = this;
 
 			switch (args.tab) {
-				case 'account':
-				default:
-					self.portListingGetRequestsByType(args);
-					break;
 				case 'agent':
 					self.portListingGetRequestsByAgent(args);
 					break;
 				case 'descendants':
 					self.portlistingGetRequestsDescendantsByType(args);
+					break;
+				case 'account':
+				default:
+					self.portListingGetRequestsByType(args);
 					break;
 			}
 		},
