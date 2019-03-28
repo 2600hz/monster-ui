@@ -129,6 +129,7 @@
 			dashboards: {
 				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
 				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getRecipientOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/recipient_overview' },
 				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
 			device: {
@@ -336,7 +337,8 @@
 				'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
 				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' },
-				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' }
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' },
+				'updateSessions': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/sessions/{sessionId}' }
 			},
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
@@ -353,6 +355,20 @@
 			},
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
+			},
+			qubicleSkills: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skills' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skills' }
+			},
+			qubicleSkillRules: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skill_rules' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skill_rules' }
 			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
