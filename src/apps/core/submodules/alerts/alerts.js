@@ -176,11 +176,12 @@ define(function(require) {
 				}
 			});
 
-			$(window).on('resize', function() {
-				self.alertsSetDropdownBodyMaxHeight({
-					dropdownBody: $alertsContainer.find('.dropdown-body')
-				});
-			});
+			$(window).on('resize',
+				_.debounce(function() {
+					self.alertsSetDropdownBodyMaxHeight({
+						dropdownBody: $alertsContainer.find('.dropdown-body')
+					});
+				}, 100));
 		},
 
 		/**

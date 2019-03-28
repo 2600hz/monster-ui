@@ -307,13 +307,14 @@ define(function(require) {
 			});
 
 			// Hide dropdowns when clicking anywhere outside the topbar nav links
-			$(document).on('click', function(e) {
-				if ($(e.target).closest('#main_topbar_nav').length > 0) {
-					return;
-				}
-				e.stopPropagation();
-				self.hideTopbarDropdowns();
-			});
+			$(document).on('click',
+				_.throttle(function(e) {
+					if ($(e.target).closest('#main_topbar_nav').length > 0) {
+						return;
+					}
+					e.stopPropagation();
+					self.hideTopbarDropdowns();
+				}, 250));
 
 			// Hide dropdowns on click at any topbar link
 			container.find('.core-topbar .links').on('click', function() {
