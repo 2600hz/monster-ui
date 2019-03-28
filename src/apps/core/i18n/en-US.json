@@ -1,4 +1,10 @@
 {
+	"bookkeepers": {
+		"braintree": "Braintree",
+		"default": "Default",
+		"http": "HTTP",
+		"kazoo": "Kazoo"
+	},
 	"monthPicker": {
 		"backTo": "Back to",
 		"buttonText": "Open Month Picker",
