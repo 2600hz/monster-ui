@@ -29,7 +29,7 @@ define({
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `api` | Various API related settings | `Object`([#api](#api)) | | `false`
-`currencyCode` | ISO 4217 currency code for which your billing system is configured for that will be used throughout the UI to display prices using the corresponding currency symbol | `String` | `USD` | `false`
+`currencyCode` | The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as `USD` for the US dollar, `EUR` for the euro, or `CNY` for the Chinese RMB (see the [Current currency & funds code][currency-codes]). | `String` | `USD` | `false`
 `developerFlags` | Enable development functionalities | `Object`([#developerFlags](#developerflags)) | | `true`
 `disableBraintree` | If you are not using Braintree in your environment, you should add the following flag to disable the UI components that are using it | `Boolean` | `false` | `false`
 `kazooClusterId` | The kazooClusterId is the cluster id generated when creating a cluster doc for provisioner | `String` | | `false`
@@ -56,16 +56,18 @@ Key | Description | Type | Default | Required
 `additionalLoggedApps.[]` | Name of the app to side load | `String` | | `false`
 `allowAccessList` | If set to true, will allow the user to modify access_lists from the account settings page. | `Boolean` | `false` | `false`
 `applicationTitle` | Application title, displayed in the browser tab | `String` | | `false`
+`bookkeepers` | | `Object`([#bookkeepers](#bookkeepers)) | | `false`
 `callReportEmail` | E-mail address used to report calls in SmartPBX's Call Logs. "Report Call" link won't be displayed if no address is specified. This address can either be set here in the config file, or through the Branding app. | `String` | | `false`
 `companyName` | Company Name, used in many places in the UI | `String` | | `false`
 `disableNumbersFeatures` | Indicates whether or not number features (e.g. e911, cnam) are configurable through the UI. | `Boolean` | `false` |`false`
 `hideAppStore` | The appstore is exposed to admins by default. If set to false, it will be hidden for all users. | `Boolean` | `false` | `false`
 `hideBuyNumbers` | Remove the ability to buy phone numbers throughout the entire UI | `Boolean` | `false` | `false`
 `hideNewAccountCreation` | If set to true, will hide creation of new accounts | `Boolean` | `false` | `false`
+`hide_port` | Whether or not to make porting actions available through the UI. | `Boolean` | `false` | `false`
 `jiraFeedback` | If you want to provide a "Provide Feedback" button tied with JIRA issue collector, you can set this object to enabled: true, and provide the URL of the JIRA Issue collector to the url property. If this item is removed or set to enabled: false, nothing will appear in the UI. | `Object` | | `false`
 `jiraFeedback.enabled` | | `Boolean` | `false` | `false`
 `jiraFeedback.url` | | `String` | | `false`
-`language` | By default the language is set by the browser, and once the user is log in it will take what's set in the account/user. If you want to force the language of the UI before the user is logged in, you can set it here. | `String` | | `true`
+`language` | By default the language is set by the cookie, and once the user is log in it will take what's set in the account/user. If you want to force the language of the UI before a user is logged in, you can set it here. | `String` | | `true`
 `logoPath` | Hardcoded logo to override default Kazoo Logo | `String` | | `false`
 `logoutTimer` | Minutes before showing the logged in user that it will auto-disconnect him soon. Changing this value allows you to disable the auto-logout mechanism by setting it to 0. If you want to change the default duration (15), you can set this value with a number > 0 | `Number` | `15` | `false`
 `nav` | | `Object` | | `false`
@@ -73,7 +75,16 @@ Key | Description | Type | Default | Required
 `nav.logout` | Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior | `Object` | | `false`
 `port` | | `Object`([#/port](#port)) | | `false`
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
+`showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
+
+#### `bookkeepers`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`braintree` | Whether or not bookkeeping transactions can be performed through Braintree. | `Boolean` | `true` | `false`
+`kazoo` | Whether or not bookkeeping transactions can be performed through Kazoo. | `Boolean` | `true` | `false`
+`http` | Whether or not bookkeeping transactions can be performed through HTTP. | `Boolean` | `true` | `false`
 
 #### `port`
 
@@ -90,3 +101,5 @@ Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `showAllCallflows` | Setting this flag to `true` will show all restricted callflows in the Callflows app | `Boolean` | `false` | `false`
 `showJsErrors` | Show JS error when they happen | `Boolean` | `false` | `false`
+
+[currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html

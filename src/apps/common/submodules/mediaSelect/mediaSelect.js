@@ -32,6 +32,7 @@ define(function(require) {
 		mediaSelectFormatData: function(args) {
 			var self = this,
 				defaultData = {
+					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
 					noneLabel: self.i18n.active().mediaSelect.noneLabel,
 					selectedOption: false,
 					uploadButton: true,

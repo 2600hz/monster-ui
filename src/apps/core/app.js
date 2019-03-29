@@ -3,8 +3,18 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
+	var appSubmodules = [
+		'alerts'
+	];
+
+	require(_.map(appSubmodules, function(name) {
+		return './submodules/' + name + '/' + name;
+	}));
+
 	var app = {
 		name: 'core',
+
+		subModules: appSubmodules,
 
 		css: [ 'app' ],
 
@@ -249,6 +259,7 @@ define(function(require) {
 				if (!monster.routing.hasMatch()) {
 					if (typeof defaultApp !== 'undefined') {
 						monster.apps.load(defaultApp, function(app) {
+							monster.pub('core.alerts.refresh');
 							self.showAppName(defaultApp);
 							app.render($('#monster_content'));
 						}, {}, true);

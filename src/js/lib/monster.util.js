@@ -455,34 +455,6 @@ define(function(require) {
 			}
 		},
 
-		/* Set the language to start the application.
-			By default will take the value from the cookie,
-			or if it doesn't exist, it will take the value from the config.js,
-			or if it's not set it will fall back to the language of the browser.
-			In last resort it will set it to 'en-US' if nothing is set above
-		*/
-		setDefaultLanguage: function() {
-			var languages = [
-					'de-DE',
-					'en-US',
-					'es-ES',
-					'fr-FR',
-					'nl-NL',
-					'ru-RU'
-				],
-				browserLanguage = _.find(languages, function(lang) {
-					return lang.indexOf(navigator.language) > -1;
-				}),
-				cookieLanguage = monster.cookies.has('monster-auth') ? monster.cookies.getJson('monster-auth').language : undefined,
-				defaultLanguage = browserLanguage || 'en-US';
-
-			monster.config.whitelabel.language = cookieLanguage || monster.config.whitelabel.language || defaultLanguage;
-
-			// Normalize the language to always be capitalized after the hyphen (ex: en-us -> en-US, fr-FR -> fr-FR)
-			// Will normalize bad input from the config.js or cookie data coming directly from the database
-			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/, function(a) { return a.toUpperCase(); });
-		},
-
 		checkVersion: function(obj, callback) {
 			var self = this,
 				i18n = monster.apps.core.i18n.active();
@@ -1032,51 +1004,80 @@ define(function(require) {
 	 * will have two digits.
 	 */
 	function formatPrice(args) {
-		var price = Number(args.price);
-		var digits = parseInt(args.digits);
-		var withCurrency = _.isBoolean(args.withCurrency)
-			? args.withCurrency
-			: true;
-		var digitsCount = digits >= 0
-			? digits
-			: 2;
-		var roundedPrice = Math.round(price * Math.pow(10, digitsCount)) / Math.pow(10, digitsCount);
-		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(digits) || digits < 0) ? 0 : digitsCount);
-		var addCurrency = function(value) {
-			var currencyCode = monster.config.hasOwnProperty('currencyCode')
-				? monster.config.currencyCode
-				: 'USD';
-			var codeData = monster.supportedCurrencyCodes[currencyCode];
-			var ret;
-			if (_.isUndefined(codeData)) {
-				throw new Error('Currency code ' + currencyCode + ' is not supported.');
-			} else {
-				if (codeData.position === 'ante') {
-					ret = codeData.symbol + fixedPrice;
-				} else if (codeData.position === 'post') {
-					ret = fixedPrice + ' ' + codeData.symbol;
-				}
-			}
-			return ret;
-		};
-		return withCurrency
-			? addCurrency(fixedPrice)
-			: fixedPrice;
+		if (
+			_.isNaN(args.price)
+			|| (!_.isNumber(args.price) && _.isNaN(_.toNumber(args.price)))
+		) {
+			throw new TypeError('"price" is not a valid number or not castable into a number');
+		}
+		if (
+			!_.isUndefined(args.digits)
+			&& (!_.isNumber(args.digits) || (!_.isInteger(args.digits) || args.digits < 0))
+		) {
+			throw new TypeError('"digits" is not a positive integer');
+		}
+		if (!_.isUndefined(args.withCurrency) && !_.isBoolean(args.withCurrency)) {
+			throw new TypeError('"withCurrency" is not a boolean');
+		}
+		var price = _.toNumber(args.price);
+		var digits = _.get(args, 'digits', 2);
+		var withCurrency = _.get(args, 'withCurrency', true);
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
+			style: withCurrency ? 'currency' : 'decimal',
+			currency: monster.config.currencyCode,
+			minimumFractionDigits: digits
+		});
+
+		return formatter.format(price);
 	}
 
 	/**
-	 * Return the symbol of the currency used
+	 * Returns a list of bookkeepers available for Monster UI
+	 * @return {Array} List of bookkeepers availalbe
+	 */
+	function getBookkeepers() {
+		var i18n = monster.apps.core.i18n.active().bookkeepers;
+
+		return _.flatten([
+			[
+				{
+					label: i18n.default,
+					value: 'default'
+				}
+			],
+			_.chain(monster.config.whitelabel.bookkeepers)
+				.map(function(isEnabled, bookkeeper) {
+					return {
+						bookkeeper: bookkeeper,
+						isEnabled: isEnabled
+					};
+				})
+				.filter('isEnabled')
+				.map(function(item) {
+					var value = _.get(item, 'bookkeeper');
+
+					return {
+						label: _.get(i18n, value, _.startCase(value)),
+						value: value
+					};
+				})
+				.sortBy('label')
+				.value()
+		]);
+	}
+
+	/**
+	 * Return the symbol of the currency used through the UI
 	 * @return {String} Symbol of currency
 	 */
 	function getCurrencySymbol() {
-		var currencyCode = monster.config.hasOwnProperty('currencyCode')
-			? monster.config.currencyCode
-			: 'USD';
-		var codeData = monster.supportedCurrencyCodes[currencyCode];
-		if (_.isUndefined(codeData)) {
-			throw new Error('Currency code ' + currencyCode + ' is not supported');
-		}
-		return codeData.symbol;
+		var base = NaN;
+		var formatter = new Intl.NumberFormat(monster.defaultLanguage, {
+			style: 'currency',
+			currency: monster.config.currencyCode
+		});
+
+		return formatter.format(base).replace('NaN', '');
 	}
 
 	/**
@@ -1156,14 +1157,10 @@ define(function(require) {
 		if (!_.isPlainObject(number)) {
 			throw new TypeError('"number" is not an object');
 		}
-		if (!_.has(number, 'features_available') && !_.has(number, '_read_only.features_available')) {
-			throw new Error('"number" does not represent a Kazoo phone number');
-		}
 		var numberFeatures = _.get(number, 'features_available', []);
-		if (_.isEmpty(numberFeatures)) {
-			numberFeatures = _.get(number, '_read_only.features_available', []);
-		}
-		return numberFeatures;
+		return _.isEmpty(numberFeatures)
+			? _.get(number, '_read_only.features_available', [])
+			: numberFeatures;
 	}
 
 	/**
@@ -1372,6 +1369,7 @@ define(function(require) {
 
 	util.formatMacAddress = formatMacAddress;
 	util.formatPrice = formatPrice;
+	util.getBookkeepers = getBookkeepers;
 	util.getCurrencySymbol = getCurrencySymbol;
 	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;

@@ -19,6 +19,7 @@ define(function(require) {
 		moment = require('moment');
 
 	require('moment-timezone');
+	require('monthpicker');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
@@ -101,11 +102,13 @@ define(function(require) {
 				return monster.util.formatPhoneNumber(phoneNumber);
 			},
 
-			formatPrice: function(price, decimals, withCurrency) {
+			formatPrice: function() {
+				var args = _.toArray(arguments);
+
 				return monster.util.formatPrice({
-					price: price,
-					digits: decimals,
-					withCurrency: withCurrency
+					price: _.size(args) >= 2 ? args[0] : 0,
+					digits: _.size(args) >= 3 ? args[1] : undefined,
+					withCurrency: _.size(args) >= 4 ? args[2] : undefined
 				});
 			},
 
@@ -3147,6 +3150,35 @@ define(function(require) {
 	}
 
 	/**
+	 * Transforms a field into a jQuery MonthPicker element
+	 * @param  {jQuery} $target Input to transform
+	 * @param  {Object} options List of options
+	 * @return {jQuery}         MonthPicker instance
+	 */
+	function monthpicker($target, options) {
+		var selectedMonth = _.get(options, 'selectedMonth', null);
+		var minMonth = _.get(options, 'minMonth', null);
+		var maxMonth = _.get(options, 'maxMonth', null);
+
+		return $target.MonthPicker({
+			ShowIcon: false,
+			SelectedMonth: selectedMonth,
+			Duration: 250,
+			MinMonth: minMonth,
+			MaxMonth: maxMonth,
+			i18n: _.merge({
+				months: _
+					.chain(monster.apps.core.i18n.active().calendar.month)
+					.toArray()
+					.map(function(month) {
+						return month.substring(0, 3) + '.';
+					})
+					.value()
+			}, monster.apps.core.i18n.active().monthPicker)
+		});
+	}
+
+	/**
 	 * Wrapper for toast notification library
 	 * @param  {Object} args
 	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
@@ -3170,8 +3202,9 @@ define(function(require) {
 
 	initialize();
 
-	ui.toast = toast;
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+	ui.monthpicker = monthpicker;
+	ui.toast = toast;
 
 	return ui;
 });
