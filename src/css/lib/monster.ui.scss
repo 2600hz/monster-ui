@@ -513,88 +513,101 @@ i.monster-password-strength {
 /************************************************************/
 /************************ APPS LAYOUT ***********************/
 /************************************************************/
+.modal-content,
+.core-content {
+	.app-layout {
+		position: relative;
+		min-height: 100%;
+		background-color: $background-primary-color;
+		box-sizing: border-box;
+		padding-bottom: 15px;
 
-.core-content .app-layout {
-	position: relative;
-	min-height: 100%;
-	background-color: $background-primary-color;
-	box-sizing: border-box;
-	padding-bottom: 15px;
-}
+		.app-header {
+			.app-navbar-bg {
+				position: relative;
+				z-index: 10;
+				border-bottom: 1px solid #c0c0c9;
+				background-color: #fff;
+				box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
 
-.core-content .app-header .app-navbar-bg {
-	position: relative;
-	z-index: 10;
-	border-bottom: 1px solid #c0c0c9;
-	background-color: #fff;
-	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
-}
+				.app-navbar-wrapper {
+					max-width: 1280px;
+					margin: 0 auto;
+					padding: 18px 20px 0;
 
-.core-content .app-header .app-navbar-wrapper {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 18px 20px 0;
-}
+					.app-navbar {
+						clear: both;
+					}
+				}
+			}
 
-.core-content .app-layout.fullscreen .app-header .app-navbar-wrapper,
-.core-content .app-layout.docked .app-header .app-navbar-wrapper {
-	max-width: none;
-}
+			.app-subnav-bg {
+				z-index: 9;
+				display: none;
 
-.core-content .app-header .app-navbar {
-	clear: both;
-}
+				.app-subnav-wrapper {
+					max-width: 1280px;
+					margin: 0 auto;
+					padding: 20px 20px 0;
 
-.core-content .app-header .app-subnav-bg {
-	z-index: 9;
-	display: none;
-}
+					.app-subnav {
+						border-bottom: 1px solid #c0c0c9;
 
-.core-content .app-header .app-subnav-wrapper {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 20px 20px 0;
-}
+						&:not(.active) {
+							display: none;
+						}
+					}
+				}
+			}
+		}
 
-.core-content .app-header .app-subnav-wrapper .app-subnav {
-	border-bottom: 1px solid #c0c0c9;
-}
+		.app-content-wrapper {
+			max-width: 1280px;
+			margin: 0 auto;
+			padding: 30px 20px;
 
-.core-content .app-header .app-subnav:not(.active) {
-	display: none;
-}
+			&.subnav-enabled {
+				background: #FFF;
+				max-width: 1238px;
+				border-left: 1px solid #CCC;
+				border-bottom: 1px solid #CCC;
+				border-right: 1px solid #CCC;
+				padding: 40px 20px 20px;
+			}
+		}
 
-.core-content .app-layout .app-content-wrapper {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 30px 20px;
-}
+		&.fullscreen {
+			.app-content-wrapper {
+				max-width: none;
+			}
+		}
 
-.core-content .app-layout .app-content-wrapper.subnav-enabled {
-	background: #FFF;
-	max-width: 1238px;
-	border-left: 1px solid #CCC;
-	border-bottom: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	padding: 40px 20px 20px;
-}
+		&.docked {
+			.app-content-wrapper {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				max-width: none;
+				height: 100%;
+				padding: 0;
+			}
 
-.core-content .app-layout.fullscreen .app-content-wrapper {
-	max-width: none;
-}
+			&.with-navbar {
+				.app-content-wrapper {
+					position: relative;
+				}
+			}
+		}
 
-.core-content .app-layout.docked .app-content-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	max-width: none;
-	height: 100%;
-	padding: 0;
-}
-
-.core-content .app-layout.docked.with-navbar .app-content-wrapper {
-	position: relative;
+		&.docked,&.fullscreen {
+			.app-header {
+				.app-navbar-wrapper {
+					max-width: none;
+				}
+			}
+		}
+	}
 }
 
 /************************************************************/
