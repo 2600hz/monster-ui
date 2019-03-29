@@ -64,12 +64,11 @@
 					inset 0 1px 0 0 $woodsmoke;
 					padding: 12px 16px;
 
-					* {
+					.title, .subtitle, .message, .button-clear {
 						margin-left: 48px;
 						margin-right: 0;
 						margin-bottom: 0;
 						color: $white;
-						font-size: 12px;
 						font-weight: normal;
 						line-height: 12px;
 					}
@@ -85,23 +84,24 @@
 						background-size: contain;
 					}
 
-					h1 {
+					.title {
 						margin-top: 0;
 						font-size: 14px;
 						font-weight: 600;
 						line-height: 18px;
 					}
 
-					h2, p {
+					.subtitle, .message {
+						font-size: 12px;
 						letter-spacing: 0;
 					}
 
-					h2 {
+					.subtitle {
 						margin-top: 4px;
 						color: $french-gray2;
 					}
 
-					p {
+					.message {
 						margin-top: 12px;
 					}
 
@@ -111,6 +111,7 @@
 						border:none;
 						border-radius: 2px;
 						padding: 8px 12px;
+						font-size: 12px;
 					}
 				}
 			}
