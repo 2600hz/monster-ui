@@ -162,17 +162,12 @@ define(function(require) {
 					$alertGroup = $alertItem.parent(),
 					$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
 
-				$elementToRemove.slideUp({
-					duration: 200,
-					complete: function() {
-						$elementToRemove.remove();
-					}
+				$elementToRemove.slideUp(200, function() {
+					$elementToRemove.remove();
 				});
 
 				if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
-					$alertGroup.siblings('.alert-group-empty').slideDown({
-						duration: 200
-					});
+					$alertGroup.siblings('.alert-group-empty').slideDown(200);
 				}
 			});
 
