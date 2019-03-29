@@ -54,9 +54,9 @@ Used internally to let admins masquerade an app or not. If it's set to false, an
 
 ##### callApi
 
-Probably the most used helper by developers! Every time you want to call a Kazoo API, you'll want to use `self.callApi`. This is automatically configured with our KazooSDK so the only things you need to provide are the `resource`, the `data` and the `success` callback for it to work. For the full list of available parameters, please see the [callApi() function reference][call_api_reference].
+Probably the most used helper by developers! Every time you want to call a Kazoo API, you'll want to use `self.callApi`. This is automatically configured with our KazooSDK so the only things you need to provide are the `resource`, the `data` and the `success` callback for it to work.
 
-	// Example: Get information about the logged in user
+	Example: Get information about the logged in user
 	self.callApi({
 		resource: 'user.get',
 		data: {
@@ -94,4 +94,3 @@ In order for your users to see what the shortcut does, it's important to set the
 [i18n]: internationalization.md
 [tutorial]: tutorial.md
 [events]: events.md
-[call_api_reference]: appContext/callApi().md
