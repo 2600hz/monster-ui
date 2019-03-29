@@ -17,20 +17,21 @@
 					</div>
 					{{#each alerts}}
 						<div class="alert-item" data-alert_id="{{id}}">
-							<div class="icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
-							<h1>{{title}}</h1>
-						{{#if metadata}}
-							<h2>
-								{{#each metadata}}
-									{{ tryI18n @root.i18n.alerts.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
-								{{/each}}
-							</h2>
-						{{/if}}
-							<p>{{message}}</p>
-						{{#if clearable}}
-							<button class="button-clear">{{@root.i18n.alerts.clearButton}}</button>
-						{{/if}}
-							<div class="clearfix"></div>
+							<div class="item-icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
+							<div class="item-body">
+								<div class="title">{{title}}</div>
+							{{#if metadata}}
+								<div class="subtitle">
+									{{#each metadata}}
+										{{ tryI18n @root.i18n.alerts.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
+									{{/each}}
+								</div>
+							{{/if}}
+								<div class="message">{{message}}</div>
+							{{#if clearable}}
+								<button class="button-clear">{{@root.i18n.alerts.clearButton}}</button>
+							{{/if}}
+							</div>
 						</div>
 					{{/each}}
 				</div>
