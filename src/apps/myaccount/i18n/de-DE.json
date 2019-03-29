@@ -65,9 +65,9 @@
 		"enableTwelveHoursMode": "Uhrzeit im 12-Stunden-Format (AM/PM)",
 		"dateFormatTitle": "Datumsformat",
 		"dateFormats": {
-			"dmy": "Tag/Monat/Jahr",
-			"mdy": "Monat/Tag/Jahr",
-			"ymd": "Jahr/Monat/Tag"
+			"dmy": "Tag.Monat.Jahr",
+			"mdy": "Monat.Tag.Jahr",
+			"ymd": "Jahr.Monat.Tag"
 		},
 		"outbound_privacy": {
 			"type": "Datenschutz bei der Anrufer-ID ",

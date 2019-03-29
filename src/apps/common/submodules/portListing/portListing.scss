@@ -41,6 +41,7 @@
 
 /********************** LISTING TABLES **********************/
 
+
 #common_app_container .monster-table-wrapper:not(:first-child) {
 	margin-top: 20px;
 }
@@ -195,7 +196,7 @@
 			width: 80px;
 			margin: 0 0 0 5px;
 		}
-	}
+  }
 	#port_detail_view {
 		display: flex;
 		width: 100%;
@@ -250,7 +251,6 @@
 				.controls {
 					font-weight: 600;
 					margin-left: 150px;
-
 					.text {
 						display: inline-block;
 						margin-bottom: 5px;

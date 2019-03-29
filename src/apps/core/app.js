@@ -3,8 +3,18 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
+	var appSubmodules = [
+		'alerts'
+	];
+
+	require(_.map(appSubmodules, function(name) {
+		return './submodules/' + name + '/' + name;
+	}));
+
 	var app = {
 		name: 'core',
+
+		subModules: appSubmodules,
 
 		css: [ 'app' ],
 
@@ -249,6 +259,7 @@ define(function(require) {
 				if (!monster.routing.hasMatch()) {
 					if (typeof defaultApp !== 'undefined') {
 						monster.apps.load(defaultApp, function(app) {
+							monster.pub('core.alerts.refresh');
 							self.showAppName(defaultApp);
 							app.render($('#monster_content'));
 						}, {}, true);
@@ -280,12 +291,16 @@ define(function(require) {
 			};
 
 			/* Only subscribe to the requestStart and End event when the spinner is loaded */
-			monster.sub('monster.requestStart', function() {
-				self.onRequestStart(spinner);
+			monster.sub('monster.requestStart', function(params) {
+				self.onRequestStart(_.merge({
+					spinner: spinner
+				}, params));
 			});
 
-			monster.sub('monster.requestEnd', function() {
-				self.onRequestEnd(spinner);
+			monster.sub('monster.requestEnd', function(params) {
+				self.onRequestEnd(_.merge({
+					spinner: spinner
+				}, params));
 			});
 
 			// Different functionality depending on whether default apploader or dropdown apploader to be opened
@@ -640,9 +655,16 @@ define(function(require) {
 			});
 		},
 
-		onRequestStart: function($spinner) {
+		onRequestStart: function(args) {
 			var self = this,
-				waitTime = 250;
+				waitTime = 250,
+				$spinner = args.spinner,
+				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
+
+			// If indicated, bypass progress indicator display/hide process
+			if (bypassProgressIndicator) {
+				return;
+			}
 
 			self.request.counter++;
 
@@ -664,9 +686,16 @@ define(function(require) {
 			}, waitTime);
 		},
 
-		onRequestEnd: function($spinner) {
+		onRequestEnd: function(args) {
 			var self = this,
-				waitTime = 50;
+				waitTime = 50,
+				$spinner = args.spinner,
+				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
+
+			// If indicated, bypass progress indicator display/hide process
+			if (bypassProgressIndicator) {
+				return;
+			}
 
 			self.request.counter--;
 

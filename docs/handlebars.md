@@ -6,29 +6,29 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
 * [How to use it](#how-to-use-it)
 * [Going Further](#going-further)
 * [Listing of different helpers](#listing-of-different-helpers)
-  - [coalesce](#coalesce)
-  - [compare](#compare)
-  - [debug](#debug)
-  - [formatMacAddress](#formatmacaddress)
-  - [formatPhoneNumber](#formatphonenumber)
-  - [formatPrice](#formatprice)
-  - [getUserFullName](#getuserfullname)
-  - [ifInArray](#ifinarray)
-  - [isPrivLevelAdmin](#isprivleveladmin)
-  - [isSuperDuper](#issuperduper)
-  - [monsterCheckbox](#monstercheckbox)
-  - [monsterNumberWrapper](#monsternumberwrapper)
-  - [monsterPanelText](#monsterpaneltext)
-  - [monsterRadio](#monsterradio)
-  - [monsterSignalIndicator](#monstersignalindicator)
-  - [monsterSwitch](#monsterswitch)
-  - [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
-  - [replaceVar](#replacevar)
-  - [svgIcon](#svgicon)
-  - [telicon](#telicon)
-  - [toFriendlyDate](#tofriendlydate)
-  - [toLowerCase](#tolowercase)
-  - [tryI18n](#tryi18n)
+    - [coalesce](#coalesce)
+    - [compare](#compare)
+    - [debug](#debug)
+    - [formatMacAddress](#formatmacaddress)
+    - [formatPhoneNumber](#formatphonenumber)
+    - [formatPrice](#formatprice)
+    - [getUserFullName](#getuserfullname)
+    - [ifInArray](#ifinarray)
+    - [isPrivLevelAdmin](#isprivleveladmin)
+    - [isSuperDuper](#issuperduper)
+    - [monsterCheckbox](#monstercheckbox)
+    - [monsterNumberWrapper](#monsternumberwrapper)
+    - [monsterPanelText](#monsterpaneltext)
+    - [monsterRadio](#monsterradio)
+    - [monsterSignalIndicator](#monstersignalindicator)
+    - [monsterSwitch](#monsterswitch)
+    - [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
+    - [replaceVar](#replacevar)
+    - [svgIcon](#svgicon)
+    - [telicon](#telicon)
+    - [toFriendlyDate](#tofriendlydate)
+    - [toLowerCase](#tolowercase)
+    - [tryI18n](#tryi18n)
 
 ## How to use it
 Let's start with an easy example. We want to display a banner displaying `Hello Georges!` whenever the User georges logs in. The HTML to do that could be something like this:
@@ -86,7 +86,7 @@ Let's see an example:
 
 example.html
 ```handlebars
-{{compare role "===" "admin"}}
+{{#compare role "===" "admin"}}
   <div class="admin-welcome">You're an admin! You must be so cool!</div>
 {{else}}
   <div class="peon-welcome">You're a user! That's cool.</div>
