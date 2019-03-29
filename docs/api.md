@@ -140,8 +140,7 @@ listDevices: function(callback) {
 }
 ```
 
-[Here is a full list of supported APIs][kazoo_sdk_methods].
+[Here is a full list of supported APIs](https://github.com/2600hz/monster-ui/blob/master/docs/kazooSdk.md#list-of-methods).
 
 [tutorial]: tutorial.md
 [kazoo_sdk_settings]: kazooSdk.md#general-api-settings
-[kazoo_sdk_methods]: kazooSdk.md#list-of-methods

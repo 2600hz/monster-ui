@@ -199,18 +199,6 @@ kazooSdk.auth.userAuth({
 | Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
-###### Alert
-
-|||
-|---|---|
-| Method: | alert.list(__*settings*__)__ |
-| Request Type: | GET |
-| Request URL: | {apiRoot}/accounts/{accountId}/alerts |
-| Request Content Type: | application/json |
-| Response Content Type: | json |
-| Mandatory _settings_: | `accountId` |
-| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
-
 ###### Auth
 
 |||
