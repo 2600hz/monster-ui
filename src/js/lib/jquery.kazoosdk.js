@@ -217,7 +217,8 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
 				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
 				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
-				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' },
+				'listByAccounts': { verb: 'GET', url: 'accounts/{accountId}/ledgers/summary_by_accounts' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
