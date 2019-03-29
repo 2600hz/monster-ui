@@ -12,6 +12,7 @@ define(function(require) {
 					monster.pub('myaccount.hide');
 
 					monster.apps.load(appName, function(loadedApp) {
+						monster.pub('core.alerts.refresh');
 						monster.pub('core.showAppName', appName);
 						$('#monster_content').empty();
 
