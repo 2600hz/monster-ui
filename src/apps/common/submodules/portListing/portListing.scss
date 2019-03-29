@@ -9,7 +9,7 @@
 	background-color: #F0F0F9;
 }
 
-#common_app_container .listing-section h4.title {
+#common_app_container h4.title {
 	font-weight: 600;
 	color: $manatee;
 }
@@ -41,20 +41,21 @@
 
 /********************** LISTING TABLES **********************/
 
-#common_app_container .listing-section .monster-table-wrapper:not(:first-child) {
+
+#common_app_container .monster-table-wrapper:not(:first-child) {
 	margin-top: 20px;
 }
 
-#common_app_container .listing-section .listing-item:hover td {
+#common_app_container .listing-item:hover td {
 	cursor: pointer;
 	border-color: $primary-color;
 }
 
-#common_app_container .listing-section .monster-table .bold {
+#common_app_container .monster-table .bold {
 	font-weight: 600;
 }
 
-#common_app_container .listing-section .monster-table .info {
+#common_app_container .monster-table .info {
 	font-size: 13px;
 	color: $manatee;
 }
@@ -180,6 +181,22 @@
 
 .modal-content,
 #common_app_container {
+	.port-listing-actions {
+		display: flex;
+		align-items: center;
+		position: relative;
+		margin-bottom: 15px;
+
+		input[type='text'] {
+			cursor: pointer;
+			background-color: #f0f0f9;
+			border-radius: 2px;
+			box-shadow: none;
+			text-align: center;
+			width: 80px;
+			margin: 0 0 0 5px;
+		}
+  }
 	#port_detail_view {
 		display: flex;
 		width: 100%;
@@ -234,7 +251,6 @@
 				.controls {
 					font-weight: 600;
 					margin-left: 150px;
-
 					.text {
 						display: inline-block;
 						margin-bottom: 5px;
