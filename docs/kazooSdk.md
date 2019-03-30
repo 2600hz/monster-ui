@@ -1609,6 +1609,16 @@ kazooSdk.auth.userAuth({
 
 |||
 |---|---|
+| Method: | __voicemail.patch(__*settings*__)__ |
+| Request Type: | PATCH |
+| Request URL: | {apiRoot}/accounts/{accountId}/vmboxes/{voicemailId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `voicemailId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
 | Method: | __voicemail.delete(__*settings*__)__ |
 | Request Type: | DELETE |
 | Request URL: | {apiRoot}/accounts/{accountId}/vmboxes/{voicemailId} |

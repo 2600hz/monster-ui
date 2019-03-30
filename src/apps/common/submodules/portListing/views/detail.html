@@ -245,7 +245,7 @@
 	{{#if isUpdateable}}
 		<div class="textarea-wrapper">
 			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
-			{{#isSuperDuper}}
+			{{#if allowPrivate}}
 				<div class="btn-group">
 					<button type="button" class="monster-button-success add-comment">
 						{{@root.i18n.portListing.detail.buttons.send}}
@@ -263,7 +263,7 @@
 				<button type="button" class="monster-button-success add-comment">
 					{{@root.i18n.portListing.detail.buttons.send}}
 				</button>
-			{{/isSuperDuper}}
+			{{/if}}
 		</div>
 	{{/if}}
 	</div>

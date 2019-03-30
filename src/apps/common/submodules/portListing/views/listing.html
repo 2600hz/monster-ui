@@ -1,22 +1,25 @@
-{{#if hasPorts}}
-<div class="listing-section">
-	<button class="monster-button-primary port-wizard">
-		{{i18n.portListing.listing.button}}
-	</button>
-	<div id="incomplete_ports_wrapper"></div>
-	<div id="submitted_ports_wrapper"></div>
+<div class="monster-table-wrapper">
+	<div class="monster-table-header port-listing-actions clearfix">
+		<button class="monster-button-primary port-wizard port-top-button">
+			{{i18n.portListing.listing.button}}
+		</button>
+
+		{{#if type}}
+		<div>
+			{{i18n.startDate}}
+			<input id="startDate" class="filter-from" readonly="readonly" type="text"/>
+		</div>
+		<div>
+			{{i18n.endDate}}
+			<input id="endDate" class="filter-to" readonly="readonly" type="text"/>
+		</div>
+		<button type="button" class="port-filter monster-button-secondary">
+			<i class="fa fa-filter" title="{{i18n.filter}}"></i>
+			{{ i18n.filter }}
+		</button>
+		{{/if}}
+
+	</div>
+	<div id="ports_listing_wrapper"></div>
 </div>
-{{else}}
-<div class="listing-section empty-listing">
-	<i class="icon-telicon-porting iconography"></i>
-	<h4 class="title">
-		{{i18n.portListing.listing.empty.title}}
-	</h4>
-	<p class="text">
-		{{i18n.portListing.listing.empty.text}}
-	</p>
-	<button class="monster-button-primary port-wizard">
-		{{i18n.portListing.listing.button}}
-	</button>
-</div>
-{{/if}}
+

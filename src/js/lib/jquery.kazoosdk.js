@@ -129,6 +129,7 @@
 			dashboards: {
 				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
 				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getRecipientOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/recipient_overview' },
 				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
 			device: {
@@ -216,7 +217,8 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
 				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
 				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
-				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' },
+				'listByAccounts': { verb: 'GET', url: 'accounts/{accountId}/ledgers/summary_by_accounts' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
@@ -316,7 +318,8 @@
 				'getTimeline': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/timeline' },
 				'listLastSubmitted': { verb: 'GET', url: 'accounts/{accountId}/port_requests/last_submitted' },
 				'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
-				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' }
+				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' },
+				'listPortAuthority': { verb: 'GET', url: 'port_requests' }
 			},
 			presence: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },
@@ -336,7 +339,8 @@
 				'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
 				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' },
-				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' }
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' },
+				'updateSessions': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/sessions/{sessionId}' }
 			},
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
@@ -353,6 +357,20 @@
 			},
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
+			},
+			qubicleSkills: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skills' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skills' }
+			},
+			qubicleSkillRules: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skill_rules' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skill_rules' }
 			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
