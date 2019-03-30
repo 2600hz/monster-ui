@@ -1038,6 +1038,17 @@
 	},
 
 	"alerts": {
-		"topbarTooltip": "Notifications"
+		"alertTypes": {
+			"manual": "Manual",
+			"system": "System",
+			"provisioner": "Advanced Provisioner",
+			"port": "Porting"
+		},
+		"clearButton": "Clear",
+		"dropdownTitle": "Notifications",
+		"metadata": {
+			"current_balance": "Current balance"
+		},
+		"noAlerts": "No new notifications"
 	}
 }
