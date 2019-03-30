@@ -35,7 +35,8 @@ define(function(require) {
 			'core.initializeShortcuts': 'initializeShortcuts',
 			'socket.connected': 'refreshIfWebSocketsApp',
 			'socket.disconnected': 'onSocketDisconnected',
-			'core.showWarningDisconnectedSockets': 'showWarningSockets'
+			'core.showWarningDisconnectedSockets': 'showWarningSockets',
+			'core.hideTopbarDropdowns': 'hideTopbarDropdowns'
 		},
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
@@ -162,6 +163,8 @@ define(function(require) {
 					name: appName,
 					label: self.i18n.active().controlCenter
 				};
+
+				myaccount.icon = monster.util.getAppIconPath(myaccount);
 
 				monster.ui.formatIconApp(myaccount);
 
@@ -303,6 +306,21 @@ define(function(require) {
 				}, params));
 			});
 
+			// Hide dropdowns when clicking anywhere outside the topbar nav links
+			$(document).on('click',
+				_.throttle(function(e) {
+					if ($(e.target).closest('#main_topbar_nav').length > 0) {
+						return;
+					}
+					e.stopPropagation();
+					self.hideTopbarDropdowns();
+				}, 250));
+
+			// Hide dropdowns on click at any topbar link
+			container.find('.core-topbar .links').on('click', function() {
+				self.hideTopbarDropdowns({ except: $(this).attr('id') });
+			});
+
 			// Different functionality depending on whether default apploader or dropdown apploader to be opened
 			var eventType = monster.config.whitelabel.useDropdownApploader ? 'mouseover' : 'click';
 			container.find('#main_topbar_apploader_link').on(eventType, function(e) {
@@ -313,15 +331,6 @@ define(function(require) {
 			container.find('#main_topbar_account_toggle_link').on('click', function(e) {
 				e.preventDefault();
 				self.toggleAccountToggle();
-			});
-
-			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
-			$('.core-wrapper').on('click', '#monster_content', function() {
-				var $accountToggle = $('#main_topbar_account_toggle');
-
-				if ($accountToggle.hasClass('open')) {
-					$accountToggle.removeClass('open');
-				}
 			});
 
 			container.find('#main_topbar_account_toggle').on('click', '.home-account-link', function() {
@@ -936,6 +945,28 @@ define(function(require) {
 
 			if (args.hasOwnProperty('callback')) {
 				args.callback && args.callback();
+			}
+		},
+
+		/**
+		 * Hide topbar dropdowns
+		 * @param  {Object} [args]
+		 * @param  {String} [args.except]  ID of any element that does not want to be hidden
+		 */
+		hideTopbarDropdowns: function(args) {
+			if (!monster.util.isLoggedIn()) {
+				// If user is not logged in, there is no menu displayed, so there is no need
+				// to hide topbar dropdowns
+				return;
+			}
+
+			var except = _.get(args, 'except');
+
+			if (except !== 'main_topbar_account_toggle_link') {
+				$('#main_topbar_account_toggle').removeClass('open');
+			}
+			if (except !== 'main_topbar_alerts_link') {
+				monster.pub('core.alerts.hideDropdown');
 			}
 		}
 	};
