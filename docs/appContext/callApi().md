@@ -36,13 +36,13 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `resource` | Kazoo SDK method name. | `String` | | `true`
-`apiRoot` | Custom API URL, to use instead of the configured globally. | `String` | | `false`
-`authToken` | A Kazoo auth token. This will override any previously set auth token, for the current request only. | `String` | | `false`
-`bypassProgressIndicator` | Flag to tell the core app that the progress indicator should not be displayed for the current API call. | `Boolean` | | `false`
+`apiRoot` | Custom API URL, to use instead of the one configured globally. | `String` | | `false`
+`authToken` | A Kazoo auth token. This will override any previously set auth token, but only for the current request. | `String` | | `false`
+`bypassProgressIndicator` | Flag to tell the core app that the progress indicator should not be displayed for the current API call. | `Boolean` | `false` | `false`
 `data` | A plain JavaScript object that contains the list of parameters to be sent on the request. | `Object`([#data](#data)) | | `true`
 `success` | Function executed if the API responded successfully (i.e. Success HTTP code is received). | `Function` | | `false`
 `error` | Function executed if the API request fails, or the API responds with a failure status. | `Function` | | `false`
-`onChargesCancelled` | Function executed if the operation will apply charges, but they are declined by the user. | `Function` | | `false`
+`onChargesCancelled` | Function executed if the operation will apply charges, but these are declined by the user. | `Function` | | `false`
 
 ### `data`
 Here is a list of some common data properties. However, this object may contain other properties besides the listed here, depending on the requested resource.
@@ -58,7 +58,7 @@ Key | Description | Type | Default | Required
 ## Description
 Every Monster app has a helper function `callApi(_params_)` that can be used to call any API endpoint supported by the Kazoo SDK.
 
-It is automatically configured with our [Kazoo SDK][kazoo_sdk] and takes the same parameter structure as the [`monster.request(_params_)`][monster_request] function, as well as some additional arguments, to easily interact with the Kazoo API within the application context. The main difference, however, is that the `resource` value must be a valid [Kazoo SDK's method name][kazoo_sdk_methods], which means that you don't have to declare any resource in the `requests` object, compared to the `monster.request(_params_)` function.
+It is automatically configured with our [Kazoo SDK][kazoo_sdk] and takes the same parameter structure as the [`monster.request(_params_)`][monster_request] function, as well as some additional arguments, to easily interact with the Kazoo API within the application context. The main difference, however, is that the `resource` value must be a valid [Kazoo SDK's method name][kazoo_sdk_methods], which means that you don't have to declare any resource in the app's `requests` object, compared to the `monster.request(_params_)` function.
 
 ## Examples
 ### Request all the devices for the current account, without displaying Monster UI progress indicator
@@ -76,7 +76,7 @@ self.callApi(params: {
   success: function(data, status) {
     var devices = data.data;
 
-    // Do something with the devices list
+    // Do something with the device list
   },
   error: function(parsedError, error, globalHandler) {
     // Handle failure
@@ -129,7 +129,7 @@ self.callApi(params: {
     // Do something with the newly created vmbox...
   },
   onChargesCancelled: function() {
-    console.log('Charges not accepted by user!');
+    console.log('Charges not accepted by the user!');
   }
 });
 ```
