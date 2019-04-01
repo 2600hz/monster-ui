@@ -1,4 +1,10 @@
 {
+	"bookkeepers": {
+		"braintree": "Braintree",
+		"default": "Default",
+		"http": "HTTP",
+		"kazoo": "Kazoo"
+	},
 	"monthPicker": {
 		"backTo": "Back to",
 		"buttonText": "Open Month Picker",
@@ -1029,5 +1035,20 @@
 		"content1": "The WebSockets Connection is not working.",
 		"content2": "Please check that your Internet connection and your firewall are working as expected, as we can not display the current application without a proper connection to the WebSockets server.",
 		"content3": "We'll automatically refresh the application once the connection works properly..."
+	},
+
+	"alerts": {
+		"alertTypes": {
+			"manual": "Manual",
+			"system": "System",
+			"provisioner": "Advanced Provisioner",
+			"port": "Porting"
+		},
+		"clearButton": "Clear",
+		"dropdownTitle": "Notifications",
+		"metadata": {
+			"current_balance": "Current balance"
+		},
+		"noAlerts": "No new notifications"
 	}
 }

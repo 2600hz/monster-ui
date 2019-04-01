@@ -217,7 +217,8 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
 				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
 				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
-				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' }
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' },
+				'listByAccounts': { verb: 'GET', url: 'accounts/{accountId}/ledgers/summary_by_accounts' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
@@ -317,7 +318,8 @@
 				'getTimeline': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/timeline' },
 				'listLastSubmitted': { verb: 'GET', url: 'accounts/{accountId}/port_requests/last_submitted' },
 				'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
-				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' }
+				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' },
+				'listPortAuthority': { verb: 'GET', url: 'port_requests' }
 			},
 			presence: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },

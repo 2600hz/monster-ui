@@ -34,6 +34,9 @@ define(function(require) {
 		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
 		'whitelabel.allowAccessList': [_.isBoolean, false],
 		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
+		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
+		'whitelabel.bookkeepers.http': [_.isBoolean, true],
+		'whitelabel.bookkeepers.kazoo': [_.isBoolean, true],
 		'whitelabel.companyName': [_.isString, '2600Hz'],
 		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
 		'whitelabel.hideAppStore': [_.isBoolean, false],
@@ -556,10 +559,10 @@ define(function(require) {
 			self.kazooSdk = $.getKazooSdk({
 				apiRoot: monster.config.api.default,
 				onRequestStart: function(request, requestOptions) {
-					monster.pub('monster.requestStart');
+					monster.pub('monster.requestStart', requestOptions.requestEventParams);
 				},
 				onRequestEnd: function(request, requestOptions) {
-					monster.pub('monster.requestEnd');
+					monster.pub('monster.requestEnd', requestOptions.requestEventParams);
 				},
 				onRequestError: function(error, requestOptions) {
 					var parsedError = error,

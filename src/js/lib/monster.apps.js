@@ -309,7 +309,7 @@ define(function() {
 					if (cancelCall) {
 						return errorCallback && errorCallback();
 					} else {
-						var apiSettings = $.extend({
+						var apiSettings = _.assignIn({	// lodash#assignIn is used here to have a shallow merge (only top level properties)
 							authToken: params.authToken || app.getAuthToken(),
 							apiRoot: params.apiUrl || app.apiUrl,
 							uiMetadata: {
@@ -319,15 +319,14 @@ define(function() {
 							},
 							success: successCallback,
 							error: errorCallback,
-							headers: {}
-						}, params.data);
+							headers: {},
+							requestEventParams: _.pick(params, 'bypassProgressIndicator')
+						},
+						params.data,
+						_.pick(params, 'onChargesCancelled'));
 
-						if (monster.config.hasOwnProperty('kazooClusterId')) {
+						if (_.has(monster.config, 'kazooClusterId')) {
 							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
-						}
-
-						if (params.hasOwnProperty('onChargesCancelled')) {
-							apiSettings.onChargesCancelled = params.onChargesCancelled;
 						}
 
 						return monster.kazooSdk[module][method](apiSettings);
