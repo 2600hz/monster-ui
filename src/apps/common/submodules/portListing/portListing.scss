@@ -4,37 +4,37 @@
 /*********************** LISTING PANEL **********************/
 /************************************************************/
 
-#common_app_container .listing-section-wrapper {
+#port_app_container .listing-section-wrapper {
 	padding: 40px 20px;
 	background-color: #F0F0F9;
 }
 
-#common_app_container h4.title {
+#port_app_container h4.title {
 	font-weight: 600;
 	color: $manatee;
 }
 
 /*********************** EMPTY LISTING **********************/
 
-#common_app_container .listing-section.empty-listing {
+#port_app_container .listing-section.empty-listing {
 	padding: 45px 20px;
 	text-align: center;
 	border: 1px dashed $panel-border-color;
 	background-color: transparent;
 }
 
-#common_app_container .empty-listing .iconography {
+#port_app_container .empty-listing .iconography {
 	font-size: 140px;
 	color: $panel-border-color;
 }
 
-#common_app_container .empty-listing h4.title {
+#port_app_container .empty-listing h4.title {
 	font-weight: normal;
 	margin: 15px 0 5px;
 	color: $font-primary-color;
 }
 
-#common_app_container .empty-listing .text {
+#port_app_container .empty-listing .text {
 	margin-bottom: 25px;
 	color: $manatee;
 }
@@ -42,36 +42,36 @@
 /********************** LISTING TABLES **********************/
 
 
-#common_app_container .monster-table-wrapper:not(:first-child) {
+#port_app_container .monster-table-wrapper:not(:first-child) {
 	margin-top: 20px;
 }
 
-#common_app_container .listing-item:hover td {
+#port_app_container .listing-item:hover td {
 	cursor: pointer;
 	border-color: $primary-color;
 }
 
-#common_app_container .monster-table .bold {
+#port_app_container .monster-table .bold {
 	font-weight: 600;
 }
 
-#common_app_container .monster-table .info {
+#port_app_container .monster-table .info {
 	font-size: 13px;
 	color: $manatee;
 }
 
-#common_app_container #incomplete_ports_listing tbody {
+#port_app_container #incomplete_ports_listing tbody {
 	background-color: transparent;
 }
 
 /***************** CUSTOM FOOTABLE FILTERS ******************/
 
-#common_app_container .footable-filtering .custom-select {
+#port_app_container .footable-filtering .custom-select {
 	display: inline-block;
 	min-width: 170px;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-toggle {
+#port_app_container .footable-filtering .custom-select .dropdown-toggle {
 	display: block;
 	padding: 4px 6px 4px 10px;
 	text-align: left;
@@ -81,61 +81,61 @@
 	background-color: #fff;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-toggle:hover,
-#common_app_container .footable-filtering .custom-select .dropdown-toggle:focus {
+#port_app_container .footable-filtering .custom-select .dropdown-toggle:hover,
+#port_app_container .footable-filtering .custom-select .dropdown-toggle:focus {
 	color: #555;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-toggle:focus {
+#port_app_container .footable-filtering .custom-select .dropdown-toggle:focus {
 	border: 1px solid $primary-color;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu {
+#port_app_container .footable-filtering .custom-select .dropdown-menu {
 	margin-top: 4px;
 	padding: 0;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu::before,
-#common_app_container .footable-filtering .custom-select .dropdown-menu::after {
+#port_app_container .footable-filtering .custom-select .dropdown-menu::before,
+#port_app_container .footable-filtering .custom-select .dropdown-menu::after {
 	display: none;
 	content: initial;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a {
 	padding: 8px 20px;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li:not(:first-child) a {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li:not(:first-child) a {
 	border-top: 1px solid $panel-border-color;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a:hover {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a:hover {
 	color: #fff;
 	background-color: $primary-color;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link i {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link i {
 	float: left;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link .text {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link .text {
 	margin-left: 20px;
 	padding-left: 10px;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link,
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link i {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link,
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link i {
 	color: $primary-color;
 }
 
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link:hover,
-#common_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link:hover i {
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link:hover,
+#port_app_container .footable-filtering .custom-select .dropdown-menu li a.icon-link:hover i {
 	color: #fff;
 	background-color: $primary-color;
 }
 
 /********************** STATUS WRAPPER **********************/
-#common_app_container .status-wrapper {
+#port_app_container .status-wrapper {
 	i {
 		float: left;
 		color: $primary-color;
@@ -179,8 +179,7 @@
 /************************ DETAIL VIEW ***********************/
 /************************************************************/
 
-.modal-content,
-#common_app_container {
+#port_app_container {
 	.port-listing-actions {
 		display: flex;
 		align-items: center;
@@ -196,33 +195,14 @@
 			width: 80px;
 			margin: 0 0 0 5px;
 		}
-  }
-	#port_detail_view {
-		display: flex;
-		width: 100%;
-		height: 100%;
-
-		.textarea-wrapper {
-			display: flex;
-			min-height: 34px;
-			margin-top: 50px;
-			padding: 20px;
-			border: 1px solid $panel-border-color;
-			border-radius: 2px;
-			background-color: $white;
-
-			textarea {
-				margin: 0;
-				margin-right: 25px;
-				resize: none;
-				border: 0;
-				background-color: transparent;
-				box-shadow: none;
-
-				flex-grow: 100;
-			}
-		}
 	}
+}
+
+#port_detail_view {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	background-color: $background-primary-color;
 
 	/************************ INFO PANEL ************************/
 
@@ -562,6 +542,27 @@
 						margin-top: 15px;
 					}
 				}
+			}
+		}
+
+		.textarea-wrapper {
+			display: flex;
+			min-height: 34px;
+			margin-top: 50px;
+			padding: 20px;
+			border: 1px solid $panel-border-color;
+			border-radius: 2px;
+			background-color: $white;
+
+			textarea {
+				margin: 0;
+				margin-right: 25px;
+				resize: none;
+				border: 0;
+				background-color: transparent;
+				box-shadow: none;
+
+				flex-grow: 100;
 			}
 		}
 	}
