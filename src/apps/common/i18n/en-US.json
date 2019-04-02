@@ -594,6 +594,14 @@
 	},
 
 	"portListing": {
+		"tabs": {
+			"agent": "Agent",
+			"account": "Account",
+			"completed": "Completed",
+			"descendants": "Descendants",
+			"progressing": "Progressing",
+			"suspended": "Suspended"
+		},
 		"misc": {
 			"unknownUser": "Unknown User",
 			"unknownCarrier": "Unknown Carrier",
