@@ -85,13 +85,12 @@ define(function(require) {
 		/**
 		 * @param  {Boolean} args.isMonsterApp
 		 * @param  {jQuery} [args.parent]
-		 * @param  {jQuery} [args.container]
+		 * @param  {String} [args.data.accountId]
 		 */
 		portListingRender: function(args) {
 			var self = this,
-				isMonsterApp = _.isBoolean(args.isMonsterApp)
-					? args.isMonsterApp
-					: false,
+				accountId = _.get(args, 'data.accountId', self.accountId),
+				isMonsterApp = !!_.get(args, 'isMonsterApp', false),
 				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
 					return {
 						text: self.i18n.active().portListing.tabs[tab],
@@ -110,27 +109,29 @@ define(function(require) {
 						}]
 					};
 				}),
-				parent,
-				modalParent;
+				container,
+				parent;
 
-			self.portListingSet('isMonsterApp', isMonsterApp);
-
-			if (!isMonsterApp) {
-				modalParent = _.has(args, 'parent.getId')
+			if (isMonsterApp) {
+				container = args.parent;
+			} else {
+				parent = _.has(args, 'parent.getId')
 					? args.parent
 					: monster.ui.fullScreenModal(null, {
 						inverseBg: true,
 						cssContentId: 'port_app_container'
 					});
-				parent = $('.core-absolute').find(
-						'#'
-						+ modalParent.getId()
-						+ ' .modal-content'
-					);
+				container = $('.core-absolute').find('#' + parent.getId() + ' .modal-content');
 			}
 
-			monster.ui.generateAppLayout(self, {
-				parent: parent,
+			self.portListingSet('isMonsterApp', isMonsterApp);
+			self.portListingSet('accountId', accountId);
+			self.portListingSet('parent', parent);
+			self.portListingSet('container', container);
+
+			monster.ui.generateAppLayout(_.merge({}, self, { name: 'port' }), {
+				layout: 'docked',
+				parent: container,
 				menus: [
 					{
 						tabs: self.portListingCheckProfile() ? subTabs : tabs
@@ -145,7 +146,7 @@ define(function(require) {
 		portListingRenderListing: function(args) {
 			var self = this,
 				type = args.type,
-				tab = args.parent.find('nav.app-navbar a.active').data('id'),
+				tab = self.portListingGet('container').find('nav.app-navbar a.active').data('id'),
 				type = self.portListingCheckProfile() ? (tab || type) : type,
 				template = $(self.getTemplate({
 					name: 'listing',
@@ -155,18 +156,14 @@ define(function(require) {
 					submodule: 'portListing'
 				}));
 
+			self.portListingSet('accountNamesById', {});
+			self.portListingSet('portRequest', {});
+			self.portListingSet('portRequestsById', {});
+			self.portListingSet('type', type);
+
 			self.portListingRenderTableList({
 				template: template,
 				tab: tab,
-				type: type
-			});
-
-			self.portListingSet({
-				accountNamesById: {},
-				container: args.container,
-				parent: args.parent,
-				portRequest: {},
-				portRequestsById: {},
 				type: type
 			});
 
@@ -476,10 +473,12 @@ define(function(require) {
 			if (self.portListingGet('isMonsterApp')) {
 				monster.pub('port.render');
 			} else {
-				self.portListingRenderListing({
+				self.portListingRender({
+					isMonsterApp: self.portListingGet('isMonsterApp'),
 					parent: self.portListingGet('parent'),
-					container: self.portListingGet('container'),
-					type: self.portListingGet('type')
+					data: {
+						accountId: self.portListingGet('accountId')
+					}
 				});
 			}
 		},
@@ -511,7 +510,7 @@ define(function(require) {
 						monster.pub('common.portWizard.render', {
 							container: self.portListingGet('container'),
 							data: {
-								accountId: self.accountId
+								accountId: self.portListingGet('accountId')
 							},
 							globalCallback: function() {
 								self.portListingGlobalCallback();
@@ -559,7 +558,7 @@ define(function(require) {
 						monster.pub('common.portWizard.render', {
 							container: self.portListingGet('container'),
 							data: {
-								accountId: self.accountId
+								accountId: self.portListingGet('accountId')
 							},
 							globalCallback: function() {
 								self.portListingGlobalCallback();
@@ -626,11 +625,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portListingRenderListing({
-							parent: self.portListingGet('parent'),
-							container: self.portListingGet('container'),
-							type: self.portListingGet('type')
-						});
+						self.portListingGlobalCallback();
 					});
 
 			template
@@ -1096,7 +1091,7 @@ define(function(require) {
 					filters: args.filters
 				},
 				success: function(ports) {
-					self.portListingSetters(ports.data);
+					self.portListingSetters(ports);
 					args.success(self.portlistingFlattenResults(ports));
 				}
 			});
@@ -1193,7 +1188,7 @@ define(function(require) {
 
 		portlistingFlattenResults: function(results) {
 			return _.assign({}, results, {
-				data: _.flatMap(results.data, function(payload) {
+				data: _.flatMap(results, function(payload) {
 					return _.flatMap(payload.port_requests, function(account) {
 						return account;
 					});
@@ -1236,10 +1231,10 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.list',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1258,10 +1253,10 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.listDescendants',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1280,10 +1275,10 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.listPortAuthority',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1301,7 +1296,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.get',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1324,7 +1319,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.changeState',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1346,7 +1341,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.getAttachment',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(pdfBase64, status) {
 					args.hasOwnProperty('success') && args.success(pdfBase64);
@@ -1368,7 +1363,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.addComment',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data.comments);
@@ -1389,7 +1384,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.getTimeline',
 				data: _.merge({
-					accountId: self.accountId
+					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
@@ -1409,7 +1404,7 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.listLastSubmitted',
 				data: _.merge({
-					accountId: self.accountId,
+					accountId: self.portListingGet('accountId'),
 					filters: {
 						paginate: false
 					}
