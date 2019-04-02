@@ -85,15 +85,12 @@ define(function(require) {
 		/**
 		 * @param  {Boolean} args.isMonsterApp
 		 * @param  {jQuery} [args.parent]
-		 * @param  {jQuery} [args.container]
 		 * @param  {String} [args.data.accountId]
 		 */
 		portListingRender: function(args) {
 			var self = this,
 				accountId = _.get(args, 'data.accountId', self.accountId),
-				isMonsterApp = _.isBoolean(args.isMonsterApp)
-					? args.isMonsterApp
-					: false,
+				isMonsterApp = !!_.get(args, 'isMonsterApp', false),
 				subTabs = _.map(self.appFlags.portListing.subtabs, function(tab) {
 					return {
 						text: self.i18n.active().portListing.tabs[tab],
@@ -112,28 +109,29 @@ define(function(require) {
 						}]
 					};
 				}),
-				parent,
-				modalParent;
+				container,
+				parent;
 
-			self.portListingSet('isMonsterApp', isMonsterApp);
-			self.portListingSet('accountId', accountId);
-
-			if (!isMonsterApp) {
-				modalParent = _.has(args, 'parent.getId')
+			if (isMonsterApp) {
+				container = args.parent;
+			} else {
+				parent = _.has(args, 'parent.getId')
 					? args.parent
 					: monster.ui.fullScreenModal(null, {
 						inverseBg: true,
 						cssContentId: 'port_app_container'
 					});
-				parent = $('.core-absolute').find(
-						'#'
-						+ modalParent.getId()
-						+ ' .modal-content'
-					);
+				container = $('.core-absolute').find('#' + parent.getId() + ' .modal-content');
 			}
 
+			self.portListingSet('isMonsterApp', isMonsterApp);
+			self.portListingSet('accountId', accountId);
+			self.portListingSet('parent', parent);
+			self.portListingSet('container', container);
+
 			monster.ui.generateAppLayout(self, {
-				parent: parent,
+				layout: 'docked',
+				parent: container,
 				menus: [
 					{
 						tabs: self.portListingCheckProfile() ? subTabs : tabs
@@ -148,7 +146,7 @@ define(function(require) {
 		portListingRenderListing: function(args) {
 			var self = this,
 				type = args.type,
-				tab = args.parent.find('nav.app-navbar a.active').data('id'),
+				tab = self.portListingGet('container').find('nav.app-navbar a.active').data('id'),
 				type = self.portListingCheckProfile() ? (tab || type) : type,
 				template = $(self.getTemplate({
 					name: 'listing',
@@ -159,8 +157,6 @@ define(function(require) {
 				}));
 
 			self.portListingSet('accountNamesById', {});
-			self.portListingSet('container', args.container);
-			self.portListingSet('parent', args.parent);
 			self.portListingSet('portRequest', {});
 			self.portListingSet('portRequestsById', {});
 			self.portListingSet('type', type);
@@ -476,10 +472,12 @@ define(function(require) {
 			if (self.portListingGet('isMonsterApp')) {
 				monster.pub('port.render');
 			} else {
-				self.portListingRenderListing({
+				self.portListingRender({
+					isMonsterApp: self.portListingGet('isMonsterApp'),
 					parent: self.portListingGet('parent'),
-					container: self.portListingGet('container'),
-					type: self.portListingGet('type')
+					data: {
+						accountId: self.portListingGet('accountId')
+					}
 				});
 			}
 		},
@@ -626,11 +624,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portListingRenderListing({
-							parent: self.portListingGet('parent'),
-							container: self.portListingGet('container'),
-							type: self.portListingGet('type')
-						});
+						self.portListingGlobalCallback();
 					});
 
 			template
