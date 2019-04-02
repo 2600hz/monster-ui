@@ -129,7 +129,7 @@ define(function(require) {
 			self.portListingSet('parent', parent);
 			self.portListingSet('container', container);
 
-			monster.ui.generateAppLayout(self, {
+			monster.ui.generateAppLayout(_.merge({}, self, { name: 'port' }), {
 				layout: 'docked',
 				parent: container,
 				menus: [
@@ -1090,7 +1090,7 @@ define(function(require) {
 					filters: args.filters
 				},
 				success: function(ports) {
-					self.portListingSetters(ports.data);
+					self.portListingSetters(ports);
 					args.success(self.portlistingFlattenResults(ports));
 				}
 			});
@@ -1187,7 +1187,7 @@ define(function(require) {
 
 		portlistingFlattenResults: function(results) {
 			return _.assign({}, results, {
-				data: _.flatMap(results.data, function(payload) {
+				data: _.flatMap(results, function(payload) {
 					return _.flatMap(payload.port_requests, function(account) {
 						return account;
 					});
@@ -1233,7 +1233,7 @@ define(function(require) {
 					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1255,7 +1255,7 @@ define(function(require) {
 					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
@@ -1277,7 +1277,7 @@ define(function(require) {
 					accountId: self.portListingGet('accountId')
 				}, args.data),
 				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data);
+					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					args.hasOwnProperty('error') && args.error(parsedError);
