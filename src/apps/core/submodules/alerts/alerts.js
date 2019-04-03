@@ -204,9 +204,16 @@ define(function(require) {
 				e.preventDefault();
 
 				var $alertItem = $(this).closest('.alert-item'),
+					alertId = $alertItem.data('alert_id'),
+					dismissedAlertIds = self.alertsGetStore('dismissed', []),
 					itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
 					$alertGroup = $alertItem.parent(),
 					$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
+
+				if (!_.includes(dismissedAlertIds, alertId)) {
+					dismissedAlertIds.push(alertId);
+					self.alertsSetStore('dismissed', dismissedAlertIds);
+				}
 
 				$elementToRemove.slideUp(200, function() {
 					$elementToRemove.remove();
@@ -235,6 +242,7 @@ define(function(require) {
 			var self = this,
 				data = args.data,
 				readAlertIds = self.alertsGetStore('read', []),
+				dismissedAlertIds = self.alertsGetStore('dismissed', []),
 				sortOrder = [
 					'manual',
 					'system'
@@ -260,6 +268,9 @@ define(function(require) {
 				.chain(data)
 				.filter(function(alert) {
 					return _.has(alert, 'category');
+				})
+				.reject(function(alert) {
+					return _.includes(dismissedAlertIds, alert.id);
 				})
 				.map(function(alert) {
 					return _.merge({
