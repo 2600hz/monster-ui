@@ -188,11 +188,10 @@ define(function(require) {
 		alertsFormatData: function(args) {
 			var self = this,
 				data = args.data,
-				sortOrder = {
-					manual: '1',
-					system: '2',
-					apps: '3'
-				},
+				sortOrder = [
+					'manual',
+					'system'
+				],
 				metadataFormat = self.appFlags.alerts.metadataFormat,
 				getMetadata = function(category, key) {
 					return _.get(
@@ -262,7 +261,7 @@ define(function(require) {
 						alerts: alerts
 					};
 				}).sortBy(function(alertGroup) {
-					return _.get(sortOrder, alertGroup.type) + alertGroup.type;
+					return _.includes(sortOrder, alertGroup.type) ? _.indexOf(sortOrder, alertGroup.type) : _.size(sortOrder);
 				}).value();
 		},
 
