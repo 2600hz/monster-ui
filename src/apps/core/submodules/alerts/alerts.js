@@ -58,7 +58,7 @@ define(function(require) {
 
 		/**
 		 * Store setter
-		 * @param  {Array|String} [path]
+		 * @param  {Array|String|*} path|value
 		 * @param  {*} [value]
 		 */
 		alertsSetStore: function(path, value) {
@@ -81,9 +81,7 @@ define(function(require) {
 			var self = this,
 				initTemplate = function initTemplate(alerts) {
 					var alertGroups = self.alertsFormatData({ data: alerts }),
-						alertCount = _.reduce(alertGroups, function(count, alertGroup) {
-							return count + alertGroup.unreadCount;
-						}, 0),
+						alertCount = _.sumBy(alertGroups, 'unreadCount'),
 						dataTemplate = {
 							showAlertCount: alertCount > 0,
 							alertCount: alertCount > 9 ? '9+' : alertCount.toString(),
@@ -252,7 +250,7 @@ define(function(require) {
 					return _.get(
 						metadataFormat.categories,
 						[category, key],
-						_.get(metadataFormat.common, key)
+						_.get(metadataFormat.common, key, {})
 					);
 				},
 				formatValue = function(type, value) {
@@ -276,17 +274,15 @@ define(function(require) {
 					return _.merge({
 						metadata: _
 							.chain(alert.metadata)
-							.reject(function(value, key) {
-								return _.isUndefined(getMetadata(alert.category, key));
-							})
 							.map(function(value, key) {
 								var metadata = getMetadata(alert.category, key);
 
 								return {
-									key: metadata.i18nKey,
-									value: formatValue(metadata.valueType, value)
+									key: _.get(metadata, 'i18nKey'),
+									value: formatValue(_.get(metadata, 'valueType'), value)
 								};
 							})
+							.reject({ key: undefined })
 							.value()
 					}, _.pick(alert, [
 						'category',
@@ -316,9 +312,9 @@ define(function(require) {
 				}).map(function(alerts, type) {
 					return {
 						type: type,
-						unreadCount: _.reduce(alerts, function(total, alert) {
-							return total + _.includes(readAlertIds, alert.id) ? 0 : 1;
-						}, 0),
+						unreadCount: _.sumBy(alerts, function(alert) {
+							return _.includes(readAlertIds, alert.id) ? 0 : 1;
+						}),
 						alerts: alerts
 					};
 				}).sortBy(function(alertGroup) {
