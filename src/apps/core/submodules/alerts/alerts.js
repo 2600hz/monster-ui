@@ -193,55 +193,51 @@ define(function(require) {
 					system: '2',
 					apps: '3'
 				},
-				metadataFormat = self.appFlags.alerts.metadataFormat;
+				metadataFormat = self.appFlags.alerts.metadataFormat,
+				getMetadata = function(category, key) {
+					return _.get(
+						metadataFormat.categories,
+						[category, key],
+						_.get(metadataFormat.common, key)
+					);
+				},
+				formatValue = function(type, value) {
+					if (type === 'price') {
+						return monster.util.formatPrice({
+							price: value
+						});
+					}
+					return value;
+				};
 
-			if (_.isEmpty(data)) {
-				return [];
-			}
-
-			return _.chain(data)
+			return _
+				.chain(data)
 				.filter(function(alert) {
 					return _.has(alert, 'category');
 				})
 				.map(function(alert) {
-					var category = alert.category,
-						metadata = _.reduce(alert.metadata,
-							function(metadataArray, value, key) {
-								var formatData = _.get(
-									metadataFormat.categories,
-									category + '.' + key,
-									_.get(metadataFormat.common, key)
-								);
+					return _.merge({
+						metadata: _
+							.chain(alert.metadata)
+							.reject(function(value, key) {
+								return _.isUndefined(getMetadata(alert.category, key));
+							})
+							.map(function(value, key) {
+								var metadata = getMetadata(alert.category, key);
 
-								if (formatData) {
-									var metadataItem = {
-										key: formatData.i18nKey,
-										value: value
-									};
-
-									switch (formatData.valueType) {
-										case 'price':
-											metadataItem.value = monster.util.formatPrice({
-												price: metadataItem.value
-											});
-											break;
-										default: break;
-									}
-
-									metadataArray.push(metadataItem);
-								}
-
-								return metadataArray;
-							}, []);
-
-					return {
-						id: alert.id,
-						title: alert.title,
-						metadata: metadata,
-						message: alert.message,
-						category: category,
-						clearable: alert.clearable
-					};
+								return {
+									key: metadata.i18nKey,
+									value: formatValue(metadata.valueType, value)
+								};
+							})
+							.value()
+					}, _.pick(alert, [
+						'category',
+						'clearable',
+						'id',
+						'message',
+						'title'
+					]));
 				})
 				.groupBy(function(alert) {
 					var category = alert.category,
