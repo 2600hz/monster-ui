@@ -1,59 +1,36 @@
 title: callApi()
 
-# callApi()
+# appContext.callApi()
 
 ## Syntax
 ```javascript
-var self = this;
-
-// ...
-
-self.callApi(params: {
-  resource[,
-  apiRoot,
-  authToken,
-  bypassProgressIndicator,
-  data: {
-    accountId,
-    data,
-    filters,
-    generateError,
-    headers,
-    ...
-  },
-  success,
-  error,
-  onChargesCancelled]
-});
+appContext.callApi(params);
 ```
 
 ### Parameters
-Key | Description | Type | Default | Required
-:-: | --- | :-: | :-: | :-:
-`params` | A plain JavaScript object that wraps the arguments for the function. | `Object`([#params](#params)) | | `true`
+`params` is a mandatory `Object` parameter with the following properties:
 
-### `params`
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `resource` | Kazoo SDK method name. | `String` | | `true`
-`apiRoot` | Custom API URL, to use instead of the one configured globally. | `String` | | `false`
-`authToken` | A Kazoo auth token. This will override any previously set auth token, but only for the current request. | `String` | | `false`
+`apiRoot` | Override the API URL set in `config.js` for this request only. | `String` | `monster.config.api.default` | `false`
+`authToken` | Override the authentication token (JWT) generated during the authentication process for this request only. | `String` | `monster.util.getAuthToken()` | `false`
 `bypassProgressIndicator` | Whether or not to hide the request progress indicator while this request is in progress. | `Boolean` | `false` | `false`
 `data` | A plain JavaScript object that contains the list of parameters to be sent on the request. | `Object`([#data](#data)) | | `true`
 `success` | A function to be called if the request succeeds (`200 OK`). The function gets passed two arguments: the response payload formatted according to the data type; a string describing the status. | `Function` | | `false`
 `error` | A function to be called if the request fails (except for `402 Payment Required`, see `onChargesCancelled`). The function receives three arguments: the error parsed as JSON; the raw error from the ajax error handler; a function to throw a generic Monster UI request error. | `Function` | | `false`
-`onChargesCancelled` | Function executed if the operation will apply charges, but these are declined by the user. | `Function` | | `false`
+`onChargesCancelled` | A function called when the error is specifically a `402 Payment Required`. It is executed if the user declines the charges associated with the request. | `Function` | | `false`
 
 ### `data`
-Here is a list of some common data properties. However, this object may contain other properties besides the listed here, depending on the requested resource.
+Here is a list of some common data properties. However, this object may contain other properties besides the ones listed here, depending on the requested resource.
 
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `accountId` | Kazoo account ID. | `String` | | `false`
-`data` | Data payload to be sent in the request body. | `Object` | | `false`
+`data` | Payload to be sent in as request body. | `Object` | | `false`
 `filters` | A map of filters to append to the API URL, where the key is the URL parameter name and the value is the parameter's value. | `Object` | | `false`
-`generateError` | Flag that indicates if the method should display the default error alert, if the request fails. | `Boolean` | `true` | `false`
-`headers` | An object of additional header key/value pairs to send along with the request (e.g. `{ 'Accept': 'application/octet-stream' }`).
+`generateError` | Whether or not to display the generic Monster UI error dialog when the request fails. | `Boolean` | `true` | `false`
+`headers` | An object of additional header key/value pairs to send along with the request (e.g. `{ 'Accept': 'application/octet-stream' }`). | `Object` | | `false`
 
 ## Description
 Every Monster app has a helper function `callApi(_params_)` that can be used to call any API endpoint supported by the Kazoo SDK.
