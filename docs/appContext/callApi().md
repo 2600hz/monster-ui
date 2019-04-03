@@ -40,7 +40,7 @@ Key | Description | Type | Default | Required
 `authToken` | A Kazoo auth token. This will override any previously set auth token, but only for the current request. | `String` | | `false`
 `bypassProgressIndicator` | Whether or not to hide the request progress indicator while this request is in progress. | `Boolean` | `false` | `false`
 `data` | A plain JavaScript object that contains the list of parameters to be sent on the request. | `Object`([#data](#data)) | | `true`
-`success` | Function executed if the API responded successfully (i.e. Success HTTP code is received). | `Function` | | `false`
+`success` | A function to be called if the request succeeds (`200 OK`). The function gets passed two arguments: the response payload formatted according to the data type; a string describing the status. | `Function` | | `false`
 `error` | Function executed if the API request fails, or the API responds with a failure status. | `Function` | | `false`
 `onChargesCancelled` | Function executed if the operation will apply charges, but these are declined by the user. | `Function` | | `false`
 
