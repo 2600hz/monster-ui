@@ -19,6 +19,8 @@ pages:
   - 'docs/kazooSdk.md'
   - 'docs/using-postman-as-a-crud.md'
 - 'References':
+  - 'appContext':
+    - 'docs/appContext/callApi().md'
   - 'monster':
     - 'docs/monster/getTemplate().md'
     - 'docs/monster/parallel().md'
