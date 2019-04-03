@@ -39,6 +39,42 @@ define(function(require) {
 		},
 
 		/**
+		 * Store getter
+		 * @param  {Array|String} [path]
+		 * @param  {*} [defaultValue]
+		 * @return {*}
+		 */
+		alertsGetStore: function(path, defaultValue) {
+			var self = this,
+				store = ['_store', 'alerts'];
+			return _.get(
+				self,
+				_.isUndefined(path)
+					? store
+					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+				defaultValue
+			);
+		},
+
+		/**
+		 * Store setter
+		 * @param  {Array|String} [path]
+		 * @param  {*} [value]
+		 */
+		alertsSetStore: function(path, value) {
+			var self = this,
+				hasValue = _.toArray(arguments).length === 2,
+				store = ['_store', 'alerts'];
+			_.set(
+				self,
+				hasValue
+					? _.flatten([store, _.isString(path) ? path.split('.') : path])
+					: store,
+				hasValue ? value : path
+			);
+		},
+
+		/**
 		 * Trigger the alerts pulling process from API
 		 */
 		alertsRender: function() {
@@ -46,7 +82,7 @@ define(function(require) {
 				initTemplate = function initTemplate(alerts) {
 					var alertGroups = self.alertsFormatData({ data: alerts }),
 						alertCount = _.reduce(alertGroups, function(count, alertGroup) {
-							return count + alertGroup.alerts.length;
+							return count + alertGroup.unreadCount;
 						}, 0),
 						dataTemplate = {
 							showAlertCount: alertCount > 0,
@@ -139,6 +175,7 @@ define(function(require) {
 				e.preventDefault();
 
 				var $this = $(this),
+					readAlertIds = self.alertsGetStore('read', []),
 					$parent = $this.parent();
 
 				$this.find('.badge')
@@ -151,6 +188,15 @@ define(function(require) {
 				} else {
 					monster.pub('core.hideTopbarDropdowns', { except: 'main_topbar_alerts_link' });
 					$parent.addClass('open');
+
+					$alertsContainer.find('.alert-item').each(function(index, el) {
+						var id = $(this).data('alert_id');
+						if (_.includes(readAlertIds, id)) {
+							return;
+						}
+						readAlertIds.push(id);
+					});
+					self.alertsSetStore('read', readAlertIds);
 				}
 			});
 
@@ -188,6 +234,7 @@ define(function(require) {
 		alertsFormatData: function(args) {
 			var self = this,
 				data = args.data,
+				readAlertIds = self.alertsGetStore('read', []),
 				sortOrder = [
 					'manual',
 					'system'
@@ -258,6 +305,9 @@ define(function(require) {
 				}).map(function(alerts, type) {
 					return {
 						type: type,
+						unreadCount: _.reduce(alerts, function(total, alert) {
+							return total + _.includes(readAlertIds, alert.id) ? 0 : 1;
+						}, 0),
 						alerts: alerts
 					};
 				}).sortBy(function(alertGroup) {
