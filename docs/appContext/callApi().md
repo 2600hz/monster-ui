@@ -38,7 +38,7 @@ Key | Description | Type | Default | Required
 `resource` | Kazoo SDK method name. | `String` | | `true`
 `apiRoot` | Custom API URL, to use instead of the one configured globally. | `String` | | `false`
 `authToken` | A Kazoo auth token. This will override any previously set auth token, but only for the current request. | `String` | | `false`
-`bypassProgressIndicator` | Flag to tell the core app that the progress indicator should not be displayed for the current API call. | `Boolean` | `false` | `false`
+`bypassProgressIndicator` | Whether or not to hide the request progress indicator while this request is in progress. | `Boolean` | `false` | `false`
 `data` | A plain JavaScript object that contains the list of parameters to be sent on the request. | `Object`([#data](#data)) | | `true`
 `success` | Function executed if the API responded successfully (i.e. Success HTTP code is received). | `Function` | | `false`
 `error` | Function executed if the API request fails, or the API responds with a failure status. | `Function` | | `false`
