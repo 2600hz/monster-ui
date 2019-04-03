@@ -263,6 +263,13 @@ define(function(require) {
 			return isSuperDuper;
 		},
 
+		// Validate if the given port authority ID matches with the current account ID
+		isPortAuthority: function(portAuthorityID, pAccount) {
+			var account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
+
+			return portAuthorityID === account.id;
+		},
+
 		// We only let super duper admins impersonate users from subaccounts. If you're not a super duper admin, or if you're using the account you logged in with, you shouldn't have access to impersonating.
 		canImpersonate: function(accountId) {
 			var self = this,
@@ -787,7 +794,7 @@ define(function(require) {
 				authApp = monster.apps.auth,
 				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
 					'cluster', 'conferences', 'csv-onboarding', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
-					'migration', 'mobile', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
+					'migration', 'mobile', 'myaccount', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
 					'service-plan-override', 'tasks', 'taxation', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
 
 			if (localIcons.indexOf(app.name) >= 0) {
