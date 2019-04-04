@@ -34,7 +34,7 @@ define(function(require) {
 
 		appFlags: {
 			searchLimit: 15,
-			selectedCountryCode: 'US',
+			selectedCountryCode: monster.config.whitelabel.countryCode,
 			isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
 			isSelectedNumbersEmpty: true
 		},
