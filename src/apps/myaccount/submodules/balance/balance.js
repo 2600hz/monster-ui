@@ -327,7 +327,7 @@ define(function(require) {
 						digits: self.appFlags.balance.digits.perMinuteTableAmount
 					},
 					calleeNumber: calleeIdNumber !== toField
-						? callerIdNumber
+						? calleeIdNumber
 						: '',
 					callerNumber: callerIdNumber !== fromField
 						? callerIdNumber
