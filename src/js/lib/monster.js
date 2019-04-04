@@ -9,10 +9,12 @@ define(function(require) {
 		form2object = require('form2object'),
 		handlebars = require('handlebars'),
 		kazoosdk = require('kazoosdk'),
+		libphonenumber = require('libphonenumber'),
 		md5 = require('md5'),
 		postal = require('postal'),
 		reqwest = require('reqwest');
 
+	var defaultCountryCode = 'US';
 	var defaultCurrencyCode = 'USD';
 	var defaultLanguage = 'en-US';
 
@@ -27,7 +29,7 @@ define(function(require) {
 
 	var defaultConfig = {
 		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
-		currencyCode: [isCurrencyCodeValid, defaultCurrencyCode],
+		currencyCode: [isCurrencyCode, defaultCurrencyCode],
 		'developerFlags.showAllCallflows': [_.isBoolean, false],
 		'developerFlags.showJsErrors': [_.isBoolean, false],
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
@@ -45,6 +47,7 @@ define(function(require) {
 		'whitelabel.language': [_.isString, defaultLanguage, supportedLanguages],
 		'whitelabel.logoutTimer': [_.isNumber, 15],
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
+		'whitelabel.countryCode': [isCountryCode, defaultCountryCode],
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
 		'whitelabel.useDropdownApploader': [_.isBoolean, false]
 	};
@@ -662,14 +665,15 @@ define(function(require) {
 	function initConfig() {
 		var config = require('config');
 		var getValue = function(value, path) {
-			var existingValue = _.get(config, path);
-			var isExistingValueValid = value[0](existingValue);
-			var hasEnum = !_.isUndefined(value[2]);
-			var matchesEnum = hasEnum && _.includes(value[2], existingValue);
+			var validator = value[0];
 			var presetValue = _.cloneDeep(value[1]);
+			var enumValues = value[2];
+			var existingValue = _.get(config, path);
+			var isExistingValueValid = validator(existingValue);
+			var hasEnum = !_.isUndefined(enumValues);
 
 			if (hasEnum) {
-				return matchesEnum ? existingValue : presetValue;
+				return _.includes(enumValues, existingValue) ? existingValue : presetValue;
 			}
 			if (isExistingValueValid) {
 				return existingValue;
@@ -689,12 +693,22 @@ define(function(require) {
 	}
 
 	/**
-	 * Validates `code` against ISO 4217 currency codes
+	 * Validates `code` against ISO-3166 alpha-2 codes
+	 * @private
+	 * @param  {String}  code
+	 * @return {Boolean}      Whether or not `code` is a valid country code
+	 */
+	function isCountryCode(code) {
+		return libphonenumber.isSupportedCountry(code);
+	}
+
+	/**
+	 * Validates `code` against ISO 4217 codes
 	 * @private
 	 * @param  {String}  code
 	 * @return {Boolean}      Whether or not `code` is a valid currency code.
 	 */
-	function isCurrencyCodeValid(code) {
+	function isCurrencyCode(code) {
 		try {
 			Intl.NumberFormat(defaultLanguage, {
 				style: 'currency',
