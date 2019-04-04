@@ -97,89 +97,6 @@ define(function(require) {
 			return formattedResponse;
 		},
 
-		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
-			var resp = libphonenumber.parse(phoneNumber, {
-					country: {
-						'default': 'US'
-					}
-				}),
-				phoneNumber;
-
-			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				phoneNumber = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
-			} else {
-				phoneNumber = formattedNumber.replace(/[^0-9+]/g, '');
-			}
-
-			return phoneNumber;
-		},
-
-		formatPhoneNumber: function(phoneNumber) {
-			var self = this,
-				formattedPhoneNumber = phoneNumber;
-
-			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
-				formattedPhoneNumber = self.getFormatPhoneNumber(phoneNumber).userFormat;
-			}
-
-			return formattedPhoneNumber;
-		},
-
-		getFormatPhoneNumber: function(phoneNumber) {
-			var resp = libphonenumber.parse(phoneNumber, {
-					country: {
-						'default': 'US'
-					}
-				}),
-				user = monster.apps.auth.currentUser || {},
-				account = monster.apps.auth.originalAccount || {},
-				formattedData = {
-					originalNumber: phoneNumber,
-					userFormat: phoneNumber // Setting it as a default, in case the number is not valid
-				},
-				getUserFormatFromEntity = function(entity, data) {
-					var response = '';
-
-					if (entity.ui_flags.numbers_format === 'national') {
-						response = data.nationalFormat;
-					} else if (entity.ui_flags.numbers_format === 'international') {
-						response = data.internationalFormat;
-					} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
-						if (entity.ui_flags.numbers_format_exceptions.length && entity.ui_flags.numbers_format_exceptions.indexOf(data.country.code) >= 0) {
-							response = data.nationalFormat;
-						} else {
-							response = data.internationalFormat;
-						}
-					}
-					return response;
-				};
-
-			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				formattedData.e164Number = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
-				formattedData.nationalFormat = libphonenumber.format(resp.phone, resp.country, 'National');
-				formattedData.internationalFormat = libphonenumber.format(resp.phone, resp.country, 'International');
-
-				formattedData.country = {
-					code: resp.country,
-					name: monster.timezone.getCountryName(resp.country)
-				};
-
-				// Default to international mode
-				formattedData.userFormat = formattedData.internationalFormat;
-				formattedData.userFormatType = 'international';
-
-				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format') && user.ui_flags.numbers_format !== 'inherit') {
-					formattedData.userFormatType = user.ui_flags.numbers_format;
-					formattedData.userFormat = getUserFormatFromEntity(user, formattedData);
-				} else if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
-					formattedData.userFormatType = account.ui_flags.numbers_format;
-					formattedData.userFormat = getUserFormatFromEntity(account, formattedData);
-				}
-			}
-
-			return formattedData;
-		},
-
 		getDefaultNumbersFormat: function() {
 			var self = this,
 				account = monster.apps.auth.originalAccount || {},
@@ -927,7 +844,7 @@ define(function(require) {
 						}
 
 						if (formattedKey !== key) {
-							replaceHTML(element, key, monster.util.unformatPhoneNumber(numbers[formattedKey]));
+							replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
 						} else {
 							replaceHTML(element, key, numbers[key]);
 						}
@@ -994,6 +911,17 @@ define(function(require) {
 		return !_.isNull(matches) && _.size(matches) >= 6
 			? matches.slice(0, 6).join(':')
 			: '';
+	}
+
+	/**
+	 * Phone number formatting according to user preferences.
+	 * @param  {Number|String} phoneNumber Input to format as phone number
+	 * @return {String}                    Input formatted as phone number
+	 */
+	function formatPhoneNumber(input) {
+		return !monster.config.whitelabel.preventDIDFormatting && input
+			? getFormatPhoneNumber(input).userFormat
+			: _.toString(input);
 	}
 
 	/**
@@ -1085,6 +1013,68 @@ define(function(require) {
 		});
 
 		return formatter.format(base).replace('NaN', '');
+	}
+
+	function getFormatPhoneNumber(input) {
+		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
+		var user = _.get(monster, 'apps.auth.currentUser', {});
+		var account = _.get(monster, 'apps.auth.originalAccount', {});
+		var formattedData = {
+			originalNumber: input,
+			userFormat: input // Setting it as a default, in case the number is not valid
+		};
+		var getUserFormatFromEntity = function(entity, data) {
+			var response = '';
+
+			if (entity.ui_flags.numbers_format === 'national') {
+				response = data.nationalFormat;
+			} else if (entity.ui_flags.numbers_format === 'international') {
+				response = data.internationalFormat;
+			} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
+				if (_.includes(_.get(entity, 'ui_flags.numbers_format_exceptions', []), data.country.code)) {
+					response = data.nationalFormat;
+				} else {
+					response = data.internationalFormat;
+				}
+			}
+			return response;
+		};
+
+		if (
+			_.has(phoneNumber, 'country')
+			&& !_.isEmpty(phoneNumber.country)
+			&& _.has(phoneNumber, 'number')
+			&& !_.isEmpty(phoneNumber.number)
+		) {
+			_.merge(formattedData, {
+				e164Number: phoneNumber.format('E.164'),
+				nationalFormat: phoneNumber.format('NATIONAL'),
+				internationalFormat: phoneNumber.format('INTERNATIONAL'),
+				country: {
+					code: phoneNumber.country,
+					name: monster.timezone.getCountryName(phoneNumber.country)
+				}
+			});
+
+			if (_.get(user, 'ui_flags.numbers_format', 'inherit') !== 'inherit') {
+				_.merge(formattedData, {
+					userFormat: getUserFormatFromEntity(user, formattedData),
+					userFormatType: _.get(user, 'ui_flags.numbers_format')
+				});
+			} else if (_.has(account, 'ui_flags.numbers_format')) {
+				_.merge(formattedData, {
+					userFormat: getUserFormatFromEntity(account, formattedData),
+					userFormatType: _.get(account, 'ui_flags.numbers_format')
+				});
+			} else {
+				_.merge(formattedData, {
+					userFormat: phoneNumber.format('INTERNATIONAL'),
+					userFormatType: 'international'
+				});
+			}
+		}
+
+		return formattedData;
 	}
 
 	/**
@@ -1343,6 +1333,19 @@ define(function(require) {
 	}
 
 	/**
+	 * Normalize phone number by using E.164 format
+	 * @param  {String} input Input to normalize
+	 * @return {String}       Input normalized as E.164 phone number
+	 */
+	function unformatPhoneNumber(input) {
+		return _.get(
+			getFormatPhoneNumber(input),
+			'internationalFormat',
+			_.replace(input, /[^0-9+]/g, '')
+		);
+	}
+
+	/**
 	 * Converts a Unix timestamp into a Date instance
 	 * @param  {Number} pTimestamp Unix timestamp
 	 * @return {Date}           Converted Date instance
@@ -1375,15 +1378,18 @@ define(function(require) {
 	}
 
 	util.formatMacAddress = formatMacAddress;
+	util.formatPhoneNumber = formatPhoneNumber;
 	util.formatPrice = formatPrice;
 	util.getBookkeepers = getBookkeepers;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getFormatPhoneNumber = getFormatPhoneNumber;
 	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 	util.randomString = randomString;
 	util.toFriendlyDate = toFriendlyDate;
+	util.unformatPhoneNumber = unformatPhoneNumber;
 	util.unixToDate = unixToDate;
 
 	return util;
