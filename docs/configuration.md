@@ -31,7 +31,7 @@ Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `api` | Various API related settings | `Object`([#api](#api)) | | `false`
 `advancedView` | Whether or not to toggle the Callflows app's "Advanced" tab by default. | `Boolean` | | `false`
-`currencyCode` | The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as `USD` for the US dollar, `EUR` for the euro, or `CNY` for the Chinese RMB (see the [Current currency & funds code][currency-codes]). | `String` | `USD` | `false`
+`currencyCode` | The currency to use in price formatting. Possible values are ISO 4217 currency codes, such as `USD` for the US dollar, `EUR` for the euro, or `CNY` for the Chinese RMB (see the [Current currency & funds code][currency-codes]). | `String` | `USD` | `false`
 `developerFlags` | Enable development functionalities | `Object`([#developerFlags](#developerflags)) | | `true`
 `disableBraintree` | If you are not using Braintree in your environment, you should add the following flag to disable the UI components that are using it | `Boolean` | `false` | `false`
 `hide_registration` | Whether or not to hide the login page's "Register" button.  | `Boolean` | | `false`
@@ -90,6 +90,7 @@ Key | Description | Type | Default | Required
 `carrier` | | `Object`([#carrier](#carrier)) | | `false`
 `companyName` | Company Name, used in many places in the UI | `String` | | `false`
 `custom_welcome_message` | Welcome message displayed on login page. | `String` | `Your Unified Communications Platform.` | `false`
+`countryCode` | The country code to use in phone number pretty print. Possible values are ISO-3166 alpha-2 codes, such as `US` for the USA or `FR` for France (see the [ISO Online Browsing Platform][country-codes]). | `String` | `US` | `false`
 `disableNumbersFeatures` | Indicates whether or not number features (e.g. e911, cnam) are configurable through the UI. | `Boolean` | `false` |`false`
 `domain` | Domain used to whitelabel the UI. | `String` | | `false`
 `hasMetaflowsEnabled` | Whether or not to expose the "On-demand (In-Call) Recording" feature in the Call Recording app. | `Boolean` | | `false`
@@ -102,7 +103,7 @@ Key | Description | Type | Default | Required
 `jiraFeedback` | If you want to provide a "Provide Feedback" button tied with JIRA issue collector, you can set this object to enabled: true, and provide the URL of the JIRA Issue collector to the url property. If this item is removed or set to enabled: false, nothing will appear in the UI. | `Object` | | `false`
 `jiraFeedback.enabled` | | `Boolean` | `false` | `false`
 `jiraFeedback.url` | | `String` | | `false`
-`language` | By default the language is set by the cookie, and once the user is log in it will take what's set in the account/user. If you want to force the language of the UI before a user is logged in, you can set it here. | `String` | | `true`
+`language` | By default the language is set by the cookie, and once the user is log in it will take what's set in the account/user. If you want to force the language of the UI before a user is logged in, you can set it here. | `String` | `en-US` | `false`
 `logoPath` | Hardcoded logo to override default Kazoo Logo | `String` | | `false`
 `logoutTimer` | Minutes before showing the logged in user that it will auto-disconnect him soon. Changing this value allows you to disable the auto-logout mechanism by setting it to 0. If you want to change the default duration (15), you can set this value with a number > 0 | `Number` | `15` | `false`
 `nav` | | `Object` | | `false`
@@ -140,3 +141,4 @@ Key | Description | Type | Default | Required
 `carriers.[]` | Name of losing carrier (should be unique). | `String` | | `false`
 
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
+[country-codes]: https://www.iso.org/obp/ui/#search
