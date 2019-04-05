@@ -30,11 +30,11 @@ define({
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `api` | Various API related settings | `Object`([#api](#api)) | | `false`
-`advancedView` | Provide a global flag that enable advanced features in the UI | `String` | | `false`
+`advancedView` | Whether or not to toggle the Callflows app's "Advanced" tab by default. | `Boolean` | | `false`
 `currencyCode` | The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as `USD` for the US dollar, `EUR` for the euro, or `CNY` for the Chinese RMB (see the [Current currency & funds code][currency-codes]). | `String` | `USD` | `false`
 `developerFlags` | Enable development functionalities | `Object`([#developerFlags](#developerflags)) | | `true`
 `disableBraintree` | If you are not using Braintree in your environment, you should add the following flag to disable the UI components that are using it | `Boolean` | `false` | `false`
-`hide_registration` | Setting this flag to `true` will hide registration  | `Boolean` | | `false`
+`hide_registration` | Whether or not to hide the login page's "Register" button.  | `Boolean` | | `false`
 `kazooClusterId` | The kazooClusterId is the cluster id generated when creating a cluster doc for provisioner | `String` | | `false`
 `pbx_help_configuration_link` | Allow to define help link to configure PBX app | `String` | | `false`
 `pbx_help_link` | Allow to define help link for PBX app | `String` | | `false`
@@ -56,20 +56,19 @@ Key | Description | Type | Default | Required
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
-`build` | Provide app build information | `Object`([#build](#build)) | | `false`
-`showAllCallflows` | Setting this flag to `true` will show all restricted callflows in the Callflows app | `Boolean` | `false` | `false`
-`showJsErrors` | Show JS error when they happen | `Boolean` | `false` | `false`
-`kazooVersion` | Provide the backend (Kazoo) version | `String` | | `false`
-`showAllCallflows` | Setting this flag to `true` will show all callflows | `Boolean` | | `false`
+`build` | Information about the build. | `Object`([#build](#build)) | | `readonly`
+`showAllCallflows` | Whether or not to show all restricted callflows in the Callflows app | `Boolean` | `false` | `false`
+`showJsErrors` | Whether or not to show JavaScript errors when they happen. | `Boolean` | `false` | `false`
+`kazooVersion` | Backend verison number (set during authentication). | `String` | | `readonly`
 
 
 #### `build`
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
-`preloadedApps` | Contain a track of loaded apps | `Object` | | `false`
-`proApps` | Contain a list of pro applications that the logged in user have | `Object` | | `false`
-`type` | Provide the build environment | `String` | | `false`
-`version` | Provide the build version | `String` | | `false`
+`preloadedApps` | A list of applications loaded during the build. | `Array` | | `readonly`
+`proApps` | A list of applications built in `pro` mode. | `Array` | | `readonly`
+`type` | Build environment. | `String('development' | 'production')` | | `readonly`
+`version` | Build version of Monster UI. | `String` | | `readonly`
 
 
 ### `whitelabel`
@@ -81,25 +80,25 @@ Key | Description | Type | Default | Required
 `additionalLoggedInApps` | Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..) | `Array` | | `false`
 `additionalLoggedInApps.[]` | Name of the app to side load | `String` | | `false`
 `allowAccessList` | If set to true, will allow the user to modify access_lists from the account settings page. | `Boolean` | `false` | `false`
-`allowAnyOwnedNumberAsCallerID` | | `Boolean` | | `false`
-`announcement` | | `String` | | `false`
+`allowAnyOwnedNumberAsCallerID` | Whether or not to allow any phone number on the account to be used as caller ID. | `Boolean` | | `false`
+`announcement` | Message to show every time a user logs in. | `String` | | `false`
 `applicationTitle` | Application title, displayed in the browser tab | `String` | | `false`
-`authentication` | Provide autentication mechanism info | `Object` | | `false`
+`authentication` | Third party application to handle authentication in place of `auth`. | `Object` | | `false`
 `bookkeepers` | | `Object`([#bookkeepers](#bookkeepers)) | | `false`
-`brandColor` | Allow to customize the UI color | `String` | | `false`
+`brandColor` | Hexadecimal color code used as primary color on the login page. | `String` | | `false`
 `callReportEmail` | E-mail address used to report calls in SmartPBX's Call Logs. "Report Call" link won't be displayed if no address is specified. This address can either be set here in the config file, or through the Branding app. | `String` | | `false`
 `carrier` | | `Object`([#carrier](#carrier)) | | `false`
 `companyName` | Company Name, used in many places in the UI | `String` | | `false`
-`custom_welcome_message` | Allow to customize the login page message | `String` | `Your Unified Communications Platform.` | `false`
+`custom_welcome_message` | Welcome message displayed on login page. | `String` | `Your Unified Communications Platform.` | `false`
 `disableNumbersFeatures` | Indicates whether or not number features (e.g. e911, cnam) are configurable through the UI. | `Boolean` | `false` |`false`
-`domain` | | `String` | | `false`
-`hasMetaflowsEnabled` | | `Boolean` | | `false`
+`domain` | Domain used to whitelabel the UI. | `String` | | `false`
+`hasMetaflowsEnabled` | Whether or not to expose the "On-demand (In-Call) Recording" feature in the Call Recording app. | `Boolean` | | `false`
 `hideAppStore` | The appstore is exposed to admins by default. If set to false, it will be hidden for all users. | `Boolean` | `false` | `false`
 `hideBuyNumbers` | Remove the ability to buy phone numbers throughout the entire UI | `Boolean` | `false` | `false`
 `hideNewAccountCreation` | If set to true, will hide creation of new accounts | `Boolean` | `false` | `false`
 `hide_port` | Whether or not to make porting actions available through the UI. | `Boolean` | `false` | `false`
-`hidePasswordRecovery` | If set to `true`, the recovery link will be hidden on the login page | `Boolean` | `false` | `false`
-`hide_powered` | If set to `true`, the `powered by` text that is shown in the page bottom will be hidden | Type | Default | Required
+`hidePasswordRecovery` | Whether or not to hide the "Forgot your info?" feature from the login page. | `Boolean` | `false` | `false`
+`hide_powered` | Whether or not to hide the "powered by" info shown in the bottom of the page. | `Boolean` | | `false`
 `jiraFeedback` | If you want to provide a "Provide Feedback" button tied with JIRA issue collector, you can set this object to enabled: true, and provide the URL of the JIRA Issue collector to the url property. If this item is removed or set to enabled: false, nothing will appear in the UI. | `Object` | | `false`
 `jiraFeedback.enabled` | | `Boolean` | `false` | `false`
 `jiraFeedback.url` | | `String` | | `false`
@@ -111,11 +110,10 @@ Key | Description | Type | Default | Required
 `nav.logout` | Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior | `Object` | | `false`
 `port` | | `Object`([#/port](#port)) | | `false`
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
-`realm_suffix` | | `String` | | `false`
-`sso` | Authentication mechanism | `Object` | | `false`
-`sso_providers` | | `Object` | | `false`
+`sso` | Cookie information to force a specific SSO provider to be used. | `Object` | | `false`
+`sso_providers` | List of SSO providers available on login. | `Array` | | `false`
 `showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
-`social` | Allow to define a set social networks | `Object` | | `false`
+`social` | List of social network to expose on the login page. | `Array` | | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 
 #### `bookkeepers`
@@ -130,7 +128,7 @@ Key | Description | Type | Default | Required
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
-`choices` | | `Object` | | `false`
+`choices` | List of carrier strategies available system-wide. | `Array` | | `false`
 
 #### `port`
 
