@@ -1448,7 +1448,7 @@ define(function(require) {
 				function(callback) {
 					self.portWizardRequestCreatePort({
 						data: {
-							data: args.data.request
+							data: self.portWizardNormalizePortRequestData(args.data.request)
 						},
 						success: function(portRequest) {
 							callback(null, portRequest);
@@ -1514,7 +1514,7 @@ define(function(require) {
 				function(callback) {
 					self.portWizardRequestUpdatePort({
 						data: {
-							data: portRequest
+							data: self.portWizardNormalizePortRequestData(portRequest)
 						},
 						success: function() {
 							callback(null);
@@ -1601,6 +1601,33 @@ define(function(require) {
 			monster.parallel(parallelRequests, function() {
 				globalCallback();
 			});
+		},
+
+		/**
+		 * Mutates portRequest to follow API schema
+		 * @param  {Object} portRequest Port request to normalize
+		 * @return {Object}             Normalized port request
+		 */
+		portWizardNormalizePortRequestData: function(portRequest) {
+			var self = this,
+				isPropEmpty = function(path) {
+					return _
+						.chain(portRequest)
+						.get(path)
+						.isEmpty()
+						.value();
+				};
+
+			// Empty value is not found in enumerated list of values for those properties so we
+			// delete them to avoid a validation error
+			if (isPropEmpty('bill.street_post_dir')) {
+				delete portRequest.bill.street_post_dir;
+			}
+			if (isPropEmpty('bill.street_pre_dir')) {
+				delete portRequest.bill.street_pre_dir;
+			}
+
+			return portRequest;
 		},
 
 		/**************************************************
