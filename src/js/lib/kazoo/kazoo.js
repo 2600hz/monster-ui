@@ -2,8 +2,15 @@
 	Kazoo WebRTC Library v0.2
 	Created by Jean-Roch Maitre and Maxime Roux for 2600hz (jr@2600hz.com / max@2600hz.com).
 */
-
-(function() {
+;(function(global, factory) {
+	if (typeof exports === 'object' && typeof module !== 'undefined') {
+		module.exports = factory();
+	} else if (typeof define === 'function' && define.amd) {
+		define('kazoo', [], factory);
+	} else {
+		global.kazoo = factory();
+	}
+}(this, function() {
 	var kazoo = {
 			connected: false,
 			registered: false,
@@ -365,7 +372,18 @@
 		};
 	}
 
+	function monitorConnectivity(enabled) { //True by default
+		if (enabled === false) {
+			clearInterval(connectivity.onlineTimer);
+			connectivity.onlineTimer = 0;
+		} else if (connectivity.onlineTimer === 0) {
+			connectivity.onlineTimer = setInterval(connectivity.onlineTimerFunction, 100);
+		}
+	}
+
 	kazoo.init = function(params) {
+		monitorConnectivity(true);
+
 		if (params.prefixScripts) {
 			for (var i in privateP.config.paths) {
 				privateP.config.paths[i] = params.prefixScripts + privateP.config.paths[i];
@@ -734,20 +752,9 @@
 		}
 	};
 
-	kazoo.monitorConnectivity = function(enabled) { //True by default
-		if (enabled === false) {
-			clearInterval(connectivity.onlineTimer);
-			connectivity.onlineTimer = 0;
-		} else if (connectivity.onlineTimer === 0) {
-			connectivity.onlineTimer = setInterval(connectivity.onlineTimerFunction, 100);
-		}
-	};
-
 	kazoo.getConnectivityHistory = function() {
 		return connectivity.onlineHistory;
 	};
 
-	window.kazoo = kazoo;
-
-	kazoo.monitorConnectivity(true);
-}());
+	return kazoo;
+}));

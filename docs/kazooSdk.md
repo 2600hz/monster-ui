@@ -199,6 +199,18 @@ kazooSdk.auth.userAuth({
 | Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
+###### Alert
+
+|||
+|---|---|
+| Method: | alert.list(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/alerts |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
 ###### Auth
 
 |||
@@ -1605,6 +1617,16 @@ kazooSdk.auth.userAuth({
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `voicemailId`, `data` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+|||
+|---|---|
+| Method: | __voicemail.patch(__*settings*__)__ |
+| Request Type: | PATCH |
+| Request URL: | {apiRoot}/accounts/{accountId}/vmboxes/{voicemailId} |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId`, `voicemailId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 |||

@@ -87,21 +87,25 @@
 		"trunks": "Trunks",
 		"twoWayCalling": "Unlimited Two-way Trunks",
 		"updateLimits": "Update Limieten",
-		"helpTwoway": "Het aantal Two-way trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (inkomend en uitgaand).",
-		"helpInbound": "Het aantal Inbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteerd (inkomend).",
 		"monthlyCharges": "Maandelijkse Kosten",
 		"__comment": "UI-664: Adding the real twoway sliders",
 		"__version": "v3.19_s2",
 		"twowayTitle": "Twoway Trunking Limits",
 		"twoway": "Two-way",
 		"outboundCalling": "Unlimited Outbound Trunks",
-		"helpOutbound": "Het aantal Outbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (uitgaand).",
 		"__comment": "UI-1014: Redesign of MyAccount",
 		"__version": "v3.20_s1",
 		"currentLimit": "Huidige Limiet",
-		"exampleTwoway": "VOORBEELD: 10 Two-way Trunks stellen u in staat bijv. 4 inbound en 6 outbound gesprekken te voeren op het zelfde moment.",
-		"exampleInbound": "VOORBEELD: 5 Inbound Trunks stellen u in staat om 5 gelijktijdige inkommende gesprekken te voeren",
-		"exampleOutbound": "VOORBEELD: 10 Outbound Trunks stellen u in staat om 10 gelijktijdige gesprkken te voerne naar een extern nummer"
+		"example": {
+			"inbound": "VOORBEELD: 5 Inbound Trunks stellen u in staat om 5 gelijktijdige inkommende gesprekken te voeren",
+			"outbound": "VOORBEELD: 10 Outbound Trunks stellen u in staat om 10 gelijktijdige gesprkken te voerne naar een extern nummer",
+			"twoway": "VOORBEELD: 10 Two-way Trunks stellen u in staat bijv. 4 inbound en 6 outbound gesprekken te voeren op het zelfde moment."
+		},
+		"help": {
+			"inbound": "Het aantal Inbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteerd (inkomend).",
+			"outbound": "Het aantal Outbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (uitgaand).",
+			"twoway": "Het aantal Two-way trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (inkomend en uitgaand)."
+		}
 	},
 
 	"balance" : {

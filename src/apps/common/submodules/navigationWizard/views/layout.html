@@ -1,0 +1,50 @@
+<div id="navigation_wizard_wrapper">
+	<div class="header">
+		<h4>{{title}}</h4>
+		<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
+	</div>
+
+	<div class="left-content">
+		<div class="nav">
+			<ol>
+			{{#each steps}}
+				<div class="step" data-id="{{@key}}">
+					<span class="fa fa-circle"></span>
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<li>{{this.label}}</li>
+					<span class="description">{{this.description}}</span>
+				</div>
+			{{/each}}
+			</ol>
+		</div>
+	</div>
+
+	<div class="right-content">
+	</div>
+
+	<div class="footer">
+		<form class="input-container form-row" id="form_navigation_buttons">
+			<div class="actions">
+				<a href="javascript:void(0);" id="clear">
+					{{i18n.navigationWizard.buttons.clear}}
+				</a>
+				<button class="monster-button back">
+					<i class="fa fa-arrow-circle-left"></i>
+					{{i18n.navigationWizard.buttons.back}}
+				</button>
+				<button id="next" class="monster-button">
+					{{i18n.navigationWizard.buttons.next}}
+					<i class="fa fa-arrow-circle-right"></i>
+				</button>
+				<button id="done" class="monster-button">
+					{{#unless doneButton}}
+						{{i18n.navigationWizard.buttons.done}}
+					{{else}}
+						{{doneButton}}
+					{{/unless}}
+				</button>
+			</div>
+		</form>
+
+	</div>
+</div>

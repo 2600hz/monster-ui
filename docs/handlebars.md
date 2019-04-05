@@ -6,26 +6,29 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
 * [How to use it](#how-to-use-it)
 * [Going Further](#going-further)
 * [Listing of different helpers](#listing-of-different-helpers)
-	- [coalesce](#coalesce)
-	- [compare](#compare)
-	- [debug](#debug)
-	- [ifInArray](#ifinarray)
-	- [isPrivLevelAdmin](#isprivleveladmin)
-	- [isSuperDuper](#issuperduper)
-	- [formatPhoneNumber](#formatphonenumber)
-	- [formatPrice](#formatprice)
-	- [getUserFullName](#getuserfullname)
-	- [monsterCheckbox](#monstercheckbox)
-	- [monsterNumberWrapper](#monsternumberwrapper)
-	- [monsterPanelText](#monsterpaneltext)
-	- [monsterRadio](#monsterradio)
-	- [monsterSignalIndicator](#monstersignalindicator)
-	- [monsterSwitch](#monsterswitch)
-	- [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
-	- [replaceVar](#replacevar)
-	- [toFriendlyDate](#tofriendlydate)
-	- [toLowerCase](#tolowercase)
-	- [tryI18n](#tryi18n)
+    - [coalesce](#coalesce)
+    - [compare](#compare)
+    - [debug](#debug)
+    - [formatMacAddress](#formatmacaddress)
+    - [formatPhoneNumber](#formatphonenumber)
+    - [formatPrice](#formatprice)
+    - [getUserFullName](#getuserfullname)
+    - [ifInArray](#ifinarray)
+    - [isPrivLevelAdmin](#isprivleveladmin)
+    - [isSuperDuper](#issuperduper)
+    - [monsterCheckbox](#monstercheckbox)
+    - [monsterNumberWrapper](#monsternumberwrapper)
+    - [monsterPanelText](#monsterpaneltext)
+    - [monsterRadio](#monsterradio)
+    - [monsterSignalIndicator](#monstersignalindicator)
+    - [monsterSwitch](#monsterswitch)
+    - [monsterText](#monstertext-obsolete-use-monsterpaneltext-where-possible)
+    - [replaceVar](#replacevar)
+    - [svgIcon](#svgicon)
+    - [telicon](#telicon)
+    - [toFriendlyDate](#tofriendlydate)
+    - [toLowerCase](#tolowercase)
+    - [tryI18n](#tryi18n)
 
 ## How to use it
 Let's start with an easy example. We want to display a banner displaying `Hello Georges!` whenever the User georges logs in. The HTML to do that could be something like this:
@@ -33,7 +36,7 @@ Let's start with an easy example. We want to display a banner displaying `Hello 
 hello.html
 ```html
 <div class="banner-hello">
-	<span>Hello Georges!</span>
+  <span>Hello Georges!</span>
 </div>
 ```
 This hello.html file is a template. In order to add it somewhere in your UI, you would do `container.append(monster.template(self, 'hello'))` and it would add this HTML inside the container.
@@ -43,15 +46,15 @@ Now let's add some dynamic data, since that's why we need to use Handlebars in t
 app.js
 ```javascript
 var dataTemplate = {
-		firstName: 'Pedro'
-	},
-	template = monster.template(self, 'hello', dataTemplate);
+    firstName: 'Pedro'
+  },
+  template = monster.template(self, 'hello', dataTemplate);
 ```
 
 hello.html
 ```html
 <div class="banner-hello">
-	<span>Hello {{firstName}}!</span>
+  <span>Hello {{firstName}}!</span>
 </div>
 ```
 It's almost exactly the same template as above, except that we're now using the `firstName` variable, and we can now display it properly for all the users.
@@ -83,10 +86,10 @@ Let's see an example:
 
 example.html
 ```handlebars
-{{compare role "===" "admin"}}
-	<div class="admin-welcome">You're an admin! You must be so cool!</div>
+{{#compare role "===" "admin"}}
+  <div class="admin-welcome">You're an admin! You must be so cool!</div>
 {{else}}
-	<div class="peon-welcome">You're a user! That's cool.</div>
+  <div class="peon-welcome">You're a user! That's cool.</div>
 {{/compare}}
 ```
 In the above example, we check if the role of a user is `"admin"` and if it is we display a special div, otherwise we display another one. We can use it the same way to compare values, for example `{{compare moneyLeft ">=" 10000}}You're so rich...{{/compare}}`. You get the idea!
@@ -100,12 +103,58 @@ example.html
 {{debug}} <!-- Would output the entire context, containing users and anything else -->
 {{debug users}} <!-- Would output the entire users object}} -->
 {{#each users}}
-	{{debug}} <!-- Would output the object representing the current user -->
-	<div class="user-div">
-		<span class="user-first-name">{{firstName}}</span>
-		<span class="user-last-name">{{lastName}}</span>
-	</div>
+  {{debug}} <!-- Would output the object representing the current user -->
+  <div class="user-div">
+    <span class="user-first-name">{{firstName}}</span>
+    <span class="user-last-name">{{lastName}}</span>
+  </div>
 {{/each}}
+```
+
+#### formatMacAddress
+The formatMacAddress helper formats a string into a string representation of a MAC address, using colons as separator.
+
+```handlebars
+{{formatMacAddress 'E3.FF.34.9A.71.BC'}}
+```
+
+#### formatPhoneNumber
+The formatPhoneNumber helper can display a phone-number with proper formatting automatically. It's useful because a lot of numbers are stored in the database with a format such as `+14151993821` and we want to display them to the user like `+1 (415) 199-3821`.
+
+example.html
+```handlebars
+<div class="user-div">
+  <span class="user-first-name">{{firstName}}</span>
+  <span class="user-last-name">{{lastName}}</span>
+
+  <div class="user-phone-number">{{formatPhoneNumber phoneNumber}}</div>
+</div>
+```
+
+#### formatPrice
+The formatPrice helper can display a price with the proper amount of digits after the decimal point as well as the currency used by the UI. It's useful because prices can have a various number of digits, but should be displayed in a consistent way.
+The example below will round off the price to two (2) digits, and display it with two (2) digits even if it has less than that (i.e. "6" -> "6.00", "6.666" -> "6.67").
+
+```handlebars
+<div class="item-row">
+  <span class="item-name">{{name}}</span>
+  <span class="item-price">{{formatPrice price 2}}</span>
+</div>
+```
+
+If you do not want the currency to be displayed, you'll have to specify a third argument:
+```handlebars
+<div class="item-row">
+  <span class="item-name">{{name}}</span>
+  <span class="item-price">{{formatPrice price 2 false}}</span>
+</div>
+```
+
+#### getUserFullName
+This helper will display the full name of the user object passed as argument, following the [internationalization][i18n] rules that are currently active. If no argument is provided, it will return the full name of the user that is currently logged in. The user parameter should be a plain object that has the properties `first_name` and `last_name`.
+
+```handlebars
+{{getUserFullName optionalUserObject}}
 ```
 
 #### ifInArray
@@ -135,51 +184,12 @@ This is a predetermined conditional helper letting you render content only if th
 {{/isSuperDuper}}
 ```
 
-#### formatPhoneNumber
-The formatPhoneNumber helper can display a phone-number with proper formatting automatically. It's useful because a lot of numbers are stored in the database with a format such as `+14151993821` and we want to display them to the user like `+1 (415) 199-3821`.
-
-example.html
-```handlebars
-<div class="user-div">
-	<span class="user-first-name">{{firstName}}</span>
-	<span class="user-last-name">{{lastName}}</span>
-
-	<div class="user-phone-number">{{formatPhoneNumber phoneNumber}}</div>
-</div>
-```
-
-#### formatPrice
-The formatPrice helper can display a price with the proper amount of digits after the decimal point as well as the currency used by the UI. It's useful because prices can have a various number of digits, but should be displayed in a consistent way.
-The example below will round off the price to two (2) digits, and display it with two (2) digits even if it has less than that (i.e. "6" -> "6.00", "6.666" -> "6.67").
-
-```handlebars
-<div class="item-row">
-	<span class="item-name">{{name}}</span>
-	<span class="item-price">{{formatPrice price 2}}</span>
-</div>
-```
-
-If you do not want the currency to be displayed, you'll have to specify a third argument:
-```handlebars
-<div class="item-row">
-	<span class="item-name">{{name}}</span>
-	<span class="item-price">{{formatPrice price 2 false}}</span>
-</div>
-```
-
-#### getUserFullName
-This helper will display the full name of the user object passed as argument, following the [internationalization][i18n] rules that are currently active. If no argument is provided, it will return the full name of the user that is currently logged in. The user parameter should be a plain object that has the properties `first_name` and `last_name`.
-
-```handlebars
-{{getUserFullName optionalUserObject}}
-```
-
 #### monsterCheckbox
 This helper allows you to generate a pretty checkbox from a simple checkbox input.
 
 ```handlebars
 {{#monsterCheckbox}}
-	<input type="checkbox" />
+  <input type="checkbox" />
 {{/monsterCheckbox}}
 ```
 
@@ -188,7 +198,7 @@ You can also provide parameters to define a label, set its positioning, and set 
 
 ```handlebars
 {{#monsterCheckbox "large-checkbox" "prepend-label" "My Checkbox's label"}}
-	<input type="checkbox" />
+  <input type="checkbox" />
 {{/monsterCheckbox}}
 ```
 
@@ -215,16 +225,16 @@ Here are some examples on how to use this helper.
 
 ```handlebars
 {{#monsterPanelText 'Warning!' 'warning' 'fill-width'}}
-	You should see a warning message here!
+  You should see a warning message here!
 {{/monsterPanelText}}
 {{#monsterPanelText 'Help' 'info'}}
-	<p>This is an informational message</p>
+  <p>This is an informational message</p>
 {{/monsterPanelText}}
 {{#monsterPanelText 'Error!' 'danger' 'fill-width'}}
-	You should see an error message here
+  You should see an error message here
 {{/monsterPanelText}}
 {{#monsterPanelText 'Congratulations!' 'success' 'fill-width'}}
-	You should see a success message here
+  You should see a success message here
 {{/monsterPanelText}}
 ```
 
@@ -233,7 +243,7 @@ Similar to monsterCheckbox, this helper allows you to generate a pretty radio bu
 
 ```handlebars
 {{#monsterRadio}}
-	<input type="radio" name="myRadioName" />
+  <input type="radio" name="myRadioName" />
 {{/monsterRadio}}
 ```
 
@@ -242,7 +252,7 @@ You can also provide parameters to define a label, set its positioning, and set 
 
 ```handlebars
 {{#monsterRadio "large-radio" "prepend-label" "My Radio Button's label"}}
-	<input type="radio" name="myRadioName" />
+  <input type="radio" name="myRadioName" />
 {{/monsterRadio}}
 ```
 
@@ -251,7 +261,7 @@ This helper will generate a signal strength indicator using a pair of parameters
 
 ```handlebars
 {{#monsterSignalIndicator strength}}
-	{{label}}
+  {{label}}
 {{/monsterSignalIndicator}}
 ```
 
@@ -263,7 +273,7 @@ This helper allows you to generate a switch from a simple checkbox.
 
 ```handlebars
 {{#monsterSwitch}}
-	<input type="checkbox" />
+  <input type="checkbox" />
 {{/monsterSwitch}}
 ```
 
@@ -286,6 +296,33 @@ Second argument is optional and let you define a className that will be added to
 #### replaceVar
 This helper allows you to replace a variable inside another variable with Handlebars. It's useful for i18n keys.
 You can see a very good example about this helper [here][i18n_templates].
+
+#### svgIcon
+This helper makes it easy to render [SVG icons from collections supported by Monster UI][svgIcons] by only requiring you to specify an icon ID.
+
+```handlebars
+{{svgIcon "telicon2--phone-outbound"}}
+
+```
+
+Optionally, additional HTML attributes can be provided to further customize the SVG tag.
+
+```handlebars
+{{svgIcon "g-drive--color" class="my-icon-class icon-large" data-tooltip="Click here" disabled="true"}}
+```
+
+### telicon
+This helper is a wrapper over `svgIcon` and allows you to render telicon icons by specifying an icon ID stripped of the `telicon2` prefix.
+
+```handlebars
+{{telicon "phone-outbound"}}
+```
+
+Like `svgIcon`, additional HTML attributes can be provided to the SVG tag.
+
+```handlebars
+{{telicon "phone-outbound" style="display:block;" data-label="Click here"}}
+```
 
 #### toFriendlyDate
 This helper allows you to display time in a customizable format. It take a mandatory Gregorian timestamp in parameter and returns a formatted date:
@@ -327,7 +364,7 @@ This helper is pretty simple, and is basically executing the toLowerCase() JS fu
 example.html
 ```handlebars
 <div class="user-div">
-	<span class="small-user-first-name">{{toLowerCase firstName}}</span>
+  <span class="small-user-first-name">{{toLowerCase firstName}}</span>
 </div>
 ```
 
@@ -340,18 +377,18 @@ Basically, it will check if a key has a translation in a JSON object. If it has 
 Let's say we have a i18n file like:
 ```JSON
 {
-	"demoHandlebars": {
-		"test_1": "Test 1",
-		"test_2": "Test 2",
-		"test_3": "Test 3"
-	}
+  "demoHandlebars": {
+    "test_1": "Test 1",
+    "test_2": "Test 2",
+    "test_3": "Test 3"
+  }
 }
 ```
 
 and a HTML template named 'templateName' like:
 ```handlebars
 {{#each keys}}
-	{{ tryI18n i18n.demoHandlebars this }}<br/>
+  {{ tryI18n i18n.demoHandlebars this }}<br/>
 {{/each}}
 ```
 
@@ -374,3 +411,4 @@ Test 3
 
 [i18n]: internationalization.md
 [i18n_templates]: internationalization.md#in-html-templates
+[svgIcons]: svgIcons.md

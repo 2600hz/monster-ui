@@ -8,17 +8,6 @@ define(function(require) {
 	require('moment-timezone');
 		//momentTimezone = require('moment-timezone');
 
-	var supportedCurrencyCodes = {
-		USD: {
-			symbol: '$',
-			position: 'ante'
-		},
-		EUR: {
-			symbol: '€',
-			position: 'post'
-		}
-	};
-
 	var util = {
 
 		/**
@@ -106,89 +95,6 @@ define(function(require) {
 			}
 
 			return formattedResponse;
-		},
-
-		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
-			var resp = libphonenumber.parse(phoneNumber, {
-					country: {
-						'default': 'US'
-					}
-				}),
-				phoneNumber;
-
-			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				phoneNumber = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
-			} else {
-				phoneNumber = formattedNumber.replace(/[^0-9+]/g, '');
-			}
-
-			return phoneNumber;
-		},
-
-		formatPhoneNumber: function(phoneNumber) {
-			var self = this,
-				formattedPhoneNumber = phoneNumber;
-
-			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
-				formattedPhoneNumber = self.getFormatPhoneNumber(phoneNumber).userFormat;
-			}
-
-			return formattedPhoneNumber;
-		},
-
-		getFormatPhoneNumber: function(phoneNumber) {
-			var resp = libphonenumber.parse(phoneNumber, {
-					country: {
-						'default': 'US'
-					}
-				}),
-				user = monster.apps.auth.currentUser || {},
-				account = monster.apps.auth.originalAccount || {},
-				formattedData = {
-					originalNumber: phoneNumber,
-					userFormat: phoneNumber // Setting it as a default, in case the number is not valid
-				},
-				getUserFormatFromEntity = function(entity, data) {
-					var response = '';
-
-					if (entity.ui_flags.numbers_format === 'national') {
-						response = data.nationalFormat;
-					} else if (entity.ui_flags.numbers_format === 'international') {
-						response = data.internationalFormat;
-					} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
-						if (entity.ui_flags.numbers_format_exceptions.length && entity.ui_flags.numbers_format_exceptions.indexOf(data.country.code) >= 0) {
-							response = data.nationalFormat;
-						} else {
-							response = data.internationalFormat;
-						}
-					}
-					return response;
-				};
-
-			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				formattedData.e164Number = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
-				formattedData.nationalFormat = libphonenumber.format(resp.phone, resp.country, 'National');
-				formattedData.internationalFormat = libphonenumber.format(resp.phone, resp.country, 'International');
-
-				formattedData.country = {
-					code: resp.country,
-					name: monster.timezone.getCountryName(resp.country)
-				};
-
-				// Default to international mode
-				formattedData.userFormat = formattedData.internationalFormat;
-				formattedData.userFormatType = 'international';
-
-				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format') && user.ui_flags.numbers_format !== 'inherit') {
-					formattedData.userFormatType = user.ui_flags.numbers_format;
-					formattedData.userFormat = getUserFormatFromEntity(user, formattedData);
-				} else if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
-					formattedData.userFormatType = account.ui_flags.numbers_format;
-					formattedData.userFormat = getUserFormatFromEntity(account, formattedData);
-				}
-			}
-
-			return formattedData;
 		},
 
 		getDefaultNumbersFormat: function() {
@@ -466,34 +372,6 @@ define(function(require) {
 			}
 		},
 
-		/* Set the language to start the application.
-			By default will take the value from the cookie,
-			or if it doesn't exist, it will take the value from the config.js,
-			or if it's not set it will fall back to the language of the browser.
-			In last resort it will set it to 'en-US' if nothing is set above
-		*/
-		setDefaultLanguage: function() {
-			var languages = [
-					'de-DE',
-					'en-US',
-					'es-ES',
-					'fr-FR',
-					'nl-NL',
-					'ru-RU'
-				],
-				browserLanguage = _.find(languages, function(lang) {
-					return lang.indexOf(navigator.language) > -1;
-				}),
-				cookieLanguage = monster.cookies.has('monster-auth') ? monster.cookies.getJson('monster-auth').language : undefined,
-				defaultLanguage = browserLanguage || 'en-US';
-
-			monster.config.whitelabel.language = cookieLanguage || monster.config.whitelabel.language || defaultLanguage;
-
-			// Normalize the language to always be capitalized after the hyphen (ex: en-us -> en-US, fr-FR -> fr-FR)
-			// Will normalize bad input from the config.js or cookie data coming directly from the database
-			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/, function(a) { return a.toUpperCase(); });
-		},
-
 		checkVersion: function(obj, callback) {
 			var self = this,
 				i18n = monster.apps.core.i18n.active();
@@ -543,20 +421,6 @@ define(function(require) {
 			});
 
 			return result;
-		},
-
-		formatMacAddress: function(pMacAddress) {
-			var regex = /[^0-9a-fA-F]/g,
-				macAddress = pMacAddress.replace(regex, ''),
-				formattedMac = '';
-
-			if (macAddress.length === 12) {
-				_.each(macAddress.split(''), function(char, idx) {
-					formattedMac += (idx % 2 === 0 && idx !== 0 ? ':' : '') + macAddress[idx];
-				});
-			}
-
-			return formattedMac;
 		},
 
 		getDefaultRangeDates: function(pRange) {
@@ -840,7 +704,7 @@ define(function(require) {
 				authApp = monster.apps.auth,
 				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
 					'cluster', 'conferences', 'csv-onboarding', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
-					'migration', 'mobile', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
+					'migration', 'mobile', 'myaccount', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
 					'service-plan-override', 'tasks', 'taxation', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
 
 			if (localIcons.indexOf(app.name) >= 0) {
@@ -973,7 +837,7 @@ define(function(require) {
 						}
 
 						if (formattedKey !== key) {
-							replaceHTML(element, key, monster.util.unformatPhoneNumber(numbers[formattedKey]));
+							replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
 						} else {
 							replaceHTML(element, key, numbers[key]);
 						}
@@ -1023,6 +887,37 @@ define(function(require) {
 	};
 
 	/**
+	 * Formats a string into a string representation of a MAC address, using
+	 * colons as separator.
+	 * @param  {String} macAddress   String to format as MAC address.
+	 * @return {String}              String representation of a MAC address.
+	 */
+	function formatMacAddress(macAddress) {
+		if (!_.isString(macAddress)) {
+			throw new TypeError('"macAddress" is not a string');
+		}
+		var matches = macAddress
+			.toLowerCase()
+			.replace(/[^0-9a-f]/g, '')
+			.match(/[0-9a-f]{2}/g);
+
+		return !_.isNull(matches) && _.size(matches) >= 6
+			? matches.slice(0, 6).join(':')
+			: '';
+	}
+
+	/**
+	 * Phone number formatting according to user preferences.
+	 * @param  {Number|String} phoneNumber Input to format as phone number
+	 * @return {String}                    Input formatted as phone number
+	 */
+	function formatPhoneNumber(input) {
+		return !monster.config.whitelabel.preventDIDFormatting && input
+			? getFormatPhoneNumber(input).userFormat
+			: _.toString(input);
+	}
+
+	/**
 	 * Decimal and currency formatting for prices
 	 * @param  {Object}  args
 	 * @param  {Number}  args.price        Price to format (number or string
@@ -1037,51 +932,142 @@ define(function(require) {
 	 * will have two digits.
 	 */
 	function formatPrice(args) {
-		var price = Number(args.price);
-		var digits = parseInt(args.digits);
-		var withCurrency = _.isBoolean(args.withCurrency)
-			? args.withCurrency
-			: true;
-		var digitsCount = digits >= 0
-			? digits
-			: 2;
-		var roundedPrice = Math.round(price * Math.pow(10, digitsCount)) / Math.pow(10, digitsCount);
-		var fixedPrice = roundedPrice.toFixed(parseInt(price) === price && (isNaN(digits) || digits < 0) ? 0 : digitsCount);
-		var addCurrency = function(value) {
-			var currencyCode = monster.config.hasOwnProperty('currencyCode')
-				? monster.config.currencyCode
-				: 'USD';
-			var codeData = supportedCurrencyCodes[currencyCode];
-			var ret;
-			if (_.isUndefined(codeData)) {
-				throw new Error('Currency code ' + currencyCode + ' is not supported.');
-			} else {
-				if (codeData.position === 'ante') {
-					ret = codeData.symbol + fixedPrice;
-				} else if (codeData.position === 'post') {
-					ret = fixedPrice + ' ' + codeData.symbol;
-				}
-			}
-			return ret;
-		};
-		return withCurrency
-			? addCurrency(fixedPrice)
-			: fixedPrice;
+		if (
+			_.isNaN(args.price)
+			|| (!_.isNumber(args.price) && _.isNaN(_.toNumber(args.price)))
+		) {
+			throw new TypeError('"price" is not a valid number or not castable into a number');
+		}
+		if (
+			!_.isUndefined(args.digits)
+			&& (!_.isNumber(args.digits) || (!_.isInteger(args.digits) || args.digits < 0))
+		) {
+			throw new TypeError('"digits" is not a positive integer');
+		}
+		if (!_.isUndefined(args.withCurrency) && !_.isBoolean(args.withCurrency)) {
+			throw new TypeError('"withCurrency" is not a boolean');
+		}
+		var price = _.toNumber(args.price);
+		var digits = _.get(args, 'digits', 2);
+		var withCurrency = _.get(args, 'withCurrency', true);
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
+			style: withCurrency ? 'currency' : 'decimal',
+			currency: monster.config.currencyCode,
+			minimumFractionDigits: digits
+		});
+
+		return formatter.format(price);
 	}
 
 	/**
-	 * Return the symbol of the currency used
+	 * Returns a list of bookkeepers available for Monster UI
+	 * @return {Array} List of bookkeepers availalbe
+	 */
+	function getBookkeepers() {
+		var i18n = monster.apps.core.i18n.active().bookkeepers;
+
+		return _.flatten([
+			[
+				{
+					label: i18n.default,
+					value: 'default'
+				}
+			],
+			_.chain(monster.config.whitelabel.bookkeepers)
+				.map(function(isEnabled, bookkeeper) {
+					return {
+						bookkeeper: bookkeeper,
+						isEnabled: isEnabled
+					};
+				})
+				.filter('isEnabled')
+				.map(function(item) {
+					var value = _.get(item, 'bookkeeper');
+
+					return {
+						label: _.get(i18n, value, _.startCase(value)),
+						value: value
+					};
+				})
+				.sortBy('label')
+				.value()
+		]);
+	}
+
+	/**
+	 * Return the symbol of the currency used through the UI
 	 * @return {String} Symbol of currency
 	 */
 	function getCurrencySymbol() {
-		var currencyCode = monster.config.hasOwnProperty('currencyCode')
-			? monster.config.currencyCode
-			: 'USD';
-		var codeData = supportedCurrencyCodes[currencyCode];
-		if (_.isUndefined(codeData)) {
-			throw new Error('Currency code ' + currencyCode + ' is not supported');
+		var base = NaN;
+		var formatter = new Intl.NumberFormat(monster.defaultLanguage, {
+			style: 'currency',
+			currency: monster.config.currencyCode
+		});
+
+		return formatter.format(base).replace('NaN', '');
+	}
+
+	function getFormatPhoneNumber(input) {
+		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
+		var user = _.get(monster, 'apps.auth.currentUser', {});
+		var account = _.get(monster, 'apps.auth.originalAccount', {});
+		var formattedData = {
+			originalNumber: input,
+			userFormat: input // Setting it as a default, in case the number is not valid
+		};
+		var getUserFormatFromEntity = function(entity, data) {
+			var response = '';
+
+			if (entity.ui_flags.numbers_format === 'national') {
+				response = data.nationalFormat;
+			} else if (entity.ui_flags.numbers_format === 'international') {
+				response = data.internationalFormat;
+			} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
+				if (_.includes(_.get(entity, 'ui_flags.numbers_format_exceptions', []), data.country.code)) {
+					response = data.nationalFormat;
+				} else {
+					response = data.internationalFormat;
+				}
+			}
+			return response;
+		};
+
+		if (
+			_.has(phoneNumber, 'country')
+			&& !_.isEmpty(phoneNumber.country)
+			&& _.has(phoneNumber, 'number')
+			&& !_.isEmpty(phoneNumber.number)
+		) {
+			_.merge(formattedData, {
+				e164Number: phoneNumber.format('E.164'),
+				nationalFormat: phoneNumber.format('NATIONAL'),
+				internationalFormat: phoneNumber.format('INTERNATIONAL'),
+				country: {
+					code: phoneNumber.country,
+					name: monster.timezone.getCountryName(phoneNumber.country)
+				}
+			});
+
+			if (_.get(user, 'ui_flags.numbers_format', 'inherit') !== 'inherit') {
+				_.merge(formattedData, {
+					userFormat: getUserFormatFromEntity(user, formattedData),
+					userFormatType: _.get(user, 'ui_flags.numbers_format')
+				});
+			} else if (_.has(account, 'ui_flags.numbers_format')) {
+				_.merge(formattedData, {
+					userFormat: getUserFormatFromEntity(account, formattedData),
+					userFormatType: _.get(account, 'ui_flags.numbers_format')
+				});
+			} else {
+				_.merge(formattedData, {
+					userFormat: phoneNumber.format('INTERNATIONAL'),
+					userFormatType: 'international'
+				});
+			}
 		}
-		return codeData.symbol;
+
+		return formattedData;
 	}
 
 	/**
@@ -1150,6 +1136,21 @@ define(function(require) {
 			return shortcuts[format] + ' A';
 		}
 		return shortcuts[format];
+	}
+
+	/**
+	 * Returns the available features for a Kazoo phone number
+	 * @param  {Object} number  Phone number object, which contains the features details
+	 * @return {String[]}       Number's available features
+	 */
+	function getNumberFeatures(number) {
+		if (!_.isPlainObject(number)) {
+			throw new TypeError('"number" is not an object');
+		}
+		var numberFeatures = _.get(number, 'features_available', []);
+		return _.isEmpty(numberFeatures)
+			? _.get(number, '_read_only.features_available', [])
+			: numberFeatures;
 	}
 
 	/**
@@ -1325,6 +1326,19 @@ define(function(require) {
 	}
 
 	/**
+	 * Normalize phone number by using E.164 format
+	 * @param  {String} input Input to normalize
+	 * @return {String}       Input normalized as E.164 phone number
+	 */
+	function unformatPhoneNumber(input) {
+		return _.get(
+			getFormatPhoneNumber(input),
+			'internationalFormat',
+			_.replace(input, /[^0-9+]/g, '')
+		);
+	}
+
+	/**
 	 * Converts a Unix timestamp into a Date instance
 	 * @param  {Number} pTimestamp Unix timestamp
 	 * @return {Date}           Converted Date instance
@@ -1356,13 +1370,19 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 
+	util.formatMacAddress = formatMacAddress;
+	util.formatPhoneNumber = formatPhoneNumber;
 	util.formatPrice = formatPrice;
+	util.getBookkeepers = getBookkeepers;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getFormatPhoneNumber = getFormatPhoneNumber;
+	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;
 	util.gregorianToDate = gregorianToDate;
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 	util.randomString = randomString;
 	util.toFriendlyDate = toFriendlyDate;
+	util.unformatPhoneNumber = unformatPhoneNumber;
 	util.unixToDate = unixToDate;
 
 	return util;

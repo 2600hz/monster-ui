@@ -2,7 +2,7 @@
 	<div class="title-bar clearfix">
 		<div class="title-box">
 			<div class="value">
-				{{inbound}}
+				{{ value }}
 			</div>
 			<div class="title">
 				{{ i18n.trunks.currentLimit }}
@@ -10,7 +10,7 @@
 		</div>
 		<div class="title-box message-box">
 			<div class="title">
-				{{ i18n.trunks.helpInbound }}
+				{{ tryI18n i18n.trunks.help trunkType }}
 			</div>
 		</div>
 	</div>
@@ -18,13 +18,13 @@
 	<div class="section-slider clearfix">
 		<div class="slider-title">{{ i18n.trunks.quantity }}</div>
 		<div class="slider-wrapper">
-			<div id="slider_inbound"></div>
-			<div class="slider-value">{{inbound}}</div>
+			<div id="slider_trunks"></div>
+			<div class="slider-value">{{ value }}</div>
 		</div>
 		<div class="question-box">
 			<div class="box-icon"><i class="fa fa-question-circle"></i></div>
 			<div class="box-message">
-				{{ i18n.trunks.exampleInbound }}
+				{{ tryI18n i18n.trunks.example trunkType }}
 			</div>
 		</div>
 	</div>

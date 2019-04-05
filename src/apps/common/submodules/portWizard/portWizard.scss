@@ -1,11 +1,24 @@
+@import '../../../../css/partials/base';
+
 #port_wizard {
-	position: relative;
-	margin: 40px 20px;
-	padding: 45px 20px;
-	text-align: center;
-	border: 1px solid #c0c0c9;
-	border-radius: 2px;
-	background-color: #fff;
+	background-color: $background-primary-color;
+	padding: 40px 20px;
+	height: calc(100% - 80px);
+
+	.app-content {
+		position: relative;
+		padding: 45px 20px;
+		text-align: center;
+		border: 1px solid #c0c0c9;
+		border-radius: 2px;
+		background-color: #fff;
+
+		.controls-list {
+			select:not(:first-child) {
+				margin-top: 20px;
+			}
+		}
+	}
 }
 
 #port_wizard .row-fluid {

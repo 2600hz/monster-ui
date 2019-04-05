@@ -9,9 +9,48 @@ define(function(require) {
 		form2object = require('form2object'),
 		handlebars = require('handlebars'),
 		kazoosdk = require('kazoosdk'),
+		libphonenumber = require('libphonenumber'),
 		md5 = require('md5'),
 		postal = require('postal'),
 		reqwest = require('reqwest');
+
+	var defaultCountryCode = 'US';
+	var defaultCurrencyCode = 'USD';
+	var defaultLanguage = 'en-US';
+
+	var supportedLanguages = [
+		'de-DE',
+		'en-US',
+		'es-ES',
+		'fr-FR',
+		'nl-NL',
+		'ru-RU'
+	];
+
+	var defaultConfig = {
+		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
+		currencyCode: [isCurrencyCode, defaultCurrencyCode],
+		'developerFlags.showAllCallflows': [_.isBoolean, false],
+		'developerFlags.showJsErrors': [_.isBoolean, false],
+		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
+		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
+		'whitelabel.allowAccessList': [_.isBoolean, false],
+		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
+		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
+		'whitelabel.bookkeepers.http': [_.isBoolean, true],
+		'whitelabel.bookkeepers.kazoo': [_.isBoolean, true],
+		'whitelabel.companyName': [_.isString, '2600Hz'],
+		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
+		'whitelabel.hideAppStore': [_.isBoolean, false],
+		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
+		'whitelabel.hideNewAccountCreation': [_.isBoolean, false],
+		'whitelabel.language': [_.isString, defaultLanguage, supportedLanguages],
+		'whitelabel.logoutTimer': [_.isNumber, 15],
+		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
+		'whitelabel.countryCode': [isCountryCode, defaultCountryCode],
+		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
+		'whitelabel.useDropdownApploader': [_.isBoolean, false]
+	};
 
 	var _privateFlags = {
 		lockRetryAttempt: false,
@@ -232,21 +271,6 @@ define(function(require) {
 		logs: {
 			error: []
 		},
-
-		config: (function(config) {
-			var getValue = function(node, key, check, preset) {
-				return node.hasOwnProperty(key) && check(node[key])
-					? node[key]
-					: preset;
-			};
-			config.api = getValue(config, 'api', _.isObject, {});
-			config.api.default = getValue(config.api, 'default', _.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/');
-			config.currencyCode = getValue(config, 'currencyCode', _.isString, 'USD');
-			config.whitelabel = getValue(config, 'whitelabel', _.isObject, {});
-			config.whitelabel.disableNumbersFeatures = getValue(config.whitelabel, 'disableNumbersFeatures', _.isBoolean, false);
-			config.developerFlags = getValue(config, 'developerFlags', _.isObject, {});
-			return config;
-		}(require('config'))),
 
 		cookies: {
 			set: function set(key, value, options) {
@@ -538,10 +562,10 @@ define(function(require) {
 			self.kazooSdk = $.getKazooSdk({
 				apiRoot: monster.config.api.default,
 				onRequestStart: function(request, requestOptions) {
-					monster.pub('monster.requestStart');
+					monster.pub('monster.requestStart', requestOptions.requestEventParams);
 				},
 				onRequestEnd: function(request, requestOptions) {
-					monster.pub('monster.requestEnd');
+					monster.pub('monster.requestEnd', requestOptions.requestEventParams);
 				},
 				onRequestError: function(error, requestOptions) {
 					var parsedError = error,
@@ -552,14 +576,22 @@ define(function(require) {
 					}
 
 					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						var parsedError = error;
+						// Handle the "Payment Required" status
+						var parsedError = error,
+							originalPreventCallbackError = requestOptions.preventCallbackError;
 
 						if ('responseText' in error && error.responseText) {
 							parsedError = $.parseJSON(error.responseText);
 						}
 
+						// Prevent the execution of the custom error callback, as it is a
+						// charges notification that will be handled here
+						requestOptions.preventCallbackError = true;
+
+						// Notify the user about the charges
 						monster.ui.charges(parsedError.data, function() {
 							requestOptions.acceptCharges = true;
+							requestOptions.preventCallbackError = originalPreventCallbackError;
 							monster.kazooSdk.request(requestOptions);
 						}, function() {
 							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
@@ -626,6 +658,88 @@ define(function(require) {
 			return md5(string);
 		}
 	};
+
+	/**
+	 * Set missing/incorrect config.js properties required by the UI to function properly.
+	 */
+	function initConfig() {
+		var config = require('config');
+		var getValue = function(value, path) {
+			var validator = value[0];
+			var presetValue = _.cloneDeep(value[1]);
+			var enumValues = value[2];
+			var existingValue = _.get(config, path);
+			var isExistingValueValid = validator(existingValue);
+			var hasEnum = !_.isUndefined(enumValues);
+
+			if (hasEnum) {
+				return _.includes(enumValues, existingValue) ? existingValue : presetValue;
+			}
+			if (isExistingValueValid) {
+				return existingValue;
+			}
+			return presetValue;
+		};
+
+		_.forEach(defaultConfig, function(value, path) {
+			_.set(
+				config,
+				path,
+				getValue(value, path)
+			);
+		});
+
+		_.set(monster, 'config', config);
+	}
+
+	/**
+	 * Validates `code` against ISO-3166 alpha-2 codes
+	 * @private
+	 * @param  {String}  code
+	 * @return {Boolean}      Whether or not `code` is a valid country code
+	 */
+	function isCountryCode(code) {
+		return libphonenumber.isSupportedCountry(code);
+	}
+
+	/**
+	 * Validates `code` against ISO 4217 codes
+	 * @private
+	 * @param  {String}  code
+	 * @return {Boolean}      Whether or not `code` is a valid currency code.
+	 */
+	function isCurrencyCode(code) {
+		try {
+			Intl.NumberFormat(defaultLanguage, {
+				style: 'currency',
+				currency: code
+			});
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Set the language on application startup.
+	 *
+	 * If the `monster-auth` cookie exists, the language defined in it will take precedence.
+	 * When no cookie, the language will default to the UI's default language set by initConfig().
+	 */
+	function setDefaultLanguage() {
+		var language = _.get(monster.cookies.getJson('monster-auth'), 'language');
+
+		if (_.isUndefined(language)) {
+			return;
+		}
+
+		_.set(monster.config.whitelabel, 'language', language);
+	}
+
+	monster.defaultLanguage = defaultLanguage;
+
+	monster.initConfig = initConfig;
+	monster.setDefaultLanguage = setDefaultLanguage;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager

@@ -37,7 +37,8 @@ define(function(require) {
 							'notifications.email.send_to': 'portNotify.email.label'
 						}
 					}
-				}
+				},
+				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']
 			}
 		},
 
@@ -78,22 +79,38 @@ define(function(require) {
 		},
 
 		/**
-		 * @param  {jQuery} args.container
-		 * @param  {String} args.data.accountId
-		 * @param  {Function} args.globalCallback
+		 * @param  {jQuery} [args.container]
+		 * @param  {String} [args.data.accountId]
+		 * @param  {Function} [args.globalCallback]
 		 * @param  {Object} [args.data.portRequestId]
 		 */
 		portWizardRender: function(args) {
 			var self = this,
-				accountId = args.data.accountId,
-				container = args.container,
-				globalCallback = args.globalCallback,
-				portRequestId = _.get(args, 'data.portRequestId');
+				accountId = _.get(args, 'data.accountId', self.accountId),
+				globalCallback = _.get(args, 'globalCallback', function() {}),
+				portRequestId = _.get(args, 'data.portRequestId'),
+				container,
+				callback;
+
+			if (args.container instanceof jQuery) {
+				container = args.container;
+				callback = globalCallback;
+			} else {
+				var modal = monster.ui.fullScreenModal(null, {
+					inverseBg: true
+				});
+				container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content');
+				callback = function() {
+					modal.close();
+
+					globalCallback();
+				};
+			}
 
 			self.portWizardSet({
 				accountId: accountId,
 				container: container,
-				globalCallback: globalCallback
+				globalCallback: callback
 			});
 
 			monster.parallel({
@@ -116,7 +133,7 @@ define(function(require) {
 				}
 			}, function(err, result) {
 				if (err) {
-					globalCallback();
+					callback();
 					return;
 				}
 				var portRequest = _.merge({
@@ -259,7 +276,10 @@ define(function(require) {
 				formatDataToTemplate = function formatDataToTemplate(request) {
 					return {
 						carriers: _.get(monster, 'config.whitelabel.port.carriers'),
-						request: request
+						request: request,
+						cardinalDirections: self.appFlags.portWizard.cardinalDirections,
+						selectedPreDir: _.get(request, 'bill.street_pre_dir', ''),
+						selectedPostDir: _.get(request, 'bill.street_post_dir', '')
 					};
 				};
 
@@ -694,7 +714,7 @@ define(function(require) {
 						maxlength: 128
 					},
 					'bill.pin': {
-						maxlength: 6
+						maxlength: 15
 					},
 					'bill.btn': {
 						required: true,
@@ -1428,7 +1448,7 @@ define(function(require) {
 				function(callback) {
 					self.portWizardRequestCreatePort({
 						data: {
-							data: args.data.request
+							data: self.portWizardNormalizePortRequestData(args.data.request)
 						},
 						success: function(portRequest) {
 							callback(null, portRequest);
@@ -1494,7 +1514,7 @@ define(function(require) {
 				function(callback) {
 					self.portWizardRequestUpdatePort({
 						data: {
-							data: portRequest
+							data: self.portWizardNormalizePortRequestData(portRequest)
 						},
 						success: function() {
 							callback(null);
@@ -1581,6 +1601,33 @@ define(function(require) {
 			monster.parallel(parallelRequests, function() {
 				globalCallback();
 			});
+		},
+
+		/**
+		 * Mutates portRequest to follow API schema
+		 * @param  {Object} portRequest Port request to normalize
+		 * @return {Object}             Normalized port request
+		 */
+		portWizardNormalizePortRequestData: function(portRequest) {
+			var self = this,
+				isPropEmpty = function(path) {
+					return _
+						.chain(portRequest)
+						.get(path)
+						.isEmpty()
+						.value();
+				};
+
+			// Empty value is not found in enumerated list of values for those properties so we
+			// delete them to avoid a validation error
+			if (isPropEmpty('bill.street_post_dir')) {
+				delete portRequest.bill.street_post_dir;
+			}
+			if (isPropEmpty('bill.street_pre_dir')) {
+				delete portRequest.bill.street_pre_dir;
+			}
+
+			return portRequest;
 		},
 
 		/**************************************************

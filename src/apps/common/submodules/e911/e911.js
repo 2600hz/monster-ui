@@ -233,7 +233,7 @@ define(function(require) {
 						} else {
 							callbacks.invalidAddress && callbacks.invalidAddress();
 						}
-					} else if (_data.error !== '402') {
+					} else {
 						globalHandler(_data, { generateError: true });
 					}
 				}

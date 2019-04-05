@@ -4,8 +4,6 @@ define(function() {
 		monster = require('monster');
 
 	var apps = {
-		defaultLanguage: 'en-US',
-
 		// Global var used to show the loading gif
 		uploadProgress: {
 			amount: 0,
@@ -118,23 +116,20 @@ define(function() {
 					switch (params.resource) {
 						case 'account.update':
 						case 'account.patch':
-							if (params.data.accountId === monster.apps.auth.currentAccount.id) {
-								successCallback = function(data, status) {
+							successCallback = function(data, status) {
+								if (params.data.accountId === monster.apps.auth.currentAccount.id) {
 									monster.apps.auth.currentAccount = data.data;
 									monster.pub('auth.currentAccountUpdated', data.data);
+								}
 
-									params.success && params.success(data, status);
-								};
-							}
-
-							if (params.data.accountId === monster.apps.auth.originalAccount.id) {
-								successCallback = function(data, status) {
+								if (params.data.accountId === monster.apps.auth.originalAccount.id) {
 									monster.apps.auth.originalAccount = data.data;
 									monster.pub('auth.originalAccountUpdated', data.data);
+								}
 
-									params.success && params.success(data, status);
-								};
-							}
+								params.success && params.success(data, status);
+							};
+
 							break;
 
 						case 'user.list':
@@ -314,7 +309,7 @@ define(function() {
 					if (cancelCall) {
 						return errorCallback && errorCallback();
 					} else {
-						var apiSettings = $.extend({
+						var apiSettings = _.assignIn({	// lodash#assignIn is used here to have a shallow merge (only top level properties)
 							authToken: params.authToken || app.getAuthToken(),
 							apiRoot: params.apiUrl || app.apiUrl,
 							uiMetadata: {
@@ -324,15 +319,14 @@ define(function() {
 							},
 							success: successCallback,
 							error: errorCallback,
-							headers: {}
-						}, params.data);
+							headers: {},
+							requestEventParams: _.pick(params, 'bypassProgressIndicator')
+						},
+						params.data,
+						_.pick(params, 'onChargesCancelled'));
 
-						if (monster.config.hasOwnProperty('kazooClusterId')) {
+						if (_.has(monster.config, 'kazooClusterId')) {
 							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
-						}
-
-						if (params.hasOwnProperty('onChargesCancelled')) {
-							apiSettings.onChargesCancelled = params.onChargesCancelled;
 						}
 
 						return monster.kazooSdk[module][method](apiSettings);
@@ -393,7 +387,7 @@ define(function() {
 			}
 
 			// If the current UI Language is not the default of the Monster UI, see if we have a specific i18n file to load
-			if (currentLanguage !== self.defaultLanguage) {
+			if (currentLanguage !== monster.defaultLanguage) {
 				if (app.i18n.hasOwnProperty(currentLanguage) && app.i18n[currentLanguage].customCss === true) {
 					listCss.push('cssI18n/' + currentLanguage);
 				}
@@ -417,9 +411,9 @@ define(function() {
 			};
 
 			// We automatically load the default language (en-US) i18n files
-			self.loadLocale(app, self.defaultLanguage, function() {
+			self.loadLocale(app, monster.defaultLanguage, function() {
 				// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
-				if (monster.config.whitelabel.language.toLowerCase() !== self.defaultLanguage.toLowerCase()) {
+				if (monster.config.whitelabel.language.toLowerCase() !== monster.defaultLanguage.toLowerCase()) {
 					self.loadLocale(app, monster.config.whitelabel.language, function() {
 						// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
 						addCoreI18n();
@@ -433,7 +427,7 @@ define(function() {
 			// add an active property method to the i18n array within the app.
 			_.extend(app.i18n, {
 				active: function() {
-					var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : self.defaultLanguage;
+					var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
 
 					return app.data.i18n[language];
 				}
@@ -639,11 +633,11 @@ define(function() {
 			if (app.i18n.hasOwnProperty(language)) {
 				loadFile(function(data) {
 					// If we're loading the default language, then we add it, and also merge the core i18n to it
-					if (language === self.defaultLanguage) {
+					if (language === monster.defaultLanguage) {
 						app.data.i18n[language] = data;
 					} else {
 						// Otherwise, if we load a custom language, we merge the translation to the en-one
-						app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[self.defaultLanguage], data);
+						app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[monster.defaultLanguage], data);
 					}
 
 					callback && callback();

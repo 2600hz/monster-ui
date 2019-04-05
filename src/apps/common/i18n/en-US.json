@@ -616,7 +616,7 @@
 				"submitted": "Port Requested",
 				"pending": "Submitted to Carrier",
 				"scheduled": "Scheduled by Carrier",
-				"completed": "Successful",
+				"completed": "Completed",
 				"rejected": "Rejected - Action Required",
 				"canceled": "Canceled"
 			}
@@ -630,7 +630,7 @@
 			"customSelect": {
 				"byStatus": "View by Status",
 				"forToday": "Scheduled for Today",
-				"all": "All Port Requests"
+				"all": "Active Port Requests"
 			},
 			"button": "New Port Request",
 			"empty": {
@@ -746,15 +746,24 @@
 				"back": "Back to port requests",
 				"cancel": "Cancel Request",
 				"send": "Send",
+				"actionRequired": "Action Required",
 				"sendPrivate": "Private"
 			},
 			"numbers": {
-				"singular": "Number",
-				"plural": "Numbers"
+				"singular": "{{variable}} Number",
+				"plural": "{{variable}} Numbers"
 			},
 			"textarea": {
 				"placeholder": "New Message..."
 			}
+		},
+		"tabs": {
+			"account": "Account",
+			"agent": "Agent",
+			"descendants": "Descendants",
+			"suspended": "Suspended",
+			"progressing": "Progressing",
+			"completed": "Completed"
 		}
 	},
 
@@ -835,7 +844,10 @@
 					"streetType": "Street Type",
 					"city": "City",
 					"state": "State",
-					"zip": "ZIP Code"
+					"zip": "ZIP Code",
+					"preDir": "Street Pre-Direction",
+					"postDir": "Street Post-Direction",
+					"extended_address": "Address Line 2"
 				}
 			},
 			"buttons": {
@@ -999,7 +1011,15 @@
 		"successUpdate": "Your Storage Settings were successfully updated!",
 		"successPathUpdate": "You successfully updated the path where this storage plan will store its files."
 	},
-
+	"navigationWizard": {
+		"buttons": {
+			"next": "Next",
+			"cancel": "Cancel",
+			"clear": "Clear",
+			"back": "Back",
+			"done": "Done"
+    }
+  },
 	"__comment": "UI-3147: Migrate Smart PBX user deletion to common submodule",
 	"__version": "4.3",
 	"deleteSmartUser": {

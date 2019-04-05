@@ -13,7 +13,9 @@ const standardFilesToExclude = [
 
 const libsToExcludeFromWhole = [
 	'pdfjs-dist/build/pdf',
-	'pdfjs-dist/build/pdf.worker'
+	'pdfjs-dist/build/pdf.worker',
+	'pdfmake',
+	'vfs_fonts'
 ];
 
 const libsToExcludeFromApp = [
@@ -28,6 +30,7 @@ const libsToExcludeFromApp = [
 	'crossroads',
 	'ddslick',
 	'drop',
+	'duo',
 	'file-saver',
 	'fileupload',
 	'footable',
@@ -40,20 +43,31 @@ const libsToExcludeFromApp = [
 	'jquery',
 	'jqueryui',
 	'jstz',
+	'kazoo',
 	'kazoosdk',
+	'libphonenumber',
 	'lodash',
 	'mask',
+	'md5',
 	'modernizr',
+	'moment',
+	'moment-timezone',
 	'monster',
 	'monster-apps',
 	'monster-routing',
+	'monster-socket',
 	'monster-timezone',
+	'monster-ua',
 	'monster-ui',
 	'monster-util',
+	'monster-webphone',
+	'monthpicker',
 	'mousetrap',
 	'papaparse',
 	'pdfjs-dist/build/pdf',
 	'pdfjs-dist/build/pdf.worker',
+	'pdfmake',
+	'popup-redirect',
 	'postal',
 	'randomColor',
 	'renderjson',
@@ -65,6 +79,7 @@ const libsToExcludeFromApp = [
 	'toastr',
 	'touch-punch',
 	'validate',
+	'vfs_fonts',
 	'wysiwyg'
 ];
 

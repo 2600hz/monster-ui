@@ -375,6 +375,8 @@ define(function(require) {
 					except: module
 				});
 			}
+
+			monster.pub('core.alerts.refresh');
 		},
 
 		bindEvents: function(container) {
@@ -412,6 +414,7 @@ define(function(require) {
 			navLinks.on('click', '#main_topbar_myaccount', function(e) {
 				e.preventDefault();
 
+				monster.pub('core.hideTopbarDropdowns');
 				self.clickMyAccount();
 			});
 		},
