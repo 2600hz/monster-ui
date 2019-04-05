@@ -302,6 +302,7 @@ define(function(require) {
 						alert.iconPath = monster.util.getAppIconPath({ name: 'websockets' });
 					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], category)) {
 						alertType = 'system';
+						alert.iconPath = monster.util.getAppIconPath({ name: 'myaccount' });
 					} else {
 						dashIndex = category.indexOf('_');
 						alertType = category.substring(0, dashIndex > 0 ? dashIndex : category.length);
