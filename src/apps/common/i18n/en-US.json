@@ -754,6 +754,7 @@
 				"back": "Back to port requests",
 				"cancel": "Cancel Request",
 				"send": "Send",
+				"actionRequired": "Action Required",
 				"sendPrivate": "Private"
 			},
 			"numbers": {
