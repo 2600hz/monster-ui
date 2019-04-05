@@ -146,7 +146,7 @@
 			</div>
 		{{#isSuperDuper}}
 			<div>
-			{{#if isUpdateable}}
+			{{#if canUpdate}}
 				<button class="monster-button-primary" id="update_status">
 					{{i18n.portListing.detail.buttons.update}}
 				</button>
@@ -175,7 +175,7 @@
 			</ul>
 		</div>
 	</div>
-	<div class="timeline-panel-wrapper justify-content-{{#if isUpdateable}}end{{else}}start{{/if}}">
+	<div class="timeline-panel-wrapper justify-content-{{#if canComment}}end{{else}}start{{/if}}">
 		<div class="timeline-panel">
 			<ul class="timeline">
 		{{#if timeline}}
@@ -242,10 +242,10 @@
 		{{/if}}
 			</ul>
 		</div>
-	{{#if isUpdateable}}
+	{{#if canComment}}
 		<div class="textarea-wrapper">
 			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
-			{{#if allowPrivate}}
+			{{#if isAgent}}
 				<div class="btn-group">
 					<button type="button" class="monster-button-success add-comment">
 						{{@root.i18n.portListing.detail.buttons.send}}

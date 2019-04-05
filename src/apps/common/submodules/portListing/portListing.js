@@ -288,10 +288,14 @@ define(function(require) {
 							'ported_numbers',
 							_.get(portRequest, 'numbers')
 						),
-						unactionableStatuses = ['canceled', 'completed'];
+						unactionableStatuses = ['canceled', 'completed'],
+						isAgent = self.portListingUtilIsAgent(_.get(portRequest, 'port_authority')),
+						isUpdateable = !_.includes(unactionableStatuses, portRequest.port_state);
 
 					return _.merge({
-						isUpdateable: !_.includes(unactionableStatuses, portRequest.port_state),
+						isAgent: isAgent,
+						canComment: isUpdateable,
+						canUpdate: isAgent && isUpdateable,
 						lastSubmitted: _.isUndefined(lastSubmitted)
 							? undefined
 							: {
@@ -300,8 +304,7 @@ define(function(require) {
 							},
 						numbers: numbers,
 						numbersAmount: _.size(numbers),
-						timeline: self.portListingFormatEntriesToTimeline(results.timeline),
-						allowPrivate: monster.util.isSuperDuper() || monster.util.isPortAuthority(_.get(portRequest, 'port_authority', null))
+						timeline: self.portListingFormatEntriesToTimeline(results.timeline)
 					}, _.pick(portRequest, [
 						'carrier',
 						'name',
@@ -735,7 +738,7 @@ define(function(require) {
 								$buttons.prop('disabled', false);
 							},
 							comment: comment,
-							isPrivate: monster.util.isSuperDuper() && isPrivate
+							isPrivate: isPrivate
 						});
 					});
 		},
@@ -1214,6 +1217,17 @@ define(function(require) {
 			}));
 
 			self.portListingSet('portRequestsById', _.merge(portRequestsById, self.portListingGet(['portRequestsById'])));
+		},
+
+		/**
+		 * Determine whether or not the current user has agent permmissions. In this context, an
+		 * agent is a user that has the ability to update the status of a port request and to
+		 * privately comment/require actions when posting a comment.
+		 * @param  {String} [authorityId]
+		 * @return {Boolean}
+		 */
+		portListingUtilIsAgent: function(authorityId) {
+			return monster.util.isSuperDuper() || _.get(monster, 'apps.auth.originalAccount.id') === authorityId;
 		},
 
 		/**************************************************
