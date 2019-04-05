@@ -726,7 +726,9 @@ define(function(require) {
 						if (_.chain(textarea.val()).trim().isEmpty().value()) {
 							return;
 						}
-						var isPrivate = _.get($(this).data(), 'is_private', false),
+						var $this = $(this),
+							isPrivate = _.get($this.data(), 'is_private', false),
+							isRequiringAction = _.get($this.data(), 'is_requiring_action', false),
 							comment = textarea.val(),
 							$buttons = textareaWrapper.find('button');
 
@@ -738,6 +740,7 @@ define(function(require) {
 								$buttons.prop('disabled', false);
 							},
 							comment: comment,
+							isRequiringAction: isRequiringAction,
 							isPrivate: isPrivate
 						});
 					});
@@ -957,13 +960,15 @@ define(function(require) {
 		/**
 		 * @param  {Function} args.callback
 		 * @param  {String} args.comment
-		 * @param  {Boolean} args.isPrivate
+		 * @param  {Boolean} [args.isRequiringAction=false]
+		 * @param  {Boolean} [args.isPrivate=false]
 		 */
 		portListingHelperAddComment: function(args) {
 			var self = this,
 				callback = args.callback,
 				comment = args.comment,
-				isPrivate = args.isPrivate,
+				isRequiringAction = _.get(args, 'isRequiringAction', false),
+				isPrivate = _.get(args, 'isPrivate', false),
 				container = self.portListingGet('container'),
 				user = monster.apps.auth.currentUser,
 				now = moment().toDate(),
@@ -978,6 +983,7 @@ define(function(require) {
 						comments: [
 							{
 								timestamp: monster.util.dateToGregorian(now),
+								action_required: isRequiringAction,
 								author: author,
 								content: comment,
 								is_private: isPrivate
