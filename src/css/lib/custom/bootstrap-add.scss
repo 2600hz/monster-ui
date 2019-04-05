@@ -83,6 +83,31 @@ pre {
 	text-align: center;
 }
 
+.btn-group {
+	button:last-of-type {
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
+
+	&.dropup {
+		.dropdown-menu.pull-right {
+			&::after {
+				top: initial;
+				bottom: -6px;
+				border-top: 6px solid white;
+				border-bottom: none;
+			}
+
+			&::before {
+				top: initial;
+				bottom: -7px;
+				border-top: 7px solid rgba(0, 0, 0, .2);
+				border-bottom: none;
+			}
+		}
+	}
+}
+
 /************* BOTTOM NAVBAR *************/
 .navbar.navbar-fixed-bottom.blue {
 	position: fixed;
