@@ -1,27 +1,20 @@
-// File globs.
-var path = require('path');
-var fs = require('fs');
-var gutil = require('gulp-util');
+import { dirname } from 'path';
+import { env } from './helpers/helpers.js';
 
-var pathToThisFile = __dirname;
-var root = path.dirname(pathToThisFile);
-var distPath = root + '/dist/',
-	tmpPath = root + '/tmp',
-	requirePath = root + '/distRequired',
-	srcPath = root + '/src',
-	distDevPath = root + '/distDev';
+const pathToThisFile = __dirname;
+const root = dirname(pathToThisFile);
+const distPath = root + '/dist/';
+const tmpPath = root + '/tmp';
+const requirePath = root + '/distRequired';
+const srcPath = root + '/src';
+const distDevPath = root + '/distDev';
+const appPath = env.app
+	? tmpPath + '/apps/' + env.app + '/'
+	: 'null';
 
-var appPath = 'null';
-
-if(gutil.env.app) {
-	appPath = tmpPath + '/apps/' + gutil.env.app + '/';
-}
-
-module.exports = {
-	src: srcPath,
-	require: requirePath,
-	dist: distPath,
-	distDev: distDevPath,
-	tmp: tmpPath,
-	app: appPath
-};
+export const app = appPath;
+export const dist = distPath;
+export const distDev = distDevPath;
+export const require = requirePath;
+export const src = srcPath;
+export const tmp = tmpPath;

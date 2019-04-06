@@ -1,67 +1,69 @@
-var gulp = require('gulp');
-var fs = require('fs');
-var gutil = require('gulp-util');
-var jeditor = require('gulp-json-editor');
+import gulp from 'gulp';
+import fs from 'fs';
+import { app, tmp } from '../paths.js';
+import {
+	env,
+	getAppsToInclude,
+	getProApps,
+	listAllApps
+} from '../helpers/helpers.js';
 
-var paths = require('../paths');
-var helpers = require('../helpers/helpers.js');
+const writeFile = (fileName, content) => {
+	const json = JSON.stringify(content);
+	fs.writeFileSync(fileName, json);
+};
 
-var writeFile = function(fileName, content) {
-		var json = JSON.stringify(content);
+const writeBulkAppsConfig = () => {
+	let fileName;
+	let content;
 
-		fs.writeFileSync(fileName, json);
-	},
-	writeBulkAppsConfig = function() {
-		var apps = helpers.listAllApps(),
-			fileName,
-			content;
-
-		for(var i in apps) {
-			fileName = paths.tmp + '/apps/' + apps[i] + '/app-build-config.json';
-			content = {
-				version: helpers.getProApps().indexOf(apps[i]) >= 0 ? 'pro' : 'standard'
-			};
-
-			writeFile(fileName, content);
+	listAllApps().forEach(item => {
+		fileName = tmp + '/apps/' + item + '/app-build-config.json';
+		content = {
+			version: getProApps().includes(item)
+				? 'pro'
+				: 'standard'
 		};
+		writeFile(fileName, content);
+	});
+};
+
+/**
+ * Writes a config file for monster to know which apps have been minified so it
+ * doesn't reload the assets
+ */
+export const writeConfigProd = () => {
+	const mainFileName = tmp + '/build-config.json';
+	const content = {
+		type: 'production',
+		preloadApps: getAppsToInclude()
 	};
-
-gulp.task('write-config-prod', function() {
-	var mainFileName = paths.tmp + '/build-config.json',
-		content = {
-			type: 'production',
-			preloadedApps: helpers.getAppsToInclude()
-		};
-
 	writeFile(mainFileName, content);
-
 	writeBulkAppsConfig();
-
 	return gulp.src(mainFileName);
-});
+};
 
-gulp.task('write-config-dev', function() {
-	var fileName = paths.tmp + '/build-config.json',
-		content = {
-			type: 'development',
-			preloadedApps: []
-		};
-
+export const writeConfigDev = () => {
+	const fileName = tmp + '/build-config.json';
+	const content = {
+		version: env.pro
+			? 'pro'
+			: 'standard'
+	};
 	writeFile(fileName, content);
-
-	writeBulkAppsConfig();
-
 	return gulp.src(fileName);
-});
+};
 
-
-gulp.task('write-config-app', function() {
-	var fileName = paths.app + 'app-build-config.json',
-		content = {
-			version: gutil.env.pro ? 'pro' : 'standard'
-		};
-
+/**
+ * Add flags if needed, like pro/lite version
+ */
+export const writeConfigApp = () => {
+	const fileName = app + 'app-build-config.json';
+	const content = {
+		version: env.pro
+			? 'pro'
+			: 'standard'
+	};
 	writeFile(fileName, content);
-
 	return gulp.src(fileName);
-});
+};
