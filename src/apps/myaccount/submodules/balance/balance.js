@@ -961,7 +961,6 @@ define(function(require) {
 					});
 				},
 				function(accountData, cb) {
-					_.has(accountData, 'topup.montly') && _.set(accountData, 'topup.montly', null);
 					_.set(accountData, 'topup.monthly.preemptive', preemptive);
 					_.set(accountData, 'topup.monthly.exact', exact);
 
