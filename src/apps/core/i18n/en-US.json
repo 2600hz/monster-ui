@@ -2,8 +2,8 @@
 	"bookkeepers": {
 		"braintree": "Braintree",
 		"default": "Default",
-		"http": "HTTP",
-		"kazoo": "Kazoo"
+		"payphone": "HTTP",
+		"iou": "Kazoo"
 	},
 	"monthPicker": {
 		"backTo": "Back to",
