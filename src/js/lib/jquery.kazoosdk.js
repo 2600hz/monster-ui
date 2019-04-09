@@ -127,6 +127,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 			},
 			dashboards: {
+				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/dashboards/ensure_started' },
 				'getQueueDetails': { verb: 'GET', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
 				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
 				'getRecipientOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/recipient_overview' },
@@ -340,7 +341,8 @@
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
 				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' },
 				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' },
-				'updateSessions': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/sessions/{sessionId}' }
+				'updateSessions': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/sessions/{sessionId}' },
+				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/ensure_started' }
 			},
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
