@@ -254,6 +254,8 @@ define(function(require) {
 			}
 
 			var templateData = {
+				preemptive: _.get(data, 'account.topup.monthly.preemptive', false),
+				exact: _.get(data, 'account.topup.monthly.exact', false),
 				currencySymbol: monster.util.getCurrencySymbol(),
 				amount: amount,
 				threshold: thresholdData,
@@ -424,7 +426,7 @@ define(function(require) {
 
 				monster.ui.tooltips($rows);
 
-					// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
+				// monster.ui.footable requires this function to return the list of rows to add to the table, as well as the payload from the request, so it can set the pagination filters properly
 				callback && callback($rows, data.ledger);
 			}, filters);
 		},
@@ -496,10 +498,101 @@ define(function(require) {
 				thresholdAlerts = data.threshold.enabled,
 				autoRecharge = data.topup.enabled || false,
 				tabAnimationInProgress = false,
+				automaticRemediationSwitch = parent.find('#automatic_remediation'),
+				automaticRemediationText = parent.find('.automatic-remediation-text'),
+				directToPaySwitch = parent.find('#direct_to_pay'),
+				directToPayWrapper = parent.find('.direct-to-pay-wrapper'),
+				directToPayText = parent.find('.direct-to-pay-text'),
 				thresholdAlertsContent = parent.find('#threshold_alerts_content'),
 				thresholdAlertsSwitch = parent.find('#threshold_alerts_switch'),
 				autoRechargeContent = parent.find('#auto_recharge_content'),
 				autoRechargeSwitch = parent.find('#auto_recharge_switch');
+
+			automaticRemediationSwitch.prop('checked', data.preemptive);
+			directToPaySwitch.prop('checked', data.exact);
+
+			automaticRemediationSwitch
+				.on('change', function(event) {
+					event.preventDefault();
+
+					automaticRemediationSwitch.prop('disabled', 'disabled');
+
+					if ($(this).is(':checked')) {
+						automaticRemediationText.find('[data-toggle="off"]').hide();
+						automaticRemediationText.find('[data-toggle="on"]').fadeIn(250);
+						directToPayWrapper.slideDown(250);
+
+						self.balanceUpdateSubscriptions({
+							preemptive: true,
+							callback: function() {
+								automaticRemediationSwitch.prop('disabled', false);
+
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().balance.subscriptionsTurnedOn
+								});
+							}
+						});
+					} else {
+						automaticRemediationText.find('[data-toggle="on"]').hide();
+						automaticRemediationText.find('[data-toggle="off"]').fadeIn(250);
+						directToPayWrapper.slideUp(250);
+						directToPaySwitch.prop('checked', false);
+
+						self.balanceUpdateSubscriptions({
+							preemptive: false,
+							callback: function() {
+								automaticRemediationSwitch.prop('disabled', false);
+
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().balance.subscriptionsTurnedOff
+								});
+							}
+						});
+					}
+				});
+
+			directToPaySwitch
+				.on('change', function(event) {
+					event.preventDefault();
+
+					directToPaySwitch.prop('disabled', 'disabled');
+
+					if ($(this).is(':checked')) {
+						directToPayText.find('[data-toggle="off"]').hide();
+						directToPayText.find('[data-toggle="on"]').fadeIn(250);
+
+						self.balanceUpdateSubscriptions({
+							preemptive: true,
+							exact: true,
+							callback: function() {
+								directToPaySwitch.prop('disabled', false);
+
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().balance.directToPayTurnedOn
+								});
+							}
+						});
+					} else {
+						directToPayText.find('[data-toggle="on"]').hide();
+						directToPayText.find('[data-toggle="off"]').fadeIn(250);
+
+						self.balanceUpdateSubscriptions({
+							preemptive: true,
+							exact: false,
+							callback: function() {
+								directToPaySwitch.prop('disabled', false);
+
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().balance.directToPayTurnedOff
+								});
+							}
+						});
+					}
+				});
 
 			parent
 				.find('.navbar-menu-item-link')
@@ -820,6 +913,52 @@ define(function(require) {
 		},
 
 		//utils
+
+		/**
+		 * @param  {Object} args
+		 * @param  {Boolean} [args.preemptive=false]
+		 * @param  {Boolean} [args.exact=false]
+		 * @param  {Function} [args.callback]
+		 */
+		balanceUpdateSubscriptions: function(args) {
+			var self = this,
+				preemptive = _.get(args, 'preemptive', false),
+				exact = _.get(args, 'exact', false),
+				callback = _.get(args, 'callback');
+
+			monster.waterfall([
+				function(cb) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							cb(null, data.data);
+						}
+					});
+				},
+				function(accountData, cb) {
+					_.has(accountData, 'topup.montly') && _.set(accountData, 'topup.montly', null);
+					_.set(accountData, 'topup.monthly.preemptive', preemptive);
+					_.set(accountData, 'topup.monthly.exact', exact);
+
+					self.callApi({
+						resource: 'account.patch',
+						data: {
+							accountId: self.accountId,
+							data: accountData
+						},
+						success: function(data) {
+							cb(null);
+						}
+					});
+				}
+			], function(err) {
+				callback && callback();
+			});
+		},
+
 		balanceTurnOffThreshold: function(callback) {
 			var self = this;
 
