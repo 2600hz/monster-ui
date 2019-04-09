@@ -163,6 +163,18 @@
 	font-size: 14px;
 }
 
+.add-credits-popup-wrapper {
+	#subscriptions {
+		label:not(.monster-switch) {
+			margin: 20px 0;
+		}
+
+		.monster-panel-text {
+			width: 100%;
+		}
+	}
+}
+
 .add-credits-popup-wrapper .add-credits-actions {
 	margin-top: 20px;
 	padding-top: 20px;

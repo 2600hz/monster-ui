@@ -6,7 +6,7 @@ define(function(require) {
 		moment = require('moment');
 
 	require('moment-timezone');
-		//momentTimezone = require('moment-timezone');
+	//momentTimezone = require('moment-timezone');
 
 	var util = {
 
@@ -865,7 +865,7 @@ define(function(require) {
 				replaceHTML = function(element, oldValue, newValue) {
 					// First we need to escape the old value, since we're creating a regex out of it, we can't have special regex characters like the "+" that are often present in phone numbers
 					var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'),
-					// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
+						// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
 						regexOldValue = new RegExp(escapedOldvalue, 'g');
 
 					// Replace all occurences of old value by the new value
@@ -970,7 +970,7 @@ define(function(require) {
 			[
 				{
 					label: i18n.default,
-					value: 'default'
+					value: null
 				}
 			],
 			_.chain(monster.config.whitelabel.bookkeepers)
