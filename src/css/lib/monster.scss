@@ -685,80 +685,80 @@ label[class*='monster-radio'].prepend-label > span {
 /********************* MONSTER PANEL TEXT *******************/
 /************************************************************/
 .monster-panel-text {
-	box-shadow: 1px 1px 1px #aaa;
-	box-sizing: border-box;
-	border-left-width: 4px;
-	border-left-style: solid;
+	display: block;
+	margin-bottom: 1rem;
 	width: 320px;
-}
+	padding: 0;
+	background: $white;
+	border-radius: 2px 2px 2px 2px;
+	box-shadow: 0px 1px 4px 0px rgba(21, 21, 23, 0.24);
+	color: $woodsmoke;
 
-.monster-panel-text.fill-width {
-	width: 100%;
-}
-
-.monster-panel-text .monster-panel-text-header {
-	padding: 12px 20px;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-	border-top-width: 1px;
-	border-top-style: solid;
-}
-
-.monster-panel-text .monster-panel-text-header .title-text-wrapper {
-	float: left;
-	font-weight: 700;
-	color: #333;
-	text-transform: uppercase;
-	width: 245px;
-	text-align: left;
-}
-
-.monster-panel-text .monster-panel-text-header .icon-wrapper {
-	float: left;
-}
-
-.monster-panel-text .monster-panel-text-header .icon-wrapper i {
-	font-size: 18px;
-	margin-right: 14px;
-	vertical-align: bottom;
-}
-
-.monster-panel-text .monster-panel-text-content {
-	background: #FFF;
-	box-sizing: border-box;
-	display: inline-block;
-	padding: 15px 20px;
-	width: 100%;
-}
-
-@mixin color-panel($color) {
-	border-left-color: $color;
+	&.fill-width {
+		width: 100%;
+	}
 
 	.monster-panel-text-header {
-		background: lighten($color, 30%);
-		border-color: $color;
+		padding: 1.25rem 1rem 1rem 1rem;
+		font-size: 1rem;
+		line-height: 16px;
+
+		.title-text-wrapper {
+			font-weight: 600;
+			text-align: left;
+		}
+
+		.icon-wrapper {
+			float: left;
+
+			.icon {
+				margin-right: 0.75rem;
+				vertical-align: bottom;
+				padding: 0;
+			}
+		}
 	}
 
-	.monster-panel-text-header i {
-		color: $color;
+	.monster-panel-text-content {
+		background: $white;
+		display: block;
+		padding: 0 1rem 1rem 1rem;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 21px;
+	}
+
+	@mixin color-panel($color) {
+		border-left-color: $color;
+
+
+		.monster-panel-text-header {
+			box-shadow: inset 0px 4px 0px 0px $color;
+			border-radius: 2px 2px 0px 0px;
+
+			.icon {
+				color: $color;
+			}
+		}
+	}
+
+	&[data-type="info"] {
+		@include color-panel($primary-color);
+	}
+
+	&[data-type="warning"] {
+		@include color-panel($warning-color);
+	}
+
+	&[data-type="danger"] {
+		@include color-panel($danger-color);
+	}
+
+	&[data-type="success"] {
+		@include color-panel($success-color);
 	}
 }
 
-.monster-panel-text[data-type="info"] {
-	@include color-panel($primary-color);
-}
-
-.monster-panel-text[data-type="warning"] {
-	@include color-panel($warning-color);
-}
-
-.monster-panel-text[data-type="danger"] {
-	@include color-panel($danger-color);
-}
-
-.monster-panel-text[data-type="success"] {
-	@include color-panel($success-color);
-}
 /************************************************************/
 /************************** WIZARD **************************/
 /************************************************************/
