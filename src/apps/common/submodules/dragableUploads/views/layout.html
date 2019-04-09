@@ -1,0 +1,37 @@
+<div class="dragable-wrapper">
+	<div class="file-upload-area">
+		<form class="form form-horizontal" id="form_source">
+			<div class="file-drop">
+				{{telicon "upload-cloud"}}
+				<div class="file-drop-inner">
+					<input type="file" id="source" name="source" class="hide">
+					<div class="inner-text">
+						<span>Darg and drop files here or </span>
+						<a href="#" class="upload-file">
+							<label for="source" class="file-name">
+								browse
+							</label>
+						</a>
+					</div>
+				</div>
+				<div class="file-drop-error">
+					Error! Only .fileformat files are accepted.
+					<a href="#" class="upload-file">
+						<label for="source" class="file-name">
+							Try again!
+						</label>
+					</a>
+				</div>
+				<div class="file-drop-success">
+					Done!
+					<a href="#" class="upload-file">
+						<label for="source" class="file-name">
+							Choose a new file
+						</label>
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="file-list-area"></div>
+</div>
