@@ -239,12 +239,17 @@
 		"__version": "v4.0",
 		"thresholdAlertsEnabled": "Threshold Alerts are now enabled!",
 		"thresholdAlertsCancelled": "You successfully disabled Threshold Alerts.",
+		"subscriptionsTurnedOn": "You successfully enabled Automatic Remediation.",
+		"subscriptionsTurnedOff": "You successfully disabled Automatic Remediation.",
+		"directToPayTurnedOn": "You successfully enabled Direct To Pay.",
+		"directToPayTurnedOff": "You successfully disabled Direct To Pay.",
 		"addCreditPopup": {
 			"creditBalance": "Available Credit Balance",
 			"menus": {
 				"manageCredits": "Manage Credits",
 				"thresholdAlerts": "Threshold Alerts",
-				"autoRecharge": "Auto Recharge"
+				"autoRecharge": "Auto Recharge",
+				"subscriptions": "Subscriptions"
 			},
 			"alerts": {
 				"missingValue": {
@@ -269,6 +274,28 @@
 				"alert": {
 					"title": "",
 					"text": ""
+				}
+			},
+			"subscriptions": {
+				"panelTextTitle": "Info",
+				"info": "Every month, your account will be charged according to your service plan subscriptions.",
+				"automaticRemediation": {
+					"label": "Turn on automatic remediation",
+					"on": "Automatic Remediation will use any available credit balance, charging your payment method on file the remaining balance to bring the account above the auto recharge threshold.",
+					"off": "If monthly charges exceed your current available credit balance, your account may become delinquent immediately."
+				},
+				"directToPay": {
+					"label": "Direct to Pay Method",
+					"on": {
+						"text1": "The system will attempt to charge your",
+						"bold": " payment method on file ",
+						"text2": "for the full amount of your monthly subscriptions. If charges are declined on your account using the \"Direct to Payment Method\", your account may become delinquent immediately. Your payment method will be billed your total Monthly Recurring Costs, no math required."
+					},
+					"off": {
+						"text1": "The system will attempt to charge your",
+						"bold": " Available Credit Balance ",
+						"text2": "for the full amount of your monthly subscriptions. If charges are declined due to a low balance, your account may become delinquent immediately. Your payment method may be billed a portion of your total Monthly Recurring Costs, some math required."
+					}
 				}
 			},
 			"autoRecharge": {
