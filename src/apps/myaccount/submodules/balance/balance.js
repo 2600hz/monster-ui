@@ -203,6 +203,17 @@ define(function(require) {
 			var self = this;
 
 			monster.parallel({
+				serviceSummary: function(callback) {
+					self.callApi({
+						resource: 'services.getSummary',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							callback(null, data.data);
+						}
+					});
+				},
 				account: function(callback) {
 					self.callApi({
 						resource: 'account.get',
@@ -226,8 +237,16 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param  {Object} data
+		 * @param  {Object} data.account
+		 * @param  {Object} data.balance
+		 * @param  {Object} data.serviceSummary
+		 * @return {Object}
+		 */
 		balanceFormatDialogData: function(data) {
 			var self = this,
+				serviceSummary = _.get(data, 'serviceSummary'),
 				amount = (data.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
 				topupData = { enabled: false };
@@ -253,7 +272,12 @@ define(function(require) {
 				$.extend(true, topupData, data.account.topup);
 			}
 
-			var templateData = {
+			return {
+				showSubscriptions: !_.some(serviceSummary.invoices, {
+					bookkeeper: {
+						type: 'iou'
+					}
+				}),
 				preemptive: _.get(data, 'account.topup.monthly.preemptive', false),
 				exact: _.get(data, 'account.topup.monthly.exact', false),
 				currencySymbol: monster.util.getCurrencySymbol(),
@@ -261,8 +285,6 @@ define(function(require) {
 				threshold: thresholdData,
 				topup: topupData
 			};
-
-			return templateData;
 		},
 
 		_balanceRenderAddCredit: function(args) {
