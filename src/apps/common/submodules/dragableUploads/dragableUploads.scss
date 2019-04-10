@@ -95,11 +95,6 @@
 					.file-drop-error {
 						display: block;
 					}
-
-					&:not(.dragover) {
-						background-color: darken($error-color, 30%);
-						outline-color: darken($error-color, 20%);
-					}
 				}
 			}
 		}
