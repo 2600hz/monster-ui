@@ -23,7 +23,9 @@ define(function(require) {
 				container = args.container,
 				template = $(self.getTemplate({
 					name: 'layout',
-					data: {},
+					data: {
+						allowedFiles: _.join(args.allowedFiles, ', ')
+					},
 					submodule: 'dragableUploads'
 				}));
 
