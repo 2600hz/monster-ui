@@ -41,9 +41,10 @@ define(function(require) {
 					var file = event.type === 'drop'
 							? event.originalEvent.dataTransfer.files[0]
 							: event.target.files[0],
-						fd = new FormData();
+						reader = new FileReader();
 
 					if (file && _.includes(args.allowedFiles, file.type)) {
+						reader.onload = function(event) {
 						self.appFlags.dragableUploads.files.push({
 							name: file.name,
 							size: file.size,
@@ -57,6 +58,9 @@ define(function(require) {
 							.addClass('success');
 
 						updateFileList();
+						};
+
+						reader.readAsDataURL(file);
 					} else {
 						$fileDrop
 							.removeClass('success uploaded')
@@ -75,7 +79,7 @@ define(function(require) {
 						submodule: 'dragableUploads'
 					}));
 
-					template.find('.file-list-area')
+					template.find('.dragable-file-list-area')
 						.empty()
 						.append(templateFilesList);
 				};

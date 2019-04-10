@@ -1,10 +1,12 @@
 @import '../../../../css/partials/base';
 
 .dragable-wrapper {
-	padding: 24px 16px;
+	.dragable-file-upload-area {
+		padding: 24px 16px;
 
-	.file-upload-area {
 		form.form {
+			margin: 0;
+
 			.file-drop {
 				text-align: center;
 				min-height: 102px;
@@ -103,15 +105,17 @@
 		}
 	}
 
-	.file-list-area {
+	.dragable-file-list-area {
 		display: flex;
 		flex-direction: column;
+		padding: 0 16px;
 
 		.file-box {
 			display: flex;
 			border-bottom: 1px solid $french-gray2;
 			padding: .7rem 12px;
 			font-size: 0.8rem;
+			cursor: pointer;
 
 			&:first-child {
 				border-top: 1px solid $french-gray2;
@@ -135,6 +139,21 @@
 					color: $french-gray2;
 				}
 			}
+		}
+	}
+
+	.dragable-actions {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		padding: 15px 16px;
+		background-color: #F4F4F5;
+		margin-top: 24px;
+
+		.dragable-cancel {
+			color: $midgray2;
+			padding: 8px 15px;
+			cursor: pointer;
 		}
 	}
 }
