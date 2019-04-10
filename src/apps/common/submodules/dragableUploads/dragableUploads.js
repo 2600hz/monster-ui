@@ -34,6 +34,24 @@ define(function(require) {
 			self.dragableUploadsBindEvents(template, args);
 		},
 
+		dragableUploadsRenderFileList(template) {
+			var self = this,
+				templateFilesList = $(self.getTemplate({
+					name: 'file-list',
+					data: {
+						files: self.appFlags.dragableUploads.files,
+						hasFiles: !_.isEmpty(self.appFlags.dragableUploads.files)
+					},
+					submodule: 'dragableUploads'
+				}));
+
+			template.find('.dragable-file-list-area')
+				.empty()
+				.append(templateFilesList);
+
+			self.dragableUploadsBindFileListEvents(template);
+		},
+
 		dragableUploadsBindEvents: function(template, args) {
 			var self = this,
 				$fileDrop = template.find('.file-drop'),
@@ -45,19 +63,17 @@ define(function(require) {
 
 					if (file && _.includes(args.allowedFiles, file.type)) {
 						reader.onload = function(event) {
-						self.appFlags.dragableUploads.files.push({
-							name: file.name,
-							size: file.size,
-							data: event.target.result
-						});
+							self.appFlags.dragableUploads.files.push({
+								name: file.name,
+								size: file.size,
+								data: event.target.result
+							});
 
-						fd.append('file', file);
+							$fileDrop
+								.removeClass('error uploaded')
+								.addClass('success');
 
-						$fileDrop
-							.removeClass('error uploaded')
-							.addClass('success');
-
-						updateFileList();
+							self.dragableUploadsRenderFileList(template);
 						};
 
 						reader.readAsDataURL(file);
@@ -66,50 +82,9 @@ define(function(require) {
 							.removeClass('success uploaded')
 							.addClass('error');
 
-						updateFileList();
+						self.dragableUploadsRenderFileList(template);
 					}
-				},
-				updateFileList = function() {
-					var templateFilesList = $(self.getTemplate({
-						name: 'file-list',
-						data: {
-							files: self.appFlags.dragableUploads.files,
-							hasFiles: !_.isEmpty(self.appFlags.dragableUploads.files)
-						},
-						submodule: 'dragableUploads'
-					}));
-
-					template.find('.dragable-file-list-area')
-						.empty()
-						.append(templateFilesList);
 				};
-
-			template
-				.find('.upload-file')
-					.on('mouseenter', function(event) {
-						event.preventDefault();
-
-						$fileDrop
-							.addClass('dragover', 100);
-					})
-					.on('mouseleave', function(event) {
-						event.preventDefault();
-
-						$fileDrop
-							.removeClass('dragover', 100);
-					})
-					.on('click', function(event) {
-						var source = self.appFlags.store.wizard.files.source;
-						if (source.hasOwnProperty('id') || source.hasOwnProperty('data')) {
-							$fileDrop
-								.find('.file-name')
-									.text(source.name);
-
-							$fileDrop
-								.removeClass('success error')
-								.addClass('uploaded');
-						}
-					});
 
 			$fileDrop
 				.on('drag dragstart dragend dragover dragenter dragleave drop', function(event) {
@@ -127,6 +102,85 @@ define(function(require) {
 			template
 				.find('#source')
 					.on('change', handleFileSelect);
+
+			template
+				.find('.upload-action')
+					.on('click', function() {
+						self.dragableUploadsUploadFiles(args.callback);
+						self.dragableUploadsClearList(template);
+					});
+		},
+
+		dragableUploadsBindFileListEvents: function(template) {
+			template
+				.find('.file-box')
+					.on('click', function() {
+						console.log('clicking');
+					});
+		},
+
+		dragableUploadsUploadFiles: function(mainCallback) {
+			var self = this,
+				parallelRequests = [];
+
+			if (!_.isEmpty(self.appFlags.dragableUploads.files)) {
+				parallelRequests = _.map(self.appFlags.dragableUploads.files, function(file) {
+					return function(callback) {
+						return self.dragableUploadsRequestMediaUpload(callback, file);
+					};
+				});
+
+				monster.parallel(parallelRequests, function(err, results) {
+					mainCallback(err, results);
+				});
+			}
+		},
+
+		dragableUploadsClearList(template) {
+			var self = this;
+			self.appFlags.dragableUploads.files = [];
+			self.dragableUploadsRenderFileList(template);
+		},
+
+		dragableUploadsRequestMediaUpload(callback, file) {
+			var self = this;
+
+			self.callApi({
+				resource: 'media.create',
+				data: {
+					accountId: self.accountId,
+					data: {
+						streamable: true,
+						name: file.name,
+						media_source: 'upload',
+						description: file.name
+					}
+				},
+				success: function(data, status) {
+					var media = data.data;
+					self.callApi({
+						resource: 'media.upload',
+						data: {
+							accountId: self.accountId,
+							mediaId: media.id,
+							data: file.data
+						},
+						success: function(data, status) {
+							callback(null, media);
+						},
+						error: function(data, status) {
+							self.callApi({
+								resource: 'media.delete',
+								data: {
+									accountId: self.accountId,
+									mediaId: media.id,
+									data: {}
+								}
+							});
+						}
+					});
+				}
+			});
 		}
 	};
 
