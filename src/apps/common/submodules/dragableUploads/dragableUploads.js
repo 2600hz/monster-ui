@@ -106,8 +106,14 @@ define(function(require) {
 			template
 				.find('.upload-action')
 					.on('click', function() {
-						self.dragableUploadsUploadFiles(args.callback);
+						self.dragableUploadsUploadFiles(args);
 						self.dragableUploadsClearList(template);
+					});
+
+			template
+				.find('.upload-cancel')
+					.on('click', function() {
+						args.hasOwnProperty('popup') && args.popup.dialog('close').remove();
 					});
 		},
 
@@ -127,9 +133,10 @@ define(function(require) {
 					});
 		},
 
-		dragableUploadsUploadFiles: function(mainCallback) {
+		dragableUploadsUploadFiles: function(args) {
 			var self = this,
-				parallelRequests = [];
+				parallelRequests = [],
+				mainCallback = args.callback;
 
 			if (!_.isEmpty(self.appFlags.dragableUploads.files)) {
 				parallelRequests = _.map(self.appFlags.dragableUploads.files, function(file) {
@@ -140,6 +147,7 @@ define(function(require) {
 
 				monster.parallel(parallelRequests, function(err, results) {
 					mainCallback(err, results);
+					args.hasOwnProperty('popup') && args.popup.dialog('close').remove();
 				});
 			}
 		},
