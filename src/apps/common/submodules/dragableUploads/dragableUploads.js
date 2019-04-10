@@ -112,10 +112,18 @@ define(function(require) {
 		},
 
 		dragableUploadsBindFileListEvents: function(template) {
+			var self = this;
+
 			template
 				.find('.file-box')
 					.on('click', function() {
-						console.log('clicking');
+						var filename = $(this).data('file_name');
+
+						self.appFlags.dragableUploads.files = _.filter(self.appFlags.dragableUploads.files, function(file) {
+							return file.name !== filename;
+						});
+
+						self.dragableUploadsRenderFileList(template);
 					});
 		},
 
