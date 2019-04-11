@@ -14,17 +14,25 @@ define(function(require) {
 
 		appFlags: {
 			dragableUploads: {
-				files: []
+				files: [],
+				maxFileSize: 5242880 // 5MB
 			}
 		},
 
 		renderUploadArea: function(args) {
 			var self = this,
 				container = args.container,
+				maxFileSize = monster.util.formatBytes(args.maxFileSize || self.appFlags.dragableUploads.maxFileSize),
 				template = $(self.getTemplate({
 					name: 'layout',
 					data: {
-						allowedFiles: _.join(args.allowedFiles, ', ')
+						fileUploadLegend: self.getTemplate({
+							name: '!' + self.i18n.active().dragableUploads.fileUploadLegend,
+							data: {
+								allowedFiles: _.join(args.allowedFiles, ', '),
+								maxFileSize: maxFileSize.value + '' + maxFileSize.unit.symbol
+							}
+						})
 					},
 					submodule: 'dragableUploads'
 				}));
@@ -61,14 +69,16 @@ define(function(require) {
 					var file = event.type === 'drop'
 							? event.originalEvent.dataTransfer.files[0]
 							: event.target.files[0],
-						reader = new FileReader();
+						reader = new FileReader(),
+						maxFileSize = args.maxFileSize || self.appFlags.dragableUploads.maxFileSize;
 
-					if (file && _.includes(args.allowedFiles, file.type)) {
+					if (file && _.includes(args.allowedFiles, file.type) && file.size <= maxFileSize) {
 						reader.onload = function(event) {
 							self.appFlags.dragableUploads.files.push({
 								name: file.name,
 								size: file.size,
-								data: event.target.result
+								data: event.target.result,
+								bytes: monster.util.formatBytes(file.size)
 							});
 
 							$fileDrop

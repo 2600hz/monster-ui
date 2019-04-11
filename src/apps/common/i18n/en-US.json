@@ -585,12 +585,13 @@
 	"dragableUploads": {
 		"draganddrop": "Darg and drop files here or",
 		"browse": "browse",
-		"invalidFileFormatError": "Error! Only {{allowedFiles}} files are accepted.",
+		"invalidFileFormatError": "Error! Invalid file format.",
 		"tryagain": "Try again!",
 		"chooseFile": "Choose a new file",
 		"success": "Done!",
 		"cancel": "Cancel",
-		"upload": "Upload files"
+		"upload": "Upload files",
+		"fileUploadLegend": "Allowed files: {{allowedFiles}}, Max file size: ({{maxFileSize}})"
 	},
 
 	"__comment": "UI-2554: Add a way to customize carrier used by number",

@@ -15,7 +15,7 @@
 					</div>
 				</div>
 				<div class="file-drop-error">
-					{{i18n.dragableUploads.invalidFileFormatError}}
+					{{allowedFilesErrorMessage}}
 					<a href="#" class="upload-file">
 						<label for="source" class="file-name">
 							{{i18n.dragableUploads.tryagain}}
@@ -31,6 +31,7 @@
 					</a>
 				</div>
 			</div>
+			<p class="allowed-files-legend">{{fileUploadLegend}}</p>
 		</form>
 	</div>
 	<div class="dragable-file-list-area"></div>
