@@ -583,7 +583,7 @@
 	},
 
 	"dragableUploads": {
-		"draganddrop": "Darg and drop files here or",
+		"draganddrop": "Drag and drop files here or",
 		"browse": "browse",
 		"invalidFileFormatError": "Error! Invalid file format.",
 		"tryagain": "Try again!",
