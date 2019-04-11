@@ -1,20 +1,21 @@
+import { join } from 'upath';
 import { dirname } from 'path';
 import { env } from './helpers/helpers.js';
 
-const pathToThisFile = __dirname;
+const pathToThisFile = dirname(__filename);
 const root = dirname(pathToThisFile);
-const distPath = root + '/dist/';
-const tmpPath = root + '/tmp';
-const requirePath = root + '/distRequired';
-const srcPath = root + '/src';
-const distDevPath = root + '/distDev';
-const appPath = env.app
-	? tmpPath + '/apps/' + env.app + '/'
-	: 'null';
+const dist = join(root, 'dist');
+const distDev = join(root, 'distDev');
+const require = join(root, 'distRequired');
+const src = join(root, 'src');
+const tmp = join(root, 'tmp');
+const app = env.app ? join(tmp, 'apps', env.app) : '';
 
-export const app = appPath;
-export const dist = distPath;
-export const distDev = distDevPath;
-export const require = requirePath;
-export const src = srcPath;
-export const tmp = tmpPath;
+export {
+	app,
+	dist,
+	distDev,
+	require,
+	src,
+	tmp
+};
