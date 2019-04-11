@@ -6,27 +6,27 @@
 				<div class="file-drop-inner">
 					<input type="file" id="source" name="source" class="hide">
 					<div class="inner-text">
-						<span>Darg and drop files here or </span>
+						<span>{{i18n.dragableUploads.draganddrop}} </span>
 						<a href="#" class="upload-file">
 							<label for="source" class="file-name">
-								browse
+								{{i18n.dragableUploads.browse}}
 							</label>
 						</a>
 					</div>
 				</div>
 				<div class="file-drop-error">
-					Error! Only {{allowedFiles}} files are accepted.
+					{{i18n.dragableUploads.invalidFileFormatError}}
 					<a href="#" class="upload-file">
 						<label for="source" class="file-name">
-							Try again!
+							{{i18n.dragableUploads.tryagain}}
 						</label>
 					</a>
 				</div>
 				<div class="file-drop-success">
-					Done!
+					{{i18n.dragableUploads.success}}
 					<a href="#" class="upload-file">
 						<label for="source" class="file-name">
-							Choose a new file
+							{{i18n.dragableUploads.chooseFile}}
 						</label>
 					</a>
 				</div>
@@ -35,7 +35,7 @@
 	</div>
 	<div class="dragable-file-list-area"></div>
 	<div class="dragable-actions">
-		<a class="dragable-cancel pull-right upload-cancel">Cancel</a>
-		<button class="monster-button-success pull-right upload-action">Upload files</button>
+		<a class="dragable-cancel pull-right upload-cancel">{{i18n.cancel}}</a>
+		<button class="monster-button-success pull-right upload-action">{{i18n.dragableUploads.upload}}</button>
 	</div>
 </div>
