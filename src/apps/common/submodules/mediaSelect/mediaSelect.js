@@ -96,7 +96,7 @@ define(function(require) {
 					data: formattedData,
 					submodule: 'mediaSelect'
 				}));
-				self.mediaSelectBindDefaultTemplate(template);
+				self.mediaSelectBindDefaultTemplate(template, args);
 			} else if (skin === 'tabs') {
 				template = $(self.getTemplate({
 					name: 'tabs-layout',
@@ -209,8 +209,14 @@ define(function(require) {
 			});
 		},
 
-		mediaSelectBindDefaultTemplate: function(template) {
+		mediaSelectBindDefaultTemplate: function(template, args) {
 			var self = this,
+				popupTemplate = $(self.getTemplate({
+					name: 'upload-dialog',
+					data: {},
+					submodule: 'mediaSelect'
+				})),
+				popup,
 				mediaToUpload,
 				closeUploadDiv = function(newMedia) {
 					mediaToUpload = undefined;
@@ -230,10 +236,31 @@ define(function(require) {
 			});
 
 			template.find('.upload-toggle').on('click', function() {
-				if ($(this).hasClass('active')) {
-					template.find('.upload-div').stop(true, true).slideUp();
+				if (args.dragableUpload) {
+					popup = monster.ui.dialog(popupTemplate, {
+						title: self.i18n.active().mediaSelect.uploadNewMedia,
+						width: '400px',
+						position: ['center', 20]
+					});
+
+					monster.pub('common.dragableUploads.renderUploadArea', {
+						container: popupTemplate,
+						popup: popup,
+						allowedFiles: ['video/mp4', 'audio/mp3'],
+						callback: function(error, medias) {
+							if (medias) {
+								var mediaSelect = template.find('.media-dropdown');
+								mediaSelect.append('<option value="' + medias[0].id + '">' + medias[0].name + '</option>');
+								mediaSelect.val(medias[0].id);
+							}
+						}
+					});
 				} else {
-					template.find('.upload-div').stop(true, true).slideDown();
+					if ($(this).hasClass('active')) {
+						template.find('.upload-div').stop(true, true).slideUp();
+					} else {
+						template.find('.upload-div').stop(true, true).slideDown();
+					}
 				}
 			});
 
