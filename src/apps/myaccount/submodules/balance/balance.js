@@ -273,7 +273,7 @@ define(function(require) {
 			}
 
 			return {
-				showSubscriptions: !_.some(serviceSummary.invoices, {
+				showSubscriptions: _.some(serviceSummary.invoices, {
 					bookkeeper: {
 						type: 'iou'
 					}
