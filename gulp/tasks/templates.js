@@ -1,3 +1,4 @@
+import { join, normalize, sep } from 'upath';
 import gulp from 'gulp';
 import handlebars from 'gulp-handlebars';
 import wrap from 'gulp-wrap';
@@ -5,7 +6,6 @@ import declare from 'gulp-declare';
 import concat from 'gulp-concat';
 import del from 'del';
 import vinylPaths from 'vinyl-paths';
-import { sep } from 'path';
 import { app, tmp } from '../paths.js';
 import { env, getAppsToInclude } from '../helpers/helpers.js';
 
@@ -15,18 +15,18 @@ const mode = env.app
 const pathsTemplates = {
 	whole: {
 		src: getAppsToInclude().reduce((acc, item) => acc.concat([
-			tmp + '/apps/' + item + '/views/*.html',
-			tmp + '/apps/' + item + 'submodules/*/views/*.html'
+			join(tmp, 'apps', item, 'views', '*.html'),
+			join(tmp, 'apps', item, 'submodules', '*', 'views', '*.html')
 		]), []),
-		dest: tmp + '/js/',
+		dest: join(tmp, 'js'),
 		concatName: 'templates-compiled.js'
 	},
 	app: {
 		src: [
-			app + 'views/*.html',
-			app + '/submodules/*/views/*.html'
+			join(app, 'views', '*.html'),
+			join(app, 'submodules', '*', 'views','*.html')
 		],
-		dest: app + 'views/',
+		dest: join(app, 'views'),
 		concatName: 'templates.js'
 	}
 };
@@ -41,7 +41,7 @@ const compileTemplates = () => gulp
 		namespace: 'monster.cache.templates',
 		noRedeclare: true,
 		processName: filePath => {
-			const splits = filePath.split(sep);
+			const splits = normalize(filePath).split(sep);
 			const indexSub = splits.indexOf('submodules');
 			let newName;
 			if (indexSub >= 0) {
@@ -65,8 +65,8 @@ const compileTemplates = () => gulp
 
 const concatTemplatesWhole = () => gulp
 	.src([
-		pathsTemplates.whole.dest + 'templates.js',
-		pathsTemplates.whole.dest + pathsTemplates.whole.concatName
+		join(pathsTemplates.whole.dest, 'templates.js'),
+		join(pathsTemplates.whole.dest, pathsTemplates.whole.concatName)
 	])
 	.pipe(concat('templates.js'))
 	.pipe(gulp.dest(pathsTemplates.whole.dest));
@@ -74,7 +74,7 @@ const concatTemplatesWhole = () => gulp
 const cleanTemplates = () => gulp
 	.src([
 		...pathsTemplates[mode].src,
-		pathsTemplates[mode].dest + pathsTemplates[mode].concatName
+		join(pathsTemplates[mode].dest, pathsTemplates[mode].concatName)
 	], {
 		read: false
 	})
@@ -106,8 +106,8 @@ export const templatesApp = gulp.series(
 	compileTemplates,
 	() => gulp
 		.src([
-			app + 'app.js',
-			pathsTemplates.app.dest + pathsTemplates.app.concatName
+			join(app, 'app.js'),
+			join(pathsTemplates.app.dest, pathsTemplates.app.concatName)
 		])
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest(app)),

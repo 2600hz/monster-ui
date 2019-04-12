@@ -1,9 +1,9 @@
+import { join, normalize, relative, resolve } from 'upath';
 import browserSync from 'browser-sync';
 import del from 'del';
 import gulp from 'gulp';
 import cache from 'gulp-cached';
 import sass from 'gulp-sass';
-import path from 'path';
 import { src, dist } from '../paths.js';
 
 /**
@@ -21,7 +21,7 @@ const buildWatchPipeline = args => {
 		useCache = !!args.useCache,
 		reload = !!args.reload,
 		server = args.server,
-		pipeline = gulp.src(`${src}/**/*.${fileExt}`);
+		pipeline = gulp.src(join(src, '**', `*.${fileExt}`));
 
 	if (process) {
 		pipeline = pipeline.pipe(process);
@@ -93,8 +93,8 @@ const getWatchJsonFn = server =>
 
 const getUnlinkFileFn = server =>
 	filePath => {
-		var filePathFromSrc = path.relative(path.resolve(src), filePath),
-			destFilePath = path.resolve(dist, filePathFromSrc);
+		const filePathFromSrc = relative(resolve(src), normalize(filePath));
+		let destFilePath = resolve(dist, filePathFromSrc);
 
 		if (filePath.endsWith('.scss')) {
 			destFilePath = destFilePath.replace(/\.scss$/, ".css");
@@ -107,11 +107,11 @@ const getUnlinkFileFn = server =>
 
 const watchSources = server => {
 	let watchers = [
-		gulp.watch(src + '/**/*.scss', getWatchSassFn(server)),
-		gulp.watch(src + '/**/*.css', getWatchCssFn(server)),
-		gulp.watch(src + '/**/*.js', getWatchJsFn(server)),
-		gulp.watch(src + '/**/*.html', getWatchHtmlFn(server)),
-		gulp.watch(src + '/**/*.json', getWatchJsonFn(server))
+		gulp.watch(join(src, '**', '*.scss'), getWatchSassFn(server)),
+		gulp.watch(join(src, '**', '*.css'), getWatchCssFn(server)),
+		gulp.watch(join(src, '**', '*.js'), getWatchJsFn(server)),
+		gulp.watch(join(src, '**', '*.html'), getWatchHtmlFn(server)),
+		gulp.watch(join(src, '**', '*.json'), getWatchJsonFn(server))
 	];
 
 	// Handle delete file events
