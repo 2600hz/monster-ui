@@ -273,7 +273,7 @@ define(function(require) {
 			}
 
 			return {
-				showSubscriptions: !_.some(serviceSummary.invoices, {
+				showSubscriptions: _.some(serviceSummary.invoices, {
 					bookkeeper: {
 						type: 'iou'
 					}
@@ -540,8 +540,7 @@ define(function(require) {
 					automaticRemediationSwitch.prop('disabled', 'disabled');
 
 					if ($(this).is(':checked')) {
-						automaticRemediationText.find('[data-toggle="off"]').hide();
-						automaticRemediationText.find('[data-toggle="on"]').fadeIn(250);
+						automaticRemediationText.slideUp(250);
 						directToPayWrapper.slideDown(250);
 
 						self.balanceUpdateSubscriptions({
@@ -556,8 +555,7 @@ define(function(require) {
 							}
 						});
 					} else {
-						automaticRemediationText.find('[data-toggle="on"]').hide();
-						automaticRemediationText.find('[data-toggle="off"]').fadeIn(250);
+						automaticRemediationText.slideDown(250);
 						directToPayWrapper.slideUp(250);
 						directToPaySwitch.prop('checked', false);
 

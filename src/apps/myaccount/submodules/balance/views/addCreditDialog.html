@@ -125,43 +125,48 @@
 			<div class="text">
 				{{i18n.balance.addCreditPopup.subscriptions.info}}
 			</div>
-			<label for="automatic_remediation">
-				{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.label}}
-			{{#monsterSwitch}}
-				<input type="checkbox" id="automatic_remediation" name="topup.monthly.preemptive">
-			{{/monsterSwitch}}
-			</label>
-			{{#monsterPanelText i18n.balance.addCreditPopup.subscriptions.panelTextTitle 'info' 'automatic-remediation-text'}}
-				<span data-toggle="on"{{#unless preemptive}} style="display:none"{{/unless}}>
-					{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.on}}
-				</span>
-				<span data-toggle="off"{{#if preemptive}} style="display:none"{{/if}}>
-					{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.off}}
-				</span>
-			{{/monsterPanelText}}
-			<div class="direct-to-pay-wrapper"{{#unless preemptive}} style="display: none"{{/unless}}>
-				<label for="direct_to_pay">
-					{{i18n.balance.addCreditPopup.subscriptions.directToPay.label}}
+			<div class="form-horizontal">
+				<div class="control-group">
+					<label for="automatic_remediation" class="control-label">
+						{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.label}}
+					</label>
+					<div class="controls">
 					{{#monsterSwitch}}
-						<input type="checkbox" id="direct_to_pay" name="topup.monthly.exact">
+						<input type="checkbox" id="automatic_remediation" name="topup.monthly.preemptive">
 					{{/monsterSwitch}}
-				</label>
-				{{#monsterPanelText i18n.balance.addCreditPopup.subscriptions.panelTextTitle 'info' 'direct-to-pay-text'}}
-					<span data-toggle="on"{{#unless exact}} style="display:none"{{/unless}}>
-						{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.text1}}
-						<strong>
-							{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.bold}}
-						</strong>
-						{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.text2}}
-					</span>
-					<span data-toggle="off"{{#if exact}} style="display: none"{{/if}}>
-						{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.text1}}
-						<strong>
-							{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.bold}}
-						</strong>
-						{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.text2}}
-					</span>
-				{{/monsterPanelText}}
+					</div>
+				</div>
+				<div class="automatic-remediation-text"{{#if preemptive}} style="display:none"{{/if}}>
+					{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.text}}
+				</div>
+				<div class="direct-to-pay-wrapper"{{#unless preemptive}} style="display: none"{{/unless}}>
+					<div class="control-group">
+						<label for="direct_to_pay" class="control-label">
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.label}}
+						</label>
+						<div class="controls">
+							{{#monsterSwitch}}
+								<input type="checkbox" id="direct_to_pay" name="topup.monthly.exact">
+							{{/monsterSwitch}}
+						</div>
+					</div>
+					<div class="direct-to-pay-text">
+						<span data-toggle="on"{{#unless exact}} style="display:none"{{/unless}}>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.text1}}
+							<strong>
+								{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.bold}}
+							</strong>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.text2}}
+						</span>
+						<span data-toggle="off"{{#if exact}} style="display: none"{{/if}}>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.text1}}
+							<strong>
+								{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.bold}}
+							</strong>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.text2}}
+						</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
