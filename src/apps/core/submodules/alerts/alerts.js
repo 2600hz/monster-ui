@@ -34,6 +34,11 @@ define(function(require) {
 					}
 					*/
 				},
+				categoryActions: {
+					low_balance: 'publishedMethod',
+					no_payment_token: 'publishedMethod',
+					expired_payment_token: 'publishedMethod'
+				},
 				template: null
 			}
 		},
@@ -167,7 +172,8 @@ define(function(require) {
 		alertsBindEvents: function() {
 			var self = this,
 				$template = self.appFlags.alerts.template,
-				$alertsContainer = $template.find('#main_topbar_alerts_container');
+				$alertsContainer = $template.find('#main_topbar_alerts_container'),
+				$alertItems = $alertsContainer.find('.alert-item');
 
 			$template.find('#main_topbar_alerts_link').on('click', function(e) {
 				e.preventDefault();
@@ -198,7 +204,7 @@ define(function(require) {
 				}
 			});
 
-			$alertsContainer.find('.alert-item .button-clear').on('click', function(e) {
+			$alertItems.find('.button-clear').on('click', function(e) {
 				e.preventDefault();
 
 				var $alertItem = $(this).closest('.alert-item'),
@@ -220,6 +226,13 @@ define(function(require) {
 				if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
 					$alertGroup.siblings('.alert-group-empty').slideDown(200);
 				}
+			});
+
+			$alertItems.find('.actionable').on('click', function() {
+				var alertCategory = $(this).data('alert_category'),
+					action = _.get(self.appFlags.alerts.categoryActions, alertCategory);
+
+				monster.pub(action);
 			});
 
 			$(window).on('resize',
@@ -295,19 +308,23 @@ define(function(require) {
 				.groupBy(function(alert) {
 					var category = alert.category,
 						alertType,
-						dashIndex;
+						dashIndex,
+						iconName;
 
 					if (alert.clearable) {
 						alertType = 'manual';
-						alert.iconPath = monster.util.getAppIconPath({ name: 'websockets' });
+						iconName = 'websockets';
 					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], category)) {
 						alertType = 'system';
-						alert.iconPath = monster.util.getAppIconPath({ name: 'myaccount' });
+						iconName = 'myaccount';
 					} else {
 						dashIndex = category.indexOf('_');
 						alertType = category.substring(0, dashIndex > 0 ? dashIndex : category.length);
-						alert.iconPath = monster.util.getAppIconPath({ name: alertType });
+						iconName = alertType;
 					}
+
+					alert.iconPath = monster.util.getAppIconPath({ name: iconName });
+					alert.isActionable = _.has(self.appFlags.alerts.categoryActions, alert.category);
 
 					return alertType;
 				}).map(function(alerts, type) {
