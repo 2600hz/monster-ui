@@ -280,21 +280,20 @@
 				"panelTextTitle": "Info",
 				"info": "Every month, your account will be charged according to your service plan subscriptions.",
 				"automaticRemediation": {
-					"label": "Turn on automatic remediation",
-					"on": "Automatic Remediation will use any available credit balance, charging your payment method on file the remaining balance to bring the account above the auto recharge threshold.",
-					"off": "If monthly charges exceed your current available credit balance, your account may become delinquent immediately."
+					"label": "Automatic remediation",
+					"text": "If monthly charges exceed your current available credit balance, your account may become delinquent immediately."
 				},
 				"directToPay": {
 					"label": "Direct to Pay Method",
 					"on": {
 						"text1": "The system will attempt to charge your",
 						"bold": " payment method on file ",
-						"text2": "for the full amount of your monthly subscriptions. If charges are declined on your account using the \"Direct to Payment Method\", your account may become delinquent immediately. Your payment method will be billed your total Monthly Recurring Costs, no math required."
+						"text2": "for the exact amount of your monthly subscriptions. If the charges are declined your account may become delinquent, causing a service disruption."
 					},
 					"off": {
-						"text1": "The system will attempt to charge your",
-						"bold": " Available Credit Balance ",
-						"text2": "for the full amount of your monthly subscriptions. If charges are declined due to a low balance, your account may become delinquent immediately. Your payment method may be billed a portion of your total Monthly Recurring Costs, some math required."
+						"text1": "The system will use any available credit balance for your monthly subscriptions, only charging your",
+						"bold": " payment method on file ",
+						"text2": "if required. The amount charged to the payment method will vary each month depending on what is required to ensure the account remains above any configured auto recharge threshold."
 					}
 				}
 			},
