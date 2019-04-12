@@ -9,7 +9,7 @@ define(function(require) {
 
 		// Define the events available for other apps
 		subscribe: {
-			'common.dragableUploads.renderUploadArea': 'renderUploadArea'
+			'common.dragableUploads.render': 'dragableUploadsRender'
 		},
 
 		appFlags: {
@@ -19,7 +19,15 @@ define(function(require) {
 			}
 		},
 
-		renderUploadArea: function(args) {
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 * @param {Array} args.allowedFiles
+		 * @param {Integer} args.maxFileSize
+		 * @param {jQuery} args.popup
+		 * @param {Function} args.callback
+		 */
+		dragableUploadsRender: function(args) {
 			var self = this,
 				container = args.container,
 				maxFileSize = monster.util.formatBytes(args.maxFileSize || self.appFlags.dragableUploads.maxFileSize),
