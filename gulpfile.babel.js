@@ -15,7 +15,7 @@ import {
 	moveDistDev,
 	moveFilesToTmp
 } from './gulp/tasks/clean-move.js';
-import watchSources from './gulp/tasks/watch-sources'
+import watchSources from './gulp/tasks/watch-sources';
 
 const server = create();
 
@@ -47,7 +47,6 @@ const buildProd = gulp.series(
 
 const buildDev = gulp.series(
 	moveFilesToTmp,
-	// lint,
 	compileSass,
 	writeConfigDev,
 	writeVersion,
@@ -64,6 +63,8 @@ const buildApp = gulp.series(
 	writeConfigApp,
 	cleanFolders
 );
+
+gulp.task('lint', lint);
 
 gulp.task('build-app', buildApp);
 

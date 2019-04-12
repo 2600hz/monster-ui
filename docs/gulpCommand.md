@@ -2,7 +2,7 @@ title: Gulp command
 
 # Gulp Command
 
-`gulp` - Build Monster UI
+`gulp` - Toolkit to manage Monster UI builds and related tasks
 
 * [Synopsis](#synopsis)
 * [Description](#description)
@@ -12,10 +12,12 @@ title: Gulp command
 ## Synopsis
 
 ```
-gulp                        [--pro=<name>] [--require ./.babelregister.js]
+gulp [serve-dev]            [--pro=<name>] [--require ./.babelregister.js]
 gulp build-dev              [--pro=<name>] [--require ./.babelregister.js]
+gulp serve-prod             [--pro=<name>] [--require ./.babelregister.js]
 gulp build-prod             [--pro=<name>] [--require ./.babelregister.js]
 gulp build-app --app=<name> [--pro]        [--require ./.babelregister.js]
+gulp lint
 ```
 
 ## Description
@@ -24,21 +26,29 @@ Build Monster UI for either development, or production environment, the result o
 
 ## Commands
 
-###### `gulp`
+###### `serve-dev`
 
-Compile SCSS to CSS, launch Web server ([browsersync](https://www.npmjs.com/package/browser-sync)) and serve project at `http://localhost:3000/`, include a CSS watcher that make changes immediate in the browser ([livereload](https://www.npmjs.com/package/gulp-livereload)), UI reloads automatically on file save.
+Compile SCSS to CSS, launch Web server ([browsersync](https://www.npmjs.com/package/browser-sync)) and serve project at `http://localhost:3000/`, include a CSS watcher that make changes immediate in the browser, UI reloads automatically on file save.
 
-###### `gulp build-dev`
+###### `build-dev`
 
-Only compile SCSS to CSS.
+Compile SCSS to CSS.
 
-###### `gulp build-prod`
+###### `build-prod`
 
 Compile SCSS to CSS, merge all templates in a single `templates.js` file, run require, minify `main.js` and `templates.js` and minify CSS files.
 
-###### `gulp build-app --app=<name>`
+##### `serve-prod`
+
+Run the `build-prod` task and serves the results at `http://localhost:3000/`.
+
+###### `build-app --app=<name>`
 
 To build an app independently, you will need to clone it inside the `/src/app` folder of `monster-ui` and then run this command while indicating which app you want to build.
+
+##### `lint`
+
+Run the Monster UI linter for the whole project (including apps).
 
 ## Options
 
