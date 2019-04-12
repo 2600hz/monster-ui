@@ -1,3 +1,4 @@
+import { join } from 'upath';
 import gulp from 'gulp';
 import del from 'del';
 import vinylPaths from 'vinyl-paths';
@@ -19,17 +20,17 @@ const cleanDistDev = () => gulp
 
 const moveBuiltFilesToDist = () => gulp
 	.src([
-		tmp + '/**/*',
-		'!' + tmp + '**/*.scss'
+		join(tmp, '**', '*'),
+		'!' + join(tmp, '**', '*.scss')
 	])
 	.pipe(gulp.dest(dist));
 
 const moveDistFilesToDev = () => gulp
-	.src(dist + '/**/*')
+	.src(join(dist, '**', '*'))
 	.pipe(gulp.dest(distDev));
 
 const moveSrcFilesToTmp = () => gulp
-	.src(src + '/**/*')
+	.src(join(src, '**', '*'))
 	.pipe(gulp.dest(tmp));
 
 

@@ -1,3 +1,4 @@
+import { join } from 'upath';
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
@@ -13,17 +14,17 @@ const handleUglifyError = error => {
  */
 export const minifyJs = () => gulp
 	.src([
-		tmp + '/js/main.js',
-		tmp + '/js/templates.js'
+		join(tmp, 'js', 'main.js'),
+		join(tmp, 'js', 'templates.js')
 	])
 	.pipe(uglify().on('error', handleUglifyError))
-	.pipe(gulp.dest(tmp + '/js/'));
+	.pipe(gulp.dest(join(tmp, 'js')));
 
 /**
  * Minifies app.js
  */
 export const minifyJsApp = () => gulp
-	.src(app + 'app.js')
+	.src(join(app, 'app.js'))
 	.pipe(uglify().on('error', handleUglifyError))
 	.pipe(gulp.dest(app));
 
@@ -32,9 +33,9 @@ export const minifyJsApp = () => gulp
  */
 export const lint = () => gulp
 	.src([
-		src + '/**/*.js',
-		'!'+ src + '/js/vendor/**/*.js',
-		'!'+ src + '/js/lib/kazoo/dependencies/**/*.js'
+		join(src, '**', '*.js'),
+		'!' + join(src, 'js', 'vendor', '**', '*.js'),
+		'!' + join(src, 'js', 'lib', 'kazoo', 'dependencies', '**', '*.js')
 	])
 	.pipe(eslint())
 	.pipe(eslint.format());

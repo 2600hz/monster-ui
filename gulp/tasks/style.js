@@ -1,3 +1,4 @@
+import { join } from 'upath';
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import concatCss from 'gulp-concat-css';
@@ -9,9 +10,9 @@ const concatName = 'style.css';
 const cssDest = tmp + '/css/';
 const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
 	...acc,
-	tmp + '/apps/' + item + '/style/*.css'
+	join(tmp, 'apps', item, 'style', '*.css')
 ], [
-	tmp + '/css/style.css'
+	join(tmp, 'css', 'style.css')
 ]);
 
 const concatAllCss = () => gulp
@@ -39,7 +40,7 @@ export const css = gulp.series(
  * Uglifies app.css
  */
 export const minifyCssApp = () => gulp
-	.src(app + '/style/app.css')
+	.src(join(app, 'style', 'app.css'))
 	.pipe(cleanCss())
 	.pipe(gulp.dest(app + 'style'));
 
@@ -47,6 +48,6 @@ export const minifyCssApp = () => gulp
  * Compiles all .scss files into .css and moves them to dist folder
  */
 export const compileSass = () => gulp
-	.src(tmp + '/**/*.scss')
+	.src(join(tmp, '**', '*.scss'))
 	.pipe(sass().on('error', sass.logError))
 	.pipe(gulp.dest(tmp));

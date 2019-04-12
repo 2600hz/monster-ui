@@ -1,3 +1,4 @@
+import { join } from 'upath';
 import gulp from 'gulp';
 import rjs from 'requirejs';
 import del from 'del';
@@ -86,8 +87,8 @@ const libsToExcludeFromApp = [
 const getConfigRequire = () => ({
 	dir: require, // direction
 	appDir: tmp, // origin
-	baseUrl:'./',
-	mainConfigFile: tmp + '/js/main.js',
+	baseUrl:'.',
+	mainConfigFile: join(tmp, 'js', 'main.js'),
 	fileExclusionRegExp: /^doc*|.*\.md|^\..*|^monster-ui\.build\.js$/,
 	findNestedDependencies:true,
 	preserveLicenseComments:false,
@@ -101,29 +102,29 @@ const getConfigRequire = () => ({
 	modules: env.hasOwnProperty('app')
 		? [
 			{
-				name:'js/main',
+				name: join('js', 'main'),
 				exclude: standardFilesToExclude
 			},
 			{
-				name: 'apps/' + env.app + '/app',
+				name: join('apps', env.app, 'app'),
 				exclude: libsToExcludeFromApp,
 				include: env.hasOwnProperty('pro')
-					? ['apps/' + env.app + '/submodules/pro/pro']
+					? [join('apps', env.app, 'submodules', 'pro',  'pro')]
 					: []
 			}
 		]
 		: [
 			{
-				name:'js/main',
+				name: join('js', 'main'),
 				exclude: [
 					...standardFilesToExclude,
 					...libsToExcludeFromWhole
 				],
 				include: getAppsToInclude().reduce((acc, item) => [
 					...acc,
-					'apps/' + item + '/app',
+					join('apps', item, 'app'),
 					...(getProApps().includes(item)
-						? ['apps/' + item + '/submodules/pro/pro']
+						? [join('apps', item, 'submodules', 'pro', 'pro')]
 						: [])
 				], [])
 			}
@@ -137,7 +138,7 @@ const buildRequire = done => {
 };
 
 const moveRequire = () => gulp
-	.src(require  + '/**/*')
+	.src(join(require , '**', '*'))
 	.pipe(gulp.dest(tmp));
 
 const cleanRequire = () => gulp
