@@ -1,10 +1,9 @@
-import { join, normalize } from 'upath';
+import { join, normalize, relative, resolve } from 'upath';
 import browserSync from 'browser-sync';
 import del from 'del';
 import gulp from 'gulp';
 import cache from 'gulp-cached';
 import sass from 'gulp-sass';
-import { relative, resolve } from 'path';
 import { src, dist } from '../paths.js';
 
 /**
@@ -94,14 +93,14 @@ const getWatchJsonFn = server =>
 
 const getUnlinkFileFn = server =>
 	filePath => {
-		var filePathFromSrc = relative(resolve(src), filePath),
-			destFilePath = resolve(dist, filePathFromSrc);
+		const filePathFromSrc = relative(resolve(src), normalize(filePath));
+		let destFilePath = resolve(dist, filePathFromSrc);
 
 		if (filePath.endsWith('.scss')) {
 			destFilePath = destFilePath.replace(/\.scss$/, ".css");
 		}
 
-		del.sync(normalize(destFilePath));
+		del.sync(destFilePath);
 
 		server.reload();
 	};

@@ -1,5 +1,4 @@
-import { join } from 'upath';
-import { dirname } from 'path';
+import { dirname, join } from 'upath';
 import { env } from './helpers/helpers.js';
 
 const pathToThisFile = dirname(__filename);

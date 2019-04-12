@@ -1,4 +1,4 @@
-import { join } from 'upath';
+import { join, normalize, sep } from 'upath';
 import gulp from 'gulp';
 import handlebars from 'gulp-handlebars';
 import wrap from 'gulp-wrap';
@@ -6,7 +6,6 @@ import declare from 'gulp-declare';
 import concat from 'gulp-concat';
 import del from 'del';
 import vinylPaths from 'vinyl-paths';
-import { sep } from 'path';
 import { app, tmp } from '../paths.js';
 import { env, getAppsToInclude } from '../helpers/helpers.js';
 
@@ -42,7 +41,7 @@ const compileTemplates = () => gulp
 		namespace: 'monster.cache.templates',
 		noRedeclare: true,
 		processName: filePath => {
-			const splits = filePath.split(sep);
+			const splits = normalize(filePath).split(sep);
 			const indexSub = splits.indexOf('submodules');
 			let newName;
 			if (indexSub >= 0) {
