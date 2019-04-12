@@ -1,0 +1,160 @@
+@import '../../../../css/partials/base';
+
+.dragableUploads-wrapper {
+	.dragable-file-upload-area {
+		padding: 24px 16px;
+
+		form.form {
+			margin: 0;
+
+			.file-drop {
+				text-align: center;
+				min-height: 102px;
+				background-color: #F4F4F5;
+				border: 1px solid $french-gray2;
+				border-radius: 2px;
+				color: $midgray2;
+
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				&:hover {
+					background-color: $white-lilac;
+				}
+
+				.svg-icon {
+					width: 2rem;
+					height: 2rem;
+				}
+
+				.upload-file {
+					display: inline-block;
+					padding: 5px;
+
+					label {
+						font-weight: bold;
+						color: $midgray2;
+						margin: 0;
+					}
+
+					&:hover {
+						cursor: pointer;
+						text-decoration: underline;
+						text-decoration-color: $woodsmoke;
+					}
+				}
+
+				.file-drop-inner {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+
+					.inner-text {
+						display: flex;
+						align-items: center;
+					}
+				}
+
+				.file-drop-error,
+				.file-drop-success {
+					display: none;
+
+					.upload-file {
+						label {
+							font-weight: bold;
+							color: $midgray2;
+						}
+					}
+				}
+
+				&.dragover {
+					background-color: darken($french-gray, 0.5%);
+				}
+
+				&.success {
+					.iconography,
+					.file-drop-inner,
+					.file-drop-error {
+						display: none;
+					}
+
+					.file-drop-success {
+						display: block;
+					}
+				}
+
+				&.error {
+					.iconography,
+					.file-drop-inner,
+					.file-drop-success {
+						display: none;
+					}
+
+					.file-drop-error {
+						display: block;
+					}
+				}
+			}
+
+			.allowed-files-legend {
+				font-size: 0.8rem;
+				text-align: center;
+				color: $midgray2;
+			}
+		}
+	}
+
+	.dragable-file-list-area {
+		display: flex;
+		flex-direction: column;
+		padding: 0 16px;
+
+		.file-box {
+			display: flex;
+			border-bottom: 1px solid $french-gray2;
+			padding: .7rem 12px;
+			font-size: 0.8rem;
+			cursor: pointer;
+
+			&:first-child {
+				border-top: 1px solid $french-gray2;
+			}
+
+			&:hover {
+				.file-item-icon {
+					.svg-icon {
+						color: #ff0000;
+					}
+				}
+			}
+
+			.file-item-name {
+				flex: 1;
+				font-size: 12px;
+			}
+
+			.file-item-icon {
+				.svg-icon {
+					color: $french-gray2;
+				}
+			}
+		}
+	}
+
+	.dragable-actions {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		padding: 15px 16px;
+		background-color: #F4F4F5;
+		margin-top: 24px;
+
+		.dragable-cancel {
+			color: $midgray2;
+			padding: 8px 15px;
+			cursor: pointer;
+		}
+	}
+}
