@@ -690,7 +690,7 @@ label[class*='monster-radio'].prepend-label > span {
 	width: 320px;
 	padding: 0;
 	background: $panel-background-color;
-	border-radius: 2px 2px 2px 2px;
+	border-radius: 2px;
 	box-shadow: 0px 1px 4px 0px rgba(21, 21, 23, 0.24);
 	color: $woodsmoke;
 
@@ -711,7 +711,7 @@ label[class*='monster-radio'].prepend-label > span {
 		.icon-wrapper {
 			float: left;
 
-			.icon {
+			.iconography {
 				margin-right: 0.75rem;
 				vertical-align: bottom;
 				padding: 0;
@@ -735,7 +735,7 @@ label[class*='monster-radio'].prepend-label > span {
 			box-shadow: inset 0px 4px 0px 0px $color;
 			border-radius: 2px 2px 0px 0px;
 
-			.icon {
+			.iconography {
 				color: $color;
 			}
 		}
