@@ -21,3 +21,5 @@ export const getAppsToInclude = () => listAllApps()
 export const getProApps = () => env.pro && env.pro.length
 	? env.pro.split(',')
 	: [];
+
+export const mode = env.app && env.app.length ? 'app' : 'whole';

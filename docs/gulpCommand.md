@@ -17,7 +17,7 @@ gulp build-dev              [--pro=<name>] [--require ./.babelregister.js]
 gulp serve-prod             [--pro=<name>] [--require ./.babelregister.js]
 gulp build-prod             [--pro=<name>] [--require ./.babelregister.js]
 gulp build-app --app=<name> [--pro]        [--require ./.babelregister.js]
-gulp lint
+gulp lint [--app=<name>]
 ```
 
 ## Description
@@ -49,6 +49,10 @@ To build an app independently, you will need to clone it inside the `/src/app` f
 ##### `lint`
 
 Run the Monster UI linter for the whole project (including apps).
+
+##### `lint --app=<name>`
+
+Run the Monster UI linter for the app specified as `<name>`.
 
 ## Options
 
