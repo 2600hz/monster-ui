@@ -582,6 +582,18 @@
 		}
 	},
 
+	"dragableUploads": {
+		"draganddrop": "Drag and drop files here or",
+		"browse": "browse",
+		"invalidFileFormatError": "Error! Invalid file format.",
+		"tryagain": "Try again!",
+		"chooseFile": "Choose a new file",
+		"success": "Done!",
+		"cancel": "Cancel",
+		"upload": "Upload files",
+		"fileUploadLegend": "Allowed files: {{allowedFiles}}, Max file size: ({{maxFileSize}})"
+	},
+
 	"__comment": "UI-2554: Add a way to customize carrier used by number",
 	"__version": "v4.0",
 	"numberRenameCarrier": {

@@ -10,6 +10,7 @@ define(function(require) {
 		'chooseModel',
 		'conferenceViewer',
 		'deleteSmartUser',
+		'dragableUploads',
 		'e911',
 		'extensionTools',
 		'failover',

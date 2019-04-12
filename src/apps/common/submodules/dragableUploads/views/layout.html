@@ -1,0 +1,42 @@
+<div class="dragableUploads-wrapper">
+	<div class="dragable-file-upload-area">
+		<form class="form form-horizontal" id="form_source">
+			<div class="file-drop">
+				{{telicon "upload-cloud"}}
+				<div class="file-drop-inner">
+					<input type="file" id="source" name="source" class="hide">
+					<div class="inner-text">
+						<span>{{i18n.dragableUploads.draganddrop}} </span>
+						<a href="#" class="upload-file">
+							<label for="source" class="file-name">
+								{{i18n.dragableUploads.browse}}
+							</label>
+						</a>
+					</div>
+				</div>
+				<div class="file-drop-error">
+					{{allowedFilesErrorMessage}}
+					<a href="#" class="upload-file">
+						<label for="source" class="file-name">
+							{{i18n.dragableUploads.tryagain}}
+						</label>
+					</a>
+				</div>
+				<div class="file-drop-success">
+					{{i18n.dragableUploads.success}}
+					<a href="#" class="upload-file">
+						<label for="source" class="file-name">
+							{{i18n.dragableUploads.chooseFile}}
+						</label>
+					</a>
+				</div>
+			</div>
+			<p class="allowed-files-legend">{{fileUploadLegend}}</p>
+		</form>
+	</div>
+	<div class="dragable-file-list-area"></div>
+	<div class="dragable-actions">
+		<a class="dragable-cancel pull-right upload-cancel">{{i18n.cancel}}</a>
+		<button class="monster-button-success pull-right upload-action">{{i18n.dragableUploads.upload}}</button>
+	</div>
+</div>
