@@ -14,7 +14,7 @@ const cssWatcher = () => gulp
 	.pipe(server.stream());
 
 const htmlWatcher = () => gulp
-	.src(join(src, '**', '*.src'))
+	.src(join(src, '**', '*.html'))
 	.pipe(cache('html'))
 	.pipe(gulp.dest(dist))
 	.pipe(server.reload({ stream: true }));
