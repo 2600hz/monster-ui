@@ -7,11 +7,8 @@ import concat from 'gulp-concat';
 import del from 'del';
 import vinylPaths from 'vinyl-paths';
 import { app, tmp } from '../paths.js';
-import { env, getAppsToInclude } from '../helpers/helpers.js';
+import { env, getAppsToInclude, mode } from '../helpers/helpers.js';
 
-const mode = env.app
-	? 'app'
-	: 'whole';
 const pathsTemplates = {
 	whole: {
 		src: getAppsToInclude().reduce((acc, item) => acc.concat([
@@ -33,9 +30,7 @@ const pathsTemplates = {
 
 const compileTemplates = () => gulp
 	.src(pathsTemplates[mode].src)
-	.pipe(handlebars({
-		handlebars: require('handlebars')
-	}))
+	.pipe(handlebars())
 	.pipe(wrap('Handlebars.template(<%= contents %>)'))
 	.pipe(declare({
 		namespace: 'monster.cache.templates',
@@ -62,6 +57,14 @@ const compileTemplates = () => gulp
 	}))
 	.pipe(concat(pathsTemplates[mode].concatName))
 	.pipe(gulp.dest(pathsTemplates[mode].dest));
+
+const concatTemplatesApp = () => gulp
+	.src([
+		join(app, 'app.js'),
+		join(pathsTemplates.app.dest, pathsTemplates.app.concatName)
+	])
+	.pipe(concat('app.js'))
+	.pipe(gulp.dest(app));
 
 const concatTemplatesWhole = () => gulp
 	.src([
@@ -104,12 +107,6 @@ export const templates = gulp.series(
  */
 export const templatesApp = gulp.series(
 	compileTemplates,
-	() => gulp
-		.src([
-			join(app, 'app.js'),
-			join(pathsTemplates.app.dest, pathsTemplates.app.concatName)
-		])
-		.pipe(concat('app.js'))
-		.pipe(gulp.dest(app)),
+	concatTemplatesApp,
 	cleanTemplates
 );

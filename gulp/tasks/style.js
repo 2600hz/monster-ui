@@ -7,7 +7,7 @@ import { app, tmp } from '../paths.js';
 import { getAppsToInclude } from '../helpers/helpers.js';
 
 const concatName = 'style.css';
-const cssDest = tmp + '/css/';
+const cssDest = join(tmp, 'css');
 const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
 	...acc,
 	join(tmp, 'apps', item, 'style', '*.css')
@@ -21,7 +21,7 @@ const concatAllCss = () => gulp
 	.pipe(gulp.dest(cssDest));
 
 const minifyCss = () => gulp
-	.src(cssDest + concatName)
+	.src(join(cssDest, concatName))
 	.pipe(cleanCss())
 	.pipe(gulp.dest(cssDest));
 
@@ -42,7 +42,7 @@ export const css = gulp.series(
 export const minifyCssApp = () => gulp
 	.src(join(app, 'style', 'app.css'))
 	.pipe(cleanCss())
-	.pipe(gulp.dest(app + 'style'));
+	.pipe(gulp.dest(join(app, 'style')));
 
 /**
  * Compiles all .scss files into .css and moves them to dist folder
