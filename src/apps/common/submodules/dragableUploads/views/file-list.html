@@ -1,0 +1,10 @@
+{{#if hasFiles}}
+
+{{#each files}}
+	<div class="file-box" data-file_name="{{name}}">
+		<div class="file-item-name">{{name}}</div>
+		<div class="file-item-icon">{{telicon "x--circle"}}</div>
+	</div>
+{{/each}}
+
+{{/if}}
