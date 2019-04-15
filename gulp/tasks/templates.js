@@ -30,9 +30,7 @@ const pathsTemplates = {
 
 const compileTemplates = () => gulp
 	.src(pathsTemplates[mode].src)
-	.pipe(handlebars({
-		handlebars: require('handlebars')
-	}))
+	.pipe(handlebars())
 	.pipe(wrap('Handlebars.template(<%= contents %>)'))
 	.pipe(declare({
 		namespace: 'monster.cache.templates',
