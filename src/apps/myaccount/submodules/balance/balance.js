@@ -620,6 +620,7 @@ define(function(require) {
 						event.preventDefault();
 
 						var $this = $(this),
+							tab = $this.prop('href').match(/[^#]+$/),
 							renderTabContent = function() {
 								if (!tabAnimationInProgress) {
 									tabAnimationInProgress = true;
@@ -645,7 +646,10 @@ define(function(require) {
 								}
 							};
 
-						if (parent.find('.add-credits-content-wrapper.active input[type="checkbox"]').is(':checked')) {
+						if (
+							(tab === 'threshold_alerts' || tab === 'auto_recharge')
+							&& parent.find('.add-credits-content-wrapper.active input[type"checkbox"]').is(':checkbox')
+						) {
 							var formId = parent.find('.add-credits-content-wrapper.active form').prop('id'),
 								hasEmptyValue = false,
 								formData = monster.ui.getFormData(formId);
