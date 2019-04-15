@@ -39,11 +39,9 @@ define(function(require) {
 						categories: [ 'no_payment_token', 'expired_payment_token' ],
 						action: 'editCreditCard',
 						restrictions: {
-							my_account: {
-								balance: {
-									show_credit: true,
-									show_tabs: true
-								}
+							balance: {
+								show_credit: true,
+								show_tab: true
 							}
 						}
 					},
@@ -409,8 +407,10 @@ define(function(require) {
 				args.uiRestrictions,
 				args.expectedRestrictions,
 				function(objectValue, otherValue) {
-					return _.isUndefined(otherValue)
-						|| (!_.isUndefined(objectValue) && objectValue === otherValue);
+					if (!_.isPlainObject(objectValue) && !_.isPlainObject(otherValue)) {
+						return _.isUndefined(otherValue)
+							|| (!_.isUndefined(objectValue) && objectValue === otherValue);
+					}
 				});
 		},
 
