@@ -51,7 +51,8 @@ define(function(require) {
 			'myaccount.hasCreditCards': 'hasCreditCards',
 			'core.changedAccount': 'refreshMyAccount',
 			'myaccount.hasToShowWalkthrough': 'hasToShowWalkthrough',
-			'myaccount.renderDropdown': 'clickMyAccount'
+			'myaccount.renderDropdown': 'clickMyAccount',
+			'myaccount.showAddCreditDialog': 'showAddCreditDialog'
 		},
 
 		appFlags: {
@@ -1020,6 +1021,25 @@ define(function(require) {
 				success: function(savedUser) {
 					callback && callback(savedUser.data);
 				}
+			});
+		},
+
+		/**
+		 * Open balance tab and show add credit dialog
+		 */
+		showAddCreditDialog: function() {
+			var self = this;
+
+			self.renderDropdown(true, function() {
+				var module = 'balance';
+
+				self.activateSubmodule({
+					title: self.i18n.active()[module].title,
+					module: module,
+					callback: function() {
+						monster.pub('myaccount.balance.addCreditDialog');
+					}
+				});
 			});
 		}
 	};
