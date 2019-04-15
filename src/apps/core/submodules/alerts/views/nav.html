@@ -16,7 +16,7 @@
 						{{ tryI18n @root.i18n.alerts.alertTypes type }}
 					</div>
 					{{#each alerts}}
-						<div class="alert-item{{#if isActionable}} actionable{{/if}}" data-alert_id="{{id}}" data-alert_category="{{category}}">
+						<div class="alert-item{{#if action}} actionable{{/if}}" data-alert_id="{{id}}"{{#if action}} data-alert_action="{{action}}"{{/if}}>
 							<div class="item-icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
 							<div class="item-body">
 								<div class="title">{{title}}</div>

@@ -34,10 +34,27 @@ define(function(require) {
 					}
 					*/
 				},
-				categoryActions: {
-					low_balance: 'publishedMethod',
-					no_payment_token: 'publishedMethod',
-					expired_payment_token: 'publishedMethod'
+				categoryActions: [
+					{
+						categories: [ 'no_payment_token', 'expired_payment_token' ],
+						action: 'editCreditCard',
+						restrictions: {
+							my_account: {
+								balance: {
+									show_credit: true,
+									show_tabs: true
+								}
+							}
+						}
+					},
+					{
+						categories: [ 'low_balance' ],
+						action: 'addCredit'
+					}
+				],
+				actionTopics: {
+					ediCreditCard: 'myaccount.showCreditCardTab',
+					addCredit: 'myaccount.showAddCreditDialog'
 				},
 				template: null
 			}
@@ -84,8 +101,13 @@ define(function(require) {
 		 */
 		alertsRender: function() {
 			var self = this,
-				initTemplate = function initTemplate(alerts) {
-					var alertGroups = self.alertsFormatData({ data: alerts }),
+				initTemplate = function initTemplate(data) {
+					var alerts = _.get(data, 'alerts'),
+						uiRestrictions = _.get(data, 'uiRestrictions'),
+						alertGroups = self.alertsFormatData({
+							data: alerts,
+							uiRestrictions: uiRestrictions
+						}),
 						alertCount = _.sumBy(alertGroups, 'unreadCount'),
 						dataTemplate = {
 							showAlertCount: alertCount > 0,
@@ -110,10 +132,10 @@ define(function(require) {
 
 					return $template;
 				},
-				renderTemplate = function renderTemplate(alerts) {
+				renderTemplate = function renderTemplate(data) {
 					var $navLinks = $('#main_topbar_nav'),
 						$topbarAlert = $navLinks.find('#main_topbar_alerts'),
-						$template = initTemplate(alerts);
+						$template = initTemplate(data);
 
 					if ($topbarAlert.length === 0) {
 						$template.insertBefore($navLinks.find('#main_topbar_signout'));
@@ -123,24 +145,32 @@ define(function(require) {
 				};
 
 			monster.parallel({
-				alerts: function(callback) {
+				alerts: function(paralellCallback) {
 					self.alertsRequestListAlerts({
 						success: function(data) {
-							callback(null, data);
+							paralellCallback(null, data);
 						},
 						error: function(parsedError) {
-							callback(parsedError);
+							paralellCallback(parsedError);
 						}
 					});
 				},
-				render: function(callback) {
+				render: function(paralellCallback) {
 					if (self.appFlags.alerts.template) {
 						self.alertsHideDropdown();
 					}
 
 					// Display notifications topbar element without alerts
 					renderTemplate();
-					callback(null, true);
+					paralellCallback(null, true);
+				},
+				uiRestrictions: function(paralellCallback) {
+					monster.pub('myaccount.UIRestrictionsCompatibility', {
+						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+						callback: function(uiRestrictions) {
+							paralellCallback(null, uiRestrictions);
+						}
+					});
 				}
 			}, function(err, results) {
 				if (err) {
@@ -148,7 +178,7 @@ define(function(require) {
 				}
 
 				// If there is no error, re-render topbar element with alerts
-				renderTemplate(results.alerts);
+				renderTemplate(_.pick(results, ['alerts', 'uiRestrictions']));
 			});
 		},
 
@@ -214,12 +244,12 @@ define(function(require) {
 
 			$alertItems.filter('.actionable').on('click', function() {
 				var $alertItem = $(this),
-					alertCategory = $alertItem.data('alert_category'),
-					action = _.get(self.appFlags.alerts.categoryActions, alertCategory);
+					alertAction = $alertItem.data('alert_action'),
+					actionTopic = _.get(self.appFlags.alerts.actionTopics, alertAction);
 
-				console.log('Execute action', action);
-
-				monster.pub(action);
+				if (actionTopic) {
+					monster.pub(actionTopic);
+				}
 
 				self.alertsDismissAlert({
 					alertItem: $alertItem,
@@ -240,12 +270,14 @@ define(function(require) {
 		/**
 		 * Formats the alert data received from the API, into UI category groups
 		 * @param    {Object}   args
-		 * @param    {Object[]} args.data  Array of alerts
-		 * @returns  {Object}              Grouped alerts by UI categories
+		 * @param    {Object[]} args.data            Array of alerts
+		 * @param    {Object}   args.uiRestrictions  UI restrictions
+		 * @returns  {Object}   Grouped alerts by UI categories
 		 */
 		alertsFormatData: function(args) {
 			var self = this,
 				data = args.data,
+				uiRestrictions = args.uiRestrictions,
 				readAlertIds = self.alertsGetStore('read', []),
 				dismissedAlertIds = self.alertsGetStore('dismissed', []),
 				sortOrder = [
@@ -318,7 +350,10 @@ define(function(require) {
 					}
 
 					alert.iconPath = monster.util.getAppIconPath({ name: iconName });
-					alert.isActionable = _.has(self.appFlags.alerts.categoryActions, category);
+					alert.action = self.alertsGetCategoryAction({
+						category: category,
+						uiRestrictions: uiRestrictions
+					});
 
 					return alertType;
 				}).map(function(alerts, type) {
@@ -332,6 +367,51 @@ define(function(require) {
 				}).sortBy(function(alertGroup) {
 					return _.includes(sortOrder, alertGroup.type) ? _.indexOf(sortOrder, alertGroup.type) : _.size(sortOrder);
 				}).value();
+		},
+
+		/**
+		 * Get the action name for a specific alert category
+		 * @param    {Object} args
+		 * @param    {String} args.category        Alert category
+		 * @param    {Object} args.uiRestrictions  UI restrictions
+		 * @returns  {String} The found action name, or null otherwise
+		 */
+		alertsGetCategoryAction: function(args) {
+			var self = this,
+				category = args.category,
+				uiRestrictions = args.uiRestrictions,
+				categoryAction = _.find(self.appFlags.alerts.categoryActions, function(categoryActionItem) {
+					return _.includes(categoryActionItem.categories, category);
+				});
+
+			if (categoryAction
+				&& self.alertsCheckUIRestrictions({
+					uiRestrictions: uiRestrictions,
+					expectedRestrictions: categoryAction.restrictions
+				})) {
+				return categoryAction.action;
+			}
+
+			return null;
+		},
+
+		/**
+		 * Checks UI restrictions, and returns `true` if they are valid, or `false` otherwise
+		 * @param    {Object}  args
+		 * @param    {Object}  args.uiRestrictions
+		 * @param    {Object}  args.expectedRestrictions
+		 * @returns  {Boolean} `True` or `false`, whether the expected restrictions are valid or not
+		 */
+		alertsCheckUIRestrictions: function(args) {
+			var self = this;
+
+			return _.isEqualWith(
+				args.uiRestrictions,
+				args.expectedRestrictions,
+				function(objectValue, otherValue) {
+					return _.isUndefined(otherValue)
+						|| (!_.isUndefined(objectValue) && objectValue === otherValue);
+				});
 		},
 
 		/**
