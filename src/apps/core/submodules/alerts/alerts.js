@@ -207,32 +207,26 @@ define(function(require) {
 			$alertItems.find('.button-clear').on('click', function(e) {
 				e.preventDefault();
 
-				var $alertItem = $(this).closest('.alert-item'),
-					alertId = $alertItem.data('alert_id'),
-					dismissedAlertIds = self.alertsGetStore('dismissed', []),
-					itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
-					$alertGroup = $alertItem.parent(),
-					$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
-
-				if (!_.includes(dismissedAlertIds, alertId)) {
-					dismissedAlertIds.push(alertId);
-					self.alertsSetStore('dismissed', dismissedAlertIds);
-				}
-
-				$elementToRemove.slideUp(200, function() {
-					$elementToRemove.remove();
+				self.alertsDismissAlert({
+					alertItem: $(this).closest('.alert-item')
 				});
-
-				if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
-					$alertGroup.siblings('.alert-group-empty').slideDown(200);
-				}
 			});
 
-			$alertItems.find('.actionable').on('click', function() {
-				var alertCategory = $(this).data('alert_category'),
+			$alertItems.filter('.actionable').on('click', function() {
+				var $alertItem = $(this),
+					alertCategory = $alertItem.data('alert_category'),
 					action = _.get(self.appFlags.alerts.categoryActions, alertCategory);
 
+				console.log('Execute action', action);
+
 				monster.pub(action);
+
+				self.alertsDismissAlert({
+					alertItem: $alertItem,
+					callback: function() {
+						self.alertsHideDropdown();
+					}
+				});
 			});
 
 			$(window).on('resize',
@@ -324,7 +318,7 @@ define(function(require) {
 					}
 
 					alert.iconPath = monster.util.getAppIconPath({ name: iconName });
-					alert.isActionable = _.has(self.appFlags.alerts.categoryActions, alert.category);
+					alert.isActionable = _.has(self.appFlags.alerts.categoryActions, category);
 
 					return alertType;
 				}).map(function(alerts, type) {
@@ -349,8 +343,8 @@ define(function(require) {
 			var self = this,
 				$dropdownBody = args.dropdownBody,
 				maxHeight = $(window).height() - 136;	// To expand dropdown up until it reaches
-														// 24px (1.5rem) from viewport bottom
-														// (112px top + 24px bottom)
+				// 24px (1.5rem) from viewport bottom
+				// (112px top + 24px bottom)
 
 			if (maxHeight < 200) {
 				maxHeight = 200;
@@ -359,6 +353,37 @@ define(function(require) {
 			$dropdownBody.css({
 				maxHeight: maxHeight + 'px'
 			});
+		},
+
+		/**
+		 * Dismiss an alert item from the dropdown
+		 * @param  {Object}   args
+		 * @param  {JQuery}   args.alertItem  Alert item element
+		 * @param  {Function} args.callback   Callback function
+		 */
+		alertsDismissAlert: function(args) {
+			var self = this,
+				$alertItem = args.alertItem,
+				alertId = $alertItem.data('alert_id'),
+				dismissedAlertIds = self.alertsGetStore('dismissed', []),
+				itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
+				$alertGroup = $alertItem.parent(),
+				$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
+
+			if (!_.includes(dismissedAlertIds, alertId)) {
+				dismissedAlertIds.push(alertId);
+				self.alertsSetStore('dismissed', dismissedAlertIds);
+			}
+
+			$elementToRemove.slideUp(200, function() {
+				$elementToRemove.remove();
+
+				_.has(args, 'callback') && args.callback();
+			});
+
+			if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
+				$alertGroup.siblings('.alert-group-empty').slideDown(200);
+			}
 		},
 
 		/**
