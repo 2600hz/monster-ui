@@ -11,6 +11,12 @@ define(function(require) {
 			'common.mediaSelect.render': 'mediaSelectRender'
 		},
 
+		appFlags: {
+			mediaSelect: {
+				allowedFiles: ['audio/mp3', 'video/mp4']
+			}
+		},
+
 		mediaSelectRender: function(args) {
 			var self = this,
 				container = args.container,
@@ -246,7 +252,7 @@ define(function(require) {
 					monster.pub('common.dragableUploads.renderUploadArea', {
 						container: popupTemplate,
 						popup: popup,
-						allowedFiles: ['video/mp4', 'audio/mp3'],
+						allowedFiles: self.appFlags.mediaSelect.allowedFiles,
 						callback: function(error, medias) {
 							if (medias) {
 								var mediaSelect = template.find('.media-dropdown');
