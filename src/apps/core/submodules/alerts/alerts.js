@@ -51,7 +51,7 @@ define(function(require) {
 					}
 				],
 				actionTopics: {
-					ediCreditCard: 'myaccount.showCreditCardTab',
+					editCreditCard: 'myaccount.showCreditCardTab',
 					addCredit: 'myaccount.showAddCreditDialog'
 				},
 				template: null
