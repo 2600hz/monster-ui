@@ -595,25 +595,20 @@ define(function(require) {
 		showCreditCardTab: function() {
 			var self = this;
 
-			self.renderDropdown(true, function() {
-				var module = 'billing';
+			self.showSubmodule({
+				module: 'billing',
+				callback: function() {
+					var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
 
-				self.activateSubmodule({
-					title: self.i18n.active()[module].title,
-					module: module,
-					callback: function() {
-						var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
+					self._openAccordionGroup({
+						link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
+					});
 
-						self._openAccordionGroup({
-							link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
-						});
-
-						monster.ui.toast({
-							type: 'error',
-							message: self.i18n.active().billing.missingCard
-						});
-					}
-				});
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().billing.missingCard
+					});
+				}
 			});
 		},
 
@@ -1030,16 +1025,46 @@ define(function(require) {
 		showAddCreditDialog: function() {
 			var self = this;
 
-			self.renderDropdown(true, function() {
-				var module = 'balance';
+			self.showSubmodule({
+				module: 'balance',
+				callback: function() {
+					monster.pub('myaccount.balance.addCreditDialog');
+				}
+			});
+		},
 
-				self.activateSubmodule({
-					title: self.i18n.active()[module].title,
-					module: module,
-					callback: function() {
-						monster.pub('myaccount.balance.addCreditDialog');
+		/**
+		 * Displays the main view (if not displayed already), and activates the specified submodule
+		 * @param  {Object}   args
+		 * @param  {String}   args.module    Submodule name
+		 * @param  {Function} args.callback  Function called after the submodule has been activated
+		 */
+		showSubmodule: function(args) {
+			var self = this,
+				moduleName = args.module,
+				callback = args.callback;
+
+			monster.series([
+				function(seriesCallback) {
+					if ($(self.mainContainer).hasClass('myaccount-open')) {
+						seriesCallback(null);
+					} else {
+						self.renderDropdown(true, function() {
+							seriesCallback(null);
+						});
 					}
-				});
+				},
+				function(seriesCallback) {
+					self.activateSubmodule({
+						title: self.i18n.active()[moduleName].title,
+						module: moduleName,
+						callback: function() {
+							seriesCallback(null);
+						}
+					});
+				}
+			], function(err) {
+				!err && callback && callback();
 			});
 		}
 	};
