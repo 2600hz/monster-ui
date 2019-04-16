@@ -66,7 +66,7 @@
 					display: flex;
 
 					&.actionable:hover {
-						background: linear-gradient(to top, $woodsmoke, $midgray2);
+						background-color: $tuna2;
 						cursor: pointer;
 					}
 
@@ -117,6 +117,13 @@
 							border-radius: 2px;
 							padding: 8px 12px;
 							font-size: 12px;
+
+							&:hover, &:focus {
+								background: $manatee;
+								color: $woodsmoke;
+								transform: translateY(-1px);
+								box-shadow: 0 2px 8px rgba(32,32,32,0.24);
+							}
 						}
 					}
 				}

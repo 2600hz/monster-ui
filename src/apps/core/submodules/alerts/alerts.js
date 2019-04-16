@@ -234,6 +234,7 @@ define(function(require) {
 
 			$alertItems.find('.button-clear').on('click', function(e) {
 				e.preventDefault();
+				e.stopPropagation();
 
 				self.alertsDismissAlert({
 					alertItem: $(this).closest('.alert-item')
