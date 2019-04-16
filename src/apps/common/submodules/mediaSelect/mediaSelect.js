@@ -17,6 +17,16 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 * @param {String} [args.skin]
+		 * @param {Function} args.callback
+		 * @param {String} [args.label]
+		 * @param {Array} args.options
+		 * @param {Array} [args.allowedFiles]
+		 * @param {Boolean} [args.dragableUpload]
+		 */
 		mediaSelectRender: function(args) {
 			var self = this,
 				container = args.container,
@@ -102,7 +112,10 @@ define(function(require) {
 					data: formattedData,
 					submodule: 'mediaSelect'
 				}));
-				self.mediaSelectBindDefaultTemplate(template, args);
+				self.mediaSelectBindDefaultTemplate(_.merge({}, args, {
+					template: template,
+					skin: skin
+				}));
 			} else if (skin === 'tabs') {
 				template = $(self.getTemplate({
 					name: 'tabs-layout',
@@ -215,11 +228,11 @@ define(function(require) {
 			});
 		},
 
-		mediaSelectBindDefaultTemplate: function(template, args) {
+		mediaSelectBindDefaultTemplate: function(args) {
 			var self = this,
+				template = args.template,
 				popupTemplate = $(self.getTemplate({
 					name: 'upload-dialog',
-					data: {},
 					submodule: 'mediaSelect'
 				})),
 				popup,
@@ -249,10 +262,10 @@ define(function(require) {
 						position: ['center', 20]
 					});
 
-					monster.pub('common.dragableUploads.renderUploadArea', {
+					monster.pub('common.dragableUploads.render', {
 						container: popupTemplate,
 						popup: popup,
-						allowedFiles: self.appFlags.mediaSelect.allowedFiles,
+						allowedFiles: args.allowedFiles || self.appFlags.mediaSelect.allowedFiles,
 						callback: function(error, medias) {
 							if (medias) {
 								var mediaSelect = template.find('.media-dropdown');
