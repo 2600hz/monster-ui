@@ -396,22 +396,29 @@ define(function(require) {
 		/**
 		 * Checks UI restrictions, and returns `true` if they are valid, or `false` otherwise
 		 * @param    {Object}  args
-		 * @param    {Object}  args.uiRestrictions
-		 * @param    {Object}  args.expectedRestrictions
+		 * @param    {Object}  args.expectedRestrictions  Expected restrictions
+		 * @param    {Object}  args.uiRestrictions        UI restrictions
 		 * @returns  {Boolean} `True` or `false`, whether the expected restrictions are valid or not
 		 */
 		alertsCheckUIRestrictions: function(args) {
-			var self = this;
-
-			return _.isEqualWith(
-				args.uiRestrictions,
-				args.expectedRestrictions,
-				function(objectValue, otherValue) {
-					if (!_.isPlainObject(objectValue) && !_.isPlainObject(otherValue)) {
-						return _.isUndefined(otherValue)
-							|| (!_.isUndefined(objectValue) && objectValue === otherValue);
+			var self = this,
+				expectedRestrictions = args.expectedRestrictions,
+				uiRestrictions = args.uiRestrictions,
+				deepRestrictionCheck = function(obj1, obj2) {
+					if (_.isObject(obj1) && _.isObject(obj2)) {
+						return _.reduce(obj1, function(result, value1, key1) {
+							if (!result) {
+								return false;
+							}
+							var value2 = _.get(obj2, key1);
+							return deepRestrictionCheck(value1, value2);
+						}, true);
+					} else {
+						return obj1 === obj2;
 					}
-				});
+				};
+
+			return _.isUndefined(expectedRestrictions) || deepRestrictionCheck(expectedRestrictions, uiRestrictions);
 		},
 
 		/**
