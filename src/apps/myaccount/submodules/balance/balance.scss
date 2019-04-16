@@ -163,6 +163,18 @@
 	font-size: 14px;
 }
 
+.add-credits-popup-wrapper {
+	#subscriptions {
+		.control-label {
+			text-align: left;
+		}
+
+		.controls .monster-switch {
+			margin: 5px 0 0 0;
+		}
+	}
+}
+
 .add-credits-popup-wrapper .add-credits-actions {
 	margin-top: 20px;
 	padding-top: 20px;

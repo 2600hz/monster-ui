@@ -1,3 +1,4 @@
+import { join } from 'upath';
 import gulp from 'gulp';
 import fs from 'fs';
 import { app, tmp } from '../paths.js';
@@ -18,7 +19,7 @@ const writeBulkAppsConfig = () => {
 	let content;
 
 	listAllApps().forEach(item => {
-		fileName = tmp + '/apps/' + item + '/app-build-config.json';
+		fileName = join(tmp, 'apps', item, 'app-build-config.json');
 		content = {
 			version: getProApps().includes(item)
 				? 'pro'
@@ -33,7 +34,7 @@ const writeBulkAppsConfig = () => {
  * doesn't reload the assets
  */
 export const writeConfigProd = () => {
-	const mainFileName = tmp + '/build-config.json';
+	const mainFileName = join(tmp, 'build-config.json');
 	const content = {
 		type: 'production',
 		preloadApps: getAppsToInclude()
@@ -44,7 +45,7 @@ export const writeConfigProd = () => {
 };
 
 export const writeConfigDev = () => {
-	const fileName = tmp + '/build-config.json';
+	const fileName = join(tmp, 'build-config.json');
 	const content = {
 		version: env.pro
 			? 'pro'
@@ -58,7 +59,7 @@ export const writeConfigDev = () => {
  * Add flags if needed, like pro/lite version
  */
 export const writeConfigApp = () => {
-	const fileName = app + 'app-build-config.json';
+	const fileName = join(app, 'app-build-config.json');
 	const content = {
 		version: env.pro
 			? 'pro'

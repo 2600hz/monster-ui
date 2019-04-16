@@ -122,8 +122,8 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `braintree` | Whether or not bookkeeping transactions can be performed through Braintree. | `Boolean` | `true` | `false`
-`kazoo` | Whether or not bookkeeping transactions can be performed through Kazoo. | `Boolean` | `true` | `false`
-`http` | Whether or not bookkeeping transactions can be performed through HTTP. | `Boolean` | `true` | `false`
+`iou` | Whether or not bookkeeping transactions can be performed through Kazoo. | `Boolean` | `true` | `false`
+`payphone` | Whether or not bookkeeping transactions can be performed through HTTP. | `Boolean` | `true` | `false`
 
 #### `carrier`
 

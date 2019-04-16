@@ -24,6 +24,13 @@
 					{{i18n.balance.addCreditPopup.menus.autoRecharge}}
 				</a>
 			</li>
+		{{#if showSubscriptions}}
+			<li class="navbar-menu-item">
+				<a href="#subscriptions" class="navbar-menu-item-link">
+					{{i18n.balance.addCreditPopup.menus.subscriptions}}
+				</a>
+			</li>
+		{{/if}}
 		</ul>
 	</nav>
 	<div class="add-credits-content-wrapper active" id="manage_credit">
@@ -112,4 +119,56 @@
 			</form>
 		</div>
 	</div>
+{{#if showSubscriptions}}
+	<div class="add-credits-content-wrapper" id="subscriptions">
+		<div class="add-credits-content">
+			<div class="text">
+				{{i18n.balance.addCreditPopup.subscriptions.info}}
+			</div>
+			<div class="form-horizontal">
+				<div class="control-group">
+					<label for="automatic_remediation" class="control-label">
+						{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.label}}
+					</label>
+					<div class="controls">
+					{{#monsterSwitch}}
+						<input type="checkbox" id="automatic_remediation" name="topup.monthly.preemptive">
+					{{/monsterSwitch}}
+					</div>
+				</div>
+				<div class="automatic-remediation-text"{{#if preemptive}} style="display:none"{{/if}}>
+					{{i18n.balance.addCreditPopup.subscriptions.automaticRemediation.text}}
+				</div>
+				<div class="direct-to-pay-wrapper"{{#unless preemptive}} style="display: none"{{/unless}}>
+					<div class="control-group">
+						<label for="direct_to_pay" class="control-label">
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.label}}
+						</label>
+						<div class="controls">
+							{{#monsterSwitch}}
+								<input type="checkbox" id="direct_to_pay" name="topup.monthly.exact">
+							{{/monsterSwitch}}
+						</div>
+					</div>
+					<div class="direct-to-pay-text">
+						<span data-toggle="on"{{#unless exact}} style="display:none"{{/unless}}>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.text1}}
+							<strong>
+								{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.bold}}
+							</strong>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.on.text2}}
+						</span>
+						<span data-toggle="off"{{#if exact}} style="display: none"{{/if}}>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.text1}}
+							<strong>
+								{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.bold}}
+							</strong>
+							{{i18n.balance.addCreditPopup.subscriptions.directToPay.off.text2}}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{{/if}}
 </div>
