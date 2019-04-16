@@ -58,6 +58,26 @@
 	color: #444;
 }
 
+.control-group.warning {
+	.chosen-container-single .chosen-single {
+		border-color: #c09853;
+
+		span {
+			color: #c09853;
+		}
+	}
+
+	.chosen-container.chosen-with-drop {
+		.chosen-single, .chosen-drop {
+			border-color: #a47e3c;
+		}
+
+		.chosen-single {
+			box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset, #dbc59e 0px 0px 6px;
+		}
+	}
+}
+
 /********* FIREFOX DROPDOWN STYLE *******/
 @-moz-document url-prefix() {
 	.chosen-container .chosen-single div b {
