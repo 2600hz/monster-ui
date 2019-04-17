@@ -367,13 +367,6 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skills' }
 			},
-			qubicleSkillRules: {
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skill_rules' },
-				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skill_rules/{ruleId}' },
-				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skill_rules' }
-			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/recordings/{resourceId}' },
