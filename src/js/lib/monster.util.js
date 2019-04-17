@@ -1333,7 +1333,7 @@ define(function(require) {
 	function unformatPhoneNumber(input) {
 		return _.get(
 			getFormatPhoneNumber(input),
-			'internationalFormat',
+			'e164Number',
 			_.replace(input, /[^0-9+]/g, '')
 		);
 	}
