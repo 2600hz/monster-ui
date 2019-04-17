@@ -602,3 +602,8 @@ form.form-horizontal .input-append {
 	}
 }
 
+.control-group.warning {
+	input[type="text"]:not(.search-query) {
+		border-color: #c09853;
+	}
+}
