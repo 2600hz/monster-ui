@@ -24,7 +24,11 @@ define(function(require) {
 					maxSize: 8
 				},
 				knownErrors: {
+					billUpload: {
+						carrier_error_7203: {}
+					},
 					addNumbers: {
+						mixed_number_type: {},
 						number_is_being_ported_for_a_different_account: {},
 						number_is_on_a_port_request_already: {},
 						number_exists_on_the_system_already: {},
@@ -1322,6 +1326,21 @@ define(function(require) {
 									},
 									success: function() {
 										globalCallback();
+									},
+									error: function(parsedError, groupedErrors) {
+										var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
+
+										if (processedErrors.failedWizardStep === 'billUpload') {
+											self.portWizardRenderBillUpload(args);
+										} else if (processedErrors.failedWizardStep === 'addNumbers') {
+											self.portWizardRenderAddNumbers(args);
+										} else if (processedErrors.failedWizardStep === 'portNotify') {
+											self.portWizardRenderPortNotify(args);
+										} else {
+											self.portWizardRenderPortInfo(args);
+										}
+
+										self.portWizardShowErrors(processedErrors);
 									}
 								});
 							}
@@ -1743,6 +1762,14 @@ define(function(require) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
+					var groupedErrors = self.portWizardGroupSavePortErrors(parsedError, error);
+					if (groupedErrors) {
+						_.has(args, 'error') && args.error(parsedError, groupedErrors);
+						return;
+					}
+					globalHandler(error, {
+						generateError: true
+					});
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
@@ -1834,69 +1861,78 @@ define(function(require) {
 				groupedErrors = {},
 				errorsI18n = self.i18n.active().portWizard.errors;
 
-			_.each(parsedError.data, function(fieldErrors, fieldKey) {
-				var isPhoneNumber = _.startsWith(fieldKey, '+');
+			if (_.get(parsedError, 'error_format', '') === 'phonebook') {
+				_.forEach(parsedError.data, function(fieldError, fieldKey) {
+					groupedErrors[fieldKey] = _.pick(fieldError.type, [
+						'cause',
+						'message'
+					]);
+				});
+			} else {
+				_.each(parsedError.data, function(fieldErrors, fieldKey) {
+					var isPhoneNumber = _.startsWith(fieldKey, '+');
 
-				if (typeof fieldErrors === 'string') {
-					return;
-				}
-
-				_.each(fieldErrors, function(errorData, errorDataKey) {
-					var errorKey, errorMessage, errorCause;
-
-					try {
-						// Separate error data depending on the case
-						if (isPhoneNumber) {
-							errorCause = errorData.cause || fieldKey;
-
-							if (errorData.hasOwnProperty('message')) {
-								errorKey = self.portWizardGetErrorKey(errorData.message);
-							} else {
-								errorKey = errorDataKey;
-							}
-
-							errorMessage = errorsI18n[errorKey];
-
-							if (!errorMessage) {
-								if (errorData.hasOwnProperty('message')) {
-									errorMessage
-										= _.capitalize(errorData.message) + ': {{variable}}';
-								} else {
-									errorMessage = errorsI18n.unknown_error;
-								}
-							}
-						} else {
-							errorKey = errorDataKey;
-							errorCause = fieldKey;
-
-							if (errorsI18n.hasOwnProperty(errorDataKey)) {
-								errorMessage = errorsI18n[errorDataKey];
-							} else if (typeof errorData === 'string' || typeof errorData === 'number') {
-								errorMessage = _.capitalize(errorData + '') + ': {{variable}}';
-							} else if (errorData.hasOwnProperty('message')) {
-								errorMessage = _.capitalize(errorData.message) + ': {{variable}}';
-							}
-						}
-					} catch (err) {
-						// In case of exception, skip error entry
-						return false;
-					}
-
-					// If error group already exists, add cause
-					if (groupedErrors.hasOwnProperty(errorKey)) {
-						if (errorCause) {
-							groupedErrors[errorKey].causes.push(errorCause);
-						}
+					if (typeof fieldErrors === 'string') {
 						return;
 					}
 
-					// Else add new error group
-					groupedErrors[errorKey] = {
-						message: errorMessage,
-						causes: errorCause ? [ errorCause ] : []
-					};
+					_.each(fieldErrors, function(errorData, errorDataKey) {
+						var errorKey, errorMessage, errorCause;
+
+						try {
+							// Separate error data depending on the case
+							if (isPhoneNumber) {
+								errorCause = errorData.cause || fieldKey;
+
+								if (errorData.hasOwnProperty('message')) {
+									errorKey = self.portWizardGetErrorKey(errorData.message);
+								} else {
+									errorKey = errorDataKey;
+								}
+
+								errorMessage = errorsI18n[errorKey];
+
+								if (!errorMessage) {
+									if (errorData.hasOwnProperty('message')) {
+										errorMessage
+											= _.capitalize(errorData.message) + ': {{variable}}';
+									} else {
+										errorMessage = errorsI18n.unknown_error;
+									}
+								}
+							} else {
+								errorKey = errorDataKey;
+								errorCause = fieldKey;
+
+								if (errorsI18n.hasOwnProperty(errorDataKey)) {
+									errorMessage = errorsI18n[errorDataKey];
+								} else if (typeof errorData === 'string' || typeof errorData === 'number') {
+									errorMessage = _.capitalize(errorData + '') + ': {{variable}}';
+								} else if (errorData.hasOwnProperty('message')) {
+									errorMessage = _.capitalize(errorData.message) + ': {{variable}}';
+								}
+							}
+						} catch (err) {
+							// In case of exception, skip error entry
+							return false;
+						}
+
+						// If error group already exists, add cause
+						if (groupedErrors.hasOwnProperty(errorKey)) {
+							if (errorCause) {
+								groupedErrors[errorKey].causes.push(errorCause);
+							}
+							return;
+						}
+
+						// Else add new error group
+						groupedErrors[errorKey] = {
+							message: errorMessage,
+							causes: errorCause ? [ errorCause ] : []
+						};
+					});
 				});
-			});
+			}
 
 			return _.isEmpty(groupedErrors) ? null : groupedErrors;
 		},
@@ -1934,7 +1970,9 @@ define(function(require) {
 						errors: viewErrors
 					},
 					submodule: 'portWizard'
-				}));
+				}), undefined, {
+					isPersistent: true
+				});
 
 				return;
 			}
