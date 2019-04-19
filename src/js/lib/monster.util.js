@@ -871,7 +871,7 @@ define(function(require) {
 					// Replace all occurences of old value by the new value
 					element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
 
-					logs.push({oldValue: oldValue, newValue: newValue});
+					logs.push({ oldValue: oldValue, newValue: newValue });
 				},
 				replaceBoth = function(element) {
 					replaceExtensions(element);
@@ -910,10 +910,14 @@ define(function(require) {
 	 * Phone number formatting according to user preferences.
 	 * @param  {Number|String} phoneNumber Input to format as phone number
 	 * @return {String}                    Input formatted as phone number
+	 *
+	 * Warning: this method is used to format entities other than phone
+	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
 	 */
 	function formatPhoneNumber(input) {
-		return !monster.config.whitelabel.preventDIDFormatting && input
-			? getFormatPhoneNumber(input).userFormat
+		var phoneNumber = getFormatPhoneNumber(input);
+		return !monster.config.whitelabel.preventDIDFormatting && phoneNumber.isValid
+			? _.get(phoneNumber, 'userFormat')
 			: _.toString(input);
 	}
 
@@ -1013,6 +1017,7 @@ define(function(require) {
 		var user = _.get(monster, 'apps.auth.currentUser', {});
 		var account = _.get(monster, 'apps.auth.originalAccount', {});
 		var formattedData = {
+			isValid: false,
 			originalNumber: input,
 			userFormat: input // Setting it as a default, in case the number is not valid
 		};
@@ -1040,6 +1045,7 @@ define(function(require) {
 			&& !_.isEmpty(phoneNumber.number)
 		) {
 			_.merge(formattedData, {
+				isValid: phoneNumber.isValid(),
 				e164Number: phoneNumber.format('E.164'),
 				nationalFormat: phoneNumber.format('NATIONAL'),
 				internationalFormat: phoneNumber.format('INTERNATIONAL'),
@@ -1329,13 +1335,15 @@ define(function(require) {
 	 * Normalize phone number by using E.164 format
 	 * @param  {String} input Input to normalize
 	 * @return {String}       Input normalized as E.164 phone number
+	 *
+	 * Warning: this method is used to unformat entities other than phone
+	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
 	 */
 	function unformatPhoneNumber(input) {
-		return _.get(
-			getFormatPhoneNumber(input),
-			'e164Number',
-			_.replace(input, /[^0-9+]/g, '')
-		);
+		var phoneNumber = getFormatPhoneNumber(input);
+		return phoneNumber.isValid
+			? _.get(phoneNumber, 'e164Number')
+			: _.replace(input, /[^0-9+]/g, '');
 	}
 
 	/**
