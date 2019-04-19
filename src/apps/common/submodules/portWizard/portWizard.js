@@ -273,6 +273,7 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
+					monster.ui.mask(template.find('#btn'), 'phoneNumber');
 					monster.ui.renderPDF(attachments.bill.file, template.find('.pdf-container'));
 
 					return template;
@@ -280,7 +281,13 @@ define(function(require) {
 				formatDataToTemplate = function formatDataToTemplate(request) {
 					return {
 						carriers: _.get(monster, 'config.whitelabel.port.carriers'),
-						request: request,
+						request: _.merge({}, request, {
+							bill: {
+								btn: _.has(request, 'bill.btn')
+									? _.get(monster.util.getFormatPhoneNumber(request.bill.btn), 'e164Number', '')
+									: ''
+							}
+						}),
 						cardinalDirections: self.appFlags.portWizard.cardinalDirections,
 						selectedPreDir: _.get(request, 'bill.street_pre_dir', ''),
 						selectedPostDir: _.get(request, 'bill.street_post_dir', '')
@@ -768,9 +775,7 @@ define(function(require) {
 
 						var $form = template.find('#form_account_verification'),
 							formData = monster.ui.getFormData('form_account_verification'),
-							btn = formData.bill.btn
-								? monster.util.unformatPhoneNumber(monster.util.formatPhoneNumber(formData.bill.btn), 'keepPlus')
-								: '';
+							btn = _.get(monster.util.getFormatPhoneNumber(formData.bill.btn), 'e164Number', '');
 
 						monster.ui.validate($form, {
 							rules: formValidationRules
