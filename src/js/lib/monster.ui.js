@@ -2933,7 +2933,7 @@ define(function(require) {
 						formattedNumber: formattedNumber.userFormat
 					},
 					options: {
-						hideFlag: options.hasOwnProperty('hideFlag') ? options.hideFlag : false
+						hideFlag: !formattedNumber.isValid || _.get(options, 'hideFlag', false)
 					}
 				},
 				template = monster.template(monster.apps.core, 'monster-number-wrapper', formattedData);
