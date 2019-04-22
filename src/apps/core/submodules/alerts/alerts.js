@@ -252,6 +252,7 @@ define(function(require) {
 
 				self.alertsDismissAlert({
 					alertItem: $alertItem,
+					save: false,
 					callback: function() {
 						self.alertsHideDropdown();
 					}
@@ -381,17 +382,19 @@ define(function(require) {
 				uiRestrictions = args.uiRestrictions,
 				categoryAction = _.find(self.appFlags.alerts.categoryActions, function(categoryActionItem) {
 					return _.includes(categoryActionItem.categories, category);
-				});
+				}),
+				uiRestrictionsCheckResult;
 
-			if (categoryAction
-				&& self.alertsCheckUIRestrictions({
-					uiRestrictions: uiRestrictions,
-					expectedRestrictions: categoryAction.restrictions
-				})) {
-				return categoryAction.action;
+			if (_.isUndefined(categoryAction)) {
+				return null;
 			}
 
-			return null;
+			uiRestrictionsCheckResult = self.alertsCheckUIRestrictions({
+				uiRestrictions: uiRestrictions,
+				expectedRestrictions: categoryAction.restrictions
+			});
+
+			return uiRestrictionsCheckResult ? categoryAction.action : null;
 		},
 
 		/**
@@ -406,17 +409,17 @@ define(function(require) {
 				expectedRestrictions = args.expectedRestrictions,
 				uiRestrictions = args.uiRestrictions,
 				deepRestrictionCheck = function(obj1, obj2) {
-					if (_.isObject(obj1) && _.isObject(obj2)) {
-						return _.reduce(obj1, function(result, value1, key1) {
-							if (!result) {
-								return false;
-							}
-							var value2 = _.get(obj2, key1);
-							return deepRestrictionCheck(value1, value2);
-						}, true);
-					} else {
+					if (!_.isObject(obj1) || !_.isObject(obj2)) {
 						return obj1 === obj2;
 					}
+
+					return _.reduce(obj1, function(result, value1, key1) {
+						if (!result) {
+							return false;
+						}
+						var value2 = _.get(obj2, key1);
+						return deepRestrictionCheck(value1, value2);
+					}, true);
 				};
 
 			return _.isUndefined(expectedRestrictions) || deepRestrictionCheck(expectedRestrictions, uiRestrictions);
@@ -430,9 +433,9 @@ define(function(require) {
 		alertsSetDropdownBodyMaxHeight: function(args) {
 			var self = this,
 				$dropdownBody = args.dropdownBody,
-				maxHeight = $(window).height() - 136;	// To expand dropdown up until it reaches
-				// 24px (1.5rem) from viewport bottom
+				// Expand dropdown up until it reaches 24px (1.5rem) from viewport bottom
 				// (112px top + 24px bottom)
+				maxHeight = $(window).height() - 136;
 
 			if (maxHeight < 200) {
 				maxHeight = 200;
@@ -446,19 +449,22 @@ define(function(require) {
 		/**
 		 * Dismiss an alert item from the dropdown
 		 * @param  {Object}   args
-		 * @param  {JQuery}   args.alertItem  Alert item element
-		 * @param  {Function} args.callback   Callback function
+		 * @param  {JQuery}   args.alertItem    Alert item element
+		 * @param  {Boolean}  [args.save=true]  Save the alert as dismissed
+		 * @param  {Function} [args.callback]   Callback function
 		 */
 		alertsDismissAlert: function(args) {
 			var self = this,
 				$alertItem = args.alertItem,
+				save = _.get(args, 'save', true),
 				alertId = $alertItem.data('alert_id'),
-				dismissedAlertIds = self.alertsGetStore('dismissed', []),
 				itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
 				$alertGroup = $alertItem.parent(),
-				$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
+				$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup,
+				dismissedAlertIds;
 
-			if (!_.includes(dismissedAlertIds, alertId)) {
+			if (save && !_.includes(dismissedAlertIds, alertId)) {
+				dismissedAlertIds = self.alertsGetStore('dismissed', []);
 				dismissedAlertIds.push(alertId);
 				self.alertsSetStore('dismissed', dismissedAlertIds);
 			}

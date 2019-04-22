@@ -1064,7 +1064,10 @@ define(function(require) {
 					});
 				}
 			], function(err) {
-				!err && callback && callback();
+				if (err) {
+					return;
+				}
+				callback && callback();
 			});
 		}
 	};
