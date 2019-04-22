@@ -1,7 +1,26 @@
+import { env, mode } from '../helpers/helpers.js';
+import { join } from 'upath';
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
 import { app, src, tmp } from '../paths.js';
+
+const config = {
+	app: {
+		lint: [
+			join(src, 'apps', env.app || '', 'app.js'),
+			join(src, 'apps', env.app || '', 'submodules', '*', '*.js')
+		]
+	},
+	whole: {
+		lint: [
+			join(src, '**', '*.js'),
+			'!' + join(src, 'js', 'vendor', '**', '*.js'),
+			'!' + join(src, 'js', 'lib', 'kazoo', 'dependencies', '**', '*.js')
+		]
+	}
+};
+const context = config[mode];
 
 const handleUglifyError = error => {
 	console.error(JSON.stringify(error, null, 4));
@@ -13,17 +32,17 @@ const handleUglifyError = error => {
  */
 export const minifyJs = () => gulp
 	.src([
-		tmp + '/js/main.js',
-		tmp + '/js/templates.js'
+		join(tmp, 'js', 'main.js'),
+		join(tmp, 'js', 'templates.js')
 	])
 	.pipe(uglify().on('error', handleUglifyError))
-	.pipe(gulp.dest(tmp + '/js/'));
+	.pipe(gulp.dest(join(tmp, 'js')));
 
 /**
  * Minifies app.js
  */
 export const minifyJsApp = () => gulp
-	.src(app + 'app.js')
+	.src(join(app, 'app.js'))
 	.pipe(uglify().on('error', handleUglifyError))
 	.pipe(gulp.dest(app));
 
@@ -31,10 +50,6 @@ export const minifyJsApp = () => gulp
  * Show linting error
  */
 export const lint = () => gulp
-	.src([
-		src + '/**/*.js',
-		'!'+ src + '/js/vendor/**/*.js',
-		'!'+ src + '/js/lib/kazoo/dependencies/**/*.js'
-	])
+	.src(context.lint)
 	.pipe(eslint())
 	.pipe(eslint.format());

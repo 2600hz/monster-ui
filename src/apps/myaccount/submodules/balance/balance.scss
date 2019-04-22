@@ -165,12 +165,12 @@
 
 .add-credits-popup-wrapper {
 	#subscriptions {
-		label:not(.monster-switch) {
-			margin: 20px 0;
+		.control-label {
+			text-align: left;
 		}
 
-		.monster-panel-text {
-			width: 100%;
+		.controls .monster-switch {
+			margin: 5px 0 0 0;
 		}
 	}
 }

@@ -3,7 +3,11 @@
 	<ul>
 	{{#each errors}}
 		<li>
+		{{#if causes}}
 			{{replaceVar this.message this.causes}}
+		{{else}}
+			{{message}}
+		{{/if}}
 		</li>
 	{{/each}}
 	</ul>

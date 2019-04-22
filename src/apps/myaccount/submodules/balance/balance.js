@@ -273,7 +273,7 @@ define(function(require) {
 			}
 
 			return {
-				showSubscriptions: !_.some(serviceSummary.invoices, {
+				showSubscriptions: _.some(serviceSummary.invoices, {
 					bookkeeper: {
 						type: 'iou'
 					}
@@ -540,8 +540,7 @@ define(function(require) {
 					automaticRemediationSwitch.prop('disabled', 'disabled');
 
 					if ($(this).is(':checked')) {
-						automaticRemediationText.find('[data-toggle="off"]').hide();
-						automaticRemediationText.find('[data-toggle="on"]').fadeIn(250);
+						automaticRemediationText.slideUp(250);
 						directToPayWrapper.slideDown(250);
 
 						self.balanceUpdateSubscriptions({
@@ -556,8 +555,7 @@ define(function(require) {
 							}
 						});
 					} else {
-						automaticRemediationText.find('[data-toggle="on"]').hide();
-						automaticRemediationText.find('[data-toggle="off"]').fadeIn(250);
+						automaticRemediationText.slideDown(250);
 						directToPayWrapper.slideUp(250);
 						directToPaySwitch.prop('checked', false);
 
@@ -622,6 +620,7 @@ define(function(require) {
 						event.preventDefault();
 
 						var $this = $(this),
+							tab = $this.prop('href').match(/[^#]+$/),
 							renderTabContent = function() {
 								if (!tabAnimationInProgress) {
 									tabAnimationInProgress = true;
@@ -647,7 +646,10 @@ define(function(require) {
 								}
 							};
 
-						if (parent.find('.add-credits-content-wrapper.active input[type="checkbox"]').is(':checked')) {
+						if (
+							(tab === 'threshold_alerts' || tab === 'auto_recharge')
+							&& parent.find('.add-credits-content-wrapper.active input[type"checkbox"]').is(':checkbox')
+						) {
 							var formId = parent.find('.add-credits-content-wrapper.active form').prop('id'),
 								hasEmptyValue = false,
 								formData = monster.ui.getFormData(formId);
