@@ -52,7 +52,7 @@ define(function(require) {
 			self.dragableUploadsBindEvents(template, args);
 		},
 
-		dragableUploadsRenderFileList(template) {
+		dragableUploadsRenderFileList: function(template) {
 			var self = this,
 				templateFilesList = $(self.getTemplate({
 					name: 'file-list',
@@ -172,13 +172,13 @@ define(function(require) {
 			}
 		},
 
-		dragableUploadsClearList(template) {
+		dragableUploadsClearList: function(template) {
 			var self = this;
 			self.appFlags.dragableUploads.files = [];
 			self.dragableUploadsRenderFileList(template);
 		},
 
-		dragableUploadsRequestMediaUpload(callback, file) {
+		dragableUploadsRequestMediaUpload: function(callback, file) {
 			var self = this;
 
 			self.callApi({
