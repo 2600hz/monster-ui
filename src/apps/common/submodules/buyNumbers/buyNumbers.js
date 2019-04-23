@@ -39,15 +39,32 @@ define(function(require) {
 			isSelectedNumbersEmpty: true
 		},
 
+		/**
+		 * @param  {Object} [params]
+		 * @param  {String} [params.accountId=self.accountId]
+		 * @param  {'regular'|'tollfree'|'vanity'} [params.searchType='regular']
+		 * @param  {Boolean} [params.singleSelect=false]
+		 * @param  {Object} [params.callback]
+		 * @param  {Function} [params.callback.success]
+		 * @param  {Function} [params.callback.error]
+		 */
 		buyNumbersRender: function(params) {
+			if (monster.config.whitelabel.hideBuyNumbers) {
+				throw new Error('Whitelabeling configuration does not allow for this common control to be loaded');
+			}
 			var self = this,
+				accountId = _.get(params, 'accountId', self.accountId),
+				searchType = _.get(params, 'searchType', 'regular'),
+				singleSelect = _.isBoolean(params.singleSelect)
+					? params.singleSelect
+					: false,
 				params = params || {},
 				args = {
-					searchType: params.searchType || 'regular',
-					singleSelect: params.singleSelect || false
+					searchType: searchType,
+					singleSelect: singleSelect
 				};
 
-			self.assignedAccountId = params.accountId || self.accountId;
+			self.assignedAccountId = accountId;
 
 			self.buyNumbersGetData(function(data) {
 				args.availableCountries = data.countries;

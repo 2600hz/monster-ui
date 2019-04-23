@@ -12,8 +12,22 @@ define(function(require) {
 			'common.numberSelector.render': 'numberSelectorRender'
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {String} [args.inputName='']
+		 * @param  {String} [args.number=undefined]
+		 * @param  {Boolean} [args.noBuy=false]
+		 * @param  {Boolean} [args.noExtension=false]
+		 * @param  {Boolean} [args.noSpare=false]
+		 * @param  {Object} [args.labels]
+		 */
 		numberSelectorRender: function(args) {
 			var self = this,
+				inputName = _.get(args, 'inputName', ''),
+				number = _.get(args, 'number'),
+				noBuy = _.isBoolean(args.noBuy) ? args.noBuy : false,
+				noExtension = _.isBoolean(args.noExtension) ? args.noExtension : false,
+				noSpare = _.isBoolean(args.noSpare) ? args.noSpare : false,
 				container = args.container,
 				labels = $.extend({
 					empty: self.i18n.active().numberSelector.emptyValue,
@@ -27,11 +41,13 @@ define(function(require) {
 					name: 'layout',
 					data: {
 						labels: labels,
-						inputName: args.inputName || '',
-						number: args.number,
-						noSpare: args.noSpare === true ? true : false,
-						noBuy: args.noBuy === true ? true : false,
-						noExtension: args.noExtension === true ? true : false
+						inputName: inputName,
+						number: number,
+						noSpare: noSpare,
+						noBuy: monster.config.whitelabel.hideBuyNumbers
+							? true
+							: noBuy,
+						noExtension: noExtension
 					},
 					submodule: 'numberSelector'
 				}));

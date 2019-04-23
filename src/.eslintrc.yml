@@ -18,6 +18,7 @@ globals:
   FooTable: false
 
 rules:
+  standard/no-callback-literal: off
   no-tabs: off
   indent: [ "error", "tab", { "SwitchCase": 1, "MemberExpression": "off" }]
   semi:
