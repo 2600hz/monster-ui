@@ -160,6 +160,7 @@ define(function(require) {
 			self.portListingSet('portRequest', {});
 			self.portListingSet('portRequestsById', {});
 			self.portListingSet('type', type);
+			self.portListingSet('tab', tab);
 
 			self.portListingRenderTableList({
 				template: template,
@@ -204,6 +205,8 @@ define(function(require) {
 						tab: tab,
 						type: type,
 						isMonsterApp: self.portListingGet('isMonsterApp'),
+						fromDate: args.fromDate,
+						toDate: args.toDate,
 						callback: callback
 					});
 				},
@@ -228,12 +231,13 @@ define(function(require) {
 
 		portListingGenericRows: function(args) {
 			var self = this,
-				tab = args.tab,
 				type = args.type;
 
 			self.portListingHelperListPorts({
-				tab: tab,
-				type: type,
+				tab: args.tab,
+				type: args.type,
+				fromDate: args.fromDate,
+				toDate: args.toDate,
 				success: function(data) {
 					var requests = data.data,
 						hasPorts = !_.isEmpty(requests),
@@ -249,7 +253,6 @@ define(function(require) {
 						}));
 
 					self.portListingSet('hasPorts', hasPorts);
-					self.portListingSet('tab', tab);
 
 					args.callback && args.callback($rows, data);
 				}
@@ -505,6 +508,25 @@ define(function(require) {
 			template.find('#endDate').datepicker('setDate', toDate);
 
 			template
+				.find('.port-filter')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var fromDate = template.find('input.filter-from').datepicker('getDate'),
+							toDate = template.find('input.filter-to').datepicker('getDate'),
+							tab = self.portListingGet('tab'),
+							type = self.portListingGet('type');
+
+						self.portListingRenderTableList({
+							template: self.portListingGet('container'),
+							fromDate: fromDate,
+							toDate: toDate,
+							type: type,
+							tab: tab
+						});
+					});
+
+			template
 				.find('.port-wizard')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -527,30 +549,6 @@ define(function(require) {
 		portListingBindTableEvents: function(args) {
 			var self = this,
 				template = args.template;
-
-			template
-				.find('.port-filter')
-					.on('click', function(event) {
-						event.preventDefault();
-						var fromDate = template.find('input.filter-from').datepicker('getDate'),
-							toDate = template.find('input.filter-to').datepicker('getDate'),
-							tab = self.portListingGet('tab'),
-							type = self.portListingGet('type');
-
-						self.portListingHelperListPorts({
-							tab: tab,
-							type: type,
-							fromDate: fromDate,
-							toDate: toDate,
-							success: function(portRequests) {
-								self.portListingRenderTableList({
-									template: self.portListingGet('container'),
-									type: type,
-									portRequests: portRequests
-								});
-							}
-						});
-					});
 
 			template
 				.find('.port-wizard')
