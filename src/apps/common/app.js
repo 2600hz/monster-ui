@@ -28,6 +28,7 @@ define(function(require) {
 		'servicePlanDetails',
 		'storagePlanManager',
 		'storageSelector',
+		'tagSelector',
 		'webphone'
 	];
 

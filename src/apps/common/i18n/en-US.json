@@ -1001,6 +1001,13 @@
 		"subTitle": "Please select from the following storage options available on this account",
 		"select": "Use Selected Storage Option"
 	},
+	"__comment": "UI-3375",
+	"tagSelector": {
+		"title": "Add tags",
+		"description": "Tag selector description",
+		"placeholder": "Select tag",
+		"add": "Add"
+	},
 
 	"__comment": "UI-2788",
 	"__version": "4.1",
