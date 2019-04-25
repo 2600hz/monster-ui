@@ -229,22 +229,36 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {String} args.tab
+		 * @param {String} args.type
+		 * @param {Object} args.fromDate
+		 * @param {Object} args.toDate
+		 * @param {Boolean} args.isMonsterApp
+		 * @param {Function} args.callback
+		 */
 		portListingGenericRows: function(args) {
 			var self = this,
-				type = args.type;
+				tab = args.tab,
+				type = args.type,
+				fromDate = args.fromDate,
+				toDate = args.toDate,
+				isMonsterApp = args.isMonsterApp,
+				callback = args.callback;
 
 			self.portListingHelperListPorts({
-				tab: args.tab,
-				type: args.type,
-				fromDate: args.fromDate,
-				toDate: args.toDate,
+				tab: tab,
+				type: type,
+				fromDate: fromDate,
+				toDate: toDate,
 				success: function(data) {
 					var requests = data.data,
 						hasPorts = !_.isEmpty(requests),
 						$rows = $(self.getTemplate({
 							name: 'generic-rows',
 							data: {
-								isMonsterApp: args.isMonsterApp,
+								isMonsterApp: isMonsterApp,
 								type: type,
 								hasPorts: hasPorts,
 								requests: _.sortBy(self.portListingFormatDataToTemplate(requests), 'state')
@@ -254,7 +268,7 @@ define(function(require) {
 
 					self.portListingSet('hasPorts', hasPorts);
 
-					args.callback && args.callback($rows, data);
+					callback && callback($rows, data);
 				}
 			});
 		},
