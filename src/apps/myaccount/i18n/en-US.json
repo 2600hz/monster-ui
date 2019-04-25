@@ -239,10 +239,6 @@
 		"__version": "v4.0",
 		"thresholdAlertsEnabled": "Threshold Alerts are now enabled!",
 		"thresholdAlertsCancelled": "You successfully disabled Threshold Alerts.",
-		"subscriptionsTurnedOn": "You successfully enabled Automatic Remediation.",
-		"subscriptionsTurnedOff": "You successfully disabled Automatic Remediation.",
-		"directToPayTurnedOn": "You successfully enabled Direct To Pay.",
-		"directToPayTurnedOff": "You successfully disabled Direct To Pay.",
 		"addCreditPopup": {
 			"creditBalance": "Available Credit Balance",
 			"menus": {
@@ -277,25 +273,7 @@
 				}
 			},
 			"subscriptions": {
-				"panelTextTitle": "Info",
-				"info": "Every month, your account will be charged according to your service plan subscriptions.",
-				"automaticRemediation": {
-					"label": "Automatic remediation",
-					"text": "If monthly charges exceed your current available credit balance, your account may become delinquent immediately."
-				},
-				"directToPay": {
-					"label": "Direct to Pay Method",
-					"on": {
-						"text1": "The system will attempt to charge your",
-						"bold": " payment method on file ",
-						"text2": "for the exact amount of your monthly subscriptions. If the charges are declined your account may become delinquent, causing a service disruption."
-					},
-					"off": {
-						"text1": "The system will use any available credit balance for your monthly subscriptions, only charging your",
-						"bold": " payment method on file ",
-						"text2": "if required. The amount charged to the payment method will vary each month depending on what is required to ensure the account remains above any configured auto recharge threshold."
-					}
-				}
+				"info": "Every month, your account will be charged according to your service plan subscriptions."
 			},
 			"autoRecharge": {
 				"text": "Auto Recharge enables you to set up a threshold to automatically add credit, and determines how much will be refilled each time. Auto Recharge also will notify you via email when an account is recharged.",
