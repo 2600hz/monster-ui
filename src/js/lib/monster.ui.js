@@ -823,7 +823,7 @@ define(function(require) {
 				if (scrollableContent) {
 					if (scrollableContent instanceof $) {
 						$scrollableContent = scrollableContent;
-					} else if (scrollableContent instanceof Element) {
+					} else if (_.isElement(scrollableContent)) {
 						$scrollableContent = $(scrollableContent);
 					} else {
 						$scrollableContent = $dialogBody.find(scrollableContent);
