@@ -741,20 +741,34 @@ define(function(require) {
 		},
 
 		dialog: function(content, options) {
-			var isPersistent = _.has(options, 'isPersistent')
-				? options.isPersistent
-				: false;
-			var dialog = $('<div />').append(content),
-				coreApp = monster.apps.core,
-				i18n = coreApp.i18n.active(),
-				dialogType = typeof options !== 'undefined' && typeof options.dialogType !== 'undefined' ? options.dialogType : 'classic',
-				closeBtnText = i18n.close || 'X';
+			// Get options
+			var dialogType = _.get(options, 'dialogType', 'classic');
+			var fitHeightToViewport = _.get(options, 'fitHeightToViewport', false);
+			var isPersistent = _.get(options, 'isPersistent', false);
+			var minHeight = _.get(options, 'minHeight', 400);
+			var scrollableContent = options.scrollableContent;
+			// Dialog body
+			var $dialogBody = $('<div />').append(content);
+			// Other variables/functions for internal use
+			var coreApp = monster.apps.core;
+			var i18n = coreApp.i18n.active();
+			var closeBtnText = i18n.close || 'X';
+			var $window = $(window);
+			var $dialog;
+			var $scrollableContent;
+			var setScrollableContentMaxHeight = function() {
+				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
+				var dialogHeight = $dialog.height();
 
-			if (typeof options !== 'undefined' && typeof options.dialogType !== 'undefined') {
-				delete options.dialogType;
-			}
+				if (dialogMaxHeight < minHeight) {
+					dialogMaxHeight = minHeight;
+				}
 
-			// delete options.dialogType;
+				$scrollableContent.css({
+					maxHeight: $scrollableContent.height() + dialogMaxHeight - dialogHeight
+				});
+			};
+
 			$('input', content).keypress(function(e) {
 				if (e.keyCode === 13) {
 					e.preventDefault();
@@ -770,10 +784,10 @@ define(function(require) {
 					zIndex: 20000,
 					close: function() {
 						$('div.popover').remove();
-						dialog.dialog('destroy');
-						dialog.remove();
+						$dialogBody.dialog('destroy');
+						$dialogBody.remove();
 
-						if (typeof options.onClose === 'function') {
+						if (_.isFunction(options.onClose)) {
 							// jQuery FREAKS out and gets into an infinite loop if the following function kicks back an error. Hence the try/catch.
 							try {
 								options.onClose();
@@ -793,14 +807,54 @@ define(function(require) {
 					resizable: false,
 					open: function(event, ui) {
 						if (options.hideClose) {
-							$('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
+							$('.ui-dialog-titlebar-close', ui.dialog || ui).hide();
 						}
 					}
 				};
 
-			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
-			options = $.extend(defaults, options || {}, strictOptions);
-			dialog.dialog(options);
+			if (fitHeightToViewport) {
+				// Remove minHeight option if present, as it will be handled in a custom way
+				delete options.minHeight;
+
+				strictOptions.resizable = false;
+
+				$window.on('resize', _.debounce(setScrollableContentMaxHeight, 100));
+
+				if (scrollableContent) {
+					if (scrollableContent instanceof $) {
+						$scrollableContent = scrollableContent;
+					} else if (scrollableContent instanceof Element) {
+						$scrollableContent = $(scrollableContent);
+					} else {
+						$scrollableContent = $dialogBody.find(scrollableContent);
+					}
+				} else {
+					$scrollableContent = $dialogBody;
+				}
+
+				$scrollableContent.css({
+					overflowY: 'auto'
+				});
+			}
+
+			// Overwrite any defaults with settings passed in (omitting the custom ones),
+			// and then overwrite any attributes with the unoverridable options
+			options = _
+				.merge(defaults,
+					_.omit(options, [
+						'fitHeightToViewport',
+						'scrollableContent',
+						'dialogType'
+					]),
+					strictOptions);
+
+			$dialogBody.dialog(options);
+			$dialog = $dialogBody.closest('.ui-dialog');
+
+			if (fitHeightToViewport) {
+				// Set initial content height
+				setScrollableContentMaxHeight();
+			}
 
 			switch (dialogType) {
 				case 'conference':
@@ -810,9 +864,9 @@ define(function(require) {
 					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
 					break;
 			}
-			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
+			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
+			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
 		},
 
 		charges: function(data, callbackOk, callbackCancel) {
