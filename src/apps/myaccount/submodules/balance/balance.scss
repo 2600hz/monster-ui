@@ -190,7 +190,7 @@
 }
 
 .add-credits-popup-wrapper {
-	#subscriptions {
+	#subscriptions .add-credits-content {
 		.subscription-options {
 			border: 1px solid $french-gray2;
 			border-radius: 2px;
@@ -224,6 +224,10 @@
 					background-color: #e9f5ff;
 				}
 			}
+		}
+
+		& > .monster-panel-text {
+			margin: 20px 0 0;
 		}
 	}
 }

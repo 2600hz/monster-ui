@@ -131,9 +131,6 @@
 						{{@root.i18n.balance.addCreditPopup.subscriptions.text2}}
 					</p>
 				</div>
-				{{#monsterPanelText @root.i18n.balance.addCreditPopup.subscriptions.panelTitle.info "info" "fill-width"}}
-					{{@root.i18n.balance.addCreditPopup.subscriptions.info}}
-				{{/monsterPanelText}}
 				<div class="subscription-options">
 					<label class="option{{#compare selected "===" "preemptive"}} selected{{/compare}}" for="preemptive">
 						{{#monsterRadio @root.i18n.balance.addCreditPopup.subscriptions.preemptive.label}}
@@ -170,6 +167,9 @@
 						</div>
 					</label>
 				</div>
+				{{#monsterPanelText @root.i18n.balance.addCreditPopup.subscriptions.panelTitle.info "info" "fill-width"}}
+					{{@root.i18n.balance.addCreditPopup.subscriptions.info}}
+				{{/monsterPanelText}}
 			</div>
 		</div>
 	{{/if}}
