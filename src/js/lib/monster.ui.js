@@ -816,7 +816,10 @@ define(function(require) {
 				// Remove minHeight option if present, as it will be handled in a custom way
 				delete options.minHeight;
 
-				strictOptions.resizable = false;
+				_.merge(strictOptions, {
+					resizable: false,
+					position: ['center', 24]	// 1.5rem from top
+				});
 
 				$window.on('resize', _.debounce(setScrollableContentMaxHeight, 100));
 
