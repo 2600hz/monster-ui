@@ -273,7 +273,8 @@
 				}
 			},
 			"subscriptions": {
-				"text": "On the 1st of each month, monthly subscription items will renew and you’ll be charged for the upcoming month.",
+				"text1": "On the 1st of each month, monthly subscription items will renew and you’ll be charged for the upcoming month.",
+				"text2": "There are two ways you can cover these costs. Select how you’d like to be billed:",
 				"info": "If you add any services mid-month, you’ll be charged immediately for the remainder of the month for that service. If you remove a service mid-month, you’ll be credited back for any unused portion of the month.",
 				"toast": {
 					"success": "Your payment method was successfully updated"
