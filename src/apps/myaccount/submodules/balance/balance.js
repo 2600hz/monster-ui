@@ -540,6 +540,8 @@ define(function(require) {
 				thresholdAlerts = data.threshold.enabled,
 				autoRecharge = data.topup.enabled || false,
 				tabAnimationInProgress = false,
+				subscriptionsContent = parent.find('#subscriptions'),
+				subscriptionsRadio = subscriptionsContent.find('.subscription-option'),
 				thresholdAlertsContent = parent.find('#threshold_alerts_content'),
 				thresholdAlertsSwitch = parent.find('#threshold_alerts_switch'),
 				autoRechargeContent = parent.find('#auto_recharge_content'),
@@ -786,6 +788,43 @@ define(function(require) {
 					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
+
+			subscriptionsRadio
+				.on('change', function(event) {
+					event.preventDefault();
+
+					var $this = $(this),
+						$warningElements = subscriptionsContent.find('.option .warning');
+
+					subscriptionsRadio.prop('disabled', 'disabled');
+
+					subscriptionsContent
+						.find('.option.selected')
+							.removeClass('selected');
+
+					$this
+						.parents('.option')
+							.addClass('selected');
+
+					$warningElements
+						.hide();
+
+					$this
+						.parents('.option')
+							.find('.warning')
+								.fadeIn(250);
+
+					self.balanceUpdateSubscriptions({
+						type: $this.val(),
+						callback: function() {
+							subscriptionsRadio.prop('disabled', false);
+							monster.ui.toast({
+								type: 'success',
+								message: self.i18n.active().balance.addCreditPopup.subscriptions.toast.success
+							});
+						}
+					});
+				});
 		},
 
 		balanceBindEvents: function(template, showCredits, afterRender) {
