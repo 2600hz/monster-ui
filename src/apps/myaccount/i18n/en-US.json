@@ -273,7 +273,29 @@
 				}
 			},
 			"subscriptions": {
-				"info": "Every month, your account will be charged according to your service plan subscriptions."
+				"text": "On the 1st of each month, monthly subscription items will renew and you’ll be charged for the upcoming month.",
+				"info": "If you add any services mid-month, you’ll be charged immediately for the remainder of the month for that service. If you remove a service mid-month, you’ll be credited back for any unused portion of the month.",
+				"toast": {
+					"success": "Your payment method was successfully updated"
+				},
+				"panelTitle": {
+					"info": "Info",
+					"warning": "Warning"
+				},
+				"preemptive": {
+					"label": "Use Account Credit, with Credit Card Backup",
+					"text": "Deduct my monthly service charges from my account balance. If my account dips below my automatic top-up threshold because of my monthly charge, use my credit card to cover any charges and return my account to my minimum top-up amount."
+				},
+				"exact": {
+					"label": "Use Credit Card, with Account Credit as Backup",
+					"text": "Deduct my monthly subscription fees from my credit card in the exact amount of the monthly subscription. If my credit card is declined, any credit already on my account will serve as a backup to cover the charges until I’m able to fix my credit card issue.",
+					"warning": "This method requires you to always keep your account credit balance higher than your monthly subscription if you intend for your account credit to serve as a backup. If your account balance is lower than your subscription amount and your credit card declines, your account will be negative and services will fail. Please ensure your automatic top-up amount keeps you above the minimum threshold of your monthly bill."
+				},
+				"none": {
+					"label": "Self-Manage",
+					"text": "I’ll manage my credit balance and I’ll ensure there’s enough money for my monthly charges. This means I’ll add money to the account prior to the 1st of the month to cover any upcoming charges.",
+					"warning": "If you are billed on the 1st and there is not enough money in your account, your services will stop working."
+				}
 			},
 			"autoRecharge": {
 				"text": "Auto Recharge enables you to set up a threshold to automatically add credit, and determines how much will be refilled each time. Auto Recharge also will notify you via email when an account is recharged.",
