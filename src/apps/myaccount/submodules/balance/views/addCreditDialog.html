@@ -24,7 +24,7 @@
 					{{i18n.balance.addCreditPopup.menus.autoRecharge}}
 				</a>
 			</li>
-		{{#if showSubscriptions}}
+		{{#if subscriptions.show}}
 			<li class="navbar-menu-item">
 				<a href="#subscriptions" class="navbar-menu-item-link">
 					{{i18n.balance.addCreditPopup.menus.subscriptions}}
@@ -119,7 +119,7 @@
 			</form>
 		</div>
 	</div>
-{{#if showSubscriptions}}
+{{#if subscriptions.show}}
 	<div class="add-credits-content-wrapper" id="subscriptions">
 		<div class="add-credits-content">
 			<div class="text">

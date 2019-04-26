@@ -249,7 +249,26 @@ define(function(require) {
 				serviceSummary = _.get(data, 'serviceSummary'),
 				amount = (data.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
-				topupData = { enabled: false };
+				topupData = { enabled: false },
+				getSelectedSubscription = function() {
+					var monthly = _.get(data, 'account.topup.monthly'),
+						isPreemptive = _.get(monthly, 'preemptive', false),
+						isExact = _.get(monthly, 'exact', false);
+
+					if (
+						(isPreemptive || !isPreemptive)
+						&& !isExact
+					) {
+						return 'preemptive';
+					}
+					if (
+						!isPreemptive
+						&& isExact
+					) {
+						return 'exact';
+					}
+					return 'none';
+				};
 
 			if (data.account.hasOwnProperty('notifications') && data.account.notifications.hasOwnProperty('low_balance')) {
 				$.extend(true, thresholdData, data.account.notifications.low_balance);
@@ -273,11 +292,14 @@ define(function(require) {
 			}
 
 			return {
-				showSubscriptions: _.some(serviceSummary.invoices, {
-					bookkeeper: {
-						type: 'iou'
-					}
-				}),
+				subscriptions: {
+					show: _.some(serviceSummary.invoices, {
+						bookkeeper: {
+							type: 'iou'
+						}
+					}),
+					selected: getSelectedSubscription()
+				},
 				currencySymbol: monster.util.getCurrencySymbol(),
 				amount: amount,
 				threshold: thresholdData,
@@ -849,14 +871,30 @@ define(function(require) {
 
 		/**
 		 * @param  {Object} args
-		 * @param  {Boolean} [args.preemptive=false]
-		 * @param  {Boolean} [args.exact=false]
+		 * @param  {'preemptive'|'exact'|'none'} args.type
 		 * @param  {Function} [args.callback]
 		 */
 		balanceUpdateSubscriptions: function(args) {
 			var self = this,
-				preemptive = _.get(args, 'preemptive', false),
-				exact = _.get(args, 'exact', false),
+				type = args.type,
+				normalizedSubscriptions = (function(type) {
+					if (type === 'preemptive') {
+						return {
+							preemptive: true,
+							exact: false
+						};
+					}
+					if (type === 'exact') {
+						return {
+							preemptive: false,
+							exact: true
+						};
+					}
+					return {
+						preemptive: false,
+						exact: false
+					};
+				})(type),
 				callback = _.get(args, 'callback');
 
 			monster.waterfall([
@@ -872,8 +910,8 @@ define(function(require) {
 					});
 				},
 				function(accountData, cb) {
-					_.set(accountData, 'topup.monthly.preemptive', preemptive);
-					_.set(accountData, 'topup.monthly.exact', exact);
+					_.set(accountData, 'topup.monthly.preemptive', normalizedSubscriptions.preemptive);
+					_.set(accountData, 'topup.monthly.exact', normalizedSubscriptions.exact);
 
 					self.callApi({
 						resource: 'account.patch',
