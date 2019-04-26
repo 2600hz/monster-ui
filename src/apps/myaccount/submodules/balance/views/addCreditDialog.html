@@ -119,13 +119,54 @@
 			</form>
 		</div>
 	</div>
-{{#if subscriptions.show}}
-	<div class="add-credits-content-wrapper" id="subscriptions">
-		<div class="add-credits-content">
-			<div class="text">
-				{{i18n.balance.addCreditPopup.subscriptions.text}}
+{{#with subscriptions}}
+	{{#if show}}
+		<div class="add-credits-content-wrapper" id="subscriptions">
+			<div class="add-credits-content">
+				<div class="text">
+					{{@root.i18n.balance.addCreditPopup.subscriptions.text}}
+				</div>
+				{{#monsterPanelText @root.i18n.balance.addCreditPopup.subscriptions.panelTitle.info "info" "fill-width"}}
+					{{@root.i18n.balance.addCreditPopup.subscriptions.info}}
+				{{/monsterPanelText}}
+				<div class="subscription-options">
+					<label class="option{{#compare selected "===" "preemptive"}} selected{{/compare}}" for="preemptive">
+						{{#monsterRadio @root.i18n.balance.addCreditPopup.subscriptions.preemptive.label}}
+							<input type="radio" class="subscription-option" name="subscription" value="preemptive" id="preemptive"{{#compare selected "===" "preemptive"}} checked="checked"{{/compare}}>
+						{{/monsterRadio}}
+						<div class="description">
+							{{@root.i18n.balance.addCreditPopup.subscriptions.preemptive.text}}
+						</div>
+					</label>
+					<label class="option{{#compare selected "===" "exact"}} selected{{/compare}}" for="exact">
+						{{#monsterRadio @root.i18n.balance.addCreditPopup.subscriptions.exact.label}}
+							<input type="radio" class="subscription-option" name="subscription" value="exact" id="exact"{{#compare selected "===" "exact"}} checked="checked"{{/compare}}>
+						{{/monsterRadio}}
+						<div class="description">
+							{{@root.i18n.balance.addCreditPopup.subscriptions.exact.text}}
+						</div>
+						<div class="warning"{{#compare selected "!==" "exact"}} style="display: none"{{/compare}}>
+						{{#monsterPanelText @root.i18n.balance.addCreditPopup.subscriptions.panelTitle.warning "warning" "fill-width"}}
+							{{@root.i18n.balance.addCreditPopup.subscriptions.exact.warning}}
+						{{/monsterPanelText}}
+						</div>
+					</label>
+					<label class="option{{#compare selected "===" "none"}} selected{{/compare}}" for="none">
+						{{#monsterRadio @root.i18n.balance.addCreditPopup.subscriptions.none.label}}
+							<input type="radio" class="subscription-option" name="subscription" value="none" id="none"{{#compare selected "===" "none"}} checked="checked"{{/compare}}>
+						{{/monsterRadio}}
+						<div class="description">
+							{{@root.i18n.balance.addCreditPopup.subscriptions.none.text}}
+						</div>
+						<div class="warning"{{#compare selected "!==" "none"}} style="display: none"{{/compare}}>
+						{{#monsterPanelText @root.i18n.balance.addCreditPopup.subscriptions.panelTitle.warning "warning" "fill-width"}}
+							{{@root.i18n.balance.addCreditPopup.subscriptions.none.warning}}
+						{{/monsterPanelText}}
+						</div>
+					</label>
+				</div>
 			</div>
 		</div>
-	</div>
-{{/if}}
+	{{/if}}
+{{/with}}
 </div>
