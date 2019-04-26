@@ -256,8 +256,8 @@ define(function(require) {
 						isExact = _.get(monthly, 'exact', false);
 
 					if (
-						(isPreemptive || !isPreemptive)
-						&& !isExact
+						isPreemptive
+						&& (isExact || !isExact)
 					) {
 						return 'preemptive';
 					}
