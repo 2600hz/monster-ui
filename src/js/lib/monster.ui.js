@@ -743,9 +743,9 @@ define(function(require) {
 		dialog: function(content, options) {
 			// Get options
 			var dialogType = _.get(options, 'dialogType', 'classic');
-			var fitHeightToViewport = _.get(options, 'fitHeightToViewport', false);
 			var isPersistent = _.get(options, 'isPersistent', false);
 			var minHeight = _.get(options, 'minHeight', 400);
+			var minWidth = _.get(options, 'minWidth', 400);
 			var scrollableContent = options.scrollableContent;
 			// Dialog body
 			var $dialogBody = $('<div />').append(content);
@@ -756,18 +756,73 @@ define(function(require) {
 			var $window = $(window);
 			var $dialog;
 			var $scrollableContent;
-			var setScrollableContentMaxHeight = function() {
+			var widthItems;
+			var setScrollableContentMaxSize = function() {
 				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
+				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
+				var dialogWidth = $dialog.width();
+				var $parentContainer = $scrollableContent;
+				var dialogHeightDiff;
+				var dialogWidthDiff;
 
+				// Calculate maxs
 				if (dialogMaxHeight < minHeight) {
 					dialogMaxHeight = minHeight;
 				}
+				if (dialogMaxWidth < minWidth) {
+					dialogMaxWidth = minWidth;
+				}
 
+				// Calculate diffs
+				dialogHeightDiff = dialogMaxHeight - dialogHeight;
+				dialogWidthDiff = dialogMaxWidth - dialogWidth;
+
+				// Calculate item widths, from scrollable element up to dialog element.
+				// This is required because it is likely that the width has been set via CSS
+				// styles in any of the elements of the dialog that wraps the scroll container.
+				// This is less likely for height, so it is done for width only.
+				if (!widthItems) {
+					// If not listed previously, populate list
+					widthItems = [];
+					while (true) {
+						widthItems.push({
+							$element: $parentContainer,
+							originalWidth: $parentContainer.width(),
+							width: $parentContainer.width(),
+							maxWidth: $parentContainer.width() + dialogWidthDiff
+						});
+
+						if ($parentContainer.is($dialog)) {
+							break;
+						}
+
+						$parentContainer = $parentContainer.parent();
+					}
+				} else {
+					// If already listed, update width values
+					_.each(widthItems, function(item) {
+						item.width = item.$element.width();
+						item.maxWidth = item.$element.width() + dialogWidthDiff;
+					});
+				}
+
+				// Set scrollable content max size
 				$scrollableContent.css({
-					maxHeight: $scrollableContent.height() + dialogMaxHeight - dialogHeight
+					maxHeight: $scrollableContent.height() + dialogHeightDiff,
+					maxWidth: $scrollableContent.width() + dialogWidthDiff
+				});
+
+				// Update widths
+				_.each(widthItems, function(item) {
+					if (item.width > item.maxWidth) {
+						item.$element.width(item.maxWidth);
+					} else if (item.originalWidth < item.maxWidth) {
+						item.$element.width(item.originalWidth);
+					}
 				});
 			};
+			var windowResizeHandler = _.debounce(setScrollableContentMaxSize, 100);
 
 			$('input', content).keypress(function(e) {
 				if (e.keyCode === 13) {
@@ -787,6 +842,7 @@ define(function(require) {
 					zIndex: 20000,
 					// Event handlers
 					close: function() {
+						$window.unbind('resize', windowResizeHandler);
 						$('div.popover').remove();
 						$dialogBody.dialog('destroy');
 						$dialogBody.remove();
@@ -817,51 +873,46 @@ define(function(require) {
 					}
 				};
 
-			if (fitHeightToViewport) {
-				// Remove minHeight option if present, as it will be handled in a custom way
-				delete options.minHeight;
+			_.merge(strictOptions, {
+				position: ['center', 24]	// 1.5rem from top
+			});
 
-				_.merge(strictOptions, {
-					position: ['center', 24]	// 1.5rem from top
-				});
+			$window.bind('resize', windowResizeHandler);
 
-				$window.on('resize', _.debounce(setScrollableContentMaxHeight, 100));
-
-				if (scrollableContent) {
-					if (scrollableContent instanceof $) {
-						$scrollableContent = scrollableContent;
-					} else if (_.isElement(scrollableContent)) {
-						$scrollableContent = $(scrollableContent);
-					} else {
-						$scrollableContent = $dialogBody.find(scrollableContent);
-					}
+			if (scrollableContent) {
+				if (scrollableContent instanceof $) {
+					$scrollableContent = scrollableContent;
+				} else if (_.isElement(scrollableContent)) {
+					$scrollableContent = $(scrollableContent);
 				} else {
-					$scrollableContent = $dialogBody;
+					$scrollableContent = $dialogBody.find(scrollableContent);
 				}
-
-				$scrollableContent.css({
-					overflowY: 'auto'
-				});
+			} else {
+				$scrollableContent = $dialogBody;
 			}
 
-			// Overwrite any defaults with settings passed in (omitting the custom ones),
-			// and then overwrite any attributes with the unoverridable options
+			$scrollableContent.css({
+				overflow: 'auto'
+			});
+
+			// Overwrite any defaults with settings passed in,omitting the custom ones, or the
+			// ones that will be handled in a custom way. Then overwrite any attributes with the
+			// unoverridable options
 			options = _
 				.merge(defaults,
 					_.omit(options, [
-						'fitHeightToViewport',
 						'scrollableContent',
-						'dialogType'
+						'dialogType',
+						'minHeight',
+						'minWidth'
 					]),
 					strictOptions);
 
 			$dialogBody.dialog(options);
 			$dialog = $dialogBody.closest('.ui-dialog');
 
-			if (fitHeightToViewport) {
-				// Set initial content height
-				setScrollableContentMaxHeight();
-			}
+			// Set initial scrollable content size
+			setScrollableContentMaxSize();
 
 			switch (dialogType) {
 				case 'conference':

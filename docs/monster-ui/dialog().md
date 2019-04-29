@@ -20,9 +20,8 @@ Here is a list of the customization settings specific to Monster UI.
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `dialogType` | Type of dialog, which determines the closing button style. | `String('conference' | 'classic')` | `classic` | `false`
-`fitHeightToViewport` | Whether or not to fit the dialog height within the viewport size. If set to `true` it will also override its default position. | `Boolean` | `false` | `false`
 `isPersistent` | Indicates whether or not to persist the dialog when switching app contexts. | `Boolean` | `false` | `false`
-`scrollableContent` | Either a string selector path, a DOM Element or a jQuery object that references an element within the dialog content. This element will be made vertically scrollable when needed, to be able to fit the dialog to the viewport's height. This option is used only when `fitHeightToViewport` is set to `true`. | `String`, `Element`, `jQuery` | | `false`
+`scrollableContent` | Either a string selector path, a DOM Element or a jQuery object that references an element within the dialog content. This element will be made vertically scrollable when needed, to be able to fit the dialog to the viewport's height. | `String`, `Element`, `jQuery` | | `false`
 
 ### Return
 A jQuery object representing the dialog widget.
@@ -49,17 +48,15 @@ monster.ui.dialog(template, {
 
 As shown in the example above, the method only generates the part inside the red rectangle and the template's container.
 
-### Fit a dialog within the viewport's height
+### Specify the scrollable container
 ```javascript
 var template = $(app.getTemplate({
   name: 'edit-device'
 }));
 
 monster.ui.dialog(template, {
-  position: ['center', 20],
   title: app.i18n.active().device.editDialog.title,
   dialogClass: 'edit-device-popup',
-  fitHeightToViewport: true,
   scrollableContent: 'div.form-body'
 });
 ```
