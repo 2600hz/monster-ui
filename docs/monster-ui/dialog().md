@@ -12,7 +12,7 @@ monster.ui.dialog([content, options]);
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `content` | Either a string representation or a jQuery object that will be inserted inside the dialog widget. | `String`, `jQuery` | | `true`
-`options` | Let you customize the look and feel of the dialog in Monster UI. Besides that, you can override the default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `appendTo`, `draggable`, `resizable`, `show`, `hide`, `zIndex` and the `close` method. | `Object`([#options](#options)) | | `false`
+`options` | Let you customize the look and feel of the dialog in Monster UI. Besides that, you can override the default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `appendTo`, `draggable`, `resizable`, `show`, `hide`, `position`, `zIndex` and the `close` method. | `Object`([#options](#options)) | | `false`
 
 ### `options`
 Here is a list of the customization settings specific to Monster UI.

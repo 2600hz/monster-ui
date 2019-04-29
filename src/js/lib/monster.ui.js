@@ -822,7 +822,13 @@ define(function(require) {
 					}
 				});
 			};
-			var windowResizeHandler = _.debounce(setScrollableContentMaxSize, 100);
+			var centerDialog = function() {
+				$dialogBody.dialog('option', 'position', {my: 'center', at: 'center', of: window});
+			};
+			var windowResizeHandler = _.debounce(function() {
+				setScrollableContentMaxSize();
+				centerDialog();
+			}, 100);
 
 			$('input', content).keypress(function(e) {
 				if (e.keyCode === 13) {
@@ -837,6 +843,7 @@ define(function(require) {
 					appendTo: getDialogAppendTo(isPersistent),
 					draggable: false,
 					hide: { effect: 'fade', duration: 200 },
+					position: { my: 'center', at: 'center', of: window },
 					resizable: false,
 					show: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
@@ -872,10 +879,6 @@ define(function(require) {
 						}
 					}
 				};
-
-			_.merge(strictOptions, {
-				position: ['center', 24]	// 1.5rem from top
-			});
 
 			$window.bind('resize', windowResizeHandler);
 
