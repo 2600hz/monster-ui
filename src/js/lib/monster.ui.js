@@ -778,10 +778,14 @@ define(function(require) {
 
 			//Unoverridable options
 			var strictOptions = {
+					// Values
 					appendTo: getDialogAppendTo(isPersistent),
-					show: { effect: 'fade', duration: 200 },
+					draggable: false,
 					hide: { effect: 'fade', duration: 200 },
+					resizable: false,
+					show: { effect: 'fade', duration: 200 },
 					zIndex: 20000,
+					// Event handlers
 					close: function() {
 						$('div.popover').remove();
 						$dialogBody.dialog('destroy');
@@ -800,11 +804,12 @@ define(function(require) {
 						}
 					}
 				},
-				//Default values
+				//Default options
 				defaults = {
-					width: 'auto',
+					// Values
 					modal: true,
-					resizable: false,
+					width: 'auto',
+					// Event handlers
 					open: function(event, ui) {
 						if (options.hideClose) {
 							$('.ui-dialog-titlebar-close', ui.dialog || ui).hide();
@@ -817,7 +822,6 @@ define(function(require) {
 				delete options.minHeight;
 
 				_.merge(strictOptions, {
-					resizable: false,
 					position: ['center', 24]	// 1.5rem from top
 				});
 
