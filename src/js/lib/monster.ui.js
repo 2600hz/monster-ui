@@ -756,7 +756,16 @@ define(function(require) {
 			var $window = $(window);
 			var $dialog;
 			var $scrollableContent;
+			var dialogResizeIntervalId;
 			var widthItems;
+			var getElementSize = function($element) {
+				return {
+					width: $element.width(),
+					height: $element.height()
+				};
+			};
+			var dialogLastSize;
+			var windowLastSize = getElementSize($window);
 			var setScrollableContentMaxSize = function() {
 				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
@@ -825,10 +834,7 @@ define(function(require) {
 			var centerDialog = function() {
 				$dialogBody.dialog('option', 'position', {my: 'center', at: 'center', of: window});
 			};
-			var windowResizeHandler = _.debounce(function() {
-				setScrollableContentMaxSize();
-				centerDialog();
-			}, 100);
+			var windowResizeHandler = _.debounce(setScrollableContentMaxSize, 100);
 
 			$('input', content).keypress(function(e) {
 				if (e.keyCode === 13) {
@@ -850,6 +856,7 @@ define(function(require) {
 					// Event handlers
 					close: function() {
 						$window.unbind('resize', windowResizeHandler);
+						clearInterval(dialogResizeIntervalId);
 						$('div.popover').remove();
 						$dialogBody.dialog('destroy');
 						$dialogBody.remove();
@@ -913,9 +920,23 @@ define(function(require) {
 
 			$dialogBody.dialog(options);
 			$dialog = $dialogBody.closest('.ui-dialog');
+			dialogLastSize = getElementSize($dialog);
 
 			// Set initial scrollable content size
 			setScrollableContentMaxSize();
+
+			// Detect size changes ever 100ms
+			dialogResizeIntervalId = setInterval(function() {
+				var windowCurrentSize = getElementSize($window);
+				var dialogCurrentSize = getElementSize($dialog);
+				if (_.isEqual(dialogLastSize, dialogCurrentSize) && _.isEqual(windowLastSize, windowCurrentSize)) {
+					return;
+				}
+
+				centerDialog();
+				dialogLastSize = dialogCurrentSize;
+				windowLastSize = windowCurrentSize;
+			}, 100);
 
 			switch (dialogType) {
 				case 'conference':
