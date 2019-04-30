@@ -21,7 +21,7 @@ Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `dialogType` | Type of dialog, which determines the closing button style. | `String('conference' | 'classic')` | `classic` | `false`
 `isPersistent` | Indicates whether or not to persist the dialog when switching app contexts. | `Boolean` | `false` | `false`
-`scrollableContent` | Either a string selector path, a DOM Element or a jQuery object that references an element within the dialog content. This element will be made vertically scrollable when needed, to be able to fit the dialog to the viewport's height. | `String`, `Element`, `jQuery` | | `false`
+`scrollableContainer` | Either a string selector path, a DOM Element or a jQuery object that references an element within the dialog. This element will be made scrollable when needed, to be able to fit the dialog to the viewport's size. | `String`, `Element`, `jQuery` | | `false`
 
 ### Return
 A jQuery object representing the dialog widget.
@@ -57,7 +57,7 @@ var template = $(app.getTemplate({
 monster.ui.dialog(template, {
   title: app.i18n.active().device.editDialog.title,
   dialogClass: 'edit-device-popup',
-  scrollableContent: 'div.form-body'
+  scrollableContainer: 'div.form-body'
 });
 ```
 

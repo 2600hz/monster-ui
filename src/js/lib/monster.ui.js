@@ -746,7 +746,7 @@ define(function(require) {
 			var isPersistent = _.get(options, 'isPersistent', false);
 			var minHeight = _.get(options, 'minHeight', 400);
 			var minWidth = _.get(options, 'minWidth', 400);
-			var scrollableContent = options.scrollableContent;
+			var scrollableContainer = options.scrollableContainer;
 			// Other variables/functions for internal use
 			var $dialogBody = $('<div />').append(content);
 			var $window = $(window);
@@ -766,7 +766,7 @@ define(function(require) {
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
 				var dialogWidth = $dialog.width();
-				var $parentContainer = $scrollableContent;
+				var $parentContainer = $scrollableContainer;
 				var dialogHeightDiff;
 				var dialogWidthDiff;
 
@@ -812,9 +812,9 @@ define(function(require) {
 				}
 
 				// Set scrollable content max size
-				$scrollableContent.css({
-					maxHeight: $scrollableContent.height() + dialogHeightDiff,
-					maxWidth: $scrollableContent.width() + dialogWidthDiff
+				$scrollableContainer.css({
+					maxHeight: $scrollableContainer.height() + dialogHeightDiff,
+					maxWidth: $scrollableContainer.width() + dialogWidthDiff
 				});
 
 				// Update items width
@@ -836,7 +836,7 @@ define(function(require) {
 			var windowResizeHandler = _.debounce(setDialogSizes, 100);
 			// Unset variables
 			var $dialog;
-			var $scrollableContent;
+			var $scrollableContainer;
 			var dialogLastSize;
 			var dialogResizeIntervalId;
 			var widthItems;
@@ -910,7 +910,7 @@ define(function(require) {
 			options = _
 				.merge(defaults,
 					_.omit(options, [
-						'scrollableContent',
+						'scrollableContainer',
 						'dialogType',
 						'minHeight',
 						'minWidth'
@@ -933,22 +933,22 @@ define(function(require) {
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			// Prepare scrollable container
-			if (scrollableContent) {
-				if (scrollableContent instanceof $) {
-					$scrollableContent = scrollableContent;
-				} else if (_.isElement(scrollableContent)) {
-					$scrollableContent = $(scrollableContent);
+			if (scrollableContainer) {
+				if (scrollableContainer instanceof $) {
+					$scrollableContainer = scrollableContainer;
+				} else if (_.isElement(scrollableContainer)) {
+					$scrollableContainer = $(scrollableContainer);
 				} else {
-					$scrollableContent = $dialogBody.find(scrollableContent);
+					$scrollableContainer = $dialogBody.find(scrollableContainer);
 				}
 			}
 			// If scrollable content was not specified, or is not a dialog's descendant,
 			// then default to dialog's body as scrollable content
-			if (!scrollableContent || _.isEmpty($scrollableContent) || !$.contains($dialog.get(0), $scrollableContent.get(0))) {
-				$scrollableContent = $dialogBody;
+			if (!scrollableContainer || _.isEmpty($scrollableContainer) || !$.contains($dialog.get(0), $scrollableContainer.get(0))) {
+				$scrollableContainer = $dialogBody;
 			}
 
-			$scrollableContent.css({
+			$scrollableContainer.css({
 				overflow: 'auto'
 			});
 
