@@ -750,6 +750,7 @@ define(function(require) {
 			// Other variables/functions for internal use
 			var $dialogBody = $('<div />').append(content);
 			var $window = $(window);
+			var $body = $('body');
 			var coreApp = monster.apps.core;
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
@@ -870,6 +871,7 @@ define(function(require) {
 					$('div.popover').remove();
 					$dialogBody.dialog('destroy');
 					$dialogBody.remove();
+					$body.removeClass('monster-dialog-active');
 
 					// Execute close callback, if possible
 					if (_.isFunction(options.onClose)) {
@@ -884,6 +886,9 @@ define(function(require) {
 							}
 						}
 					}
+				},
+				open: function() {
+					$body.addClass('monster-dialog-active');
 				}
 			};
 			//Default options
