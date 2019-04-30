@@ -833,7 +833,7 @@ define(function(require) {
 					of: window
 				});
 			};
-			var windowResizeHandler = _.debounce(setDialogSizes, 100);
+			var windowResizeHandler = _.debounce(setDialogSizes, 10);
 			// Unset variables
 			var $dialog;
 			var $scrollableContainer;
@@ -964,7 +964,7 @@ define(function(require) {
 			});
 			$window.on('resize', windowResizeHandler);
 
-			// Check for size changes every 100ms
+			// Check for size changes every 20ms
 			dialogResizeIntervalId = setInterval(function() {
 				var windowCurrentSize = getElementSize($window);
 				var dialogCurrentSize = getElementSize($dialog);
@@ -975,7 +975,7 @@ define(function(require) {
 				centerDialog();
 				dialogLastSize = dialogCurrentSize;
 				windowLastSize = windowCurrentSize;
-			}, 100);
+			}, 20);
 
 			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
 		},
