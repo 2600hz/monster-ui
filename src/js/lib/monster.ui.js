@@ -904,23 +904,6 @@ define(function(require) {
 				}
 			};
 
-			// Prepare scrollable container
-			if (scrollableContent) {
-				if (scrollableContent instanceof $) {
-					$scrollableContent = scrollableContent;
-				} else if (_.isElement(scrollableContent)) {
-					$scrollableContent = $(scrollableContent);
-				} else {
-					$scrollableContent = $dialogBody.find(scrollableContent);
-				}
-			} else {
-				$scrollableContent = $dialogBody;
-			}
-
-			$scrollableContent.css({
-				overflow: 'auto'
-			});
-
 			// Overwrite any defaults with settings passed in,omitting the custom ones, or the
 			// ones that will be handled in a custom way. Then overwrite any attributes with the
 			// unoverridable options
@@ -948,6 +931,26 @@ define(function(require) {
 					break;
 			}
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
+
+			// Prepare scrollable container
+			if (scrollableContent) {
+				if (scrollableContent instanceof $) {
+					$scrollableContent = scrollableContent;
+				} else if (_.isElement(scrollableContent)) {
+					$scrollableContent = $(scrollableContent);
+				} else {
+					$scrollableContent = $dialogBody.find(scrollableContent);
+				}
+			}
+			// If scrollable content was not specified, or is not a dialog's descendant,
+			// then default to dialog's body as scrollable content
+			if (!scrollableContent || _.isEmpty($scrollableContent) || !$.contains($dialog.get(0), $scrollableContent.get(0))) {
+				$scrollableContent = $dialogBody;
+			}
+
+			$scrollableContent.css({
+				overflow: 'auto'
+			});
 
 			// Set initial sizes
 			setDialogSizes();
