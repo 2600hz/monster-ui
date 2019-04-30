@@ -747,26 +747,20 @@ define(function(require) {
 			var minHeight = _.get(options, 'minHeight', 400);
 			var minWidth = _.get(options, 'minWidth', 400);
 			var scrollableContent = options.scrollableContent;
-			// Dialog body
-			var $dialogBody = $('<div />').append(content);
 			// Other variables/functions for internal use
+			var $dialogBody = $('<div />').append(content);
+			var $window = $(window);
 			var coreApp = monster.apps.core;
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
-			var $window = $(window);
-			var $dialog;
-			var $scrollableContent;
-			var dialogResizeIntervalId;
-			var widthItems;
 			var getElementSize = function($element) {
 				return {
 					width: $element.width(),
 					height: $element.height()
 				};
 			};
-			var dialogLastSize;
 			var windowLastSize = getElementSize($window);
-			var setScrollableContentMaxSize = function() {
+			var setDialogSizes = function() {
 				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
@@ -787,7 +781,7 @@ define(function(require) {
 				dialogHeightDiff = dialogMaxHeight - dialogHeight;
 				dialogWidthDiff = dialogMaxWidth - dialogWidth;
 
-				// Calculate item widths, from scrollable element up to dialog element.
+				// Calculate item widths, from scrollable element up to the dialog element.
 				// This is required because it is likely that the width has been set via CSS
 				// styles in any of the elements of the dialog that wraps the scroll container.
 				// This is less likely for height, so it is done for width only.
@@ -822,7 +816,7 @@ define(function(require) {
 					maxWidth: $scrollableContent.width() + dialogWidthDiff
 				});
 
-				// Update widths
+				// Update items width
 				_.each(widthItems, function(item) {
 					if (item.width > item.maxWidth) {
 						item.$element.width(item.maxWidth);
@@ -832,63 +826,80 @@ define(function(require) {
 				});
 			};
 			var centerDialog = function() {
-				$dialogBody.dialog('option', 'position', {my: 'center', at: 'center', of: window});
+				$dialogBody.dialog('option', 'position', {
+					my: 'center',
+					at: 'center',
+					of: window
+				});
 			};
-			var windowResizeHandler = _.debounce(setScrollableContentMaxSize, 100);
-
-			$('input', content).keypress(function(e) {
-				if (e.keyCode === 13) {
-					e.preventDefault();
-					return false;
-				}
-			});
+			var windowResizeHandler = _.debounce(setDialogSizes, 100);
+			// Unset variables
+			var $dialog;
+			var $scrollableContent;
+			var dialogLastSize;
+			var dialogResizeIntervalId;
+			var widthItems;
 
 			//Unoverridable options
 			var strictOptions = {
-					// Values
-					appendTo: getDialogAppendTo(isPersistent),
-					draggable: false,
-					hide: { effect: 'fade', duration: 200 },
-					position: { my: 'center', at: 'center', of: window },
-					resizable: false,
-					show: { effect: 'fade', duration: 200 },
-					zIndex: 20000,
-					// Event handlers
-					close: function() {
-						$window.unbind('resize', windowResizeHandler);
-						clearInterval(dialogResizeIntervalId);
-						$('div.popover').remove();
-						$dialogBody.dialog('destroy');
-						$dialogBody.remove();
+				// Values
+				appendTo: getDialogAppendTo(isPersistent),
+				draggable: false,
+				hide: {
+					effect: 'fade',
+					duration: 200
+				},
+				position: {
+					my: 'center',
+					at: 'center',
+					of: window
+				},
+				resizable: false,
+				show: {
+					effect: 'fade',
+					duration: 200
+				},
+				zIndex: 20000,
+				// Event handlers
+				close: function() {
+					// Clear events
+					$window.off('resize', windowResizeHandler);
+					clearInterval(dialogResizeIntervalId);
 
-						if (_.isFunction(options.onClose)) {
-							// jQuery FREAKS out and gets into an infinite loop if the following function kicks back an error. Hence the try/catch.
-							try {
-								options.onClose();
-							} catch (err) {
-								if (console && err.message && err.stack) {
-									console.log(err.message);
-									console.log(err.stack);
-								}
+					// Remove elements
+					$('div.popover').remove();
+					$dialogBody.dialog('destroy');
+					$dialogBody.remove();
+
+					// Execute close callback, if possible
+					if (_.isFunction(options.onClose)) {
+						// jQuery FREAKS out and gets into an infinite loop if the
+						// following function kicks back an error. Hence the try/catch.
+						try {
+							options.onClose();
+						} catch (err) {
+							if (console && err.message && err.stack) {
+								console.log(err.message);
+								console.log(err.stack);
 							}
 						}
 					}
-				},
-				//Default options
-				defaults = {
-					// Values
-					modal: true,
-					width: 'auto',
-					// Event handlers
-					open: function(event, ui) {
-						if (options.hideClose) {
-							$('.ui-dialog-titlebar-close', ui.dialog || ui).hide();
-						}
+				}
+			};
+			//Default options
+			var defaults = {
+				// Values
+				modal: true,
+				width: 'auto',
+				// Event handlers
+				open: function(event, ui) {
+					if (options.hideClose) {
+						$('.ui-dialog-titlebar-close', ui.dialog || ui).hide();
 					}
-				};
+				}
+			};
 
-			$window.bind('resize', windowResizeHandler);
-
+			// Prepare scrollable container
 			if (scrollableContent) {
 				if (scrollableContent instanceof $) {
 					$scrollableContent = scrollableContent;
@@ -922,10 +933,30 @@ define(function(require) {
 			$dialog = $dialogBody.closest('.ui-dialog');
 			dialogLastSize = getElementSize($dialog);
 
-			// Set initial scrollable content size
-			setScrollableContentMaxSize();
+			// Set dialog close button
+			switch (dialogType) {
+				case 'conference':
+					closeBtnText = '<i class="fa fa-times icon-small"></i>';
+					break;
+				default:
+					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
+					break;
+			}
+			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			// Detect size changes ever 100ms
+			// Set initial sizes
+			setDialogSizes();
+
+			// Set event handlers
+			$('input', content).keypress(function(e) {
+				if (e.keyCode === 13) {
+					e.preventDefault();
+					return false;
+				}
+			});
+			$window.on('resize', windowResizeHandler);
+
+			// Check for size changes every 100ms
 			dialogResizeIntervalId = setInterval(function() {
 				var windowCurrentSize = getElementSize($window);
 				var dialogCurrentSize = getElementSize($dialog);
@@ -937,16 +968,6 @@ define(function(require) {
 				dialogLastSize = dialogCurrentSize;
 				windowLastSize = windowCurrentSize;
 			}, 100);
-
-			switch (dialogType) {
-				case 'conference':
-					closeBtnText = '<i class="fa fa-times icon-small"></i>';
-					break;
-				default:
-					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
-					break;
-			}
-			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
 			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
 		},
