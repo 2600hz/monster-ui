@@ -98,7 +98,7 @@ define(function(require) {
 						var $this = $(this),
 							tag = $this.html(),
 							id = $this.data('id'),
-							newDiv = $(self.getTemplate({
+							newTag = $(self.getTemplate({
 								name: 'tag',
 								data: {
 									tag: tag,
@@ -109,7 +109,7 @@ define(function(require) {
 
 						template
 							.find('.tags-search .tags')
-								.prepend(newDiv);
+								.prepend(newTag);
 
 						template
 							.find('.tags-search .tags-keyword')
