@@ -754,6 +754,7 @@ define(function(require) {
 			var coreApp = monster.apps.core;
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
+			var dialogPosition = [ 'center', 24 ];
 			var getElementSize = function($element) {
 				return {
 					width: $element.width(),
@@ -827,11 +828,7 @@ define(function(require) {
 				});
 			};
 			var centerDialog = function() {
-				$dialogBody.dialog('option', 'position', {
-					my: 'center',
-					at: 'center',
-					of: window
-				});
+				$dialogBody.dialog('option', 'position', dialogPosition);
 			};
 			var windowResizeHandler = _.debounce(setDialogSizes, 10);
 			// Unset variables
@@ -850,11 +847,7 @@ define(function(require) {
 					effect: 'fade',
 					duration: 200
 				},
-				position: {
-					my: 'center',
-					at: 'center',
-					of: window
-				},
+				position: dialogPosition,
 				resizable: false,
 				show: {
 					effect: 'fade',
