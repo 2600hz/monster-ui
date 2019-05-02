@@ -153,11 +153,7 @@ define(function(require) {
 						amount: _
 							.chain(formatted)
 							.filter('isApproved')
-								return transaction.isApproved;
-							})
-							.sumBy('amount')
-								return acc + parseFloat(transaction.amount);
-							}, 0),
+							.sumBy('amount'),
 						transactions: formatted
 					});
 				}
