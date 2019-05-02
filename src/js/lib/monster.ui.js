@@ -745,8 +745,6 @@ define(function(require) {
 			var dialogType = _.get(options, 'dialogType', 'classic');
 			var hideClose = _.get(options, 'hideClose', false);
 			var isPersistent = _.get(options, 'isPersistent', false);
-			var minHeight = _.get(options, 'minHeight', 400);
-			var minWidth = _.get(options, 'minWidth', 400);
 			var onClose = _.get(options, 'onClose');
 			var open = _.get(options, 'open');
 			var scrollableContainer = _.get(options, 'scrollableContainer');
@@ -781,14 +779,6 @@ define(function(require) {
 				var $parentContainer = $scrollableContainer;
 				var dialogHeightDiff;
 				var dialogWidthDiff;
-
-				// Calculate maxs
-				if (dialogMaxHeight < minHeight) {
-					dialogMaxHeight = minHeight;
-				}
-				if (dialogMaxWidth < minWidth) {
-					dialogMaxWidth = minWidth;
-				}
 
 				// Calculate diffs
 				dialogHeightDiff = dialogMaxHeight - dialogHeight;
