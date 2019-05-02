@@ -748,6 +748,7 @@ define(function(require) {
 			var minHeight = _.get(options, 'minHeight', 400);
 			var minWidth = _.get(options, 'minWidth', 400);
 			var onClose = _.get(options, 'onClose');
+			var open = _.get(options, 'open');
 			var scrollableContainer = _.get(options, 'scrollableContainer');
 			// Other variables/functions for internal use
 			var $dialogBody = $('<div />').append(content);
@@ -764,7 +765,15 @@ define(function(require) {
 				};
 			};
 			var windowLastSize = getElementSize($window);
+			var $fullDialog;
+			var getFullDialog = function() {
+				if (_.isEmpty($fullDialog)) {
+					$fullDialog = $dialogBody.closest('.ui-dialog');
+				}
+				return $fullDialog;
+			};
 			var setDialogSizes = function() {
+				var $dialog = getFullDialog();
 				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
@@ -834,7 +843,6 @@ define(function(require) {
 			};
 			var windowResizeHandler = _.debounce(setDialogSizes, 10);
 			// Unset variables
-			var $dialog;
 			var $scrollableContainer;
 			var dialogLastSize;
 			var dialogResizeIntervalId;
@@ -884,19 +892,19 @@ define(function(require) {
 				},
 				open: function() {
 					$body.addClass('monster-dialog-active');
+					if (hideClose) {
+						getFullDialog().find('.ui-dialog-titlebar-close').hide();
+					}
+					if (_.isFunction(open)) {
+						open();
+					}
 				}
 			};
 			//Default options
 			var defaults = {
 				// Values
 				modal: true,
-				width: 'auto',
-				// Event handlers
-				open: function(event, ui) {
-					if (hideClose) {
-						$('.ui-dialog-titlebar-close', ui.dialog || ui).hide();
-					}
-				}
+				width: 'auto'
 			};
 
 			// Overwrite any defaults with settings passed in,omitting the custom ones, or the
@@ -905,16 +913,16 @@ define(function(require) {
 			options = _
 				.merge(defaults,
 					_.omit(options, [
-						'scrollableContainer',
 						'dialogType',
+						'hideClose',
 						'minHeight',
-						'minWidth'
+						'minWidth',
+						'scrollableContainer'
 					]),
 					strictOptions);
 
 			$dialogBody.dialog(options);
-			$dialog = $dialogBody.closest('.ui-dialog');
-			dialogLastSize = getElementSize($dialog);
+			dialogLastSize = getElementSize(getFullDialog());
 
 			// Set dialog close button
 			switch (dialogType) {
@@ -939,7 +947,7 @@ define(function(require) {
 			}
 			// If scrollable content was not specified, or is not a dialog's descendant,
 			// then default to dialog's body as scrollable content
-			if (!scrollableContainer || _.isEmpty($scrollableContainer) || !$.contains($dialog.get(0), $scrollableContainer.get(0))) {
+			if (!scrollableContainer || _.isEmpty($scrollableContainer) || !$.contains(getFullDialog().get(0), $scrollableContainer.get(0))) {
 				$scrollableContainer = $dialogBody;
 			}
 
@@ -963,7 +971,7 @@ define(function(require) {
 			// Check for size changes every 20ms
 			dialogResizeIntervalId = setInterval(function() {
 				var windowCurrentSize = getElementSize($window);
-				var dialogCurrentSize = getElementSize($dialog);
+				var dialogCurrentSize = getElementSize(getFullDialog());
 				if (_.isEqual(dialogLastSize, dialogCurrentSize) && _.isEqual(windowLastSize, windowCurrentSize)) {
 					return;
 				}
