@@ -155,7 +155,7 @@ define(function(require) {
 							.filter(function(transaction) {
 								return transaction.isApproved;
 							})
-							.reduce(function(acc, transaction) {
+							.sumBy('amount')
 								return acc + parseFloat(transaction.amount);
 							}, 0),
 						transactions: formatted
