@@ -743,10 +743,12 @@ define(function(require) {
 		dialog: function(content, options) {
 			// Get options
 			var dialogType = _.get(options, 'dialogType', 'classic');
+			var hideClose = _.get(options, 'hideClose', false);
 			var isPersistent = _.get(options, 'isPersistent', false);
 			var minHeight = _.get(options, 'minHeight', 400);
 			var minWidth = _.get(options, 'minWidth', 400);
-			var scrollableContainer = options.scrollableContainer;
+			var onClose = _.get(options, 'onClose');
+			var scrollableContainer = _.get(options, 'scrollableContainer');
 			// Other variables/functions for internal use
 			var $dialogBody = $('<div />').append(content);
 			var $window = $(window);
@@ -867,11 +869,11 @@ define(function(require) {
 					$body.removeClass('monster-dialog-active');
 
 					// Execute close callback, if possible
-					if (_.isFunction(options.onClose)) {
+					if (_.isFunction(onClose)) {
 						// jQuery FREAKS out and gets into an infinite loop if the
 						// following function kicks back an error. Hence the try/catch.
 						try {
-							options.onClose();
+							onClose();
 						} catch (err) {
 							if (console && err.message && err.stack) {
 								console.log(err.message);
@@ -891,7 +893,7 @@ define(function(require) {
 				width: 'auto',
 				// Event handlers
 				open: function(event, ui) {
-					if (options.hideClose) {
+					if (hideClose) {
 						$('.ui-dialog-titlebar-close', ui.dialog || ui).hide();
 					}
 				}
