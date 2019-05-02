@@ -152,7 +152,7 @@ define(function(require) {
 					args.callback({
 						amount: _
 							.chain(formatted)
-							.filter(function(transaction) {
+							.filter('isApproved')
 								return transaction.isApproved;
 							})
 							.sumBy('amount')
