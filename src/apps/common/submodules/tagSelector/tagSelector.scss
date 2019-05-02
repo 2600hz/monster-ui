@@ -29,7 +29,7 @@
 			.tags-keyword {
 				border: 0 !important;
 				margin: 0;
-				max-width: 164px;
+				max-width: 100px;
 			}
 
 			.tags {
@@ -65,6 +65,8 @@
 		margin-top: 20px;
 
 		button {
+			cursor: pointer;
+
 			&:first-child {
 				margin-right: 10px;
 			}

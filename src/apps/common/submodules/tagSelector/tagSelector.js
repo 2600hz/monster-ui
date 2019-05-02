@@ -34,7 +34,8 @@ define(function(require) {
 				})),
 				optionsPopup = {
 					position: ['center', 100],
-					title: title || self.i18n.active().tagSelector.title
+					title: title || self.i18n.active().tagSelector.title,
+					width: 500
 				},
 				popup = monster.ui.dialog(template, optionsPopup);
 
@@ -53,8 +54,8 @@ define(function(require) {
 				callback = args.callback;
 
 			template
-				.find('#cancel')
-					.on('click', function(event) {
+				.find('.cancel')
+					.on('click', function() {
 						popup.dialog('close').remove();
 					});
 
