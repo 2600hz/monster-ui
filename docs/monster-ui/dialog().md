@@ -12,7 +12,7 @@ monster.ui.dialog([content, options]);
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `content` | Either a string representation or a jQuery object that will be inserted inside the dialog widget. | `String`, `jQuery` | | `true`
-`options` | Let you customize the look and feel of the dialog in Monster UI. Besides that, you can override the default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `appendTo`, `draggable`, `resizable`, `show`, `hide`, `position`, `zIndex` and the `close` method. | `Object`([#options](#options)) | | `false`
+`options` | Let you customize the look and feel of the dialog in Monster UI. Besides that, you can override the default options that can be found on the [jQuery UI Dialog Widget][dialog_widget] page. The only options that cannot be overridden are `appendTo`, `draggable`, `resizable`, `show`, `hide`, `position`, `minHeight`, `minWidth`, `zIndex` and the `close` method. | `Object`([#options](#options)) | | `false`
 
 ### `options`
 Here is a list of the customization settings specific to Monster UI.
@@ -21,6 +21,7 @@ Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `dialogType` | Type of dialog, which determines the closing button style. | `String('conference' | 'classic')` | `classic` | `false`
 `isPersistent` | Whether or not to keep the dialog open when another app is loaded. | `Boolean` | `false` | `false`
+`onClose` | A function to be executed when the dialog is closed. | `Function` | | `false`
 `scrollableContainer` | Either a string selector path, a DOM Element or a jQuery object that references an element within the dialog. This element will be made scrollable when needed, to be able to fit the dialog to the viewport's size. | `String`, `Element`, `jQuery` | | `false`
 
 ### Return
@@ -40,7 +41,10 @@ var template = $(app.getTemplate({
 
 monster.ui.dialog(template, {
     title: app.i18n.active().dialog.failover.title,
-    width: '540px'
+    width: '540px',
+    onClose: function() {
+      doStuff();
+    }
 });
 ```
 
