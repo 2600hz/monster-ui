@@ -14,22 +14,27 @@ define(function(require) {
 
 		/**
 		 * @param {Object} args
+		 * @param {Object} args.tags
+		 * @param {String} args.title
+		 * @param {String} args.description
+		 * @param {Function} args.callback
 		 */
 		tagSelectorRender: function(args) {
 			var self = this,
 				tags = args.tags,
 				title = args.title,
+				description = args.description,
 				template = $(self.getTemplate({
 					name: 'layout',
 					data: {
-						tags: tags
+						tags: tags,
+						description: description || self.i18n.active().tagSelector.description
 					},
 					submodule: 'tagSelector'
 				})),
 				optionsPopup = {
 					position: ['center', 100],
-					title: title || self.i18n.active().tagSelector.title,
-					width: 400
+					title: title || self.i18n.active().tagSelector.title
 				},
 				popup = monster.ui.dialog(template, optionsPopup);
 
@@ -132,7 +137,7 @@ define(function(require) {
 					if (tagsCount === 0) {
 						template
 							.find('.tags-search .tags-keyword')
-								.attr('placeholder', self.i18n.active().tagSelector.searchTags);
+								.attr('placeholder', self.i18n.active().tagSelector.placeholder);
 					}
 
 					template

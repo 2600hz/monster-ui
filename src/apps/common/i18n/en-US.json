@@ -1005,10 +1005,9 @@
 	"__comment": "UI-3375",
 	"tagSelector": {
 		"title": "Add tags",
-		"description": "Tag selector description",
+		"description": "Select tags by typing the box below.",
 		"placeholder": "Select tag",
-		"add": "Add",
-		"searchTags": "Start typing to add tags"
+		"add": "Add"
 	},
 
 	"__comment": "UI-2788",
