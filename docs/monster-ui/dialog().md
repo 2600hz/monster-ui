@@ -20,7 +20,7 @@ Here is a list of the customization settings specific to Monster UI.
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `dialogType` | Type of dialog, which determines the closing button style. | `String('conference' | 'classic')` | `classic` | `false`
-`isPersistent` | Indicates whether or not to persist the dialog when switching app contexts. | `Boolean` | `false` | `false`
+`isPersistent` | Whether or not to keep the dialog open when another app is loaded. | `Boolean` | `false` | `false`
 `scrollableContainer` | Either a string selector path, a DOM Element or a jQuery object that references an element within the dialog. This element will be made scrollable when needed, to be able to fit the dialog to the viewport's size. | `String`, `Element`, `jQuery` | | `false`
 
 ### Return
