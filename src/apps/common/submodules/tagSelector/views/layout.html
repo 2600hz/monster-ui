@@ -1,30 +1,28 @@
-<div class="form-horinzontal add-tag-dialog">
+<div class="form-horinzontal add-tags-dialog">
 	<div class="control-group">
 		<p>{{ i18n.tagSelector.description }}</p>
 	</div>
 
-	<div class="dialog-content-wrapper">
-		<div class="action-element">
-			<div class="tags-search transparent">
-				<div class="tags">
-					<input type="text" class="tags-keyword" placeholder="{{ i18n.tagSelector.placeholder }}">
-				</div>
+	<div class="add-tags-dialog-content-wrapper">
+		<div class="tags-search transparent">
+			<div class="tags">
+				<input type="text" class="tags-keyword" placeholder="{{ i18n.tagSelector.placeholder }}">
 			</div>
+		</div>
 
-			<div class="tags-list hide">
-				{{#each tags}}
-					<a href="#" data-id="{{ this.id }}">{{this.tag}}</a>
-				{{/each}}
-			</div>
+		<div class="tags-list hide">
+			{{#each tags}}
+				<a href="#" data-id="{{ this.id }}">{{this.tag}}</a>
+			{{/each}}
 		</div>
 	</div>
 
-	<div class="actions">
+	<div class="add-tags-dialog-actions clearfix">
 		<div class="pull-right">
 			<button class="monster-button cancel">
 				{{i18n.cancel}}
 			</button>
-			<button class="monster-button-success update">
+			<button class="monster-button-success add-tags">
 				{{ i18n.tagSelector.add }}
 			</button>
 		</div>
