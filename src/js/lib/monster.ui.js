@@ -941,12 +941,13 @@ define(function(require) {
 				$scrollableContainer = $dialogBody;
 			}
 
+			// Set initial sizes
+			setDialogSizes();
+
+			// Make container scrollable
 			$scrollableContainer.css({
 				overflow: 'auto'
 			});
-
-			// Set initial sizes
-			setDialogSizes();
 
 			// Set event handlers
 			$('input', content).keypress(function(e) {
