@@ -153,7 +153,8 @@ define(function(require) {
 						amount: _
 							.chain(formatted)
 							.filter('isApproved')
-							.sumBy('amount'),
+							.sumBy('amount')
+							.value(),
 						transactions: formatted
 					});
 				}
