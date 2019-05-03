@@ -438,6 +438,16 @@ define(function(require) {
 		}
 	}
 
+	/**
+	 * Gets the scrollbar width for the current browser
+	 */
+	function getScrollBarWidth () {
+		var $outer = $('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),
+			widthWithScroll = $('<div>').css({width: '100%'}).appendTo($outer).outerWidth();
+		$outer.remove();
+		return 100 - widthWithScroll;
+	};
+
 	var ui = {
 
 		/**
@@ -756,8 +766,11 @@ define(function(require) {
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
 			var dialogPosition = [ 'center', 24 ];
+			var rightPaddingAdded = false;
+			var scrollbarWidth = getScrollBarWidth();
 			var windowLastWidth = $window.width();
 			var $fullDialog;
+			var scrollableContainerOriginalHeight;
 			var getFullDialog = function() {
 				if (_.isEmpty($fullDialog)) {
 					$fullDialog = $dialogBody.closest('.ui-dialog');
@@ -766,16 +779,45 @@ define(function(require) {
 			};
 			var setDialogSizes = function() {
 				var $dialog = getFullDialog();
+				var $parentContainer = $scrollableContainer;
 				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
-				var dialogWidth = $dialog.width();
-				var $parentContainer = $scrollableContainer;
-				var dialogHeightDiff;
-				var dialogWidthDiff;
+				var dialogHeightDiff = dialogMaxHeight - dialogHeight;
 
-				// Calculate diffs
-				dialogHeightDiff = dialogMaxHeight - dialogHeight;
+				if (!scrollableContainerOriginalHeight) {
+					scrollableContainerOriginalHeight = $scrollableContainer.height();
+				}
+
+				// If will be vertically overflown, add padding, to prevent unnecessary horizontal overflow
+				var paddingDiff = 0;
+				var paddingRight;
+
+				if (scrollableContainerOriginalHeight > $scrollableContainer.height() + dialogHeightDiff) {
+					if (!rightPaddingAdded) {
+						paddingRight = $scrollableContainer.css('padding-right');
+						$scrollableContainer.css({
+							paddingRight: _.parseInt(paddingRight, 10) + scrollbarWidth
+						});
+						rightPaddingAdded = true;
+					}
+				} else {
+					if (rightPaddingAdded) {
+						paddingRight = $scrollableContainer.css('padding-right');
+						$scrollableContainer.css({
+							paddingRight: _.parseInt(paddingRight, 10) - scrollbarWidth
+						});
+						rightPaddingAdded = false;
+					}
+				}
+
+				if (rightPaddingAdded) {
+					paddingDiff = scrollbarWidth;
+				}
+
+				// Calculate width data
+				var dialogWidth = $dialog.width();
+				var dialogWidthDiff;
 				dialogWidthDiff = dialogMaxWidth - dialogWidth;
 
 				// Calculate item widths, from scrollable element up to the dialog element.
@@ -815,10 +857,11 @@ define(function(require) {
 
 				// Update items width
 				_.each(widthItems, function(item) {
-					if (item.width !== item.maxWidth && (item.width > item.maxWidth || item.originalWidth > item.maxWidth)) {
+					var originalWidthPlusPadding = item.originalWidth + paddingDiff;
+					if (item.width !== item.maxWidth && (item.width > item.maxWidth || originalWidthPlusPadding > item.maxWidth)) {
 						item.$element.width(item.maxWidth);
-					} else if (item.width !== item.originalWidth && item.originalWidth < item.maxWidth) {
-						item.$element.width(item.originalWidth);
+					} else if (item.width !== originalWidthPlusPadding && originalWidthPlusPadding < item.maxWidth) {
+						item.$element.width(originalWidthPlusPadding);
 					}
 				});
 			};
@@ -932,12 +975,17 @@ define(function(require) {
 				$scrollableContainer = $dialogBody;
 			}
 
+			// Make container scrollable on Y
+			$scrollableContainer.css({
+				overflowY: 'auto'
+			});
+
 			// Set initial sizes
 			setDialogSizes();
 
-			// Make container scrollable
+			// Make container scrollable on X
 			$scrollableContainer.css({
-				overflow: 'auto'
+				overflowX: 'auto'
 			});
 
 			// Set event handlers
