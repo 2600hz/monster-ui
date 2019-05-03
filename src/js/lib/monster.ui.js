@@ -815,9 +815,9 @@ define(function(require) {
 
 				// Update items width
 				_.each(widthItems, function(item) {
-					if (item.width > item.maxWidth || item.originalWidth > item.maxWidth) {
+					if (item.width !== item.maxWidth && (item.width > item.maxWidth || item.originalWidth > item.maxWidth)) {
 						item.$element.width(item.maxWidth);
-					} else if (item.originalWidth < item.maxWidth) {
+					} else if (item.width !== item.originalWidth && item.originalWidth < item.maxWidth) {
 						item.$element.width(item.originalWidth);
 					}
 				});
