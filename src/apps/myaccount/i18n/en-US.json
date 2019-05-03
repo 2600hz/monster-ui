@@ -277,7 +277,7 @@
 				"text2": "There are two ways you can cover these costs. Select how you’d like to be billed:",
 				"info": "If you add any services mid-month, you’ll be charged immediately for the remainder of the month for that service. If you remove a service mid-month, you’ll be credited back for any unused portion of the month.",
 				"toast": {
-					"success": "Your payment method was successfully updated"
+					"success": "Your billing method was updated successfully"
 				},
 				"panelTitle": {
 					"info": "Info",
