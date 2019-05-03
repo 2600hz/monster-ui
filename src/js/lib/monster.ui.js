@@ -756,13 +756,7 @@ define(function(require) {
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
 			var dialogPosition = [ 'center', 24 ];
-			var getElementSize = function($element) {
-				return {
-					width: $element.width(),
-					height: $element.height()
-				};
-			};
-			var windowLastSize = getElementSize($window);
+			var windowLastWidth = $window.width();
 			var $fullDialog;
 			var getFullDialog = function() {
 				if (_.isEmpty($fullDialog)) {
@@ -828,13 +822,10 @@ define(function(require) {
 					}
 				});
 			};
-			var centerDialog = function() {
-				$dialogBody.dialog('option', 'position', dialogPosition);
-			};
 			var windowResizeHandler = _.debounce(setDialogSizes, 10);
 			// Unset variables
 			var $scrollableContainer;
-			var dialogLastSize;
+			var dialogLastWidth;
 			var dialogResizeIntervalId;
 			var widthItems;
 
@@ -912,7 +903,7 @@ define(function(require) {
 					strictOptions);
 
 			$dialogBody.dialog(options);
-			dialogLastSize = getElementSize(getFullDialog());
+			dialogLastWidth = getFullDialog().width();
 
 			// Set dialog close button
 			switch (dialogType) {
@@ -960,15 +951,16 @@ define(function(require) {
 
 			// Check for size changes every 20ms
 			dialogResizeIntervalId = setInterval(function() {
-				var windowCurrentSize = getElementSize($window);
-				var dialogCurrentSize = getElementSize(getFullDialog());
-				if (_.isEqual(dialogLastSize, dialogCurrentSize) && _.isEqual(windowLastSize, windowCurrentSize)) {
+				var windowCurrentWidth = $window.width();
+				var dialogCurrentWidth = getFullDialog().width();
+				if (dialogLastWidth === dialogCurrentWidth && windowLastWidth === windowCurrentWidth) {
 					return;
 				}
 
-				centerDialog();
-				dialogLastSize = dialogCurrentSize;
-				windowLastSize = windowCurrentSize;
+				$dialogBody.dialog('option', 'position', dialogPosition);
+
+				dialogLastWidth = dialogCurrentWidth;
+				windowLastWidth = windowCurrentWidth;
 			}, 20);
 
 			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
