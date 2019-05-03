@@ -328,6 +328,9 @@ define(function(require) {
 				monster.pub('myaccount.updateMenu', dataUpdate);
 
 				popup = monster.ui.dialog(addCreditDialog, {
+					draggable: false,
+					position: ['center', 24],
+					maxHeight: $(window).height() - 48,
 					title: self.i18n.active().balance.addCreditDialogTitle
 				});
 
