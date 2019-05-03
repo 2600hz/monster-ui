@@ -188,3 +188,46 @@
 	content: '';
 	clear: both;
 }
+
+.add-credits-popup-wrapper {
+	#subscriptions .add-credits-content {
+		.subscription-options {
+			border: 1px solid $french-gray2;
+			border-radius: 2px;
+
+			.option {
+				padding: 16px;
+
+				.monster-radio {
+					i {
+						margin: 3px 0;
+					}
+
+					span {
+						font-weight: 600;
+					}
+				}
+
+				.description {
+					margin-left: 20px;
+				}
+
+				.monster-panel-text {
+					margin: 16px 0 0;
+				}
+
+				&:not(:first-child) {
+					border-top: 1px solid $french-gray2;
+				}
+
+				&.selected {
+					background-color: #e9f5ff;
+				}
+			}
+		}
+
+		& > .monster-panel-text {
+			margin: 20px 0 0;
+		}
+	}
+}
