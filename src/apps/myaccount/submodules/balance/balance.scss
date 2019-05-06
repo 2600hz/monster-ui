@@ -226,8 +226,11 @@
 			}
 		}
 
-		& > .monster-panel-text {
-			margin: 20px 0 0;
+		& > .text {
+			p,
+			.monster-panel-text {
+				margin-bottom: 20px;
+			}
 		}
 	}
 }
