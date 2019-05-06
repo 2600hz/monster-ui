@@ -766,6 +766,7 @@ define(function(require) {
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
 			var dialogPosition = [ 'center', 24 ];
+			var processingResize = false;
 			var rightPaddingAdded = false;
 			var scrollbarWidth = getScrollBarWidth();
 			var getElementSize = function($element) {
@@ -776,7 +777,6 @@ define(function(require) {
 			};
 			var windowLastSize = getElementSize($window);
 			var $fullDialog;
-			var scrollableContainerOriginalHeight;
 			var getFullDialog = function() {
 				if (_.isEmpty($fullDialog)) {
 					$fullDialog = $dialogBody.closest('.ui-dialog');
@@ -790,41 +790,11 @@ define(function(require) {
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
 				var dialogHeightDiff = dialogMaxHeight - dialogHeight;
-
-				if (!scrollableContainerOriginalHeight) {
-					scrollableContainerOriginalHeight = $scrollableContainer.height();
-				}
-
-				// If will be vertically overflown, add padding, to prevent unnecessary horizontal overflow
+				var dialogWidth = $dialog.width();
+				var dialogWidthDiff = dialogMaxWidth - dialogWidth;
+				var scrollableContainerElement = $scrollableContainer.get(0);
 				var paddingDiff = 0;
 				var paddingRight;
-
-				if (scrollableContainerOriginalHeight > $scrollableContainer.height() + dialogHeightDiff) {
-					if (!rightPaddingAdded) {
-						paddingRight = $scrollableContainer.css('padding-right');
-						$scrollableContainer.css({
-							paddingRight: _.parseInt(paddingRight, 10) + scrollbarWidth
-						});
-						rightPaddingAdded = true;
-					}
-				} else {
-					if (rightPaddingAdded) {
-						paddingRight = $scrollableContainer.css('padding-right');
-						$scrollableContainer.css({
-							paddingRight: _.parseInt(paddingRight, 10) - scrollbarWidth
-						});
-						rightPaddingAdded = false;
-					}
-				}
-
-				if (rightPaddingAdded) {
-					paddingDiff = scrollbarWidth;
-				}
-
-				// Calculate width data
-				var dialogWidth = $dialog.width();
-				var dialogWidthDiff;
-				dialogWidthDiff = dialogMaxWidth - dialogWidth;
 
 				// Calculate item widths, from scrollable element up to the dialog element.
 				// This is required because it is likely that the width has been set via CSS
@@ -857,13 +827,35 @@ define(function(require) {
 
 				// Set scrollable content max size
 				$scrollableContainer.css({
-					maxHeight: $scrollableContainer.height() + dialogHeightDiff,
-					maxWidth: $scrollableContainer.width() + dialogWidthDiff
+					maxHeight: $scrollableContainer.height() + dialogHeightDiff
 				});
 
+				// If it is vertically overflown, add padding, to prevent unnecessary horizontal overflow
+				if (scrollableContainerElement.scrollHeight > scrollableContainerElement.clientHeight) {
+					if (!rightPaddingAdded && dialogWidthDiff > 0) {
+						paddingRight = $scrollableContainer.css('padding-right');
+						$scrollableContainer.css({
+							paddingRight: _.parseInt(paddingRight, 10) + scrollbarWidth
+						});
+						rightPaddingAdded = true;
+					}
+				} else {
+					if (rightPaddingAdded && dialogWidthDiff > 0) {
+						paddingRight = $scrollableContainer.css('padding-right');
+						$scrollableContainer.css({
+							paddingRight: _.parseInt(paddingRight, 10) - scrollbarWidth
+						});
+						rightPaddingAdded = false;
+					}
+				}
+
+				if (rightPaddingAdded) {
+					paddingDiff = scrollbarWidth;
+				}
+
 				// Update items width
-				_.each(widthItems, function(item) {
-					var originalWidthPlusPadding = item.originalWidth + paddingDiff;
+				_.each(widthItems, function(item, index) {
+					var originalWidthPlusPadding = item.originalWidth + (index === 0 ? 0 : paddingDiff);
 					if (item.width !== item.maxWidth && (item.width > item.maxWidth || originalWidthPlusPadding > item.maxWidth)) {
 						item.$element.width(item.maxWidth);
 					} else if (item.width !== originalWidthPlusPadding && originalWidthPlusPadding < item.maxWidth) {
@@ -874,7 +866,6 @@ define(function(require) {
 			var centerDialog = function() {
 				$dialogBody.dialog('option', 'position', dialogPosition);
 			};
-			var windowResizeHandler = _.debounce(setDialogSizes, 10);
 			// Unset variables
 			var $scrollableContainer;
 			var dialogLastSize;
@@ -900,7 +891,6 @@ define(function(require) {
 				// Event handlers
 				close: function() {
 					// Clear events
-					$window.off('resize', windowResizeHandler);
 					clearInterval(dialogResizeIntervalId);
 
 					// Remove elements
@@ -1004,19 +994,29 @@ define(function(require) {
 					return false;
 				}
 			});
-			$window.on('resize', windowResizeHandler);
 
 			// Check for size changes every 20ms
 			dialogResizeIntervalId = setInterval(function() {
+				if (processingResize) {
+					return;
+				}
+				processingResize = true;
+
+				var $dialog = getFullDialog();
 				var windowCurrentSize = getElementSize($window);
-				var dialogCurrentSize = getElementSize(getFullDialog());
+				var dialogCurrentSize = getElementSize($dialog);
 				if (_.isEqual(dialogLastSize, dialogCurrentSize) && _.isEqual(windowLastSize, windowCurrentSize)) {
+					processingResize = false;
 					return;
 				}
 
+				setDialogSizes();
 				centerDialog();
-				dialogLastSize = dialogCurrentSize;
-				windowLastSize = windowCurrentSize;
+
+				windowLastSize = getElementSize($window);
+				dialogLastSize = getElementSize($dialog);
+
+				processingResize = false;
 			}, 20);
 
 			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
