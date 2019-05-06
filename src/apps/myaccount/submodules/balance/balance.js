@@ -917,7 +917,8 @@ define(function(require) {
 		/**
 		 * @param  {Object} args
 		 * @param  {'preemptive'|'exact'|'none'} args.type
-		 * @param  {Function} [args.callback]
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
 		 */
 		balanceUpdateSubscriptions: function(args) {
 			var self = this,
