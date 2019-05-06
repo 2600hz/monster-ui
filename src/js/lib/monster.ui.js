@@ -783,9 +783,35 @@ define(function(require) {
 				}
 				return $fullDialog;
 			};
-			var setDialogSizes = function() {
+			var widthItems = [];
+			var saveWidthSizes = function() {
 				var $dialog = getFullDialog();
 				var $parentContainer = $scrollableContainer;
+
+				// Calculate item widths, from scrollable element up to the dialog element.
+				// This is required because it is likely that the width has been set via CSS
+				// styles in any of the elements of the dialog that wraps the scroll container.
+				// This is less likely for height, so it is done for width only.
+				while (true) {
+					var itemWidth = $parentContainer.width();
+					widthItems.push({
+						$element: $parentContainer,
+						originalWidth: itemWidth
+					});
+
+					// Set width, so it don't get lost after changing other styles. For example,
+					// when overflow is set as auto, in some cases the initial width is lost.
+					$parentContainer.width(itemWidth);
+
+					if ($parentContainer.is($dialog)) {
+						break;
+					}
+
+					$parentContainer = $parentContainer.parent();
+				}
+			};
+			var setDialogSizes = function() {
+				var $dialog = getFullDialog();
 				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
 				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
 				var dialogHeight = $dialog.height();
@@ -796,34 +822,10 @@ define(function(require) {
 				var paddingDiff = 0;
 				var paddingRight;
 
-				// Calculate item widths, from scrollable element up to the dialog element.
-				// This is required because it is likely that the width has been set via CSS
-				// styles in any of the elements of the dialog that wraps the scroll container.
-				// This is less likely for height, so it is done for width only.
-				if (!widthItems) {
-					// If not listed previously, populate list
-					widthItems = [];
-					while (true) {
-						widthItems.push({
-							$element: $parentContainer,
-							originalWidth: $parentContainer.width(),
-							width: $parentContainer.width(),
-							maxWidth: $parentContainer.width() + dialogWidthDiff
-						});
-
-						if ($parentContainer.is($dialog)) {
-							break;
-						}
-
-						$parentContainer = $parentContainer.parent();
-					}
-				} else {
-					// If already listed, update width values
-					_.each(widthItems, function(item) {
-						item.width = item.$element.width();
-						item.maxWidth = item.$element.width() + dialogWidthDiff;
-					});
-				}
+				_.each(widthItems, function(item) {
+					item.width = item.$element.width();
+					item.maxWidth = item.$element.width() + dialogWidthDiff;
+				});
 
 				// Set scrollable content max size
 				$scrollableContainer.css({
@@ -870,7 +872,6 @@ define(function(require) {
 			var $scrollableContainer;
 			var dialogLastSize;
 			var dialogResizeIntervalId;
-			var widthItems;
 
 			//Unoverridable options
 			var strictOptions = {
@@ -974,18 +975,16 @@ define(function(require) {
 				$scrollableContainer = $dialogBody;
 			}
 
-			// Make container scrollable on Y
+			// Save initial width sizes, before changing any CSS
+			saveWidthSizes();
+
+			// Make container scrollable
 			$scrollableContainer.css({
-				overflowY: 'auto'
+				overflow: 'auto'
 			});
 
 			// Set initial sizes
 			setDialogSizes();
-
-			// Make container scrollable on X
-			$scrollableContainer.css({
-				overflowX: 'auto'
-			});
 
 			// Set event handlers
 			$('input', content).keypress(function(e) {
