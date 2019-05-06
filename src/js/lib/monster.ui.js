@@ -768,7 +768,13 @@ define(function(require) {
 			var dialogPosition = [ 'center', 24 ];
 			var rightPaddingAdded = false;
 			var scrollbarWidth = getScrollBarWidth();
-			var windowLastWidth = $window.width();
+			var getElementSize = function($element) {
+				return {
+					width: $element.width(),
+					height: $element.height()
+				};
+			};
+			var windowLastSize = getElementSize($window);
 			var $fullDialog;
 			var scrollableContainerOriginalHeight;
 			var getFullDialog = function() {
@@ -865,10 +871,13 @@ define(function(require) {
 					}
 				});
 			};
+			var centerDialog = function() {
+				$dialogBody.dialog('option', 'position', dialogPosition);
+			};
 			var windowResizeHandler = _.debounce(setDialogSizes, 10);
 			// Unset variables
 			var $scrollableContainer;
-			var dialogLastWidth;
+			var dialogLastSize;
 			var dialogResizeIntervalId;
 			var widthItems;
 
@@ -946,7 +955,7 @@ define(function(require) {
 					strictOptions);
 
 			$dialogBody.dialog(options);
-			dialogLastWidth = getFullDialog().width();
+			dialogLastSize = getElementSize(getFullDialog());
 
 			// Set dialog close button
 			switch (dialogType) {
@@ -999,16 +1008,15 @@ define(function(require) {
 
 			// Check for size changes every 20ms
 			dialogResizeIntervalId = setInterval(function() {
-				var windowCurrentWidth = $window.width();
-				var dialogCurrentWidth = getFullDialog().width();
-				if (dialogLastWidth === dialogCurrentWidth && windowLastWidth === windowCurrentWidth) {
+				var windowCurrentSize = getElementSize($window);
+				var dialogCurrentSize = getElementSize(getFullDialog());
+				if (_.isEqual(dialogLastSize, dialogCurrentSize) && _.isEqual(windowLastSize, windowCurrentSize)) {
 					return;
 				}
 
-				$dialogBody.dialog('option', 'position', dialogPosition);
-
-				dialogLastWidth = dialogCurrentWidth;
-				windowLastWidth = windowCurrentWidth;
+				centerDialog();
+				dialogLastSize = dialogCurrentSize;
+				windowLastSize = windowCurrentSize;
 			}, 20);
 
 			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
