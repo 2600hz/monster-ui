@@ -280,7 +280,7 @@
 					"success": "Your billing method was updated successfully"
 				},
 				"panelTitle": {
-					"info": "Info",
+					"info": "Prorated Charges",
 					"warning": "Warning"
 				},
 				"preemptive": {

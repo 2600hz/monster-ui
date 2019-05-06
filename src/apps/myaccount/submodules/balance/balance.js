@@ -819,12 +819,15 @@ define(function(require) {
 
 					self.balanceUpdateSubscriptions({
 						type: $this.val(),
-						callback: function() {
+						success: function() {
 							subscriptionsRadio.prop('disabled', false);
 							monster.ui.toast({
 								type: 'success',
 								message: self.i18n.active().balance.addCreditPopup.subscriptions.toast.success
 							});
+						},
+						error: function() {
+							subscriptionsRadio.prop('disabled', false);
 						}
 					});
 				});
@@ -914,7 +917,8 @@ define(function(require) {
 		/**
 		 * @param  {Object} args
 		 * @param  {'preemptive'|'exact'|'none'} args.type
-		 * @param  {Function} [args.callback]
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
 		 */
 		balanceUpdateSubscriptions: function(args) {
 			var self = this,
@@ -937,7 +941,8 @@ define(function(require) {
 						exact: false
 					};
 				})(type),
-				callback = _.get(args, 'callback');
+				success = _.get(args, 'success'),
+				error = _.get(args, 'error');
 
 			monster.waterfall([
 				function(cb) {
@@ -963,11 +968,18 @@ define(function(require) {
 						},
 						success: function(data) {
 							cb(null);
+						},
+						error: function() {
+							cb(true);
 						}
 					});
 				}
 			], function(err) {
-				callback && callback();
+				if (err) {
+					error && error();
+					return;
+				}
+				success && success();
 			});
 		},
 
