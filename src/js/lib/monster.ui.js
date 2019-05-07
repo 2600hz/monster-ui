@@ -747,9 +747,9 @@ define(function(require) {
 			var isPersistent = _.get(options, 'isPersistent', false);
 			var onClose = _.get(options, 'onClose');
 			var open = _.get(options, 'open');
-			var scrollableContainer = _.get(options, 'scrollableContainer');
 			// Other variables/functions for internal use
 			var $dialogBody = $('<div />').append(content);
+			var $scrollableContainer = $dialogBody;
 			var $window = $(window);
 			var $body = $('body');
 			var coreApp = monster.apps.core;
@@ -788,7 +788,6 @@ define(function(require) {
 			};
 			var windowResizeHandler = _.debounce(setDialogSizes, 100);
 			// Unset variables
-			var $scrollableContainer;
 			var dialogLastWidth;
 
 			//Unoverridable options
@@ -876,22 +875,6 @@ define(function(require) {
 					break;
 			}
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
-
-			// Prepare scrollable container
-			if (scrollableContainer) {
-				if (scrollableContainer instanceof $) {
-					$scrollableContainer = scrollableContainer;
-				} else if (_.isElement(scrollableContainer)) {
-					$scrollableContainer = $(scrollableContainer);
-				} else {
-					$scrollableContainer = $dialogBody.find(scrollableContainer);
-				}
-			}
-			// If scrollable content was not specified, or is not a dialog's descendant,
-			// then default to dialog's body as scrollable content
-			if (!scrollableContainer || _.isEmpty($scrollableContainer) || !$.contains(getFullDialog().get(0), $scrollableContainer.get(0))) {
-				$scrollableContainer = $dialogBody;
-			}
 
 			// Make container scrollable
 			$scrollableContainer.css({
