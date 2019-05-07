@@ -69,7 +69,7 @@ define(function(require) {
 		},
 
 		/**
-		 * Check if the user is marquerading or is a reseller
+		 * Check if the user is masquerading or is not a reseller
 		 */
 		portListingCheckProfile: function() {
 			return monster.util.isMasquerading() || !monster.util.isReseller();
@@ -100,15 +100,21 @@ define(function(require) {
 						}
 					};
 				}),
-				tabs = _.map(self.appFlags.portListing.tabs, function(tab) {
-					return {
-						text: self.i18n.active().portListing.tabs[tab],
-						id: tab,
-						menus: [{
-							tabs: subTabs
-						}]
-					};
-				}),
+				tabs = _
+					.chain(self.appFlags.portListing.tabs)
+					.filter(function(tab) {
+						return tab !== 'agent' || monster.util.isSuperDuper() || monster.config.whitelabel.port.authority === self.accountId;
+					})
+					.map(function(tab) {
+						return {
+							text: self.i18n.active().portListing.tabs[tab],
+							id: tab,
+							menus: [{
+								tabs: subTabs
+							}]
+						};
+					})
+					.value(),
 				container,
 				parent;
 
