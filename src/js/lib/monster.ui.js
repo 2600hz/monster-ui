@@ -756,7 +756,6 @@ define(function(require) {
 			var i18n = coreApp.i18n.active();
 			var closeBtnText = i18n.close || 'X';
 			var dialogPosition = [ 'center', 24 ];
-			var checkingResize = false;
 			var windowLastWidth = $window.width();
 			var getFullDialog = _.once(function() {
 				return $dialogBody.closest('.ui-dialog');
@@ -778,12 +777,19 @@ define(function(require) {
 				$dialogBody.css({
 					maxWidth: dialogMaxWidth
 				});
+
+				// Center
+				if (dialogLastWidth !== $dialog.width() || windowLastWidth !== $window.width() || $dialog.offset().top === 24) {
+					$dialogBody.dialog('option', 'position', dialogPosition);
+
+					dialogLastWidth = $dialog.width();
+					windowLastWidth = $window.width();
+				}
 			};
 			var windowResizeHandler = _.debounce(setDialogSizes, 100);
 			// Unset variables
 			var $scrollableContainer;
 			var dialogLastWidth;
-			var resizeCheckIntervalId;
 
 			//Unoverridable options
 			var strictOptions = {
@@ -805,7 +811,6 @@ define(function(require) {
 				close: function() {
 					// Clear events
 					$window.off('resize', windowResizeHandler);
-					clearInterval(resizeCheckIntervalId);
 
 					// Remove elements
 					$('div.popover').remove();
@@ -904,28 +909,6 @@ define(function(require) {
 				}
 			});
 			$window.on('resize', windowResizeHandler);
-
-			// Check periodically for window width changes, or dialog width/position changes,
-			// to center dialog
-			resizeCheckIntervalId = setInterval(function() {
-				if (checkingResize) {
-					return;
-				}
-				checkingResize = true;
-
-				var $dialog = getFullDialog();
-				if (dialogLastWidth === $dialog.width() && windowLastWidth === $window.width() && $dialog.offset().top === 24) {
-					checkingResize = false;
-					return;
-				}
-
-				$dialogBody.dialog('option', 'position', dialogPosition);
-
-				dialogLastWidth = $dialog.width();
-				windowLastWidth = $window.width();
-
-				checkingResize = false;
-			}, 100);
 
 			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
 		},
