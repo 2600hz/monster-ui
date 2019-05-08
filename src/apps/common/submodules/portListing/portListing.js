@@ -1168,10 +1168,12 @@ define(function(require) {
 		},
 
 		/**
+		 * @param  {Object}   args
 		 * @param  {Function} args.success
-		 * @param  {String} args.tab
-		 * @param  {String} args.status
-		 * @param  {Object} args.filters
+		 * @param  {String}   args.tab
+		 * @param  {String}   args.type
+		 * @param  {Date}     [args.fromDate]
+		 * @param  {Date}     [args.toDate]
 		 */
 		portListingHelperListPorts: function(args) {
 			var self = this,
