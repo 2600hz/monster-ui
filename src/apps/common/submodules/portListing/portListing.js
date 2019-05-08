@@ -1177,7 +1177,7 @@ define(function(require) {
 			var self = this,
 				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range),
 				fromDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'fromDate', dates.from)),
-				toDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'toDate', dates.to)),
+				toDate = monster.util.dateToEndOfGregorianDay(_.get(args, 'toDate', dates.to)),
 				filters = {
 					paginate: false,
 					by_types: args.type
