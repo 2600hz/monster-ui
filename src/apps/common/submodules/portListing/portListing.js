@@ -102,8 +102,8 @@ define(function(require) {
 				}),
 				tabs = _
 					.chain(self.appFlags.portListing.tabs)
-					.filter(function(tab) {
-						return tab !== 'agent' || monster.util.isSuperDuper() || monster.config.whitelabel.port.authority === self.accountId;
+					.reject(function(tab) {
+						return tab === 'agent' && !monster.util.isSuperDuper() && _.get(monster.config.whitelabel, 'port.authority') !== self.accountId;
 					})
 					.map(function(tab) {
 						return {
