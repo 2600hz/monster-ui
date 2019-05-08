@@ -1175,18 +1175,22 @@ define(function(require) {
 		 */
 		portListingHelperListPorts: function(args) {
 			var self = this,
-				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range),
-				fromDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'fromDate', dates.from)),
-				toDate = monster.util.dateToEndOfGregorianDay(_.get(args, 'toDate', dates.to)),
 				filters = {
 					paginate: false,
 					by_types: args.type
-				};
+				},
+				dates,
+				fromDate,
+				toDate;
 
 			if (self.portListingIsTypeCompleted(args.type)) {
+				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range);
+				fromDate = _.get(args, 'fromDate', dates.from);
+				toDate = _.get(args, 'toDate', dates.to);
+
 				filters = _.merge(filters, {
-					modified_from: fromDate,
-					modified_to: toDate
+					modified_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+					modified_to: monster.util.dateToEndOfGregorianDay(toDate)
 				});
 			}
 
