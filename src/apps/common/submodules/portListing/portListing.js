@@ -1185,8 +1185,8 @@ define(function(require) {
 
 			if (self.portListingIsTypeCompleted(args.type)) {
 				filters = _.merge(filters, {
-					created_from: fromDate,
-					created_to: toDate
+					modified_from: fromDate,
+					modified_to: toDate
 				});
 			}
 
