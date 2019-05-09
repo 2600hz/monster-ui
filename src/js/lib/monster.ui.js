@@ -3196,6 +3196,62 @@ define(function(require) {
 	};
 
 	/**
+	 * Get handlebars template to render a key-value editor
+	 * @param   {Object} args
+	 * @param   {String} [args.attributes]  Attributes to be added to the editor's main div
+	 * @return  {String}                    Key value editor template
+	 */
+	function getKeyValueEditorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (_.has(args, 'attributes') && !_.isPlainObject(args.attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		var attributes = _.get(args, 'attributes', {});
+		attributes = mergeHtmlAttributes(attributes, {
+			'class': 'monster-key-value-editor'
+		});
+		return monster.template(monster.apps.core, 'monster-key-value-editor', {
+			attributes: attributes
+		});
+	}
+
+	/**
+	 * Get handlebars template to render a key-value editor row
+	 * @param   {Objecy} args
+	 * @param   {String} [args.attributes]  Attributes to be added to the row div
+	 * @param   {String} [args.key]         Row key
+	 * @param   {String} [args.value]       Row value
+	 * @return  {String}                    Key value editor row template
+	 */
+	function getKeyValueEditorRowTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (_.has(args, 'attributes') && !_.isPlainObject(args.attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		var key = _.get(args, 'key', '');
+		if (!_.isString(key)) {
+			throw TypeError('"key" is not a string');
+		}
+		var value = _.get(args, 'value', '');
+		if (!_.isString(value)) {
+			throw TypeError('"value" is not a string');
+		}
+		var attributes = _.get(args, 'attributes', {});
+		attributes = mergeHtmlAttributes(attributes, {
+			'class': 'monster-key-value-editor-row'
+		});
+		return monster.template(monster.apps.core, 'monster-key-value-editor-row', {
+			attributes: attributes,
+			key: key,
+			value: value
+		});
+	}
+
+	/**
 	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
 	 * @param   {String} args.id            Icon ID
@@ -3215,18 +3271,45 @@ define(function(require) {
 		var iconId = args.id;
 		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
 		var attributes = _.get(args, 'attributes', {});
-		attributes.class = _
-			.chain(attributes)
-			.get('class', '')
-			.split(/\s+/g)      // Split by one or more whitespaces
-			.reject(_.isEmpty)  // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
-			.union(['svg-icon', iconPrefix])
-			.join(' ')
-			.value();
+		attributes = mergeHtmlAttributes(attributes, {
+			'class': 'svg-icon ' + iconPrefix
+		});
 
 		return monster.template(monster.apps.core, 'monster-svg-icon', {
 			iconId: iconId,
 			attributes: attributes
+		});
+	}
+
+	/**
+	 * Merges HTML attributes, mapped as JSON objects
+	 * @param   {Object} object  Destination object
+	 * @param   {Object} source  Source object
+	 * @returns {Object}         Returns `object` after merge
+	 */
+	function mergeHtmlAttributes(object, source) {
+		if (!_.isPlainObject(object)) {
+			throw TypeError('"object" is not a plain object');
+		}
+		if (!_.isPlainObject(source)) {
+			throw TypeError('"source" is not a plain object');
+		}
+
+		return _.mergeWith(object, source, function(objValue, srcValue, key) {
+			if (key !== 'class') {
+				return (_.isNil(objValue) ? '' : objValue) + (_.isNil(srcValue) ? '' : srcValue);
+			}
+			var srcClasses = _
+				.chain(srcValue || '')
+				.split(/\s+/g) // Split by one or more whitespaces
+				.value();
+			return _
+				.chain(objValue || '')
+				.split(/\s+/g) // Split by one or more whitespaces
+				.union(srcClasses)
+				.reject(_.isEmpty) // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
+				.join(' ')
+				.value();
 		});
 	}
 
@@ -3283,6 +3366,8 @@ define(function(require) {
 
 	initialize();
 
+	ui.getKeyValueEditorTemplate = getKeyValueEditorTemplate;
+	ui.getKeyValueEditorRowTemplate = getKeyValueEditorRowTemplate;
 	ui.getSvgIconTemplate = getSvgIconTemplate;
 	ui.monthpicker = monthpicker;
 	ui.toast = toast;
