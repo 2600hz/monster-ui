@@ -8,9 +8,9 @@ The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
 ### Prerequisites
 
-* [node](https://nodejs.org/en/download/) >= 4.5.0
+* [node](https://nodejs.org/en/download/) >= 6.9.0
 * [npm](https://docs.npmjs.com/getting-started/installing-node) >= 3.10.6
-* [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 3.9.1
+* [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 4.0.0
 
 ### Install
 
@@ -57,7 +57,7 @@ gulp
 
 Access your development environment at `http://localhost:3000/`
 
-*For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
+*If you are using Node <6.0.0, you need to require the file `.babelregister.js` while running gulp. For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
 
 ## Using Docker
 

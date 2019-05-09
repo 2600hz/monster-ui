@@ -1,169 +1,167 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var rjs = require('requirejs');
-var helpers = require('../helpers/helpers.js');
-var clean = require('gulp-clean');
-var gutil = require('gulp-util');
+import { join } from 'upath';
+import gulp from 'gulp';
+import rjs from 'requirejs';
+import del from 'del';
+import vinylPaths from 'vinyl-paths';
+import { require, tmp } from '../paths.js';
+import { env, getProApps, getAppsToInclude } from '../helpers/helpers.js';
+import { cleanTmp } from './clean-move.js';
 
-var paths = require('../paths.js');
+const standardFilesToExclude = [
+	'config',
+	'templates'
+];
 
+const libsToExcludeFromWhole = [
+	'pdfjs-dist/build/pdf',
+	'pdfjs-dist/build/pdf.worker',
+	'pdfmake',
+	'vfs_fonts'
+];
 
-var requireJsAppsToInclude = [],
-	appsToInclude = helpers.getAppsToInclude(),
-	proApps = helpers.getProApps();
+const libsToExcludeFromApp = [
+	'async',
+	'bootstrap',
+	'card',
+	'chart',
+	'chosen',
+	'clipboard',
+	'config',
+	'cookies',
+	'crossroads',
+	'ddslick',
+	'drop',
+	'duo',
+	'file-saver',
+	'fileupload',
+	'footable',
+	'form2object',
+	'handlebars',
+	'hasher',
+	'hotkeys',
+	'introJs',
+	'isotope',
+	'jquery',
+	'jqueryui',
+	'jstz',
+	'kazoo',
+	'kazoosdk',
+	'libphonenumber',
+	'lodash',
+	'mask',
+	'md5',
+	'modernizr',
+	'moment',
+	'moment-timezone',
+	'monster',
+	'monster-apps',
+	'monster-routing',
+	'monster-socket',
+	'monster-timezone',
+	'monster-ua',
+	'monster-ui',
+	'monster-util',
+	'monster-webphone',
+	'monthpicker',
+	'mousetrap',
+	'papaparse',
+	'pdfjs-dist/build/pdf',
+	'pdfjs-dist/build/pdf.worker',
+	'pdfmake',
+	'popup-redirect',
+	'postal',
+	'randomColor',
+	'renderjson',
+	'reqwest',
+	'signals',
+	'templates',
+	'tether',
+	'timepicker',
+	'toastr',
+	'touch-punch',
+	'validate',
+	'vfs_fonts',
+	'wysiwyg'
+];
 
-for(var i in appsToInclude) {
-	requireJsAppsToInclude.push('apps/' + appsToInclude[i] + '/app');
-
-	if(proApps.indexOf(appsToInclude[i]) >= 0) {
-		requireJsAppsToInclude.push('apps/' + appsToInclude[i] + '/submodules/pro/pro');
-	}
-}
-
-var getConfigRequire = function(mode, app) {
-	var	librariesToExcludeFromAppBuild = [
-			'async',
-			'bootstrap',
-			'card',
-			'chart',
-			'chosen',
-			'clipboard',
-			'config',
-			'cookies',
-			'crossroads',
-			'ddslick',
-			'drop',
-			'duo',
-			'file-saver',
-			'fileupload',
-			'footable',
-			'form2object',
-			'handlebars',
-			'hasher',
-			'hotkeys',
-			'introJs',
-			'isotope',
-			'jquery',
-			'jqueryui',
-			'jstz',
-			'kazoo',
-			'kazoosdk',
-			'libphonenumber',
-			'lodash',
-			'mask',
-			'md5',
-			'modernizr',
-			'moment',
-			'moment-timezone',
-			'monster',
-			'monster-apps',
-			'monster-routing',
-			'monster-socket',
-			'monster-timezone',
-			'monster-ua',
-			'monster-ui',
-			'monster-util',
-			'monster-webphone',
-			'monthpicker',
-			'mousetrap',
-			'papaparse',
-			'pdfjs-dist/build/pdf',
-			'pdfjs-dist/build/pdf.worker',
-			'pdfmake',
-			'popup-redirect',
-			'postal',
-			'randomColor',
-			'renderjson',
-			'reqwest',
-			'signals',
-			'templates',
-			'tether',
-			'timepicker',
-			'toastr',
-			'touch-punch',
-			'validate',
-			'vfs_fonts',
-			'wysiwyg'
-		],
-		librariesToExcludeFromWhole = [
-			'pdfjs-dist/build/pdf',
-			'pdfjs-dist/build/pdf.worker',
-			'pdfmake',
-			'vfs_fonts'
-		],
-		standardFilesToExclude = [
-			'config',
-			'templates'
-		];
-
-	if(mode === 'app') {
-		modules = [
+const getConfigRequire = () => ({
+	dir: require, // direction
+	appDir: tmp, // origin
+	baseUrl:'.',
+	mainConfigFile: join(tmp, 'js', 'main.js'),
+	fileExclusionRegExp: /^doc*|.*\.md|^\..*|^monster-ui\.build\.js$/,
+	findNestedDependencies:true,
+	preserveLicenseComments:false,
+	removeCombined:true,
+	/**
+	 * Prevent optimization because we don't want to minify config.js and there
+	 * is no way to single it out, we should optimize with gulp later.
+	 * @type {String}
+	 */
+	optimize: 'none',
+	modules: env.hasOwnProperty('app')
+		? [
 			{
-				name:'js/main',
+				name: join('js', 'main'),
 				exclude: standardFilesToExclude
 			},
 			{
-				name: 'apps/' + app + '/app',
-				exclude: librariesToExcludeFromAppBuild,
-				include: gutil.env.pro ? ['apps/' + app + '/submodules/pro/pro'] : []
+				name: join('apps', env.app, 'app'),
+				exclude: libsToExcludeFromApp,
+				include: env.hasOwnProperty('pro')
+					? [join('apps', env.app, 'submodules', 'pro',  'pro')]
+					: []
 			}
-		];
-	}
-	else if(mode === 'whole') {
-		var excludeFromWhole = standardFilesToExclude.concat(librariesToExcludeFromWhole);
-
-		modules = [
+		]
+		: [
 			{
-				name:'js/main',
-				exclude: excludeFromWhole,
-				include: requireJsAppsToInclude
+				name: join('js', 'main'),
+				exclude: [
+					...standardFilesToExclude,
+					...libsToExcludeFromWhole
+				],
+				include: getAppsToInclude().reduce((acc, item) => [
+					...acc,
+					join('apps', item, 'app'),
+					...(getProApps().includes(item)
+						? [join('apps', item, 'submodules', 'pro', 'pro')]
+						: [])
+				], [])
 			}
-		];
-	}
+		]
+});
 
-	var config = {
-		dir: paths.require, // direction
-		appDir: paths.tmp, // origin
-		baseUrl:'./',
-		mainConfigFile: paths.tmp + '/js/main.js',
-		fileExclusionRegExp: /^doc*|.*\.md|^\..*|^monster-ui\.build\.js$/,
-		findNestedDependencies:true,
-		preserveLicenseComments:false,
-		removeCombined:true,
-		optimize: 'none', // prevent optimization because we don't want to minify config.js and there's no way to single it out // we should optimize with gulp later
-		modules: modules
-	};
-
-	return config;
+const buildRequire = done => {
+	rjs.optimize(getConfigRequire(), function(buildResponse){
+		done();
+	}, done);
 };
 
-gulp.task('require', function(cb) {
-	runSequence('build-require', 'move-require', 'clean-require', cb);
-});
+const moveRequire = () => gulp
+	.src(join(require , '**', '*'))
+	.pipe(gulp.dest(tmp));
 
-gulp.task('require-app', function(cb) {
-	runSequence('build-require-app', 'move-require', 'clean-require', cb);
-});
+const cleanRequire = () => gulp
+	.src(require, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
 
-
-gulp.task('build-require', function(cb){
-	rjs.optimize(getConfigRequire('whole'), function(buildResponse){
-		cb();
-	}, cb);
-});
-
-gulp.task('build-require-app', function(cb){
-	rjs.optimize(getConfigRequire('app', gutil.env.app), function(buildResponse){
-		cb();
-	}, cb);
-});
-
-gulp.task('clean-require', function() {
-	return gulp.src(paths.require, {read: false})
-			.pipe(clean());
-});
-
-gulp.task('move-require', ['clean-tmp'], function() {
-	return gulp.src(paths.require  + '/**/*')
-		.pipe(gulp.dest(paths.tmp));
-});
+/**
+ * buildRequire
+ * cleanTmp
+ * moveRequire
+ * cleanRequire
+ *
+ * For `whole`: from dist, run the optimizer and output it into dist
+ *
+ * For `app`: require whole directory, skipping all the optimizing of the core
+ * modules, but focusing on the specific app
+ */
+export default gulp.series(
+	buildRequire,
+	cleanTmp,
+	moveRequire,
+	cleanRequire
+);

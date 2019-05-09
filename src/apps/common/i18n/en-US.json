@@ -776,6 +776,14 @@
 			"textarea": {
 				"placeholder": "New Message..."
 			}
+		},
+		"tabs": {
+			"account": "Account",
+			"agent": "Agent",
+			"descendants": "Descendants",
+			"suspended": "Suspended",
+			"progressing": "Progressing",
+			"completed": "Completed"
 		}
 	},
 

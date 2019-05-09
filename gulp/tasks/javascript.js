@@ -1,29 +1,55 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var eslint = require('gulp-eslint');
+import { env, mode } from '../helpers/helpers.js';
+import { join } from 'upath';
+import gulp from 'gulp';
+import uglify from 'gulp-uglify';
+import eslint from 'gulp-eslint';
+import { app, src, tmp } from '../paths.js';
 
-var paths = require('../paths.js');
+const config = {
+	app: {
+		lint: [
+			join(src, 'apps', env.app || '', 'app.js'),
+			join(src, 'apps', env.app || '', 'submodules', '*', '*.js')
+		]
+	},
+	whole: {
+		lint: [
+			join(src, '**', '*.js'),
+			'!' + join(src, 'js', 'vendor', '**', '*.js'),
+			'!' + join(src, 'js', 'lib', 'kazoo', 'dependencies', '**', '*.js')
+		]
+	}
+};
+const context = config[mode];
 
-gulp.task('minify-js', function() {
-	return gulp.src([paths.tmp + '/js/main.js', paths.tmp + '/js/templates.js'])
-		.pipe(uglify().on('error', handleUglifyError))
-		.pipe(gulp.dest(paths.tmp + '/js/'));
-});
-
-gulp.task('minify-js-app', function() {
-	return gulp.src(paths.app + 'app.js')
-			.pipe(uglify().on('error', handleUglifyError))
-			.pipe(gulp.dest(paths.app));
-});
-
-gulp.task('lint', function() {
-	var pathToLint = [paths.src + '/**/*.js', '!'+ paths.src + '/js/vendor/**/*.js', '!'+ paths.src + '/js/lib/kazoo/dependencies/**/*.js'];
-
-	return gulp.src(pathToLint)
-				.pipe(eslint())
-				.pipe(eslint.format());
-});
-
-function handleUglifyError(error) {
+const handleUglifyError = error => {
 	console.error(JSON.stringify(error, null, 4));
-}
+};
+
+/**
+ * Minifies js/main.js, we don't use the optimizer from requirejs as we don't
+ * want to minify config.js
+ */
+export const minifyJs = () => gulp
+	.src([
+		join(tmp, 'js', 'main.js'),
+		join(tmp, 'js', 'templates.js')
+	])
+	.pipe(uglify().on('error', handleUglifyError))
+	.pipe(gulp.dest(join(tmp, 'js')));
+
+/**
+ * Minifies app.js
+ */
+export const minifyJsApp = () => gulp
+	.src(join(app, 'app.js'))
+	.pipe(uglify().on('error', handleUglifyError))
+	.pipe(gulp.dest(app));
+
+/**
+ * Show linting error
+ */
+export const lint = () => gulp
+	.src(context.lint)
+	.pipe(eslint())
+	.pipe(eslint.format());

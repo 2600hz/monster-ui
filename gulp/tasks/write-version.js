@@ -1,13 +1,16 @@
-var gulp = require('gulp');
-var fs = require('fs');
-var paths = require('../paths');
-var package = require('../../package.json');
+import { join } from 'upath';
+import gulp from 'gulp';
+import { writeFileSync } from 'fs';
+import { tmp } from '../paths';
+import { version } from '../../package.json';
 
-gulp.task('write-version', function() {
-	var version = package.version,
-		fileName = paths.tmp + '/VERSION';
-
-	fs.writeFileSync(fileName, version);
-
+/**
+ * Writes version file to display in monster
+ */
+const writeVersion = () => {
+	const fileName = join(tmp, 'VERSION');
+	writeFileSync(fileName, version);
 	return gulp.src(fileName);
-});
+};
+
+export default writeVersion;

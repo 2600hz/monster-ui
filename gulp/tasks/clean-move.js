@@ -1,52 +1,75 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var clean = require('gulp-clean');
-var paths = require('../paths.js');
+import { join } from 'upath';
+import gulp from 'gulp';
+import del from 'del';
+import vinylPaths from 'vinyl-paths';
+import { dist, distDev, src, tmp } from '../paths.js';
 
-gulp.task('clean-folders', function(cb) {
-	runSequence( 
-		'move-built-files-dist', // moves all files to dist
-		'clean-tmp', // empty tmp
-		cb
-	);
-});
+const cleanDist = () => gulp
+	.src(dist, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
 
-gulp.task('move-files-to-tmp', ['clean-tmp'], function() {
-	return gulp.src([
-			paths.src + '/**/*'
-		])
-		.pipe(gulp.dest(paths.tmp)); // Move the files selected to the dist path
-});
+const cleanDistDev = () => gulp
+	.src(distDev, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
 
-gulp.task('move-built-files-dist', ['clean-dist'], function() {
-	return gulp.src([
-			'!' + paths.tmp + '/**/*.scss',
-			paths.tmp + '/**/*'
-		])
-		.pipe(gulp.dest(paths.dist)); // Move the files selected to the dist path
-});
+const moveBuiltFilesToDist = () => gulp
+	.src([
+		join(tmp, '**', '*'),
+		'!' + join(tmp, '**', '*.scss')
+	])
+	.pipe(gulp.dest(dist));
 
-gulp.task('move-dist-dev', ['clean-dist-dev'], function() {
-	return gulp.src(paths.dist + '/**/*')
-			.pipe(gulp.dest(paths.distDev));
-});
+const moveDistFilesToDev = () => gulp
+	.src(join(dist, '**', '*'))
+	.pipe(gulp.dest(distDev));
 
-gulp.task('clean-require', function() {
-	return gulp.src(paths.require, {read: false})
-			.pipe(clean());
-});
+const moveSrcFilesToTmp = () => gulp
+	.src(join(src, '**', '*'))
+	.pipe(gulp.dest(tmp));
 
-gulp.task('clean-dist', function() {
-	return gulp.src(paths.dist, {read: false})
-			.pipe(clean());
-});
 
-gulp.task('clean-dist-dev', function() {
-	return gulp.src(paths.distDev, {read: false})
-			.pipe(clean());
-});
+export const cleanTmp = () => gulp
+	.src(tmp, {
+		allowEmpty: true,
+		read: false
+	})
+	.pipe(vinylPaths(del));
 
-gulp.task('clean-tmp', function() {
-	return gulp.src(paths.tmp, {read: false})
-		.pipe(clean());
-});
+/**
+ * cleanTmp
+ * moveFilesToTmp
+ *
+ * Moves all files to tmp folder
+ */
+export const moveFilesToTmp = gulp.series(
+	cleanTmp,
+	moveSrcFilesToTmp
+);
+
+/**
+ * cleanDistDev
+ * moveDistDev
+ */
+export const moveDistDev = gulp.series(
+	cleanDistDev,
+	moveDistFilesToDev
+);
+
+/**
+ * cleanDist
+ * moveBuiltFilesDist
+ * cleanTmp
+ *
+ * Moves tmp to dist and removes tmp after that
+ */
+export const cleanFolders = gulp.series(
+	cleanDist,
+	moveBuiltFilesToDist,
+	cleanTmp
+);

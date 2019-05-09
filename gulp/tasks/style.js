@@ -1,50 +1,53 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var sass = require('gulp-sass');
-var concatCss = require('gulp-concat-css');
-var cleanCSS = require('gulp-clean-css');
-var rename = require('gulp-rename');
-var clean = require('gulp-clean');
+import { join } from 'upath';
+import gulp from 'gulp';
+import sass from 'gulp-sass';
+import concatCss from 'gulp-concat-css';
+import cleanCss from 'gulp-clean-css';
+import { app, tmp } from '../paths.js';
+import { getAppsToInclude } from '../helpers/helpers.js';
 
-var paths = require('../paths.js');
-var helpers = require('../helpers/helpers.js');
+const concatName = 'style.css';
+const cssDest = join(tmp, 'css');
+const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
+	...acc,
+	join(tmp, 'apps', item, 'style', '*.css')
+], [
+	join(tmp, 'css', 'style.css')
+]);
 
-var concatCssPaths = [ paths.tmp + '/css/style.css'];
-	appsToInclude = helpers.getAppsToInclude();
+const concatAllCss = () => gulp
+	.src(concatCssPaths)
+	.pipe(concatCss(concatName))
+	.pipe(gulp.dest(cssDest));
 
-for(var i in appsToInclude) {
-	concatCssPaths.push(paths.tmp +'/apps/'+ appsToInclude[i] +'/style/*.css');
-}
+const minifyCss = () => gulp
+	.src(join(cssDest, concatName))
+	.pipe(cleanCss())
+	.pipe(gulp.dest(cssDest));
 
-gulp.task('css', function(cb) {
-	runSequence('concat-css', 'minify-css', cb);
-});
+/**
+ * concatAllCss
+ * minifyCss
+ *
+ * Takes all the apps provided up top and concatenate and minify them
+ */
+export const css = gulp.series(
+	concatAllCss,
+	minifyCss
+);
 
-var concatName = 'style.css',
-	cssDest = paths.tmp + '/css/';
+/**
+ * Uglifies app.css
+ */
+export const minifyCssApp = () => gulp
+	.src(join(app, 'style', 'app.css'))
+	.pipe(cleanCss())
+	.pipe(gulp.dest(join(app, 'style')));
 
-gulp.task('concat-css', function() {
-	return gulp.src(concatCssPaths)
-				.pipe(concatCss(concatName))
-				.pipe(gulp.dest(cssDest))
-});
-
-gulp.task('minify-css', function() {
-	return gulp.src(cssDest + concatName)
-		.pipe(cleanCSS())
-		.pipe(gulp.dest(cssDest));
-});
-
-gulp.task('minify-css-app', function() {
-		return gulp.src(paths.app +'/style/app.css')
-			.pipe(cleanCSS())
-			.pipe(gulp.dest(paths.app + '/style'));
-});
-
-
-// compile our scss files to css files
-gulp.task('sass', function() {
-	return gulp.src(paths.tmp + '/**/*.scss') // Select all the scss files
-		.pipe(sass().on('error', sass.logError)) // compile them using the sass plug-in
-		.pipe(gulp.dest(paths.tmp)) // move them to the dist folder
-});
+/**
+ * Compiles all .scss files into .css and moves them to dist folder
+ */
+export const compileSass = () => gulp
+	.src(join(tmp, '**', '*.scss'))
+	.pipe(sass().on('error', sass.logError))
+	.pipe(gulp.dest(tmp));
