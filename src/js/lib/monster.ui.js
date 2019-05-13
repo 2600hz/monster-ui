@@ -186,6 +186,25 @@ define(function(require) {
 				return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
 			},
 
+			monsterNumberWrapper: function(number) {
+				return monster.ui.getTemplatePhoneNumber(number.toString());
+			},
+
+			monsterPanelText: function(title, type, className) {
+				var htmlContent = arguments[arguments.length - 1].fn(this),
+					validTypes = ['info', 'success', 'danger', 'warning'],
+					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+					templateData = {
+						className: typeof className === 'string' ? className : '',
+						title: title,
+						content: new Handlebars.SafeString(htmlContent)
+					},
+					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
+
+				return new Handlebars.SafeString(template);
+			},
+
 			monsterRadio: function() {
 				var templateData = {
 					cssClass: 'monster-radio',
@@ -255,27 +274,8 @@ define(function(require) {
 				return new Handlebars.SafeString(template);
 			},
 
-			monsterPanelText: function(title, type, className) {
-				var htmlContent = arguments[arguments.length - 1].fn(this),
-					validTypes = ['info', 'success', 'danger', 'warning'],
-					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-					templateData = {
-						className: typeof className === 'string' ? className : '',
-						title: title,
-						content: new Handlebars.SafeString(htmlContent)
-					},
-					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
-					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
-
-				return new Handlebars.SafeString(template);
-			},
-
 			numberFeatures: function(features) {
 				return monster.ui.paintNumberFeaturesIcon(features);
-			},
-
-			monsterNumberWrapper: function(number) {
-				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
 			replaceVar: function(stringValue, variable) {
