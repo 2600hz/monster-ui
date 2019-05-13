@@ -944,3 +944,30 @@ i.monster-password-strength {
 	/* position: relative !important; */
 	z-index: 4 !important;
 }
+
+/************************************************************/
+/********************* KEY-VALUE EDITOR *********************/
+/************************************************************/
+.monster-key-value-editor {
+	.monster-key-value-data-container {
+		.monster-key-value-editor-row {
+			margin-bottom: 10px;
+			display: flex;
+
+			input {
+				flex: 1;
+				margin-right: 1rem;
+			}
+
+			i[data-action="remove"] {
+				cursor: pointer;
+				flex: initial;
+			}
+		}
+	}
+
+	.monster-link[data-action="add"] {
+		width: 180px;
+		font-size: 12px;
+	}
+}

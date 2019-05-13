@@ -1050,5 +1050,11 @@
 			"current_balance": "Current balance"
 		},
 		"noAlerts": "No new notifications"
+	},
+
+	"keyValueEditor": {
+		"addRow": "+ Add Data Row",
+		"keyPlaceholder": "Data Key",
+		"valuePlaceholder": "Data Value"
 	}
 }

@@ -3226,6 +3226,64 @@ define(function(require) {
 	}
 
 	/**
+	 * Generates a key-value pair editor
+	 * @param  {jQuery} $target  Container to append the widget to.
+	 * @param  {Object} [options]  Editor options
+	 * @param  {Object} [options.data]  Key-value data, as a plain object
+	 * @param  {String} [options.inputName]  Input name prefix
+	 * @param  {String} [options.keyPlaceholder]  Key input placeholder
+	 * @param  {String} [options.valuePlaceholder]  Value input placeholder
+	 */
+	function keyValueEditor($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		var data = _.get(options, 'data', {});
+		var inputName = _.get(options, 'inputName', 'data');
+		var keyPlaceholder = _.get(options, 'keyPlaceholder');
+		var valuePlaceholder = _.get(options, 'valuePlaceholder');
+		if (!_.isPlainObject(data)) {
+			throw TypeError('"options.data" is not a plain object');
+		}
+		if (!_.isNil(inputName) && !_.isString(inputName)) {
+			throw TypeError('"options.inputName" is not a string');
+		}
+		if (!_.isNil(keyPlaceholder) && !_.isString(keyPlaceholder)) {
+			throw TypeError('"options.keyPlaceholder" is not a string');
+		}
+		if (!_.isNil(valuePlaceholder) && !_.isString(valuePlaceholder)) {
+			throw TypeError('"options.valuePlaceholder" is not a string');
+		}
+		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor'));
+		var $rowContainer = $editorTemplate.find('.monster-key-value-data-container');
+		var addRow = function(value, key, index) {
+			$rowContainer.append(monster.template(monster.apps.core, 'monster-key-value-editor-row', {
+				key: key,
+				value: value,
+				inputName: inputName + '[' + index + ']',
+				keyPlaceholder: keyPlaceholder,
+				valuePlaceholder: valuePlaceholder
+			}));
+		};
+		// Add initial rows
+		var counter = 0;
+		_.each(data, function(value, key, index) {
+			addRow(value, key, counter++);
+		});
+		// Bind events
+		$editorTemplate.find('[data-action="add"]').on('click', function(e) {
+			e.preventDefault();
+			addRow('', '', counter++);
+		});
+		$rowContainer.on('click', '[data-action="remove"]', function() {
+			$(this).closest('.monster-key-value-editor-row').remove();
+		});
+		// Append editor
+		$target.append($editorTemplate);
+		return $editorTemplate;
+	}
+
+	/**
 	 * Merges HTML attributes, mapped as JSON objects
 	 * @param   {Object} object  Destination object
 	 * @param   {Object} source  Source object
@@ -3240,15 +3298,20 @@ define(function(require) {
 		}
 
 		return _.mergeWith(object, source, function(objValue, srcValue, key) {
+			objValue = _.isNil(objValue) ? '' : objValue;
+			srcValue = _.isNil(srcValue) ? '' : srcValue;
+			if (!_.isString(objValue || '') || !_.isString(srcValue || '')) {
+				throw TypeError('One or both values is not a string');
+			}
 			if (key !== 'class') {
-				return (_.isNil(objValue) ? '' : objValue) + (_.isNil(srcValue) ? '' : srcValue);
+				return objValue + srcValue;
 			}
 			var srcClasses = _
-				.chain(srcValue || '')
+				.chain(srcValue)
 				.split(/\s+/g) // Split by one or more whitespaces
 				.value();
 			return _
-				.chain(objValue || '')
+				.chain(objValue)
 				.split(/\s+/g) // Split by one or more whitespaces
 				.union(srcClasses)
 				.reject(_.isEmpty) // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
@@ -3311,6 +3374,7 @@ define(function(require) {
 	initialize();
 
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+	ui.keyValueEditor = keyValueEditor;
 	ui.monthpicker = monthpicker;
 	ui.toast = toast;
 
