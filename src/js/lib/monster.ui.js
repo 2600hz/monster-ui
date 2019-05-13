@@ -145,18 +145,18 @@ define(function(require) {
 				return options[monster.util.isAdmin(user) ? 'fn' : 'inverse'](this);
 			},
 
-			isSuperDuper: function(pAccount, pOptions) {
-				var account = pAccount.hasOwnProperty('superduper_admin') ? pAccount : undefined,
-					options = !pOptions ? pAccount : pOptions;
-
-				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
-			},
-
 			isReseller: function(pAccount, pOptions) {
 				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
 					options = !pOptions ? pAccount : pOptions;
 
 				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			},
+
+			isSuperDuper: function(pAccount, pOptions) {
+				var account = pAccount.hasOwnProperty('superduper_admin') ? pAccount : undefined,
+					options = !pOptions ? pAccount : pOptions;
+
+				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
 			monsterCheckbox: function() {
@@ -278,6 +278,21 @@ define(function(require) {
 				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
+			replaceVar: function(stringValue, variable) {
+				return stringValue.replace(/{{variable}}/g, variable);
+			},
+
+			select: function(value, options) {
+				var $el = $('<select />').html(options.fn(this));
+				if (!_.isArray(value)) {
+					value = [ value ];
+				}
+				_.forEach(value, function(data) {
+					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
+				});
+				return $el.html();
+			},
+
 			svgIcon: function(id, options) {
 				return new Handlebars.SafeString(
 					monster.ui.getSvgIconTemplate({
@@ -294,21 +309,6 @@ define(function(require) {
 						attributes: options.hash
 					})
 				);
-			},
-
-			replaceVar: function(stringValue, variable) {
-				return stringValue.replace(/{{variable}}/g, variable);
-			},
-
-			select: function(value, options) {
-				var $el = $('<select />').html(options.fn(this));
-				if (!_.isArray(value)) {
-					value = [ value ];
-				}
-				_.forEach(value, function(data) {
-					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
-				});
-				return $el.html();
 			},
 
 			times: function(max, options) {
