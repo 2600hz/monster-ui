@@ -34,6 +34,26 @@ define(function(require) {
 					}
 					*/
 				},
+				categoryActions: [
+					{
+						categories: [ 'no_payment_token', 'expired_payment_token' ],
+						action: 'editCreditCard',
+						restrictions: {
+							balance: {
+								show_credit: true,
+								show_tab: true
+							}
+						}
+					},
+					{
+						categories: [ 'low_balance' ],
+						action: 'addCredit'
+					}
+				],
+				actionTopics: {
+					editCreditCard: 'myaccount.showCreditCardTab',
+					addCredit: 'myaccount.showAddCreditDialog'
+				},
 				template: null
 			}
 		},
@@ -79,8 +99,13 @@ define(function(require) {
 		 */
 		alertsRender: function() {
 			var self = this,
-				initTemplate = function initTemplate(alerts) {
-					var alertGroups = self.alertsFormatData({ data: alerts }),
+				initTemplate = function initTemplate(data) {
+					var alerts = _.get(data, 'alerts'),
+						uiRestrictions = _.get(data, 'uiRestrictions'),
+						alertGroups = self.alertsFormatData({
+							data: alerts,
+							uiRestrictions: uiRestrictions
+						}),
 						alertCount = _.sumBy(alertGroups, 'unreadCount'),
 						dataTemplate = {
 							showAlertCount: alertCount > 0,
@@ -105,10 +130,10 @@ define(function(require) {
 
 					return $template;
 				},
-				renderTemplate = function renderTemplate(alerts) {
+				renderTemplate = function renderTemplate(data) {
 					var $navLinks = $('#main_topbar_nav'),
 						$topbarAlert = $navLinks.find('#main_topbar_alerts'),
-						$template = initTemplate(alerts);
+						$template = initTemplate(data);
 
 					if ($topbarAlert.length === 0) {
 						$template.insertBefore($navLinks.find('#main_topbar_signout'));
@@ -118,24 +143,32 @@ define(function(require) {
 				};
 
 			monster.parallel({
-				alerts: function(callback) {
+				alerts: function(paralellCallback) {
 					self.alertsRequestListAlerts({
 						success: function(data) {
-							callback(null, data);
+							paralellCallback(null, data);
 						},
 						error: function(parsedError) {
-							callback(parsedError);
+							paralellCallback(parsedError);
 						}
 					});
 				},
-				render: function(callback) {
+				render: function(paralellCallback) {
 					if (self.appFlags.alerts.template) {
 						self.alertsHideDropdown();
 					}
 
 					// Display notifications topbar element without alerts
 					renderTemplate();
-					callback(null, true);
+					paralellCallback(null, true);
+				},
+				uiRestrictions: function(paralellCallback) {
+					monster.pub('myaccount.UIRestrictionsCompatibility', {
+						restrictions: monster.apps.auth.originalAccount.ui_restrictions,
+						callback: function(uiRestrictions) {
+							paralellCallback(null, uiRestrictions);
+						}
+					});
 				}
 			}, function(err, results) {
 				if (err) {
@@ -143,7 +176,7 @@ define(function(require) {
 				}
 
 				// If there is no error, re-render topbar element with alerts
-				renderTemplate(results.alerts);
+				renderTemplate(_.pick(results, ['alerts', 'uiRestrictions']));
 			});
 		},
 
@@ -167,7 +200,8 @@ define(function(require) {
 		alertsBindEvents: function() {
 			var self = this,
 				$template = self.appFlags.alerts.template,
-				$alertsContainer = $template.find('#main_topbar_alerts_container');
+				$alertsContainer = $template.find('#main_topbar_alerts_container'),
+				$alertItems = $alertsContainer.find('.alert-item');
 
 			$template.find('#main_topbar_alerts_link').on('click', function(e) {
 				e.preventDefault();
@@ -198,28 +232,31 @@ define(function(require) {
 				}
 			});
 
-			$alertsContainer.find('.alert-item .button-clear').on('click', function(e) {
+			$alertItems.find('.button-clear').on('click', function(e) {
 				e.preventDefault();
+				e.stopPropagation();
 
-				var $alertItem = $(this).closest('.alert-item'),
-					alertId = $alertItem.data('alert_id'),
-					dismissedAlertIds = self.alertsGetStore('dismissed', []),
-					itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
-					$alertGroup = $alertItem.parent(),
-					$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup;
-
-				if (!_.includes(dismissedAlertIds, alertId)) {
-					dismissedAlertIds.push(alertId);
-					self.alertsSetStore('dismissed', dismissedAlertIds);
-				}
-
-				$elementToRemove.slideUp(200, function() {
-					$elementToRemove.remove();
+				self.alertsDismissAlert({
+					alertItem: $(this).closest('.alert-item')
 				});
+			});
 
-				if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
-					$alertGroup.siblings('.alert-group-empty').slideDown(200);
+			$alertItems.filter('.actionable').on('click', function() {
+				var $alertItem = $(this),
+					alertAction = $alertItem.data('alert_action'),
+					actionTopic = _.get(self.appFlags.alerts.actionTopics, alertAction);
+
+				if (actionTopic) {
+					monster.pub(actionTopic);
 				}
+
+				self.alertsDismissAlert({
+					alertItem: $alertItem,
+					save: false,
+					callback: function() {
+						self.alertsHideDropdown();
+					}
+				});
 			});
 
 			$(window).on('resize',
@@ -233,12 +270,14 @@ define(function(require) {
 		/**
 		 * Formats the alert data received from the API, into UI category groups
 		 * @param    {Object}   args
-		 * @param    {Object[]} args.data  Array of alerts
-		 * @returns  {Object}              Grouped alerts by UI categories
+		 * @param    {Object[]} args.data            Array of alerts
+		 * @param    {Object}   args.uiRestrictions  UI restrictions
+		 * @returns  {Object}   Grouped alerts by UI categories
 		 */
 		alertsFormatData: function(args) {
 			var self = this,
 				data = args.data,
+				uiRestrictions = args.uiRestrictions,
 				readAlertIds = self.alertsGetStore('read', []),
 				dismissedAlertIds = self.alertsGetStore('dismissed', []),
 				sortOrder = [
@@ -295,19 +334,26 @@ define(function(require) {
 				.groupBy(function(alert) {
 					var category = alert.category,
 						alertType,
-						dashIndex;
+						dashIndex,
+						iconName;
 
 					if (alert.clearable) {
 						alertType = 'manual';
-						alert.iconPath = monster.util.getAppIconPath({ name: 'websockets' });
+						iconName = 'websockets';
 					} else if (_.includes([ 'low_balance', 'no_payment_token', 'expired_payment_token' ], category)) {
 						alertType = 'system';
-						alert.iconPath = monster.util.getAppIconPath({ name: 'myaccount' });
+						iconName = 'myaccount';
 					} else {
 						dashIndex = category.indexOf('_');
 						alertType = category.substring(0, dashIndex > 0 ? dashIndex : category.length);
-						alert.iconPath = monster.util.getAppIconPath({ name: alertType });
+						iconName = alertType;
 					}
+
+					alert.iconPath = monster.util.getAppIconPath({ name: iconName });
+					alert.action = self.alertsGetCategoryAction({
+						category: category,
+						uiRestrictions: uiRestrictions
+					});
 
 					return alertType;
 				}).map(function(alerts, type) {
@@ -324,6 +370,62 @@ define(function(require) {
 		},
 
 		/**
+		 * Get the action name for a specific alert category
+		 * @param    {Object} args
+		 * @param    {String} args.category        Alert category
+		 * @param    {Object} args.uiRestrictions  UI restrictions
+		 * @returns  {String} The found action name, or null otherwise
+		 */
+		alertsGetCategoryAction: function(args) {
+			var self = this,
+				category = args.category,
+				uiRestrictions = args.uiRestrictions,
+				categoryAction = _.find(self.appFlags.alerts.categoryActions, function(categoryActionItem) {
+					return _.includes(categoryActionItem.categories, category);
+				}),
+				uiRestrictionsCheckResult;
+
+			if (_.isUndefined(categoryAction)) {
+				return null;
+			}
+
+			uiRestrictionsCheckResult = self.alertsCheckUIRestrictions({
+				uiRestrictions: uiRestrictions,
+				expectedRestrictions: categoryAction.restrictions
+			});
+
+			return uiRestrictionsCheckResult ? categoryAction.action : null;
+		},
+
+		/**
+		 * Checks UI restrictions, and returns `true` if they are valid, or `false` otherwise
+		 * @param    {Object}  args
+		 * @param    {Object}  args.expectedRestrictions  Expected restrictions
+		 * @param    {Object}  args.uiRestrictions        UI restrictions
+		 * @returns  {Boolean} `True` or `false`, whether the expected restrictions are valid or not
+		 */
+		alertsCheckUIRestrictions: function(args) {
+			var self = this,
+				expectedRestrictions = args.expectedRestrictions,
+				uiRestrictions = args.uiRestrictions,
+				deepRestrictionCheck = function(obj1, obj2) {
+					if (!_.isObject(obj1) || !_.isObject(obj2)) {
+						return obj1 === obj2;
+					}
+
+					return _.reduce(obj1, function(result, value1, key1) {
+						if (!result) {
+							return false;
+						}
+						var value2 = _.get(obj2, key1);
+						return deepRestrictionCheck(value1, value2);
+					}, true);
+				};
+
+			return _.isUndefined(expectedRestrictions) || deepRestrictionCheck(expectedRestrictions, uiRestrictions);
+		},
+
+		/**
 		 * Set max-height for dropdown body, based on viewport size
 		 * @param  {Object} args
 		 * @param  {jQuery} args.dropdownBody  JQuery object for dropdown body
@@ -331,9 +433,9 @@ define(function(require) {
 		alertsSetDropdownBodyMaxHeight: function(args) {
 			var self = this,
 				$dropdownBody = args.dropdownBody,
-				maxHeight = $(window).height() - 136;	// To expand dropdown up until it reaches
-														// 24px (1.5rem) from viewport bottom
-														// (112px top + 24px bottom)
+				// Expand dropdown up until it reaches 24px (1.5rem) from viewport bottom
+				// (112px top + 24px bottom)
+				maxHeight = $(window).height() - 136;
 
 			if (maxHeight < 200) {
 				maxHeight = 200;
@@ -342,6 +444,40 @@ define(function(require) {
 			$dropdownBody.css({
 				maxHeight: maxHeight + 'px'
 			});
+		},
+
+		/**
+		 * Dismiss an alert item from the dropdown
+		 * @param  {Object}   args
+		 * @param  {JQuery}   args.alertItem    Alert item element
+		 * @param  {Boolean}  [args.save=true]  Save the alert as dismissed
+		 * @param  {Function} [args.callback]   Callback function
+		 */
+		alertsDismissAlert: function(args) {
+			var self = this,
+				$alertItem = args.alertItem,
+				save = _.get(args, 'save', true),
+				alertId = $alertItem.data('alert_id'),
+				itemHasSiblings = $alertItem.siblings('.alert-item').length > 0,
+				$alertGroup = $alertItem.parent(),
+				$elementToRemove = itemHasSiblings ? $alertItem : $alertGroup,
+				dismissedAlertIds;
+
+			if (save && !_.includes(dismissedAlertIds, alertId)) {
+				dismissedAlertIds = self.alertsGetStore('dismissed', []);
+				dismissedAlertIds.push(alertId);
+				self.alertsSetStore('dismissed', dismissedAlertIds);
+			}
+
+			$elementToRemove.slideUp(200, function() {
+				$elementToRemove.remove();
+
+				_.has(args, 'callback') && args.callback();
+			});
+
+			if (!itemHasSiblings && $alertGroup.siblings('.alert-group').length === 0) {
+				$alertGroup.siblings('.alert-group-empty').slideDown(200);
+			}
 		},
 
 		/**

@@ -249,7 +249,26 @@ define(function(require) {
 				serviceSummary = _.get(data, 'serviceSummary'),
 				amount = (data.balance || 0).toFixed(self.appFlags.balance.digits.availableCreditsBadge),
 				thresholdData = {},
-				topupData = { enabled: false };
+				topupData = { enabled: false },
+				getSelectedSubscription = function() {
+					var monthly = _.get(data, 'account.topup.monthly'),
+						isPreemptive = _.get(monthly, 'preemptive', false),
+						isExact = _.get(monthly, 'exact', false);
+
+					if (
+						isPreemptive
+						&& (isExact || !isExact)
+					) {
+						return 'preemptive';
+					}
+					if (
+						!isPreemptive
+						&& isExact
+					) {
+						return 'exact';
+					}
+					return 'none';
+				};
 
 			if (data.account.hasOwnProperty('notifications') && data.account.notifications.hasOwnProperty('low_balance')) {
 				$.extend(true, thresholdData, data.account.notifications.low_balance);
@@ -273,13 +292,14 @@ define(function(require) {
 			}
 
 			return {
-				showSubscriptions: _.some(serviceSummary.invoices, {
-					bookkeeper: {
-						type: 'iou'
-					}
-				}),
-				preemptive: _.get(data, 'account.topup.monthly.preemptive', false),
-				exact: _.get(data, 'account.topup.monthly.exact', false),
+				subscriptions: {
+					show: _.some(serviceSummary.invoices, {
+						bookkeeper: {
+							type: 'iou'
+						}
+					}),
+					selected: getSelectedSubscription()
+				},
 				currencySymbol: monster.util.getCurrencySymbol(),
 				amount: amount,
 				threshold: thresholdData,
@@ -520,99 +540,12 @@ define(function(require) {
 				thresholdAlerts = data.threshold.enabled,
 				autoRecharge = data.topup.enabled || false,
 				tabAnimationInProgress = false,
-				automaticRemediationSwitch = parent.find('#automatic_remediation'),
-				automaticRemediationText = parent.find('.automatic-remediation-text'),
-				directToPaySwitch = parent.find('#direct_to_pay'),
-				directToPayWrapper = parent.find('.direct-to-pay-wrapper'),
-				directToPayText = parent.find('.direct-to-pay-text'),
+				subscriptionsContent = parent.find('#subscriptions'),
+				subscriptionsRadio = subscriptionsContent.find('.subscription-option'),
 				thresholdAlertsContent = parent.find('#threshold_alerts_content'),
 				thresholdAlertsSwitch = parent.find('#threshold_alerts_switch'),
 				autoRechargeContent = parent.find('#auto_recharge_content'),
 				autoRechargeSwitch = parent.find('#auto_recharge_switch');
-
-			automaticRemediationSwitch.prop('checked', data.preemptive);
-			directToPaySwitch.prop('checked', data.exact);
-
-			automaticRemediationSwitch
-				.on('change', function(event) {
-					event.preventDefault();
-
-					automaticRemediationSwitch.prop('disabled', 'disabled');
-
-					if ($(this).is(':checked')) {
-						automaticRemediationText.slideUp(250);
-						directToPayWrapper.slideDown(250);
-
-						self.balanceUpdateSubscriptions({
-							preemptive: true,
-							callback: function() {
-								automaticRemediationSwitch.prop('disabled', false);
-
-								monster.ui.toast({
-									type: 'success',
-									message: self.i18n.active().balance.subscriptionsTurnedOn
-								});
-							}
-						});
-					} else {
-						automaticRemediationText.slideDown(250);
-						directToPayWrapper.slideUp(250);
-						directToPaySwitch.prop('checked', false);
-
-						self.balanceUpdateSubscriptions({
-							preemptive: false,
-							callback: function() {
-								automaticRemediationSwitch.prop('disabled', false);
-
-								monster.ui.toast({
-									type: 'success',
-									message: self.i18n.active().balance.subscriptionsTurnedOff
-								});
-							}
-						});
-					}
-				});
-
-			directToPaySwitch
-				.on('change', function(event) {
-					event.preventDefault();
-
-					directToPaySwitch.prop('disabled', 'disabled');
-
-					if ($(this).is(':checked')) {
-						directToPayText.find('[data-toggle="off"]').hide();
-						directToPayText.find('[data-toggle="on"]').fadeIn(250);
-
-						self.balanceUpdateSubscriptions({
-							preemptive: true,
-							exact: true,
-							callback: function() {
-								directToPaySwitch.prop('disabled', false);
-
-								monster.ui.toast({
-									type: 'success',
-									message: self.i18n.active().balance.directToPayTurnedOn
-								});
-							}
-						});
-					} else {
-						directToPayText.find('[data-toggle="on"]').hide();
-						directToPayText.find('[data-toggle="off"]').fadeIn(250);
-
-						self.balanceUpdateSubscriptions({
-							preemptive: true,
-							exact: false,
-							callback: function() {
-								directToPaySwitch.prop('disabled', false);
-
-								monster.ui.toast({
-									type: 'success',
-									message: self.i18n.active().balance.directToPayTurnedOff
-								});
-							}
-						});
-					}
-				});
 
 			parent
 				.find('.navbar-menu-item-link')
@@ -855,6 +788,46 @@ define(function(require) {
 					monster.ui.alert(self.i18n.active().balance.invalidAmount);
 				}
 			});
+
+			subscriptionsRadio
+				.on('change', function(event) {
+					event.preventDefault();
+
+					var $this = $(this),
+						$warningElements = subscriptionsContent.find('.option .warning');
+
+					subscriptionsRadio.prop('disabled', 'disabled');
+
+					subscriptionsContent
+						.find('.option.selected')
+							.removeClass('selected');
+
+					$this
+						.parents('.option')
+							.addClass('selected');
+
+					$warningElements
+						.hide();
+
+					$this
+						.parents('.option')
+							.find('.warning')
+								.fadeIn(250);
+
+					self.balanceUpdateSubscriptions({
+						type: $this.val(),
+						success: function() {
+							subscriptionsRadio.prop('disabled', false);
+							monster.ui.toast({
+								type: 'success',
+								message: self.i18n.active().balance.addCreditPopup.subscriptions.toast.success
+							});
+						},
+						error: function() {
+							subscriptionsRadio.prop('disabled', false);
+						}
+					});
+				});
 		},
 
 		balanceBindEvents: function(template, showCredits, afterRender) {
@@ -940,15 +913,33 @@ define(function(require) {
 
 		/**
 		 * @param  {Object} args
-		 * @param  {Boolean} [args.preemptive=false]
-		 * @param  {Boolean} [args.exact=false]
-		 * @param  {Function} [args.callback]
+		 * @param  {'preemptive'|'exact'|'none'} args.type
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
 		 */
 		balanceUpdateSubscriptions: function(args) {
 			var self = this,
-				preemptive = _.get(args, 'preemptive', false),
-				exact = _.get(args, 'exact', false),
-				callback = _.get(args, 'callback');
+				type = args.type,
+				normalizedSubscriptions = (function(type) {
+					if (type === 'preemptive') {
+						return {
+							preemptive: true,
+							exact: false
+						};
+					}
+					if (type === 'exact') {
+						return {
+							preemptive: false,
+							exact: true
+						};
+					}
+					return {
+						preemptive: false,
+						exact: false
+					};
+				})(type),
+				success = _.get(args, 'success'),
+				error = _.get(args, 'error');
 
 			monster.waterfall([
 				function(cb) {
@@ -963,8 +954,8 @@ define(function(require) {
 					});
 				},
 				function(accountData, cb) {
-					_.set(accountData, 'topup.monthly.preemptive', preemptive);
-					_.set(accountData, 'topup.monthly.exact', exact);
+					_.set(accountData, 'topup.monthly.preemptive', normalizedSubscriptions.preemptive);
+					_.set(accountData, 'topup.monthly.exact', normalizedSubscriptions.exact);
 
 					self.callApi({
 						resource: 'account.patch',
@@ -974,11 +965,18 @@ define(function(require) {
 						},
 						success: function(data) {
 							cb(null);
+						},
+						error: function() {
+							cb(true);
 						}
 					});
 				}
 			], function(err) {
-				callback && callback();
+				if (err) {
+					error && error();
+					return;
+				}
+				success && success();
 			});
 		},
 

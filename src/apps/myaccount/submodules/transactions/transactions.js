@@ -150,9 +150,11 @@ define(function(require) {
 						.value();
 
 					args.callback({
-						amount: _.reduce(formatted, function(acc, transaction) {
-							return acc + parseFloat(transaction.amount);
-						}, 0),
+						amount: _
+							.chain(formatted)
+							.filter('isApproved')
+							.sumBy('amount')
+							.value(),
 						transactions: formatted
 					});
 				}

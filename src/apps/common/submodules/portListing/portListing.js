@@ -69,7 +69,7 @@ define(function(require) {
 		},
 
 		/**
-		 * Check if the user is marquerading or is a reseller
+		 * Check if the user is masquerading or is not a reseller
 		 */
 		portListingCheckProfile: function() {
 			return monster.util.isMasquerading() || !monster.util.isReseller();
@@ -100,15 +100,21 @@ define(function(require) {
 						}
 					};
 				}),
-				tabs = _.map(self.appFlags.portListing.tabs, function(tab) {
-					return {
-						text: self.i18n.active().portListing.tabs[tab],
-						id: tab,
-						menus: [{
-							tabs: subTabs
-						}]
-					};
-				}),
+				tabs = _
+					.chain(self.appFlags.portListing.tabs)
+					.reject(function(tab) {
+						return tab === 'agent' && !monster.util.isSuperDuper() && _.get(monster.config.whitelabel, 'port.authority') !== self.accountId;
+					})
+					.map(function(tab) {
+						return {
+							text: self.i18n.active().portListing.tabs[tab],
+							id: tab,
+							menus: [{
+								tabs: subTabs
+							}]
+						};
+					})
+					.value(),
 				container,
 				parent;
 
@@ -160,6 +166,7 @@ define(function(require) {
 			self.portListingSet('portRequest', {});
 			self.portListingSet('portRequestsById', {});
 			self.portListingSet('type', type);
+			self.portListingSet('tab', tab);
 
 			self.portListingRenderTableList({
 				template: template,
@@ -204,6 +211,8 @@ define(function(require) {
 						tab: tab,
 						type: type,
 						isMonsterApp: self.portListingGet('isMonsterApp'),
+						fromDate: args.fromDate,
+						toDate: args.toDate,
 						callback: callback
 					});
 				},
@@ -226,21 +235,36 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {String} args.tab
+		 * @param {String} args.type
+		 * @param {Object} args.fromDate
+		 * @param {Object} args.toDate
+		 * @param {Boolean} args.isMonsterApp
+		 * @param {Function} args.callback
+		 */
 		portListingGenericRows: function(args) {
 			var self = this,
 				tab = args.tab,
-				type = args.type;
+				type = args.type,
+				fromDate = args.fromDate,
+				toDate = args.toDate,
+				isMonsterApp = args.isMonsterApp,
+				callback = args.callback;
 
 			self.portListingHelperListPorts({
 				tab: tab,
 				type: type,
+				fromDate: fromDate,
+				toDate: toDate,
 				success: function(data) {
 					var requests = data.data,
 						hasPorts = !_.isEmpty(requests),
 						$rows = $(self.getTemplate({
 							name: 'generic-rows',
 							data: {
-								isMonsterApp: args.isMonsterApp,
+								isMonsterApp: isMonsterApp,
 								type: type,
 								hasPorts: hasPorts,
 								requests: _.sortBy(self.portListingFormatDataToTemplate(requests), 'state')
@@ -249,9 +273,8 @@ define(function(require) {
 						}));
 
 					self.portListingSet('hasPorts', hasPorts);
-					self.portListingSet('tab', tab);
 
-					args.callback && args.callback($rows, data);
+					callback && callback($rows, data);
 				}
 			});
 		},
@@ -505,6 +528,25 @@ define(function(require) {
 			template.find('#endDate').datepicker('setDate', toDate);
 
 			template
+				.find('.port-filter')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var fromDate = template.find('input.filter-from').datepicker('getDate'),
+							toDate = template.find('input.filter-to').datepicker('getDate'),
+							tab = self.portListingGet('tab'),
+							type = self.portListingGet('type');
+
+						self.portListingRenderTableList({
+							template: self.portListingGet('container'),
+							fromDate: fromDate,
+							toDate: toDate,
+							type: type,
+							tab: tab
+						});
+					});
+
+			template
 				.find('.port-wizard')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -527,30 +569,6 @@ define(function(require) {
 		portListingBindTableEvents: function(args) {
 			var self = this,
 				template = args.template;
-
-			template
-				.find('.port-filter')
-					.on('click', function(event) {
-						event.preventDefault();
-						var fromDate = template.find('input.filter-from').datepicker('getDate'),
-							toDate = template.find('input.filter-to').datepicker('getDate'),
-							tab = self.portListingGet('tab'),
-							type = self.portListingGet('type');
-
-						self.portListingHelperListPorts({
-							tab: tab,
-							type: type,
-							fromDate: fromDate,
-							toDate: toDate,
-							success: function(portRequests) {
-								self.portListingRenderTableList({
-									template: self.portListingGet('container'),
-									type: type,
-									portRequests: portRequests
-								});
-							}
-						});
-					});
 
 			template
 				.find('.port-wizard')
@@ -1156,25 +1174,31 @@ define(function(require) {
 		},
 
 		/**
+		 * @param  {Object}   args
 		 * @param  {Function} args.success
-		 * @param  {String} args.tab
-		 * @param  {String} args.status
-		 * @param  {Object} args.filters
+		 * @param  {String}   args.tab
+		 * @param  {String}   args.type
+		 * @param  {Date}     [args.fromDate]
+		 * @param  {Date}     [args.toDate]
 		 */
 		portListingHelperListPorts: function(args) {
 			var self = this,
-				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range),
-				fromDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'fromDate', dates.from)),
-				toDate = monster.util.dateToBeginningOfGregorianDay(_.get(args, 'toDate', dates.to)),
 				filters = {
 					paginate: false,
 					by_types: args.type
-				};
+				},
+				dates,
+				fromDate,
+				toDate;
 
 			if (self.portListingIsTypeCompleted(args.type)) {
+				dates = monster.util.getDefaultRangeDates(self.appFlags.portListing.range);
+				fromDate = _.get(args, 'fromDate', dates.from);
+				toDate = _.get(args, 'toDate', dates.to);
+
 				filters = _.merge(filters, {
-					created_from: fromDate,
-					created_to: toDate
+					modified_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+					modified_to: monster.util.dateToEndOfGregorianDay(toDate)
 				});
 			}
 

@@ -741,67 +741,131 @@ define(function(require) {
 		},
 
 		dialog: function(content, options) {
-			var isPersistent = _.has(options, 'isPersistent')
-				? options.isPersistent
-				: false;
-			var dialog = $('<div />').append(content),
-				coreApp = monster.apps.core,
-				i18n = coreApp.i18n.active(),
-				dialogType = typeof options !== 'undefined' && typeof options.dialogType !== 'undefined' ? options.dialogType : 'classic',
-				closeBtnText = i18n.close || 'X';
-
-			if (typeof options !== 'undefined' && typeof options.dialogType !== 'undefined') {
-				delete options.dialogType;
-			}
-
-			// delete options.dialogType;
-			$('input', content).keypress(function(e) {
-				if (e.keyCode === 13) {
-					e.preventDefault();
-					return false;
-				}
+			// Get options
+			var dialogType = _.get(options, 'dialogType', 'classic');
+			var hideClose = _.get(options, 'hideClose', false);
+			var isPersistent = _.get(options, 'isPersistent', false);
+			var onClose = _.get(options, 'onClose');
+			var open = _.get(options, 'open');
+			// Other variables/functions for internal use
+			var $dialogBody = $('<div />').append(content);
+			var $scrollableContainer = $dialogBody;
+			var $window = $(window);
+			var $body = $('body');
+			var coreApp = monster.apps.core;
+			var i18n = coreApp.i18n.active();
+			var closeBtnText = i18n.close || 'X';
+			var dialogPosition = [ 'center', 24 ];
+			var windowLastWidth = $window.width();
+			var getFullDialog = _.once(function() {
+				return $dialogBody.closest('.ui-dialog');
 			});
+			var setDialogSizes = function() {
+				var $dialog = getFullDialog();
+				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
+				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
+				var dialogHeight = $dialog.height();
+				var dialogHeightDiff = dialogMaxHeight - dialogHeight;
+
+				// Set max sizes
+				$scrollableContainer.css({
+					maxHeight: $scrollableContainer.height() + dialogHeightDiff
+				});
+				$dialog.css({
+					maxWidth: dialogMaxWidth
+				});
+				$dialogBody.css({
+					maxWidth: dialogMaxWidth
+				});
+
+				// Center
+				if (dialogLastWidth !== $dialog.width() || windowLastWidth !== $window.width() || $dialog.offset().top === 24) {
+					$dialogBody.dialog('option', 'position', dialogPosition);
+
+					dialogLastWidth = $dialog.width();
+					windowLastWidth = $window.width();
+				}
+			};
+			var windowResizeHandler = _.debounce(setDialogSizes, 100);
+			// Unset variables
+			var dialogLastWidth;
 
 			//Unoverridable options
 			var strictOptions = {
-					appendTo: getDialogAppendTo(isPersistent),
-					show: { effect: 'fade', duration: 200 },
-					hide: { effect: 'fade', duration: 200 },
-					zIndex: 20000,
-					close: function() {
-						$('div.popover').remove();
-						dialog.dialog('destroy');
-						dialog.remove();
+				// Values
+				appendTo: getDialogAppendTo(isPersistent),
+				draggable: false,
+				hide: {
+					effect: 'fade',
+					duration: 200
+				},
+				position: dialogPosition,
+				resizable: false,
+				show: {
+					effect: 'fade',
+					duration: 200
+				},
+				zIndex: 20000,
+				// Event handlers
+				close: function() {
+					// Clear events
+					$window.off('resize', windowResizeHandler);
 
-						if (typeof options.onClose === 'function') {
-							// jQuery FREAKS out and gets into an infinite loop if the following function kicks back an error. Hence the try/catch.
-							try {
-								options.onClose();
-							} catch (err) {
-								if (console && err.message && err.stack) {
-									console.log(err.message);
-									console.log(err.stack);
-								}
+					// Remove elements
+					$('div.popover').remove();
+					$dialogBody.dialog('destroy');
+					$dialogBody.remove();
+					$body.removeClass('monster-dialog-active');
+
+					// Execute close callback, if possible
+					if (_.isFunction(onClose)) {
+						// jQuery FREAKS out and gets into an infinite loop if the
+						// following function kicks back an error. Hence the try/catch.
+						try {
+							onClose();
+						} catch (err) {
+							if (console && err.message && err.stack) {
+								console.log(err.message);
+								console.log(err.stack);
 							}
 						}
 					}
 				},
-				//Default values
-				defaults = {
-					width: 'auto',
-					modal: true,
-					resizable: false,
-					open: function(event, ui) {
-						if (options.hideClose) {
-							$('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
-						}
+				open: function() {
+					$body.addClass('monster-dialog-active');
+					if (hideClose) {
+						getFullDialog().find('.ui-dialog-titlebar-close').hide();
 					}
-				};
+					if (_.isFunction(open)) {
+						open();
+					}
+				}
+			};
+			//Default options
+			var defaults = {
+				// Values
+				modal: true,
+				width: 'auto'
+			};
 
-			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
-			options = $.extend(defaults, options || {}, strictOptions);
-			dialog.dialog(options);
+			// Overwrite any defaults with settings passed in,omitting the custom ones, or the
+			// ones that will be handled in a custom way. Then overwrite any attributes with the
+			// unoverridable options
+			options = _
+				.merge(defaults,
+					_.omit(options, [
+						'dialogType',
+						'hideClose',
+						'minHeight',
+						'minWidth',
+						'scrollableContainer'
+					]),
+					strictOptions);
 
+			$dialogBody.dialog(options);
+			dialogLastWidth = getFullDialog().width();
+
+			// Set dialog close button
 			switch (dialogType) {
 				case 'conference':
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
@@ -810,9 +874,26 @@ define(function(require) {
 					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
 					break;
 			}
-			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
+			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
+			// Make container scrollable
+			$scrollableContainer.css({
+				overflow: 'auto'
+			});
+
+			// Set initial sizes
+			setDialogSizes();
+
+			// Set event handlers
+			$('input', content).keypress(function(e) {
+				if (e.keyCode === 13) {
+					e.preventDefault();
+					return false;
+				}
+			});
+			$window.on('resize', windowResizeHandler);
+
+			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
 		},
 
 		charges: function(data, callbackOk, callbackCancel) {
@@ -2933,7 +3014,7 @@ define(function(require) {
 						formattedNumber: formattedNumber.userFormat
 					},
 					options: {
-						hideFlag: options.hasOwnProperty('hideFlag') ? options.hideFlag : false
+						hideFlag: !formattedNumber.isValid || _.get(options, 'hideFlag', false)
 					}
 				},
 				template = monster.template(monster.apps.core, 'monster-number-wrapper', formattedData);
