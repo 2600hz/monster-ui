@@ -219,7 +219,7 @@
 				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
 				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
 				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' },
-				'listByAccounts': { verb: 'GET', url: 'accounts/{accountId}/ledgers/summary_by_accounts' }
+				'summaryPerMonth': { verb: 'GET', url: 'accounts/{accountId}/ledgers/summary/{modbSuffix}' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
