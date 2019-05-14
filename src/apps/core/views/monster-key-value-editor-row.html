@@ -1,5 +1,9 @@
 <div class="monster-key-value-editor-row">
-	<input required id="{{inputName}}.key" name="{{inputName}}.key" class="data-key" type="text" placeholder="{{coalesce keyPlaceholder i18n.keyValueEditor.keyPlaceholder}}" value="{{key}}"></input>
-	<input required id="{{inputName}}.value" name="{{imputName}}.value" class="data-value" type="text" placeholder="{{coalesce valuePlaceholder i18n.keyValueEditor.valuePlaceholder}}" value="{{value}}"></input>
+	<div class="data-key">
+		<input required id="{{inputName}}.key" name="{{inputName}}.key" type="text" placeholder="{{coalesce keyPlaceholder i18n.keyValueEditor.keyPlaceholder}}" value="{{key}}"></input>
+	</div>
+	<div class="data-value">
+		<input required id="{{inputName}}.value" name="{{inputName}}.value" type="text" placeholder="{{coalesce valuePlaceholder i18n.keyValueEditor.valuePlaceholder}}" value="{{value}}"></input>
+	</div>
 	<i class="fa fa-trash-o fa-lg monster-red" data-action="remove"></i>
 </div>
