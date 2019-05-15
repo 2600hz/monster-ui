@@ -311,7 +311,7 @@ Optionally, additional HTML attributes can be provided to further customize the 
 {{svgIcon "g-drive--color" class="my-icon-class icon-large" data-tooltip="Click here" disabled="true"}}
 ```
 
-### telicon
+#### telicon
 This helper is a wrapper over `svgIcon` and allows you to render telicon icons by specifying an icon ID stripped of the `telicon2` prefix.
 
 ```handlebars
