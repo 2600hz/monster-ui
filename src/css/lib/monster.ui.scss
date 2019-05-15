@@ -960,17 +960,14 @@ i.monster-password-strength {
 
 				input {
 					width: 100%;
+					box-sizing: border-box;
+					height: 30px;
 				}
-			}
-
-			.data-value {
-				margin-left: 1rem;
 			}
 
 			i[data-action="remove"] {
 				cursor: pointer;
 				flex: initial;
-				margin-left: 1rem;
 				padding-top: 4px;
 			}
 		}
