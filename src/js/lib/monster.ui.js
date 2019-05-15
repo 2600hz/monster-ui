@@ -3231,8 +3231,10 @@ define(function(require) {
 	 * @param  {Object} [options]  Editor options
 	 * @param  {Object} [options.data]  Key-value data, as a plain object
 	 * @param  {String} [options.inputName]  Input name prefix
-	 * @param  {String} [options.keyPlaceholder]  Key input placeholder
-	 * @param  {String} [options.valuePlaceholder]  Value input placeholder
+	 * @param  {Object} [options.i18n]  Custom label translations
+	 * @param  {Object} [options.i18n.addLink]  Add row link label
+	 * @param  {String} [options.i18n.keyPlaceholder]  Key input placeholder
+	 * @param  {String} [options.i18n.valuePlaceholder]  Value input placeholder
 	 */
 	function keyValueEditor($target, options) {
 		if (!($target instanceof $)) {
@@ -3240,21 +3242,27 @@ define(function(require) {
 		}
 		var data = _.get(options, 'data', {});
 		var inputName = _.get(options, 'inputName', 'data');
-		var keyPlaceholder = _.get(options, 'keyPlaceholder');
-		var valuePlaceholder = _.get(options, 'valuePlaceholder');
+		var addLink = _.get(options, 'i18n.addLink');
+		var keyPlaceholder = _.get(options, 'i18n.keyPlaceholder');
+		var valuePlaceholder = _.get(options, 'i18n.valuePlaceholder');
 		if (!_.isPlainObject(data)) {
 			throw TypeError('"options.data" is not a plain object');
 		}
 		if (!_.isNil(inputName) && !_.isString(inputName)) {
 			throw TypeError('"options.inputName" is not a string');
 		}
+		if (!_.isNil(addLink) && !_.isString(addLink)) {
+			throw TypeError('"options.i18n.addLink" is not a string');
+		}
 		if (!_.isNil(keyPlaceholder) && !_.isString(keyPlaceholder)) {
-			throw TypeError('"options.keyPlaceholder" is not a string');
+			throw TypeError('"options.i18n.keyPlaceholder" is not a string');
 		}
 		if (!_.isNil(valuePlaceholder) && !_.isString(valuePlaceholder)) {
-			throw TypeError('"options.valuePlaceholder" is not a string');
+			throw TypeError('"options.i18n.valuePlaceholder" is not a string');
 		}
-		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor'));
+		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor', {
+			addLink: addLink
+		}));
 		var $rowContainer = $editorTemplate.find('.monster-key-value-data-container');
 		var addRow = function(value, key, index) {
 			$rowContainer.append(monster.template(monster.apps.core, 'monster-key-value-editor-row', {
