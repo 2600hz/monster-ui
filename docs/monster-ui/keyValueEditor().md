@@ -10,15 +10,15 @@ monster.ui.keyValueEditor($target, options);
 ### Parameters
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`$target` | A jQuery object inside which the key-value editor will be inserted using the [append()][append] method. | `jQuery` | | `true`
-`options` | A plain JavaScript object that contains options to set up the editor. | `Object`([#options](#options)) | | `false`
+`$target` | Container of the widget inserted with `jQuery#append`. | `jQuery` | | `true`
+`options` | List of initialization options. | `Object`([#options](#options)) | | `false`
 
 #### options
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`data` | JSON object that contains the data to be handled by the editor. | `Object` | `{}` | `false`
+`data` | Key/value pairs to initialize the editor with. | `Object` | `{}` | `false`
 `inputName` | String to be set as prefix for the text fields' ID and name attributes. | `String` | `data` | `false`
-`i18n` | Define custom text labels to use instead of the default ones. | `Object`([#i18n](#i18n)) | | `false`
+`i18n` | Override default i18n strings. | `Object`([#i18n](#i18n)) | | `false`
 
 #### i18n
 Key | Description | Type | Default | Required
@@ -32,18 +32,18 @@ A `jQuery` object representing the key-value editor widget.
 
 ### Errors
 * `"$target" is not a jQuery object`: `$target` is not a jQuery object
-* `"options.data" is not a plain object`: `options.data` is not a plain JavaScript object
-* `"options.inputName" is not a string`: `options.inputName` was provided, but it is not a `String` value
-* `"options.i18n.addLink" is not a string`: `options.i18n.addLink` was provided, but it is not a `String` value
-* `"options.i18n.keyPlaceholder" is not a string`: `options.i18n.keyPlaceholder` was provided, but it is not a `String` value
-* `"options.i18n.valuePlaceholder" is not a string`: `options.i18n.valuePlaceholder` was provided, but it is not a `String` value
+* `"options.data" is not a plain object`: `options.data` is not a plain object
+* `"options.inputName" is not a string`: `options.inputName` is not a `String` value
+* `"options.i18n.addLink" is not a string`: `options.i18n.addLink` is not a `String` value
+* `"options.i18n.keyPlaceholder" is not a string`: `options.i18n.keyPlaceholder` is not a `String` value
+* `"options.i18n.valuePlaceholder" is not a string`: `options.i18n.valuePlaceholder` is not a `String` value
 
 ## Description
-The `monster.ui.keyValueEditor()` method allows you to generate a list of rows to display and edit key-value pairs, with the look and feel of Monster UI.
+The `monster.ui.keyValueEditor()` creates a widget to manage a dynamic list of key-value pair with the look and feel of Monster UI.
 
-The key and value inputs are displayed as two same-lenght columns of text fields. There is also a third smaller column that contains delete icons, which allow to delete each data row. It also provides a "Add Data Row" link button at the bottom, which allows to add new key-value entries to the list.
+The key and value inputs are displayed as two same-length columns while the third, smaller column, contains an actionable element to delete each data row. It also provides a "Add Data Row" link button at the bottom allowing the addition of an unlimited number of extra rows.
 
-The editor is expanded by default to the full width of the container. The dimensions can be adjusted via additional CSS rules nonetheless.
+By default, the widget will match the width of its `$target` container.
 
 ## Examples
 ### Create an empty key-value editor, with default options
@@ -72,5 +72,3 @@ var options = {
 
 monster.ui.keyValueEditor(target, options);
 ```
-
-[append]: http://api.jquery.com/append/
