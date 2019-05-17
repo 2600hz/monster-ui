@@ -17,7 +17,7 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `data` | Key/value pairs to initialize the editor with. | `Object` | `{}` | `false`
-`inputName` | String to be set as prefix for the text fields' ID and name attributes. | `String` | `data` | `false`
+`inputName` | String to be set as prefix for the text fields' name attribute. | `String` | `data` | `false`
 `i18n` | Override default i18n strings. | `Object`([#i18n](#i18n)) | | `false`
 
 #### i18n
@@ -44,6 +44,8 @@ The `monster.ui.keyValueEditor()` creates a widget to manage a dynamic list of k
 The key and value inputs are displayed as two same-length columns while the third, smaller column, contains an actionable element to delete each data row. It also provides a "Add Data Row" link button at the bottom allowing the addition of an unlimited number of extra rows.
 
 By default, the widget will match the width of its `$target` container.
+
+When this widget is used inside a form, and [`monster.ui.getFormData()`][getFormData] is used to parse the form into an object, then `inputName` will be the property under which key/value pairs are collected in an array.
 
 ## Examples
 ### Create an empty key-value editor, with default options
@@ -72,3 +74,5 @@ var options = {
 
 monster.ui.keyValueEditor(target, options);
 ```
+
+[getFormData]: getFormData().md
