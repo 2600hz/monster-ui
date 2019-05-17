@@ -3300,27 +3300,26 @@ define(function(require) {
 	 */
 	function mergeHtmlAttributes(object, source) {
 		if (!_.isPlainObject(object)) {
-			throw TypeError('"object" is not a plain object');
+			throw new TypeError('"object" is not a plain object');
 		}
 		if (!_.isPlainObject(source)) {
-			throw TypeError('"source" is not a plain object');
+			throw new TypeError('"source" is not a plain object');
 		}
 
 		return _.mergeWith(object, source, function(objValue, srcValue, key) {
 			objValue = _.isNil(objValue) ? '' : objValue;
 			srcValue = _.isNil(srcValue) ? '' : srcValue;
-			if (!_.isString(objValue || '') || !_.isString(srcValue || '')) {
-				throw TypeError('One or both values is not a string');
-			}
 			if (key !== 'class') {
-				return objValue + srcValue;
+				return _.toString(objValue) + _.toString(srcValue);
 			}
 			var srcClasses = _
 				.chain(srcValue)
+				.toString()
 				.split(/\s+/g) // Split by one or more whitespaces
 				.value();
 			return _
 				.chain(objValue)
+				.toString()
 				.split(/\s+/g) // Split by one or more whitespaces
 				.union(srcClasses)
 				.reject(_.isEmpty) // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
