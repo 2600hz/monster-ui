@@ -3246,19 +3246,19 @@ define(function(require) {
 		var keyPlaceholder = _.get(options, 'i18n.keyPlaceholder');
 		var valuePlaceholder = _.get(options, 'i18n.valuePlaceholder');
 		if (!_.isPlainObject(data)) {
-			throw TypeError('"options.data" is not a plain object');
+			throw new TypeError('"options.data" is not a plain object');
 		}
 		if (!_.isNil(inputName) && !_.isString(inputName)) {
-			throw TypeError('"options.inputName" is not a string');
+			throw new TypeError('"options.inputName" is not a string');
 		}
 		if (!_.isNil(addLink) && !_.isString(addLink)) {
-			throw TypeError('"options.i18n.addLink" is not a string');
+			throw new TypeError('"options.i18n.addLink" is not a string');
 		}
 		if (!_.isNil(keyPlaceholder) && !_.isString(keyPlaceholder)) {
-			throw TypeError('"options.i18n.keyPlaceholder" is not a string');
+			throw new TypeError('"options.i18n.keyPlaceholder" is not a string');
 		}
 		if (!_.isNil(valuePlaceholder) && !_.isString(valuePlaceholder)) {
-			throw TypeError('"options.i18n.valuePlaceholder" is not a string');
+			throw new TypeError('"options.i18n.valuePlaceholder" is not a string');
 		}
 		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor', {
 			addLink: addLink
@@ -3279,11 +3279,12 @@ define(function(require) {
 			addRow(value, key, counter++);
 		});
 		// Bind events
-		$editorTemplate.find('[data-action="add"]').on('click', function(e) {
+		$editorTemplate.find('.key-value-add').on('click', function(e) {
 			e.preventDefault();
 			addRow('', '', counter++);
 		});
-		$rowContainer.on('click', '[data-action="remove"]', function() {
+		$rowContainer.on('click', '.key-value-remove', function(e) {
+			e.preventDefault();
 			$(this).closest('.monster-key-value-editor-row').remove();
 		});
 		// Append editor
