@@ -954,6 +954,12 @@ i.monster-password-strength {
 			margin-bottom: 10px;
 			display: flex;
 
+			&:hover {
+				.key-value-remove {
+					opacity: 1;
+				}
+			}
+
 			.data-key, .data-value {
 				flex: 1;
 				padding-right: 1rem;
@@ -965,16 +971,21 @@ i.monster-password-strength {
 				}
 			}
 
-			i[data-action="remove"] {
+			.key-value-remove {
+				color: $font-primary-color;
 				cursor: pointer;
-				flex: initial;
-				padding-top: 4px;
+				padding-top: 0.2rem;
+				opacity: 0;
+				transition: visibility 0.25s, opacity 0.25s ease-in-out;
+
+				&:hover {
+					color: $danger-color;
+				}
 			}
 		}
 	}
 
-	.monster-link[data-action="add"] {
-		width: 180px;
-		font-size: 12px;
+	.key-value-add {
+		font-size: 0.75rem;
 	}
 }
