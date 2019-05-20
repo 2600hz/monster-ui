@@ -1051,5 +1051,20 @@
 			"deleteConferences": "Also remove this user's conferences from the system",
 			"deleteConferencesHelp": "If you leave this option unchecked, you won't be able to use the user's conference number anywhere else, as it will still be used by that conference."
 		}
+	},
+
+	"appSelector": {
+		"filters": {
+			"all": "All Apps",
+			"installed": "My Apps",
+			"reseller": "Reseller Apps",
+			"carrier": "Carrier Apps",
+			"developer": "Developer Apps",
+			"end_user": "End User Apps",
+			"reporting": "Reporting Apps",
+			"integration": "Integrations",
+			"admin": "Admin Apps",
+			"system_admin": "System Admin Apps"
+		}
 	}
 }

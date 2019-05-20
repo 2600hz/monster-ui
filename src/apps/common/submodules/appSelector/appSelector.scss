@@ -1,0 +1,19 @@
+.app-selector {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+
+	.app-selector-menu {
+		flex: 1 100%;
+		width: 300px;
+	}
+
+	.app-selector-search {
+		flex: initial;
+		height: 100px;
+	}
+
+	.app-selector-list {
+		flex: 1;
+	}
+}

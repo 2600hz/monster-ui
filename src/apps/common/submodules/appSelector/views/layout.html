@@ -1,0 +1,17 @@
+<div class="app-selector">
+	<div class="app-selector-menu">
+		<ul class="nav nav-list">
+		{{#each filters}}
+			<li data-filter="{{this}}" class="app-filter">
+				{{tryI18n @root.i18n.appSelector.filters this}}
+			</li>
+		{{/each}}
+		</ul>
+	</div>
+	<div class="app-selector-search">
+		TODO: Search
+	</div>
+	<div class="app-selector-list">
+		TODO: List
+	</div>
+</div>
