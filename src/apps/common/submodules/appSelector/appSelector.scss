@@ -32,8 +32,12 @@
 		flex: 1;
 		margin-left: 25px;
 		margin-right: 1rem;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
 
 		.app-selector-search {
+			flex: initial;
 			margin-top: 1.5rem;
 
 			.search-box {
@@ -55,7 +59,10 @@
 		}
 
 		.app-selector-list {
+			flex: 1;
 			margin-top: 1.5rem;
+			overflow-y: auto;	// TODO: Scroll displayed when .app-selector has a height in pixels. Try to combine with flexbox, to try to make it scrollable (maybe in a layout with the buttons).
+			border-top: solid 1px $french-gray2;
 
 			.app-list {
 				margin-left: 0;
@@ -64,6 +71,10 @@
 					display: flex;
 					flex-wrap: wrap;
 					box-shadow: inset 0px 1px 0px 0px $french-gray2;
+
+					&:first-of-type {
+						box-shadow: none;
+					}
 
 					.app-icon {
 						flex: initial;
