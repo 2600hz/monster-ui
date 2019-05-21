@@ -2,16 +2,35 @@
 	<div class="app-selector-menu">
 		<ul class="nav nav-list">
 		{{#each filters}}
-			<li data-filter="{{this}}" class="app-filter">
-				{{tryI18n @root.i18n.appSelector.filters this}}
+			<li class="nav-item">
+				<a href="javascript:void(0);" data-filter="{{this}}" class="app-filter text-container{{#if @first}} active{{/if}}">
+					{{tryI18n @root.i18n.appSelector.filters this}}
+				</a>
 			</li>
 		{{/each}}
 		</ul>
 	</div>
-	<div class="app-selector-search">
-		TODO: Search
-	</div>
-	<div class="app-selector-list">
-		TODO: List
+	<div class="app-selector-body">
+		<div class="app-selector-search">
+			<div class="search-box">
+				<input type="text" class="search-query" placeholder="{{i18n.appSelector.searchBox}}">
+				{{telicon "search" class="search-icon"}}
+			</div>
+		</div>
+		<div class="app-selector-list">
+			<ul class="app-list">
+			{{#each apps}}
+				<li class="app-item text-container">
+					<div class="app-icon {{icon.extraCssClass}}" {{#if icon.path}}style="background-image:url({{icon.path}})"{{/if}}></div>
+					<div class="app-title">
+						{{label}}
+					</div>
+					<div class="app-description">
+						{{description}}
+					</div>
+				</li>
+			{{/each}}
+			</ul>
+		</div>
 	</div>
 </div>

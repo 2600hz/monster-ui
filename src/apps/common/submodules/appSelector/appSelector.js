@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		isotope = require('isotope'),
 		monster = require('monster');
 
 	var appSelector = {
@@ -31,7 +32,7 @@ define(function(require) {
 		appSelectorRender: function(args) {
 			var self = this,
 				$container = args.container,
-				initTemplate = function initTemplate() {
+				initTemplate = function initTemplate(initTemplateCallback) {
 					var dataTemplate = {
 							filters: self.appFlags.appSelector.filters
 						},
@@ -41,16 +42,70 @@ define(function(require) {
 							submodule: 'appSelector'
 						}));
 
-					self.appSelectorBindEvents();
+					self.appSelectorBindEvents({
+						template: $template
+					});
 
-					return $template;
+					self.appSelectorGetApps({
+						callback: function(apps) {
+							var dataTemplate = {
+									filters: self.appFlags.appSelector.filters,
+									apps: apps
+								},
+								$template = $(self.getTemplate({
+									name: 'layout',
+									data: dataTemplate,
+									submodule: 'appSelector'
+								}));
+
+							self.appSelectorBindEvents({
+								template: $template
+							});
+
+							initTemplateCallback($template);
+						}
+					});
 				};
 
-			$container.append(initTemplate());
+			initTemplate(function($template) {
+				$container.append($template);
+			});
 		},
 
-		appSelectorBindEvents: function() {
+		appSelectorBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				$appFilters = $template.find('.app-selector-menu .app-filter');
 
+			$appFilters.on('click', function() {
+				var $this = $(this),
+					filter = $this.data('filter');
+
+				if ($this.hasClass('active')) {
+					return;
+				}
+
+				$appFilters.removeClass('active');
+				$this.addClass('active');
+			});
+		},
+
+		appSelectorGetApps: function(args) {
+			var apps = _.transform(monster.appsStore, function(apps, appData, appName) {
+				var i18n = _.get(appData.i18n, monster.config.whitelabel.language, _.get(appData.i18n, 'en-US'));
+				monster.ui.formatIconApp(appData);
+				apps[appData.id] = {
+					name: appName,
+					label: i18n.label,
+					description: i18n.description,
+					icon: {
+						path: monster.util.getAppIconPath(appData),
+						extraCssClass: appData.extraCssClass
+					}
+				};
+			});
+
+			args.callback(apps);
 		}
 	};
 

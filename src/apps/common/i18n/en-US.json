@@ -1054,6 +1054,7 @@
 	},
 
 	"appSelector": {
+		"searchBox": "Search",
 		"filters": {
 			"all": "All Apps",
 			"installed": "My Apps",
