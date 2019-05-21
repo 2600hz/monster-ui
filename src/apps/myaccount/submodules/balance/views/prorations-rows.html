@@ -1,0 +1,9 @@
+{{#each transactions}}
+	<tr class="transaction-row">
+		<td data-sort-value="{{extra.date}}">{{toFriendlyDate extra.date}}</td>
+		<td>{{ account.name }}</td>
+		<td>{{ description }}</td>
+		<td>{{ audit.agent.first_name }} {{ audit.agent.last_name }}</td>
+		<td>{{formatPrice amount }}</td>
+	</tr>
+{{/each}}
