@@ -2,7 +2,8 @@
 
 .app-selector-dialog {
 	max-height: inherit;
-	max-width: 1156px;
+	width: 1100px;
+	max-width: inherit;
 
 	.popup-body {
 		max-height: inherit;
@@ -114,6 +115,9 @@
 					display: flex;
 					flex-wrap: wrap;
 					box-shadow: inset 0px 1px 0px 0px $french-gray2;
+					width: 100%;
+					background-color: $panel-background-color;
+					box-sizing: border-box;
 
 					&:first-of-type {
 						box-shadow: none;

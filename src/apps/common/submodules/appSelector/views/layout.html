@@ -20,7 +20,7 @@
 		<div class="app-selector-list">
 			<ul class="app-list">
 			{{#each apps}}
-				<li class="app-item text-container">
+				<li class="app-item text-container{{#each tags}} {{this}}{{/each}}">
 					<div class="app-icon {{icon.extraCssClass}}" {{#if icon.path}}style="background-image:url({{icon.path}})"{{/if}}></div>
 					<div class="app-title">
 						{{label}}

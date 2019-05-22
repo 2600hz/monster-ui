@@ -33,9 +33,10 @@ define(function(require) {
 		appSelectorRender: function(args) {
 			var self = this,
 				$container = args.container,
-				initTemplate = function initTemplate(initTemplateCallback) {
+				initTemplate = function initTemplate(apps) {
 					var dataTemplate = {
-							filters: self.appFlags.appSelector.filters
+							filters: self.appFlags.appSelector.filters,
+							apps: apps
 						},
 						$template = $(self.getTemplate({
 							name: 'layout',
@@ -47,29 +48,17 @@ define(function(require) {
 						template: $template
 					});
 
-					self.appSelectorGetApps({
-						callback: function(apps) {
-							var dataTemplate = {
-									filters: self.appFlags.appSelector.filters,
-									apps: apps
-								},
-								$template = $(self.getTemplate({
-									name: 'layout',
-									data: dataTemplate,
-									submodule: 'appSelector'
-								}));
-
-							self.appSelectorBindEvents({
-								template: $template
-							});
-
-							initTemplateCallback($template);
-						}
+					$template.find('.app-selector-body .app-list').isotope({
+						filter: '.app-item'
 					});
+
+					return $template;
 				};
 
-			initTemplate(function($template) {
-				$container.append($template);
+			self.appSelectorGetApps({
+				callback: function(apps) {
+					$container.append(initTemplate(apps));
+				}
 			});
 		},
 
@@ -94,15 +83,36 @@ define(function(require) {
 		appSelectorBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
-				$appFilters = $template.find('.app-selector-menu .app-filter');
+				$appFilters = $template.find('.app-selector-menu .app-filter'),
+				$appItems = $template.find('.app-selector-body .app-list .app-item');
 
 			$appFilters.on('click', function() {
 				var $this = $(this),
-					filter = $this.data('filter');
+					filter = $this.data('filter'),
+					filterClass,
+					$toShow,
+					$toHide;
 
 				if ($this.hasClass('active')) {
 					return;
 				}
+
+				$template.find('.app-selector-body .app-list').isotope({
+					filter: '.app-item' + (filter ? '.' + filter : '')
+				});
+
+				/*
+				if (filter) {
+					filterClass = '.' + filter;
+
+					$toShow = $appItems.filter(filterClass + '.app-item-hidden');
+					$toHide = $appItems.not(filterClass).not('.app-item-hidden');
+					$toShow.slideDown(500).removeClass('app-item-hidden');
+					$toHide.slideUp(500).addClass('app-item-hidden');
+				} else {
+					$appItems.slideDown(500);	//.filter('.hidden');
+				}
+				*/
 
 				$appFilters.removeClass('active');
 				$this.addClass('active');
@@ -117,6 +127,7 @@ define(function(require) {
 					name: appName,
 					label: i18n.label,
 					description: i18n.description,
+					tags: appData.tags,
 					icon: {
 						path: monster.util.getAppIconPath(appData),
 						extraCssClass: appData.extraCssClass
