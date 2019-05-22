@@ -28,7 +28,6 @@
 }
 
 #navigation_wizard_wrapper .left-content li {
-	margin: 15px 0;
 }
 
 #navigation_wizard_wrapper .footer {
@@ -64,13 +63,14 @@
 	height: 8px;
 	width: 10px;
 	right: 20px;
+	margin: 0 3px 3px 0;
 }
 
 #navigation_wizard_wrapper .nav .fa-check-circle {
 	color: #2ED022;
 	right: 22px;
-	height: 8px;
-	width: 10px;
+	height: 16px;
+	font-size: 16px;
 }
 
 #navigation_wizard_wrapper .left-content .selected li {
@@ -79,6 +79,10 @@
 
 #navigation_wizard_wrapper .nav .completed, #navigation_wizard_wrapper .nav .selected {
 	cursor: pointer;
+}
+
+#navigation_wizard_wrapper .nav .completed, #navigation_wizard_wrapper .nav .step {
+	margin-bottom: 24px;
 }
 
 #navigation_wizard_wrapper .nav .completed span, #navigation_wizard_wrapper .nav .step span, #navigation_wizard_wrapper .nav .selected i, #navigation_wizard_wrapper .nav .step i {
@@ -90,13 +94,13 @@
 }
 
 #navigation_wizard_wrapper .nav .selected .description {
-	color: #64646C;
+	color: $midgray2;
 	font-size: 12px;
 	line-height: 18px;
 	position: relative;
-	bottom: 10px;
-	right: 5px;
+	right: 1px;
 	width: 208px;
+	margin-top: 12px;
 }
 
 #navigation_wizard_wrapper .monster-button {
