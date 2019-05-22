@@ -1054,7 +1054,10 @@
 	},
 
 	"appSelector": {
-		"searchBox": "Search",
+		"dialog": {
+			"title": "Select Applications",
+			"acceptButton": "Select Applications"
+		},
 		"filters": {
 			"all": "All Apps",
 			"installed": "My Apps",
@@ -1066,6 +1069,7 @@
 			"integration": "Integrations",
 			"admin": "Admin Apps",
 			"system_admin": "System Admin Apps"
-		}
+		},
+		"searchBox": "Search"
 	}
 }

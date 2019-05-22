@@ -10,7 +10,8 @@ define(function(require) {
 
 		// Define the events available for other apps
 		subscribe: {
-			'common.appSelector.render': 'appSelectorRender'
+			'common.appSelector.render': 'appSelectorRender',
+			'common.appSelector.renderPopup': 'appSelectorRenderPopup'
 		},
 
 		appFlags: {
@@ -69,6 +70,24 @@ define(function(require) {
 
 			initTemplate(function($template) {
 				$container.append($template);
+			});
+		},
+
+		appSelectorRenderPopup: function(args) {
+			var self = this,
+				$template = $(self.getTemplate({
+					name: 'appSelectorDialog',
+					submodule: 'appSelector'
+				})),
+				popup;
+
+			self.appSelectorRender({
+				container: $template.find('.popup-body')
+			});
+
+			popup = monster.ui.dialog($template, {
+				title: self.i18n.active().appSelector.dialog.title,
+				autoScroll: false
 			});
 		},
 

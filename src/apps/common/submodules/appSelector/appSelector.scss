@@ -1,5 +1,41 @@
 @import "../../../../css/partials/base";
 
+.app-selector-dialog {
+	max-height: inherit;
+	max-width: 1156px;
+
+	.popup-body {
+		max-height: inherit;
+
+		.app-selector {
+			max-height: inherit;
+
+			.app-selector-body {
+				max-height: inherit;
+				padding-bottom: 70px;
+				box-sizing: border-box;
+			}
+
+			.app-selector-menu {
+				margin-bottom: 70px;
+			}
+		}
+	}
+
+	.popup-actions {
+		height: 70px;
+		margin-top: -70px;
+		background-color: #f4f4f5;
+		border-top: 1px solid $french-gray2;
+		box-sizing: border-box;
+		padding: 1rem;
+
+		button {
+			margin-left: 10px;
+		}
+	}
+}
+
 .app-selector {
 	display: flex;
 	height: 100%;
@@ -13,17 +49,24 @@
 		width: 240px;
 		font-size: 14px;
 		line-height: 14px;
-		border-right: 1px solid $french-gray2;
+		box-shadow: inset -1px 0px 0px 0px $french-gray2;
+		overflow-x: hidden;
+		overflow-y: auto;
 
 		ul.nav {
 			margin-top: 1.5rem;
-			padding-right: 14px;
 
-			& > li a.active {
-				font-weight: 600;
-				color: $primary-color;
-				background-color: $background-primary-color;
-				border-right: solid 3px $primary-color;
+			> li {
+				a:hover {
+					background-color: $background-primary-color;
+				}
+
+				a.active {
+					font-weight: 600;
+					color: $primary-color;
+					background-color: $background-primary-color;
+					border-right: solid 3px $primary-color;
+				}
 			}
 		}
 	}
