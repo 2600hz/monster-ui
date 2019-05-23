@@ -45,6 +45,7 @@ define(function(require) {
 						}));
 
 					self.appSelectorBindEvents({
+						apps: apps,
 						template: $template
 					});
 
@@ -95,11 +96,15 @@ define(function(require) {
 
 		appSelectorBindEvents: function(args) {
 			var self = this,
+				apps = args.apps,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
 				$appList = $appSelectorBody.find('.app-list'),
 				$searchInput = $appSelectorBody.find('input.search-query'),
+				$selectedAppsCounter = $appSelectorBody.find('.selected-count'),
+				$selectedAppsList = $appSelectorBody.find('.selected-list'),
+				selectedApps = [],
 				currentFilters = {
 					classNames: '',
 					data: ''
@@ -138,6 +143,40 @@ define(function(require) {
 
 				applyFilters();
 			}, 200));
+
+			$appList.find('.app-item').on('click', function() {
+				var $this = $(this),
+					appId = $this.data('id'),
+					$selectedAppsTemplate;
+
+				$this.toggleClass('selected');
+
+				if ($this.hasClass('selected')) {
+					selectedApps.push(apps[appId]);
+				} else {
+					_.remove(selectedApps, {
+						id: appId
+					});
+				}
+
+				$selectedAppsCounter.text(selectedApps.length.toString());
+
+				$selectedAppsTemplate = $(self.getTemplate({
+					name: 'selectedApps',
+					data: {
+						apps: selectedApps
+					},
+					submodule: 'appSelector'
+				}));
+
+				$selectedAppsTemplate.css({
+					maxWidth: (selectedApps.length * 1.5) + 'rem'
+				});
+
+				$selectedAppsList.replaceWith($selectedAppsTemplate);
+
+				$selectedAppsList = $selectedAppsTemplate;
+			});
 		},
 
 		appSelectorGetApps: function(args) {
@@ -145,6 +184,7 @@ define(function(require) {
 				var i18n = _.get(appData.i18n, monster.config.whitelabel.language, _.get(appData.i18n, 'en-US'));
 				monster.ui.formatIconApp(appData);
 				apps[appData.id] = {
+					id: appData.id,
 					name: appName,
 					label: i18n.label,
 					description: i18n.description,

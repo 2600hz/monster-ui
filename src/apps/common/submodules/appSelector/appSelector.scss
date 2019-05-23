@@ -80,32 +80,73 @@
 		flex-direction: column;
 		height: 100%;
 
-		.app-selector-search {
+		.app-selector-group {
 			flex: initial;
 			margin-top: 1.5rem;
+		}
 
-			.search-box {
-				width: 100%;
+		.selected-title {
+			line-height: 23px;
 
-				.search-query {
-					padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-					font-size: 14px;
-					line-height: 14px;
-					height: auto;
-					width: 100%;
-					box-sizing: border-box;
-				}
-				.search-icon {
-					margin-left: -1.75rem;
-					color: $manatee;
+			span {
+				vertical-align: middle;
+				font-size: 1rem;
+			}
+
+			.selected-count {
+				font-size: 23px;
+				font-weight: 600;
+				margin-right: 0.5rem;
+			}
+		}
+
+		.selected-list {
+			display: table;
+			table-layout: fixed;
+			width: 100%;
+
+			.app-icon-container {
+				padding-top: 1rem;
+				display: table-cell;
+				width: 1rem;
+
+				.app-icon {
+					box-shadow: -4px 0px 0px 0px $white;
 				}
 			}
+		}
+
+		.search-box {
+			width: 100%;
+
+			.search-query {
+				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+				font-size: 14px;
+				line-height: 14px;
+				height: auto;
+				width: 100%;
+				box-sizing: border-box;
+			}
+			.search-icon {
+				margin-left: -1.75rem;
+				color: $manatee;
+			}
+		}
+
+		.app-icon {
+			width: 2rem;
+			height: 2rem;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-color: $midgray;
+			border-radius: 0.5rem;
 		}
 
 		.app-selector-list {
 			flex: 1;
 			margin-top: 1.5rem;
-			overflow-y: auto;	// TODO: Scroll displayed when .app-selector has a height in pixels. Try to combine with flexbox, to try to make it scrollable (maybe in a layout with the buttons).
+			overflow-y: auto;
 			border-top: solid 1px $french-gray2;
 
 			.app-list {
@@ -118,20 +159,20 @@
 					width: 100%;
 					background-color: $panel-background-color;
 					box-sizing: border-box;
+					cursor: pointer;
 
-					&:first-of-type {
-						box-shadow: none;
+					&:hover {
+						background-color: $background-primary-color;
+					}
+
+					&.selected {
+						background-color: $french-pass;
 					}
 
 					.app-icon {
 						flex: initial;
-						width: 2rem;
-						height: 2rem;
 						margin-right: 0.75rem;
 						margin-bottom: 0.75rem;
-						background-position: center;
-						background-repeat: no-repeat;
-						background-size: contain;
 					}
 					.app-title {
 						flex: 1;

@@ -11,7 +11,14 @@
 		</ul>
 	</div>
 	<div class="app-selector-body">
-		<div class="app-selector-search">
+		<div class="app-selector-group">
+			<div class="selected-title">
+				<span class="selected-count">0</span>
+				<span>{{i18n.appSelector.selectedApps}}</span>
+			</div>
+			<div class="selected-list"></div>
+		</div>
+		<div class="app-selector-group">
 			<div class="search-box">
 				<input type="text" class="search-query" placeholder="{{i18n.appSelector.searchBox}}">
 				{{telicon "search" class="search-icon"}}

@@ -1070,6 +1070,7 @@
 			"admin": "Admin Apps",
 			"system_admin": "System Admin Apps"
 		},
-		"searchBox": "Search"
+		"searchBox": "Search",
+		"selectedApps": "Applications Selected"
 	}
 }
