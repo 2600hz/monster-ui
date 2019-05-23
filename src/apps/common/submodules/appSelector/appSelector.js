@@ -53,7 +53,7 @@ define(function(require) {
 
 			self.appSelectorGetApps({
 				callback: function(apps) {
-					var $template = initTemplate(apps)
+					var $template = initTemplate(apps);
 
 					$container.append($template);
 
@@ -97,7 +97,18 @@ define(function(require) {
 			var self = this,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
-				$appList = $template.find('.app-selector-body .app-list');
+				$appSelectorBody = $template.find('.app-selector-body'),
+				$appList = $appSelectorBody.find('.app-list'),
+				$searchInput = $appSelectorBody.find('input.search-query'),
+				currentFilters = {
+					classNames: '',
+					data: ''
+				},
+				applyFilters = function() {
+					$appList.isotope({
+						filter: _.chain(currentFilters).values().join('').value()
+					});
+				};
 
 			$appFilters.on('click', function() {
 				var $this = $(this),
@@ -108,14 +119,25 @@ define(function(require) {
 				}
 
 				filter = $this.data('filter');
+				currentFilters.classNames = (filter === 'all') ? '' : '.' + filter;
+				currentFilters.data = '';
+
+				$searchInput.val('');
 
 				$appFilters.removeClass('active');
 				$this.addClass('active');
 
-				$appList.isotope({
-					filter: (filter === 'all') ? '' : '.' + filter
-				});
+				applyFilters();
 			});
+
+			$searchInput.on('keyup', _.debounce(function(e) {
+				var $this = $(this),
+					value = _.chain($this.val()).trim().lowerCase().value();
+
+				currentFilters.data = _.isEmpty(value) ? '' : '[data-name*="' + value + '"]';
+
+				applyFilters();
+			}, 200));
 		},
 
 		appSelectorGetApps: function(args) {
