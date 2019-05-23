@@ -48,16 +48,29 @@ define(function(require) {
 						template: $template
 					});
 
-					$template.find('.app-selector-body .app-list').isotope({
-						filter: '.app-item'
-					});
-
 					return $template;
 				};
 
 			self.appSelectorGetApps({
 				callback: function(apps) {
-					$container.append(initTemplate(apps));
+					var $template = initTemplate(apps)
+
+					$container.append($template);
+
+					_.has(args, 'callback') && args.callback();
+
+					// Init Isotope after callback, so the app list is already displayed
+					// If not, all items are hidden, because Isotope is not able to calculate
+					// its positions properly
+					$template.find('.app-selector-body .app-list').isotope({
+						itemSelector: '.app-item',
+						getSortData: {
+							name: function($elem) {
+								return $elem.find('.app-title').text();
+							}
+						},
+						sortBy: 'name'
+					});
 				}
 			});
 		},
@@ -67,16 +80,16 @@ define(function(require) {
 				$template = $(self.getTemplate({
 					name: 'appSelectorDialog',
 					submodule: 'appSelector'
-				})),
-				popup;
+				}));
 
 			self.appSelectorRender({
-				container: $template.find('.popup-body')
-			});
-
-			popup = monster.ui.dialog($template, {
-				title: self.i18n.active().appSelector.dialog.title,
-				autoScroll: false
+				container: $template.find('.popup-body'),
+				callback: function() {
+					var popup = monster.ui.dialog($template, {
+						title: self.i18n.active().appSelector.dialog.title,
+						autoScroll: false
+					});
+				}
 			});
 		},
 
@@ -84,38 +97,24 @@ define(function(require) {
 			var self = this,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
-				$appItems = $template.find('.app-selector-body .app-list .app-item');
+				$appList = $template.find('.app-selector-body .app-list');
 
 			$appFilters.on('click', function() {
 				var $this = $(this),
-					filter = $this.data('filter'),
-					filterClass,
-					$toShow,
-					$toHide;
+					filter;
 
 				if ($this.hasClass('active')) {
 					return;
 				}
 
-				$template.find('.app-selector-body .app-list').isotope({
-					filter: '.app-item' + (filter ? '.' + filter : '')
-				});
-
-				/*
-				if (filter) {
-					filterClass = '.' + filter;
-
-					$toShow = $appItems.filter(filterClass + '.app-item-hidden');
-					$toHide = $appItems.not(filterClass).not('.app-item-hidden');
-					$toShow.slideDown(500).removeClass('app-item-hidden');
-					$toHide.slideUp(500).addClass('app-item-hidden');
-				} else {
-					$appItems.slideDown(500);	//.filter('.hidden');
-				}
-				*/
+				filter = $this.data('filter');
 
 				$appFilters.removeClass('active');
 				$this.addClass('active');
+
+				$appList.isotope({
+					filter: (filter === 'all') ? '' : '.' + filter
+				});
 			});
 		},
 
