@@ -11,7 +11,8 @@ define(function(require) {
 		// Define the events available for other apps
 		subscribe: {
 			'common.appSelector.render': 'appSelectorRender',
-			'common.appSelector.renderPopup': 'appSelectorRenderPopup'
+			'common.appSelector.renderPopup': 'appSelectorRenderPopup',
+			'common.appSelector.getSelectedApps': 'appSelectorGetSelectedApps'
 		},
 
 		appFlags: {
@@ -30,10 +31,45 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Store getter
+		 * @param  {Array|String} [path]
+		 * @param  {*} [defaultValue]
+		 * @return {*}
+		 */
+		appSelectorGetStore: function(path, defaultValue) {
+			var self = this,
+				store = ['_store', 'appSelector'];
+			return _.get(
+				self,
+				_.isUndefined(path)
+					? store
+					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+				defaultValue
+			);
+		},
+
+		/**
+		 * Store setter
+		 * @param  {Array|String|*} path|value
+		 * @param  {*} [value]
+		 */
+		appSelectorSetStore: function(path, value) {
+			var self = this,
+				hasValue = _.toArray(arguments).length === 2,
+				store = ['_store', 'appSelector'];
+			_.set(
+				self,
+				hasValue
+					? _.flatten([store, _.isString(path) ? path.split('.') : path])
+					: store,
+				hasValue ? value : path
+			);
+		},
+
 		appSelectorRender: function(args) {
 			var self = this,
 				$container = args.container,
-				selectedApps = [],
 				initTemplate = function initTemplate(apps) {
 					var dataTemplate = {
 							filters: self.appFlags.appSelector.filters,
@@ -47,14 +83,10 @@ define(function(require) {
 
 					self.appSelectorBindEvents({
 						apps: apps,
-						selectedApps: selectedApps,
 						template: $template
 					});
 
 					return $template;
-				},
-				getSelectedApps = function() {
-					return selectedApps;
 				};
 
 			self.appSelectorGetApps({
@@ -63,7 +95,7 @@ define(function(require) {
 
 					$container.append($template);
 
-					_.has(args, 'callback') && args.callback(getSelectedApps);
+					_.has(args, 'callback') && args.callback();
 
 					// Init Isotope after callback, so the app list is already displayed
 					// If not, all items are hidden, because Isotope is not able to calculate
@@ -100,17 +132,26 @@ define(function(require) {
 					self.appSelectorBindPopupEvents({
 						template: $template,
 						popup: $popup,
-						callbacks: callbacks,
-						getSelectedApps: getSelectedApps
+						callbacks: callbacks
 					});
 				}
 			});
 		},
 
+		appSelectorGetSelectedApps: function(args) {
+			var self = this,
+				selectedApps = self.appSelectorGetStore('selectedApps', []);
+
+			if (_.has(args, 'callback')) {
+				args.callback(selectedApps);
+			} else {
+				return selectedApps;
+			}
+		},
+
 		appSelectorBindEvents: function(args) {
 			var self = this,
 				apps = args.apps,
-				selectedApps = args.selectedApps,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
@@ -160,17 +201,24 @@ define(function(require) {
 			$appList.find('.app-item').on('click', function() {
 				var $this = $(this),
 					appId = $this.data('id'),
-					$selectedAppsTemplate;
+					$selectedAppsTemplate,
+					// Get selected apps from store
+					selectedApps = self.appSelectorGetStore('selectedApps', []);
 
 				$this.toggleClass('selected');
 
+				// Create a new array with or without the clicked app,
+				// in order to keep the store inmutable
 				if ($this.hasClass('selected')) {
-					selectedApps.push(apps[appId]);
+					selectedApps = _.concat(selectedApps, apps[appId]);
 				} else {
-					_.remove(selectedApps, {
-						id: appId
+					selectedApps = _.reject(selectedApps, function(app) {
+						return app.id === appId;
 					});
 				}
+
+				// Save selected apps to store
+				self.appSelectorSetStore('selectedApps', selectedApps);
 
 				$selectedAppsCounter.text(selectedApps.length.toString());
 
@@ -195,13 +243,12 @@ define(function(require) {
 		appSelectorBindPopupEvents: function(args) {
 			var self = this,
 				$popup = args.popup,
-				$template = args.template,
-				getSelectedApps = args.getSelectedApps;
+				$template = args.template;
 
 			$template.find('.accept').on('click', function(e) {
 				e.preventDefault();
 
-				var selectedApps = getSelectedApps();
+				var selectedApps = self.appSelectorGetSelectedApps();
 
 				$popup.dialog('close').remove();
 
