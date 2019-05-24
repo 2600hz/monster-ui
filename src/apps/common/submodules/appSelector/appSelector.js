@@ -69,6 +69,7 @@ define(function(require) {
 
 		appSelectorRender: function(args) {
 			var self = this,
+				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
 					var dataTemplate = {
@@ -81,6 +82,11 @@ define(function(require) {
 							submodule: 'appSelector'
 						}));
 
+					self.appSelectorRenderSelectedApps({
+						template: $template,
+						markSelectedApps: true
+					});
+
 					self.appSelectorBindEvents({
 						apps: apps,
 						template: $template
@@ -91,7 +97,19 @@ define(function(require) {
 
 			self.appSelectorGetApps({
 				callback: function(apps) {
-					var $template = initTemplate(apps);
+					var selectedApps = _
+							.chain(selectedAppIds)
+							.map(function(appId) {
+								return apps[appId];
+							})
+							.compact()
+							.value(),
+						$template;
+
+					self.appSelectorSetStore('selectedApps', selectedApps);
+
+					// Init template after saving selected apps to store, so they can be rendered
+					$template = initTemplate(apps);
 
 					$container.append($template);
 
@@ -115,6 +133,7 @@ define(function(require) {
 
 		appSelectorRenderPopup: function(args) {
 			var self = this,
+				selectedAppIds = args.selectedAppIds,
 				callbacks = args.callbacks,
 				$template = $(self.getTemplate({
 					name: 'appSelectorDialog',
@@ -122,6 +141,7 @@ define(function(require) {
 				}));
 
 			self.appSelectorRender({
+				selectedAppIds: selectedAppIds,
 				container: $template.find('.popup-body'),
 				callback: function(getSelectedApps) {
 					var $popup = monster.ui.dialog($template, {
@@ -157,8 +177,6 @@ define(function(require) {
 				$appSelectorBody = $template.find('.app-selector-body'),
 				$appList = $appSelectorBody.find('.app-list'),
 				$searchInput = $appSelectorBody.find('input.search-query'),
-				$selectedAppsCounter = $appSelectorBody.find('.selected-count'),
-				$selectedAppsList = $appSelectorBody.find('.selected-list'),
 				currentFilters = {
 					classNames: '',
 					data: ''
@@ -201,7 +219,6 @@ define(function(require) {
 			$appList.find('.app-item').on('click', function() {
 				var $this = $(this),
 					appId = $this.data('id'),
-					$selectedAppsTemplate,
 					// Get selected apps from store
 					selectedApps = self.appSelectorGetStore('selectedApps', []);
 
@@ -220,23 +237,10 @@ define(function(require) {
 				// Save selected apps to store
 				self.appSelectorSetStore('selectedApps', selectedApps);
 
-				$selectedAppsCounter.text(selectedApps.length.toString());
-
-				$selectedAppsTemplate = $(self.getTemplate({
-					name: 'selectedApps',
-					data: {
-						apps: selectedApps
-					},
-					submodule: 'appSelector'
-				}));
-
-				$selectedAppsTemplate.css({
-					maxWidth: (selectedApps.length * 1.5) + 'rem'
+				// Render selected apps
+				self.appSelectorRenderSelectedApps({
+					template: $template
 				});
-
-				$selectedAppsList.replaceWith($selectedAppsTemplate);
-
-				$selectedAppsList = $selectedAppsTemplate;
 			});
 		},
 
@@ -262,6 +266,40 @@ define(function(require) {
 
 				_.has(args, 'callbacks.cancel') && args.callbacks.cancel();
 			});
+		},
+
+		appSelectorRenderSelectedApps: function(args) {
+			var self = this,
+				markSelectedApps = _.get(args, 'markSelectedApps', false),
+				$template = args.template,
+				$appSelectorBody = $template.find('.app-selector-body'),
+				$selectedAppsCounter = $appSelectorBody.find('.selected-count'),
+				$selectedAppsList = $appSelectorBody.find('.selected-list'),
+				selectedApps = self.appSelectorGetStore('selectedApps', []),
+				$selectedAppsTemplate = $(self.getTemplate({
+					name: 'selectedApps',
+					data: {
+						apps: selectedApps
+					},
+					submodule: 'appSelector'
+				})),
+				$appList;
+
+			$selectedAppsCounter.text(selectedApps.length.toString());
+
+			$selectedAppsTemplate.css({
+				maxWidth: (selectedApps.length * 1.5) + 'rem'
+			});
+
+			$selectedAppsList.replaceWith($selectedAppsTemplate);
+
+			if (markSelectedApps) {
+				$appList = $appSelectorBody.find('.app-list');
+
+				_.each(selectedApps, function(app) {
+					$appList.find('[data-id="' + app.id + '"]').addClass('selected');
+				});
+			}
 		},
 
 		appSelectorGetApps: function(args) {
