@@ -33,6 +33,7 @@ define(function(require) {
 		appSelectorRender: function(args) {
 			var self = this,
 				$container = args.container,
+				selectedApps = [],
 				initTemplate = function initTemplate(apps) {
 					var dataTemplate = {
 							filters: self.appFlags.appSelector.filters,
@@ -46,10 +47,14 @@ define(function(require) {
 
 					self.appSelectorBindEvents({
 						apps: apps,
+						selectedApps: selectedApps,
 						template: $template
 					});
 
 					return $template;
+				},
+				getSelectedApps = function() {
+					return selectedApps;
 				};
 
 			self.appSelectorGetApps({
@@ -58,7 +63,7 @@ define(function(require) {
 
 					$container.append($template);
 
-					_.has(args, 'callback') && args.callback();
+					_.has(args, 'callback') && args.callback(getSelectedApps);
 
 					// Init Isotope after callback, so the app list is already displayed
 					// If not, all items are hidden, because Isotope is not able to calculate
@@ -78,6 +83,7 @@ define(function(require) {
 
 		appSelectorRenderPopup: function(args) {
 			var self = this,
+				callbacks = args.callbacks,
 				$template = $(self.getTemplate({
 					name: 'appSelectorDialog',
 					submodule: 'appSelector'
@@ -85,10 +91,17 @@ define(function(require) {
 
 			self.appSelectorRender({
 				container: $template.find('.popup-body'),
-				callback: function() {
-					var popup = monster.ui.dialog($template, {
+				callback: function(getSelectedApps) {
+					var $popup = monster.ui.dialog($template, {
 						title: self.i18n.active().appSelector.dialog.title,
 						autoScroll: false
+					});
+
+					self.appSelectorBindPopupEvents({
+						template: $template,
+						popup: $popup,
+						callbacks: callbacks,
+						getSelectedApps: getSelectedApps
 					});
 				}
 			});
@@ -97,6 +110,7 @@ define(function(require) {
 		appSelectorBindEvents: function(args) {
 			var self = this,
 				apps = args.apps,
+				selectedApps = args.selectedApps,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
@@ -104,7 +118,6 @@ define(function(require) {
 				$searchInput = $appSelectorBody.find('input.search-query'),
 				$selectedAppsCounter = $appSelectorBody.find('.selected-count'),
 				$selectedAppsList = $appSelectorBody.find('.selected-list'),
-				selectedApps = [],
 				currentFilters = {
 					classNames: '',
 					data: ''
@@ -176,6 +189,31 @@ define(function(require) {
 				$selectedAppsList.replaceWith($selectedAppsTemplate);
 
 				$selectedAppsList = $selectedAppsTemplate;
+			});
+		},
+
+		appSelectorBindPopupEvents: function(args) {
+			var self = this,
+				$popup = args.popup,
+				$template = args.template,
+				getSelectedApps = args.getSelectedApps;
+
+			$template.find('.accept').on('click', function(e) {
+				e.preventDefault();
+
+				var selectedApps = getSelectedApps();
+
+				$popup.dialog('close').remove();
+
+				_.has(args, 'callbacks.accept') && args.callbacks.accept(selectedApps);
+			});
+
+			$template.find('.cancel-link').on('click', function(e) {
+				e.preventDefault();
+
+				$popup.dialog('close').remove();
+
+				_.has(args, 'callbacks.cancel') && args.callbacks.cancel();
 			});
 		},
 
