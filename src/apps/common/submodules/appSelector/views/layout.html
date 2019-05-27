@@ -3,8 +3,8 @@
 		<ul class="nav nav-list">
 		{{#each filters}}
 			<li class="nav-item">
-				<a href="javascript:void(0);" data-filter="{{this}}" class="app-filter text-container{{#if @first}} active{{/if}}">
-					{{tryI18n @root.i18n.appSelector.filters this}}
+				<a href="javascript:void(0);" data-filter="{{@key}}" class="app-filter text-container{{#if @first}} active{{/if}}">
+					{{replaceVar (tryI18n @root.i18n.appSelector.filters @key) this}}
 				</a>
 			</li>
 		{{/each}}

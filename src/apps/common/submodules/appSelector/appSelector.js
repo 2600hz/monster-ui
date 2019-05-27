@@ -73,8 +73,14 @@ define(function(require) {
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
 					var selectedApps = self.appSelectorGetStore('selectedApps', []),
+						tagCount = _.chain(apps).flatMap(function(app) {
+							return app.tags;
+						}).countBy().value(),
+						filters = _.transform(self.appFlags.appSelector.filters, function(filters, filterName) {
+							filters[filterName] = (filterName === 'all') ? _.size(apps) : _.get(tagCount, filterName, 0);
+						}, {}),
 						dataTemplate = {
-							filters: self.appFlags.appSelector.filters,
+							filters: filters,
 							apps: apps,
 							selectedApps: selectedApps
 						},

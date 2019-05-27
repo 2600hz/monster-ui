@@ -1059,16 +1059,16 @@
 			"acceptButton": "Select Applications"
 		},
 		"filters": {
-			"all": "All Apps",
-			"installed": "My Apps",
-			"reseller": "Reseller Apps",
-			"carrier": "Carrier Apps",
-			"developer": "Developer Apps",
-			"end_user": "End User Apps",
-			"reporting": "Reporting Apps",
-			"integration": "Integrations",
-			"admin": "Admin Apps",
-			"system_admin": "System Admin Apps"
+			"all": "All Apps ({{variable}})",
+			"installed": "My Apps ({{variable}})",
+			"reseller": "Reseller Apps ({{variable}})",
+			"carrier": "Carrier Apps ({{variable}})",
+			"developer": "Developer Apps ({{variable}})",
+			"end_user": "End User Apps ({{variable}})",
+			"reporting": "Reporting Apps ({{variable}})",
+			"integration": "Integrations ({{variable}})",
+			"admin": "Admin Apps ({{variable}})",
+			"system_admin": "System Admin Apps ({{variable}})"
 		},
 		"searchBox": "Search",
 		"selectedApps": "Applications Selected"
