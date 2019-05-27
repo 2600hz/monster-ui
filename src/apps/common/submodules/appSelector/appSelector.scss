@@ -25,7 +25,10 @@
 
 	.popup-actions {
 		height: 70px;
-		margin-top: -70px;
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		width: 100%;
 		background-color: #f4f4f5;
 		border-top: 1px solid $french-gray2;
 		box-sizing: border-box;
