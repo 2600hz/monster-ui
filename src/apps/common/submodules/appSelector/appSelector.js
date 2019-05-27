@@ -140,12 +140,13 @@ define(function(require) {
 				$template = $(self.getTemplate({
 					name: 'appSelectorDialog',
 					submodule: 'appSelector'
-				}));
+				})),
+				$popupBody = $template.find('.popup-body');
 
 			self.appSelectorRender({
 				selectedAppIds: selectedAppIds,
-				container: $template.find('.popup-body'),
-				callback: function(getSelectedApps) {
+				container: $popupBody,
+				callback: function() {
 					var $popup = monster.ui.dialog($template, {
 						title: self.i18n.active().appSelector.dialog.title,
 						autoScroll: false
@@ -155,6 +156,12 @@ define(function(require) {
 						template: $template,
 						popup: $popup,
 						callbacks: callbacks
+					});
+
+					// Hack for Chrome. It somehow forces the browser to properly fit the
+					// .popup-body element into the dialog, and enable the scroll.
+					$popupBody.css({
+						height: 'auto'
 					});
 				}
 			});
