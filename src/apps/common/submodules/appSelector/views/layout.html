@@ -13,10 +13,16 @@
 	<div class="app-selector-body">
 		<div class="app-selector-group">
 			<div class="selected-title">
-				<span class="selected-count">0</span>
+				<span class="selected-count">{{selectedApps.length}}</span>
 				<span>{{i18n.appSelector.selectedApps}}</span>
 			</div>
-			<div class="selected-list"></div>
+			<div class="selected-list">
+				{{#each selectedApps}}
+					<div class="app-icon-container show" data-id="{{id}}">
+						<div class="app-icon {{icon.extraCssClass}}"{{#if icon.path}} style="background-image:url({{icon.path}})"{{/if}}></div>
+					</div>
+				{{/each}}
+			</div>
 		</div>
 		<div class="app-selector-group">
 			<div class="search-box">

@@ -72,19 +72,21 @@ define(function(require) {
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
-					var dataTemplate = {
+					var selectedApps = self.appSelectorGetStore('selectedApps', []),
+						dataTemplate = {
 							filters: self.appFlags.appSelector.filters,
-							apps: apps
+							apps: apps,
+							selectedApps: selectedApps
 						},
 						$template = $(self.getTemplate({
 							name: 'layout',
 							data: dataTemplate,
 							submodule: 'appSelector'
-						}));
+						})),
+						$appList = $template.find('.app-list');
 
-					self.appSelectorRenderSelectedApps({
-						template: $template,
-						markSelectedApps: true
+					_.each(selectedApps, function(app) {
+						$appList.find('[data-id="' + app.id + '"]').addClass('selected');
 					});
 
 					self.appSelectorBindEvents({
@@ -176,6 +178,8 @@ define(function(require) {
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
 				$appList = $appSelectorBody.find('.app-list'),
+				$selectedAppsCounter = $appSelectorBody.find('.selected-count'),
+				$selectedAppsList = $appSelectorBody.find('.selected-list'),
 				$searchInput = $appSelectorBody.find('input.search-query'),
 				currentFilters = {
 					classNames: '',
@@ -219,28 +223,47 @@ define(function(require) {
 			$appList.find('.app-item').on('click', function() {
 				var $this = $(this),
 					appId = $this.data('id'),
-					// Get selected apps from store
-					selectedApps = self.appSelectorGetStore('selectedApps', []);
+					selectedApps = self.appSelectorGetStore('selectedApps', []),
+					selectedApp,
+					$selectedAppIcon;
 
 				$this.toggleClass('selected');
 
 				// Create a new array with or without the clicked app,
 				// in order to keep the store inmutable
 				if ($this.hasClass('selected')) {
-					selectedApps = _.concat(selectedApps, apps[appId]);
+					selectedApp = apps[appId];
+					selectedApps = _.concat(selectedApps, selectedApp);
+
+					$selectedAppIcon = $(self.getTemplate({
+						name: 'selectedApp',
+						data: selectedApp,
+						submodule: 'appSelector'
+					}));
+
+					$selectedAppIcon.appendTo($selectedAppsList);
+
+					// Defer to wait for the icon to be appendend, in order to trigger the transitions
+					_.defer(function() {
+						$selectedAppIcon.addClass('show');
+					});
 				} else {
 					selectedApps = _.reject(selectedApps, function(app) {
 						return app.id === appId;
 					});
+
+					$selectedAppIcon = $selectedAppsList.find('[data-id="' + appId + '"]');
+					$selectedAppIcon.removeClass('show');
+
+					// Wait for animations to finish, before removing the element
+					setTimeout(function() {
+						$selectedAppIcon.remove();
+					}, 250);
 				}
 
-				// Save selected apps to store
-				self.appSelectorSetStore('selectedApps', selectedApps);
+				$selectedAppsCounter.text(selectedApps.length.toString());
 
-				// Render selected apps
-				self.appSelectorRenderSelectedApps({
-					template: $template
-				});
+				self.appSelectorSetStore('selectedApps', selectedApps);
 			});
 		},
 
@@ -266,40 +289,6 @@ define(function(require) {
 
 				_.has(args, 'callbacks.cancel') && args.callbacks.cancel();
 			});
-		},
-
-		appSelectorRenderSelectedApps: function(args) {
-			var self = this,
-				markSelectedApps = _.get(args, 'markSelectedApps', false),
-				$template = args.template,
-				$appSelectorBody = $template.find('.app-selector-body'),
-				$selectedAppsCounter = $appSelectorBody.find('.selected-count'),
-				$selectedAppsList = $appSelectorBody.find('.selected-list'),
-				selectedApps = self.appSelectorGetStore('selectedApps', []),
-				$selectedAppsTemplate = $(self.getTemplate({
-					name: 'selectedApps',
-					data: {
-						apps: selectedApps
-					},
-					submodule: 'appSelector'
-				})),
-				$appList;
-
-			$selectedAppsCounter.text(selectedApps.length.toString());
-
-			$selectedAppsTemplate.css({
-				maxWidth: (selectedApps.length * 1.5) + 'rem'
-			});
-
-			$selectedAppsList.replaceWith($selectedAppsTemplate);
-
-			if (markSelectedApps) {
-				$appList = $appSelectorBody.find('.app-list');
-
-				_.each(selectedApps, function(app) {
-					$appList.find('[data-id="' + app.id + '"]').addClass('selected');
-				});
-			}
 		},
 
 		appSelectorGetApps: function(args) {

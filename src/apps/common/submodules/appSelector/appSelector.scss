@@ -101,14 +101,38 @@
 		}
 
 		.selected-list {
-			display: table;
-			table-layout: fixed;
-			width: 100%;
+			display: flex;
 
 			.app-icon-container {
-				padding-top: 1rem;
-				display: table-cell;
-				width: 1rem;
+				flex: 1 1 0;
+				max-width: 0;
+				height: 0;
+				box-sizing: border-box;
+				opacity: 0;
+				transition: all 250ms ease-in-out;
+
+				&.show {
+					opacity: 1;
+					max-width: 1.5rem;
+					height: 3rem;
+					padding-top: 1rem;
+
+					&:nth-last-child(8) {
+						max-width: 1rem;
+					}
+
+					&:nth-last-child(9) {
+						max-width: 0.6rem;
+					}
+
+					&:nth-last-child(10) {
+						max-width: 0.4rem;
+					}
+
+					&:nth-last-child(n+11) {
+						max-width: 0;
+					}
+				}
 
 				.app-icon {
 					box-shadow: -4px 0px 0px 0px $white;
