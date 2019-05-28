@@ -21,7 +21,7 @@
 			<div class="selected-list">
 				{{#each selectedApps}}
 					<div class="app-icon-container show" data-id="{{id}}">
-						<div class="app-icon {{icon.extraCssClass}}"{{#if icon.path}} style="background-image:url({{icon.path}})"{{/if}}></div>
+						<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image:url({{icon}})"{{/if}}></div>
 					</div>
 				{{/each}}
 			</div>
@@ -36,7 +36,7 @@
 			<ul class="app-list">
 			{{#each apps}}
 				<li class="app-item text-container{{#each tags}} {{this}}{{/each}}" data-id="{{@key}}" data-name="{{toLowerCase label}}">
-					<div class="app-icon {{icon.extraCssClass}}" {{#if icon.path}}style="background-image:url({{icon.path}})"{{/if}}></div>
+					<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
 					<div class="app-title">
 						{{label}}
 					</div>

@@ -71,11 +71,13 @@ define(function(require) {
 		 * Render app selector
 		 * @param  {Object} args
 		 * @param  {jQuery} args.container  Element that will contain the app selector
-		 * @param  {String[]} [args.selectedAppIds]  Pre-selected application IDs
+		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
+		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
 		 * @param  {Function} [args.callback]  Optional callback to be executed after render
 		 */
 		appSelectorRender: function(args) {
 			var self = this,
+				scope = _.get(args, 'scope', 'all'),
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
@@ -122,9 +124,12 @@ define(function(require) {
 					return $template;
 				};
 
-			self.appSelectorGetApps({
-				callback: function(apps) {
-					var selectedApps = _
+			monster.pub('apploader.getAppList', {
+				scope: scope,
+				refresh: false,
+				callback: function(appList) {
+					var apps = _.keyBy(appList, 'id'),
+						selectedApps = _
 							.chain(selectedAppIds)
 							.map(function(appId) {
 								return apps[appId];
@@ -161,6 +166,7 @@ define(function(require) {
 		/**
 		 * Render app selector as a dialog
 		 * @param  {Object} args
+		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
 		 * @param  {String[]} [args.selectedAppIds]  Pre-selected application IDs
 		 * @param  {Object} [args.callbacks]  Callback functions
 		 * @param  {Function} [args.callbacks.accept]  Optional callback for accept action
@@ -168,6 +174,7 @@ define(function(require) {
 		 */
 		appSelectorRenderPopup: function(args) {
 			var self = this,
+				scope = args.scope,
 				selectedAppIds = args.selectedAppIds,
 				callbacks = args.callbacks,
 				$template = $(self.getTemplate({
@@ -177,6 +184,7 @@ define(function(require) {
 				$popupBody = $template.find('.popup-body');
 
 			self.appSelectorRender({
+				scope: scope,
 				selectedAppIds: selectedAppIds,
 				container: $popupBody,
 				callback: function() {
@@ -358,31 +366,6 @@ define(function(require) {
 
 				_.has(args, 'callbacks.cancel') && args.callbacks.cancel();
 			});
-		},
-
-		/**
-		 * Get available apps
-		 * @param  {Object} args
-		 * @param  {Function} args.callback  Callback to be invoked with the retrieved apps
-		 */
-		appSelectorGetApps: function(args) {
-			var apps = _.transform(monster.appsStore, function(apps, appData, appName) {
-				var i18n = _.get(appData.i18n, monster.config.whitelabel.language, _.get(appData.i18n, 'en-US'));
-				monster.ui.formatIconApp(appData);
-				apps[appData.id] = {
-					id: appData.id,
-					name: appName,
-					label: i18n.label,
-					description: i18n.description,
-					tags: appData.tags,
-					icon: {
-						path: monster.util.getAppIconPath(appData),
-						extraCssClass: appData.extraCssClass
-					}
-				};
-			});
-
-			args.callback(apps);
 		}
 	};
 
