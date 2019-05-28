@@ -100,6 +100,20 @@ define(function(require) {
 						$appList.find('[data-id="' + app.id + '"]').addClass('selected');
 					});
 
+					monster.ui.tooltips($template, {
+						selector: '.selected-title .selected-text',
+						options: {
+							placement: 'bottom',
+							title: function() {
+								return _
+									.chain(self.appSelectorGetStore('selectedApps', []))
+									.map('label')
+									.join(', ')
+									.value();
+							}
+						}
+					});
+
 					self.appSelectorBindEvents({
 						apps: apps,
 						template: $template
