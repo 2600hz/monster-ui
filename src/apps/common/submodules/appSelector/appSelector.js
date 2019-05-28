@@ -17,7 +17,7 @@ define(function(require) {
 
 		appFlags: {
 			appSelector: {
-				filters: [
+				tagFilters: [
 					'all',
 					'reseller',
 					'carrier',
@@ -67,21 +67,26 @@ define(function(require) {
 			);
 		},
 
+		/**
+		 * Render app selector
+		 * @param  {Object} args
+		 * @param  {jQuery} args.container  Element that will contain the app selector
+		 * @param  {String[]} [args.selectedAppIds]  Pre-selected application IDs
+		 * @param  {Function} [args.callback]  Optional callback to be executed after render
+		 */
 		appSelectorRender: function(args) {
 			var self = this,
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
 					var selectedApps = self.appSelectorGetStore('selectedApps', []),
-						tagCount = _.chain(apps).flatMap(function(app) {
-							return app.tags;
-						}).countBy().value(),
-						filters = _.transform(self.appFlags.appSelector.filters, function(filters, filterName) {
+						tagCount = _.chain(apps).flatMap('tags').countBy().value(),
+						filters = _.transform(self.appFlags.appSelector.tagFilters, function(filters, filterName) {
 							filters[filterName] = (filterName === 'all') ? _.size(apps) : _.get(tagCount, filterName, 0);
 						}, {}),
 						dataTemplate = {
-							filters: filters,
 							apps: apps,
+							filters: filters,
 							selectedApps: selectedApps
 						},
 						$template = $(self.getTemplate({
@@ -123,9 +128,9 @@ define(function(require) {
 
 					_.has(args, 'callback') && args.callback();
 
-					// Init Isotope after callback, so the app list is already displayed
-					// If not, all items are hidden, because Isotope is not able to calculate
-					// its positions properly
+					// Init Isotope after callback, so the app list is already displayed.
+					// If not, all items will be hidden, because Isotope is not able to calculate
+					// its positions properly.
 					$template.find('.app-selector-body .app-list').isotope({
 						itemSelector: '.app-item',
 						getSortData: {
@@ -139,12 +144,20 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Render app selector as a dialog
+		 * @param  {Object} args
+		 * @param  {String[]} [args.selectedAppIds]  Pre-selected application IDs
+		 * @param  {Object} [args.callbacks]  Callback functions
+		 * @param  {Function} [args.callbacks.accept]  Optional callback for accept action
+		 * @param  {Function} [args.callbacks.cancel]  Optional callback for cancel action
+		 */
 		appSelectorRenderPopup: function(args) {
 			var self = this,
 				selectedAppIds = args.selectedAppIds,
 				callbacks = args.callbacks,
 				$template = $(self.getTemplate({
-					name: 'appSelectorDialog',
+					name: 'dialog',
 					submodule: 'appSelector'
 				})),
 				$popupBody = $template.find('.popup-body');
@@ -155,7 +168,11 @@ define(function(require) {
 				callback: function() {
 					var $popup = monster.ui.dialog($template, {
 						title: self.i18n.active().appSelector.dialog.title,
-						autoScroll: false
+						autoScroll: false,
+						onClose: function() {
+							// Clean selected apps on close
+							self.appSelectorSetStore('selectedApps', []);
+						}
 					});
 
 					self.appSelectorBindPopupEvents({
@@ -165,7 +182,7 @@ define(function(require) {
 					});
 
 					// Hack for Chrome. It somehow forces the browser to properly fit the
-					// .popup-body element into the dialog, and enable the scroll.
+					// popup-body element into the dialog, and enable the scroll.
 					$popupBody.css({
 						height: 'auto'
 					});
@@ -173,6 +190,13 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Get currently selected apps from store
+		 * @param  {Object} [args]
+		 * @param  {Function} [args.callback]  Callback function to be called when the selected apps
+		 *                                   have been retrieved.
+		 * @returns {Array}  Selected apps, when no callback was provided.
+		 */
 		appSelectorGetSelectedApps: function(args) {
 			var self = this,
 				selectedApps = self.appSelectorGetStore('selectedApps', []);
@@ -184,6 +208,12 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Bind app selector events
+		 * @param  {Object} args
+		 * @param  {Array} args.apps  List of available apps
+		 * @param  {jQuery} args.template  App selector template
+		 */
 		appSelectorBindEvents: function(args) {
 			var self = this,
 				apps = args.apps,
@@ -204,6 +234,7 @@ define(function(require) {
 					});
 				};
 
+			// Filter by tag
 			$appFilters.on('click', function() {
 				var $this = $(this),
 					filter;
@@ -224,6 +255,7 @@ define(function(require) {
 				applyFilters();
 			});
 
+			// Search
 			$searchInput.on('keyup', _.debounce(function(e) {
 				var $this = $(this),
 					value = _.chain($this.val()).trim().lowerCase().value();
@@ -233,6 +265,7 @@ define(function(require) {
 				applyFilters();
 			}, 200));
 
+			// Select app
 			$appList.find('.app-item').on('click', function() {
 				var $this = $(this),
 					appId = $this.data('id'),
@@ -274,12 +307,21 @@ define(function(require) {
 					}, 250);
 				}
 
-				$selectedAppsCounter.text(selectedApps.length.toString());
-
 				self.appSelectorSetStore('selectedApps', selectedApps);
+
+				$selectedAppsCounter.text(selectedApps.length.toString());
 			});
 		},
 
+		/**
+		 * Bind app selector dialog events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.popup  Dialog element
+		 * @param  {jQUery} args.template  App selector template
+		 * @param  {Object} [args.callbacks]  Callback functions
+		 * @param  {Function} [args.callbacks.accept]  Optional callback for accept action
+		 * @param  {Function} [args.callbacks.cancel]  Optional callback for cancel action
+		 */
 		appSelectorBindPopupEvents: function(args) {
 			var self = this,
 				$popup = args.popup,
@@ -304,6 +346,11 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Get available apps
+		 * @param  {Object} args
+		 * @param  {Function} args.callback  Callback to be invoked with the retrieved apps
+		 */
 		appSelectorGetApps: function(args) {
 			var apps = _.transform(monster.appsStore, function(apps, appData, appName) {
 				var i18n = _.get(appData.i18n, monster.config.whitelabel.language, _.get(appData.i18n, 'en-US'));
