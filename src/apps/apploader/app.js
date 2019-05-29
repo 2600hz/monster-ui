@@ -432,7 +432,7 @@ define(function(require) {
 					var allAps = monster.appsStore;
 
 					if (!forceFetch && !_.isEmpty(allAps)) {
-						waterfallCallback(null, _.cloneDeep(allAps));
+						waterfallCallback(null, allAps);
 						return;
 					}
 
@@ -489,6 +489,7 @@ define(function(require) {
 						};
 
 					filteredAppList = [];
+					allApps = _.keyBy(allApps, 'id');
 
 					userApps = _.filter(userApps, function(appId) {
 						var app = allApps[appId];
@@ -521,34 +522,37 @@ define(function(require) {
 				function(appList, waterfallCallback) {
 					var lang = monster.config.whitelabel.language,
 						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
-						parallelRequest = _.map(appList, function(app) {
+						formattedApps = _.map(appList, function(app) {
 							var currentLang = _.has(app.i18n, isoFormattedLang) ? isoFormattedLang : 'en-US',
 								i18n = app.i18n[currentLang];
 
+							return {
+								id: app.id,
+								name: app.name,
+								label: i18n.label,
+								description: i18n.description,
+								tags: app.tags
+							};
+						}),
+						parallelRequests = _.map(formattedApps, function(formattedApp) {
 							return function(parallelCallback) {
-								var formattedApp = {
-									id: app.id,
-									name: app.name,
-									icon: monster.util.getAppIconPath(app),
-									label: i18n.label,
-									description: i18n.description,
-									tags: app.tags
-								};
-
+								formattedApp.icon = monster.util.getAppIconPath(formattedApp);
 								monster.ui.formatIconApp(formattedApp);
 
 								parallelCallback(null, formattedApp);
 							};
 						});
 
-					monster.parallel(parallelRequest, waterfallCallback);
+					monster.parallel(parallelRequests, function(err) {
+						waterfallCallback(err, formattedApps);
+					});
 				}
 			], function(err, appList) {
 				if (err) {
 					return;
 				}
 
-				callback && callback(_.sortBy(appList, 'label'));
+				callback && callback(appList);
 			});
 		},
 
