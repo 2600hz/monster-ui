@@ -72,12 +72,14 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {jQuery} args.container  Element that will contain the app selector
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
+		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
 		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
 		 * @param  {Function} [args.callback]  Optional callback to be executed after render
 		 */
 		appSelectorRender: function(args) {
 			var self = this,
 				scope = _.get(args, 'scope', 'all'),
+				forceFetch = _.get(args, 'forceFetch', false),
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
@@ -126,7 +128,7 @@ define(function(require) {
 
 			monster.pub('apploader.getAppList', {
 				scope: scope,
-				refresh: false,
+				forceFetch: forceFetch,
 				callback: function(appList) {
 					var apps = _.keyBy(appList, 'id'),
 						selectedApps = _
@@ -167,49 +169,51 @@ define(function(require) {
 		 * Render app selector as a dialog
 		 * @param  {Object} args
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
-		 * @param  {String[]} [args.selectedAppIds]  Pre-selected application IDs
+		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
+		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
 		 * @param  {Object} [args.callbacks]  Callback functions
 		 * @param  {Function} [args.callbacks.accept]  Optional callback for accept action
 		 * @param  {Function} [args.callbacks.cancel]  Optional callback for cancel action
 		 */
 		appSelectorRenderPopup: function(args) {
 			var self = this,
-				scope = args.scope,
-				selectedAppIds = args.selectedAppIds,
 				callbacks = args.callbacks,
 				$template = $(self.getTemplate({
 					name: 'dialog',
 					submodule: 'appSelector'
 				})),
-				$popupBody = $template.find('.popup-body');
+				$popupBody = $template.find('.popup-body'),
+				renderArgs = _
+					.chain(args)
+					.pick([ 'scope', 'forceFetch', 'selectedAppIds' ])
+					.merge({
+						container: $popupBody,
+						callback: function() {
+							var $popup = monster.ui.dialog($template, {
+								title: self.i18n.active().appSelector.dialog.title,
+								autoScroll: false,
+								onClose: function() {
+									// Clean selected apps on close
+									self.appSelectorSetStore('selectedApps', []);
+								}
+							});
 
-			self.appSelectorRender({
-				scope: scope,
-				selectedAppIds: selectedAppIds,
-				container: $popupBody,
-				callback: function() {
-					var $popup = monster.ui.dialog($template, {
-						title: self.i18n.active().appSelector.dialog.title,
-						autoScroll: false,
-						onClose: function() {
-							// Clean selected apps on close
-							self.appSelectorSetStore('selectedApps', []);
+							self.appSelectorBindPopupEvents({
+								template: $template,
+								popup: $popup,
+								callbacks: callbacks
+							});
+
+							// Hack for Chrome. It somehow forces the browser to properly fit the
+							// popup-body element into the dialog, and enable the scroll.
+							$popupBody.css({
+								height: 'auto'
+							});
 						}
-					});
+					})
+					.value();
 
-					self.appSelectorBindPopupEvents({
-						template: $template,
-						popup: $popup,
-						callbacks: callbacks
-					});
-
-					// Hack for Chrome. It somehow forces the browser to properly fit the
-					// popup-body element into the dialog, and enable the scroll.
-					$popupBody.css({
-						height: 'auto'
-					});
-				}
-			});
+			self.appSelectorRender(renderArgs);
 		},
 
 		/**

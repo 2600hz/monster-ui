@@ -365,7 +365,7 @@ define(function(require) {
 
 			self.getAppList({
 				scope: 'user',
-				refresh: true,
+				forceFetch: true,
 				callback: callback
 			});
 		},
@@ -417,13 +417,13 @@ define(function(require) {
 		 * Get app list
 		 * @param  {Object} args
 		 * @param  {('all'|'account'|'user')} [args.scope='all']  App list scope
-		 * @param  {Boolean} [args.refresh=true]  Refresh data from API
+		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
 		 * @param  {Function} [args.callback]  Callback funtion to send the retrieved app list
 		 */
 		getAppList: function(args) {
 			var self = this,
 				scope = _.get(args, 'scope', 'all'),
-				refresh = _.get(args, 'refresh', true),
+				forceFetch = _.get(args, 'forceFetch', false),
 				callback = args.callback;
 
 			monster.waterfall([
@@ -431,7 +431,7 @@ define(function(require) {
 				function(waterfallCallback) {
 					var allAps = monster.appsStore;
 
-					if (!refresh && !_.isEmpty(allAps)) {
+					if (!forceFetch && !_.isEmpty(allAps)) {
 						waterfallCallback(null, _.cloneDeep(allAps));
 						return;
 					}
@@ -510,7 +510,7 @@ define(function(require) {
 						}
 					});
 
-					if (refresh && updateUserApps) {
+					if (forceFetch && updateUserApps) {
 						monster.apps.auth.currentUser.appList = userApps;
 						self.userUpdate();
 					}
