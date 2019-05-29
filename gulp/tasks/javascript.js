@@ -3,6 +3,7 @@ import { join } from 'upath';
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
+import sourcemaps from 'gulp-sourcemaps';
 import { app, src, tmp } from '../paths.js';
 
 const config = {
@@ -35,7 +36,9 @@ export const minifyJs = () => gulp
 		join(tmp, 'js', 'main.js'),
 		join(tmp, 'js', 'templates.js')
 	])
+	.pipe(sourcemaps.init())
 	.pipe(uglify().on('error', handleUglifyError))
+	.pipe(sourcemaps.write('.', { sourceRoot: '/' }))
 	.pipe(gulp.dest(join(tmp, 'js')));
 
 /**
