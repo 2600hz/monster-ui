@@ -944,3 +944,48 @@ i.monster-password-strength {
 	/* position: relative !important; */
 	z-index: 4 !important;
 }
+
+/************************************************************/
+/********************* KEY-VALUE EDITOR *********************/
+/************************************************************/
+.monster-key-value-editor {
+	.monster-key-value-data-container {
+		.monster-key-value-editor-row {
+			margin-bottom: 10px;
+			display: flex;
+
+			&:hover {
+				.key-value-remove {
+					opacity: 1;
+				}
+			}
+
+			.data-key, .data-value {
+				flex: 1;
+				padding-right: 1rem;
+
+				input {
+					width: 100%;
+					box-sizing: border-box;
+					height: 30px;
+				}
+			}
+
+			.key-value-remove {
+				color: $font-primary-color;
+				cursor: pointer;
+				padding-top: 0.2rem;
+				opacity: 0;
+				transition: opacity 0.125s ease-in-out;
+
+				&:hover {
+					color: $danger-color;
+				}
+			}
+		}
+	}
+
+	.key-value-add {
+		font-size: 0.75rem;
+	}
+}
