@@ -3276,12 +3276,14 @@ define(function(require) {
 		// Add initial rows
 		var counter = 0;
 		_.each(data, function(value, key, index) {
-			addRow(value, key, counter++);
+			addRow(value, key, counter);
+			counter += 1;
 		});
 		// Bind events
 		$editorTemplate.find('.key-value-add').on('click', function(e) {
 			e.preventDefault();
-			addRow('', '', counter++);
+			addRow('', '', counter);
+			counter += 1;
 		});
 		$rowContainer.on('click', '.key-value-remove', function(e) {
 			e.preventDefault();
