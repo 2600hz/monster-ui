@@ -3288,6 +3288,10 @@ define(function(require) {
 		$rowContainer.on('click', '.key-value-remove', function(e) {
 			e.preventDefault();
 			$(this).closest('.monster-key-value-editor-row').remove();
+			// Notice that the counter is not decremented on row remove. This is because its sole
+			// purpose is to guarantee a unique and ordered index of the rows, to allow the
+			// key-value pairs to be sorted in the same way as they are displayed in the editor
+			// when the values are retrieved as an array via monster.ui.getFormData()
 		});
 		// Append editor
 		$target.append($editorTemplate);
