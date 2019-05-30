@@ -1013,7 +1013,7 @@ define(function(require) {
 	}
 
 	/**
-	 * Gets the current time zone identifier.
+	 * Returns the timezone of the currently authenticated session
 	 * @return {String}  Current time zone identifier.
 	 *
 	 * By default, the time zone of the logged in user will be returned. If that
