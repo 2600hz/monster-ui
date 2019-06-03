@@ -159,6 +159,21 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
+			languageSelector: function(options) {
+				var namedOptions = options.hash,
+					specialArgs = ['selectedLanguage', 'showDefault'],
+					args = _
+						.chain(namedOptions)
+						.pick(specialArgs)
+						.merge({
+							attributes: _.omit(namedOptions, specialArgs)
+						})
+						.value();
+				return new Handlebars.SafeString(
+					monster.ui.getLanguageSelectorTemplate(args)
+				);
+			},
+
 			lookupPath: function(object, path, pDefaultValue) {
 				// If there are more than 3 arguments, it means that pDefaultValue is not the
 				// last argument (which corresponds to Handlebar's options parameter), so it
@@ -3204,6 +3219,38 @@ define(function(require) {
 		}
 	};
 
+	function getLanguageSelectorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		var selectedLanguage = _.get(args, 'selectedLanguage'),
+			showDefault = _.get(args, 'showDefault', false),
+			attributes = _.get(args, 'attributes', {});
+		if (!_.isUndefined(selectedLanguage) && !_.isString(selectedLanguage)) {
+			throw TypeError('"selectedLanguage" is not a string');
+		}
+		if (!_.isBoolean(showDefault)) {
+			throw TypeError('"showDefault" is not a boolean');
+		}
+		if (!_.isPlainObject(attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		var languages = [
+			'en-US',
+			'fr-FR',
+			'de-DE',
+			'ru-RU',
+			'es-ES'
+		];
+		if (showDefault) {
+			languages.unshift('auto');
+		}
+		return monster.template(monster.apps.core, 'monster-language-selector', {
+			attributes: attributes,
+			languages: languages
+		});
+	};
+
 	/**
 	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
@@ -3396,6 +3443,7 @@ define(function(require) {
 
 	initialize();
 
+	ui.getLanguageSelectorTemplate = getLanguageSelectorTemplate;
 	ui.getSvgIconTemplate = getSvgIconTemplate;
 	ui.keyValueEditor = keyValueEditor;
 	ui.monthpicker = monthpicker;
