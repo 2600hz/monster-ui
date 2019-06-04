@@ -114,7 +114,7 @@ define(function(require) {
 							placement: 'bottom',
 							title: function() {
 								return _
-									.chain(self.appSelectorGetStore('selectedAppIds', []))
+									.chain(self.appSelectorGetSelectedApps())
 									.map('label')
 									.sortBy()
 									.join(', ')
