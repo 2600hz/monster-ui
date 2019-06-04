@@ -14,6 +14,11 @@
 	"placeholderEmail": "jon_doe@yumminova.eu",
 	"phoneNumber": "Telefoonnummer",
 	"placeholderNumber": "+31222xxxxxx",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "3rd Floor",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderZipCode": "12345".
 
 	"user": {
 		"title": "Gebruiker",
@@ -72,7 +77,12 @@
 
 		"accountAdministrator": "Administratie Contact",
 		"accountAdministratorEmail": "Administratie Contact Emailadres",
-		"accountAdministratorNumber": "Telefoonnummer"
+		"accountAdministratorNumber": "Telefoonnummer",
+		"accountAdministratorAddress": "Adres",
+		"accountAdministratorAddressLineTwo": "Adres lijn 2",
+		"accountAdministratorAddressCity": "stad",
+		"accountAdministratorAddressState": "Staat",
+		"accountAdministratorAdressZipCode": "Postcode"
 	},
 
 	"trunks": {

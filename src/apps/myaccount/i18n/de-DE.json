@@ -14,6 +14,11 @@
 	"placeholderEmail": "namer@firma.de",
 	"phoneNumber": "Telefonnummer",
 	"placeholderNumber": "+49123456789033",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderZipCode": "12345",
 
 	"walkthrough": {
 		"greetingsDialog": {
@@ -150,7 +155,12 @@
 
 		"accountAdministrator": "Rechnungskontakt",
 		"accountAdministratorEmail": "Rechnungskontakt – E-Mail-Adresse",
-		"accountAdministratorNumber": "Telefonnummer"
+		"accountAdministratorNumber": "Telefonnummer",
+		"accountAdministratorAddress": "Adresse",
+		"accountAdministratorAddressLineTwo": "Adresszeile 2",
+		"accountAdministratorAddressCity": "Stadt",
+		"accountAdministratorAddressState": "Zustand",
+		"accountAdministratorAddressZipCode": "Postleitzahl"
 	},
 
 	"trunks": {

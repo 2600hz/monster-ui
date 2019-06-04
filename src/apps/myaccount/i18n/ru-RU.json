@@ -14,6 +14,11 @@
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Телефонный номер",
 	"placeholderNumber": "74951111111",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "3rd Floor",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderZipCode": "12345"
 
 	"walkthrough": {
 		"greetingsDialog": {
@@ -108,7 +113,12 @@
 
 		"accountAdministrator": "Связь по вопросам оплаты",
 		"accountAdministratorEmail": "Адрес email специалиста по финансовым вопросам",
-		"accountAdministratorNumber": "Телефон"
+		"accountAdministratorNumber": "Телефон",
+		"accountAdministratorAddress": "Адрес",
+		"accountAdministratorAddressLineTwo": "Адресная строка 2",
+		"accountAdministratorAddressCity": "город",
+		"accountAdministratorAddressState": "государственный",
+		"accountAdministratorAddressZipCode": "Почтовый индекс"
 	},
 
 	"trunks": {
