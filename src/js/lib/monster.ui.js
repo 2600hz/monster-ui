@@ -3235,13 +3235,7 @@ define(function(require) {
 		if (!_.isPlainObject(attributes)) {
 			throw TypeError('"attributes" is not a plain object');
 		}
-		var languages = [
-			'en-US',
-			'fr-FR',
-			'de-DE',
-			'ru-RU',
-			'es-ES'
-		];
+		var languages = _.clone(monster.supportedLanguages);
 		if (showDefault) {
 			languages.unshift('auto');
 		}
