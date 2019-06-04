@@ -3,8 +3,8 @@
 		<ul class="nav nav-list">
 		{{#each filters}}
 			<li class="nav-item">
-				<a href="javascript:void(0);" data-filter="{{@key}}" class="app-filter text-container{{#if @first}} active{{/if}}">
-					{{replaceVar (tryI18n @root.i18n.appSelector.filters @key) this}}
+				<a href="javascript:void(0);" data-filter="{{filter}}" class="app-filter text-container{{#if @first}} active{{/if}}">
+					{{replaceVar (tryI18n @root.i18n.appSelector.filters filter) count}}
 				</a>
 			</li>
 		{{/each}}
@@ -35,7 +35,7 @@
 		<div class="app-selector-list">
 			<ul class="app-list">
 			{{#each apps}}
-				<li class="app-item text-container{{#each tags}} {{this}}{{/each}}" data-id="{{@key}}" data-name="{{toLowerCase label}}">
+				<li class="app-item text-container{{#each tags}} {{this}}{{/each}}{{#ifInArray id @root.selectedAppIds}} selected{{/ifInArray}}" data-id="{{id}}" data-name="{{toLowerCase label}}">
 					<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
 					<div class="app-title">
 						{{label}}

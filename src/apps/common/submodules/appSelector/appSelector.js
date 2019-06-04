@@ -83,15 +83,19 @@ define(function(require) {
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
-					var selectedApps = self.appSelectorGetStore('selectedApps', []),
+					var selectedApps = self.appSelectorGetStore('selectedAppIds', []),
 						tagCount = _.chain(apps).flatMap('tags').countBy().value(),
-						filters = _.transform(self.appFlags.appSelector.tagFilters, function(filters, filterName) {
-							filters[filterName] = (filterName === 'all') ? _.size(apps) : _.get(tagCount, filterName, 0);
-						}, {}),
+						filters = _.map(self.appFlags.appSelector.tagFilters, function(filter) {
+							return {
+								filter: filter,
+								count: filter === 'all' ? _.size(apps) : _.get(tagCount, filter, 0)
+							};
+						}),
 						dataTemplate = {
 							apps: apps,
 							filters: filters,
-							selectedApps: selectedApps
+							selectedAppIds: selectedAppIds,
+							selectedApps: self.appSelectorGetAppsByIds(selectedAppIds)
 						},
 						$template = $(self.getTemplate({
 							name: 'layout',
@@ -110,8 +114,9 @@ define(function(require) {
 							placement: 'bottom',
 							title: function() {
 								return _
-									.chain(self.appSelectorGetStore('selectedApps', []))
+									.chain(self.appSelectorGetStore('selectedAppIds', []))
 									.map('label')
+									.sortBy()
 									.join(', ')
 									.value();
 							}
@@ -130,20 +135,13 @@ define(function(require) {
 				scope: scope,
 				forceFetch: forceFetch,
 				callback: function(appList) {
-					var apps = _.keyBy(appList, 'id'),
-						selectedApps = _
-							.chain(selectedAppIds)
-							.map(function(appId) {
-								return apps[appId];
-							})
-							.compact()
-							.value(),
-						$template;
+					var $template;
 
-					self.appSelectorSetStore('selectedApps', selectedApps);
+					self.appSelectorSetStore('apps', _.keyBy(appList, 'id'));
+					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
 
 					// Init template after saving selected apps to store, so they can be rendered
-					$template = initTemplate(apps);
+					$template = initTemplate(appList);
 
 					$container.append($template);
 
@@ -194,7 +192,7 @@ define(function(require) {
 								autoScroll: false,
 								onClose: function() {
 									// Clean selected apps on close
-									self.appSelectorSetStore('selectedApps', []);
+									self.appSelectorSetStore('selectedAppIds', []);
 								}
 							});
 
@@ -225,7 +223,8 @@ define(function(require) {
 		 */
 		appSelectorGetSelectedApps: function(args) {
 			var self = this,
-				selectedApps = self.appSelectorGetStore('selectedApps', []);
+				selectedAppIds = self.appSelectorGetStore('selectedAppIds', []),
+				selectedApps = self.appSelectorGetAppsByIds(selectedAppIds);
 
 			if (_.has(args, 'callback')) {
 				args.callback(selectedApps);
@@ -242,7 +241,6 @@ define(function(require) {
 		 */
 		appSelectorBindEvents: function(args) {
 			var self = this,
-				apps = args.apps,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
@@ -295,8 +293,7 @@ define(function(require) {
 			$appList.find('.app-item').on('click', function() {
 				var $this = $(this),
 					appId = $this.data('id'),
-					selectedApps = self.appSelectorGetStore('selectedApps', []),
-					selectedApp,
+					selectedAppIds = self.appSelectorGetStore('selectedAppIds', []),
 					$selectedAppIcon;
 
 				$this.toggleClass('selected');
@@ -304,12 +301,11 @@ define(function(require) {
 				// Create a new array with or without the clicked app,
 				// in order to keep the store inmutable
 				if ($this.hasClass('selected')) {
-					selectedApp = apps[appId];
-					selectedApps = _.concat(selectedApps, selectedApp);
+					selectedAppIds = _.concat(selectedAppIds, appId);
 
 					$selectedAppIcon = $(self.getTemplate({
 						name: 'selectedApp',
-						data: selectedApp,
+						data: _.head(self.appSelectorGetAppsByIds([ appId ])),
 						submodule: 'appSelector'
 					}));
 
@@ -320,8 +316,8 @@ define(function(require) {
 						$selectedAppIcon.addClass('show');
 					});
 				} else {
-					selectedApps = _.reject(selectedApps, function(app) {
-						return app.id === appId;
+					selectedAppIds = _.reject(selectedAppIds, function(id) {
+						return id === appId;
 					});
 
 					$selectedAppIcon = $selectedAppsList.find('[data-id="' + appId + '"]');
@@ -333,9 +329,9 @@ define(function(require) {
 					}, 250);
 				}
 
-				self.appSelectorSetStore('selectedApps', selectedApps);
+				self.appSelectorSetStore('selectedAppIds', selectedAppIds);
 
-				$selectedAppsCounter.text(selectedApps.length.toString());
+				$selectedAppsCounter.text(selectedAppIds.length.toString());
 			});
 		},
 
@@ -369,6 +365,19 @@ define(function(require) {
 				$popup.dialog('close').remove();
 
 				_.has(args, 'callbacks.cancel') && args.callbacks.cancel();
+			});
+		},
+
+		/**
+		 * Get a list of applications by its IDs
+		 * @param  {String[]} appIds  List of app ID's to be searched
+		 * @returns {Array}  Array of applications data
+		 */
+		appSelectorGetAppsByIds: function(appIds) {
+			var self = this,
+				apps = self.appSelectorGetStore('apps');
+			return _.map(appIds, function(appId) {
+				return apps[appId];
 			});
 		}
 	};
