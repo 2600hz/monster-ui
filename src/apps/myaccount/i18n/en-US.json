@@ -40,6 +40,11 @@
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Phone Number",
 	"placeholderNumber": "4152223333",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "3rd Floor",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderZipCode": "12345",
 
 	"walkthrough": {
 		"greetingsDialog": {
@@ -168,7 +173,12 @@
 
 		"accountAdministrator": "Billing Contact",
 		"accountAdministratorEmail": "Billing Contact Email",
-		"accountAdministratorNumber": "Phone Number"
+		"accountAdministratorNumber": "Phone Number",
+		"accountAdministratorAddress": "Address",
+		"accountAdministratorAddressLineTwo": "Address Line 2",
+		"accountAdministratorAddressCity": "City",
+		"accountAdministratorAddressState": "State",
+		"accountAdministratorAddressZipCode": "Zip Code"
 	},
 
 	"trunks": {
