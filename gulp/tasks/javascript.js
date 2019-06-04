@@ -4,6 +4,7 @@ import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
 import { app, src, tmp } from '../paths.js';
+import babel from 'gulp-babel';
 
 const config = {
 	app: {
@@ -53,3 +54,18 @@ export const lint = () => gulp
 	.src(context.lint)
 	.pipe(eslint())
 	.pipe(eslint.format());
+
+/**
+ * Compile with Babel
+ */
+export const compileJs = () => gulp
+	.src([
+		join(tmp, 'apps', '**', '*.js'),
+	])
+	.pipe(babel({
+		babelrc: false,
+		ignore: ['**/node_modules'],
+		plugins: ['babel-plugin-transform-object-rest-spread'],
+		presets: ['env']
+	}))
+	.pipe(gulp.dest(join(tmp, 'apps')));
