@@ -14,7 +14,7 @@
 	"placeholderAddressLineTwo": "3rd Floor",
 	"placeholderCity": "San Francisco",
 	"placeholderState": "California",
-	"placeholderZipCode": "12345"
+	"placeholderZipCode": "12345",
 
 	"user": {
 		"title": "Utilisateur",
