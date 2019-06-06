@@ -159,6 +159,15 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
+			lookupPath: function(object, path, pDefaultValue) {
+				// If there are more than 3 arguments, it means that pDefaultValue is not the
+				// last argument (which corresponds to Handlebar's options parameter), so it
+				// should be the default value.
+				var defaultValue = (_.toArray(arguments).length > 3) ? pDefaultValue : undefined;
+
+				return _.get(object, path, defaultValue);
+			},
+
 			monsterCheckbox: function() {
 				var templateData = {
 					cssClass: 'monster-checkbox',
