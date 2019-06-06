@@ -3241,7 +3241,8 @@ define(function(require) {
 		}
 		return monster.template(monster.apps.core, 'monster-language-selector', {
 			attributes: attributes,
-			languages: languages
+			languages: languages,
+			selectedLanguage: selectedLanguage
 		});
 	};
 
