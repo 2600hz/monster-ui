@@ -11,6 +11,7 @@
 
 	"editSettings": "Редактировать",
 	"changesSaved": "Изменения сохранены!",
+	"placeholderFullName": "Jon Doe",
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Телефонный номер",
 	"placeholderNumber": "74951111111",
@@ -18,6 +19,7 @@
 	"placeholderAddressLineTwo": "3rd Floor",
 	"placeholderCity": "San Francisco",
 	"placeholderState": "California",
+	"placeholderCountry": "United States",
 	"placeholderZipCode": "12345",
 
 	"walkthrough": {
@@ -112,12 +114,14 @@
 		"changeCard": "Изменить данные карты",
 
 		"accountAdministrator": "Связь по вопросам оплаты",
+		"accountAdministratorFullName": "ФИО",
 		"accountAdministratorEmail": "Адрес email специалиста по финансовым вопросам",
 		"accountAdministratorNumber": "Телефон",
 		"accountAdministratorAddress": "Адрес",
 		"accountAdministratorAddressLineTwo": "Адресная строка 2",
 		"accountAdministratorAddressCity": "город",
 		"accountAdministratorAddressState": "государственный",
+		"accountAdministratorAddressCountry": "Страна",
 		"accountAdministratorAddressZipCode": "Почтовый индекс"
 	},
 

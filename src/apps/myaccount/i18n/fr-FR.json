@@ -7,6 +7,7 @@
 
 	"editSettings": "Changer",
 	"changesSaved": "Changements sauvegardés!",
+	"placeholderName": "Jon Doe",
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Numéro de téléphone",
 	"placeholderNumber": "4152223333",
@@ -14,6 +15,7 @@
 	"placeholderAddressLineTwo": "3rd Floor",
 	"placeholderCity": "San Francisco",
 	"placeholderState": "California",
+	"placeholderCountry": "United States",
 	"placeholderZipCode": "12345",
 
 	"user": {
@@ -86,13 +88,15 @@
 		"changeCard": "Changer carte",
 
 		"accountAdministrator": "Changer carte",
+		"accountAdministratorFullName": "Nom complet"
 		"accountAdministratorEmail": "Email",
 		"accountAdministratorNumber": "Numéro de téléphone",
 		"accountAdministratorAddress":"Adresse",
 		"accountAdministratorAddressLineTwo":"Ligne d'adresse 2",
 		"accountAdministratorAddressCity":"Ville",
-		"accountAdministratorAddressState":"Etat",
-		"accountAdministratorAddressZipCode":"code postal"
+		"accountAdministratorAddressState":"Région",
+		"accountAdministratorAddressCountry": "Patrie",
+		"accountAdministratorAddressZipCode":"Code postal"
 	},
 
 	"balance": {

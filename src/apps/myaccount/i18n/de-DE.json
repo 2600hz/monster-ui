@@ -11,6 +11,7 @@
 
 	"editSettings": "Bearbeiten",
 	"changesSaved": "Änderungen wurden gespeichert!",
+	"placeholderName": "Jon Doe",
 	"placeholderEmail": "namer@firma.de",
 	"phoneNumber": "Telefonnummer",
 	"placeholderNumber": "+49123456789033",
@@ -18,6 +19,7 @@
 	"placeholderAddressLineTwo": "3rd Floor",
 	"placeholderCity": "San Francisco",
 	"placeholderState": "California",
+	"placeholderCountry": "United States",
 	"placeholderZipCode": "12345",
 
 	"walkthrough": {
@@ -154,12 +156,14 @@
 		"changeCard": "Kartendaten ändern",
 
 		"accountAdministrator": "Rechnungskontakt",
+		"accountAdministratorFullName": "Vollständiger Name",
 		"accountAdministratorEmail": "Rechnungskontakt – E-Mail-Adresse",
 		"accountAdministratorNumber": "Telefonnummer",
 		"accountAdministratorAddress": "Adresse",
 		"accountAdministratorAddressLineTwo": "Adresszeile 2",
 		"accountAdministratorAddressCity": "Stadt",
 		"accountAdministratorAddressState": "Zustand",
+		"accountAdministratorAddressCountry": "Land",
 		"accountAdministratorAddressZipCode": "Postleitzahl"
 	},
 

@@ -37,6 +37,7 @@
 
 	"editSettings": "Edit",
 	"changesSaved": "Changes Saved!",
+	"placeholderName": "Jon Doe",
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Phone Number",
 	"placeholderNumber": "4152223333",
@@ -44,6 +45,7 @@
 	"placeholderAddressLineTwo": "3rd Floor",
 	"placeholderCity": "San Francisco",
 	"placeholderState": "California",
+	"placeholderCountry": "United States",
 	"placeholderZipCode": "12345",
 
 	"walkthrough": {
@@ -172,13 +174,15 @@
 		"changeCard": "Change Card Info",
 
 		"accountAdministrator": "Billing Contact",
-		"accountAdministratorEmail": "Billing Contact Email",
+		"accountAdministratorFullName": "Full Name",
+		"accountAdministratorEmail": "Email",
 		"accountAdministratorNumber": "Phone Number",
-		"accountAdministratorAddress": "Address",
+		"accountAdministratorAddress": "Primary Service Address",
 		"accountAdministratorAddressLineTwo": "Address Line 2",
 		"accountAdministratorAddressCity": "City",
-		"accountAdministratorAddressState": "State",
-		"accountAdministratorAddressZipCode": "Zip Code"
+		"accountAdministratorAddressState": "State/Province/Region",
+		"accountAdministratorAddressCountry": "Country",
+		"accountAdministratorAddressZipCode": "Zip/Postal Code"
 	},
 
 	"trunks": {
