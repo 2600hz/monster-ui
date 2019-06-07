@@ -1012,6 +1012,20 @@ define(function(require) {
 		return formatter.format(base).replace('NaN', '');
 	}
 
+	/**
+	 * Returns the timezone of the currently authenticated session
+	 * @return {String}  Current time zone identifier.
+	 *
+	 * By default, the time zone of the logged in user will be returned. If that
+	 * time zone is not set, then the account time zone will be used. If not set,
+	 * the browser’s time zone will be used as a last resort.
+	 */
+	function getCurrentTimeZone() {
+		return _.get(monster, 'apps.auth.currentUser.timezone')
+			|| _.get(monster, 'apps.auth.currentAccount.timezone')
+			|| moment.tz.guess();
+	}
+
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
 		var user = _.get(monster, 'apps.auth.currentUser', {});
@@ -1290,7 +1304,7 @@ define(function(require) {
 	 * @param  {Object} pUser        Specific user to use for formatting.
 	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
 	 *                                gregorian format.
-	 * @param  {String} tz           Timezone to format the date with.
+	 * @param  {String} pTz           Timezone to format the date with.
 	 * @return {String}              Representation of the formatted date.
 	 *
 	 * If pDate is undefined then return an empty string. Useful for form which
@@ -1302,7 +1316,7 @@ define(function(require) {
 	 * timezone will be used. If not set, the browser’s timezone will be used as
 	 * a last resort.
 	 */
-	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, tz) {
+	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, pTz) {
 		if (_.isUndefined(pDate)) {
 			return '';
 		}
@@ -1315,20 +1329,10 @@ define(function(require) {
 				? gregorianToDate(pDate)
 				: unixToDate(pDate);
 		var format = getMomentFormat(pFormat, pUser);
-		if (!_.isNull(moment.tz.zone(tz))) {
-			return moment(date).tz(tz).format(format);
-		}
-		if (_.has(monster, 'apps.auth.currentUser.timezone')) {
-			return moment(date)
-				.tz(monster.apps.auth.currentUser.timezone)
-				.format(format);
-		}
-		if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
-			return moment(date)
-				.tz(monster.apps.auth.currentAccount.timezone)
-				.format(format);
-		}
-		return moment(date).tz(moment.tz.guess()).format(format);
+		var tz = _.isNull(moment.tz.zone(pTz)) ? getCurrentTimeZone() : pTz;
+		return moment(date)
+			.tz(tz)
+			.format(format);
 	}
 
 	/**
@@ -1383,6 +1387,7 @@ define(function(require) {
 	util.formatPrice = formatPrice;
 	util.getBookkeepers = getBookkeepers;
 	util.getCurrencySymbol = getCurrencySymbol;
+	util.getCurrentTimeZone = getCurrentTimeZone;
 	util.getFormatPhoneNumber = getFormatPhoneNumber;
 	util.getNumberFeatures = getNumberFeatures;
 	util.getUserFullName = getUserFullName;

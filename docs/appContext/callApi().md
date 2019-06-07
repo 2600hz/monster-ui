@@ -21,7 +21,7 @@ Key | Description | Type | Default | Required
 `error` | A function to be called if the request fails (except for `402 Payment Required`, see `onChargesCancelled`). The function receives three arguments: the error parsed as JSON; the raw error from the ajax error handler; a function to throw a generic Monster UI request error. | `Function` | | `false`
 `onChargesCancelled` | A function called when the error is specifically a `402 Payment Required`. It is executed if the user declines the charges associated with the request. | `Function` | | `false`
 
-### `data`
+#### `data`
 Here is a list of some common data properties. However, this object may contain other properties besides the ones listed here, depending on the requested resource.
 
 Key | Description | Type | Default | Required

@@ -1097,7 +1097,7 @@ define(function(require) {
 				])
 				.flatten()
 				.groupBy(function(entry) {
-					return moment(entry.timestamp).startOf('day').valueOf();
+					return moment.tz(entry.timestamp, monster.util.getCurrentTimeZone()).startOf('day').valueOf();
 				})
 				.map(function(entries, timestamp) {
 					return {

@@ -145,6 +145,13 @@ define(function(require) {
 				return options[monster.util.isAdmin(user) ? 'fn' : 'inverse'](this);
 			},
 
+			isReseller: function(pAccount, pOptions) {
+				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
+					options = !pOptions ? pAccount : pOptions;
+
+				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			},
+
 			isSuperDuper: function(pAccount, pOptions) {
 				var account = pAccount.hasOwnProperty('superduper_admin') ? pAccount : undefined,
 					options = !pOptions ? pAccount : pOptions;
@@ -152,11 +159,13 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
-			isReseller: function(pAccount, pOptions) {
-				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
-					options = !pOptions ? pAccount : pOptions;
+			lookupPath: function(object, path, pDefaultValue) {
+				// If there are more than 3 arguments, it means that pDefaultValue is not the
+				// last argument (which corresponds to Handlebar's options parameter), so it
+				// should be the default value.
+				var defaultValue = (_.toArray(arguments).length > 3) ? pDefaultValue : undefined;
 
-				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+				return _.get(object, path, defaultValue);
 			},
 
 			monsterCheckbox: function() {
@@ -184,6 +193,25 @@ define(function(require) {
 				}
 
 				return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+			},
+
+			monsterNumberWrapper: function(number) {
+				return monster.ui.getTemplatePhoneNumber(number.toString());
+			},
+
+			monsterPanelText: function(title, type, className) {
+				var htmlContent = arguments[arguments.length - 1].fn(this),
+					validTypes = ['info', 'success', 'danger', 'warning'],
+					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+					templateData = {
+						className: typeof className === 'string' ? className : '',
+						title: title,
+						content: new Handlebars.SafeString(htmlContent)
+					},
+					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
+
+				return new Handlebars.SafeString(template);
 			},
 
 			monsterRadio: function() {
@@ -255,27 +283,23 @@ define(function(require) {
 				return new Handlebars.SafeString(template);
 			},
 
-			monsterPanelText: function(title, type, className) {
-				var htmlContent = arguments[arguments.length - 1].fn(this),
-					validTypes = ['info', 'success', 'danger', 'warning'],
-					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-					templateData = {
-						className: typeof className === 'string' ? className : '',
-						title: title,
-						content: new Handlebars.SafeString(htmlContent)
-					},
-					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
-					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
-
-				return new Handlebars.SafeString(template);
-			},
-
 			numberFeatures: function(features) {
 				return monster.ui.paintNumberFeaturesIcon(features);
 			},
 
-			monsterNumberWrapper: function(number) {
-				return monster.ui.getTemplatePhoneNumber(number.toString());
+			replaceVar: function(stringValue, variable) {
+				return stringValue.replace(/{{variable}}/g, variable);
+			},
+
+			select: function(value, options) {
+				var $el = $('<select />').html(options.fn(this));
+				if (!_.isArray(value)) {
+					value = [ value ];
+				}
+				_.forEach(value, function(data) {
+					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
+				});
+				return $el.html();
 			},
 
 			svgIcon: function(id, options) {
@@ -294,21 +318,6 @@ define(function(require) {
 						attributes: options.hash
 					})
 				);
-			},
-
-			replaceVar: function(stringValue, variable) {
-				return stringValue.replace(/{{variable}}/g, variable);
-			},
-
-			select: function(value, options) {
-				var $el = $('<select />').html(options.fn(this));
-				if (!_.isArray(value)) {
-					value = [ value ];
-				}
-				_.forEach(value, function(data) {
-					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
-				});
-				return $el.html();
 			},
 
 			times: function(max, options) {
@@ -3215,18 +3224,122 @@ define(function(require) {
 		var iconId = args.id;
 		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
 		var attributes = _.get(args, 'attributes', {});
-		attributes.class = _
-			.chain(attributes)
-			.get('class', '')
-			.split(/\s+/g)      // Split by one or more whitespaces
-			.reject(_.isEmpty)  // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
-			.union(['svg-icon', iconPrefix])
-			.join(' ')
-			.value();
+		attributes = mergeHtmlAttributes(attributes, {
+			'class': 'svg-icon ' + iconPrefix
+		});
 
 		return monster.template(monster.apps.core, 'monster-svg-icon', {
 			iconId: iconId,
 			attributes: attributes
+		});
+	}
+
+	/**
+	 * Generates a key-value pair editor
+	 * @param  {jQuery} $target  Container to append the widget to.
+	 * @param  {Object} [options]  Editor options
+	 * @param  {Object} [options.data]  Key-value data, as a plain object
+	 * @param  {String} [options.inputName]  Input name prefix
+	 * @param  {Object} [options.i18n]  Custom label translations
+	 * @param  {Object} [options.i18n.addLink]  Add row link label
+	 * @param  {String} [options.i18n.keyPlaceholder]  Key input placeholder
+	 * @param  {String} [options.i18n.valuePlaceholder]  Value input placeholder
+	 */
+	function keyValueEditor($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		var data = _.get(options, 'data', {});
+		var inputName = _.get(options, 'inputName', 'data');
+		var addLink = _.get(options, 'i18n.addLink');
+		var keyPlaceholder = _.get(options, 'i18n.keyPlaceholder');
+		var valuePlaceholder = _.get(options, 'i18n.valuePlaceholder');
+		if (!_.isPlainObject(data)) {
+			throw new TypeError('"options.data" is not a plain object');
+		}
+		if (!_.isNil(inputName) && !_.isString(inputName)) {
+			throw new TypeError('"options.inputName" is not a string');
+		}
+		if (!_.isNil(addLink) && !_.isString(addLink)) {
+			throw new TypeError('"options.i18n.addLink" is not a string');
+		}
+		if (!_.isNil(keyPlaceholder) && !_.isString(keyPlaceholder)) {
+			throw new TypeError('"options.i18n.keyPlaceholder" is not a string');
+		}
+		if (!_.isNil(valuePlaceholder) && !_.isString(valuePlaceholder)) {
+			throw new TypeError('"options.i18n.valuePlaceholder" is not a string');
+		}
+		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor', {
+			addLink: addLink
+		}));
+		var $rowContainer = $editorTemplate.find('.monster-key-value-data-container');
+		var addRow = function(value, key, index) {
+			$rowContainer.append(monster.template(monster.apps.core, 'monster-key-value-editor-row', {
+				key: key,
+				value: value,
+				inputName: inputName + '[' + index + ']',
+				keyPlaceholder: keyPlaceholder,
+				valuePlaceholder: valuePlaceholder
+			}));
+		};
+		// Add initial rows
+		var counter = 0;
+		_.each(data, function(value, key, index) {
+			addRow(value, key, counter);
+			counter += 1;
+		});
+		// Bind events
+		$editorTemplate.find('.key-value-add').on('click', function(e) {
+			e.preventDefault();
+			addRow('', '', counter);
+			counter += 1;
+		});
+		$rowContainer.on('click', '.key-value-remove', function(e) {
+			e.preventDefault();
+			$(this).closest('.monster-key-value-editor-row').remove();
+			// Notice that the counter is not decremented on row remove. This is because its sole
+			// purpose is to guarantee a unique and ordered index of the rows, to allow the
+			// key-value pairs to be sorted in the same way as they are displayed in the editor
+			// when the values are retrieved as an array via monster.ui.getFormData()
+		});
+		// Append editor
+		$target.append($editorTemplate);
+		return $editorTemplate;
+	}
+
+	/**
+	 * Merges HTML attributes, mapped as JSON objects
+	 * @param   {Object} object  Destination object
+	 * @param   {Object} source  Source object
+	 * @returns {Object}         Returns `object` after merge
+	 */
+	function mergeHtmlAttributes(object, source) {
+		if (!_.isPlainObject(object)) {
+			throw new TypeError('"object" is not a plain object');
+		}
+		if (!_.isPlainObject(source)) {
+			throw new TypeError('"source" is not a plain object');
+		}
+
+		return _.mergeWith(object, source, function(objValue, srcValue, key) {
+			objValue = _.isNil(objValue) ? '' : objValue;
+			srcValue = _.isNil(srcValue) ? '' : srcValue;
+			if (key !== 'class') {
+				return _.toString(objValue) + _.toString(srcValue);
+			}
+			var srcClasses = _
+				.chain(srcValue)
+				.toString()
+				.split(/\s+/g) // Split by one or more whitespaces
+				.value();
+			return _
+				.chain(objValue)
+				.toString()
+				.split(/\s+/g) // Split by one or more whitespaces
+				.union(srcClasses)
+				.reject(_.isEmpty) // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
+				.join(' ')
+				.value();
 		});
 	}
 
@@ -3284,6 +3397,7 @@ define(function(require) {
 	initialize();
 
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+	ui.keyValueEditor = keyValueEditor;
 	ui.monthpicker = monthpicker;
 	ui.toast = toast;
 
