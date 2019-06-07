@@ -820,7 +820,7 @@ define(function(require) {
 				}
 			});
 
-			if (monster.ui.validate(formAccountAdministrator)) {
+			if (monster.ui.valid(formAccountAdministrator)) {
 				callback && callback();
 			}
 		},
@@ -842,7 +842,6 @@ define(function(require) {
 					});
 				},
 				settingsValidate = function(fieldName, dataForm, callback) {
-					console.log("Is this being called?");
 					var formPassword = template.find('#form_password');
 					var formAccountAdministrator = template.find('#form_account_administrator');
 					
