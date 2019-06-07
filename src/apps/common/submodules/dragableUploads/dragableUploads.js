@@ -93,6 +93,9 @@ define(function(require) {
 								.removeClass('error uploaded')
 								.addClass('success');
 
+							if (args.singleFileSelection) {
+								args.callback(null, self.appFlags.dragableUploads.files);
+							}
 							self.dragableUploadsRenderFileList(template);
 						};
 
