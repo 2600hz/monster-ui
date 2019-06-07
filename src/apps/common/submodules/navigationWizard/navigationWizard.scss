@@ -116,6 +116,12 @@
 	width: 72px;
 }
 
+#navigation_wizard_wrapper #cancel, #navigation_wizard_wrapper .back {
+	background: linear-gradient(-180deg, $white 0%, #F4F4F5 100%);
+        border: 1px solid $french-gray2;
+	color: $midgray2;
+}
+
 #navigation_wizard_wrapper #next {
 	background: #2297ff;
 	border: 1px solid #006bca;
