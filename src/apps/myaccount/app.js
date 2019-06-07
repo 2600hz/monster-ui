@@ -788,7 +788,7 @@ define(function(require) {
 
 		validateAccountAdministratorForm(formAccountAdministrator, callback) {
 			var self = this;
-			console.log(formAccountAdministrator);
+			
 			monster.ui.validate(formAccountAdministrator, {
 				rules: {
 					'contact.billing.name': {
@@ -819,7 +819,7 @@ define(function(require) {
 					}
 				}
 			});
-			console.log(monster.ui.validate(formAccountAdministrator));
+
 			if (monster.ui.validate(formAccountAdministrator)) {
 				callback && callback();
 			}
@@ -853,7 +853,6 @@ define(function(require) {
 						self.validatePasswordForm(formPassword, callback);
 					// otherwise we don't have any validation for this field, we execute the callback
 					} else if (formAccountAdministrator.length) {
-						console.log("test");
 						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
 					} else {
 						callback && callback();
