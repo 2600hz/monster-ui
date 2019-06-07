@@ -184,8 +184,6 @@ define(function(require) {
 		dragableUploadsRequestMediaUpload: function(callback, file) {
 			var self = this;
 
-			console.log('file', file);
-
 			self.callApi({
 				resource: 'media.create',
 				data: {
