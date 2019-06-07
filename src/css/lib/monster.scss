@@ -1447,6 +1447,13 @@ table.monster-table {
 [class*='monster-table-wrapper'] {
 	position: relative;
 
+	& > h4.title {
+		margin: 0;
+		color: $woodsmoke;
+		font-size: 16px;
+		font-weight: 600;
+	}
+
 	.monster-table-header {
 		position: absolute;
 		z-index: 20;
