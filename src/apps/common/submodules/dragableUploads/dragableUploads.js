@@ -93,6 +93,9 @@ define(function(require) {
 								.removeClass('error uploaded')
 								.addClass('success');
 
+							if (args.singleFileSelection) {
+								args.callback(null, self.appFlags.dragableUploads.files);
+							}
 							self.dragableUploadsRenderFileList(template);
 						};
 
@@ -180,6 +183,8 @@ define(function(require) {
 
 		dragableUploadsRequestMediaUpload: function(callback, file) {
 			var self = this;
+
+			console.log('file', file);
 
 			self.callApi({
 				resource: 'media.create',
