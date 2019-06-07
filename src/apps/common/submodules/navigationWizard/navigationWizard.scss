@@ -5,9 +5,21 @@
 }
 
 #navigation_wizard_wrapper .header {
-	padding: 15px 0 15px 30px;
+	display: flex;
+	justify-content: space-between;
+	padding: 13px 24px;
 	box-shadow: inset 0 -1px 0 0 #BCBCC2,
 		0 1px 4px 0 rgba($woodsmoke, 0.24);
+}
+
+#navigation_wizard_wrapper .header .nav-title h4 {
+	font-size: 18px;
+	font-weight: normal;
+	color: $woodsmoke;
+}
+
+#navigation_wizard_wrapper .header .actions .monster-button:not(:last-child) {
+	margin-right: 14px;
 }
 
 #navigation_wizard_wrapper .left-content {
@@ -25,9 +37,6 @@
 
 #navigation_wizard_wrapper .left-content .nav {
 	margin: 33px 0 22px 20px;
-}
-
-#navigation_wizard_wrapper .left-content li {
 }
 
 #navigation_wizard_wrapper .footer {
@@ -109,9 +118,6 @@
 }
 
 #navigation_wizard_wrapper #cancel {
-	float: right;
-	bottom: 38px;
-	right: 25px;
 	min-width: 72px;
 	width: 72px;
 }
