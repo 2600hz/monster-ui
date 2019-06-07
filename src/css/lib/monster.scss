@@ -225,6 +225,26 @@ h1 {
 	}
 }
 
+[class*="monster-button-ghost"] {
+	color: $midgray2;
+	border-color: transparent;
+	background-color: transparent;
+	min-width: inherit;
+	display: inline-flex;
+	justify-content: center;
+
+	&:hover {
+		color: $woodsmoke;
+		background-color: #dbdbde;
+	}
+}
+
+.monster-button-ghost-icon {
+	min-width: 38px;
+	min-height: 38px;
+	padding: 0;
+}
+
 /**************** EFFECTS ***************/
 @-webkit-keyframes monster-splash-animation {
 	from {
