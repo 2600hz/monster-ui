@@ -12,6 +12,12 @@
 		0 1px 4px 0 rgba($woodsmoke, 0.24);
 }
 
+#navigation_wizard_wrapper .header .nav-title h4 {
+	font-size: 18px;
+	font-weight: normal;
+	color: $woodsmoke;
+}
+
 #navigation_wizard_wrapper .header .actions .monster-button:not(:last-child) {
 	margin-right: 14px;
 }
