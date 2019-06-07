@@ -1339,6 +1339,10 @@ table.monster-table {
 }
 /******************** TABLE MODE: spaced ********************/
 
+.monster-table-wrapper-spaced .monster-table-header {
+	margin-top: 0.5em;
+}
+
 .monster-table-wrapper-spaced .monster-table .footable-filtering th {
 	padding: 0;
 }
@@ -1379,27 +1383,89 @@ table.monster-table {
 	border-bottom-right-radius: 2px;
 }
 
+/****************** TABLE MODE: hoverable *******************/
+
+.monster-table-wrapper-hoverable table.monster-table {
+	thead {
+		vertical-align: bottom;
+
+		.footable-filtering {
+			th {
+				padding: 0
+			}
+		}
+		.footable-header {
+			background-color: transparent;
+
+			th {
+				border: 0;
+				color: #777;
+				font-size: 12px;
+				font-weight: 600;
+				padding-bottom: 12px;
+			}
+		}
+	}
+	tbody {
+		background-color: transparent;
+
+		tr {
+			border: 0;
+
+			td {
+				border: 0;
+				border-top: 1px solid $french-gray2;
+			}
+		}
+		tr:last-child {
+			td {
+				border-bottom: 1px solid $french-gray2;
+
+				&:first-child,
+				&:last-child {
+					border-radius: 0;
+				}
+			}
+		}
+		tr:hover {
+			background-color: $foreground-primary-color;
+			box-shadow: 0 1px 4px 0px $french-gray2;
+
+			td {
+				border-color: transparent;
+			}
+		}
+		tr:hover + tr {
+			td {
+				border-top-color: transparent;
+			}
+		}
+	}
+}
+
 /************************** WRAPPER *************************/
 [class*='monster-table-wrapper'] {
 	position: relative;
-}
 
-[class*='monster-table-wrapper'] .monster-table-header {
-	position: absolute;
-	z-index: 20;
-}
+	& > h4.title {
+		margin: 0;
+		color: $woodsmoke;
+		font-size: 16px;
+		font-weight: 600;
+	}
 
-[class*='monster-table-wrapper'] .monster-table-header > * {
-	display: block;
-	float: left;
-}
+	.monster-table-header {
+		position: absolute;
+		z-index: 20;
 
-[class*='monster-table-wrapper'] .monster-table-header > *:not(:first-child) {
-	margin-left: 15px;
-}
-
-.monster-table-wrapper-spaced .monster-table-header {
-	margin-top: 0.5em;
+		& > * {
+			display: block;
+			float: left;
+		}
+		& > *:not(:first-child) {
+			margin-left: 15px;
+		}
+	}
 }
 
 /************************************************************/
