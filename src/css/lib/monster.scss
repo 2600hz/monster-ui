@@ -1339,6 +1339,10 @@ table.monster-table {
 }
 /******************** TABLE MODE: spaced ********************/
 
+.monster-table-wrapper-spaced .monster-table-header {
+	margin-top: 0.5em;
+}
+
 .monster-table-wrapper-spaced .monster-table .footable-filtering th {
 	padding: 0;
 }
@@ -1442,24 +1446,19 @@ table.monster-table {
 /************************** WRAPPER *************************/
 [class*='monster-table-wrapper'] {
 	position: relative;
-}
 
-[class*='monster-table-wrapper'] .monster-table-header {
-	position: absolute;
-	z-index: 20;
-}
+	.monster-table-header {
+		position: absolute;
+		z-index: 20;
 
-[class*='monster-table-wrapper'] .monster-table-header > * {
-	display: block;
-	float: left;
-}
-
-[class*='monster-table-wrapper'] .monster-table-header > *:not(:first-child) {
-	margin-left: 15px;
-}
-
-.monster-table-wrapper-spaced .monster-table-header {
-	margin-top: 0.5em;
+		& > * {
+			display: block;
+			float: left;
+		}
+		& > *:not(:first-child) {
+			margin-left: 15px;
+		}
+	}
 }
 
 /************************************************************/
