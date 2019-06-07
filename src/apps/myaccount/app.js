@@ -786,6 +786,45 @@ define(function(require) {
 			}
 		},
 
+		validateAccountAdministratorForm(formAccountAdministrator, callback) {
+			var self = this;
+			console.log(formAccountAdministrator);
+			monster.ui.validate(formAccountAdministrator, {
+				rules: {
+					'contact.billing.name': {
+					    required: true
+					},
+					'contact.billing.email': {
+					    required: true,
+					    email: true
+					},
+					'contact.billing.number': {
+					    required: true
+					},
+					'contact.billing.street_address': {
+					    required: true
+					},
+					'contact.billing.locality': {
+					    required: true
+					},
+					'contact.billing.region': {
+					    required: true
+					},
+					'contact.billing.country': {
+					    required: true
+					},
+					'contact.billing.postal_code': {
+					    required: true,
+					    digits: true
+					}
+				}
+			});
+			console.log(monster.ui.validate(formAccountAdministrator));
+			if (monster.ui.validate(formAccountAdministrator)) {
+				callback && callback();
+			}
+		},
+
 		_myaccountEvents: function(args) {
 			var self = this,
 				data = args.data,
@@ -803,13 +842,19 @@ define(function(require) {
 					});
 				},
 				settingsValidate = function(fieldName, dataForm, callback) {
+					console.log("Is this being called?");
 					var formPassword = template.find('#form_password');
-
+					var formAccountAdministrator = template.find('#form_account_administrator');
+					
 					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
 					// If the field is password, we start custom validation
+					
 					if (formPassword.length) {
 						self.validatePasswordForm(formPassword, callback);
 					// otherwise we don't have any validation for this field, we execute the callback
+					} else if (formAccountAdministrator.length) {
+						console.log("test");
+						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
 					} else {
 						callback && callback();
 					}
