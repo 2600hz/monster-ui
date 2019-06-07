@@ -786,7 +786,7 @@ define(function(require) {
 			}
 		},
 
-		validateAccountAdministratorForm(formAccountAdministrator, callback) {
+		validateAccountAdministratorForm: function(formAccountAdministrator, callback) {
 			var self = this;
 			
 			monster.ui.validate(formAccountAdministrator, {
