@@ -1,7 +1,7 @@
 <select{{#each attributes}} {{@key}}="{{this}}"{{/each}}>
 {{#select selectedLanguage}}
 	{{#each languages}}
-		<option value="{{this}}">{{tryI18n @root.i18n.monsterLanguages this}}</option>
+		<option value="{{value}}">{{label}}</option>
 	{{/each}}
 {{/select}}
 </select>

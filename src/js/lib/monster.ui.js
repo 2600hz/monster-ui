@@ -3235,7 +3235,8 @@ define(function(require) {
 		}
 		var selectedLanguage = _.get(args, 'selectedLanguage'),
 			showDefault = _.get(args, 'showDefault', false),
-			attributes = _.get(args, 'attributes', {});
+			attributes = _.get(args, 'attributes', {}),
+			languages;
 		if (!_.isUndefined(selectedLanguage) && !_.isString(selectedLanguage)) {
 			throw TypeError('"selectedLanguage" is not a string');
 		}
@@ -3245,9 +3246,23 @@ define(function(require) {
 		if (!_.isPlainObject(attributes)) {
 			throw TypeError('"attributes" is not a plain object');
 		}
-		var languages = _.clone(monster.supportedLanguages);
+		// Delay language iteration until we know that all the parameters are valid, to avoid
+		// unnecessary processing
+		languages = _
+			.chain(monster.supportedLanguages)
+			.map(function(code) {
+				return {
+					value: code,
+					label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, code)
+				};
+			})
+			.sortBy('label')
+			.value();
 		if (showDefault) {
-			languages.unshift('auto');
+			languages.unshift({
+				value: 'auto',
+				label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, 'auto')
+			});
 		}
 		return monster.template(monster.apps.core, 'monster-language-selector', {
 			attributes: attributes,
