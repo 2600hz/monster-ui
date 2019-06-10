@@ -170,7 +170,7 @@ define(function(require) {
 						})
 						.value();
 				return new Handlebars.SafeString(
-					monster.ui.getLanguageSelectorTemplate(args)
+					getLanguageSelectorTemplate(args)
 				);
 			},
 
@@ -3219,6 +3219,16 @@ define(function(require) {
 		}
 	};
 
+	/**
+	 * Gets a template to render `select` list of the languages that are supported by Monster UI
+	 *
+	 * @private
+	 * @param  {Object} args
+	 * @param  {String} [args.selectedLanguage]  IETF language tag
+	 * @param  {Boolean} [args.showDefault=false]  Whether or not to include a default option in the language list
+	 * @param  {Object} [args.attributes]  Collection of key/value corresponding to HTML attributes set on the `select` tag
+	 * @returns {String}  Language select list template
+	 */
 	function getLanguageSelectorTemplate(args) {
 		if (!_.isPlainObject(args)) {
 			throw TypeError('"args" is not a plain object');
@@ -3438,7 +3448,6 @@ define(function(require) {
 
 	initialize();
 
-	ui.getLanguageSelectorTemplate = getLanguageSelectorTemplate;
 	ui.getSvgIconTemplate = getSvgIconTemplate;
 	ui.keyValueEditor = keyValueEditor;
 	ui.monthpicker = monthpicker;
