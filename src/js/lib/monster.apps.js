@@ -354,6 +354,12 @@ define(function() {
 				externalPath = app.appPath + '/external/',
 				deps = app.externalScripts || [];
 
+			if (monster.appsStore && monster.appsStore[app.name] && monster.appsStore[app.name].pluginsApps) {
+				_.each(monster.appsStore[app.name].pluginsApps, function(plugin) {
+					self._loadApp(plugin);
+				});
+			}
+
 			if (deps.length > 0) {
 				_.each(deps, function(name) {
 					listRequests[name] = function(callback) {

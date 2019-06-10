@@ -376,6 +376,15 @@ define(function(require) {
 
 						monster.appsStore = _.keyBy(results.appsStore, 'name');
 
+						_.each(monster.appsStore, function(app) {
+							if (app.hasOwnProperty('extends')) {
+								_.each(app.extends, function(extended) {
+									monster.appsStore[extended].pluginsApps = monster.appsStore[extended].pluginsApps || [];
+									monster.appsStore[extended].pluginsApps.push(app.name);
+								})
+							}
+						});
+
 						self.currentUser = results.user;
 						// This account will remain unchanged, it should be used by non-masqueradable apps
 						self.originalAccount = results.account;
