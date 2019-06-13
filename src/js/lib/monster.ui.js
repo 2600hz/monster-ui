@@ -2163,7 +2163,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						appLayoutClass = 'app-layout',
+						appLayoutClass = ['app-layout'],
 						subTab;
 
 					// Add 'active' class to menu element
@@ -2267,14 +2267,18 @@ define(function(require) {
 
 						// Override layout type if specified at the tab level
 						if (currentTab.hasOwnProperty('layout')) {
-							appLayoutClass += ' ' + currentTab.layout;
+							appLayoutClass.push(currentTab.layout);
 						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
-							appLayoutClass += ' ' + thisArg.appFlags._layout.appType;
+							appLayoutClass.push(thisArg.appFlags._layout.appType);
+						}
+
+						if (parent.find('header.app-header').is(':visible')) {
+							appLayoutClass.push('with-navbar');
 						}
 
 						parent
 							.find('.app-layout')
-								.prop('class', appLayoutClass + ' with-navbar');
+								.prop('class', appLayoutClass.join(' '));
 
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
