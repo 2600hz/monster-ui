@@ -2380,9 +2380,11 @@ define(function(require) {
 				context = (function(args, tabs) {
 					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
 				})(args, tabs),
-				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
+				forceNavbar = _.get(args, 'forceNavbar', false),
+				hideNavbar = _.get(args, 'hideNavbar', false),
+				hasNavbar = !(_.size(tabs) <= 1),
 				dataTemplate = {
-					hasNavbar: hasNavbar,
+					hasNavbar: forceNavbar ? true : hideNavbar ? false : hasNavbar,
 					layout: (function(args, context) {
 						if (context.hasOwnProperty('layout')) {
 							return context.layout;
@@ -2418,9 +2420,7 @@ define(function(require) {
 				thisArg.appFlags._layout = args;
 			}
 
-			if (hasNavbar) {
-				self.generateAppNavbar(thisArg);
-			}
+			self.generateAppNavbar(thisArg);
 
 			callDefaultTabCallback();
 		},
