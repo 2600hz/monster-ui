@@ -489,5 +489,15 @@
 	"uploadProgressTitle": "Загружаем файл(ы)...",
 	"__comment": "UI-1499: Added an account default option to timezones",
 	"__version": "v3.20_s5",
-	"defaultTimezone": "- Пользовательский/клиентский -"
+	"defaultTimezone": "- Пользовательский/клиентский -",
+
+	"monsterLanguages": {
+		"auto": "Автоматически",
+		"de-DE": "German (de-DE)",
+		"en-US": "English (en-US)",
+		"es-ES": "Spanish (es-ES)",
+		"fr-FR": "French (fr-FR)",
+		"nl-NL": "Dutch (nl-NL)",
+		"ru-RU": "Russian (ru-RU)"
+	}
 }

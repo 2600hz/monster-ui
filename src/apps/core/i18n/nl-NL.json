@@ -264,5 +264,15 @@
 	},
 	"__comment": "UI-1014: Redesign of MyAccount",
 	"__version": "v3.20_s0",
-	"refresh": "Refresh"
+	"refresh": "Refresh",
+
+	"monsterLanguages": {
+		"auto": "Standaard",
+		"de-DE": "Duits (de-DE)",
+		"en-US": "Engels (en-US)",
+		"es-ES": "Spaans (es-ES)",
+		"fr-FR": "Frans (fr-FR)",
+		"nl-NL": "Nederlands (nl-NL)",
+		"ru-RU": "Russisch (ru-RU)"
+	}
 }
