@@ -83,7 +83,7 @@ define(function(require) {
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
-					var selectedApps = self.appSelectorGetStore('selectedAppIds', []),
+					var selectedAppIds = self.appSelectorGetSelectedApps(),
 						tagCount = _.chain(apps).flatMap('tags').countBy().value(),
 						filters = _.map(self.appFlags.appSelector.tagFilters, function(filter) {
 							return {
@@ -104,8 +104,8 @@ define(function(require) {
 						})),
 						$appList = $template.find('.app-list');
 
-					_.each(selectedApps, function(app) {
-						$appList.find('[data-id="' + app.id + '"]').addClass('selected');
+					_.each(selectedAppIds, function(appId) {
+						$appList.find('[data-id="' + appId + '"]').addClass('selected');
 					});
 
 					monster.ui.tooltips($template, {
@@ -113,8 +113,10 @@ define(function(require) {
 						options: {
 							placement: 'bottom',
 							title: function() {
+								var currentSelectedAppIds = self.appSelectorGetSelectedApps();
+
 								return _
-									.chain(self.appSelectorGetSelectedApps())
+									.chain(self.appSelectorGetAppsByIds(currentSelectedAppIds))
 									.map('label')
 									.sortBy()
 									.join(', ')
@@ -215,21 +217,20 @@ define(function(require) {
 		},
 
 		/**
-		 * Get currently selected apps from store
+		 * Gets the IDs of the currently selected apps
 		 * @param  {Object} [args]
-		 * @param  {Function} [args.callback]  Callback function to be called when the selected apps
-		 *                                   have been retrieved.
-		 * @returns {Array}  Selected apps, when no callback was provided.
+		 * @param  {Function} [args.callback]  Callback function to be invoked when the selected
+		 *                                     apps have been retrieved
+		 * @returns {String[]}  Selected apps, when no callback was provided
 		 */
 		appSelectorGetSelectedApps: function(args) {
 			var self = this,
-				selectedAppIds = self.appSelectorGetStore('selectedAppIds', []),
-				selectedApps = self.appSelectorGetAppsByIds(selectedAppIds);
+				selectedAppIds = self.appSelectorGetStore('selectedAppIds', []);
 
 			if (_.has(args, 'callback')) {
-				args.callback(selectedApps);
+				args.callback(selectedAppIds);
 			} else {
-				return selectedApps;
+				return selectedAppIds;
 			}
 		},
 
@@ -293,7 +294,7 @@ define(function(require) {
 			$appList.find('.app-item').on('click', function() {
 				var $this = $(this),
 					appId = $this.data('id'),
-					selectedAppIds = self.appSelectorGetStore('selectedAppIds', []),
+					selectedAppIds = self.appSelectorGetSelectedApps(),
 					$selectedAppIcon;
 
 				$this.toggleClass('selected');
@@ -352,11 +353,11 @@ define(function(require) {
 			$template.find('.accept').on('click', function(e) {
 				e.preventDefault();
 
-				var selectedApps = self.appSelectorGetSelectedApps();
+				var selectedAppIds = self.appSelectorGetSelectedApps();
 
 				$popup.dialog('close').remove();
 
-				_.has(args, 'callbacks.accept') && args.callbacks.accept(selectedApps);
+				_.has(args, 'callbacks.accept') && args.callbacks.accept(selectedAppIds);
 			});
 
 			$template.find('.cancel-link').on('click', function(e) {
