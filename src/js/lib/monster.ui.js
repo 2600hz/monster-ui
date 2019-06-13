@@ -2244,7 +2244,6 @@ define(function(require) {
 
 					parent
 						.find('.app-content-wrapper')
-							.hide()
 							.empty();
 
 					self.isTabLoadingInProgress = false;
