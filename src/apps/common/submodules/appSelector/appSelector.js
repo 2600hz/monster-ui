@@ -101,12 +101,7 @@ define(function(require) {
 							name: 'layout',
 							data: dataTemplate,
 							submodule: 'appSelector'
-						})),
-						$appList = $template.find('.app-list');
-
-					_.each(selectedAppIds, function(appId) {
-						$appList.find('[data-id="' + appId + '"]').addClass('selected');
-					});
+						}));
 
 					monster.ui.tooltips($template, {
 						selector: '.selected-title .selected-text',
