@@ -2178,7 +2178,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						appLayoutClass = 'app-layout',
+						appLayoutClass = ['app-layout'],
 						subTab;
 
 					// Add 'active' class to menu element
@@ -2259,7 +2259,6 @@ define(function(require) {
 
 					parent
 						.find('.app-content-wrapper')
-							.hide()
 							.empty();
 
 					self.isTabLoadingInProgress = false;
@@ -2282,14 +2281,18 @@ define(function(require) {
 
 						// Override layout type if specified at the tab level
 						if (currentTab.hasOwnProperty('layout')) {
-							appLayoutClass += ' ' + currentTab.layout;
+							appLayoutClass.push(currentTab.layout);
 						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
-							appLayoutClass += ' ' + thisArg.appFlags._layout.appType;
+							appLayoutClass.push(thisArg.appFlags._layout.appType);
+						}
+
+						if (parent.find('header.app-header').is(':visible')) {
+							appLayoutClass.push('with-navbar');
 						}
 
 						parent
 							.find('.app-layout')
-								.prop('class', appLayoutClass + ' with-navbar');
+								.prop('class', appLayoutClass.join(' '));
 
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
@@ -2395,9 +2398,11 @@ define(function(require) {
 				context = (function(args, tabs) {
 					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
 				})(args, tabs),
-				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
+				forceNavbar = _.get(args, 'forceNavbar', false),
+				hideNavbar = _.get(args, 'hideNavbar', false),
+				hasNavbar = !(_.size(tabs) <= 1),
 				dataTemplate = {
-					hasNavbar: hasNavbar,
+					hasNavbar: forceNavbar ? true : hideNavbar ? false : hasNavbar,
 					layout: (function(args, context) {
 						if (context.hasOwnProperty('layout')) {
 							return context.layout;
@@ -2433,9 +2438,7 @@ define(function(require) {
 				thisArg.appFlags._layout = args;
 			}
 
-			if (hasNavbar) {
-				self.generateAppNavbar(thisArg);
-			}
+			self.generateAppNavbar(thisArg);
 
 			callDefaultTabCallback();
 		},
