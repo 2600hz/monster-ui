@@ -187,11 +187,9 @@ define(function(require) {
 			var self = this,
 				$template = self.appFlags.alerts.template;
 
-			if (!$template) {
-				throw new ReferenceError('The notifications template has not been loaded.');
+			if ($template instanceof $) {
+				$template.removeClass('open');
 			}
-
-			$template.removeClass('open');
 		},
 
 		/**
