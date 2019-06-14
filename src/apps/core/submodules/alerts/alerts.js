@@ -187,9 +187,11 @@ define(function(require) {
 			var self = this,
 				$template = self.appFlags.alerts.template;
 
-			if ($template instanceof $) {
-				$template.removeClass('open');
+			if (!($template instanceof $)) {
+				return;
 			}
+
+			$template.removeClass('open');
 		},
 
 		/**
