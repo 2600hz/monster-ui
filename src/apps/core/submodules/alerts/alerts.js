@@ -171,7 +171,7 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
-				if (err) {
+				if (err || _.isEmpty(results.alerts)) {
 					return;
 				}
 
