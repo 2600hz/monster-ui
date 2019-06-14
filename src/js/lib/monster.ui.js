@@ -159,6 +159,21 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
+			languageSelector: function(options) {
+				var namedOptions = options.hash,
+					specialArgs = ['selectedLanguage', 'showDefault'],
+					args = _
+						.chain(namedOptions)
+						.pick(specialArgs)
+						.merge({
+							attributes: _.omit(namedOptions, specialArgs)
+						})
+						.value();
+				return new Handlebars.SafeString(
+					getLanguageSelectorTemplate(args)
+				);
+			},
+
 			lookupPath: function(object, path, pDefaultValue) {
 				// If there are more than 3 arguments, it means that pDefaultValue is not the
 				// last argument (which corresponds to Handlebar's options parameter), so it
@@ -3205,6 +3220,58 @@ define(function(require) {
 				modal.close();
 			});
 		}
+	};
+
+	/**
+	 * Gets a template to render `select` list of the languages that are supported by Monster UI
+	 *
+	 * @private
+	 * @param  {Object} args
+	 * @param  {String} [args.selectedLanguage]  IETF language tag
+	 * @param  {Boolean} [args.showDefault=false]  Whether or not to include a default option in the language list
+	 * @param  {Object} [args.attributes]  Collection of key/value corresponding to HTML attributes set on the `select` tag
+	 * @returns {String}  Language select list template
+	 */
+	function getLanguageSelectorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		var selectedLanguage = _.get(args, 'selectedLanguage'),
+			showDefault = _.get(args, 'showDefault', false),
+			attributes = _.get(args, 'attributes', {}),
+			languages;
+		if (!_.isUndefined(selectedLanguage) && !_.isString(selectedLanguage)) {
+			throw TypeError('"selectedLanguage" is not a string');
+		}
+		if (!_.isBoolean(showDefault)) {
+			throw TypeError('"showDefault" is not a boolean');
+		}
+		if (!_.isPlainObject(attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		// Delay language iteration until we know that all the parameters are valid, to avoid
+		// unnecessary processing
+		languages = _
+			.chain(monster.supportedLanguages)
+			.map(function(code) {
+				return {
+					value: code,
+					label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, code)
+				};
+			})
+			.sortBy('label')
+			.value();
+		if (showDefault) {
+			languages.unshift({
+				value: 'auto',
+				label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, 'auto')
+			});
+		}
+		return monster.template(monster.apps.core, 'monster-language-selector', {
+			attributes: attributes,
+			languages: languages,
+			selectedLanguage: selectedLanguage
+		});
 	};
 
 	/**

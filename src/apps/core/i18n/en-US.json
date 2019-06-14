@@ -1056,5 +1056,15 @@
 		"addRow": "+ Add Data Row",
 		"keyPlaceholder": "Data Key",
 		"valuePlaceholder": "Data Value"
+	},
+
+	"monsterLanguages": {
+		"auto": "Default",
+		"de-DE": "German (de-DE)",
+		"en-US": "English (en-US)",
+		"es-ES": "Spanish (es-ES)",
+		"fr-FR": "French (fr-FR)",
+		"nl-NL": "Dutch (nl-NL)",
+		"ru-RU": "Russian (ru-RU)"
 	}
 }

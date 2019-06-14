@@ -737,9 +737,9 @@ define(function(require) {
 	}
 
 	monster.defaultLanguage = defaultLanguage;
-
 	monster.initConfig = initConfig;
 	monster.setDefaultLanguage = setDefaultLanguage;
+	monster.supportedLanguages = supportedLanguages;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager

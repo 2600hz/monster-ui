@@ -1,0 +1,7 @@
+<select{{#each attributes}} {{@key}}="{{this}}"{{/each}}>
+{{#select selectedLanguage}}
+	{{#each languages}}
+		<option value="{{value}}">{{label}}</option>
+	{{/each}}
+{{/select}}
+</select>
