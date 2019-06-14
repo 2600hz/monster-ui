@@ -766,6 +766,7 @@ define(function(require) {
 
 		dialog: function(content, options) {
 			// Get options
+			var autoScroll = _.get(options, 'autoScroll', true);
 			var dialogType = _.get(options, 'dialogType', 'classic');
 			var hideClose = _.get(options, 'hideClose', false);
 			var isPersistent = _.get(options, 'isPersistent', false);
@@ -882,7 +883,7 @@ define(function(require) {
 						'hideClose',
 						'minHeight',
 						'minWidth',
-						'scrollableContainer'
+						'autoScroll'
 					]),
 					strictOptions);
 
@@ -900,13 +901,18 @@ define(function(require) {
 			}
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			// Make container scrollable
-			$scrollableContainer.css({
-				overflow: 'auto'
-			});
+			// Container is scrollable by default, so disable if required
+			if (!autoScroll) {
+				$scrollableContainer.css({
+					overflow: 'visible'
+				});
+			}
 
 			// Set initial sizes
 			setDialogSizes();
+
+			// Update position, in case size changed
+			$dialogBody.dialog('option', 'position', dialogPosition);
 
 			// Set event handlers
 			$('input', content).keypress(function(e) {

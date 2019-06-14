@@ -29,7 +29,8 @@ define(function(require) {
 			'apploader.show': 'render',
 			'apploader.hide': '_hide',
 			'apploader.toggle': '_toggle',
-			'apploader.current': '_currentApp'
+			'apploader.current': '_currentApp',
+			'apploader.getAppList': 'getAppList'
 		},
 
 		load: function(callback) {
@@ -362,109 +363,10 @@ define(function(require) {
 		getUserApps: function(callback) {
 			var self = this;
 
-			self.callApi({
-				resource: 'appsStore.list',
-				data: {
-					accountId: self.accountId
-				},
-				success: function(data, status) {
-					var parallelRequest = {},
-						lang = monster.config.whitelabel.language,
-						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase());
-
-					_.each(data.data, function(val) {
-						var currentLang = val.i18n.hasOwnProperty(isoFormattedLang) ? isoFormattedLang : 'en-US';
-						val.description = val.i18n[currentLang].description;
-						val.label = val.i18n[currentLang].label;
-						parallelRequest[val.id] = function(parallelCallback) {
-							//This API is only called to check whether the icon can be loaded, but is not used to load the actual icon
-							/*self.callApi({
-								resource: 'appsStore.getIcon',
-								data: {
-									accountId: self.accountId,
-									appId: val.id,
-									generateError: false
-								},
-								success: function(data, status) {*/
-							val.icon = monster.util.getAppIconPath(val);
-
-							parallelCallback && parallelCallback(null, val);
-								/*},
-								error: function(data, status) {
-									val.icon = null;
-									parallelCallback && parallelCallback(null, val);
-								}
-							});*/
-						};
-					});
-
-					monster.parallel(parallelRequest, function(err, results) {
-						var allApps = results, // List of apps available on the account, with list of enabled user
-							currentUser = monster.apps.auth.currentUser,
-							userApps = currentUser.appList || [], // List of apps on the user, used for ordering and default app only
-							updateUserApps = false,
-							appList = [], // List of apps available for this user, to be return
-							isAppInstalled = function(app) {
-								if (app) {
-									var appUsers = _.map(app.users || [], function(val) { return val.id; });
-									if (app && app.allowed_users
-										&& (
-											(app.allowed_users === 'all')
-											|| (app.allowed_users === 'admins' && currentUser.priv_level === 'admin')
-											|| (app.allowed_users === 'specific' && appUsers.indexOf(currentUser.id) >= 0)
-										)) {
-										return true;
-									}
-								}
-								return false;
-							};
-
-						userApps = _.filter(userApps, function(appId) {
-							var app = allApps[appId];
-							if (isAppInstalled(app)) {
-								var formattedApp = {
-									id: app.id,
-									name: app.name,
-									icon: app.icon,
-									label: app.label,
-									description: app.description
-								};
-
-								monster.ui.formatIconApp(formattedApp);
-								appList.push(formattedApp);
-								return true;
-							} else {
-								updateUserApps = true;
-								return false;
-							}
-						});
-
-						_.each(allApps, function(app) {
-							if (userApps.indexOf(app.id) === -1 && isAppInstalled(app)) {
-								var formattedApp = {
-									id: app.id,
-									name: app.name,
-									icon: app.icon,
-									label: app.label,
-									description: app.description
-								};
-
-								monster.ui.formatIconApp(formattedApp);
-								appList.push(formattedApp);
-
-								userApps.push(app.id);
-								updateUserApps = true;
-							}
-						});
-
-						if (updateUserApps) {
-							monster.apps.auth.currentUser.appList = userApps;
-							self.userUpdate();
-						}
-
-						callback && callback(appList);
-					});
-				}
+			self.getAppList({
+				scope: 'user',
+				forceFetch: true,
+				callback: callback
 			});
 		},
 
@@ -507,6 +409,172 @@ define(function(require) {
 				},
 				success: function(data, status) {
 					callback && callback();
+				}
+			});
+		},
+
+		/**
+		 * Get app list
+		 * @param  {Object} args
+		 * @param  {('all'|'account'|'user')} [args.scope='all']  App list scope
+		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
+		 * @param  {Function} [args.callback]  Callback funtion to send the retrieved app list
+		 */
+		getAppList: function(args) {
+			var self = this,
+				scope = _.get(args, 'scope', 'all'),
+				forceFetch = _.get(args, 'forceFetch', false),
+				callback = args.callback;
+
+			monster.waterfall([
+				// Get all apps
+				function(waterfallCallback) {
+					var allAps = monster.appsStore;
+
+					if (!forceFetch && !_.isEmpty(allAps)) {
+						waterfallCallback(null, allAps);
+						return;
+					}
+
+					self.requestAppList({
+						success: function(appList) {
+							waterfallCallback(null, appList);
+						},
+						error: function() {
+							waterfallCallback(true);
+						}
+					});
+				},
+				// Filter apps according to scope, if necessary
+				function(allApps, waterfallCallback) {
+					if (scope === 'all') {
+						waterfallCallback(null, allApps);
+						return;
+					}
+
+					var filteredAppList;
+
+					if (scope === 'account') {
+						filteredAppList = _.filter(allApps, function(app) {
+							return _.has(app, 'allowed_users') && app.allowed_users !== 'specific';
+						});
+
+						waterfallCallback(null, filteredAppList);
+						return;
+					}
+
+					var currentUser = monster.apps.auth.currentUser,
+						userApps = _.get(currentUser, 'appList', []),
+						updateUserApps = false,
+						isAppInstalled = function(app) {
+							if (app) {
+								var appUsers = _
+									.chain(app)
+									.get('users', [])
+									.map(function(val) {
+										return val.id;
+									})
+									.value();
+
+								if (app && app.allowed_users
+									&& (
+										(app.allowed_users === 'all')
+										|| (app.allowed_users === 'admins' && currentUser.priv_level === 'admin')
+										|| (app.allowed_users === 'specific' && _.includes(appUsers, currentUser.id))
+									)) {
+									return true;
+								}
+							}
+							return false;
+						};
+
+					filteredAppList = [];
+					allApps = _.keyBy(allApps, 'id');
+
+					userApps = _.filter(userApps, function(appId) {
+						var app = allApps[appId];
+						if (isAppInstalled(app)) {
+							filteredAppList.push(app);
+							return true;
+						} else {
+							updateUserApps = true;
+							return false;
+						}
+					});
+
+					_.each(allApps, function(app) {
+						if (!_.includes(userApps, app.id) && isAppInstalled(app)) {
+							filteredAppList.push(app);
+
+							userApps.push(app.id);
+							updateUserApps = true;
+						}
+					});
+
+					if (forceFetch && updateUserApps) {
+						monster.apps.auth.currentUser.appList = userApps;
+						self.userUpdate();
+					}
+
+					waterfallCallback(null, filteredAppList);
+				},
+				// Format app list
+				function(appList, waterfallCallback) {
+					var lang = monster.config.whitelabel.language,
+						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
+						formattedApps = _.map(appList, function(app) {
+							var currentLang = _.has(app.i18n, isoFormattedLang) ? isoFormattedLang : 'en-US',
+								i18n = app.i18n[currentLang];
+
+							return {
+								id: app.id,
+								name: app.name,
+								label: i18n.label,
+								description: i18n.description,
+								tags: app.tags
+							};
+						}),
+						parallelRequests = _.map(formattedApps, function(formattedApp) {
+							return function(parallelCallback) {
+								formattedApp.icon = monster.util.getAppIconPath(formattedApp);
+								monster.ui.formatIconApp(formattedApp);
+
+								parallelCallback(null, formattedApp);
+							};
+						});
+
+					monster.parallel(parallelRequests, function(err) {
+						waterfallCallback(err, formattedApps);
+					});
+				}
+			], function(err, appList) {
+				if (err) {
+					return;
+				}
+
+				callback && callback(appList);
+			});
+		},
+
+		/**
+		 * Get app list from API
+		 * @param  {Object}   args
+		 * @param  {Function} [args.success]  Success callback
+		 * @param  {Function} [args.error]    Error callback
+		 */
+		requestAppList: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'appsStore.list',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data) {
+					_.has(args, 'success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					_.has(args, 'error') && args.error(parsedError);
 				}
 			});
 		}

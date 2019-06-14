@@ -1,0 +1,219 @@
+@import "../../../../css/partials/base";
+
+.app-selector-dialog {
+	width: 1100px;
+	max-width: inherit;
+	max-height: inherit;
+
+	.popup-body {
+		max-height: inherit;
+
+		.app-selector {
+			max-height: inherit;
+
+			.app-selector-body {
+				box-sizing: border-box;
+				max-height: inherit;
+				padding-bottom: 70px;
+			}
+
+			.app-selector-menu {
+				margin-bottom: 70px;
+			}
+		}
+	}
+
+	.popup-actions {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		box-sizing: border-box;
+		width: 100%;
+		height: 70px;
+		padding: 1rem;
+		background-color: #f4f4f5;
+		border-top: 1px solid $french-gray2;
+
+		button {
+			margin-left: 10px;
+		}
+	}
+}
+
+.app-selector {
+	display: flex;
+
+	.text-container {
+		padding: 0.75rem 1.5rem;
+	}
+
+	.app-selector-menu {
+		flex: initial;
+		width: 15rem;
+		overflow-x: hidden;
+		overflow-y: auto;
+		box-shadow: inset -1px 0px 0px 0px $french-gray2;
+		font-size: 14px;
+		line-height: 14px;
+
+		ul.nav {
+			margin-top: 1.5rem;
+
+			> li {
+				a:hover {
+					background-color: $background-primary-color;
+				}
+
+				a.active {
+					background-color: $background-primary-color;
+					border-right: solid 3px $primary-color;
+					color: $primary-color;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+
+	.app-selector-body {
+		flex: 1;
+		margin-left: 25px;
+		margin-right: 1rem;
+		display: flex;
+		flex-direction: column;
+
+		.app-selector-group {
+			flex: initial;
+			margin-top: 1.5rem;
+		}
+
+		.selected-title {
+			line-height: 23px;
+
+			span {
+				vertical-align: middle;
+				font-size: 1rem;
+			}
+
+			.selected-count {
+				margin-right: 0.5rem;
+				font-size: 23px;
+				font-weight: 600;
+			}
+		}
+
+		.selected-list {
+			display: flex;
+
+			.app-icon-container {
+				flex: 1 1 0;
+				box-sizing: border-box;
+				max-width: 0;
+				height: 0;
+				opacity: 0;
+				transition: all 250ms ease-in-out;
+
+				&.show {
+					max-width: 1.5rem;
+					height: 3rem;
+					padding-top: 1rem;
+					opacity: 1;
+
+					&:nth-last-child(8) {
+						max-width: 1rem;
+					}
+
+					&:nth-last-child(9) {
+						max-width: 0.6rem;
+					}
+
+					&:nth-last-child(10) {
+						max-width: 0.4rem;
+					}
+
+					&:nth-last-child(n+11) {
+						max-width: 0;
+					}
+
+					.app-icon {
+						box-shadow: -4px 0px 0px 0px rgba(255, 255, 255, 1);
+					}
+				}
+
+				.app-icon {
+					box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0);
+					transition: all 500ms ease;
+				}
+			}
+		}
+
+		.search-box {
+			width: 100%;
+
+			.search-query {
+				box-sizing: border-box;
+				width: 100%;
+				height: auto;
+				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+				font-size: 14px;
+				line-height: 14px;
+			}
+			.search-icon {
+				margin-left: -1.75rem;
+				color: $manatee;
+			}
+		}
+
+		.app-icon {
+			width: 2rem;
+			height: 2rem;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-color: $midgray;
+			border-radius: 0.5rem;
+		}
+
+		.app-selector-list {
+			flex: 1;
+			margin-top: 1.5rem;
+			overflow-y: auto;
+			border-top: solid 1px $french-gray2;
+
+			.app-list {
+				margin-left: 0;
+
+				.app-item {
+					box-sizing: border-box;
+					width: 100%;
+					background-color: $panel-background-color;
+					box-shadow: inset 0px 1px 0px 0px $french-gray2;
+					cursor: pointer;
+					display: flex;
+					flex-wrap: wrap;
+
+					&:hover {
+						background-color: $background-primary-color;
+					}
+
+					&.selected {
+						background-color: $french-pass;
+					}
+
+					.app-icon {
+						flex: initial;
+						margin-right: 0.75rem;
+						margin-bottom: 0.75rem;
+					}
+					.app-title {
+						flex: 1;
+						margin-bottom: 0.75rem;
+						align-self: center;
+					}
+					.app-description {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+}
