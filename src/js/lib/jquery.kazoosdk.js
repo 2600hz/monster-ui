@@ -419,6 +419,10 @@
 				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' },
 				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' }
 			},
+			slackIntegration: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/slack_integration' },
+				'listUsers': { verb: 'GET', url: 'accounts/{accountId}/slack_integration/user_listing' }
+			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
 				'add': { verb: 'PUT', url: 'accounts/{accountId}/storage' },
