@@ -905,6 +905,7 @@ define(function(require) {
 			? matches.slice(0, 6).join(':')
 			: '';
 	}
+	util.formatMacAddress = formatMacAddress;
 
 	/**
 	 * Phone number formatting according to user preferences.
@@ -920,6 +921,7 @@ define(function(require) {
 			? _.get(phoneNumber, 'userFormat')
 			: _.toString(input);
 	}
+	util.formatPhoneNumber = formatPhoneNumber;
 
 	/**
 	 * Decimal and currency formatting for prices
@@ -962,6 +964,7 @@ define(function(require) {
 
 		return formatter.format(price);
 	}
+	util.formatPrice = formatPrice;
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
@@ -997,6 +1000,7 @@ define(function(require) {
 				.value()
 		]);
 	}
+	util.getBookkeepers = getBookkeepers;
 
 	/**
 	 * Return the symbol of the currency used through the UI
@@ -1011,6 +1015,7 @@ define(function(require) {
 
 		return formatter.format(base).replace('NaN', '');
 	}
+	util.getCurrencySymbol = getCurrencySymbol;
 
 	/**
 	 * Returns the timezone of the currently authenticated session
@@ -1025,6 +1030,7 @@ define(function(require) {
 			|| _.get(monster, 'apps.auth.currentAccount.timezone')
 			|| moment.tz.guess();
 	}
+	util.getCurrentTimeZone = getCurrentTimeZone;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
@@ -1089,6 +1095,7 @@ define(function(require) {
 
 		return formattedData;
 	}
+	util.getFormatPhoneNumber = getFormatPhoneNumber;
 
 	/**
 	 * Determine the date format from a specific or current user's settings
@@ -1207,6 +1214,7 @@ define(function(require) {
 			}
 		});
 	}
+	util.getUserFullName = getUserFullName;
 
 	/**
 	 * Converts a Gregorian timestamp into a Date instance
@@ -1222,6 +1230,7 @@ define(function(require) {
 		}
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
+	util.gregorianToDate = gregorianToDate;
 
 	/**
 	 * Determine if a specific number feature is enabled on the current account
@@ -1245,6 +1254,7 @@ define(function(require) {
 				true
 			);
 	}
+	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
@@ -1295,6 +1305,7 @@ define(function(require) {
 				.join('')
 				.value();
 	}
+	util.randomString = randomString;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
@@ -1334,6 +1345,7 @@ define(function(require) {
 			.tz(tz)
 			.format(format);
 	}
+	util.toFriendlyDate = toFriendlyDate;
 
 	/**
 	 * Normalize phone number by using E.164 format
@@ -1349,6 +1361,7 @@ define(function(require) {
 			? _.get(phoneNumber, 'e164Number')
 			: _.replace(input, /[^0-9+]/g, '');
 	}
+	util.unformatPhoneNumber = unformatPhoneNumber;
 
 	/**
 	 * Converts a Unix timestamp into a Date instance
@@ -1381,21 +1394,6 @@ define(function(require) {
 		}
 		return new Date(timestamp);
 	}
-
-	util.formatMacAddress = formatMacAddress;
-	util.formatPhoneNumber = formatPhoneNumber;
-	util.formatPrice = formatPrice;
-	util.getBookkeepers = getBookkeepers;
-	util.getCurrencySymbol = getCurrencySymbol;
-	util.getCurrentTimeZone = getCurrentTimeZone;
-	util.getFormatPhoneNumber = getFormatPhoneNumber;
-	util.getNumberFeatures = getNumberFeatures;
-	util.getUserFullName = getUserFullName;
-	util.gregorianToDate = gregorianToDate;
-	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
-	util.randomString = randomString;
-	util.toFriendlyDate = toFriendlyDate;
-	util.unformatPhoneNumber = unformatPhoneNumber;
 	util.unixToDate = unixToDate;
 
 	return util;
