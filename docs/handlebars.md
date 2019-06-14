@@ -16,6 +16,7 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
     - [ifInArray](#ifinarray)
     - [isPrivLevelAdmin](#isprivleveladmin)
     - [isSuperDuper](#issuperduper)
+    - [languageSelector](#languageSelector)
     - [lookupPath](#lookupPath)
     - [monsterCheckbox](#monstercheckbox)
     - [monsterNumberWrapper](#monsternumberwrapper)
@@ -183,6 +184,25 @@ This is a predetermined conditional helper letting you render content only if th
 {{#isSuperDuper optionalAccountObject}}
 ...
 {{/isSuperDuper}}
+```
+
+#### languageSelector
+This inline helper displays a `select` list of the languages supported by Monster UI.
+
+```handlebars
+{{languageSelector}}
+```
+
+You can specify the value of the selected language, and whether or not to display a "Default" option, via the `selectedLanguage` and `showDefault` options.
+
+```handlebars
+{{languageSelector selectedLanguage="en-US" showDefault="true"}}
+```
+
+You can provide HTML attributes as well:
+
+```handlebars
+{{languageSelector name="user_language" class="list-selector" multiple=""}}
 ```
 
 #### lookupPath
