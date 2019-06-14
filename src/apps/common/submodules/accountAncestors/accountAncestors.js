@@ -63,9 +63,9 @@ define(function(require) {
 							callback: function() {
 								var currentApp = monster.apps.getActiveApp();
 
-								if (currentApp in monster.apps) {
-									monster.apps[currentApp].render();
+								if (_.has(monster.apps, currentApp)) {
 									container.dialog('close');
+									monster.apps[currentApp].render();
 								}
 							}
 						});

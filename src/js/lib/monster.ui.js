@@ -145,6 +145,13 @@ define(function(require) {
 				return options[monster.util.isAdmin(user) ? 'fn' : 'inverse'](this);
 			},
 
+			isReseller: function(pAccount, pOptions) {
+				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
+					options = !pOptions ? pAccount : pOptions;
+
+				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			},
+
 			isSuperDuper: function(pAccount, pOptions) {
 				var account = pAccount.hasOwnProperty('superduper_admin') ? pAccount : undefined,
 					options = !pOptions ? pAccount : pOptions;
@@ -152,11 +159,28 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
-			isReseller: function(pAccount, pOptions) {
-				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
-					options = !pOptions ? pAccount : pOptions;
+			languageSelector: function(options) {
+				var namedOptions = options.hash,
+					specialArgs = ['selectedLanguage', 'showDefault'],
+					args = _
+						.chain(namedOptions)
+						.pick(specialArgs)
+						.merge({
+							attributes: _.omit(namedOptions, specialArgs)
+						})
+						.value();
+				return new Handlebars.SafeString(
+					getLanguageSelectorTemplate(args)
+				);
+			},
 
-				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			lookupPath: function(object, path, pDefaultValue) {
+				// If there are more than 3 arguments, it means that pDefaultValue is not the
+				// last argument (which corresponds to Handlebar's options parameter), so it
+				// should be the default value.
+				var defaultValue = (_.toArray(arguments).length > 3) ? pDefaultValue : undefined;
+
+				return _.get(object, path, defaultValue);
 			},
 
 			monsterCheckbox: function() {
@@ -184,6 +208,25 @@ define(function(require) {
 				}
 
 				return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+			},
+
+			monsterNumberWrapper: function(number) {
+				return monster.ui.getTemplatePhoneNumber(number.toString());
+			},
+
+			monsterPanelText: function(title, type, className) {
+				var htmlContent = arguments[arguments.length - 1].fn(this),
+					validTypes = ['info', 'success', 'danger', 'warning'],
+					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+					templateData = {
+						className: typeof className === 'string' ? className : '',
+						title: title,
+						content: new Handlebars.SafeString(htmlContent)
+					},
+					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
+
+				return new Handlebars.SafeString(template);
 			},
 
 			monsterRadio: function() {
@@ -255,27 +298,23 @@ define(function(require) {
 				return new Handlebars.SafeString(template);
 			},
 
-			monsterPanelText: function(title, type, className) {
-				var htmlContent = arguments[arguments.length - 1].fn(this),
-					validTypes = ['info', 'success', 'danger', 'warning'],
-					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-					templateData = {
-						className: typeof className === 'string' ? className : '',
-						title: title,
-						content: new Handlebars.SafeString(htmlContent)
-					},
-					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
-					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
-
-				return new Handlebars.SafeString(template);
-			},
-
 			numberFeatures: function(features) {
 				return monster.ui.paintNumberFeaturesIcon(features);
 			},
 
-			monsterNumberWrapper: function(number) {
-				return monster.ui.getTemplatePhoneNumber(number.toString());
+			replaceVar: function(stringValue, variable) {
+				return stringValue.replace(/{{variable}}/g, variable);
+			},
+
+			select: function(value, options) {
+				var $el = $('<select />').html(options.fn(this));
+				if (!_.isArray(value)) {
+					value = [ value ];
+				}
+				_.forEach(value, function(data) {
+					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
+				});
+				return $el.html();
 			},
 
 			svgIcon: function(id, options) {
@@ -294,21 +333,6 @@ define(function(require) {
 						attributes: options.hash
 					})
 				);
-			},
-
-			replaceVar: function(stringValue, variable) {
-				return stringValue.replace(/{{variable}}/g, variable);
-			},
-
-			select: function(value, options) {
-				var $el = $('<select />').html(options.fn(this));
-				if (!_.isArray(value)) {
-					value = [ value ];
-				}
-				_.forEach(value, function(data) {
-					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
-				});
-				return $el.html();
 			},
 
 			times: function(max, options) {
@@ -2160,7 +2184,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						appLayoutClass = 'app-layout',
+						appLayoutClass = ['app-layout'],
 						subTab;
 
 					// Add 'active' class to menu element
@@ -2241,7 +2265,6 @@ define(function(require) {
 
 					parent
 						.find('.app-content-wrapper')
-							.hide()
 							.empty();
 
 					self.isTabLoadingInProgress = false;
@@ -2264,14 +2287,18 @@ define(function(require) {
 
 						// Override layout type if specified at the tab level
 						if (currentTab.hasOwnProperty('layout')) {
-							appLayoutClass += ' ' + currentTab.layout;
+							appLayoutClass.push(currentTab.layout);
 						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
-							appLayoutClass += ' ' + thisArg.appFlags._layout.appType;
+							appLayoutClass.push(thisArg.appFlags._layout.appType);
+						}
+
+						if (parent.find('header.app-header').is(':visible')) {
+							appLayoutClass.push('with-navbar');
 						}
 
 						parent
 							.find('.app-layout')
-								.prop('class', appLayoutClass + ' with-navbar');
+								.prop('class', appLayoutClass.join(' '));
 
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
@@ -2377,9 +2404,11 @@ define(function(require) {
 				context = (function(args, tabs) {
 					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
 				})(args, tabs),
-				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
+				forceNavbar = _.get(args, 'forceNavbar', false),
+				hideNavbar = _.get(args, 'hideNavbar', false),
+				hasNavbar = !(_.size(tabs) <= 1),
 				dataTemplate = {
-					hasNavbar: hasNavbar,
+					hasNavbar: forceNavbar ? true : hideNavbar ? false : hasNavbar,
 					layout: (function(args, context) {
 						if (context.hasOwnProperty('layout')) {
 							return context.layout;
@@ -2415,9 +2444,7 @@ define(function(require) {
 				thisArg.appFlags._layout = args;
 			}
 
-			if (hasNavbar) {
-				self.generateAppNavbar(thisArg);
-			}
+			self.generateAppNavbar(thisArg);
 
 			callDefaultTabCallback();
 		},
@@ -3202,6 +3229,58 @@ define(function(require) {
 	};
 
 	/**
+	 * Gets a template to render `select` list of the languages that are supported by Monster UI
+	 *
+	 * @private
+	 * @param  {Object} args
+	 * @param  {String} [args.selectedLanguage]  IETF language tag
+	 * @param  {Boolean} [args.showDefault=false]  Whether or not to include a default option in the language list
+	 * @param  {Object} [args.attributes]  Collection of key/value corresponding to HTML attributes set on the `select` tag
+	 * @returns {String}  Language select list template
+	 */
+	function getLanguageSelectorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		var selectedLanguage = _.get(args, 'selectedLanguage'),
+			showDefault = _.get(args, 'showDefault', false),
+			attributes = _.get(args, 'attributes', {}),
+			languages;
+		if (!_.isUndefined(selectedLanguage) && !_.isString(selectedLanguage)) {
+			throw TypeError('"selectedLanguage" is not a string');
+		}
+		if (!_.isBoolean(showDefault)) {
+			throw TypeError('"showDefault" is not a boolean');
+		}
+		if (!_.isPlainObject(attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		// Delay language iteration until we know that all the parameters are valid, to avoid
+		// unnecessary processing
+		languages = _
+			.chain(monster.supportedLanguages)
+			.map(function(code) {
+				return {
+					value: code,
+					label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, code)
+				};
+			})
+			.sortBy('label')
+			.value();
+		if (showDefault) {
+			languages.unshift({
+				value: 'auto',
+				label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, 'auto')
+			});
+		}
+		return monster.template(monster.apps.core, 'monster-language-selector', {
+			attributes: attributes,
+			languages: languages,
+			selectedLanguage: selectedLanguage
+		});
+	};
+
+	/**
 	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
 	 * @param   {String} args.id            Icon ID
@@ -3221,18 +3300,122 @@ define(function(require) {
 		var iconId = args.id;
 		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
 		var attributes = _.get(args, 'attributes', {});
-		attributes.class = _
-			.chain(attributes)
-			.get('class', '')
-			.split(/\s+/g)      // Split by one or more whitespaces
-			.reject(_.isEmpty)  // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
-			.union(['svg-icon', iconPrefix])
-			.join(' ')
-			.value();
+		attributes = mergeHtmlAttributes(attributes, {
+			'class': 'svg-icon ' + iconPrefix
+		});
 
 		return monster.template(monster.apps.core, 'monster-svg-icon', {
 			iconId: iconId,
 			attributes: attributes
+		});
+	}
+
+	/**
+	 * Generates a key-value pair editor
+	 * @param  {jQuery} $target  Container to append the widget to.
+	 * @param  {Object} [options]  Editor options
+	 * @param  {Object} [options.data]  Key-value data, as a plain object
+	 * @param  {String} [options.inputName]  Input name prefix
+	 * @param  {Object} [options.i18n]  Custom label translations
+	 * @param  {Object} [options.i18n.addLink]  Add row link label
+	 * @param  {String} [options.i18n.keyPlaceholder]  Key input placeholder
+	 * @param  {String} [options.i18n.valuePlaceholder]  Value input placeholder
+	 */
+	function keyValueEditor($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		var data = _.get(options, 'data', {});
+		var inputName = _.get(options, 'inputName', 'data');
+		var addLink = _.get(options, 'i18n.addLink');
+		var keyPlaceholder = _.get(options, 'i18n.keyPlaceholder');
+		var valuePlaceholder = _.get(options, 'i18n.valuePlaceholder');
+		if (!_.isPlainObject(data)) {
+			throw new TypeError('"options.data" is not a plain object');
+		}
+		if (!_.isNil(inputName) && !_.isString(inputName)) {
+			throw new TypeError('"options.inputName" is not a string');
+		}
+		if (!_.isNil(addLink) && !_.isString(addLink)) {
+			throw new TypeError('"options.i18n.addLink" is not a string');
+		}
+		if (!_.isNil(keyPlaceholder) && !_.isString(keyPlaceholder)) {
+			throw new TypeError('"options.i18n.keyPlaceholder" is not a string');
+		}
+		if (!_.isNil(valuePlaceholder) && !_.isString(valuePlaceholder)) {
+			throw new TypeError('"options.i18n.valuePlaceholder" is not a string');
+		}
+		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor', {
+			addLink: addLink
+		}));
+		var $rowContainer = $editorTemplate.find('.monster-key-value-data-container');
+		var addRow = function(value, key, index) {
+			$rowContainer.append(monster.template(monster.apps.core, 'monster-key-value-editor-row', {
+				key: key,
+				value: value,
+				inputName: inputName + '[' + index + ']',
+				keyPlaceholder: keyPlaceholder,
+				valuePlaceholder: valuePlaceholder
+			}));
+		};
+		// Add initial rows
+		var counter = 0;
+		_.each(data, function(value, key, index) {
+			addRow(value, key, counter);
+			counter += 1;
+		});
+		// Bind events
+		$editorTemplate.find('.key-value-add').on('click', function(e) {
+			e.preventDefault();
+			addRow('', '', counter);
+			counter += 1;
+		});
+		$rowContainer.on('click', '.key-value-remove', function(e) {
+			e.preventDefault();
+			$(this).closest('.monster-key-value-editor-row').remove();
+			// Notice that the counter is not decremented on row remove. This is because its sole
+			// purpose is to guarantee a unique and ordered index of the rows, to allow the
+			// key-value pairs to be sorted in the same way as they are displayed in the editor
+			// when the values are retrieved as an array via monster.ui.getFormData()
+		});
+		// Append editor
+		$target.append($editorTemplate);
+		return $editorTemplate;
+	}
+
+	/**
+	 * Merges HTML attributes, mapped as JSON objects
+	 * @param   {Object} object  Destination object
+	 * @param   {Object} source  Source object
+	 * @returns {Object}         Returns `object` after merge
+	 */
+	function mergeHtmlAttributes(object, source) {
+		if (!_.isPlainObject(object)) {
+			throw new TypeError('"object" is not a plain object');
+		}
+		if (!_.isPlainObject(source)) {
+			throw new TypeError('"source" is not a plain object');
+		}
+
+		return _.mergeWith(object, source, function(objValue, srcValue, key) {
+			objValue = _.isNil(objValue) ? '' : objValue;
+			srcValue = _.isNil(srcValue) ? '' : srcValue;
+			if (key !== 'class') {
+				return _.toString(objValue) + _.toString(srcValue);
+			}
+			var srcClasses = _
+				.chain(srcValue)
+				.toString()
+				.split(/\s+/g) // Split by one or more whitespaces
+				.value();
+			return _
+				.chain(objValue)
+				.toString()
+				.split(/\s+/g) // Split by one or more whitespaces
+				.union(srcClasses)
+				.reject(_.isEmpty) // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
+				.join(' ')
+				.value();
 		});
 	}
 
@@ -3290,6 +3473,7 @@ define(function(require) {
 	initialize();
 
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+	ui.keyValueEditor = keyValueEditor;
 	ui.monthpicker = monthpicker;
 	ui.toast = toast;
 

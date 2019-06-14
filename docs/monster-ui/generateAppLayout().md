@@ -19,7 +19,8 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `appType` | Define wrapper behavior. | `String('default' | 'fullscreen' | 'docked')` | `default` | `false`
-`forceNavbar` | Render navbar even when only one tab exists. | `Boolean` | `false` | `false`
+`forceNavbar` | Render navbar even when only one tab exists (overrides `hideNavbar` when `true`). | `Boolean` | `false` | `false`
+`hideNavbar` | Hide navbar even when multiple tabs (more than 1) are defined. | `Boolean` | `false` | `false`
 `menus` | | `Array` | | `true`
 `menus.[]` | | `Object`([#/menu](#menu)) | | `true`
 

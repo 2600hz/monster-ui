@@ -9,31 +9,38 @@ monster.util.getUrlVars([key]);
 ### Parameters
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`key` | If specified, will return the value of a specific parameter (`key`). | `String` | | `false`
+`key` | Specific query string parameter to return. | `String` | | `false`
 
 ### Return value
-An `Object` literal of all the URL parameters or a `String` representation of the value corresponding to the URL parameter `key`.
+* an `Object` literal representing every URL parameters
+* a `String` representation of the value corresponding to `key`
+* an `Array` representation of the value corresponding to `key`
+* `undefined` when `key` does not match a property
 
 ## Description
 This method returns the different URL GET parameters of the window.
 
-## Example
+## Examples
 ```javascript
-// page url:
-// http://mycompany.com/monster?test=documentation&date=142109383929
-
+// url: http://mycompany.com/monster?page=documentation&date=142109383929
 monster.util.getUrlVars();
-// output
-{
-  test: 'documentation',
-  date: '142109383929'
-}
-
-monster.util.getUrlVars('test');
-// output
-'documentation'
-
+// => { page: 'documentation', date: '142109383929' }
+monster.util.getUrlVars('page');
+// => 'documentation'
 monster.util.getUrlVars('nope');
-// ouput
-undefined
+// => undefined
+
+// url: http://mycompany.com/monster?page[]=documentation&page[]=about
+monster.util.getUrlVars();
+// => { page: ['documentation', 'about'] }
+monster.util.getUrlVars('page');
+// => ['documentation', 'about'']
+
+// url: http://mycompany.com/monster?page[2]=documentation&page[4]=about
+monster.util.getUrlVars();
+// => { page: [null, null, 'documentation', null, 'about' ] }
+
+// url: http://mycompany.com/monster?page[2]=documentation&page[4]=about
+monster.util.getUrlVars();
+// => { page: [null, null, 'documentation', null, 'about' ] }
 ```

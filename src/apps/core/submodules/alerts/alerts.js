@@ -148,8 +148,8 @@ define(function(require) {
 						success: function(data) {
 							paralellCallback(null, data);
 						},
-						error: function(parsedError) {
-							paralellCallback(parsedError);
+						error: function() {
+							paralellCallback(null, []);
 						}
 					});
 				},
@@ -171,7 +171,7 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
-				if (err) {
+				if (err || _.isEmpty(results.alerts)) {
 					return;
 				}
 
@@ -187,8 +187,8 @@ define(function(require) {
 			var self = this,
 				$template = self.appFlags.alerts.template;
 
-			if (!$template) {
-				throw new ReferenceError('The notifications template has not been loaded.');
+			if (!($template instanceof $)) {
+				return;
 			}
 
 			$template.removeClass('open');
@@ -493,7 +493,8 @@ define(function(require) {
 				resource: 'alert.list',
 				bypassProgressIndicator: true,
 				data: {
-					accountId: monster.apps.auth.currentAccount.id
+					accountId: monster.apps.auth.currentAccount.id,
+					generateError: false
 				},
 				success: function(data, status) {
 					_.has(args, 'success') && args.success(data.data, status);
