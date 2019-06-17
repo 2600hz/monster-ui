@@ -1019,5 +1019,15 @@
 		"content1": "Die WebSockets-Verbindung funktioniert nicht.",
 		"content2": "Bitte prüfen Sie nach, ob Ihre Internetverbindung und Ihre Firewall korrekt funktionieren, da wir die aktuelle Anwendung ohne eine korrekte Verbindung mit dem WebSockets-Server nicht anzeigen können.",
 		"content3": "Sobald die Verbindung wieder steht, werden wir die Anwendung automatisch aktualisieren..."
+	},
+
+	"monsterLanguages": {
+		"auto": "Standard",
+		"de-DE": "Deutsch (de-DE)",
+		"en-US": "Englisch (en-US)",
+		"es-ES": "Spanisch (es-ES)",
+		"fr-FR": "Französisch (fr-FR)",
+		"nl-NL": "Niederländisch (nl-NL)",
+		"ru-RU": "Russisch (ru-RU)"
 	}
 }

@@ -4,6 +4,7 @@ define(function(require) {
 	var appSubmodules = [
 		'accountAncestors',
 		'accountBrowser',
+		'appSelector',
 		'buyNumbers',
 		'callerId',
 		'carrierSelector',
