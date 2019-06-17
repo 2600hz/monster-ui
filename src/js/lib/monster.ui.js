@@ -1363,6 +1363,10 @@ define(function(require) {
 				return regexpr.test(value);
 			});
 
+			$.validator.addMethod('phoneNumber', function(value, element) {
+				return monster.util.getFormatPhoneNumber(value).isValid;
+			}, localization.customRules.phoneNumber);
+
 			this.customValidationInitialized = true;
 		},
 
