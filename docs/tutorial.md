@@ -104,7 +104,7 @@ This object represents the languages supported by your app (you can learn more a
 ```
 
 !!! note
-The `en-US` key is mandatory as we require all Monster UI apps to be available in American English.
+    The `en-US` key is mandatory as we require all Monster UI apps to be available in American English.
 
 ### `requests`
 This object allows you to define external APIs to be consumed by your app. For example, if you need a way to call Google Geolocation APIs, you would define the endpoint here:
@@ -151,7 +151,7 @@ monster.pub('demo.getUser', { id: '<userId>', callback: function() {} });
 ```
 
 !!! note
-As of now, this functionality is limited as those events will only be register once the subscribing app is loaded by framework.
+    As of now, this functionality is limited as those events will only be register once the subscribing app is loaded by framework.
 
 ### `initApp`, `load` & `render`
 Those two methods are required by the Monster UI framework to load you app and render it properly. If they are missing, an error will be thrown.
@@ -234,7 +234,7 @@ In order to do so, we'll add this code:
 Let's explain what this code does quickly. First of all the `render` function: it gets the HTML template called layout.html, and adds it to the main div. It then binds some events. Once those events are bound, it clears the current view and show the view. The `app#getTemplate` method is provided with a `name` named parameter that corresponds to a file located in the `views` folder of the app.
 
 !!! note
-It is very important that the template name matches the name of the file (without the extension), otherwise, it won't load the template!
+    It is very important that the template name matches the name of the file (without the extension), otherwise, it won't load the template!
 
 The `bindEvents` method defines one event, a click on the Search Button. Once you click on it, it calls a function that will look for 15 numbers starting with 650, and once the API responds with 15 numbers, it adds them to a template, and display it in the `.results-wrapper` div.
 
@@ -279,7 +279,7 @@ en-US.json
     "description": "Feel free to update the HTML template located in /demo/views/layout.html. The Javascript to manager this app is located in /demo/app.js.",
     "noNumber": "No number matching your search, but you should probably do something about the css... (hint: it belongs in /apps/demo/app.css!)",
     "searchNumbers": "Search San Francisco Numbers",
-    "welcome": "Welcome in the Skeleton App"
+    "welcome": "Welcome in the Demo App"
   }
 }
 ```
