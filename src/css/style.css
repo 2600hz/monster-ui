@@ -11,6 +11,7 @@
 
 @import url('vendor/jquery/jquery.isotope.css');
 
+@import url('vendor/jquery/jquery.monthpicker.css');
 @import url('vendor/jquery/jquery.timepicker.css');
 
 @import url('vendor/chosen/chosen.min.css');
@@ -36,6 +37,8 @@
 @import url('lib/custom/drop-add.css');
 
 @import url('lib/telicon/css/telicon.css');
+
+@import url('lib/svg-icons/svg-icons.css');
 
 @import url('lib/monster.css');
 

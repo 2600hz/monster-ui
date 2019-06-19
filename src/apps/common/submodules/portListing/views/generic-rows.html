@@ -1,0 +1,116 @@
+{{#if hasPorts}}
+{{#each requests}}
+	<tr class="listing-item" data-id="{{id}}">
+		<td data-filter-value="{{name}} {{id}} {{#if reference}} {{replaceVar @root.i18n.portListing.listing.tbody.reference reference}}{{/if}}" data-sort-value="{{name}}">
+			<div class="bold">
+				{{name}}
+			</div>
+		{{#if reference}}
+			<div class="info">
+				{{replaceVar @root.i18n.portListing.listing.tbody.reference reference}}
+			</div>
+		{{/if}}
+		</td>
+	{{#if @root.isMonsterApp}}
+		<td data-sort-value="{{account.name}}" data-filter-value="{{account.name}} {{account.id}}">
+			<a class="monster-link account-ancestors" data-id="{{account.id}}">
+				{{account.name}}
+			</a>
+		</td>
+	{{/if}}
+		<td data-filter-value="{{state}}" data-sort-value="{{ tryI18n @root.i18n.portListing.misc.status state }}">
+		{{#compare state '===' 'submitted'}}
+			<div class="status-wrapper">
+				{{telicon "list-prioritize"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.submitted}}
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+		{{#compare state '===' 'pending'}}
+			<div class="status-wrapper">
+				{{telicon "porting"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.pending}}
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+		{{#compare state '===' 'scheduled'}}
+			<div class="status-wrapper">
+				{{telicon "calendar"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.scheduled}}
+					</div>
+					{{!-- <div class="info">
+						({{toFriendlyDate scheduled_date 'dateTime'}})
+					</div> --}}
+				</div>
+			</div>
+		{{/compare}}
+		{{#compare state '===' 'completed'}}
+			<div class="status-wrapper success">
+				{{telicon "check--circle-o"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.completed}}
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+		{{#compare state '===' 'rejected'}}
+			<div class="status-wrapper warning">
+				{{telicon "warning--triangle-o"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.rejected}}
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+		{{#compare state '===' 'canceled'}}
+			<div class="status-wrapper error">
+				{{telicon "x--circle-o"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.canceled}}
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+		{{#compare state '===' 'unconfirmed'}}
+			<div class="status-wrapper">
+				{{telicon "refresh-alt"}}
+				<div class="content">
+					<div class="status">
+						{{@root.i18n.portListing.misc.status.unconfirmed}}
+					</div>
+				</div>
+			</div>
+		{{/compare}}
+		</td>
+		<td>
+			{{amount}}
+		</td>
+		{{#compare @root.type '===' 'suspended'}}
+			<td>
+				{{carrier.losing}}
+			</td>
+		{{/compare}}
+		{{#compare @root.type '===' 'progressing'}}
+			<td>
+				{{carrier.winning}}
+			</td>
+		{{/compare}}
+		{{#compare @root.type '===' 'completed'}}
+			<td>
+				{{carrier.winning}}
+			</td>
+		{{/compare}}
+	</tr>
+{{/each}}
+{{/if}}

@@ -20,9 +20,9 @@
 				'dialplans': { verb: 'GET', url: 'accounts/{accountId}/dialplans' },
 				'about': { verb: 'GET', url: 'about' }
 			},
-			accessList: {
+			accessLists: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/access_lists' },
-				'post': { verb: 'POST', url: 'accounts/{accountId}/access_lists' }
+				'update': { verb: 'POST', url: 'accounts/{accountId}/access_lists' }
 			},
 			account: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}' },
@@ -37,6 +37,9 @@
 				'searchAll': { verb: 'GET', url: 'search/multi?t=account&by_name={searchValue}&by_realm={searchValue}&by_id={searchValue}' },
 				'promote': { verb: 'PUT', url: 'accounts/{accountId}/reseller' },
 				'demote': { verb: 'DELETE', url: 'accounts/{accountId}/reseller' }
+			},
+			alert: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/alerts' }
 			},
 			apiKey: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/api_key' },
@@ -61,15 +64,6 @@
 				'unlink': { verb: 'DELETE', url: 'auth/links/{auth_id}' },
 				'getLink': { verb: 'GET', url: 'accounts/{accountId}/auth/links/{auth_id}' },
 				'impersonate': { verb: 'PUT', url: 'accounts/{accountId}/users/{userId}/user_auth' }
-			},
-			balance: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/transactions/current_balance' },
-				'getMonthly': { verb: 'GET', url: 'accounts/{accountId}/transactions/monthly_recurring?created_from={from}&created_to={to}' },
-				'getCharges': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'getSubscriptions': { verb: 'GET', url: 'accounts/{accountId}/transactions/subscriptions' },
-				'filtered': { verb: 'GET', url: 'accounts/{accountId}/transactions?created_from={from}&created_to={to}&reason={reason}' },
-				'add': { verb: 'PUT', url: 'accounts/{accountId}/braintree/credits' },
-				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/transactions/debit' }
 			},
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
@@ -132,6 +126,13 @@
 			contactList: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 			},
+			dashboards: {
+				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/dashboards/ensure_started' },
+				'getQueueDetails': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
+				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
+				'getRecipientOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_overview' },
+				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
+			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
@@ -164,7 +165,7 @@
 			},
 			faxes: {
 				'send': { verb: 'PUT', url: 'accounts/{accountId}/faxes' },
-				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: "multipart/mixed" },
+				'sendAsMultipart': { verb: 'PUT', url: 'accounts/{accountId}/faxes', type: 'multipart/mixed' },
 
 				'getLogs': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog' },
 				'getLogDetails': { verb: 'GET', url: 'accounts/{accountId}/faxes/smtplog/{logId}' },
@@ -214,7 +215,11 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/ledgers' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}' },
 				'getDetails': { verb: 'GET', url: 'accounts/{accountId}/ledgers/{ledgerId}/{id}' },
-				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' }
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/ledgers/available' },
+				'total': { verb: 'GET', url: 'accounts/{accountId}/ledgers/total' },
+				'credit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/credit' },
+				'debit': { verb: 'PUT', url: 'accounts/{accountId}/ledgers/debit' },
+				'summaryPerMonth': { verb: 'GET', url: 'accounts/{accountId}/ledgers/summary/{modbSuffix}' }
 			},
 			limits: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/limits' },
@@ -280,7 +285,8 @@
 				'searchCity': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/prefix?city={city}' },
 				'sync': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix' },
 				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' },
-				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' }
+				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
@@ -303,7 +309,7 @@
 				'createAttachment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments?filename={documentName}', type: 'application/pdf' },
 				'updateAttachment': { verb: 'POST', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}', type: 'application/pdf' },
 				'deleteAttachment': { verb: 'DELETE', url: 'accounts/{accountId}/port_requests/{portRequestId}/attachments/{documentName}' },
-				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}?reason={reason}' },
+				'changeState': { verb: 'PATCH', url: 'accounts/{accountId}/port_requests/{portRequestId}/{state}' },
 				'listComments': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
 				'getComment': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments/{commentId}' },
 				'addComment': { verb: 'PUT', url: 'accounts/{accountId}/port_requests/{portRequestId}/comments' },
@@ -313,7 +319,8 @@
 				'getTimeline': { verb: 'GET', url: 'accounts/{accountId}/port_requests/{portRequestId}/timeline' },
 				'listLastSubmitted': { verb: 'GET', url: 'accounts/{accountId}/port_requests/last_submitted' },
 				'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
-				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' }
+				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' },
+				'listPortAuthority': { verb: 'GET', url: 'port_requests' }
 			},
 			presence: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/presence' },
@@ -333,11 +340,14 @@
 				'deleteRecipients': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_queues/{queueId}/recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}/status' },
 				'listStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/status' },
-				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' }
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/roles' },
+				'updateSessions': { verb: 'POST', url: 'accounts/{accountId}/qubicle_queues/{queueId}/sessions/{sessionId}' },
+				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/ensure_started' }
 			},
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
+				'updateDisable': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/disable' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
@@ -350,6 +360,13 @@
 			},
 			qubicleReports: {
 				'get': { verb: 'POST', url: 'accounts/{accountId}/qubicle_reports' }
+			},
+			qubicleSkills: {
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_skills' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_skills/{skillId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_skills' }
 			},
 			recordings: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/recordings/{recordingId}' },
@@ -376,12 +393,13 @@
 				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/security/attempts/{attemptId}' }
 			},
 			servicePlan: {
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_plans' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'add': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'addMany': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
 				'remove': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'removeMany': { verb: 'DELETE', url: 'accounts/{accountId}/service_plans/' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/service_plans/{planId}' },
 				'addManyOverrides': { verb: 'POST', url: 'accounts/{accountId}/service_plans/override' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/service_plans' },
 				'listCurrent': { verb: 'GET', url: 'accounts/{accountId}/service_plans/current' },
@@ -389,15 +407,21 @@
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available' },
 				'getAvailable': { verb: 'GET', url: 'accounts/{accountId}/service_plans/available/{planId}' },
 				'reconciliate': { verb: 'POST', url: 'accounts/{accountId}/service_plans/reconciliation' },
-				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' },
-				'getFields': { verb: 'GET', url: 'service_plans/editable' }
+				'synchronize': { verb: 'POST', url: 'accounts/{accountId}/service_plans/synchronization' }
 			},
-			servicePlanner: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'create': { verb: 'PUT', url: 'accounts/{accountId}/service_planner' },
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/service_planner/{planId}' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/service_planner' }
+			services: {
+				'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/services' },
+				'bulkChange': { verb: 'POST', url: 'accounts/{accountId}/services/' },
+				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
+				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
+				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
+				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' },
+				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' }
+			},
+			slackIntegration: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/slack_integration' },
+				'listUsers': { verb: 'GET', url: 'accounts/{accountId}/slack_integration/user_listing' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },
@@ -430,6 +454,9 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules_sets/{setId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules_sets' }
 			},
+			transactions: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
+			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
@@ -445,6 +472,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/vmboxes' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/vmboxes' },
 				'listMessages': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}/messages' },

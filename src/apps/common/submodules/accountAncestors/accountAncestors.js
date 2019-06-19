@@ -14,6 +14,10 @@ define(function(require) {
 		accountAncestorsRender: function(args) {
 			var self = this;
 
+			if (!_.isBoolean(args.isMasqueradable)) {
+				args.isMasqueradable = true;
+			}
+
 			self.accountAncestorsRequestGetData({
 				data: {
 					accountId: args.accountId
@@ -21,9 +25,14 @@ define(function(require) {
 				success: function(accounts) {
 					var account = accounts[accounts.length - 1],
 						dataToTemplate = $.extend(true, self.accountAncestorsFormatDataToTemplate(args.entity, account), {
+							isMasqueradable: args.isMasqueradable,
 							parents: accounts
 						}),
-						template = monster.template(self, 'accountAncestors', dataToTemplate),
+						template = $(self.getTemplate({
+							name: 'layout',
+							data: dataToTemplate,
+							submodule: 'accountAncestors'
+						})),
 						popup = monster.ui.dialog(template, {
 							title: self.accountAncestorsGeneratePopupTitle(args.entity, account)
 						});
@@ -54,9 +63,9 @@ define(function(require) {
 							callback: function() {
 								var currentApp = monster.apps.getActiveApp();
 
-								if (currentApp in monster.apps) {
-									monster.apps[currentApp].render();
+								if (_.has(monster.apps, currentApp)) {
 									container.dialog('close');
+									monster.apps[currentApp].render();
 								}
 							}
 						});

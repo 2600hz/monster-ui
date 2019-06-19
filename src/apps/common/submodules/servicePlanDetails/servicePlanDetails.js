@@ -101,7 +101,11 @@ define(function(require) {
 		renderServicePlanDetails: function(container, servicePlanData, callback) {
 			var self = this,
 				formattedData = self.servicePlanDetailsFormatData(servicePlanData),
-				template = $(monster.template(self, 'servicePlanDetails-layout', formattedData));
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: formattedData,
+					submodule: 'servicePlanDetails'
+				}));
 
 			monster.ui.tooltips(template);
 
@@ -222,7 +226,11 @@ define(function(require) {
 				}
 			}, function(err, results) {
 				var data = self.servicePlanCustomizeFormatData(results),
-					template = $(monster.template(self, 'servicePlanDetails-customizeView', data)),
+					template = $(self.getTemplate({
+						name: 'customizeView',
+						data: data,
+						submodule: 'servicePlanDetails'
+					})),
 					divContainerPlan,
 					divContainerOverride;
 
@@ -463,7 +471,11 @@ define(function(require) {
 
 			self.servicePlanCustomizeGetOverrideDefault(function(data) {
 				var formattedData = self.servicePlanDetailsFormatOverride(overrides, data),
-					template = $(monster.template(self, 'servicePlanDetails-overrideView', formattedData)),
+					template = $(self.getTemplate({
+						name: 'overrideView',
+						data: formattedData,
+						submodule: 'servicePlanDetails'
+					})),
 					getOverridenValues = function() {
 						var overrides = {};
 

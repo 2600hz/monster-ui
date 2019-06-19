@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var app = {
 
@@ -11,6 +10,7 @@ define(function(require) {
 		css: [ 'app' ],
 
 		i18n: {
+			'de-DE': { customCss: false },
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -269,7 +269,10 @@ define(function(require) {
 				self.installedApps = data.data.apps;
 			} else {
 				self.installedApps = [];
-				toastr.error(self.i18n.active().toastrMessages.appListError);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().toastrMessages.appListError
+				});
 			}
 
 			// We store the language so we can load the right language before having to query anything in our back-end. (no need to query account, user etc)
@@ -400,7 +403,7 @@ define(function(require) {
 
 					// If the user or the account we're logged into has a language settings, and if it's different than
 					var loadCustomLanguage = function(language, callback) {
-						if (language !== monster.config.whitelabel.language && language !== monster.apps.defaultLanguage) {
+						if (language !== monster.config.whitelabel.language && language !== monster.defaultLanguage) {
 							monster.apps.loadLocale(monster.apps.core, language, function() {
 								monster.apps.loadLocale(self, language, function() {
 									monster.config.whitelabel.language = language;
@@ -432,7 +435,15 @@ define(function(require) {
 				announcement = self.originalAccount.announcement || monster.config.whitelabel.announcement;
 
 			if (announcement) {
-				monster.ui.alert('info', announcement, null, { title: self.i18n.active().announcementTitle });
+				monster.ui.alert(
+					'info',
+					announcement,
+					null,
+					{
+						title: self.i18n.active().announcementTitle,
+						isPersistent: true
+					}
+				);
 			}
 		},
 
@@ -440,7 +451,12 @@ define(function(require) {
 			var self = this,
 				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60 * 60 * 24)) : -1,
 				hasAlreadyLogIn = self.uiFlags.user.get('hasLoggedIn') ? true : false,
-				template = $(monster.template(self, 'trial-message', { daysLeft: daysLeft }));
+				template = $(self.getTemplate({
+					name: 'trial-message',
+					data: {
+						daysLeft: daysLeft
+					}
+				}));
 
 			template.find('.links').on('click', function() {
 				self.showTrialPopup(daysLeft);
@@ -463,7 +479,9 @@ define(function(require) {
 					monster.pub('auth.continueTrial');
 				};
 
-			var popup = $(monster.template(self, 'trial-greetingsDialog'));
+			var popup = $(self.getTemplate({
+				name: 'trial-greetingsDialog'
+			}));
 
 			popup.find('#acknowledge').on('click', function() {
 				dialog.dialog('close').remove();
@@ -513,7 +531,12 @@ define(function(require) {
 							monster.pub('auth.continueTrial');
 						},
 						{
-							title: monster.template(self, '!' + self.i18n.active().trialPopup.mainMessage, { variable: daysLeft }),
+							title: self.getTemplate({
+								name: '!' + self.i18n.active().trialPopup.mainMessage,
+								data: {
+									variable: daysLeft
+								}
+							}),
 							cancelButtonText: self.i18n.active().trialPopup.closeButton,
 							confirmButtonText: self.i18n.active().trialPopup.upgradeButton,
 							confirmButtonClass: 'monster-button-primary',
@@ -521,6 +544,9 @@ define(function(require) {
 						}
 					);
 				} else {
+					// We persist (isPersistent: true)this dialog because users
+					//  are not supposed to be able to use the platform until
+					//  they upgrade their account.
 					monster.ui.alert(
 						'error',
 						'', // Marketing content goes here
@@ -528,6 +554,7 @@ define(function(require) {
 							self.handleUpgradeClick();
 						},
 						{
+							isPersistent: true,
 							closeOnEscape: false,
 							title: self.i18n.active().trialPopup.trialExpired,
 							closeButtonText: self.i18n.active().trialPopup.upgradeButton,
@@ -551,7 +578,10 @@ define(function(require) {
 				} else {
 					monster.pub('myaccount.showCreditCardTab');
 
-					toastr.error(self.i18n.active().trial.noCreditCard);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().trial.noCreditCard
+					});
 				}
 			});
 		},
@@ -609,7 +639,10 @@ define(function(require) {
 					ssoProviders: monster.config.whitelabel.sso_providers || [],
 					isUnknownKazooUser: ssoUser.hasOwnProperty('auth_app_id') && !ssoUser.hasOwnProperty('account_id')
 				},
-				template = $(monster.template(self, 'sso-providers', dataTemplate));
+				template = $(self.getTemplate({
+					name: 'sso-providers',
+					data: dataTemplate
+				}));
 
 			template
 				.find('.sso-button')
@@ -704,7 +737,10 @@ define(function(require) {
 						}, []),
 					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
-				template = $(monster.template(self, 'app', templateData));
+				template = $(self.getTemplate({
+					name: 'app',
+					data: templateData
+				}));
 
 			if (monster.config.whitelabel.hasOwnProperty('brandColor')) {
 				template.css('background-color', monster.config.whitelabel.brandColor);
@@ -915,10 +951,16 @@ define(function(require) {
 								if (error.status === 400) {
 									_.keys(data.data).forEach(function(val) {
 										if (self.i18n.active().recoverPassword.toastr.error.reset.hasOwnProperty(val)) {
-											toastr.error(self.i18n.active().recoverPassword.toastr.error.reset[val]);
+											monster.ui.toast({
+												type: 'error',
+												message: self.i18n.active().recoverPassword.toastr.error.reset[val]
+											});
 										} else {
 											if (data.data[val].hasOwnProperty('not_found')) {
-												toastr.error(data.data[val].not_found);
+												monster.ui.toast({
+													type: 'error',
+													message: data.data[val].not_found
+												});
 											}
 										}
 									});
@@ -928,7 +970,10 @@ define(function(require) {
 							}
 						});
 					} else {
-						toastr.error(self.i18n.active().recoverPassword.toastr.error.missing);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().recoverPassword.toastr.error.missing
+						});
 					}
 				}
 			});
@@ -1060,9 +1105,14 @@ define(function(require) {
 
 		newPassword: function(userData) {
 			var self = this,
-				template = $(monster.template(self, 'dialogPasswordUpdate')),
+				template = $(self.getTemplate({
+					name: 'dialogPasswordUpdate'
+				})),
 				form = template.find('#form_password_update'),
-				popup = monster.ui.dialog(template, { title: self.i18n.active().passwordUpdate.title });
+				popup = monster.ui.dialog(template, {
+					isPersistent: true,
+					title: self.i18n.active().passwordUpdate.title
+				});
 
 			monster.ui.validate(form);
 
@@ -1086,11 +1136,17 @@ define(function(require) {
 							},
 							success: function(data, status) {
 								popup.dialog('close').remove();
-								toastr.success(self.i18n.active().passwordUpdate.toastr.success.update);
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().passwordUpdate.toastr.success.update
+								});
 							}
 						});
 					} else {
-						toastr.error(self.i18n.active().passwordUpdate.toastr.error.password);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().passwordUpdate.toastr.error.password
+						});
 					}
 				}
 			});
@@ -1151,11 +1207,17 @@ define(function(require) {
 					auth_id: authId
 				},
 				success: function(data) {
-					toastr.success(self.i18n.active().ssoSuccessUnlinking);
+					monster.ui.toast({
+						type: 'success',
+						message: self.i18n.active().ssoSuccessUnlinking
+					});
 					callback && callback(data.data);
 				},
 				error: function(data) {
-					toastr.error(self.i18n.active().ssoFailedUnlinking);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().ssoFailedUnlinking
+					});
 					callback && callback(data.data);
 				}
 			});
@@ -1170,11 +1232,17 @@ define(function(require) {
 					auth_id: authId
 				},
 				success: function(data) {
-					toastr.success(self.i18n.active().ssoSuccessLinking);
+					monster.ui.toast({
+						type: 'success',
+						message: self.i18n.active().ssoSuccessLinking
+					});
 					callback && callback(data.data);
 				},
 				error: function(data) {
-					toastr.error(self.i18n.active().ssoFailedLinking);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().ssoFailedLinking
+					});
 					callback && callback(data.data);
 				}
 			});
@@ -1209,7 +1277,12 @@ define(function(require) {
 				error: function(errorPayload, data, globalHandler) {
 					if (data.status === 423 && errorPayload.data.hasOwnProperty('account') && errorPayload.data.account.hasOwnProperty('expired')) {
 						var date = monster.util.toFriendlyDate(monster.util.gregorianToDate(errorPayload.data.account.expired.cause), 'date'),
-							errorMessage = monster.template(self, '!' + self.i18n.active().expiredTrial, { date: date });
+							errorMessage = self.getTemplate({
+								name: '!' + self.i18n.active().expiredTrial,
+								data: {
+									date: date
+								}
+							});
 
 						monster.ui.alert('warning', errorMessage);
 					} else if (data.status === 423) {
@@ -1448,7 +1521,12 @@ define(function(require) {
 		triggerImpersonateUser: function(args) {
 			var self = this;
 
-			monster.ui.confirm(monster.template(self, '!' + self.i18n.active().confirmUserMasquerading, { userName: args.userName }), function() {
+			monster.ui.confirm(self.getTemplate({
+				name: '!' + self.i18n.active().confirmUserMasquerading,
+				data: {
+					userName: args.userName
+				}
+			}), function() {
 				self.impersonateUser(args.userId, function(data) {
 					monster.cookies.set('monster-auth', {
 						authToken: data.auth_token

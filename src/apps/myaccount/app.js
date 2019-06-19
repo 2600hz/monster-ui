@@ -1,37 +1,32 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
-	require([
-		'./submodules/account/account',
-		'./submodules/balance/balance',
-		'./submodules/billing/billing',
-		'./submodules/servicePlan/servicePlan',
-		'./submodules/transactions/transactions',
-		'./submodules/trunks/trunks',
-		'./submodules/user/user',
-		'./submodules/errorTracker/errorTracker'
-	]);
+	var appSubmodules = [
+		'account',
+		'balance',
+		'billing',
+		'errorTracker',
+		'servicePlan',
+		'transactions',
+		'trunks',
+		'user'
+	];
+
+	require(_.map(appSubmodules, function(name) {
+		return './submodules/' + name + '/' + name;
+	}));
 
 	var app = {
 		name: 'myaccount',
 
-		subModules: [
-			'account',
-			'balance',
-			'billing',
-			'servicePlan',
-			'transactions',
-			'trunks',
-			'user',
-			'errorTracker'
-		],
+		subModules: appSubmodules,
 
 		css: [ 'app' ],
 
 		i18n: {
+			'de-DE': { customCss: false },
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -56,7 +51,20 @@ define(function(require) {
 			'myaccount.hasCreditCards': 'hasCreditCards',
 			'core.changedAccount': 'refreshMyAccount',
 			'myaccount.hasToShowWalkthrough': 'hasToShowWalkthrough',
-			'myaccount.renderDropdown': 'clickMyAccount'
+			'myaccount.renderDropdown': 'clickMyAccount',
+			'myaccount.showAddCreditDialog': 'showAddCreditDialog'
+		},
+
+		appFlags: {
+			common: {
+				outboundPrivacy: [
+					'inherit',
+					'none',
+					'number',
+					'name',
+					'full'
+				]
+			}
 		},
 
 		mainContainer: '#myaccount',
@@ -233,7 +241,10 @@ define(function(require) {
 				var dataTemplate = {
 						restrictions: uiRestrictions
 					},
-					myaccountHtml = $(monster.template(self, 'app', dataTemplate));
+					myaccountHtml = $(self.getTemplate({
+						name: 'app',
+						data: dataTemplate
+					}));
 
 				if (!monster.apps.auth.originalAccount.hasOwnProperty('ui_restrictions')) {
 					self.callApi({
@@ -301,10 +312,13 @@ define(function(require) {
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
-							name: args && args.name || monster.apps.auth.currentUser.first_name + ' ' + monster.apps.auth.currentUser.last_name,
+							name: args && args.name || monster.util.getUserFullName(),
 							showMyaccount: showMyaccount
 						},
-						navHtml = $(monster.template(self, 'nav', dataTemplate));
+						navHtml = $(self.getTemplate({
+							name: 'nav',
+							data: dataTemplate
+						}));
 
 					/* Hack to redraw myaccount links on masquerading */
 					navLinks.find('.myaccount-common-link').remove();
@@ -362,6 +376,8 @@ define(function(require) {
 					except: module
 				});
 			}
+
+			monster.pub('core.alerts.refresh');
 		},
 
 		bindEvents: function(container) {
@@ -399,6 +415,7 @@ define(function(require) {
 			navLinks.on('click', '#main_topbar_myaccount', function(e) {
 				e.preventDefault();
 
+				monster.pub('core.hideTopbarDropdowns');
 				self.clickMyAccount();
 			});
 		},
@@ -520,6 +537,7 @@ define(function(require) {
 
 			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
 			myaccount.find('.myaccount-right .myaccount-content').empty();
+			myaccount.find('.myaccount-dialog-container').empty();
 			myaccount.removeClass('myaccount-open');
 			$('#monster_content').show();
 
@@ -577,22 +595,20 @@ define(function(require) {
 		showCreditCardTab: function() {
 			var self = this;
 
-			self.renderDropdown(true, function() {
-				var module = 'billing';
+			self.showSubmodule({
+				module: 'billing',
+				callback: function() {
+					var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
 
-				self.activateSubmodule({
-					title: self.i18n.active()[module].title,
-					module: module,
-					callback: function() {
-						var billingContent = $('#myaccount .myaccount-content .billing-content-wrapper');
+					self._openAccordionGroup({
+						link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
+					});
 
-						self._openAccordionGroup({
-							link: billingContent.find('.settings-item[data-name="credit_card"] .settings-link')
-						});
-
-						toastr.error(self.i18n.active().billing.missingCard);
-					}
-				});
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().billing.missingCard
+					});
+				}
 			});
 		},
 
@@ -651,7 +667,9 @@ define(function(require) {
 
 		showGreetingWalkthrough: function(callback, callbackClose) {
 			var self = this,
-				popup = $(monster.template(self, 'walkthrough-greetingsDialog'));
+				popup = $(self.getTemplate({
+					name: 'walkthrough-greetingsDialog'
+				}));
 
 			popup.find('#start_walkthrough').on('click', function() {
 				dialog.dialog('close').remove();
@@ -671,7 +689,9 @@ define(function(require) {
 
 		showEndWalkthrough: function(callback) {
 			var self = this,
-				popup = $(monster.template(self, 'walkthrough-endDialog'));
+				popup = $(self.getTemplate({
+					name: 'walkthrough-endDialog'
+				}));
 
 			popup.find('#end_walkthrough').on('click', function() {
 				dialog.dialog('close').remove();
@@ -766,6 +786,45 @@ define(function(require) {
 			}
 		},
 
+		validateAccountAdministratorForm: function(formAccountAdministrator, callback) {
+			var self = this;
+			
+			monster.ui.validate(formAccountAdministrator, {
+				rules: {
+					'contact.billing.name': {
+					    required: true
+					},
+					'contact.billing.email': {
+					    required: true,
+					    email: true
+					},
+					'contact.billing.number': {
+					    required: true
+					},
+					'contact.billing.street_address': {
+					    required: true
+					},
+					'contact.billing.locality': {
+					    required: true
+					},
+					'contact.billing.region': {
+					    required: true
+					},
+					'contact.billing.country': {
+					    required: true
+					},
+					'contact.billing.postal_code': {
+					    required: true,
+					    digits: true
+					}
+				}
+			});
+
+			if (monster.ui.valid(formAccountAdministrator)) {
+				callback && callback();
+			}
+		},
+
 		_myaccountEvents: function(args) {
 			var self = this,
 				data = args.data,
@@ -784,12 +843,16 @@ define(function(require) {
 				},
 				settingsValidate = function(fieldName, dataForm, callback) {
 					var formPassword = template.find('#form_password');
-
+					var formAccountAdministrator = template.find('#form_account_administrator');
+					
 					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
 					// If the field is password, we start custom validation
+					
 					if (formPassword.length) {
 						self.validatePasswordForm(formPassword, callback);
 					// otherwise we don't have any validation for this field, we execute the callback
+					} else if (formAccountAdministrator.length) {
+						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
 					} else {
 						callback && callback();
 					}
@@ -944,6 +1007,14 @@ define(function(require) {
 				params.data = newData;
 			}
 
+			if (newData.hasOwnProperty('caller_id_options') && newData.caller_id_options.hasOwnProperty('outbound_privacy') && newData.caller_id_options.outbound_privacy === 'inherit') {
+				delete params.data.caller_id_options.outbound_privacy;
+
+				if (_.isEmpty(params.data.caller_id_options)) {
+					delete params.data.caller_id_options;
+				}
+			}
+
 			if ('language' in params.data) {
 				if (params.data.language === 'auto') {
 					delete params.data.language;
@@ -988,6 +1059,58 @@ define(function(require) {
 				success: function(savedUser) {
 					callback && callback(savedUser.data);
 				}
+			});
+		},
+
+		/**
+		 * Open balance tab and show add credit dialog
+		 */
+		showAddCreditDialog: function() {
+			var self = this;
+
+			self.showSubmodule({
+				module: 'balance',
+				callback: function() {
+					monster.pub('myaccount.balance.addCreditDialog');
+				}
+			});
+		},
+
+		/**
+		 * Displays the main view (if not displayed already), and activates the specified submodule
+		 * @param  {Object}   args
+		 * @param  {String}   args.module    Submodule name
+		 * @param  {Function} args.callback  Function called after the submodule has been activated
+		 */
+		showSubmodule: function(args) {
+			var self = this,
+				moduleName = args.module,
+				callback = args.callback;
+
+			monster.series([
+				function(seriesCallback) {
+					if ($(self.mainContainer).hasClass('myaccount-open')) {
+						seriesCallback(null);
+					} else {
+						self.renderDropdown(true, function() {
+							seriesCallback(null);
+						});
+					}
+				},
+				function(seriesCallback) {
+					self.activateSubmodule({
+						title: self.i18n.active()[moduleName].title,
+						module: moduleName,
+						callback: function() {
+							seriesCallback(null);
+						}
+					});
+				}
+			], function(err) {
+				if (err) {
+					return;
+				}
+				callback && callback();
 			});
 		}
 	};

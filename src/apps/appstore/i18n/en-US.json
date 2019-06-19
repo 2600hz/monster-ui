@@ -11,9 +11,14 @@
 	"filters": {
 		"all": "All Apps",
 		"installed": "My Apps",
-		"resellers": "Resellers Apps",
-		"carriers": "Carriers Apps",
-		"developers": "Developers Apps"
+		"reseller": "Reseller Apps",
+		"carrier": "Carrier Apps",
+		"developer": "Developer Apps",
+		"endUser": "End User Apps",
+		"reporting": "Reporting Apps",
+		"integration": "Integrations",
+		"admin": "Admin Apps",
+		"systemAdmin": "System Admin Apps"
 	},
 	"permissions": {
 		"title": "Who can use this App?",

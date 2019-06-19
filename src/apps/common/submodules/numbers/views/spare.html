@@ -1,0 +1,100 @@
+<div id="actions_wrapper_spare" class="actions-wrapper">
+	<div class="form-inline">
+		<label>{{ i18n.numbers.numbers }}</label>
+
+		<span id="trigger_links">
+			<a href="#" id="delete_numbers" class="action-number"><i class="fa fa-times monster-red"></i><span class="action-text">{{ i18n.numbers.deleteNumbers }}</span></a>
+			{{#compare viewType '!==' 'pbx'}}
+				<li class="dropdown dropdown-move">
+					<a href="#" id="move_numbers" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="fa fa-share monster-yellow"></i><span class="action-text">{{ i18n.numbers.moveNumbers }}</span></a>
+					<ul class="dropdown-menu accounts-dropdown">
+						<li class="content-centered"><i class="fa fa-spinner fa-spin"></i></li>
+					</ul>
+				</li>
+			{{/compare}}
+		</span>
+
+		{{#compare viewType '===' 'pbx'}}
+			{{#unless hideBuyNumbers}}
+			<ul class="nav buy-numbers-dropdown">
+				<li class="dropdown">
+					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart monster-green"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a class="buy-numbers-link" data-type="regular" href="#">{{@root.i18n.numbers.buyNumberLinks.regular}}</a></li>
+						<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{@root.i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+						<!-- <li><a class="buy-numbers-link" data-type="vanity" href="#">{{@root.i18n.numbers.buyNumberLinks.vanity}}</a></li> -->
+					</ul>
+				</li>
+			</ul>
+			{{/unless}}
+			{{#unless hidePort}}
+				<a href="#" id="port_numbers" class="action-number port"><i class="fa fa-external-link monster-primary-color"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
+			{{/unless}}
+			<a href="#" id="sync_numbers" class="action-number sync help-popover" data-original-title="{{ @root.i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh monster-orange"></i><span class="action-text">{{ @root.i18n.numbers.sync.label }}</span></a>
+		{{/compare}}
+
+		<div class="input-append pull-right search-custom">
+			<input class="span2" type="text" placeholder="{{ i18n.numbers.searchNumbers }}"/>
+			<button class="monster-button monster-button-success non-fixed search-numbers" type="button">{{ i18n.numbers.go }}</button>
+		</div>
+	</div>
+</div>
+
+<div class="accounts-numbers">
+	{{#each listAccounts}}
+		<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
+			{{#compare ../viewType '!==' 'pbx'}}
+				<div class="account-header">
+					<div class="right-links pull-right">
+						{{#if ../canAddExternalNumbers}}
+							<a href="javascript:void(0);" id="add_external_number" class="action-number add-external help-popover" data-original-title="{{ @root.i18n.numbers.addExternal.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-plus"></i><span class="action-text">{{ @root.i18n.numbers.addExternal.label }}</span></a>
+						{{/if}}
+					{{#unless @root.hideBuyNumbers}}
+						<ul class="nav buy-numbers-dropdown">
+							<li class="dropdown">
+								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a class="buy-numbers-link" data-type="regular" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.regular}}</a></li>
+									<li><a class="buy-numbers-link" data-type="tollfree" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.tollfree}}</a></li>
+									<!-- <li><a class="buy-numbers-link" data-type="vanity" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.vanity}}</a></li> -->
+								</ul>
+							</li>
+						</ul>
+					{{/unless}}
+						{{#unless ../hidePort}}
+							<a href="javascript:void(0);" id="port_numbers" class="action-number port"><i class="fa fa-external-link"></i><span class="action-text">{{ @root.i18n.numbers.port }}</span></a>
+						{{/unless}}
+						<a href="javascript:void(0);" id="port_numbers" class="action-number sync help-popover" data-original-title="{{ @root.i18n.numbers.sync.help }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-refresh"></i><span class="action-text">{{ @root.i18n.numbers.sync.label }}</span></a>
+					</div>
+					<div class="left-part">
+						<input type="checkbox"></input>
+					</div>
+					<div class="expandable">
+						{{ name }}
+						<span class="count">({{ countSpareNumbers }})</span>
+					</div>
+				</div>
+			{{/compare}}
+
+			<div class="numbers-wrapper">
+				{{#each spareNumbers}}
+					<div class="number-box" data-state="{{this.state}}" data-phoneNumber="{{this.phoneNumber}}">
+						<div class="number-options pull-right"></div>
+						<input type="checkbox"></input>
+						<div class="phone-number monster-phone-number" data-state="{{this.state}}"{{#compare this.state "!==" "in_service"}} data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}"{{/compare}}>{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}</div>
+						<div class="features pull-right">
+							{{#numberFeatures features}}{{/numberFeatures}}
+							{{#compare this.state '===' 'port_in'}}
+								<i class="fa fa-exclamation-triangle monster-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{@root.i18n.numbers.portIconHelp}}"></i>
+							{{/compare}}
+						</div>
+					</div>
+				{{else}}
+					<div class="number-box no-data">
+						{{ @root.i18n.numbers.noSpareNumber }}
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	{{/each}}
+</div>

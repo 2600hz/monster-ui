@@ -1,0 +1,44 @@
+<div class="app-content-wrapper" id="port_wizard">
+	<div class="app-content">
+		<h3 class="title">
+			{{i18n.portWizard.portInfo.verifyOwner.title}}
+		</h3>
+		<p class="title-help">
+			{{i18n.portWizard.portInfo.verifyOwner.text1}}
+		</p>
+		<form class="row-fluid form-horizontal" id="form_bill_validation">
+			<div class="file-upload-wrapper">
+				<h5 class="title">
+					{{i18n.portWizard.fileUpload.title}}
+					<span class="hint">
+						{{i18n.portWizard.fileUpload.hint}}
+					</span>
+				</h5>
+				<div class="file-upload-container">
+					<input id="bill_input" type="file" name="bill">
+				</div>
+			</div>
+			<div class="control-group single-group">
+				<label for="validation" class="control-label">
+					{{i18n.portWizard.accountVerification.form.label.billVerification}}
+				</label>
+				<div class="controls">
+				{{#monsterCheckbox i18n.portWizard.accountVerification.form.label.acknowledgeBill}}
+					<input type="checkbox" id="validation" name="ui_flags.validation"{{#if request.ui_flags.validation}} checked="true"{{/if}}>
+				{{/monsterCheckbox}}
+				</div>
+			</div>
+		</form>
+		<div id="account_verification"></div>
+		<div class="actions-wrapper">
+			<div class="actions">
+				<button class="monster-button-primary next">
+					{{i18n.portWizard.accountVerification.buttons.next}}
+				</button>
+			</div>
+			<a href="javascript:void(0);" class="monster-link cancel">
+				{{i18n.portWizard.buttons.cancel}}
+			</a>
+		</div>
+	</div>
+</div>

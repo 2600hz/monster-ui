@@ -1,4 +1,25 @@
 {
+	"bookkeepers": {
+		"braintree": "Braintree",
+		"default": "Default",
+		"payphone": "HTTP",
+		"iou": "Kazoo"
+	},
+	"monthPicker": {
+		"backTo": "Back to",
+		"buttonText": "Open Month Picker",
+		"jumpYears": "Jump Years",
+		"next12Years": "Jump Forward 12 Years",
+		"nextLabel": "Next",
+		"nextYear": "Next Year",
+		"prev12Years": "Jump Back 12 Years",
+		"prevLabel": "Prev",
+		"prevYear": "Previous Year",
+		"year": "Year"
+	},
+	"mediaUploadDisclosure": {
+		"text": "Uploading audio files is your own responsibility! Please make sure that you have the necessary rights to use it!"
+	},
 	"poweredBy": "Powered by ",
 	"error": "Error",
 	"olderVersion": "It appears that the data you're updating was created outside of this UI, would you like to proceed anyway?",
@@ -26,8 +47,6 @@
 			"type": "The value for the field \"{{field}}\" must be of the \"{{value}}\" type.",
 			"unique": "The value for the field \"{{field}}\" must be unique.",
 			"forbidden": "The value for the field \"{{field}}\" can not be updated.",
-			"__comment": "UI-883 (v3.19_s1): adding i18n for service_restriction error",
-			"service_restriction": "Not enought credit to purchase the number \"{{field}}\" (${{value}}).",
 			"__comment": "UI-1882: Add error handling for upload too big",
 			"__version": "3.22",
 			"maxSize": "The content for the field \"{{field}}\" must not be more than {{value}} bytes."
@@ -64,7 +83,6 @@
 	"close" : "Close",
 	"conferencingLogo": "Conferencing",
 	"csv": "CSV",
-	"currencyUsed": "$",
 	"delete": "Delete",
 	"dialog" : {
 		"showError": "Show Error",
@@ -117,6 +135,7 @@
 	"unexpectedError": "An unexpected error happened, please try again!",
 	"update": "Update",
 	"upload": "Upload",
+	"userFullName": "{{firstName}} {{lastName}}",
 	"validation": {
 		"defaultRules": {
 			"required": "This field is required.",
@@ -137,6 +156,7 @@
 			"min": "Please enter a value greater than or equal to {0}."
 		},
 		"customRules": {
+			"phoneNumber": "Please enter a valid phone number",
 			"hexadecimal": "Please only enter hexadecimal digits",
 			"checkList": "Already exists",
 			"mac": "Please enter a valid MAC address.",
@@ -161,14 +181,14 @@
 		"rate": "Rate",
 		"quantity": "Quantity",
 		"discount": "Discount",
-		"monthlyCharges": "Monthly Charges",
-		"amount": "${{variable}}"
+		"monthlyCharges": "Monthly Charges"
 	},
 	"languages": {
 		"auto": "Default",
 		"americanEnglish": "English (en-US)",
 		"frenchFrench": "French (fr-FR)",
 		"russianRussian": "Russian (ru-RU)",
+		"germanGerman": "German (de-DE)",
 		"__comment": "Add Spanish to the list of selectable languages in My Account",
 		"__version": "v3.22",
 		"spainSpanish": "Spanish (es-ES)"
@@ -1016,5 +1036,36 @@
 		"content1": "The WebSockets Connection is not working.",
 		"content2": "Please check that your Internet connection and your firewall are working as expected, as we can not display the current application without a proper connection to the WebSockets server.",
 		"content3": "We'll automatically refresh the application once the connection works properly..."
+	},
+
+	"alerts": {
+		"alertTypes": {
+			"manual": "Manual",
+			"system": "System",
+			"provisioner": "Advanced Provisioner",
+			"port": "Porting"
+		},
+		"clearButton": "Clear",
+		"dropdownTitle": "Notifications",
+		"metadata": {
+			"current_balance": "Current balance"
+		},
+		"noAlerts": "No new notifications"
+	},
+
+	"keyValueEditor": {
+		"addRow": "+ Add Data Row",
+		"keyPlaceholder": "Data Key",
+		"valuePlaceholder": "Data Value"
+	},
+
+	"monsterLanguages": {
+		"auto": "Default",
+		"de-DE": "German (de-DE)",
+		"en-US": "English (en-US)",
+		"es-ES": "Spanish (es-ES)",
+		"fr-FR": "French (fr-FR)",
+		"nl-NL": "Dutch (nl-NL)",
+		"ru-RU": "Russian (ru-RU)"
 	}
 }

@@ -45,9 +45,12 @@ require.config({
 		'monster-util': 'js/lib/monster.util',
 		'monster-webphone': 'js/lib/monster.webphone',
 		'mousetrap': 'js/vendor/mousetrap-1.5.3.min',
+		'monthpicker': 'js/vendor/jquery.monthpicker',
 		'papaparse': 'js/vendor/papaparse-4.1.2.min',
 		'pdfjs-dist/build/pdf': 'js/vendor/pdfjs/build/pdf',
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
+		'pdfmake': 'js/vendor/pdfmake/build/pdfmake.min',
+		'vfs_fonts': 'js/vendor/pdfmake/build/vfs_fonts',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'randomColor': 'js/vendor/randomColor',
@@ -85,7 +88,8 @@ require.config({
 			'exports': '_'
 		},
 		'moment-timezone': ['moment'],
-		'touch-punch': ['jqueryui']
+		'touch-punch': ['jqueryui'],
+		vfs_fonts: ['pdfmake']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
@@ -100,7 +104,10 @@ require([
 ], function($, monster) {
 	$.support.cors = true;
 
+	monster.initConfig();
 	monster.initSDK();
+
+	monster.setDefaultLanguage();
 
 	require([
 		'monster-apps',
@@ -131,8 +138,6 @@ require([
 		monster.ui = ui;
 		monster.util = util;
 		monster.webphone = webphone;
-
-		monster.util.setDefaultLanguage();
 
 		monster.loadBuildConfig(function() {
 			monster.apps.load('core', function(app) {

@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var numbersFeatuesMenu = {
 
@@ -16,27 +15,18 @@ define(function(require) {
 			var self = this,
 				numberData = args.numberData,
 				phoneNumber = numberData.hasOwnProperty('phoneNumber') ? numberData.phoneNumber : numberData.id,
-				features = self.numberFeaturesMenuGetFeatures(numberData),
-				template = $(monster.template(self, 'numberFeaturesMenu-dropdown', { features: features }));
+				features = monster.util.getNumberFeatures(numberData),
+				template = $(self.getTemplate({
+					name: 'dropdown',
+					data: {
+						features: features
+					},
+					submodule: 'numberFeaturesMenu'
+				}));
 
 			self.numberFeaturesMenuBindEvents(template, phoneNumber, args.afterUpdate);
 
 			args.target.append(template);
-		},
-
-		numberFeaturesMenuGetFeatures: function(number) {
-			var self = this,
-				featuresNumber;
-
-			if (number.hasOwnProperty('features_available') && number.features_available.length) {
-				featuresNumber = number.features_available;
-			} else if (number.hasOwnProperty('_read_only') && number._read_only.hasOwnProperty('features_available') && number._read_only.features_available.length) {
-				featuresNumber = number._read_only.features_available;
-			} else {
-				featuresNumber = [];
-			}
-
-			return featuresNumber;
 		},
 
 		numberFeaturesMenuBindEvents: function(template, phoneNumber, afterUpdate) {
@@ -100,7 +90,15 @@ define(function(require) {
 				}
 
 				self.numbersSyncOne(phoneNumber, accountId, function() {
-					toastr.success(monster.template(self, '!' + self.i18n.active().numberFeaturesMenu.syncSuccess, { number: monster.util.formatPhoneNumber(phoneNumber) }));
+					monster.ui.toast({
+						type: 'success',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().numberFeaturesMenu.syncSuccess,
+							data: {
+								number: monster.util.formatPhoneNumber(phoneNumber)
+							}
+						})
+					});
 				});
 			});
 		},

@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		crossroads = require('crossroads'),
-		toastr = require('toastr'),
 		hasher = require('hasher');
 
 	var loadApp = function(appName, query) {
@@ -13,13 +12,17 @@ define(function(require) {
 					monster.pub('myaccount.hide');
 
 					monster.apps.load(appName, function(loadedApp) {
+						monster.pub('core.alerts.refresh');
 						monster.pub('core.showAppName', appName);
 						$('#monster_content').empty();
 
 						loadedApp.render();
 					});
 				} else {
-					toastr.error(monster.apps.core.i18n.active().appMasqueradingError);
+					monster.ui.toast({
+						type: 'error',
+						message: monster.apps.core.i18n.active().appMasqueradingError
+					});
 				}
 			},
 			isAccountIDMasqueradable = function(id) {

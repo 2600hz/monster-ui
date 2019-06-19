@@ -1,0 +1,159 @@
+<div class="billing-content-wrapper">
+	<ul class="list-settings">
+		<li class="settings-item clearfix" data-name="credit_card">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.billing.cardOnFile }}</span>
+				<span class="description"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form id="form_credit_card" class="form-horizontal">
+							<div class="credit-card-inputs">
+								<div class="control-group">
+									<label class="control-label" for="first_name">{{ i18n.billing.billingName }}</label>
+									<div class="controls">
+										<label class="uneditable">{{billing.first_name}} {{billing.last_name}}</label>
+										<div class="edition">
+											<input type="text" class="input-medium" id="first_name" name="first_name" value="{{billing.first_name}}" placeholder="{{ i18n.billing.firstName }}" data-original_value="{{billing.first_name}}"/>
+											<input type="text" class="input-medium" id="last_name" name="last_name" value="{{billing.last_name}}" placeholder="{{ i18n.billing.lastName }}" data-original_value="{{billing.last_name}}"/>
+										</div>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="credit_card_number">{{ i18n.billing.creditCardNumber }}</label>
+									<div class="controls">
+										<label class="uneditable"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</label>
+										<div class="edition">
+											<div class="input-prepend">
+												<span class="add-on">
+													<i class="fa fa-credit-card"></i>
+													<span class="card-type amex"></span>
+													<span class="card-type visa"></span>
+													<span class="card-type mastercard"></span>
+													<span class="card-type discover"></span>
+												</span>
+												<input type="text" id="credit_card_number" name="credit_card.number" class="input-medium" data-original_value=""/>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="expiration_date_month">{{ i18n.billing.expirationDate }}</label>
+									<div class="controls">
+										<label class="uneditable">{{billing.credit_card.expiration_month}}/{{billing.credit_card.expiration_year}}</label>
+										<div class="edition">
+											<input type="text" class="input-mini" id="expiration_date_month" name="extra.expiration_date.month" value="{{billing.credit_card.expiration_month}}" maxLength="2" placeholder="{{ i18n.billing.month }}" data-original_value="{{billing.credit_card.expiration_month}}"/>
+											<input type="text" class="input-mini" id="expiration_date_year" name="extra.expiration_date.year" value="{{billing.credit_card.expiration_year}}" maxLength="4" placeholder="{{ i18n.billing.year }}" data-original_value="{{billing.credit_card.expiration_year}}"/>
+										</div>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="security_code">{{ i18n.billing.securityCode }}</label>
+									<div class="controls">
+										<label class="uneditable">{{billing.credit_card.fake_cvv}}</label>
+										<div class="edition">
+											<input type="text" class="input-mini" id="security_code" name="credit_card.cvv" maxLength="4" data-original_value=""/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="credit-card-container"></div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success edition change" data-module="billing" data-field="credit_card">{{ i18n.saveChanges }}</button>
+									<button type="button" class="monster-button-primary edit-credit-card uneditable">{{ i18n.billing.changeCard }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="account_administrator">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.billing.accountAdministrator }}</span>
+				<span class="description">{{account.contact.billing.email}}{{#if account.contact.billing.number}}&nbsp;&nbsp;(<span class="number">{{formatPhoneNumber account.contact.billing.number}}</span>){{/if}}</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form id="form_account_administrator" class="form-horizontal">
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_full_name">{{ i18n.billing.accountAdministratorFullName  }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_full_name" name="contact.billing.name" value="{{account.contact.billing.name}}" placeholder="{{ i18n.placeholderName  }}">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_email">{{ i18n.billing.accountAdministratorEmail }}</label>
+								<div class="controls">
+									<input type="email" id="account_administrator_email" name="contact.billing.email" value="{{account.contact.billing.email}}" placeholder="{{ i18n.placeholderEmail }}" data-original_value="{{account.contact.billing.email}}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_number">{{ i18n.phoneNumber }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_number" name="contact.billing.number" value="{{account.contact.billing.number}}" placeholder="{{ i18n.placeholderNumber }}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_address">{{ i18n.billing.accountAdministratorAddress }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_address" name="contact.billing.street_address" value="{{account.contact.billing.street_address}}" placeholder="{{ i18n.placeholderAddress }}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_address_line_2">{{ i18n.billing.accountAdministratorAddressLineTwo  }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_address_line_2" name="contact.billing.street_address_extra" value="{{account.contact.billing.street_address_extra}}" placeholder="{{ i18n.placeholderAddressLineTwo  }}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_city">{{ i18n.billing.accountAdministratorAddressCity  }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_city" name="contact.billing.locality" value="{{acocunt.contact.billing.locality}}" placeholder="{{ i18n.placeholderCity  }}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_state">{{ i18n.billing.accountAdministratorAddressState  }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_state" name="contact.billing.region" value="{{account.contact.billing.region}}" placeholder="{{ i18n.placeholderState  }}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_country">{{ i18n.billing.accountAdministratorAddressCountry }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_country" name="contact.billing.country" value="{{account.contact.billing.country}}" placeholder="{{ i18n.placeholderCountry }}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="account_administrator_zipcode">{{ i18n.billing.accountAdministratorAddressZipCode }}</label>
+								<div class="controls">
+									<input type="text" id="account_administrator_zipcode" name="contact.billing.postal_code" value="{{account.contact.billing.postal_code}}" placeholder="{{ i18n.placeholderZipCode }}"/>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="account" data-field="account_administrator">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>

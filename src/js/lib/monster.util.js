@@ -6,7 +6,7 @@ define(function(require) {
 		moment = require('moment');
 
 	require('moment-timezone');
-		//momentTimezone = require('moment-timezone');
+	//momentTimezone = require('moment-timezone');
 
 	var util = {
 
@@ -37,64 +37,6 @@ define(function(require) {
 			}
 		},
 
-		getMomentFormat: function(pFormat, pUser) {
-			var self = this,
-				format = pFormat || 'dateTime',
-				user = pUser || (monster.apps.hasOwnProperty('auth') ? monster.apps.auth.currentUser : undefined) || {},
-				userHourFormat = user && user.ui_flags && user.ui_flags.twelve_hours_mode ? '12h' : '24h',
-				userDateFormat = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy',
-				dateFormats = {
-					'dmy': 'DD/MM/YYYY',
-					'mdy': 'MM/DD/YYYY',
-					'ymd': 'YYYY/MM/DD'
-				},
-				hourFormats = {
-					'12h': 'hh',
-					'24h': 'HH'
-				},
-				// map of moment formats
-				shortcuts = {
-					shortDateTime: dateFormats[userDateFormat].replace('YYYY', 'YY') + ' ' + hourFormats[userHourFormat] + ':mm',
-					dateTime: dateFormats[userDateFormat] + ' - ' + hourFormats[userHourFormat] + ':mm:ss',
-					shortDate: dateFormats[userDateFormat].replace('YYYY', 'YY'),
-					shortTime: '' + hourFormats[userHourFormat] + ':mm',
-					time: '' + hourFormats[userHourFormat] + ':mm:ss',
-					calendarDate: (userDateFormat === 'mdy' ? 'MMMM DD' : 'DD MMMM') + ', YYYY',
-					date: dateFormats[userDateFormat]
-				},
-				momentFormat = shortcuts[format];
-
-			// If user wants to see the 12 hour mode, and the date format selected includes the time, then we show AM / PM
-			if (userHourFormat === '12h' && ['shortDateTime', 'dateTime', 'shortTime', 'time'].indexOf(format) >= 0) {
-				momentFormat += ' A';
-			}
-
-			return momentFormat;
-		},
-
-		toFriendlyDate: function(pDate, format, pUser, pIsGregorian, tz) {
-			// If Date is undefined, then we return an empty string.
-			// Useful for form which use toFriendlyDate for some fields with an undefined value (for example the carriers app, contract expiration date)
-			// Otherwise it would display NaN/NaN/NaN in Firefox for example
-			var friendlyDate = '';
-
-			if (typeof pDate !== 'undefined') {
-				var self = this,
-					isGregorian = typeof pIsGregorian !== 'undefined' ? pIsGregorian : true,
-					// date can be either a JS Date or a gregorian timestamp
-					date = typeof pDate === 'object' ? pDate : (isGregorian ? self.gregorianToDate(pDate) : self.unixToDate(pDate)),
-					momentFormat = self.getMomentFormat(format, pUser);
-
-				if (tz) {
-					friendlyDate = moment(date).tz(tz).format(momentFormat);
-				} else {
-					friendlyDate = moment(date).format(momentFormat);
-				}
-			}
-
-			return friendlyDate;
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -113,20 +55,6 @@ define(function(require) {
 			return new Date(dateString.replace(regex, dateFormats[format]));
 		},
 
-		gregorianToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				formattedResponse = new Date((timestamp - 62167219200) * 1000);
-			}
-
-			return formattedResponse;
-		},
-
 		dateToGregorian: function(date) {
 			var formattedResponse;
 
@@ -141,7 +69,7 @@ define(function(require) {
 		},
 
 		getModbID: function(id, timestamp) {
-			var jsDate = monster.util.gregorianToDate(timestamp),
+			var jsDate = gregorianToDate(timestamp),
 				UTCYear = jsDate.getUTCFullYear() + '',
 				UTCMonth = jsDate.getUTCMonth() + 1,
 				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
@@ -158,30 +86,6 @@ define(function(require) {
 			return modbString;
 		},
 
-		unixToDate: function(timestamp) {
-			var formattedResponse;
-
-			if (typeof timestamp === 'string') {
-				timestamp = parseInt(timestamp);
-			}
-
-			if (typeof timestamp === 'number' && !_.isNaN(timestamp)) {
-				// Sometimes unix times are defined with more precision, such as with the /legs API which returns channel created time in microsec, so we need to remove this extra precision to use the standard JS constructor
-				while (timestamp > 9999999999999) {
-					timestamp /= 1000;
-				}
-
-				// If we only get the "seconds" precision, we need to multiply it by 1000 to get ms, in order to use the standard JS constructor later
-				if (timestamp < 10000000000) {
-					timestamp *= 1000;
-				}
-
-				formattedResponse = new Date(timestamp);
-			}
-
-			return formattedResponse;
-		},
-
 		dateToUnix: function(date) {
 			var formattedResponse;
 
@@ -191,89 +95,6 @@ define(function(require) {
 			}
 
 			return formattedResponse;
-		},
-
-		unformatPhoneNumber: function(formattedNumber, pSpecialRule) {
-			var resp = libphonenumber.parse(phoneNumber, {
-					country: {
-						default: 'US'
-					}
-				}),
-				phoneNumber;
-
-			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				phoneNumber = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
-			} else {
-				phoneNumber = formattedNumber.replace(/[^0-9+]/g, '');
-			}
-
-			return phoneNumber;
-		},
-
-		formatPhoneNumber: function(phoneNumber) {
-			var self = this,
-				formattedPhoneNumber = phoneNumber;
-
-			if (!monster.config.whitelabel.preventDIDFormatting && phoneNumber) {
-				formattedPhoneNumber = self.getFormatPhoneNumber(phoneNumber).userFormat;
-			}
-
-			return formattedPhoneNumber;
-		},
-
-		getFormatPhoneNumber: function(phoneNumber) {
-			var resp = libphonenumber.parse(phoneNumber, {
-					country: {
-						default: 'US'
-					}
-				}),
-				user = monster.apps.auth.currentUser || {},
-				account = monster.apps.auth.originalAccount || {},
-				formattedData = {
-					originalNumber: phoneNumber,
-					userFormat: phoneNumber // Setting it as a default, in case the number is not valid
-				},
-				getUserFormatFromEntity = function(entity, data) {
-					var response = '';
-
-					if (entity.ui_flags.numbers_format === 'national') {
-						response = data.nationalFormat;
-					} else if (entity.ui_flags.numbers_format === 'international') {
-						response = data.internationalFormat;
-					} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
-						if (entity.ui_flags.numbers_format_exceptions.length && entity.ui_flags.numbers_format_exceptions.indexOf(data.country.code) >= 0) {
-							response = data.nationalFormat;
-						} else {
-							response = data.internationalFormat;
-						}
-					}
-					return response;
-				};
-
-			if (resp.hasOwnProperty('country') && resp.hasOwnProperty('phone') && resp.country.length && resp.phone.length) {
-				formattedData.e164Number = libphonenumber.format(resp.phone, resp.country, 'International_plaintext');
-				formattedData.nationalFormat = libphonenumber.format(resp.phone, resp.country, 'National');
-				formattedData.internationalFormat = libphonenumber.format(resp.phone, resp.country, 'International');
-
-				formattedData.country = {
-					code: resp.country,
-					name: monster.timezone.getCountryName(resp.country)
-				};
-
-				// Default to international mode
-				formattedData.userFormat = formattedData.internationalFormat;
-				formattedData.userFormatType = 'international';
-
-				if (user.hasOwnProperty('ui_flags') && user.ui_flags.hasOwnProperty('numbers_format') && user.ui_flags.numbers_format !== 'inherit') {
-					formattedData.userFormatType = user.ui_flags.numbers_format;
-					formattedData.userFormat = getUserFormatFromEntity(user, formattedData);
-				} else if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
-					formattedData.userFormatType = account.ui_flags.numbers_format;
-					formattedData.userFormat = getUserFormatFromEntity(account, formattedData);
-				}
-			}
-
-			return formattedData;
 		},
 
 		getDefaultNumbersFormat: function() {
@@ -286,17 +107,6 @@ define(function(require) {
 			}
 
 			return format;
-		},
-
-		randomString: function(length, _chars) {
-			var chars = _chars || '23456789abcdefghjkmnpqrstuvwxyz',
-				randomString = '';
-
-			for (var i = length; i > 0; i--) {
-				randomString += chars.charAt(Math.floor(Math.random() * chars.length));
-			}
-
-			return randomString;
 		},
 
 		cmp: function(a, b) {
@@ -344,14 +154,6 @@ define(function(require) {
 			}
 
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
-		},
-
-		formatPrice: function(value, pDecimals) {
-			var decimals = parseInt(pDecimals),
-				decimalCount = decimals >= 0 ? decimals : 2,
-				roundedValue = Math.round(Number(value) * Math.pow(10, decimalCount)) / Math.pow(10, decimalCount);
-
-			return roundedValue.toFixed(parseInt(value) === value && (isNaN(decimals) || decimals < 0) ? 0 : decimalCount);
 		},
 
 		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
@@ -457,24 +259,6 @@ define(function(require) {
 			return isReseller;
 		},
 
-		// Function returning map of URL parameters
-		// Optional key, returns value of specific GET parameter
-		// keepHashes was added because having hashes sometimes crashed some requests
-		getUrlVars: function(key, pKeepHashes) {
-			var vars = {},
-				hashes = window.location.search.substring(1).split('&'),
-				hash,
-				keepHashes = pKeepHashes || false;
-
-			for (var i = 0; i < hashes.length; i++) {
-				hash = hashes[i].split('=');
-				vars[hash[0]] = keepHashes ? hash[1] : (hash[1] || '').replace(/#/g, '');
-			}
-
-			// If we were looking for a specific key, then we only return that value, otherwise, return the full map of GET parameters
-			return key ? vars[key] : vars;
-		},
-
 		/****************** Helpers not documented because people shoudln't need to use them *******************/
 
 		// Helper only used in conference app, takes seconds and transforms it into a timer
@@ -570,33 +354,6 @@ define(function(require) {
 			}
 		},
 
-		/* Set the language to start the application.
-			By default will take the value from the cookie,
-			or if it doesn't exist, it will take the value from the config.js,
-			or if it's not set it will fall back to the language of the browser.
-			In last resort it will set it to 'en-US' if nothing is set above
-		*/
-		setDefaultLanguage: function() {
-			var languages = [
-					'en-US',
-					'es-ES',
-					'fr-FR',
-					'nl-NL',
-					'ru-RU'
-				],
-				browserLanguage = _.find(languages, function(lang) {
-					return lang.indexOf(navigator.language) > -1;
-				}),
-				cookieLanguage = monster.cookies.has('monster-auth') ? monster.cookies.getJson('monster-auth').language : undefined,
-				defaultLanguage = browserLanguage || 'en-US';
-
-			monster.config.whitelabel.language = cookieLanguage || monster.config.whitelabel.language || defaultLanguage;
-
-			// Normalize the language to always be capitalized after the hyphen (ex: en-us -> en-US, fr-FR -> fr-FR)
-			// Will normalize bad input from the config.js or cookie data coming directly from the database
-			monster.config.whitelabel.language = (monster.config.whitelabel.language).replace(/-.*/, function(a) { return a.toUpperCase(); });
-		},
-
 		checkVersion: function(obj, callback) {
 			var self = this,
 				i18n = monster.apps.core.i18n.active();
@@ -610,74 +367,6 @@ define(function(require) {
 			} else {
 				callback && callback();
 			}
-		},
-
-		// Not Intended to be used by most developers for now, we need to use it to have a standard transaction formatter.
-		// The input needed is an object from the array of transaction returned by the /transactions API.
-		formatTransaction: function(transaction, app) {
-			transaction.hasAddOns = false;
-
-			// If transaction has accounts/discounts and if at least one of these properties is not empty, run this code
-			if (transaction.hasOwnProperty('metadata') && transaction.metadata.hasOwnProperty('add_ons') && transaction.metadata.hasOwnProperty('discounts') && !(transaction.metadata.add_ons.length === 0 && transaction.metadata.discounts.length === 0)) {
-				var mapDiscounts = {};
-				_.each(transaction.metadata.discounts, function(discount) {
-					mapDiscounts[discount.id] = discount;
-				});
-
-				transaction.hasAddOns = true;
-				transaction.services = [];
-
-				$.each(transaction.metadata.add_ons, function(k, addOn) {
-					var discount = 0,
-						discountName = 'discount_' + addOn.id,
-						discountItem;
-
-					if (mapDiscounts.hasOwnProperty('discountName')) {
-						discountItem = mapDiscounts[discountName];
-						discount = parseInt(discountItem.quantity) * parseFloat(discountItem.amount);
-					}
-
-					addOn.amount = parseFloat(addOn.amount).toFixed(2);
-					addOn.quantity = parseFloat(addOn.quantity);
-					addOn.monthly_charges = ((addOn.amount * addOn.quantity) - discount).toFixed(2);
-
-					transaction.services.push({
-						service: app.i18n.active().servicePlan.titles[addOn.id] || addOn.id,
-						rate: addOn.amount,
-						quantity: addOn.quantity,
-						discount: discount > 0 ? '-' + app.i18n.active().currencyUsed + parseFloat(discount).toFixed(2) : '',
-						monthly_charges: addOn.monthly_charges
-					});
-				});
-
-				transaction.services.sort(function(a, b) {
-					return parseFloat(a.rate) <= parseFloat(b.rate);
-				});
-			}
-
-			transaction.amount = parseFloat(transaction.amount).toFixed(2);
-
-			if (transaction.hasOwnProperty('code')) {
-				transaction.friendlyName = app.i18n.active().transactions.codes[transaction.code];
-
-				if (transaction.type === 'credit') {
-					transaction.friendlyName += ' ' + app.i18n.active().transactions.refundText;
-				}
-			}
-
-			// If status is missing or among the following list, the transaction is approved
-			transaction.approved = !transaction.hasOwnProperty('status') || ['authorized', 'settled', 'settlement_confirmed', 'submitted_for_settlement'].indexOf(transaction.status) >= 0;
-
-			if (!transaction.approved) {
-				transaction.errorMessage = transaction.status in app.i18n.active().transactions.errorStatuses ? app.i18n.active().transactions.errorStatuses[transaction.status] : transaction.status;
-			}
-
-			// Our API return created but braintree returns created_at
-			transaction.created = transaction.created_at || transaction.created;
-
-			transaction.friendlyCreated = monster.util.toFriendlyDate(transaction.created);
-
-			return transaction;
 		},
 
 		accountArrayToTree: function(accountArray, rootAccountId) {
@@ -714,20 +403,6 @@ define(function(require) {
 			});
 
 			return result;
-		},
-
-		formatMacAddress: function(pMacAddress) {
-			var regex = /[^0-9a-fA-F]/g,
-				macAddress = pMacAddress.replace(regex, ''),
-				formattedMac = '';
-
-			if (macAddress.length === 12) {
-				_.each(macAddress.split(''), function(char, idx) {
-					formattedMac += (idx % 2 === 0 && idx !== 0 ? ':' : '') + macAddress[idx];
-				});
-			}
-
-			return formattedMac;
 		},
 
 		getDefaultRangeDates: function(pRange) {
@@ -990,28 +665,6 @@ define(function(require) {
 			return result.length > 1 ? result : result[0];
 		},
 
-		/**
-		 * Determine if a number feature is enalbed on the current account
-		 * @param  {String} feature Number feature to check if it is enabled (e.g. e911, cnam)
-		 * @param  {Object} account Optional account object to check from
-		 * @return {Boolean}        Boolean indicating if the feature is enabled or not
-		 */
-		isNumberFeatureEnabled: function(feature, account) {
-			var self = this,
-				accountToCheck = account || monster.apps.auth.currentAccount,
-				hasNumbersFeatures = accountToCheck.hasOwnProperty('numbers_features');
-
-			if (hasNumbersFeatures) {
-				if (accountToCheck.numbers_features[feature + '_enabled']) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}
-		},
-
 		// Check if the object is parsable or not
 		isJSON: function(obj) {
 			var self = this;
@@ -1033,7 +686,7 @@ define(function(require) {
 				authApp = monster.apps.auth,
 				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
 					'cluster', 'conferences', 'csv-onboarding', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
-					'migration', 'mobile', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
+					'migration', 'mobile', 'myaccount', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
 					'service-plan-override', 'tasks', 'taxation', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
 
 			if (localIcons.indexOf(app.name) >= 0) {
@@ -1166,7 +819,7 @@ define(function(require) {
 						}
 
 						if (formattedKey !== key) {
-							replaceHTML(element, key, monster.util.unformatPhoneNumber(numbers[formattedKey]));
+							replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
 						} else {
 							replaceHTML(element, key, numbers[key]);
 						}
@@ -1194,13 +847,13 @@ define(function(require) {
 				replaceHTML = function(element, oldValue, newValue) {
 					// First we need to escape the old value, since we're creating a regex out of it, we can't have special regex characters like the "+" that are often present in phone numbers
 					var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'),
-					// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
+						// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
 						regexOldValue = new RegExp(escapedOldvalue, 'g');
 
 					// Replace all occurences of old value by the new value
 					element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
 
-					logs.push({oldValue: oldValue, newValue: newValue});
+					logs.push({ oldValue: oldValue, newValue: newValue });
 				},
 				replaceBoth = function(element) {
 					replaceExtensions(element);
@@ -1214,6 +867,628 @@ define(function(require) {
 			printLogs();
 		}
 	};
+
+	/**
+	 * Formats a string into a string representation of a MAC address, using
+	 * colons as separator.
+	 * @param  {String} macAddress   String to format as MAC address.
+	 * @return {String}              String representation of a MAC address.
+	 */
+	function formatMacAddress(macAddress) {
+		if (!_.isString(macAddress)) {
+			throw new TypeError('"macAddress" is not a string');
+		}
+		var matches = macAddress
+			.toLowerCase()
+			.replace(/[^0-9a-f]/g, '')
+			.match(/[0-9a-f]{2}/g);
+
+		return !_.isNull(matches) && _.size(matches) >= 6
+			? matches.slice(0, 6).join(':')
+			: '';
+	}
+	util.formatMacAddress = formatMacAddress;
+
+	/**
+	 * Phone number formatting according to user preferences.
+	 * @param  {Number|String} phoneNumber Input to format as phone number
+	 * @return {String}                    Input formatted as phone number
+	 *
+	 * Warning: this method is used to format entities other than phone
+	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
+	 */
+	function formatPhoneNumber(input) {
+		var phoneNumber = getFormatPhoneNumber(input);
+		return !monster.config.whitelabel.preventDIDFormatting && phoneNumber.isValid
+			? _.get(phoneNumber, 'userFormat')
+			: _.toString(input);
+	}
+	util.formatPhoneNumber = formatPhoneNumber;
+
+	/**
+	 * Decimal and currency formatting for prices
+	 * @param  {Object}  args
+	 * @param  {Number}  args.price        Price to format (number or string
+	 *                                     representation of a number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the
+	 *                                     decimal point.
+	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
+	 * @return {String}                    String representation of `price`.
+	 *
+	 * If `digits` is not specified, integers will have no digits and floating
+	 * numbers with at least one significant number after the decimal point
+	 * will have two digits.
+	 */
+	function formatPrice(args) {
+		if (
+			_.isNaN(args.price)
+			|| (!_.isNumber(args.price) && _.isNaN(_.toNumber(args.price)))
+		) {
+			throw new TypeError('"price" is not a valid number or not castable into a number');
+		}
+		if (
+			!_.isUndefined(args.digits)
+			&& (!_.isNumber(args.digits) || (!_.isInteger(args.digits) || args.digits < 0))
+		) {
+			throw new TypeError('"digits" is not a positive integer');
+		}
+		if (!_.isUndefined(args.withCurrency) && !_.isBoolean(args.withCurrency)) {
+			throw new TypeError('"withCurrency" is not a boolean');
+		}
+		var price = _.toNumber(args.price);
+		var digits = _.get(args, 'digits', 2);
+		var withCurrency = _.get(args, 'withCurrency', true);
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
+			style: withCurrency ? 'currency' : 'decimal',
+			currency: monster.config.currencyCode,
+			minimumFractionDigits: digits
+		});
+
+		return formatter.format(price);
+	}
+	util.formatPrice = formatPrice;
+
+	/**
+	 * Returns a list of bookkeepers available for Monster UI
+	 * @return {Array} List of bookkeepers availalbe
+	 */
+	function getBookkeepers() {
+		var i18n = monster.apps.core.i18n.active().bookkeepers;
+
+		return _.flatten([
+			[
+				{
+					label: i18n.default,
+					value: null
+				}
+			],
+			_.chain(monster.config.whitelabel.bookkeepers)
+				.map(function(isEnabled, bookkeeper) {
+					return {
+						bookkeeper: bookkeeper,
+						isEnabled: isEnabled
+					};
+				})
+				.filter('isEnabled')
+				.map(function(item) {
+					var value = _.get(item, 'bookkeeper');
+
+					return {
+						label: _.get(i18n, value, _.startCase(value)),
+						value: value
+					};
+				})
+				.sortBy('label')
+				.value()
+		]);
+	}
+	util.getBookkeepers = getBookkeepers;
+
+	/**
+	 * Return the symbol of the currency used through the UI
+	 * @return {String} Symbol of currency
+	 */
+	function getCurrencySymbol() {
+		var base = NaN;
+		var formatter = new Intl.NumberFormat(monster.defaultLanguage, {
+			style: 'currency',
+			currency: monster.config.currencyCode
+		});
+
+		return formatter.format(base).replace('NaN', '');
+	}
+	util.getCurrencySymbol = getCurrencySymbol;
+
+	/**
+	 * Returns the timezone of the currently authenticated session
+	 * @return {String}  Current time zone identifier.
+	 *
+	 * By default, the time zone of the logged in user will be returned. If that
+	 * time zone is not set, then the account time zone will be used. If not set,
+	 * the browser’s time zone will be used as a last resort.
+	 */
+	function getCurrentTimeZone() {
+		return _.get(monster, 'apps.auth.currentUser.timezone')
+			|| _.get(monster, 'apps.auth.currentAccount.timezone')
+			|| moment.tz.guess();
+	}
+	util.getCurrentTimeZone = getCurrentTimeZone;
+
+	function getFormatPhoneNumber(input) {
+		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
+		var user = _.get(monster, 'apps.auth.currentUser', {});
+		var account = _.get(monster, 'apps.auth.originalAccount', {});
+		var formattedData = {
+			isValid: false,
+			originalNumber: input,
+			userFormat: input // Setting it as a default, in case the number is not valid
+		};
+		var getUserFormatFromEntity = function(entity, data) {
+			var response = '';
+
+			if (entity.ui_flags.numbers_format === 'national') {
+				response = data.nationalFormat;
+			} else if (entity.ui_flags.numbers_format === 'international') {
+				response = data.internationalFormat;
+			} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
+				if (_.includes(_.get(entity, 'ui_flags.numbers_format_exceptions', []), data.country.code)) {
+					response = data.nationalFormat;
+				} else {
+					response = data.internationalFormat;
+				}
+			}
+			return response;
+		};
+
+		if (
+			_.has(phoneNumber, 'country')
+			&& !_.isEmpty(phoneNumber.country)
+			&& _.has(phoneNumber, 'number')
+			&& !_.isEmpty(phoneNumber.number)
+		) {
+			_.merge(formattedData, {
+				isValid: phoneNumber.isValid(),
+				e164Number: phoneNumber.format('E.164'),
+				nationalFormat: phoneNumber.format('NATIONAL'),
+				internationalFormat: phoneNumber.format('INTERNATIONAL'),
+				country: {
+					code: phoneNumber.country,
+					name: monster.timezone.getCountryName(phoneNumber.country)
+				}
+			});
+
+			if (_.get(user, 'ui_flags.numbers_format', 'inherit') !== 'inherit') {
+				_.merge(formattedData, {
+					userFormat: getUserFormatFromEntity(user, formattedData),
+					userFormatType: _.get(user, 'ui_flags.numbers_format')
+				});
+			} else if (_.has(account, 'ui_flags.numbers_format')) {
+				_.merge(formattedData, {
+					userFormat: getUserFormatFromEntity(account, formattedData),
+					userFormatType: _.get(account, 'ui_flags.numbers_format')
+				});
+			} else {
+				_.merge(formattedData, {
+					userFormat: phoneNumber.format('INTERNATIONAL'),
+					userFormatType: 'international'
+				});
+			}
+		}
+
+		return formattedData;
+	}
+	util.getFormatPhoneNumber = getFormatPhoneNumber;
+
+	/**
+	 * Determine the date format from a specific or current user's settings
+	 * @private
+	 * @param  {String} pFormat Specific format for the user
+	 * @param  {Object} pUser   Specific user to get format from
+	 * @return {String}         Computed representation of the format
+	 */
+	function getMomentFormat(pFormat, pUser) {
+		var format = _.isString(pFormat)
+			? pFormat
+			: 'dateTime';
+		var user = _.isObject(pUser)
+			? pUser
+			: _.get(monster, 'apps.auth.currentUser', {});
+		var hourFormat = _.get(user, 'ui_flags.twelve_hours_mode', false)
+			? '12h'
+			: '24h';
+		var dateFormat = _.get(user, 'ui_flags.date_format', 'mdy');
+		var dateFormats = {
+			dmy: 'DD/MM/YYYY',
+			mdy: 'MM/DD/YYYY',
+			ymd: 'YYYY/MM/DD'
+		};
+		var hourFormats = {
+			'12h': 'hh',
+			'24h': 'HH'
+		};
+		var shortcuts = {
+			calendarDate: (dateFormat === 'mdy'
+				? 'MMMM DD'
+				: 'DD MMMM'
+			) + ', YYYY',
+			date: dateFormats[dateFormat],
+			dateTime: dateFormats[dateFormat]
+				.concat(
+					' - ',
+					hourFormats[hourFormat],
+					':mm:ss'
+				),
+			shortDate: dateFormats[dateFormat].replace('YYYY', 'YY'),
+			shortDateTime: dateFormats[dateFormat]
+				.replace('YYYY', 'YY')
+				.concat(
+					' ',
+					hourFormats[hourFormat],
+					':mm'
+				),
+			shortTime: '' + hourFormats[hourFormat] + ':mm',
+			time: '' + hourFormats[hourFormat] + ':mm:ss'
+		};
+		if (!_.includes(_.keys(shortcuts), format)) {
+			throw new Error('`format` must be one of '.concat(
+				_.keys(shortcuts).join(', '),
+				' or undefined'
+			));
+		}
+		if (hourFormat === '12h'
+			&& _.includes([
+				'shortDateTime',
+				'dateTime',
+				'shortTime',
+				'time'
+			], format)) {
+			return shortcuts[format] + ' A';
+		}
+		return shortcuts[format];
+	}
+
+	/**
+	 * Returns the available features for a Kazoo phone number
+	 * @param  {Object} number  Phone number object, which contains the features details
+	 * @return {String[]}       Number's available features
+	 */
+	function getNumberFeatures(number) {
+		if (!_.isPlainObject(number)) {
+			throw new TypeError('"number" is not an object');
+		}
+		var numberFeatures = _.get(number, 'features_available', []);
+		return _.isEmpty(numberFeatures)
+			? _.get(number, '_read_only.features_available', [])
+			: numberFeatures;
+	}
+	util.getNumberFeatures = getNumberFeatures;
+
+	/**
+	 * Returns map of URL parameters, with the option to return the value of a specific parameter
+	 * @param  {String} [key]
+	 * @return {Object|Array|String|undefined}
+	 */
+	function getUrlVars(key) {
+		/**
+		 * @param  {String} location
+		 * @return {String}
+		 */
+		var getQueryString = function(location) {
+			var hash = location.hash;
+			var search;
+
+			if (
+				!_.isEmpty(hash)
+				&& _.includes(hash, '?')
+			) {
+				search = hash.split('?')[1];
+			} else {
+				search = location.search.slice(1);
+			}
+
+			return search;
+		};
+		/**
+		 * @param  {String} queryString
+		 * @return {Object}
+		 */
+		var parseQueryString = function(queryString) {
+			var pair;
+			var paramKey;
+			var paramValue;
+
+			// if query string is empty exit early
+			if (!queryString) {
+				return {};
+			}
+
+			return _
+				.chain(queryString)
+				// anything after # is not part of the query string, so get rid of it
+				.split('#', 1)
+				.toString()
+				// split our query string into its component parts
+				.split('&')
+				// prase query string key/value pairs
+				.transform(function(acc, component) {
+					// separate each component in key/value pair
+					pair = component.split('=');
+
+					// set parameter name and value (use 'true' if empty)
+					paramKey = pair[0];
+					paramValue = _.isUndefined(pair[1]) ? true : pair[1];
+
+					// if the paramKey ends with square brackets, e.g. colors[] or colors[2]
+					if (paramKey.match(/\[(\d+)?\]$/)) {
+						// create key if it doesn't exist
+						var key = paramKey.replace(/\[(\d+)?\]/, '');
+						if (!acc[key]) {
+							acc[key] = [];
+						}
+
+						// if it's an indexed array e.g. colors[2]
+						if (paramKey.match(/\[\d+\]$/)) {
+							// get the index value and add the entry at the appropriate position
+							var index = /\[(\d+)\]/.exec(paramKey)[1];
+							acc[key][index] = paramValue;
+						} else {
+							// otherwise add the value to the end of the array
+							acc[key].push(paramValue);
+						}
+					} else {
+						// we're dealing with a string
+						if (!acc[paramKey]) {
+							// if it doesn't exist, create property
+							acc[paramKey] = paramValue;
+						} else if (
+							acc[paramKey]
+							&& _.isString(acc[paramKey])
+						) {
+							// if property does exist and it's a string, convert it to an array
+							acc[paramKey] = [acc[paramKey]];
+							acc[paramKey].push(paramValue);
+						} else {
+							// otherwise add the property
+							acc[paramKey].push(paramValue);
+						}
+					}
+				}, {})
+				.value();
+		};
+		/**
+		 * @param  {Object} params
+		 * @return {Object|Array|String|undefined}
+		 */
+		var resolveKey = function(params) {
+			return _.isUndefined(key)
+				? params
+				: _.get(params, key, undefined);
+		};
+		var getUrlParams = _.flow(
+			getQueryString,
+			parseQueryString,
+			resolveKey
+		);
+
+		return getUrlParams(window.location);
+	}
+	util.getUrlVars = getUrlVars;
+
+	/**
+	 * Returns the full name of a specific user or, if missing, of the currently
+	 * logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 * @return {String}                   User's full name
+	 */
+	function getUserFullName(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+		var core = monster.apps.core;
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+		return core.getTemplate({
+			name: '!' + core.i18n.active().userFullName,
+			data: {
+				firstName: user.first_name,
+				lastName: user.last_name
+			}
+		});
+	}
+	util.getUserFullName = getUserFullName;
+
+	/**
+	 * Converts a Gregorian timestamp into a Date instance
+	 * @param  {Number} pTimestamp Gregorian timestamp
+	 * @return {Date}           Converted Date instance
+	 */
+	function gregorianToDate(pTimestamp) {
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		return new Date((_.floor(timestamp) - 62167219200) * 1000);
+	}
+	util.gregorianToDate = gregorianToDate;
+
+	/**
+	 * Determine if a specific number feature is enabled on the current account
+	 * @param  {String}  feature  Feature to check (e.g. e911, cnam)
+	 * @param  {Object}  pAccount Account object to check from (optional)
+	 * @return {Boolean}          Indicate whether or not the feature is enabled
+	 *
+	 * The check is made against a flag in the account document but it can be
+	 * overridden by a flag in `config.js/whitelabel.disableNumbersFeatures`. If
+	 * none of those flags are set, it will return `true` by default.
+	 */
+	function isNumberFeatureEnabled(feature, pAccount) {
+		return monster.config.whitelabel.disableNumbersFeatures
+			? false
+			: _.get(
+				pAccount || monster.apps.auth.currentAccount,
+				'numbers_features.'.concat(
+					feature,
+					'_enabled'
+				),
+				true
+			);
+	}
+	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
+
+	/**
+	 * Generates a string of `length` random characters chosen from either a
+	 * preset or a custom string of characters.
+	 * @param  {Number} length  Number of characters to include.
+	 * @param  {String} pPreset Characters to choose from.
+	 * @return {String}         A string of random characters.
+	 */
+	function randomString(length, pPreset) {
+		if (!_.isNumber(length)) {
+			throw new TypeError('"length" is not a string');
+		}
+		if (_.isNaN(length)) {
+			throw new TypeError('"length" is NaN');
+		}
+		if (!_.isUndefined(pPreset) && !_.isString(pPreset)) {
+			throw new TypeError('"preset" is not a string');
+		}
+		if (!_.isUndefined(pPreset) && pPreset.length === 0) {
+			throw new TypeError('"preset" is an empty string');
+		}
+		var input = _.isUndefined(pPreset)
+			? 'safe'
+			: pPreset;
+		var presets = {
+			alpha: '1234567890abcdefghijklmnopqrstuvwxyz',
+			hex: '1234567890abcdef',
+			letters: 'abcdefghijklmnopqrstuvwxyz',
+			numerals: '1234567890',
+			safe: '23456789abcdefghjkmnpqrstuvwxyz'
+		};
+		var preset = _
+			.chain(presets)
+			.get(input, input)
+			.shuffle()
+			.value();
+		var upper = preset.length - 1;
+		var getRandomItem = function() {
+			var isUpper = _.sample([true, false]);
+			var item = preset[_.random(upper)];
+			return _[isUpper ? 'toUpper' : 'toLower'](item);
+		};
+		return length === 0
+			? ''
+			: _.chain(0)
+				.range(length)
+				.map(getRandomItem)
+				.join('')
+				.value();
+	}
+	util.randomString = randomString;
+
+	/**
+	 * Formats a Gregorian/Unix timestamp or Date instances into a String
+	 * representation of the corresponding date.
+	 * @param  {Date|String} pDate   Representation of the date to format.
+	 * @param  {String} pFormat      Tokens to format the date with.
+	 * @param  {Object} pUser        Specific user to use for formatting.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
+	 *                                gregorian format.
+	 * @param  {String} pTz           Timezone to format the date with.
+	 * @return {String}              Representation of the formatted date.
+	 *
+	 * If pDate is undefined then return an empty string. Useful for form which
+	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
+	 * would display NaN/NaN/NaN in Firefox for example.
+	 *
+	 * By default, the timezone of the specified or logged in user will be used
+	 * to format the date. If that timezone is not set, then the account
+	 * timezone will be used. If not set, the browser’s timezone will be used as
+	 * a last resort.
+	 */
+	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, pTz) {
+		if (_.isUndefined(pDate)) {
+			return '';
+		}
+		var isGregorian = _.isBoolean(pIsGregorian)
+			? pIsGregorian
+			: true;
+		var date = _.isDate(pDate)
+			? pDate
+			: isGregorian
+				? gregorianToDate(pDate)
+				: unixToDate(pDate);
+		var format = getMomentFormat(pFormat, pUser);
+		var tz = _.isNull(moment.tz.zone(pTz)) ? getCurrentTimeZone() : pTz;
+		return moment(date)
+			.tz(tz)
+			.format(format);
+	}
+	util.toFriendlyDate = toFriendlyDate;
+
+	/**
+	 * Normalize phone number by using E.164 format
+	 * @param  {String} input Input to normalize
+	 * @return {String}       Input normalized as E.164 phone number
+	 *
+	 * Warning: this method is used to unformat entities other than phone
+	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
+	 */
+	function unformatPhoneNumber(input) {
+		var phoneNumber = getFormatPhoneNumber(input);
+		return phoneNumber.isValid
+			? _.get(phoneNumber, 'e164Number')
+			: _.replace(input, /[^0-9+]/g, '');
+	}
+	util.unformatPhoneNumber = unformatPhoneNumber;
+
+	/**
+	 * Converts a Unix timestamp into a Date instance
+	 * @param  {Number} pTimestamp Unix timestamp
+	 * @return {Date}           Converted Date instance
+	 *
+	 * Sometimes Unix times are defined with more precision, such as with the
+	 * /legs API which returns channel created time in microseconds, so we need
+	 * need to remove this extra precision to use the Date constructor.
+	 *
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
+	 * get milliseconds in order to use the Date constructor.
+	 */
+	function unixToDate(pTimestamp) {
+		var max = 9999999999999;
+		var min = 10000000000;
+		var timestamp = _.isString(pTimestamp)
+			? _.parseInt(pTimestamp)
+			: pTimestamp;
+		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
+			throw new Error('`timestamp` is not a valid Number');
+		}
+		while (timestamp > max || timestamp < min) {
+			if (timestamp > max) {
+				timestamp /= 1000;
+			}
+			if (timestamp < min) {
+				timestamp *= 1000;
+			}
+		}
+		return new Date(timestamp);
+	}
+	util.unixToDate = unixToDate;
 
 	return util;
 });

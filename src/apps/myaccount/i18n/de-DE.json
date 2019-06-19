@@ -1,0 +1,439 @@
+{
+	"hello": "Hallo!",
+	"signout": "Abmelden",
+	"myaccount": "Account",
+	"closeSlide": "Schließen",
+	"store": "Speichern",
+
+	"settingsCategory": "Einstellungen",
+	"billingCategory": "Rechnungsstellung",
+	"trunkingCategory": "Trunking",
+
+	"editSettings": "Bearbeiten",
+	"changesSaved": "Änderungen wurden gespeichert!",
+	"placeholderName": "Jon Doe",
+	"placeholderEmail": "namer@firma.de",
+	"phoneNumber": "Telefonnummer",
+	"placeholderNumber": "+49123456789033",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "3rd Floor",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderCountry": "United States",
+	"placeholderZipCode": "12345",
+
+	"walkthrough": {
+		"greetingsDialog": {
+			"go": "Legen wir los",
+			"content": "Der Schritt-für-Schritt-Assistent wird Ihnen helfen, sich mit der Plattform vertraut machen, sodass Sie die Telefonanlage Ihres Unternehmens einrichten können. Ihre wichtigsten Account-Informationen wurden während der Registrierung eingegeben.",
+			"title": "Willkommen auf der Plattform"
+		},
+		"steps": {
+			"1": "Greifen Sie auf Ihre Account-Einstellungen zu, indem Sie auf Ihren Namen klicken.",
+			"2": "Die Einstellungen für Ihren Administratorbenutzer können Sie auf der Registerkarte „Benutzer“ einsehen. Einzelne Einstellungen (wie Zeitzone, Sprache und Datum/Uhrzeit) können basierend auf Ihren Voreinstellungen geändert werden.",
+			"3": "Die Einstellungen für Ihren Administrator-Account können Sie auf der Registerkarte „Account“ einsehen. Falls gewünscht, können Sie dort auch einen technischen Kontakt hinzufügen und die Zeitzone und Sprache für den gesamten Account festlegen.",
+			"4": "Wenn Sie Ihre Kreditkartendaten ändern oder aktualisieren möchten, nehmen Sie dies bitte hier vor. Beachten Sie, dass auf dieser Registerkarte die Kreditkarte aufgeführt ist, die Sie während der Registrierung verwendet haben.",
+			"5": "Wenn Sie Auslandsanrufe durchführen möchten, müssen Sie hier Guthaben für Gesprächsminuten einrichten.",
+			"6": "Überprüfen Sie Ihren aktuellen Diensttarif inklusive der zugehörigen Gebühren",
+			"7": "Zeigen Sie alle Transaktionen an, die unter Ihrem Account durchgeführt wurden, inklusive aller einmaligen Gebühren und Kosten"
+
+		},
+		"endDialog": {
+			"roger": "Verstanden",
+			"content": "Nachdem Sie sich nun mit den verschiedenen Einstellungen vertraut gemacht haben, können Sie die Gelegenheit nutzen, um einige der Informationen an Ihre jeweiligen Bedürfnisse anzupassen. Wenn Sie bereit sind, mit dem Einrichten Ihres Telefonsystems zu beginnen, können Sie diese Einstellungen wieder schließen. Klicken Sie dazu oben rechts auf die Schaltfläche zum Schließen oder einfach noch einmal auf Ihren Namen.",
+			"title": "Fertig!"
+		}
+	},
+
+	"user": {
+		"title": "Benutzer",
+		"passwordsNotMatching": "Die Kennwörter, die Sie eingegeben haben, stimmen nicht überein",
+
+		"email": "E-Mail",
+
+		"password": "Kennwort",
+		"newPassword": "Neues Kennwort",
+		"confirmPassword": "Neues Kennwort bestätigen",
+
+		"timezoneTitle": "Zeitzone und Sprache",
+		"userTimezone": "Zeitzone",
+		"userLanguage": "Sprache",
+
+		"colorblindTitle": "Modus für Farbenblindheit",
+		"colorblindEnabled": "Aktiviert",
+		"colorblindDisabled": "Deaktiviert",
+		"enableColorblind": "Modus für Farbenblindheit aktivieren",
+
+		"__comment": "UI-1335: Hinzufügen von Einstellungen für „Stunden“ zu den Benutzereinstellungen",
+		"__version": "v3.20_s3",
+		"dateTimeTitle": "Datums- und Uhrzeitanzeige",
+		"twelveHoursModeEnabled": "12-Stunden-Format (AM/PM)",
+		"twelveHoursModeDisabled": "24-Stunden-Format",
+		"enableTwelveHoursMode": "Uhrzeit im 12-Stunden-Format (AM/PM)",
+		"dateFormatTitle": "Datumsformat",
+		"dateFormats": {
+			"dmy": "Tag.Monat.Jahr",
+			"mdy": "Monat.Tag.Jahr",
+			"ymd": "Jahr.Monat.Tag"
+		},
+		"outbound_privacy": {
+			"type": "Datenschutz bei der Anrufer-ID ",
+			"inherit": "Standard",
+			"none": "Keine",
+			"number": "Nummer",
+			"name": "Name",
+			"full": "Vollständig"
+		}
+	},
+
+	"account": {
+		"title": "Account",
+
+		"accountName": "Account-Name",
+		"accountId": "Account-ID",
+
+		"accountRealm": "Account-Bereich",
+
+		"technicalContact": "Technischer Kontakt",
+		"technicalContactEmail": "Technischer Kontakt – E-Mail-Adresse",
+		"technicalContactNumber": "Telefonnummer",
+
+		"accessListTitle": "Zugriffsliste",
+		"newCidr": "Einen neuen CIDR hinzufügen",
+		"denyAllowOrder": "Bestellung",
+		"deny": "Ablehnen",
+		"allow": "Zulassen",
+		"cidrs": "CIDRs",
+		"postCidrSuccess": "Die Zugriffsliste wurde erfolgreich aktualisiert.",
+		"accessListInvalid": "Die Zugriffsliste konnte nicht aktualisiert werden. Sie darf keine unzulässigen CIDRs enthalten",
+		"cidrsNotConfigured": "Die Zugriffsliste ist derzeit nicht konfiguriert.",
+		"allowFirst": "Zulassen",
+		"denyFirst": "Ablehnen",
+		"errorDuplicate": "Die Zugriffsliste konnte nicht aktualisiert werden. Bitte entfernen Sie doppelt vorhandene CIDRs",
+
+		"timezoneTitle": "Zeitzone und Sprache",
+		"userTimezone": "Zeitzone",
+		"userLanguage": "Sprache",
+		"__comment": "UI-966: Allgemeines Steuerelement zur Auswahl des Anbieters in „Mein Konto“ hinzugefügt",
+		"__version": "v3.20_s0",
+		"carrierTitle": "Anbietereinstellungen",
+		"outbound_privacy": {
+			"type": "Datenschutz bei der Anrufer-ID ",
+			"inherit": "Standard",
+			"none": "Keine",
+			"number": "Nummer",
+			"name": "Name",
+			"full": "Vollständig"
+		}
+	},
+
+	"__comment": "UI-2596: Auswahlmöglichkeiten für das Format von Telefonnummern hinzugefügt",
+	"__version": "4.1",
+	"numbersFormat": {
+		"title": "Format von Telefonnummern",
+		"listCountries": "Länder",
+		"globalSetting": "Formatmodus",
+		"help": "In der Standardeinstellung werden alle Telefonnummern nach dem internationalen Standard angezeigt (z B. +49 123 456 789 bei einer deutschen Nummer). Sie können aber auch festlegen, dass Nummern in der jeweiligen nationalen Schreibweise angezeigt werden (z. B. (415) 888-2222 bei einer US-Nummer). Sie können aber auch festlegen, dass alle Nummern im internationalen Format angezeigt werden sollen, und dann einzelne Länder auswählen, deren Nummern im jeweiligen nationalen Format stehen sollen.",
+		"international": "International",
+		"national": "National",
+		"inherit": "Account-Standard",
+		"international_with_exceptions": "International mit Ausnahmen"
+	},
+
+	"billing": {
+		"title": "Kreditkarte",
+		"missingCard": "Ihre Kreditkartendaten sind ungültig, abgelaufen oder unvollständig. Bitte aktualisieren Sie Ihre Kreditkartendaten und speichern Sie die Änderungen.",
+
+		"cardOnFile": "Angegebene Kreditkarte",
+		"billingName": "Name",
+		"firstName": "Erste",
+		"lastName": "Letzte",
+		"creditCardNumber": "Nummer",
+		"expirationDate": "Ablaufdatum",
+		"year": "JJJJ",
+		"month": "MM",
+		"securityCode": "Sicherheitscode / CVV-Code",
+		"changeCard": "Kartendaten ändern",
+
+		"accountAdministrator": "Rechnungskontakt",
+		"accountAdministratorFullName": "Vollständiger Name",
+		"accountAdministratorEmail": "Rechnungskontakt – E-Mail-Adresse",
+		"accountAdministratorNumber": "Telefonnummer",
+		"accountAdministratorAddress": "Adresse",
+		"accountAdministratorAddressLineTwo": "Adresszeile 2",
+		"accountAdministratorAddressCity": "Stadt",
+		"accountAdministratorAddressState": "Zustand",
+		"accountAdministratorAddressCountry": "Land",
+		"accountAdministratorAddressZipCode": "Postleitzahl"
+	},
+
+	"trunks": {
+		"title": "Trunks",
+		"outbound": "Ausgehend",
+		"inbound": "Eingehend",
+		"outboundTitle": "Limits für Trunking in Ausgangsrichtung",
+		"inboundTitle": "Limits für Trunking in Eingangsrichtung",
+		"inboundCalling": "Unbegrenzte Trunks in Eingangsrichtung",
+		"simultaneousTwoway": "$_Variable__/month",
+		"simultaneousInbound": "$_Variable__/month",
+		"perMonth": "/month",
+		"quantity": "Neues Limit festlegen",
+		"trunks": "Trunks",
+		"twoWayCalling": "Unbegrenzte Trunks bidirektional",
+		"updateLimits": "Limits aktualisieren",
+		"monthlyCharges": "Monatliche Kosten",
+		"__comment": "UI-664: Hinzufügen der echten bidirektionalen Schieberegler",
+		"__version": "v3.19_s2",
+		"twowayTitle": "Limits für bidirektionales Trunking",
+		"twoway": "Bidirektional",
+		"outboundCalling": "Unbegrenzte Trunks in Ausgangsrichtung",
+		"__comment": "UI-1014: Neudesign von Mein Account",
+		"__version": "v3.20_s1",
+		"currentLimit": "Aktuelles Limit",
+		"example": {
+			"inbound": "BEISPIEL: Bei 5 Trunks in Eingangsrichtung wäre Ihre Plattform in der Lage, 5 gleichzeitig eingehende Anrufe zu bewältigen",
+			"outbound": "BEISPIEL: Bei 10 Trunks in Ausgangsrichtung wäre Ihre Plattform in der Lage, 10 Anrufe an externe Nummern gleichzeitig zu bewältigen",
+			"twoway": "BEISPIEL: Bei 10 Trunks bidirektional wäre Ihr System in der Lage, 6 eingehende Anrufe und 4 ausgehende Anrufe gleichzeitig zu bewältigen."
+		},
+		"help": {
+			"inbound": "Die Anzahl der Trunks in Eingangsrichtung legt fest, wie viele Anrufe gleichzeitig in Ihrem Telefonsystem eingehen können.",
+			"outbound": "Die Anzahl der Trunks in Ausgangsrichtung legt fest, wie viele externe Anrufe Sie gleichzeitig vornehmen können.",
+			"twoway": "Die Anzahl der bidirektionalen Trunks legt fest, wie viele Anrufe gleichzeitig Ihre Plattform bewältigen kann."
+		}
+	},
+
+	"balance" : {
+		"availableCredits": "Verfügbare Guthaben",
+		"minutesUsed": "Verbrauchte Minuten",
+		"callCharges": "Gesprächsgebühren",
+		"activeCall": "Aktiv",
+
+		"title": "Nutzungsgebühren",
+		"payPerMinute": "Bei einer minutenweisen Abrechnung brauchen Sie nur für die Telefonate zu zahlen, die Sie getätigt haben. Hinterlegen Sie dazu als erstes Geld in Ihrem Account, dann können Sie Ihre Telefonnutzung minutenweise abrechnen lassen.",
+		"currentBalance": "Ihr aktueller Saldo: USD",
+		"amount": "Betrag",
+		"addCredit": "Guthaben aufstocken",
+		"invalidAmount": "Bei dem Betrag, den Sie eingegeben haben, liegt ein Fehler vor. Bitte achten Sie bei der Eingabe von Zahlen darauf, nur Ziffern, Punkte und ein Komma zu verwenden.",
+		"autoRechargeEnabled": "Das automatische Aufstocken von Guthaben ist nun aktiviert.",
+		"autoRechargeCancelled": "Das automatische Aufstocken Ihres Guthabens wurde deaktiviert.",
+		"creditsAdded": "Ihrem Saldo wurden {{amount}} ordnungsgemäß hinzugefügt.",
+		"addCreditDialogTitle": "Guthaben aufstocken",
+
+		"dateColumn": "Datum",
+		"durationColumn": "Minuten",
+		"amountColumn": "Betrag",
+		"fromColumn": "Von",
+		"fromCallerColumn": "Anrufer-ID",
+		"toColumn": "An",
+		"toCallerColumn": "Teilnehmer-ID",
+		"directionColumn": " ",
+		"accountColumn": "Account",
+
+		"__comment": "UI-1324: Es wurde die Möglichkeit hinzugefügt, Braintree über ein Config-Flag zu deaktivieren",
+		"__version": "v3.20_s4",
+		"disabledAddCreditTooltip": "Um diese Aktion durchzuführen, ist Braintree erforderlich. Mehr dazu erfahren Sie von Ihrem Administrator.",
+
+		"__comment": "UI-1810: Pop-up „Guthaben aufstocken“ so umgestaltet, dass dort nun auch Schwellenwertalarme festgelegt werden können",
+		"__version": "v4.0",
+		"thresholdAlertsEnabled": "Schwellenwertalarme sind jetzt aktiviert!",
+		"thresholdAlertsCancelled": "Sie haben Schwellenwertalarme erfolgreich deaktiviert.",
+		"addCreditPopup": {
+			"creditBalance": "Verfügbares Guthaben",
+			"menus": {
+				"manageCredits": "Guthaben verwalten",
+				"thresholdAlerts": "Schwellenwertalarme",
+				"autoRecharge": "Automatisch aufstocken"
+			},
+			"alerts": {
+				"missingValue": {
+					"title": "Irgendetwas fehlt!",
+					"threshold_alerts_content": "Sie haben Schwellenwertalarme aktiviert, aber anscheinend vergessen, den Schwellenwertbetrag festzulegen. Ein Betrag ist erforderlich, damit Schwellenwertalarme funktionieren. Bitte wählen Sie entweder einen Betrag aus oder schalten Sie Schwellenwertalarme ab.",
+					"auto_recharge_content": "Sie haben automatisches Aufstocken aktiviert, aber anscheinend vergessen, den unteren Schwellenwert für den Saldo und/oder den aufzustockenden Betrag festzulegen. Beide Angaben sind erforderlich, damit das automatische Aufstocken funktioniert. Bitte legen Sie diese Beträge fest oder schalten Sie das automatische Aufstocken ab."
+				}
+			},
+			"manageCredits": {
+				"text": "Per manuelles Aufstocken können Sie Ihr aktuelles Guthaben unverzüglich erhöhen. Achten Sie darauf, immer über genügend Guthaben zu verfügen. Dieses benötigen Sie, um Auslandstelefonate, minutenweise abgerechnete Gespräche und Notrufe tätigen zu können. Außerdem ist ein Guthaben auch für Anrufer-ID und andere Systemfunktionen erforderlich, bei denen Gebühren anfallen.",
+				"placeholder": "10.00",
+				"button": "Guthaben aufstocken"
+			},
+			"thresholdAlerts": {
+				"text": "Mithilfe von Schwellenwertalarmen können Sie vermeiden, dass Dienste in Ihrem Account plötzlich nicht mehr verfügbar sind. Diese Alarme benachrichtigen Sie, wenn Ihr aktuelles Guthaben ausläuft. Es wird ausdrücklich empfohlen, dass Sie Schwellenwertalarme für Ihren Account immer aktiviert haben.",
+				"labels": {
+					"turnOn": "Schwellenwertalarme aktivieren",
+					"notifyMe": "Ich möchte benachrichtigt werden, wenn mein Saldo diese Höhe unterschreitet"
+				},
+				"placeholder": "10",
+				"button": "Schwellenwertalarm speichern",
+				"alert": {
+					"title": "",
+					"text": ""
+				}
+			},
+			"autoRecharge": {
+				"text": "Das automatische Aufstocken ermöglicht es Ihnen, einen Schwellenwert festzulegen, bei dem Ihr Guthaben automatisch aufgefüllt wird. Außerdem können Sie festlegen, wie hoch der Betrag sein soll, der jedes Mal nachgeschossen wird. Und Sie können sich von dieser Funktion auch per E-Mail benachrichtigen lassen, wenn ein Account aufgestockt wird.",
+				"labels": {
+					"turnOn": "Automatisches Aufstocken aktivieren",
+					"balanceFalls": "Wenn Saldo diese Höhe unterschreitet",
+					"rechargeAccount": "Diesen Account mit diesem Betrag aufstocken"
+				},
+				"placeholders": {
+					"balanceFalls": "10",
+					"rechargeAccount": "50"
+				},
+				"help": {
+					"firstPart": "Um Unterschlagungen zu vermeiden, ",
+					"secondPart": "wird das automatische Aufstocken nur ein Mal pro Tag ausgeführt.",
+					"thirdPart": "Wenn der Saldo ein zweites Mal am gleichen Tag den unteren Schwellenwert unterschreitet, erhalten Sie eine E-Mail mit dem entsprechenden Hinweis, und der Account-Administrator muss das Guthaben dann manuell aufstocken."
+				},
+				"button": "Automatisches Aufstocken bestätigen",
+				"alert": {
+					"title": "",
+					"text": ""
+				}
+			}
+		},
+		"__comment": "UI-2597: Mobile Nutzung im Steuerungscenter hinzugefügt",
+		"__version": "4.0",
+		"mobileTable": {
+			"date": "Datum",
+			"accountName": "Account-Name",
+			"number": "Telefonnummer",
+			"quantity": "Menge",
+			"amount": "Betrag"
+		},
+		"dataUsed": "Datennutzung",
+		"mb": "MB",
+
+		"genericLedger": {
+			"columns": {
+				"account": "Account",
+				"amount": "Betrag",
+				"date": "Datum",
+				"description": "Beschreibung",
+				"usage": "Nutzung"
+			},
+			"ledgers": {
+				"mobile_data": "Mobile Daten",
+				"per-minute-voip": "Pro Minute"
+			}
+		},
+
+		"cidHint": "CID"
+	},
+
+	"servicePlan": {
+		"discount": "Rabatt",
+		"dueOn": "Geschuldet von",
+		"empty": "Ihr aktueller Servicetarif ist leer!",
+		"monthlyChargesTitle": "Monatliche Kosten",
+		"quantityTitle": "Menge",
+		"rateTitle": "Preis",
+		"serviceTitle": "Service",
+		"title": "Servicetarif",
+		"titleHeader": "Servicetarif",
+		"titles": {
+			"cnam": "CNAM",
+			"did_us": "US-DIDs",
+			"e911": "E911",
+			"inbound_cnam": "Eingehender CNAM",
+			"inbound_trunk": "Eingehende Trunks",
+			"inbound_trunks": "Eingehende Trunks",
+			"port": "Port",
+			"sip_device": "SIP-Geräte",
+			"sip_devices": "SIP-Geräte",
+			"tollfree_us": "US gebührenfrei",
+			"twoway_trunk": "2-Wege-Trunks",
+			"twoway_trunks": "2-Wege-Trunks",
+			"__comment": "UI-815: Anzeige der Preise und Kategorien für die Trunks verbessert",
+			"__version": "v3.19_s1",
+			"outbound_trunk": "Ausgehende Trunks",
+			"outbound_trunks": "Ausgehende Trunks",
+			"user": "Benutzer",
+			"users": "Benutzer"
+		},
+		"__comment": "UI-1014: Neudesign von Mein Account",
+		"__version": "v3.20_s1",
+		"dueAmount": "Fälliger Betrag"
+	},
+
+	"transactions": {
+		"title": "Transaktionen",
+		"billingCycle": "Abrechnungszyklus",
+		"oneTimeCharge": "Einmalige Kosten",
+		"monthlyCharge": "Monatliche Kosten",
+		"serviceCharge": "Service-Kosten – anteilig",
+
+		"noData": "Für den ausgewählten Zeitraum liegen keine Transaktionen vor!",
+
+		"serviceTitle": "Service",
+		"discount": "Rabatt",
+		"rateTitle": "Preis",
+		"quantityTitle": "Menge",
+		"monthlyChargesTitle": "Monatliche Kosten",
+		"declined": "Abgelehnt",
+
+		"database_rollup": "Saldoübertrag",
+		"per_minute_call": "Minutenweise abgerechnetes Telefonat",
+		"sub_account_per_minute_call": "Minutenweise abgerechnetes Telefonat (Sub-Account)",
+		"feature_activation": "Aktivierung einer Funktion",
+		"sub_account_feature_activation": "Aktivierung einer Funktion (Sub-Account)",
+		"number_activation": "Aktivierung einer Nummer",
+		"sub_account_number_activation": "Aktivierung einer Nummer (Sub-Account)",
+		"manual_addition": "Manuelle Aufstockung",
+		"sub_account_manual_addition": "Manuelle Aufstockung (Sub-Account)",
+		"admin_discretion": "Admin-Spielraum",
+		"__comment": "UI-383: Fehler in Transaktionen für Waren behoben",
+		"__version": "v3.20_s0",
+		"unknown": "Kosten",
+		"__comment": "UI-1014: Neudesign von Mein Account",
+		"__version": "v3.20_s1",
+		"startDate": "Startdatum",
+		"endDate": "Enddatum",
+		"total": "Gesamt",
+
+		"__comment": "UI-1248: Änderungen bei Transaktionen, um deren Anzeige zu verbessern",
+		"__version": "3.19",
+		"refundText": "(Rückerstattung)",
+		"codes": {
+			"1001": "Minutenweise abgerechnetes Telefonat",
+			"1002": "Sub-Account – Minutenweise abgerechnetes Telefonat",
+			"2001": "Aktivierung einer Funktion",
+			"2002": "Sub-Account – Aktivierung einer Funktion",
+			"2003": "Aktivierung einer Nummer",
+			"2004": "Sub-Account – Aktivierung einer Nummer",
+			"3001": "Manuelle Aufstockung",
+			"3002": "Sub-Account – Manuelle Aufstockung",
+			"3003": "Automatische Aufstockung",
+			"3004": "Sub-Account – Automatische Aufstockung",
+			"3005": "Admin-Spielraum",
+			"3006": "Aufladen",
+			"4000": "Saldoübertrag",
+			"5000": "Wiederkehrend",
+			"5001": "Monatlich wiederkehrend",
+			"5002": "Monatlich wiederkehrend (anteilig)",
+			"9999": "Unbekannt"
+		},
+		"errorStatuses": {
+			"voided": "Annulliert",
+			"declined": "Abgelehnt",
+			"processor_declined": "Abgelehnt"
+		}
+	},
+
+	"miscCategory": "Sonstiges",
+	"errorTracker": {
+		"title": "Protokoll für UI-Fehler",
+		"errorTotal": "Anzahl der Fehler:",
+		"apiTotal": "Erlang",
+		"jsTotal": "Javascript",
+		"viewDetails": "Details"
+	},
+
+	"__comment": "UI-1397: Obere Leiste von unnötigen HTMLs befreit",
+	"__version": "v3.20_s4",
+	"isMasquerading": {
+		"switchBackTo": "Wieder zurück zu",
+		"myAccount": "Mein Account",
+		"currentlyViewing": "Derzeit angezeigt"
+	}
+}

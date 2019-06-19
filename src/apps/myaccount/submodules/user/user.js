@@ -31,7 +31,11 @@ define(function(require) {
 				}
 			}, function(err, results) {
 				var formattedData = self.userLayoutFormatData(results),
-					userTemplate = $(monster.template(self, 'user-layout', formattedData));
+					userTemplate = $(self.getTemplate({
+						name: 'layout',
+						data: formattedData,
+						submodule: 'user'
+					}));
 
 				self.userBindingEvents(userTemplate, results);
 
@@ -47,6 +51,12 @@ define(function(require) {
 			var self = this;
 
 			data.defaultNumbersFormat = self.i18n.active().numbersFormat[monster.util.getDefaultNumbersFormat()];
+			data.outboundPrivacy = _.map(self.appFlags.common.outboundPrivacy, function(strategy) {
+				return {
+					key: strategy,
+					value: self.i18n.active().myAccountApp.common.outboundPrivacy.values[strategy]
+				};
+			});
 
 			if (!(data.user.hasOwnProperty('ui_flags') && data.user.ui_flags.hasOwnProperty('numbers_format'))) {
 				data.user.ui_flags = data.user.ui_flags || {};

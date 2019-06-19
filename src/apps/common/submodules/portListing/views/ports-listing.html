@@ -1,0 +1,38 @@
+<div class="monster-table-wrapper-spaced">
+	<table class="monster-table footable" id="ports_listing">
+		<thead>
+			<tr>
+				<th data-type="html">
+					{{toUpperCase i18n.portListing.misc.portInfo.name}}
+				</th>
+			{{#if isMonsterApp}}
+				<th data-type="html">
+					{{toUpperCase i18n.portListing.misc.portInfo.account}}
+				</th>
+			{{/if}}
+				<th data-type="html">
+					{{toUpperCase i18n.portListing.misc.portInfo.status}}
+				</th>
+				<th data-type="number">
+					{{toUpperCase i18n.portListing.misc.portInfo.numbers}}
+				</th>
+				{{#compare type '===' 'suspended'}}
+					<td>
+						{{toUpperCase i18n.portListing.misc.portInfo.losingCarrier}}
+					</td>
+				{{/compare}}
+				{{#compare type '===' 'progressing'}}
+					<td>
+						{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
+					</td>
+				{{/compare}}
+				{{#compare type '===' 'completed'}}
+					<td>
+						{{toUpperCase i18n.portListing.misc.portInfo.winningCarrier}}
+					</td>
+				{{/compare}}
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>

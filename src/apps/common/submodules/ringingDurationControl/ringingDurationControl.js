@@ -23,7 +23,11 @@ define(function(require) {
 				container = args.container,
 				endpoints = args.endpoints,
 				callback = args.callback,
-				template = $(monster.template(self, 'ringingDurationControl-layout', args));
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: args,
+					submodule: 'ringingDurationControl'
+				}));
 
 			container
 				.empty()
@@ -196,7 +200,13 @@ define(function(require) {
 		ringingDurationControlAddEndpoint: function(args) {
 			var self = this,
 				container = args.container;
-			container.find('.grid-time').append(monster.template(self, 'ringingDurationControl-row', args));
+			container
+				.find('.grid-time')
+					.append($(self.getTemplate({
+						name: 'row',
+						data: args,
+						submodule: 'ringingDurationControl'
+					})));
 			self.ringingDurationControlRenderSliders(container, [args.endpoint], parseInt(container.find('.grid-time-row.title .scale-max-input').val()));
 		},
 

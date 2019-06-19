@@ -1,9 +1,21 @@
 {{#each transactions}}
 	<tr class="transaction-row">
-		<td data-sort-value="{{period.end}}">{{toFriendlyDate period.end}}</td>
-		<td>{{ account.name }}</td>
-		<td>{{ formatPhoneNumber source.id }}</td>
-		<td data-sort-value="{{usage.quantity}}">{{ usage.quantity }} {{usage.unit }}</td>
-		<td>${{ amount }}</td>
+		<td data-sort-value="{{timestamp}}">
+			{{toFriendlyDate timestamp}}
+		</td>
+		<td>
+			{{name}}
+		</td>
+		<td data-filter-value="{{phoneNumber}}">
+			{{formatPhoneNumber phoneNumber}}
+		</td>
+		<td data-sort-value="{{usage.quantity}}">
+			{{usage.quantity}} {{usage.unit}}
+		</td>
+	{{#if @root.showCredits}}
+		<td data-sort-value="{{amount}}">
+			{{formatPrice amount}}
+		</td>
+	{{/if}}
 	</tr>
 {{/each}}

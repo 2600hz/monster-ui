@@ -1,0 +1,97 @@
+<h3 class="title">
+	{{i18n.portWizard.accountVerification.title}}
+</h3>
+<p class="title-help">
+	{{i18n.portWizard.accountVerification.text}}
+</p>
+<div class="row-fluid">
+	<form class="span5 form-horizontal" id="form_account_verification">
+		<h4 class="title">
+			{{i18n.portWizard.accountVerification.form.legend}}
+		</h4>
+		<div class="control-group">
+			<label for="carrier" class="control-label">
+				{{i18n.portWizard.accountVerification.form.label.carrier}}
+			</label>
+			<div class="controls">
+			{{#if carriers}}
+				<select name="bill.carrier" id="carrier">
+				{{#select request.bill.carrier}}
+					{{#each carriers}}
+						<option value="{{this}}">{{this}}</option>
+					{{/each}}
+				{{/select}}
+				</select>
+			{{else}}
+				<input type="text" id="carrier" name="bill.carrier" value="{{request.bill.carrier}}">
+			{{/if}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for="name" class="control-label">
+				{{i18n.portWizard.accountVerification.form.label.accountName}}
+			</label>
+			<div class="controls">
+				<input type="text" id="name" name="bill.name" value="{{request.bill.name}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label for="address" class="control-label">
+				{{i18n.portWizard.accountVerification.form.label.billingAddress}}
+			</label>
+			<div class="controls-list">
+				<select name="bill.street_pre_dir">
+					{{#select selectedPreDir}}
+						<option value="">{{i18n.portWizard.accountVerification.form.placeholder.preDir}}</option>
+						{{#each cardinalDirections}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input type="text" name="bill.street_number" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.streetNumber}}" value="{{request.bill.street_number}}">
+				<input type="text" name="bill.street_address" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.streetName}}" value="{{request.bill.street_address}}">
+				<input type="text" name="bill.street_type" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.streetType}}" value="{{request.bill.street_type}}">
+				<select name="bill.street_post_dir">
+					{{#select selectedPostDir}}
+						<option value="">{{i18n.portWizard.accountVerification.form.placeholder.postDir}}</option>
+						{{#each cardinalDirections}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input type="text" name="bill.extended_address" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.extended_address}}" value="{{request.bill.extended_address}}">
+				<input type="text" name="bill.locality" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.city}}" value="{{request.bill.locality}}">
+				<input type="text" name="bill.region" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.state}}" value="{{request.bill.region}}">
+				<input type="text" name="bill.postal_code" placeholder="{{i18n.portWizard.accountVerification.form.placeholder.zip}}" value="{{request.bill.postal_code}}">
+			</div>
+		</div>
+		<p class="text">
+			{{i18n.portWizard.accountVerification.form.text}}
+		</p>
+		<div class="control-group">
+			<label for="account_number" class="control-label">
+				{{i18n.portWizard.accountVerification.form.label.accountNumber}}
+			</label>
+			<div class="controls">
+				<input type="text" id="account_number" name="bill.account_number" value="{{request.bill.account_number}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label for="pin" class="control-label">
+				{{i18n.portWizard.accountVerification.form.label.pin}}
+			</label>
+			<div class="controls">
+				<input type="text" id="pin" name="bill.pin" value="{{request.bill.pin}}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label for="btn" class="control-label">
+				{{i18n.portWizard.accountVerification.form.label.btn}}
+			</label>
+			<div class="controls">
+				<input type="text" id="btn" name="bill.btn" value="{{request.bill.btn}}">
+			</div>
+		</div>
+	</form>
+	<div class="span6 offset1 pdf-container"></div>
+</div>

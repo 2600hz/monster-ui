@@ -1,15 +1,25 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
+
+	var appSubmodules = [
+		'alerts'
+	];
+
+	require(_.map(appSubmodules, function(name) {
+		return './submodules/' + name + '/' + name;
+	}));
 
 	var app = {
 		name: 'core',
 
+		subModules: appSubmodules,
+
 		css: [ 'app' ],
 
 		i18n: {
+			'de-DE': { customCss: false },
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -25,7 +35,8 @@ define(function(require) {
 			'core.initializeShortcuts': 'initializeShortcuts',
 			'socket.connected': 'refreshIfWebSocketsApp',
 			'socket.disconnected': 'onSocketDisconnected',
-			'core.showWarningDisconnectedSockets': 'showWarningSockets'
+			'core.showWarningDisconnectedSockets': 'showWarningSockets',
+			'core.hideTopbarDropdowns': 'hideTopbarDropdowns'
 		},
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
@@ -70,7 +81,10 @@ define(function(require) {
 					},
 					useDropdownApploader: monster.config.whitelabel.useDropdownApploader
 				},
-				mainTemplate = $(monster.template(self, 'app', dataTemplate));
+				mainTemplate = $(self.getTemplate({
+					name: 'app',
+					data: dataTemplate
+				}));
 
 			document.title = monster.config.whitelabel.applicationTitle;
 
@@ -92,7 +106,9 @@ define(function(require) {
 
 		loadSVG: function() {
 			var self = this,
-				svgTemplate = monster.template(self, 'svg-container');
+				svgTemplate = $(self.getTemplate({
+					name: 'svg-container'
+				}));
 
 			$('.core-wrapper').append(svgTemplate);
 		},
@@ -148,10 +164,16 @@ define(function(require) {
 					label: self.i18n.active().controlCenter
 				};
 
+				myaccount.icon = monster.util.getAppIconPath(myaccount);
+
 				monster.ui.formatIconApp(myaccount);
 
 				if (currentApp.is(':empty')) {
-					currentApp.append(monster.template(self, 'current-app', myaccount));
+					currentApp
+						.append($(self.getTemplate({
+							name: 'current-app',
+							data: myaccount
+						})));
 
 					navbar
 						.find('#main_topbar_current_app_name')
@@ -164,7 +186,10 @@ define(function(require) {
 					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
 						currentApp
 							.empty()
-							.append(monster.template(self, 'current-app', myaccount));
+							.append($(self.getTemplate({
+								name: 'current-app',
+								data: myaccount
+							})));
 
 						navbar
 							.find('#main_topbar_current_app_name')
@@ -186,14 +211,21 @@ define(function(require) {
 				if (appName === 'appstore') {
 					currentApp.empty();
 				} else if (currentApp.is(':empty')) {
-					currentApp.append(monster.template(self, 'current-app', defaultApp));
+					currentApp
+						.append($(self.getTemplate({
+							name: 'current-app',
+							data: defaultApp
+						})));
 
 					navbar.find('#main_topbar_current_app_name').fadeIn(100);
 				} else {
 					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
 						currentApp
 							.empty()
-							.append(monster.template(self, 'current-app', defaultApp));
+							.append($(self.getTemplate({
+								name: 'current-app',
+								data: defaultApp
+							})));
 
 						navbar.find('#main_topbar_current_app_name').fadeIn(100);
 					});
@@ -230,6 +262,7 @@ define(function(require) {
 				if (!monster.routing.hasMatch()) {
 					if (typeof defaultApp !== 'undefined') {
 						monster.apps.load(defaultApp, function(app) {
+							monster.pub('core.alerts.refresh');
 							self.showAppName(defaultApp);
 							app.render($('#monster_content'));
 						}, {}, true);
@@ -261,12 +294,31 @@ define(function(require) {
 			};
 
 			/* Only subscribe to the requestStart and End event when the spinner is loaded */
-			monster.sub('monster.requestStart', function() {
-				self.onRequestStart(spinner);
+			monster.sub('monster.requestStart', function(params) {
+				self.onRequestStart(_.merge({
+					spinner: spinner
+				}, params));
 			});
 
-			monster.sub('monster.requestEnd', function() {
-				self.onRequestEnd(spinner);
+			monster.sub('monster.requestEnd', function(params) {
+				self.onRequestEnd(_.merge({
+					spinner: spinner
+				}, params));
+			});
+
+			// Hide dropdowns when clicking anywhere outside the topbar nav links
+			$(document).on('click',
+				_.throttle(function(e) {
+					if ($(e.target).closest('#main_topbar_nav').length > 0) {
+						return;
+					}
+					e.stopPropagation();
+					self.hideTopbarDropdowns();
+				}, 250));
+
+			// Hide dropdowns on click at any topbar link
+			container.find('.core-topbar .links').on('click', function() {
+				self.hideTopbarDropdowns({ except: $(this).attr('id') });
 			});
 
 			// Different functionality depending on whether default apploader or dropdown apploader to be opened
@@ -279,15 +331,6 @@ define(function(require) {
 			container.find('#main_topbar_account_toggle_link').on('click', function(e) {
 				e.preventDefault();
 				self.toggleAccountToggle();
-			});
-
-			// monster-content being one of the containers in the container variable, we can't select it easily without looping on container, so we select it like this
-			$('.core-wrapper').on('click', '#monster_content', function() {
-				var $accountToggle = $('#main_topbar_account_toggle');
-
-				if ($accountToggle.hasClass('open')) {
-					$accountToggle.removeClass('open');
-				}
 			});
 
 			container.find('#main_topbar_account_toggle').on('click', '.home-account-link', function() {
@@ -317,7 +360,10 @@ define(function(require) {
 								if (monster.apps[currentApp].isMasqueradable) {
 									monster.apps[currentApp].render();
 								} else {
-									toastr.warning(self.i18n.active().noMasqueradingAllowed);
+									monster.ui.toast({
+										type: 'warning',
+										message: self.i18n.active().noMasqueradingAllowed
+									});
 									monster.apps.apploader.render();
 								}
 							}
@@ -386,7 +432,12 @@ define(function(require) {
 				allowBackOnMasquerading: true,
 				onSearch: function(searchValue) {
 					if (searchValue) {
-						var template = monster.template(self, 'accountToggle-search', { searchValue: searchValue });
+						var template = $(self.getTemplate({
+							name: 'accountToggle-search',
+							data: {
+								searchValue: searchValue
+							}
+						}));
 
 						mainContainer.find('.current-account-container').html(template);
 					} else {
@@ -408,7 +459,10 @@ define(function(require) {
 										if (monster.apps[currentApp].isMasqueradable) {
 											monster.apps[currentApp].render();
 										} else {
-											toastr.warning(self.i18n.active().noMasqueradingAllowed);
+											monster.ui.toast({
+												type: 'warning',
+												message: self.i18n.active().noMasqueradingAllowed
+											});
 											monster.apps.apploader.render();
 										}
 									}
@@ -454,7 +508,15 @@ define(function(require) {
 					});
 					$('#main_topbar_account_toggle').addClass('masquerading');
 
-					toastr.info(monster.template(self, '!' + self.i18n.active().triggerMasquerading, { accountName: account.name }));
+					monster.ui.toast({
+						type: 'info',
+						message: self.getTemplate({
+							name: '!' + self.i18n.active().triggerMasquerading,
+							data: {
+								accountName: account.name
+							}
+						})
+					});
 
 					monster.pub('core.changedAccount');
 
@@ -505,7 +567,10 @@ define(function(require) {
 			monster.pub('myaccount.renderNavLinks');
 			$('#main_topbar_account_toggle').removeClass('masquerading');
 
-			toastr.info(self.i18n.active().restoreMasquerading);
+			monster.ui.toast({
+				type: 'info',
+				message: self.i18n.active().restoreMasquerading
+			});
 
 			monster.pub('core.changedAccount');
 
@@ -599,9 +664,16 @@ define(function(require) {
 			});
 		},
 
-		onRequestStart: function($spinner) {
+		onRequestStart: function(args) {
 			var self = this,
-				waitTime = 250;
+				waitTime = 250,
+				$spinner = args.spinner,
+				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
+
+			// If indicated, bypass progress indicator display/hide process
+			if (bypassProgressIndicator) {
+				return;
+			}
 
 			self.request.counter++;
 
@@ -623,9 +695,16 @@ define(function(require) {
 			}, waitTime);
 		},
 
-		onRequestEnd: function($spinner) {
+		onRequestEnd: function(args) {
 			var self = this,
-				waitTime = 50;
+				waitTime = 50,
+				$spinner = args.spinner,
+				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
+
+			// If indicated, bypass progress indicator display/hide process
+			if (bypassProgressIndicator) {
+				return;
+			}
 
 			self.request.counter--;
 
@@ -762,7 +841,10 @@ define(function(require) {
 						},
 						kazooVersion: monster.config.developerFlags.kazooVersion
 					},
-					template = $(monster.template(self, 'dialog-accountInfo', dataTemplate));
+					template = $(self.getTemplate({
+						name: 'dialog-accountInfo',
+						data: dataTemplate
+					}));
 
 				template.find('.copy-clipboard').each(function() {
 					var $this = $(this);
@@ -783,7 +865,12 @@ define(function(require) {
 			if (!$('.shortcuts-dialog').length) {
 				var self = this,
 					shortcuts = monster.ui.getShortcuts(),
-					shortcutsTemplate = monster.template(self, 'shortcuts', { categories: shortcuts });
+					shortcutsTemplate = $(self.getTemplate({
+						name: 'shortcuts',
+						data: {
+							categories: shortcuts
+						}
+					}));
 
 				monster.ui.dialog(shortcutsTemplate, {
 					title: self.i18n.active().globalShortcuts.popupTitle,
@@ -830,7 +917,10 @@ define(function(require) {
 				$('.warning-socket-wrapper').remove();
 				currentApp.render();
 
-				toastr.success(self.i18n.active().brokenWebSocketsWarning.successReconnect);
+				monster.ui.toast({
+					type: 'success',
+					message: self.i18n.active().brokenWebSocketsWarning.successReconnect
+				});
 			}
 		},
 
@@ -855,6 +945,28 @@ define(function(require) {
 
 			if (args.hasOwnProperty('callback')) {
 				args.callback && args.callback();
+			}
+		},
+
+		/**
+		 * Hide topbar dropdowns
+		 * @param  {Object} [args]
+		 * @param  {String} [args.except]  ID of any element that does not want to be hidden
+		 */
+		hideTopbarDropdowns: function(args) {
+			if (!monster.util.isLoggedIn()) {
+				// If user is not logged in, there is no menu displayed, so there is no need
+				// to hide topbar dropdowns
+				return;
+			}
+
+			var except = _.get(args, 'except');
+
+			if (except !== 'main_topbar_account_toggle_link') {
+				$('#main_topbar_account_toggle').removeClass('open');
+			}
+			if (except !== 'main_topbar_alerts_link') {
+				monster.pub('core.alerts.hideDropdown');
 			}
 		}
 	};

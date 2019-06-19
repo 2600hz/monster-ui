@@ -1,0 +1,47 @@
+<div class="service-plan-details">
+{{#if servicePlan}}
+	{{#each servicePlan.plan}}
+		<div class="line header">
+			<div>{{ tryI18n @root.i18n.servicePlanDetails.keys @key }}</div>
+			<div></div>
+			<div></div>
+		</div>
+		{{#each this}}
+		<div class="line">
+			<div class="name">
+			<span {{#if this.description}}data-toggle="tooltip" data-placement="top" data-original-title="{{this.description}}"{{/if}}>
+				{{#if this.name}}
+					{{this.name}}
+				{{else}}
+					{{tryI18n @root.i18n.servicePlanDetails.keys @key}}
+				{{/if}}
+			</span>
+			</div>
+			<div class="charges">
+				{{#compare this.rate ">" 0}}
+				<div>{{@root.i18n.servicePlanDetails.keys.rate}}: {{formatPrice this.rate}}</div>
+				{{/compare}}
+				{{#compare this.activation_charge ">" 0}}
+				<div>{{@root.i18n.servicePlanDetails.keys.activation_charge}}: {{formatPrice this.activation_charge}}</div>
+				{{/compare}}
+				{{#compare this.minimum ">" 0}}
+				<div>{{@root.i18n.servicePlanDetails.keys.minimum}}: {{formatPrice this.minimum}}</div>
+				{{/compare}}
+			</div>
+			<div class="exceptions">
+			{{#if this.exceptions.length}}
+				{{@root.i18n.servicePlanDetails.keys.exceptions}}:
+				{{#each this.exceptions}}
+					{{#if @index}}, {{/if}}{{this}}
+				{{/each}}
+			{{/if}}
+			</div>
+		</div>
+		{{/each}}
+	{{/each}}
+{{else}}
+	<div class="no-service-plan">
+	{{i18n.servicePlanDetails.noServicePlan}}
+	</div>
+{{/if}}
+</div>

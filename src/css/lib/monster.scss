@@ -163,30 +163,86 @@ h1 {
 	color: darken($primary-color, 30%);
 	border-color: darken($primary-color, 20%);
 	background: $primary-color;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-secondary {
 	color: $primary-color;
 	border-color: $primary-color;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-neutral {
 	border-color: $input-border-color;
 	color: #555;
 	background: #F9F9F9;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-success {
 	color: darken($success-color, 30%);
 	border-color: darken($success-color, 20%);
 	background: $success-color;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-warning {
 	color: #8f6b00;
 	border-color: #f0b400;
 	background: #f8a506;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
 }
 .monster-button-danger {
 	color: #8a1000;
 	border-color: #e01a00;
 	background: #ff3d24;
+	&.dropdown-toggle {
+		min-width: 20px;
+		.caret {
+			margin-top: 8px;
+		}
+	}
+}
+
+[class*="monster-button-ghost"] {
+	color: $midgray2;
+	border-color: transparent;
+	background-color: transparent;
+	min-width: inherit;
+	display: inline-flex;
+	justify-content: center;
+
+	&:hover {
+		color: $woodsmoke;
+		background-color: #dbdbde;
+	}
+}
+
+.monster-button-ghost-icon {
+	min-width: 38px;
+	min-height: 38px;
+	padding: 0;
 }
 
 /**************** EFFECTS ***************/
@@ -649,80 +705,79 @@ label[class*='monster-radio'].prepend-label > span {
 /********************* MONSTER PANEL TEXT *******************/
 /************************************************************/
 .monster-panel-text {
-	box-shadow: 1px 1px 1px #aaa;
-	box-sizing: border-box;
-	border-left-width: 4px;
-	border-left-style: solid;
+	display: block;
+	margin-bottom: 1rem;
 	width: 320px;
-}
+	padding: 0;
+	background: $panel-background-color;
+	border-radius: 2px;
+	box-shadow: 0px 1px 4px 0px rgba(21, 21, 23, 0.24);
+	color: $woodsmoke;
 
-.monster-panel-text.fill-width {
-	width: 100%;
-}
-
-.monster-panel-text .monster-panel-text-header {
-	padding: 12px 20px;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-	border-top-width: 1px;
-	border-top-style: solid;
-}
-
-.monster-panel-text .monster-panel-text-header .title-text-wrapper {
-	float: left;
-	font-weight: 700;
-	color: #333;
-	text-transform: uppercase;
-	width: 245px;
-	text-align: left;
-}
-
-.monster-panel-text .monster-panel-text-header .icon-wrapper {
-	float: left;
-}
-
-.monster-panel-text .monster-panel-text-header .icon-wrapper i {
-	font-size: 18px;
-	margin-right: 14px;
-	vertical-align: bottom;
-}
-
-.monster-panel-text .monster-panel-text-content {
-	background: #FFF;
-	box-sizing: border-box;
-	display: inline-block;
-	padding: 15px 20px;
-	width: 100%;
-}
-
-@mixin color-panel($color) {
-	border-left-color: $color;
+	&.fill-width {
+		width: 100%;
+	}
 
 	.monster-panel-text-header {
-		background: lighten($color, 30%);
-		border-color: $color;
+		padding: 1.25rem 1rem 1rem 1rem;
+		font-size: 1rem;
+		line-height: 16px;
+
+		.title-text-wrapper {
+			font-weight: 600;
+			text-align: left;
+		}
+
+		.icon-wrapper {
+			float: left;
+
+			.iconography {
+				margin-right: 0.75rem;
+				vertical-align: bottom;
+				padding: 0;
+			}
+		}
 	}
 
-	.monster-panel-text-header i {
-		color: $color;
+	.monster-panel-text-content {
+		display: block;
+		padding: 0 1rem 1rem 1rem;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 21px;
+	}
+
+	@mixin color-panel($color) {
+		border-left-color: $color;
+
+
+		.monster-panel-text-header {
+			box-shadow: inset 0px 4px 0px 0px $color;
+			border-radius: 2px 2px 0px 0px;
+
+			.iconography {
+				color: $color;
+			}
+		}
+	}
+
+	&[data-type="info"] {
+		@include color-panel($primary-color);
+	}
+
+	&[data-type="warning"] {
+		@include color-panel($warning-color);
+	}
+
+	&[data-type="danger"] {
+		@include color-panel($danger-color);
+	}
+
+	&[data-type="success"] {
+		@include color-panel($success-color);
 	}
 }
 
-.monster-panel-text[data-type="info"] {
-	@include color-panel($primary-color);
-}
-
-.monster-panel-text[data-type="warning"] {
-	@include color-panel($warning-color);
-}
-
-.monster-panel-text[data-type="danger"] {
-	@include color-panel($danger-color);
-}
-
-.monster-panel-text[data-type="success"] {
-	@include color-panel($success-color);
-}
 /************************************************************/
 /************************** WIZARD **************************/
 /************************************************************/
@@ -1304,6 +1359,10 @@ table.monster-table {
 }
 /******************** TABLE MODE: spaced ********************/
 
+.monster-table-wrapper-spaced .monster-table-header {
+	margin-top: 0.5em;
+}
+
 .monster-table-wrapper-spaced .monster-table .footable-filtering th {
 	padding: 0;
 }
@@ -1344,27 +1403,89 @@ table.monster-table {
 	border-bottom-right-radius: 2px;
 }
 
+/****************** TABLE MODE: hoverable *******************/
+
+.monster-table-wrapper-hoverable table.monster-table {
+	thead {
+		vertical-align: bottom;
+
+		.footable-filtering {
+			th {
+				padding: 0
+			}
+		}
+		.footable-header {
+			background-color: transparent;
+
+			th {
+				border: 0;
+				color: #777;
+				font-size: 12px;
+				font-weight: 600;
+				padding-bottom: 12px;
+			}
+		}
+	}
+	tbody {
+		background-color: transparent;
+
+		tr {
+			border: 0;
+
+			td {
+				border: 0;
+				border-top: 1px solid $french-gray2;
+			}
+		}
+		tr:last-child {
+			td {
+				border-bottom: 1px solid $french-gray2;
+
+				&:first-child,
+				&:last-child {
+					border-radius: 0;
+				}
+			}
+		}
+		tr:hover {
+			background-color: $foreground-primary-color;
+			box-shadow: 0 1px 4px 0px $french-gray2;
+
+			td {
+				border-color: transparent;
+			}
+		}
+		tr:hover + tr {
+			td {
+				border-top-color: transparent;
+			}
+		}
+	}
+}
+
 /************************** WRAPPER *************************/
 [class*='monster-table-wrapper'] {
 	position: relative;
-}
 
-[class*='monster-table-wrapper'] .monster-table-header {
-	position: absolute;
-	z-index: 20;
-}
+	& > h4.title {
+		margin: 0;
+		color: $woodsmoke;
+		font-size: 16px;
+		font-weight: 600;
+	}
 
-[class*='monster-table-wrapper'] .monster-table-header > * {
-	display: block;
-	float: left;
-}
+	.monster-table-header {
+		position: absolute;
+		z-index: 20;
 
-[class*='monster-table-wrapper'] .monster-table-header > *:not(:first-child) {
-	margin-left: 15px;
-}
-
-.monster-table-wrapper-spaced .monster-table-header {
-	margin-top: 0.5em;
+		& > * {
+			display: block;
+			float: left;
+		}
+		& > *:not(:first-child) {
+			margin-left: 15px;
+		}
+	}
 }
 
 /************************************************************/

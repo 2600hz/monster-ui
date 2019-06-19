@@ -81,7 +81,10 @@
 .dialog-charges {
 	width: 520px;
 }
-.dialog-charges .content > div {
+.dialog-charges .content > .bookkeeper {
+	text-align: left;
+}
+.dialog-charges .content > .section {
 	padding: 10px;
 	border: solid 1px #c0c0c9;
 	border-radius: 2px;
@@ -99,6 +102,8 @@
 }
 .dialog-charges .charges-list {
 	margin-top: 20px;
+	max-height: 349px;
+	overflow-y: auto;
 }
 .dialog-charges .charges-element {
 	padding: 10px;
@@ -194,6 +199,13 @@
 .alert-dialog-javascript table.table tr td {
 	line-height: 15px;
 	white-space: pre-line;
+}
+
+/************************************************************/
+/****************** MONSTER DIALOG RELATED ******************/
+/************************************************************/
+body.monster-dialog-active {
+	overflow: hidden;
 }
 
 /************************************************************/
@@ -508,88 +520,86 @@ i.monster-password-strength {
 /************************************************************/
 /************************ APPS LAYOUT ***********************/
 /************************************************************/
-
-.core-content .app-layout {
+.app-layout {
 	position: relative;
 	min-height: 100%;
 	background-color: $background-primary-color;
 	box-sizing: border-box;
 	padding-bottom: 15px;
-}
 
-.core-content .app-header .app-navbar-bg {
-	position: relative;
-	z-index: 10;
-	border-bottom: 1px solid #c0c0c9;
-	background-color: #fff;
-	box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
-}
+	.app-header {
+		.app-navbar-bg {
+			position: relative;
+			z-index: 10;
+			border-bottom: 1px solid #c0c0c9;
+			background-color: #fff;
+			box-shadow: 0 0 5px 0 rgba(48, 48, 57, .3);
 
-.core-content .app-header .app-navbar-wrapper {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 18px 20px 0;
-}
+			.app-navbar-wrapper {
+				max-width: 1280px;
+				margin: 0 auto;
+				padding: 18px 20px 0;
 
-.core-content .app-layout.fullscreen .app-header .app-navbar-wrapper,
-.core-content .app-layout.docked .app-header .app-navbar-wrapper {
-	max-width: none;
-}
+				.app-navbar {
+					clear: both;
+				}
+			}
+		}
 
-.core-content .app-header .app-navbar {
-	clear: both;
-}
+		.app-subnav-bg {
+			z-index: 9;
+			display: none;
 
-.core-content .app-header .app-subnav-bg {
-	z-index: 9;
-	display: none;
-}
+			.app-subnav-wrapper {
+				max-width: 1280px;
+				margin: 0 auto;
+				padding: 20px 20px 0;
 
-.core-content .app-header .app-subnav-wrapper {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 20px 20px 0;
-}
+				.app-subnav {
+					border-bottom: 1px solid #c0c0c9;
 
-.core-content .app-header .app-subnav-wrapper .app-subnav {
-	border-bottom: 1px solid #c0c0c9;
-}
+					&:not(.active) {
+						display: none;
+					}
+				}
+			}
+		}
+	}
 
-.core-content .app-header .app-subnav:not(.active) {
-	display: none;
-}
+	.app-content-wrapper {
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 30px 20px;
+	}
 
-.core-content .app-layout .app-content-wrapper {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 30px 20px;
-}
+	&.docked {
+		.app-content-wrapper {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			padding: 0;
+		}
 
-.core-content .app-layout .app-content-wrapper.subnav-enabled {
-	background: #FFF;
-	max-width: 1238px;
-	border-left: 1px solid #CCC;
-	border-bottom: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	padding: 40px 20px 20px;
-}
+		&.with-navbar {
+			.app-content-wrapper {
+				position: relative;
+			}
+		}
+	}
 
-.core-content .app-layout.fullscreen .app-content-wrapper {
-	max-width: none;
-}
-
-.core-content .app-layout.docked .app-content-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	max-width: none;
-	height: 100%;
-	padding: 0;
-}
-
-.core-content .app-layout.docked.with-navbar .app-content-wrapper {
-	position: relative;
+	&.docked,
+	&.fullscreen {
+		.app-header {
+			.app-navbar-wrapper {
+				max-width: none;
+			}
+		}
+		.app-content-wrapper {
+			max-width: none;
+		}
+	}
 }
 
 /************************************************************/
@@ -936,4 +946,49 @@ i.monster-password-strength {
 .over-monster-overlay {
 	/* position: relative !important; */
 	z-index: 4 !important;
+}
+
+/************************************************************/
+/********************* KEY-VALUE EDITOR *********************/
+/************************************************************/
+.monster-key-value-editor {
+	.monster-key-value-data-container {
+		.monster-key-value-editor-row {
+			margin-bottom: 10px;
+			display: flex;
+
+			&:hover {
+				.key-value-remove {
+					opacity: 1;
+				}
+			}
+
+			.data-key, .data-value {
+				flex: 1;
+				padding-right: 1rem;
+
+				input {
+					width: 100%;
+					box-sizing: border-box;
+					height: 30px;
+				}
+			}
+
+			.key-value-remove {
+				color: $font-primary-color;
+				cursor: pointer;
+				padding-top: 0.2rem;
+				opacity: 0;
+				transition: opacity 0.125s ease-in-out;
+
+				&:hover {
+					color: $danger-color;
+				}
+			}
+		}
+	}
+
+	.key-value-add {
+		font-size: 0.75rem;
+	}
 }

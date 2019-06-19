@@ -11,9 +11,16 @@
 
 	"editSettings": "Bewerk",
 	"changesSaved": "Wijzigingen Opgeslagen!",
+	"placeholderName": "Jon Doe",
 	"placeholderEmail": "jon_doe@yumminova.eu",
 	"phoneNumber": "Telefoonnummer",
 	"placeholderNumber": "+31222xxxxxx",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "3rd Floor",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderCountry": "United States",
+	"placeholderZipCode": "12345",
 
 	"user": {
 		"title": "Gebruiker",
@@ -71,8 +78,15 @@
 		"changeCard": "Wijzigingen Opslaan",
 
 		"accountAdministrator": "Administratie Contact",
+		"accountAdministratorFullName": "Voor-en achternaam",
 		"accountAdministratorEmail": "Administratie Contact Emailadres",
-		"accountAdministratorNumber": "Telefoonnummer"
+		"accountAdministratorNumber": "Telefoonnummer",
+		"accountAdministratorAddress": "Adres",
+		"accountAdministratorAddressLineTwo": "Adres lijn 2",
+		"accountAdministratorAddressCity": "stad",
+		"accountAdministratorAddressState": "Staat",
+		"accountAdministratorAddressCountry": "Land",
+		"accountAdministratorAdressZipCode": "Postcode"
 	},
 
 	"trunks": {
@@ -82,28 +96,30 @@
 		"outboundTitle": "Outbound Trunking Limieten",
 		"inboundTitle": "Inbound Trunking Limieten",
 		"inboundCalling": "Unlimited Inbound Trunks",
-		"simultaneousTwoway": "$_Variable__/maand",
-		"simultaneousInbound": "$_Variable__/maand",
 		"perMonth": "/maand",
 		"quantity": "Stel nieuwe limiet In",
 		"trunks": "Trunks",
 		"twoWayCalling": "Unlimited Two-way Trunks",
 		"updateLimits": "Update Limieten",
-		"helpTwoway": "Het aantal Two-way trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (inkomend en uitgaand).",
-		"helpInbound": "Het aantal Inbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteerd (inkomend).",
 		"monthlyCharges": "Maandelijkse Kosten",
 		"__comment": "UI-664: Adding the real twoway sliders",
 		"__version": "v3.19_s2",
 		"twowayTitle": "Twoway Trunking Limits",
 		"twoway": "Two-way",
 		"outboundCalling": "Unlimited Outbound Trunks",
-		"helpOutbound": "Het aantal Outbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (uitgaand).",
 		"__comment": "UI-1014: Redesign of MyAccount",
 		"__version": "v3.20_s1",
 		"currentLimit": "Huidige Limiet",
-		"exampleTwoway": "VOORBEELD: 10 Two-way Trunks stellen u in staat bijv. 4 inbound en 6 outbound gesprekken te voeren op het zelfde moment.",
-		"exampleInbound": "VOORBEELD: 5 Inbound Trunks stellen u in staat om 5 gelijktijdige inkommende gesprekken te voeren",
-		"exampleOutbound": "VOORBEELD: 10 Outbound Trunks stellen u in staat om 10 gelijktijdige gesprkken te voerne naar een extern nummer"
+		"example": {
+			"inbound": "VOORBEELD: 5 Inbound Trunks stellen u in staat om 5 gelijktijdige inkommende gesprekken te voeren",
+			"outbound": "VOORBEELD: 10 Outbound Trunks stellen u in staat om 10 gelijktijdige gesprkken te voerne naar een extern nummer",
+			"twoway": "VOORBEELD: 10 Two-way Trunks stellen u in staat bijv. 4 inbound en 6 outbound gesprekken te voeren op het zelfde moment."
+		},
+		"help": {
+			"inbound": "Het aantal Inbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteerd (inkomend).",
+			"outbound": "Het aantal Outbound trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (uitgaand).",
+			"twoway": "Het aantal Two-way trunks bepaald hoeveel gelijktijdige gesprekken het platform accepteert (inkomend en uitgaand)."
+		}
 	},
 
 	"balance" : {
@@ -123,7 +139,6 @@
 		"helpWhenBalanceFalls": "Geef de ondergrens aan, wanneer deze grens bereikt wordt proberen we uw krediet aan te vullen",
 		"helpRecharge": "Geef aan hoeveel krediet u wilt laten toevoegen. Wij adviseren te kijken naar uw verbruiks historie om een goed bedrag te bepalen.",
 		"payPerMinute": "Pay-per-minute stelt u in staat alleen te betalen voor wat u verbuikt.Voeg krediet toe aan uw account, de belkosten en dergelijke worden hier vanaf geboekt..",
-		"currentBalance": "Uw huidige krediet: $",
 		"turnoffRechargeConfirm": "Door Auto herladen uit te zetten moet u handmatig krediet toevoegen aan uw account, daarmee loopt u het risico dat wanneer dit niet snel genoeg gebeurt, u geen gesprekken meer kunt voeren. Wilt u doorgaan?",
 		"amount": "Bedrag",
 		"confirm": "Bevestig",

@@ -1,0 +1,46 @@
+<div class="transactions-content-wrapper">
+	<div class="title-bar clearfix">
+		<div class="title-box start-date">
+			<div class="value">
+				{{toFriendlyDate startDate dateFormat}}
+			</div>
+			<div class="title">
+				{{ i18n.transactions.startDate }}
+			</div>
+		</div>
+		<div class="title-box end-date">
+			<div class="value">
+				{{toFriendlyDate endDate dateFormat}}
+			</div>
+			<div class="title">
+				{{ i18n.transactions.endDate }}
+			</div>
+		</div>
+		<div class="title-box pull-right total-amount">
+			<div class="value">
+				{{formatPrice amount priceDigits}}
+			</div>
+			<div class="title">
+				{{ i18n.transactions.total }}
+			</div>
+		</div>
+	</div>
+
+	<span class="action-bar-wrapper">
+		{{ i18n.startDate }}<input id="startDate" readonly="readonly" type="text"/>
+		{{ i18n.endDate }}<input id="endDate" readonly="readonly" type="text"/>
+		<button class="monster-button-secondary button-search" id="filter_transactions">
+			<i class="fa fa-filter"></i>
+			{{ i18n.filter }}
+		</button>
+		<!--<li class="dropdown dropdown-download">
+			<a href="#" id="download" role="button" class="action-number dropdown-toggle" data-toggle="dropdown"><i class="fa fa-download monster-green"></i>{{ i18n.download }}</a>
+			<ul class="dropdown-menu">
+				<li id="get_csv"><a href="#">{{ i18n.csv }}</a></li>
+			</ul>
+		</li>-->
+	</span>
+
+	<div class="list-transactions">
+	</div>
+</div>

@@ -1,3 +1,5 @@
+title: Using Kazoo APIs
+
 # How to use an API in Monster-UI
 The Monster-UI framework allow developers to use the different Kazoo API very simply within their Monster-UI applications. If you would like more information on how to build an application, check [here][tutorial].
 
@@ -70,7 +72,7 @@ listDevices: function(callback) {
 			callback && callback(devices);
 		},
 		error: function(response) {
-			monster.ui.alert('BOOM, it doesn't work. I bet it's a French guy who coded this API.');
+			monster.ui.alert('BOOM, it doesn\'t work. I bet it\'s a French guy who coded this API.');
 		}
 	});
 }
@@ -132,13 +134,14 @@ listDevices: function(callback) {
 			callback && callback(devices);
 		},
 		error: function(response) {
-			monster.ui.alert('BOOM, it doesn't work. This wouldn't have happened if a French guy coded this API.');
+			monster.ui.alert('BOOM, it doesn\'t work. This wouldn\'t have happened if a French guy coded this API.');
 		}
 	});
 }
 ```
 
-[Here is a full list of supported APIs](https://github.com/2600hz/monster-ui/blob/master/docs/kazooSdk.md#list-of-methods).
+[Here is a full list of supported APIs][kazoo_sdk_methods].
 
 [tutorial]: tutorial.md
 [kazoo_sdk_settings]: kazooSdk.md#general-api-settings
+[kazoo_sdk_methods]: kazooSdk.md#list-of-methods

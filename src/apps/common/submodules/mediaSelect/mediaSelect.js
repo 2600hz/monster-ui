@@ -11,6 +11,16 @@ define(function(require) {
 			'common.mediaSelect.render': 'mediaSelectRender'
 		},
 
+		/**
+		 * @param {Object} args
+		 * @param {jQuery} args.container
+		 * @param {String} [args.skin]
+		 * @param {Function} args.callback
+		 * @param {String} [args.label]
+		 * @param {Array} args.options
+		 * @param {Array} args.mimeTypes - Allowed file formats to be uploaded if `dragableUpload` is true
+		 * @param {Boolean} [args.dragableUpload]
+		 */
 		mediaSelectRender: function(args) {
 			var self = this,
 				container = args.container,
@@ -32,6 +42,7 @@ define(function(require) {
 		mediaSelectFormatData: function(args) {
 			var self = this,
 				defaultData = {
+					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
 					noneLabel: self.i18n.active().mediaSelect.noneLabel,
 					selectedOption: false,
 					uploadButton: true,
@@ -90,10 +101,21 @@ define(function(require) {
 				template;
 
 			if (skin === 'default') {
-				template = $(monster.template(self, 'mediaSelect-layout', formattedData));
-				self.mediaSelectBindDefaultTemplate(template);
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: formattedData,
+					submodule: 'mediaSelect'
+				}));
+				self.mediaSelectBindDefaultTemplate(_.merge({}, args, {
+					template: template,
+					skin: skin
+				}));
 			} else if (skin === 'tabs') {
-				template = $(monster.template(self, 'mediaSelect-tabs-layout', formattedData));
+				template = $(self.getTemplate({
+					name: 'tabs-layout',
+					data: formattedData,
+					submodule: 'mediaSelect'
+				}));
 				self.mediaSelectBindTabsTemplate(template);
 			}
 
@@ -200,8 +222,14 @@ define(function(require) {
 			});
 		},
 
-		mediaSelectBindDefaultTemplate: function(template) {
+		mediaSelectBindDefaultTemplate: function(args) {
 			var self = this,
+				template = args.template,
+				popupTemplate = $(self.getTemplate({
+					name: 'upload-dialog',
+					submodule: 'mediaSelect'
+				})),
+				popup,
 				mediaToUpload,
 				closeUploadDiv = function(newMedia) {
 					mediaToUpload = undefined;
@@ -221,10 +249,31 @@ define(function(require) {
 			});
 
 			template.find('.upload-toggle').on('click', function() {
-				if ($(this).hasClass('active')) {
-					template.find('.upload-div').stop(true, true).slideUp();
+				if (args.dragableUpload) {
+					popup = monster.ui.dialog(popupTemplate, {
+						title: self.i18n.active().mediaSelect.uploadNewMedia,
+						width: '400px',
+						position: ['center', 20]
+					});
+
+					monster.pub('common.dragableUploads.render', {
+						container: popupTemplate,
+						popup: popup,
+						allowedFiles: args.mimeTypes,
+						callback: function(error, medias) {
+							if (medias) {
+								var mediaSelect = template.find('.media-dropdown');
+								mediaSelect.append('<option value="' + medias[0].id + '">' + medias[0].name + '</option>');
+								mediaSelect.val(medias[0].id);
+							}
+						}
+					});
 				} else {
-					template.find('.upload-div').stop(true, true).slideDown();
+					if ($(this).hasClass('active')) {
+						template.find('.upload-div').stop(true, true).slideUp();
+					} else {
+						template.find('.upload-div').stop(true, true).slideDown();
+					}
 				}
 			});
 

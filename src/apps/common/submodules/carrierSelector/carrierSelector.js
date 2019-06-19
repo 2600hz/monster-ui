@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var carrierSelector = {
 
@@ -19,7 +18,11 @@ define(function(require) {
 		carrierSelectorRender: function(args) {
 			var self = this,
 				formattedData = self.carrierSelectorFormatData(args.data),
-				template = $(monster.template(self, 'carrierSelector-layout', formattedData));
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: formattedData,
+					submodule: 'carrierSelector'
+				}));
 
 			self.carrierSelectorBindEvents(template, formattedData, args.callbackAfterSave);
 
@@ -34,8 +37,8 @@ define(function(require) {
 				resellerHelp = self.i18n.active().carrierSelector.useReseller.defaultHelp;
 
 			if (monster.config.whitelabel.hasOwnProperty('companyName') && monster.config.whitelabel.companyName.length) {
-				resellerString = monster.template(self, '!' + self.i18n.active().carrierSelector.useReseller.friendlyName, { variable: monster.config.whitelabel.companyName });
-				resellerHelp = monster.template(self, '!' + self.i18n.active().carrierSelector.useReseller.help, { variable: monster.config.whitelabel.companyName });
+				resellerString = self.i18n.active().carrierSelector.useReseller.friendlyName.replace('{{variable}}', monster.config.whitelabel.companyName);
+				resellerHelp = self.i18n.active().carrierSelector.useReseller.help.replace('{{variable}}', monster.config.whitelabel.companyName);
 			}
 
 			var carrierInfo = {
@@ -137,7 +140,10 @@ define(function(require) {
 				if (carrierType !== defaultType) {
 					var callbackSuccess = function(data) {
 							defaultType = carrierType;
-							toastr.success(self.i18n.active().carrierSelector.saveSuccess);
+							monster.ui.toast({
+								type: 'success',
+								message: self.i18n.active().carrierSelector.saveSuccess
+							});
 							contentHtml.find('.hunt-error').remove();
 							$this.addClass('disabled');
 
@@ -253,7 +259,7 @@ define(function(require) {
 			}
 
 			if (monster.config.whitelabel.hasOwnProperty('companyName') && type === 'useReseller') {
-				description = monster.template(self, '!' + self.i18n.active().carrierSelector.useReseller.friendlyName, { variable: monster.config.whitelabel.companyName });
+				description = self.i18n.active().carrierSelector.useReseller.friendlyName.replace('{{variable}}', monster.config.whitelabel.companyName);
 			} else {
 				description = self.i18n.active().carrierSelector[type].friendlyName;
 			}

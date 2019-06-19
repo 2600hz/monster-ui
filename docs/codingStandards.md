@@ -1,3 +1,5 @@
+title: Coding standards (Basic)
+
 # 2600hz Webapps Coding Standards
 
 *In this document, we will go over all the code conventions used in Monster UI. Although they are by no means mandatory, we strongly advise to follow this conventions for readability and maintainability purposes.*
@@ -165,7 +167,7 @@ JSON (JavaScript Object Notation) files are used for internationalization in Mon
 
 ```css
 /* bad */
-.content { 
+.content {
 	border: solid 1px red;
 }
 

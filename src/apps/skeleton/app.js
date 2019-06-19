@@ -60,7 +60,12 @@ define(function(require) {
 			var self = this,
 				args = pArgs || {},
 				parent = args.container || $('#skeleton_app_container .app-content-wrapper'),
-				template = $(monster.template(self, 'layout', { user: monster.apps.auth.currentUser }));
+				template = $(self.getTemplate({
+					name: 'layout',
+					data: {
+						user: monster.apps.auth.currentUser
+					}
+				}));
 
 			parent
 				.fadeOut(function() {

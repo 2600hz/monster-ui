@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var e911 = {
 
@@ -43,7 +42,11 @@ define(function(require) {
 		e911Render: function(dataNumber, pAccountId, callbacks) {
 			var self = this,
 				accountId = pAccountId || self.accountId,
-				popupHtml = $(monster.template(self, 'e911-dialog', dataNumber.e911 || {})),
+				popupHtml = $(self.getTemplate({
+					name: 'dialog',
+					data: dataNumber.e911 || {},
+					submodule: 'e911'
+				})),
 				popup;
 
 			popupHtml.find('#postal_code').change(function() {
@@ -80,9 +83,18 @@ define(function(require) {
 
 				var callbackSuccess = function callbackSuccess(data) {
 					var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-						template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+						template = self.getTemplate({
+							name: '!' + self.i18n.active().e911.successE911,
+							data: {
+								phoneNumber: phoneNumber
+							},
+							submodule: 'e911'
+						});
 
-					toastr.success(template);
+					monster.ui.toast({
+						type: 'success',
+						message: template
+					});
 
 					popup.dialog('destroy').remove();
 
@@ -94,7 +106,11 @@ define(function(require) {
 						callbackSuccess(data);
 					},
 					multipleChoices: function(addresses) {
-						var templatePopupAddresses = $(monster.template(self, 'e911-addressesDialog', addresses)),
+						var templatePopupAddresses = $(self.getTemplate({
+								name: 'addressesDialog',
+								data: addresses,
+								submodule: 'e911'
+							})),
 							popupAddress;
 
 						templatePopupAddresses.find('.address-option').on('click', function() {
@@ -157,9 +173,18 @@ define(function(require) {
 							self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 								success: function(data) {
 									var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-										template = monster.template(self, '!' + self.i18n.active().e911.successE911, { phoneNumber: phoneNumber });
+										template = self.getTemplate({
+											name: '!' + self.i18n.active().e911.successE911,
+											data: {
+												phoneNumber: phoneNumber
+											},
+											submodule: 'e911'
+										});
 
-									toastr.success(template);
+									monster.ui.toast({
+										type: 'success',
+										message: template
+									});
 
 									popup.dialog('destroy').remove();
 
@@ -208,7 +233,7 @@ define(function(require) {
 						} else {
 							callbacks.invalidAddress && callbacks.invalidAddress();
 						}
-					} else if (_data.error !== '402') {
+					} else {
 						globalHandler(_data, { generateError: true });
 					}
 				}

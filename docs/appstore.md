@@ -1,7 +1,9 @@
+title: Add your app to the App Store
+
 ## Adding your application to the App Store
 The Monster-UI Framework has been built to allow developers to code their own apps and to allow them to reach their users via the Monster-UI.
 
-There are 2 ways to add your applications inside the database. 
+There are 2 ways to add your applications inside the database.
 
 ### Automatic way with a Kazoo Command
 Assuming you've installed your Monster applications to `/path/to/monster-ui/apps`, you can run the following SUP command on the server:
@@ -53,6 +55,7 @@ Now click on "New Document", and we'll create that document.
 	}
 
 So let's go through those different attributes:
+
 * `name`: define the name of your app in there. It needs to match the name of the folder of your app,
 * `api_url`: define the URL of the Kazoo API to request,
 * `source_url`: this defines where the Monster-UI framework will try to get the sources of your app. For now this needs to be hosted on the same server as the Monster-UI,

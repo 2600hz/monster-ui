@@ -1,0 +1,350 @@
+<div class="user-content-wrapper">
+	<ul class="list-settings">
+		<li class="settings-item clearfix" data-name="email">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.email }}</span>
+				<span class="description">{{user.email}}</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_email">
+							<div class="control-group">
+								<label class="control-label" for="email">{{ i18n.user.email }}</label>
+								<div class="controls">
+									<input type="email" placeholder="{{ i18n.placeholderEmail }}" id="email" name="email" value="{{user.email}}" data-original_value="{{user.email}}"/>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="email">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="password">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.password }}</span>
+				<span class="description">*************</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_password">
+							<div class="control-group">
+								<label class="control-label" for="password">{{ i18n.user.newPassword }}</label>
+								<div class="controls">
+									<input type="password" id="password" name="password" data-original_value=""/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="confirm_password">{{ i18n.user.confirmPassword }}</label>
+								<div class="controls">
+									<input type="password" id="confirm_password" name="confirm_password" data-original_value=""/>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="password">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="timezone">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.timezoneTitle }}</span>
+				<div class="description">
+					<ul>
+						<li>{{user.timezone}}</li>
+						<li>{{user.language}}</li>
+					</ul>
+				</div>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_timezone">
+							<div class="control-group">
+								<label class="control-label" for="user_timezone">{{ i18n.user.userTimezone }}</label>
+								<div class="controls">
+									<select id="user_timezone" name="timezone" data-original_value="{{user.timezone}}"></select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="user_language">{{ i18n.user.userLanguage }}</label>
+								<div class="controls">
+									<select id="user_language" name="language">
+										<option value="auto">{{i18n.languages.auto}}</option>
+										<option value="en-US"{{#compare user.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+										<option value="fr-FR"{{#compare user.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+										<option value="de-DE"{{#compare user.language '===' 'de-DE'}} selected{{/compare}}>{{i18n.languages.germanGerman}}</option>
+										<option value="ru-RU"{{#compare user.language '===' 'ru-RU'}} selected{{/compare}}>{{i18n.languages.russianRussian}}</option>
+										<option value="es-ES"{{#compare user.language '===' 'es-ES'}} selected {{/compare}}>{{i18n.languages.spainSpanish}}</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="timezone">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="datetime">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.dateTimeTitle }}</span>
+				<span class="description">
+					<ul>
+						<li>
+						{{#compare user.ui_flags.date_format '===' 'dmy'}}
+							{{ i18n.user.dateFormats.dmy }}
+						{{else}}
+							{{#compare user.ui_flags.date_format '===' 'ymd'}}
+								{{ @root.i18n.user.dateFormats.ymd }}
+							{{else}}
+								{{ @root.i18n.user.dateFormats.mdy }}
+							{{/compare}}
+						{{/compare}}
+						</li>
+						<li>
+						{{#if user.ui_flags.twelve_hours_mode}}
+							{{ i18n.user.twelveHoursModeEnabled }}
+						{{else}}
+							{{ i18n.user.twelveHoursModeDisabled }}
+						{{/if}}
+						</li>
+					</ul>
+				</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_datetime">
+							<div class="control-group">
+								<label class="control-label">{{ i18n.user.dateFormatTitle }}</label>
+								<div class="controls checkbox-container">
+									<label>
+										{{#monsterRadio i18n.user.dateFormats.mdy}}
+										<input type="radio" value="mdy" name="ui_flags.date_format" checked />
+										{{/monsterRadio}}
+									</label>
+									<label>
+										{{#monsterRadio i18n.user.dateFormats.dmy}}
+										<input type="radio" value="dmy" name="ui_flags.date_format" {{#compare user.ui_flags.date_format '===' 'dmy'}}checked{{/compare}} />
+										{{/monsterRadio}}
+									</label>
+									<label>
+										{{#monsterRadio i18n.user.dateFormats.ymd}}
+										<input type="radio" value="ymd" name="ui_flags.date_format" {{#compare user.ui_flags.date_format '===' 'ymd'}}checked{{/compare}} />
+										{{/monsterRadio}}
+									</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="user_twelve_hours_mode">{{ i18n.user.enableTwelveHoursMode }}</label>
+								<div class="controls checkbox-container">
+									{{#monsterCheckbox}}
+										<input type="checkbox" id="user_twelve_hours_mode" name="ui_flags.twelve_hours_mode" {{#if user.ui_flags.twelve_hours_mode}}checked{{/if}} />
+									{{/monsterCheckbox}}
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="datetime">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="settings-item clearfix" data-name="colorblind">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.user.colorblindTitle }}</span>
+				<span class="description">
+					{{#if user.ui_flags.colorblind}}
+						{{ i18n.user.colorblindEnabled }}
+					{{else}}
+						{{ i18n.user.colorblindDisabled }}
+					{{/if}}
+				</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_colorblind">
+							<div class="control-group">
+								<label class="control-label" for="user_colorblind">{{ i18n.user.enableColorblind }}</label>
+								<div class="controls checkbox-container">
+									{{#monsterCheckbox}}
+										<input type="checkbox" id="user_colorblind" name="ui_flags.colorblind" {{#if user.ui_flags.colorblind}}checked{{/if}} />
+									{{/monsterCheckbox}}
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="colorblind">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+
+		<li class="settings-item clearfix" data-name="user_outbound_privacy">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.myAccountApp.common.outboundPrivacy.label }}</span>
+				<span class="description">
+					{{#if user.caller_id_options.outbound_privacy}}
+						{{tryI18n i18n.myAccountApp.common.outboundPrivacy.values user.caller_id_options.outbound_privacy}}
+					{{/if}}
+				</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_user_outbound_privacy">
+							<div class="control-group">
+								<label class="control-label" for="user_outbound_privacy">{{ i18n.myAccountApp.common.outboundPrivacy.label }}</label>
+								<div class="controls">
+									<select name="caller_id_options.outbound_privacy" id="user_outbound_privacy">
+									{{#select user.caller_id_options.outbound_privacy}}
+										{{#each outboundPrivacy}}
+											<option value="{{key}}">
+												{{value}}
+											</option>
+										{{/each}}
+									{{/select}}
+									</select>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="user_outbound_privacy">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+
+		<li class="settings-item clearfix" data-name="numbers_format">
+			<a class="settings-link clearfix">
+				<span class="title">{{ i18n.numbersFormat.title }}</span>
+				<span class="description">
+					{{#compare user.ui_flags.numbers_format "===" "inherit"}}
+						{{ i18n.numbersFormat.inherit }} ({{defaultNumbersFormat}})
+					{{else}}
+						{{tryI18n i18n.numbersFormat user.ui_flags.numbers_format}}
+					{{/compare}}
+				</span>
+				<span class="update">
+					<i class="fa fa-cog icon-small"></i>
+					<span class="text">{{ i18n.editSettings }}</span>
+				</span>
+				<span class="changes-saved">{{ i18n.changesSaved }}</span>
+			</a>
+			<div class="settings-item-content">
+				<div class="row-fluid">
+					<div class="span12">
+						<form class="form-horizontal" id="form_numbers_format">
+							<div class="control-group">
+								<label class="control-label">
+									{{ i18n.numbersFormat.globalSetting }}
+									<i class="help-popover fa fa-question-circle" data-original-title="{{ i18n.numbersFormat.help }}" data-placement="top" data-toggle="tooltip"></i></label>
+								<div class="controls checkbox-container">
+									<label>
+										{{#monsterRadio i18n.numbersFormat.inherit }}
+											<input type="radio" name="ui_flags.numbers_format" value="inherit"{{#compare user.ui_flags.numbers_format "===" "inherit"}} checked{{/compare}}>
+										{{/monsterRadio}}
+										   ({{defaultNumbersFormat}})
+									</label>
+									<label>
+										{{#monsterRadio i18n.numbersFormat.international }}
+											<input type="radio" name="ui_flags.numbers_format" value="international"{{#compare user.ui_flags.numbers_format "===" "international"}} checked{{/compare}}>
+										{{/monsterRadio}}
+									</label>
+									<label>
+										{{#monsterRadio i18n.numbersFormat.national }}
+											<input type="radio" name="ui_flags.numbers_format" value="national"{{#compare user.ui_flags.numbers_format "===" "national"}} checked{{/compare}}>
+										{{/monsterRadio}}
+									</label>
+									<label>
+										{{#monsterRadio i18n.numbersFormat.international_with_exceptions }}
+											<input type="radio" name="ui_flags.numbers_format" value="international_with_exceptions"{{#compare user.ui_flags.numbers_format "===" "international_with_exceptions"}} checked{{/compare}}>
+										{{/monsterRadio}}
+									</label>
+								</div>
+							</div>
+							<div class="control-group group-for-exceptions{{#compare user.ui_flags.numbers_format "===" "international_with_exceptions"}} active{{/compare}}">
+								<label class="control-label" for="numbers_format_exceptions">{{ i18n.numbersFormat.listCountries }}</label>
+								<div class="controls">
+									<select multiple id="numbers_format_exceptions" name="ui_flags.numbers_format_exceptions">
+
+										{{#each countries}}
+											<option value="{{@key}}" {{#ifInArray @key @root.user.ui_flags.numbers_format_exceptions}} selected{{/ifInArray}}>{{this}}</option>
+										{{/each}}
+									</select>
+								</div>
+							</div>
+							<div class="action-group clearfix">
+								<div class="action-bar">
+									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
+									<button type="submit" class="monster-button-success change" data-module="user" data-field="numbers_format">{{ i18n.saveChanges }}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>

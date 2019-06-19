@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var numbers = {
 
@@ -27,6 +26,10 @@ define(function(require) {
 			var self = this;
 
 			_.each(arrayNumbers, function(number) {
+				if (number.state === 'port_in' || number.used_by === 'mobile') {
+					return;
+				}
+
 				var numberDiv = parent.find('[data-phonenumber="' + number.phoneNumber + '"]'),
 					args = {
 						target: numberDiv.find('.number-options'),
@@ -52,18 +55,25 @@ define(function(require) {
 				data.viewType = viewType;
 				data = self.numbersFormatData(data);
 
-				var numbersView = $(monster.template(self, 'numbers-layout', data)),
-					spareView = $(monster.template(self, 'numbers-spare', data)),
-					usedView = $(monster.template(self, 'numbers-used', data));
+				var numbersView = $(self.getTemplate({
+						name: 'layout',
+						data: data,
+						submodule: 'numbers'
+					})),
+					usedView = $(self.getTemplate({
+						name: 'used',
+						data: data,
+						submodule: 'numbers'
+					})),
+					arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 
-				var arrayNumbers = data.listAccounts.length ? data.listAccounts[0].usedNumbers : [];
 				self.numbersDisplayFeaturesMenu(arrayNumbers, usedView);
-
-				var arrayNumbersSpare = data.listAccounts.length ? data.listAccounts[0].spareNumbers : [];
-				self.numbersDisplayFeaturesMenu(arrayNumbersSpare, spareView);
-
-				numbersView.find('.list-numbers[data-type="spare"]').append(spareView);
 				numbersView.find('.list-numbers[data-type="used"]').append(usedView);
+
+				self.numbersRenderSpare({
+					parent: numbersView,
+					dataNumbers: data
+				});
 
 				self.numbersBindEvents(numbersView, data);
 
@@ -100,6 +110,9 @@ define(function(require) {
 					usedNumbers: []
 				},
 				templateData = {
+					hideBuyNumbers: monster.config.whitelabel.hasOwnProperty('hideBuyNumbers')
+						? monster.config.whitelabel.hideBuyNumbers
+						: false,
 					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
 					canAddExternalNumbers: monster.util.canAddExternalNumbers(),
@@ -214,7 +227,14 @@ define(function(require) {
 									parent
 										.find('.list-numbers[data-type="spare"] .account-section[data-id="' + accountId + '"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-spareAccount', { viewType: dataNumbers.viewType, spareNumbers: spareNumbers }))
+										.append($(self.getTemplate({
+											name: 'spareAccount',
+											data: {
+												viewType: dataNumbers.viewType,
+												spareNumbers: spareNumbers
+											},
+											submodule: 'numbers'
+										})))
 										.parent()
 										.find('.count')
 										.html('(' + spareNumbers.length + ')');
@@ -224,10 +244,14 @@ define(function(require) {
 									parent
 										.find('.list-numbers[data-type="used"] .account-section[data-id="' + accountId + '"] .numbers-wrapper')
 										.empty()
-										.append(monster.template(self, 'numbers-usedAccount', {
-											viewType: dataNumbers.viewType,
-											usedNumbers: usedNumbers
-										}))
+										.append($(self.getTemplate({
+											name: 'usedAccount',
+											data: {
+												viewType: dataNumbers.viewType,
+												usedNumbers: usedNumbers
+											},
+											submodule: 'numbers'
+										})))
 										.parent()
 										.find('.count')
 										.html('(' + usedNumbers.length + ')');
@@ -364,7 +388,10 @@ define(function(require) {
 			function syncNumbers(accountId) {
 				self.numbersSyncUsedBy(accountId, function(numbers) {
 					displayNumberList(accountId, function(numbers) {
-						toastr.success(self.i18n.active().numbers.sync.success);
+						monster.ui.toast({
+							type: 'success',
+							message: self.i18n.active().numbers.sync.success
+						});
 					}, true);
 				});
 			};
@@ -479,7 +506,11 @@ define(function(require) {
 				if (e911ErrorMessage) {
 					monster.ui.alert('error', e911ErrorMessage);
 				} else {
-					var dialogTemplate = $(monster.template(self, 'numbers-actionsConfirmation', dataTemplate)),
+					var dialogTemplate = $(self.getTemplate({
+							name: 'actionsConfirmation',
+							data: dataTemplate,
+							submodule: 'numbers'
+						})),
 						requestData = {
 							numbers: listNumbers,
 							accountId: self.accountId
@@ -537,11 +568,7 @@ define(function(require) {
 
 							self.numbersShowDeletedNumbers(data);
 
-							self.numbersPaintSpare(parent, dataNumbers, function() {
-								//var template = monster.template(self, '!' + self.i18n.active().numbers.successDelete, { count: countDelete });
-
-								//toastr.success(template);
-							});
+							self.numbersRenderSpare({ parent: parent, dataNumbers: dataNumbers });
 						});
 					});
 				}
@@ -588,7 +615,11 @@ define(function(require) {
 
 				dataTemplate.numberCount = listNumbers.length;
 
-				var dialogTemplate = $(monster.template(self, 'numbers-actionsConfirmation', dataTemplate)),
+				var dialogTemplate = $(self.getTemplate({
+						name: 'actionsConfirmation',
+						data: dataTemplate,
+						submodule: 'numbers'
+					})),
 					requestData = {
 						numbers: listNumbers,
 						accountId: destinationAccountId
@@ -663,16 +694,27 @@ define(function(require) {
 							dataNumbers.listAccounts[destinationIndex].countSpareNumbers = dataNumbers.listAccounts[destinationIndex].spareNumbers.length;
 						}
 
-						self.numbersPaintSpare(parent, dataNumbers, function() {
-							var dataTemplate = {
-									count: countMove,
-									accountName: accountName
-								},
-								template = monster.template(self, '!' + self.i18n.active().numbers.successMove, dataTemplate);
+						self.numbersRenderSpare({
+							parent: parent,
+							dataNumbers: dataNumbers,
+							callback: function() {
+								var dataTemplate = {
+										count: countMove,
+										accountName: accountName
+									},
+									template = self.getTemplate({
+										name: '!' + self.i18n.active().numbers.successMove,
+										data: dataTemplate,
+										submodule: 'numbers'
+									});
 
-							dialogTemplate.parent().parent().remove();
+								dialogTemplate.parent().parent().remove();
 
-							toastr.success(template);
+								monster.ui.toast({
+									type: 'success',
+									message: template
+								});
+							}
 						});
 					});
 				});
@@ -710,9 +752,19 @@ define(function(require) {
 									});
 								} else {
 									var type = parent.attr('data-type') === 'spare' ? 'notSpareNumber' : 'notUsedNumber',
-										template = monster.template(self, '!' + self.i18n.active().numbers[type], { number: data.number, accountName: section.data('name') });
+										template = self.getTemplate({
+											name: '!' + self.i18n.active().numbers[type],
+											data: {
+												number: data.number,
+												accountName: section.data('name')
+											},
+											submodule: 'numbers'
+										});
 
-									toastr.warning(template);
+									monster.ui.toast({
+										type: 'warning',
+										message: template
+									});
 								}
 							});
 						} else {
@@ -792,7 +844,10 @@ define(function(require) {
 
 		numbersShowRecapAddNumbers: function(data) {
 			var self = this,
-				addRecapTemplate = $(monster.template(self, 'numbers-addExternalResults')),
+				addRecapTemplate = $(self.getTemplate({
+					name: 'addExternalResults',
+					submodule: 'numbers'
+				})),
 				formattedData = {
 					errors: [],
 					successes: [],
@@ -828,7 +883,10 @@ define(function(require) {
 					if (data.hasOwnProperty('error')) {
 						self.numbersShowRecapAddNumbers(data);
 					} else {
-						toastr.success(self.i18n.active().numbers.addExternal.successAdd);
+						monster.ui.toast({
+							type: 'success',
+							message: self.i18n.active().numbers.addExternal.successAdd
+						});
 					}
 
 					callback && callback();
@@ -912,7 +970,11 @@ define(function(require) {
 			var self = this;
 
 			self.numbersAddExternalGetData(function(data) {
-				var dialogTemplate = $(monster.template(self, 'numbers-addExternal', data)),
+				var dialogTemplate = $(self.getTemplate({
+						name: 'addExternal',
+						data: data,
+						submodule: 'numbers'
+					})),
 					CUSTOM_CHOICE = '_uiCustomChoice';
 
 				monster.ui.tooltips(dialogTemplate);
@@ -969,7 +1031,10 @@ define(function(require) {
 
 		numbersShowDeletedNumbers: function(data) {
 			var self = this,
-				deleteRecapTemplate = $(monster.template(self, 'numbers-deleteConfirmation')),
+				deleteRecapTemplate = $(self.getTemplate({
+					name: 'deleteConfirmation',
+					submodule: 'numbers'
+				})),
 				formattedData = {
 					errors: [],
 					successes: [],
@@ -997,16 +1062,24 @@ define(function(require) {
 			});
 		},
 
-		numbersPaintSpare: function(parent, dataNumbers, callback) {
+		numbersRenderSpare: function(args) {
 			var self = this,
-				template = monster.template(self, 'numbers-spare', dataNumbers);
+				dataNumbers = args.dataNumbers,
+				template = $(self.getTemplate({
+					name: 'spare',
+					data: dataNumbers,
+					submodule: 'numbers'
+				})),
+				arrayNumbersSpare = dataNumbers.listAccounts.length ? dataNumbers.listAccounts[0].spareNumbers : [];
 
-			parent
+			args.parent
 				.find('.list-numbers[data-type="spare"]')
 				.empty()
 				.append(template);
 
-			callback && callback();
+			self.numbersDisplayFeaturesMenu(arrayNumbersSpare, template);
+
+			args.hasOwnProperty('callback') && args.callback();
 		},
 
 		numbersGetData: function(viewType, callback) {
@@ -1063,7 +1136,10 @@ define(function(require) {
 					if (_data.hasOwnProperty('data') && _data.data.hasOwnProperty('cause') && _data.data.cause === 'account_disabled' && _data.data.hasOwnProperty('number')) {
 						success && success(_data.data);
 					} else {
-						toastr.error(self.i18n.active().numbers.numberNotFound);
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().numbers.numberNotFound
+						});
 					}
 				}
 			});
@@ -1087,7 +1163,7 @@ define(function(require) {
 				error: function(data, status, globalHandler) {
 					if (data.error === '400' && data.hasOwnProperty('data') && data.data.hasOwnProperty('error')) {
 						callback && callback(data.data);
-					} else if (data.error !== '402') {
+					} else {
 						globalHandler(data, { generateError: true });
 					}
 				}
@@ -1107,9 +1183,7 @@ define(function(require) {
 					success && success(data.data);
 				},
 				error: function(data) {
-					if (data.error !== '402') {
-						error && error(data);
-					}
+					error && error(data);
 				}
 			});
 		},
@@ -1138,7 +1212,7 @@ define(function(require) {
 				error: function(data, status, globalHandler) {
 					if (data.error === '400' && data.hasOwnProperty('data') && data.data.hasOwnProperty('error')) {
 						success && success(data.data);
-					} else if (data.error !== '402') {
+					} else {
 						globalHandler(data, { generateError: true });
 					}
 				}
@@ -1158,9 +1232,7 @@ define(function(require) {
 					success && success(data.data);
 				},
 				error: function(data) {
-					if (data.error !== '402') {
-						error && error(data);
-					}
+					error && error(data);
 				}
 			});
 		},
@@ -1476,7 +1548,13 @@ define(function(require) {
 					if (args.hasOwnProperty('error')) {
 						args.error('invalid');
 					} else {
-						var message = monster.template(self, '!' + self.i18n.active().numbers.notInService, { variable: monster.util.formatPhoneNumber(number.id) });
+						var message = self.getTemplate({
+							name: '!' + self.i18n.active().numbers.notInService,
+							data: {
+								variable: monster.util.formatPhoneNumber(number.id)
+							},
+							submodule: 'numbers'
+						});
 
 						monster.ui.alert('warning', message);
 					}
@@ -1486,7 +1564,13 @@ define(function(require) {
 				if (args.hasOwnProperty('error')) {
 					args.error('errorGetNumber');
 				} else {
-					var message = monster.template(self, '!' + self.i18n.active().numbers.errorFetchingNumber, { variable: monster.util.formatPhoneNumber(phoneNumber) });
+					var message = self.getTemplate({
+						name: '!' + self.i18n.active().numbers.errorFetchingNumber,
+						data: {
+							variable: monster.util.formatPhoneNumber(phoneNumber)
+						},
+						submodule: 'numbers'
+					});
 
 					monster.ui.alert(message);
 				}

@@ -1,0 +1,86 @@
+<div class="device-popup" type="provisioner">
+	<div class="block-brand">
+		<div class="title-bar clearfix">
+			<div class="title pull-left">
+				{{i18n.chooseModel.brandHeadline}}
+			</div>
+		</div>
+
+		<div class="action-bar">
+			<input type="text" class="device-popup-search" data-search_type="brand" placeholder="Search by brand">
+			{{#if show_not_listed_links}}
+				<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingBrand}}</a>
+			{{/if}}
+		</div>
+
+		<div class="brand-selection">
+			{{#each brands}}
+			<div class="brand-box" data-brand="{{id}}" style="background-image: url('css/assets/brands/{{id}}.png');" />
+			{{/each}}
+		</div>
+	</div>
+
+	<div class="block-model">
+		<div class="title-bar clearfix">
+			<div class="title pull-left">
+				{{i18n.chooseModel.deviceHeadline}}
+			</div>
+		</div>
+
+		<div class="action-bar">
+			<input type="text" class="device-popup-search" data-search_type="models" placeholder="Search by model device">
+			{{#if show_not_listed_links}}
+				<a class="monster-link pull-right missing-brand" href="javascript:void(0)">{{i18n.chooseModel.missingDevice}}</a>
+			{{/if}}
+		</div>
+
+		<div class="model-selection">
+			{{#each brands}}
+				<div class="models-brand" data-brand="{{id}}">
+					{{#each families}}
+						{{#each models}}
+							<div class="model-box" data-family="{{../id}}" data-model="{{id}}">
+								<div class="model-image" style="background-image: url('css/assets/models/{{../../id}}_{{../id}}_{{id}}.jpg');"></div>
+								<div class="model-name">{{name}}</div>
+							</div>
+						{{/each}}
+					{{/each}}
+				</div>
+			{{/each}}
+		</div>
+	</div>
+
+	<div class="block-footer">
+		<div class="block-device-info">
+			<div class="title-bar clearfix">
+				<div class="title pull-left">Device information :</div>
+			</div>
+
+			<div class="device-info">
+				<form action="" class="form form-horizontal" id="device_form">
+					<div class="control-group">
+						<label for="name" class="control-label" name="name">Device Name</label>
+						<div class="controls">
+							<input type="text" id="name" name="name">
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="mac_address" class="control-label">MAC Address</label>
+						<div class="controls">
+							<input type="text" id="mac_address" name="mac_address" placeholder="19:33:1A:B2:12:58">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="actions">
+			<div class="selection"></div>
+		{{#if show_not_listed_links}}
+			<button class="monster-button monster-button-success action-device">{{i18n.chooseModel.create}}</button>
+		{{else}}
+			<button class="monster-button monster-button-primary action-device">{{i18n.next}}</button>
+		{{/if}}
+		</div>
+	</div>
+</div>

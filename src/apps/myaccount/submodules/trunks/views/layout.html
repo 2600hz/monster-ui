@@ -1,0 +1,35 @@
+<div class="trunks-content">
+	<div class="title-bar clearfix">
+		<div class="title-box">
+			<div class="value">
+				{{ value }}
+			</div>
+			<div class="title">
+				{{ i18n.trunks.currentLimit }}
+			</div>
+		</div>
+		<div class="title-box message-box">
+			<div class="title">
+				{{ tryI18n i18n.trunks.help trunkType }}
+			</div>
+		</div>
+	</div>
+
+	<div class="section-slider clearfix">
+		<div class="slider-title">{{ i18n.trunks.quantity }}</div>
+		<div class="slider-wrapper">
+			<div id="slider_trunks"></div>
+			<div class="slider-value">{{ value }}</div>
+		</div>
+		<div class="question-box">
+			<div class="box-icon"><i class="fa fa-question-circle"></i></div>
+			<div class="box-message">
+				{{ tryI18n i18n.trunks.example trunkType }}
+			</div>
+		</div>
+	</div>
+
+	<div class="section-button clearfix">
+		<button type="submit" class="monster-button-primary update-limits pull-right">{{ i18n.trunks.updateLimits }}</button>
+	</div>
+</div>

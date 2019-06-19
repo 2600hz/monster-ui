@@ -7,9 +7,16 @@
 
 	"editSettings": "Changer",
 	"changesSaved": "Changements sauvegardés!",
+	"placeholderName": "Jon Doe",
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Numéro de téléphone",
 	"placeholderNumber": "4152223333",
+	"placeholderAddress": "140 Geary St.",
+	"placeholderAddressLineTwo": "3rd Floor",
+	"placeholderCity": "San Francisco",
+	"placeholderState": "California",
+	"placeholderCountry": "United States",
+	"placeholderZipCode": "12345",
 
 	"user": {
 		"title": "Utilisateur",
@@ -81,8 +88,15 @@
 		"changeCard": "Changer carte",
 
 		"accountAdministrator": "Changer carte",
+		"accountAdministratorFullName": "Nom complet",
 		"accountAdministratorEmail": "Email",
-		"accountAdministratorNumber": "Numéro de téléphone"
+		"accountAdministratorNumber": "Numéro de téléphone",
+		"accountAdministratorAddress":"Adresse",
+		"accountAdministratorAddressLineTwo":"Ligne d'adresse 2",
+		"accountAdministratorAddressCity":"Ville",
+		"accountAdministratorAddressState":"Région",
+		"accountAdministratorAddressCountry": "Patrie",
+		"accountAdministratorAddressZipCode":"Code postal"
 	},
 
 	"balance": {
@@ -93,7 +107,6 @@
 
 		"title": "Par Minute",
 		"payPerMinute": "Le paiement à la minute vous permet de ne payer que ce que vous utilisez. Déposez de l'argent sur votre compte pour commencer et payer en fonction de votre utilisation ensuite.",
-		"currentBalance": "Balance actuelle: $",
 		"amount": "Montant",
 		"invalidAmount": "Le montant de crédits à rajouter est invalide!",
 		"creditsAdded": "Vous venez d'ajouter {{amount}} à votre balance!",
@@ -189,9 +202,11 @@
 		"trunks": "Trunks",
 		"twoWayCalling": "Appels sortants",
 		"updateLimits": "Mettre à jour",
-		"helpTwoway": "Ceci contrôle le nombre d'appels sortants simultanés que votre système permet.",
-		"helpInbound": "Ceci contrôle le nombre d'appels entrants simultanés que votre système permet.",
-		"monthlyCharges": "Frais mensuels"
+		"monthlyCharges": "Frais mensuels",
+		"help": {
+			"inbound": "Ceci contrôle le nombre d'appels entrants simultanés que votre système permet.",
+			"twoway": "Ceci contrôle le nombre d'appels sortants simultanés que votre système permet."
+		}
 	},
 
 	"isMasquerading": {

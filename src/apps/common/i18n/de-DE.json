@@ -1,0 +1,1001 @@
+{
+	"accountBrowser": {
+		"missingInfo": "Fehlende Informationen",
+		"addAccount": "Neuen Account hinzufügen",
+		"searchDatabase": "Alle Accounts durchsuchen nach",
+		"__comment": "UI-1271: Suchlink aktualisiert",
+		"__version": "v3.20_s3",
+		"searchReset": "Erneut klicken, um Suche zu löschen",
+		"backButton": "Zum übergeordneten Element"
+	},
+	"numbers": {
+		"mainNumber": "Geschäftsnummer",
+		"conferenceNumber": "Haupt-Konferenznummer",
+		"dialogSpare": {
+			"title": "Liste mit freien Nummern",
+			"headline": "Freie Nummern von",
+			"headlineNoAccount": "Nummern auswählen",
+			"noMatchingNumbers": "Keine Nummern gefunden, die der Suchanfrage entsprachen.",
+			"noNumberSelected": "Sie haben keine Nummern ausgewählt. Sie müssen mindestens eine Nummer auswählen, indem Sie in der Liste auf eine Nummer klicken.",
+			"proceed": "Ausgewählte Nummern hinzufügen"
+		},
+		"bulkActions": "Massen-Aktionen",
+		"buy": "Kaufen",
+		"buyNumberLinks" : {
+			"regular": "Lokal",
+			"tollfree": "Gebührenfrei",
+			"vanity": "Vanity"
+		},
+		"port": "Port",
+		"assignTo": "Zuweisen an",
+		"confirmDelete": "Möchten Sie die ausgewählten Nummern von Ihrem Account löschen?",
+		"delete": "Löschen",
+		"deleteE911Error": {
+			"message": "Die folgenden Nummern können nicht gelöscht werden, weil es die einzigen sind, bei denen für die zugehörigen Accounts e911 eingerichtet ist. Sie müssen mindestens eine Nummer haben, die mit e911 für einen Account eingerichtet ist.",
+			"account": "Konto:",
+			"numbers": "Nummern:"
+		},
+		"numbers": "Nummern",
+		"addNumbers": "Nummern hinzufügen",
+		"moveNumbers": "Verschieben nach",
+		"searchNumbers": "Nummer suchen …",
+		"go": "Los",
+		"deleteNumbers": "Löschen",
+		"successDelete": "Sie haben {{count}} Telefonnummer(n) aus Ihren Accounts gelöscht",
+		"successMove": "Sie haben {{count}} Telefonnummer(n) in den folgenden Account verschoben: {{ accountName }}",
+		"noSpareNumber": "Dieser Account verfügt über keine freien Nummern.",
+		"noUsedNumber": "Keine Anwendung verwendet Nummern für diesen Account.",
+		"spareNumbers": "Freie Nummern",
+		"usedNumbers": "Verwendete Nummern",
+		"helpSpareNumbers": "Zeigt eine Liste der Nummern, die nirgendwo in diesem Account verwendet werden. Sie können diese Nummern an Ihre Sub-Accounts vergeben oder aus Ihrem Account löschen.",
+		"helpUsedNumbers": "Diese Liste zeigt, wo die Nummern verwendet werden. Außerdem wird eine Liste der Nummern angezeigt, die von Ihren Sub-Accounts verwendet werden.",
+		"callflow": "Smart PBX",
+		"trunkstore": "Trunking",
+		"notUsedNumber": "{{number}}: Diese Nummer wird nicht verwendet, gehört aber zu {{accountName}}. (Schalten Sie auf „Freie Nummern“ um, um diese Nummer zu sehen.)",
+		"notSpareNumber": "{{number}}: Diese Nummer ist keine freie Nummer, wird aber von {{accountName}} verwendet. (Schalten Sie auf „Verwendete Nummern“ um, um diese Nummer zu sehen.)",
+		"numberNotFound": "Die von Ihnen gesuchte Nummer wurde nicht gefunden! Vergewissern Sie sich, dass Sie die vollständige Nummer eingegeben haben, da Suchvorgänge nach Teilnummern nicht erlaubt sind (egal, wie die Formatierung aussieht).",
+
+		"dialogConfirm": {
+			"from": "Von ",
+			"cancel": "Abbrechen",
+			"delete": {
+				"title": "Nummern löschen – Bestätigung",
+				"questionPartOne": "Möchten Sie ",
+				"questionPartTwo": " Nummer(n) wirklich löschen?",
+				"button": "Nummer(n) löschen"
+			},
+			"move": {
+				"title": "Nummern verschieben – Bestätigung",
+				"questionPartOne": "Möchten Sie ",
+				"questionPartTwo": " Nummer(n) wirklich nach ",
+				"questionPartThree": "verschieben?",
+				"button": "Nummer(n) verschieben"
+			}
+		},
+
+		"__comment": "UI-1219: Voranstellen-Funktion („Prepend“) zu Nummern hinzugefügt",
+		"__version": "v3.20_s1",
+		"prependIconHelp": "Dieses Symbol zeigt an, dass die Nummer auf dem Telefon mit einem vorangestellten angepassten Text angezeigt wird",
+
+		"__comment": "UI-1285: Synchronisierungs-Aktion („Sync“) im Nummernmanager hinzugefügt",
+		"__version": "3.19",
+		"sync": {
+			"label": "Sync",
+			"success": "Die Nummern wurden mit der Datenbank synchronisiert",
+			"help": "Wenn Sie glauben, dass einige der Nummern in der falschen Kategorie (Frei/Verwendet) angezeigt werden, können Sie mit dieser Funktion die Nummern erneut mit der Datenbank synchronisieren."
+		},
+
+		"__comment": "UI-901: Löschbestätigung-Pop-up",
+		"__version": "3.20",
+		"deleteRecapDialog": {
+			"headline": "Nachfolgend sehen Sie eine Übersicht darüber, welche Nummern erfolgreich gelöscht werden konnten und welche nicht. Klicken Sie auf „Weiter“, um wieder in den Nummernbestand zurückzukehren.",
+			"title": "Bestätigung des Löschvorgangs",
+			"continue": "Weiter"
+		},
+
+		"__comment": "UI-1888: Auflisten von MDNs im Nummernmanager, ohne die Möglichkeit zur Konfiguration von Funktionen (e911, cnam, prepend)",
+		"__version": "3.22",
+		"mobile": "Mobilgeräte-Manager",
+		"mobileIconHelp": "Diese Nummer gehört zu einem Mobilgerät. Sie kann nur über die Verwaltung des zugehörigen Geräts verschoben werden.",
+
+		"__comment": "UI-1285: Aktion „Externe hinzufügen“ im Nummernmanager hinzugefügt",
+		"__version": "3.22",
+		"addExternal": {
+			"label": "Hinzufügen",
+			"help": "Fügen Sie Nummern zum ausgewählten Account hinzu (Sie haben Zugriff auf diese Option, weil Sie mit einem Account angemeldet sind, für den das Flag wnm_allow_additions auf true gesetzt wurde.).",
+			"dialog": {
+				"title": "Telefonnummern zur Plattform hinzufügen",
+				"fieldText": "Nummern für Import eingeben",
+				"beginImport": "Import beginnen",
+				"help1": "Formatbeispiel: +14157775555 (+[Landesvorwahl][Telefonnummer])",
+				"help2": "** Wenn Sie mehrere Nummern importieren, müssen diese jeweils durch ein Leerzeichen getrennt sein.",
+				"invalidNumbers": "Die angegebene Liste enthielt keine gültige Telefonnummer, die zum System hätte hinzugefügt werden können.",
+				"forceActivate": {
+					"text": "Hinzufügen und Zuweisen zu Konto",
+					"help": "Wenn dieses Kästchen deaktiviert ist, werden die Nummern dem Nummernpool nur hinzugefügt, sodass sie über das Nummernsuchtool erworben werden können. Wenn aktiviert, werden die Nummern hinzugefügt und unverzüglich erworben."
+				}
+			},
+			"__comment": "UI-2651: Anbieterauswahl zu „Nummern hinzufügen“ hinzugefügt",
+			"__version": "4.1",
+			"renameCarrier": {
+				"label": "Anbietermodul",
+				"customCarrierName": "Benutzerdefinierter Anbietermodulname"
+			},
+
+			"__comment": "UI-2448: Löschbestätigung-Pop-up",
+			"__version": "4.1",
+			"successAdd": "Sie haben Telefonnummern erfolgreich zum System hinzugefügt!",
+			"resultsDialog": {
+				"headline": "Einige Nummern konnten dem System nicht hinzugefügt werden. Nachfolgend sehen Sie eine Zusammenfassung, welche Nummern erfolgreich hinzugefügt wurden und welche nicht.",
+				"title": "Zusammenfassung zum Vorgang „Nummer hinzufügen“",
+				"continue": "Weiter"
+			},
+
+			"__comment": "UI-2715: Staaten zum Dialogfeld „Externe Nummer hinzufügen“ hinzugefügt",
+			"__version": "4.1",
+			"numberState": {
+				"label": "Bundesland/Kanton",
+				"default": "Standard",
+				"defaultHelp": "Wenn diese Option in der Standardeinstellung verbleibt, werden Nummern mit dem Standardstaat erstellt, der vom Backend verwendet wird."
+			}
+		},
+
+		"__comment": "UI-1935: Anzeige einer Beschreibung neben einer verwendeten Nummer",
+		"__version": "3.22",
+		"unassigned": "Nicht zugewiesen",
+		"callflows": "Callflows",
+
+		"__comment": "UI-: Hilfe für Portierungssymbol hinzugefügt",
+		"__version": "3.22",
+		"portFeatureIconHelp": "Dieses Symbol zeigt an, dass die Nummer auf das System portiert wird.",
+		"portIconHelp": "Diese Nummer wird gerade portiert; und wenn die Portierung fehlschlägt, wird sie gelöscht. Das Symbol wird nur bei der Einrichtung angezeigt und hat keine Funktion bei der Anrufverarbeitung",
+		"failoverIconHelp": "Dieses Symbol zeigt an, dass Sie eine Failover-Nummer für diese Telefonnummer eingerichtet haben.",
+		"cnamOutboundIconHelp": "Dieses Symbol zeigt an, dass Sie die Ausgehender-Anrufer-ID für diese Telefonnummer festgelegt haben.",
+		"cnamInboundIconHelp": "Dieses Symbol zeigt an, dass Sie die Eingehender-Anrufer-ID für diese Telefonnummer festgelegt haben.",
+		"e911IconHelp": "Dieses Symbol zeigt an, dass Sie e911 für diese Telefonnummer eingerichtet haben.",
+		"localIconHelp": "Dieses Symbol zeigt an, dass es sich bei dieser Nummer um eine Ortsnummer handelt.",
+		"notInService": "Diese Nummer ({{variable}}) wurde nicht vollständig aktiviert und ist nicht in Betrieb. Sie müssen warten, bis die Nummer einsatzbereit ist. Erst dann kann sie konfiguriert werden.",
+		"errorFetchingNumber": "Wir konnten zu dieser Nummer ({{variable}}) keine Informationen erhalten. Bitte versuchen Sie es zu einem späteren Zeitpunkt noch einmal!",
+
+		"__comment": "UI-2346: Bulk-API zu „Nummern hinzufügen“ hinzugefügt",
+		"__version": "4.0",
+		"noRightsAddNumber": "Sie verfügen nicht über die Berechtigungen zum Hinzufügen von Nummern zu diesem Account.",
+
+		"__comment": "OOB: Titel des Pop-up-Fensters „Nummern verschieben“ zu I18n hinzufügen",
+		"__version": "4.0",
+		"moveNumbersConfirmationTitle": "Nummern verschieben – Bestätigung",
+
+		"__comment": "OOB: Wenn einem Callflow eine Gruppe zugeordnet ist, die nicht mehr existiert, müssen wir „Unbekannte Gruppe“ anzeigen",
+		"__version": "4.0",
+		"unknownGroup": "Gelöschte Gruppe",
+
+		"__comment": "UI-2651: Benutzer können beim Hinzufügen vieler Nummern auf einmal das Anbietermodul auswählen. Anbietermodule werden in eine eigene Funktion verlegt, die dann von verschiedenen Komponenten wiederverwendet werden kann",
+		"__version": "4.1",
+		"numbersCarrierModule": {
+			"custom": "Benutzerdefiniert"
+		}
+	},
+
+	"callerId": {
+		"callerIdName": "Anrufer-ID-Name",
+		"callerIdPlaceholder": "VORNAME NACHNAME",
+		"dialogTitle": "Auswahl des Anrufer-ID-Namens",
+		"errorUpdate": "Anrufer-ID für diese Telefonnummer konnte nicht aktualisiert werden",
+		"help": {
+			"outbound": "Dieser Name wird als Ihre Anrufer-ID angezeigt, wenn Sie ausgehende Anrufe tätigen (max. 15 Zeichen). Die Bearbeitung dieser Anforderung kann bis zu 72 Stunden dauern.",
+			"inbound": "Wenn Sie diese Funktion aktivieren, wird bei einem eingehenden Anruf der Anrufername in Ihrer Anrufer-ID angezeigt."
+		},
+		"label": "Anrufer-ID",
+		"successCnam": "Sie haben die Anrufer-ID von {{phoneNumber}} erfolgreich aktualisiert",
+		"successRemoveCnam": "Sie haben die Anrufer-ID von {{phoneNumber}} erfolgreich entfernt",
+		"noCallerId": "Für die Telefonnummer {{phoneNumber}} ist keine Anrufer-ID festgelegt",
+		"inboundTitle": "Eingehender-Anrufer-ID-Name",
+		"outboundTitle": "Ausgehender-Anrufer-ID-Name"
+	},
+
+	"e911": {
+		"addressLine1": "Adresszeile 1",
+		"addressLine2": "Adresszeile 2",
+		"city": "Ort",
+		"dialogTitle": "Notrufstandort bearbeiten",
+		"gmapPinLabel": "Ihr+E911+Standort",
+		"infoBox": "Diese Adresse wird Notdiensten angezeigt, wenn Sie eine Notrufnummer wählen.",
+		"label": "e911",
+		"lastE911Error": "Die e911-Funktion (Notruf) muss für mindestens eine Nummer in Ihrem Konto eingerichtet sein. Konfigurieren Sie erst eine andere Nummer, bevor Sie die Funktion von dieser Nummer entfernen.",
+		"postalCode": "PLZ",
+		"rotatedText": "Für Notdienste",
+		"state": "Bundesland/Kanton",
+		"successE911": "Sie haben die e911-Adresse von <br> {{phoneNumber}} erfolgreich aktualisiert",
+		"title": "E911-Adresse",
+		"verifyLocation": "Standort prüfen",
+		"__comment": "UI-1355: USPS-Format zu Adressen hinzufügen",
+		"__version": "v3.20_s4",
+		"invalidAddress": "Die angegebene Adresse ist unbekannt. Prüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+		"chooseAddressPopup": {
+			"title": "Korrekte Adresse auswählen",
+			"youEntered": "Ihre Eingabe:",
+			"choicesAvailable": "Verfügbare Auswahl:",
+			"content": "Ihre Angaben passen zu mehreren Adressen. Vielleicht haben Sie keine Hausnummer angegeben oder das Haus besteht aus mehreren Gebäuden."
+		}
+	},
+
+	"failover": {
+		"activate": "Aktivieren",
+		"alternateNumber": "Alternative Nummer",
+		"errorUpdate": "Failover für diese Telefonnummer konnte nicht aktualisiert werden",
+		"failoverTitle": "Failover einrichten",
+		"failoverText": "Wenn nicht erreichbar, eingehenden Anruf weiterleiten auf",
+		"helpFailover": "Wenn Ihre Telefonanlage aus irgendeinem Grund nicht erreichbar ist, können wir Anrufe an eine alternative Telefonnummer oder an ein VoIP-Gerät durchstellen. Wenn es sich bei der Failover-Nummer um eine externe Nummer handelt, müssen Sie die Kosten sowohl für die eingehende als auch die ausgehende Verbindung tragen.",
+		"invalidFailoverNumber": "Ungültige Failover-Nummer, bitte erneut eingeben",
+		"label": "Failover",
+		"noDataFailover": "Keine Daten, bitte erneut eingeben",
+		"or": "ODER",
+		"removeFailover": "Entfernen",
+		"sipAddress": "SIP-Adresse",
+		"successFailover": "Die Failover-Nummer von {{ phoneNumber }} wurde aktualisiert",
+		"successRemove": "Die Failover-Einstellungen für {{ phoneNumber }} wurden entfernt"
+	},
+
+	"buyNumbers": {
+		"buyDialogTitle": "Nummern kaufen",
+		"countrySelectLabel": "Land auswählen",
+		"cityInputLabel": "Nach Ortsvorwahl suchen",
+		"cityInputLabelZipCode": " oder nach PLZ",
+		"seqCheckboxLabel": "Nur sequenzielle Nummern anzeigen",
+		"seqInputLabel": "Wie viele in einer Zeile?",
+		"seqNumAlert": "Geben Sie an, wie viele sequenzielle Nummern in einer Zeile angezeigt werden sollen (eine Ganzzahl zwischen 2 und 999).",
+		"seqNumParamLabel": "für {{sequentialNumbers}} aufeinanderfolgende Nummern",
+		"areaCodeRadioLabel": "Ortsvorwahl auswählen",
+		"noInputAlert": "Sie müssen eine Ortsvorwahl oder einen Ort eingeben, um fortzufahren!",
+		"searchResults": "Suchergebnisse für",
+		"backToSearch": "Zurück zur Suche",
+		"loadingNumbers": "Nummern werden geladen …",
+		"numberAddedSingle": "Nummer hinzugefügt",
+		"numberAddedPlural": "Nummern hinzugefügt",
+		"selectedNumbers": "Ausgewählte Nummern",
+		"moreInfo": "Hier klicken für weitere Informationen",
+		"tollfreeRadioLabel": "Präfix für gebührenfreie Nummer angeben:",
+		"buyNumbers": "Nummern kaufen",
+		"noSelectedNumAlert": "Sie haben keine Nummer zum Kauf ausgewählt.",
+		"buyNumber": "Nummer kaufen",
+		"searchAgain": "Andere Nummer suchen",
+		"summaryTotalNumbers": "Ausgewählte Nummern (Summe)",
+		"summaryTotalCharges": "Gesamtsumme",
+		"noSearchResult": "Es wurde keine Nummer gefunden, die zu Ihrer Anfrage passt. Bitte versuchen Sie es mit anderen Parametern noch einmal.",
+		"partialNumAlert": "Geben Sie eine gültige Nummer ein. Unvollständige Nummern sind nicht zulässig.",
+		"areaCode": "Ortsvorwahl",
+		"add": "Hinzufügen",
+		"month": "Monat",
+		"search": "Suche",
+		"checkingMessage": "Nummernverfügbarkeit wird geprüft …",
+		"processingMessage1": "Nummern werden aktiviert …",
+		"processingMessage2": "Warten Sie, bis der Vorgang abgeschlossen ist.",
+		"unavailable": "Nicht verfügbar",
+		"unavailableMessage": "Achtung! Diese Nummern stehen nun doch nicht mehr zur Verfügung. Setzen Sie den Vorgang mit den verbleibenden Nummern fort oder kehren Sie zu den Suchergebnissen zurück und fügen Sie weitere Nummern hinzu.",
+		"unavailableServiceAlert": "Verzeihung, dieser Service ist derzeit leider nicht verfügbar. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.",
+		"continue": "Weiter",
+		"backToSearchResults": "Zurück zu den Suchergebnissen",
+		"cancel": "Abbrechen",
+		"confirm": "Bestätigen",
+		"confirmInfoMsg1": "Die Nummern werden Ihrem Account hinzugefügt und sind 15 Minuten nach Abschluss der Transaktion verfügbar.",
+		"confirmInfoMsg2": "Ihre hinterlegte Kreditkarte wird sofort für regelmäßig anfallende Services belastet. Gebühren werden für Ihren Abrechnungszyklus anteilig berechnet.",
+		"vanitySearchLabel": "Lokale oder gebührenfreie Vanity-Nummer suchen:",
+		"vanitySearchInfo1": "Sie können nach einer beliebigen Kombination aus Ziffern und Buchstaben suchen.",
+		"vanitySearchInfo2": "Wenn Sie eine bestimmte Nummer nicht finden, können Sie uns gerne eine Anfrage senden. Wir schauen dann alle Datenbanken nach der von Ihnen gesuchten Nummer durch. Für die Anforderung einer speziellen Nummer wird eine einmalige Gebühr in Höhe von $20 berechnet.",
+		"sendRequest": "Suchanfrage senden",
+		"to": "bis",
+		"partialPurchaseFailure": "Die folgenden Nummern konnten nicht gekauft werden:",
+		"__comment": "UI-1716: Fehlerbehandlung, wenn die gesuchte PLZ nicht existiert, stattdessen Anzeige eines „toastr“",
+		"__version": "3.22",
+		"zipCodeDoesNotExist": "Die eingegebene PLZ existiert nicht",
+		"__comment": "UI-1716: Verwendung eines externen Skripts zum Laden des Google Maps-Skripts",
+		"__version": "3.22",
+		"markerAreaCodes": "Ortsvorwahlen für ",
+		"__comment": "UI-1210: singleSelect-Flag hinzufügen, das dafür sorgt, dass Benutzer nur eine Nummer auf einmal kaufen können",
+		"__version": "3.22",
+		"singleSelectInfo": "Sie können für diese Aktion nur eine Nummer auswählen."
+	},
+
+	"chooseModel": {
+		"brandHeadline": "Wählen Sie den Gerätehersteller aus:",
+		"deviceHeadline": "Wählen Sie das Gerätemodell aus:",
+		"deviceSelected": "Sie haben das {{model}} {{brand}} ausgewählt",
+		"missingBrand": "Die Marke meines Geräts ist hier nicht aufgeführt",
+		"missingDevice": "Mein Gerät ist nicht aufgeführt",
+		"title": "Geräteauswahl",
+		"create": "Gerät erstellen"
+	},
+
+	"servicePlanDetails": {
+		"planLines": {
+			"phone_numbers": "Telefonnummern",
+			"number_services": "Nummernservices",
+			"limits": "Grenzwerte",
+			"devices": "Geräte",
+			"users": "Benutzer",
+			"__comment": "UI-1737: Hinzufügen von i18n für neuen Servicepläne",
+			"__version": "3.21",
+			"branding": "Branding (Markenpflege)",
+			"ips": "IPs",
+			"ui_apps": "UI-Apps"
+		},
+		"noServicePlan": "Kein Servicetarif ausgewählt.",
+		"__comment": "UI-1662: Hinzufügen eines Minimums zu Anpassung",
+		"__version": "3.22",
+		"overrides": "Überschriebene Werte",
+		"addOverrides": "Hinzufügen",
+		"noOverrides": "Keine überschriebenen Werte. Klicken Sie auf den Link mit der Aufschrift „Hinzufügen“, um diesen Servicetarif anzupassen!",
+		"planTitle": "Einzelheiten zum Servicetarif",
+		"keys": {
+			"phone_numbers": "Telefonnummern",
+			"number_services": "Nummernservices",
+			"limits": "Grenzwerte",
+			"devices": "Geräte",
+			"users": "Benutzer",
+			"branding": "Branding (Markenpflege)",
+			"ips": "IPs",
+			"ui_apps": "UI-Apps",
+			"port": "Portierungsanforderung",
+			"cnam": "CNAM-Update",
+			"e911": "e911",
+			"ata": "ATA",
+			"cellphone": "Mobiltelefon",
+			"fax": "Fax",
+			"landline": "Festnetz",
+			"mobile": "Mobil",
+			"sip_device": "SIP-Gerät",
+			"sip_uri": "SIP-URI",
+			"smartphone": "Smartphone",
+			"softphone": "Softphone",
+			"outbound_trunks": "Ausgehende Trunks",
+			"inbound_trunks": "Eingehende Trunks",
+			"twoway_trunks": "2-Wege-Trunks",
+			"did_us": "US-DID",
+			"tollfree_us": "US gebührenfrei",
+			"rate": "Preis",
+			"activation_charge": "Aktivierungsgebühr",
+			"minimum": "Minimum",
+			"exceptions": "Ausnahmen",
+			"__comment": "UI-2046: Kategorie „Alle“",
+			"__version": "v3.22",
+			"_all": "Alle",
+			"as": "Als",
+			"user": "Standardbenutzer",
+			"admin": "Account-Admin",
+			"accounts": "Account-Manager",
+			"branding": "Branding (Markenpflege)",
+			"callflows": "Erweiterte Callflows",
+			"carriers": "Carriers (Netzanbieter)",
+			"cluster": "Cluster Manager (Clustermanager)",
+			"debug": "App debuggen",
+			"migration": "Migration",
+			"mobile": "Mobil",
+			"numbers": "Nummernmanager",
+			"pbxs": "Nebenstellenanlagen-Konnektor",
+			"pivot": "Pivot",
+			"port": "Port-Manager",
+			"provisioner": "Bereitsteller",
+			"reporting": "Reseller-Reporting",
+			"userportal": "Benutzerportal",
+			"voip": "Smart PBX",
+			"webhooks": "Webhooks",
+			"discounts": "Rabatte",
+			"maximum": "Maximum"
+		}
+	},
+
+	"ringingDurationControl": {
+		"distribute": "Verteilen",
+		"maxDurationTooltip": "Klicken Sie in dieses Kästchen, um die maximale Zeitdauer für Ihre Anrufgruppe zu ändern. Sie müssen eine Zahl zwischen 30 und 999 eingeben.",
+		"doNotRing": "Kein Rufton"
+	},
+
+	"__comment": "UI-966: Da wir in der Lage sein möchten, die Anbieterauswahl an verschiedenen Stellen anzupassen, haben wir ein allgemeines Steuerelement erstellt",
+	"__version": "v3.20_s0",
+	"carrierSelector": {
+		"title": "Anbieter",
+		"headline": "Wählen Sie eine Anbieterstrategie für diesen Account",
+		"useBlended": {
+			"friendlyName": "Systemweite Anbieter verwenden",
+			"help": "Anrufe werden an die für den Master-Account festgelegten weltweiten Telefonieanbieter weitergeleitet"
+		},
+		"useReseller": {
+			"friendlyName": "Partner-„{{{variable}}}“-Anbieter verwenden",
+			"help": "Leitet die Anrufe an die Anbieter von {{variable}} weiter.",
+			"__comment": "UI-1041: Es musste eine Standardnachricht für Kunden hinzugefügt werden, die kein „White Labeling“ betreiben",
+			"__version": "v3.19_s3",
+			"defaultFriendlyName": "Anbieter Ihres Resellers verwenden",
+			"defaultHelp": "Anrufe werden an die Anbieter Ihres Resellers weitergeleitet."
+		},
+		"byoc": {
+			"friendlyName": "Für diesen Account festgelegte Netzanbieter verwenden",
+			"help": "Anrufe werden an die über die Netzanbieter-App für diesen Account festgelegten Anbieter weitergeleitet."
+		},
+		"saveSuccess": "Sie haben die Netzanbieter-Einstellungen für diesen Account aktualisiert!",
+		"huntError": "Ihre aktuellen Einstellungen für Ihre „no_match“-Route werden in Monster UI nicht unterstützt. Wenn Sie diese Einstellungen weiterhin verwenden möchten, ändern Sie hier nichts. Andernfalls wählen Sie eine der Optionen aus der Dropdown-Liste aus."
+	},
+
+	"__comment": "UI-1219: Voranstellen-Funktion („Prepend“) zu Nummern hinzugefügt",
+	"__version": "v3.20_s1",
+	"numberPrepend": {
+		"dialogTitle": "Vorangestellten Text für Nummern einrichten",
+		"title": "Voranzustellender Text",
+		"label": "Voranstellen",
+		"help": "Beim Erhalt eines Anrufes wird dieser Text vor Ihrer Nummer angezeigt. So können Sie besser erkennen, welche Nummer der Anrufer angerufen hat (falls Sie mehrere Nummern in Gebrauch haben).",
+		"successUpdate": "Der vorangestellte Text für {{phoneNumber}} wurde erfolgreich aktualisiert"
+	},
+
+	"__comment": "UI-228: Hinzufügen des allgemeinen Steuerelements „numberSelector“",
+	"__version": "v3.20_s4",
+	"numberSelector": {
+		"emptyValue": "- Nummer auswählen -",
+		"removeLink": "Entfernen",
+		"spareLink": "Eine freie Nummer auswählen",
+		"buyLink": "Eine neue Nummer kaufen",
+		"__comment": "UI-2334: Nebenstellenauswahl zur allgemeinen Steuerung hinzugefügt",
+		"__version": "v4.0",
+		"extensionLink": "Zuweisen einer neuen Nebenstelle"
+	},
+
+	"__comment": "UI-1386: Hinzufügen des allgemeinen Steuerelements „numberListing“",
+	"__version": "v3.20_s4",
+	"monsterListing": {
+		"numbers": {
+			"title": "Nummernliste",
+			"headline": "Nummern auswählen",
+			"headlineSingle": "Nummer auswählen",
+			"noMatch": "Keine Nummern gefunden, die der Suchanfrage entsprachen.",
+			"noData": "Keine Nummern verfügbar.",
+			"noDataSelected": "Sie haben keine Nummern ausgewählt. Sie müssen mindestens eine Nummer auswählen, indem Sie in der Liste auf eine Nummer klicken.",
+			"okButton": "Auswählen",
+			"cancelButton": "Abbrechen"
+		},
+		"devices": {
+			"title": "Geräteliste",
+			"headline": "Geräte auswählen",
+			"headlineSingle": "Gerät auswählen",
+			"noMatch": "Kein Gerät gefunden, das Ihrer Suche entsprach.",
+			"noData": "Keine Geräte verfügbar.",
+			"noDataSelected": "Sie haben kein Gerät ausgewählt. Wählen Sie mindestens ein Gerät aus der Liste aus.",
+			"okButton": "Auswählen",
+			"cancelButton": "Abbrechen"
+		},
+		"default": {
+			"title": "Liste der Elemente",
+			"headline": "Elemente auswählen",
+			"headlineSingle": "Ein Element auswählen",
+			"noMatch": "Kein Element gefunden, das Ihrer Suche entsprach.",
+			"noData": "Keine Elemente verfügbar.",
+			"noDataSelected": "Sie haben kein Element ausgewählt. Wählen Sie mindestens ein Element aus der Liste aus.",
+			"okButton": "Auswählen",
+			"cancelButton": "Abbrechen"
+		}
+	},
+
+	"__comment": "UI-2008: Allgemeines Steuerelement erstellen, das die Vorläufer eines Accounts einer Entität anzeigt (z. B. Nummern und MAC-Adresse, ATM)",
+	"__version": "v3.22",
+	"accountAncestors": {
+		"tooltip": "Klicken Sie hier, um diesen Account zu maskieren",
+		"entities": {
+			"account": {
+				"text": "Die übergeordneten Elemente des ausgewählten Accounts lauten:"
+			},
+			"number": {
+				"ownedBy": "Diese Nummer wurde im Sub-Account {{variable}} gefunden.",
+				"usedBy": "Sie wird derzeit von {{variable}} verwendet.",
+				"notUsed": "Sie wird derzeit nicht verwendet."
+			},
+			"macAddress": {
+				"ownedBy": "Diese MAC-Adresse wurde im Sub-Account {{variable}} gefunden.",
+				"usedBy": "Sie gehört zum Gerät {{variable}}."
+			}
+		}
+	},
+
+	"__comment": "UI-2326: Hinzufügen eines Nebenstellen-Managers zu allgemeinen Steuerelementen",
+	"__version": "v4.0",
+	"extensionTools": {
+		"getNew": {
+			"title": "Nebenstellen erhalten",
+			"proceedGetExtension": "Nebenstelle auswählen",
+			"typeNewExtension": "Zu verwendende Nebenstelle eingeben",
+			"table": {
+				"unNamedCallflow": "Unbenannter Callflow",
+				"name": "Nebenstellen-Verzeichnis",
+				"columns": {
+					"extension": "Nebenstelle",
+					"callflowName": "Callflow-Name"
+				}
+			}
+		}
+	},
+
+	"__comment": "UI-2318: Erstellen eines allgemeinen Steuerelements für die Medienauswahl",
+	"__version": "v4.0",
+	"mediaSelect": {
+		"defaultLabel": "Medien",
+		"emptyUploadAlert": "Leerer Upload",
+		"fileTooBigAlert": "Datei zu groß",
+		"shoutcastURL": "Stream-URL",
+		"shoutcastURLHelp": "Sie können eine beliebige URL eingeben, inklusive :// (http, https, shout...)",
+		"noneLabel": "- Keine -",
+		"silence": "Keine",
+		"shoutcastURLWarning": "WARNUNG: Wenn der hier ausgewählte Stream beim Abspielen nicht verfügbar ist. kann der ganze Anruf fehlschlagen. Vergewissern Sie sich, dass der von Ihnen verwendete Stream rund um die Uhr verfügbar ist.",
+		"useExistingMedia": "Vorhandene Medien verwenden",
+		"uploadNewMedia": "Neue Medien hochladen"
+	},
+
+	"__comment": "UI-2279: Internettelefon-Zeichenfolgen",
+	"__version": "v4.0",
+	"webphoneSubmodule": {
+		"createADevice": "Wir konnten kein Internettelefon finden, das mit Ihrem Benutzer verknüpft ist. Möchten Sie ein neues jetzt erstellen?",
+		"deviceName": "Internettelefon"
+	},
+
+	"conferenceViewer": {
+		"actionBar": {
+			"tooltips": {
+				"lock": "Sperren",
+				"unlock": "Entsperren",
+				"mute": "Teilnehmer stumm schalten",
+				"unmute": "Stummschaltung für Teilnehmer aufheben",
+				"hangup": "Gespräch beenden",
+				"userMute": "Stummschalten",
+				"userUnMute": "Stummschaltung aufheben",
+				"userDeaf": "Ton aus",
+				"userUndeaf": "Ton wieder ein",
+				"userKick": "Anklopfen",
+				"add": "Teilnehmer einladen"
+			}
+		},
+		"moderators": "Moderatoren",
+		"participants": "Teilnehmer",
+		"userActions": {
+			"mute-member": "{{name}} wurde stummgeschaltet",
+			"unmute-member": "{{name}} kann wieder sprechen",
+			"deaf-member": "{{name}} kann andere Teilnehmer nicht mehr hören",
+			"undeaf-member": "{{name}} kann andere Teilnehmer jetzt wieder hören",
+			"del-member": "{{name}} hat die Konferenz verlassen",
+			"lock": "Die Konferenz ist jetzt abgesperrt",
+			"unlock": "Die Konferenz ist nicht mehr abgesperrt"
+		},
+		"empty": "Leer",
+		"emptyModerators": "In dieser Konferenz gibt es derzeit keine aktiven Moderatoren",
+		"emptyParticipants": "In dieser Konferenz gibt es derzeit keine aktiven Teilnehmer",
+		"notStarted": "Nicht gestartet",
+		"refreshWebsocket": "Die Verbindung mit dem WebSocket wurde neu gestartet, die Daten werden aktualisiert...",
+
+		"addEndpointDialog": {
+			"users": "Benutzer",
+			"devices": "Geräte",
+			"title": "Personen zu dieser Konferenz hinzufügen",
+			"subTitle": "Personen in der folgenden Dropdown-Liste auswählen",
+			"add": "Hinzufügen",
+			"help": {
+				"title": "Infos",
+				"content": "Sie können mehrere Benutzer oder Endpunkte in dieser Liste auswählen. Geben Sie einfach die Anfangsbuchstaben des gesuchten Benutzers bzw. Gerätes ein, bis Sie zu dem gewünschten Eintrag gelangen, und drücken Sie dann die EINGABETASTE, um ihn auszuwählen. Wiederholen Sie diese Vorgehensweise für alle gewünschten Einträge, und klicken Sie anschließend auf „Hinzufügen“, damit das System diese Personen zu der Konferenz einlädt."
+			},
+			"successAdd": "Sie haben erfolgreich Personen zu dieser Konferenz eingeladen!"
+		}
+	},
+
+	"__comment": "UI-2554: Eine Möglichkeit zum Anpassen von Anbietern per verwendeter Nummer hinzufügen",
+	"__version": "v4.0",
+	"numberRenameCarrier": {
+		"label": "Anbietermodul",
+		"help": "Durch Auswahl eines Moduls aus dieser ändern Sie das Anbietermodul, das vom System für diese Nummer verwendet wird.",
+		"dialogTitle": "Anbietermodul umbenennen",
+		"successUpdate": "Sie haben das Anbietermodul, das von der Nummer {{phoneNumber}} verwendet wird, zu {{carrierName}} geändert",
+		"custom": "Anpassen",
+		"customCarrierName": "Benutzerdefinierter Anbietermodulname"
+	},
+
+	"portListing": {
+		"misc": {
+			"unknownUser": "Unbekannter Benutzer",
+			"unknownCarrier": "Unbekannter Anbieter",
+			"portInfo": {
+				"winningCarrier": "Neuer Anbieter",
+				"refNumber": "Referenznummer",
+				"name": "Name der Anforderung",
+				"status": "Status",
+				"numbers": "Nummern",
+				"dateSubmitted": "Übermittelt am",
+				"submitter": "Übermittelt von",
+				"losingCarrier": "Ehemaliger Anbieter"
+			},
+			"alternateStatus": {
+				"rejected": "Abgelehnt"
+			},
+			"status": {
+				"unconfirmed": "Anforderung fortsetzen",
+				"submitted": "Portierung angefordert",
+				"pending": "An Anbieter übermittelt",
+				"scheduled": "Vom Anbieter geplant",
+				"completed": "Erfolgreich",
+				"rejected": "Abgelehnt – Aktion erforderlich",
+				"canceled": "Storniert"
+			}
+		},
+		"filtering": {
+			"title": "Konten",
+			"hint": "Wird angezeigt"
+		},
+		"listing": {
+			"title": "Unvollständige Anforderungen – für später gespeichert",
+			"customSelect": {
+				"byStatus": "Per Status anzeigen",
+				"forToday": "Für heute geplant",
+				"all": "Alle Portierungsanforderungen"
+			},
+			"button": "Neue Portierungsanforderung",
+			"empty": {
+				"title": "Zu diesem Account liegen keine aktiven Portierungsanforderungen vor.",
+				"text": "Hmm, diese blaue Schaltfläche sieht wichtig aus..."
+			},
+			"tbody": {
+				"reference": "Ref: {{variable}}"
+			}
+		},
+		"detail": {
+			"title": "Anforderungsstatus",
+			"dialog": {
+				"title": "Status der Portierungsanforderung aktualisieren",
+				"label": {
+					"timezone": "Zeitzone",
+					"current": "Aktueller Status",
+					"new": "Neuer Status",
+					"date": "Geplant für (Datum)",
+					"time": "Geplant für (Uhrzeit)",
+					"reason": "Ablehnungsgrund"
+				},
+				"select": {
+					"status": "Wählen Sie einen neuen Status aus",
+					"reason": "Wählen Sie einen Ablehnungsgrund aus"
+				},
+				"default": "Wählen Sie einen neuen Status aus",
+				"info": {
+					"default": "Sie versuchen gerade, den Status dieser Portierungsanforderung zu ändern. Bevor Sie die Aktualisierung bestätigen, müssen Sie sich vergewissern, dass Sie den korrekten neuen Status ausgewählt haben.",
+					"scheduled": {
+						"one": "Sie haben als neuen Status ",
+						"two": " ausgewählt. Bitte fügen Sie unten den geplanten Zeitpunkt (Datum und Uhrzeit) hinzu."
+					},
+					"rejected": {
+						"one": "Sie haben als neuen Status ",
+						"two": " ausgewählt. Bitte geben Sie dafür einen Grund an."
+					}
+				},
+				"reason": {
+					"default": "Wählen Sie einen Ablehnungsgrund aus",
+					"submitted": "Ihre Portierungsanforderung sieht korrekt aus. Sie wurde zur weiteren Bearbeitung an den Anbieter übermittelt.",
+					"list": {
+						"type_of_service": {
+							"label": "Typ von Service",
+							"text": "Der ausgewählte Service (Firma oder Wohnort) ist laut den Unterlagen des aktuellen Anbieters nicht korrekt."
+						},
+						"tn_not_portable": {
+							"label": "TN ist nicht portierbar",
+							"text": "Das bedeutet, dass die Telefonnummer(n), die Sie portieren lassen möchten, beim aktuellen Anbieter als nicht portierbar geführt werden."
+						},
+						"porting_main_btn_follow": {
+							"label": "Portierung von Haupt-BTN folgt",
+							"text": "Portieren der BTN. Sie müssen eine alternative BTN aus den verbleibenden Nummern angeben"
+						},
+						"passcode_pin_requried_or_invalid": {
+							"label": "Passcode/PIN fehlt oder ist ungültig",
+							"text": "Zeigt an, dass ein Passcode oder eine PIN im Auftrag falsch oder überhaupt nicht angegeben wurde."
+						},
+						"account_number_invalid": {
+							"label": "Account-Nummer ungültig",
+							"text": "Das bedeutet, dass die im Auftrag angegebene Account-Nummer nicht mit der Nummer übereinstimmt, die der Anbieter in seinen Unterlagen führt."
+						},
+						"account_number_required": {
+							"label": "Account-Nummer erforderlich",
+							"text": "Das bedeutet, dass der Anbieter vom Kunden verlangt, seine Account-Nummer anzugeben, bevor diese Portierung genehmigt werden kann."
+						},
+						"invalid_auth_name": {
+							"label": "Ungültiger Authentifizierungsname",
+							"text": "Der Anbieter zeigt an, dass der von Ihnen angegebene Name falsch ist und nicht mit seinen Unterlagen übereinstimmt."
+						},
+						"name_mismatch": {
+							"label": "Name stimmt nicht überein",
+							"text": "Der im Auftrag angegebene Firmen- oder Wohnsitzname stimmt nicht mit dem Namen überein, den der Anbieter in seinem Kundenservice-Datensatz (CSR, Customer Service Record) vermerkt hat."
+						},
+						"carrier_freeze": {
+							"label": "Anbieter eingefroren",
+							"text": "Die EU oder der Kunde hat (irgendwann einmal) angefordert, dass der Account eingefroren wird, wodurch die Portierung von Nummern und andere Kontoänderungen verhindert werden."
+						},
+						"btn_atn_mismatch": {
+							"label": "Diskrepanz bei BTN/ATN",
+							"text": "Wenn die im Auftrag angegebene BTN es dem Anbieter nicht erlaubt, die Account-Datensätze abzurufen, wird der Anbieter den Auftrag zurückweisen und uns gegenüber angeben, dass die BTN fehlerhaft ist."
+						},
+						"pending_order": {
+							"label": "Offene Bestellung",
+							"text": "Für den Account liegt ein aktueller Auftrag vor. Dieser Auftrag muss fertiggestellt oder abgeschlossen werden."
+						},
+						"number_disconnedted_not_active": {
+							"label": "Nummer nicht aktiv / keine Verbindung",
+							"text": "Der TN oder der Account, in dem sich die TN befindet, hat keine Verbindung oder ist inaktiv."
+						},
+						"address_mismatch": {
+							"label": "Diskrepanz bei der Adresse",
+							"text": "Das bedeutet, dass die im Auftrag angegebene Adresse nicht mit der Adresse übereinstimmt, die der alte Anbieter in seinem Kundenservice-Datensatz (CSR, Customer Service Record) vermerkt hat."
+						}
+					}
+				},
+				"message": {
+					"link": "Fügen Sie eine Nachricht hinzu",
+					"placeholder": "Ihre Nachricht hier..."
+				},
+				"helpText" : {
+					"scheduled": "Portierungen erfolgen zu den normalen Geschäftszeiten; eine bestimmte Uhrzeit kann nicht garantiert werden."
+				},
+				"ok": "Aktualisierungsstatus"
+			},
+			"links": {
+				"view": "Ursprüngliche Übermittlung anzeigen",
+				"download": "Angefügte Dokumente herunterladen"
+			},
+			"buttons": {
+				"fix": "Portierungsantrag fixieren",
+				"update": "Aktualisierungsstatus",
+				"back": "Zurück zu Portierungsanforderungen",
+				"cancel": "Anforderung stornieren",
+				"send": "Senden"
+			},
+			"numbers": {
+				"singular": "Nummer",
+				"plural": "Nummern"
+			},
+			"textarea": {
+				"placeholder": "Neue Nachricht..."
+			}
+		}
+	},
+
+	"portWizard": {
+		"loading": {
+			"title": "Ihre Portierungsanforderung wird gespeichert...",
+			"text": "Dieser Vorgang kann bis zu zwei Minuten dauern. Vielen Dank für Ihre Geduld."
+		},
+		"fileUpload": {
+			"title": "Wählen Sie eine Datei aus",
+			"hint": "Nur PDF-Format",
+			"placeholder": "PDF",
+			"button": "Durchsuchen …"
+		},
+		"toastr": {
+			"warning": {
+				"invalidNumbers": "Ungültige Nummern: {{variable}}",
+				"mimeTypes": " ist keine {{variable}}",
+				"size": " ist größer als die erlaubten {{variable}} MB"
+			}
+		},
+		"formTypes": {
+			"loa": {
+				"compact": "LoA",
+				"extended": "Schriftliche Genehmigung"
+			},
+			"resporg": {
+				"compact": "RespOrg",
+				"extended": "Verantwortliche Organisation"
+			}
+		},
+		"buttons": {
+			"cancel": "Portierungsanforderung stornieren",
+			"save": "Speichern und später fortsetzen"
+		},
+		"portInfo": {
+			"movingNumbers": {
+				"title": "Schön, dass Sie Nummern auf unseren Service portieren!",
+				"text": "Als erstes müssen Sie einen Namen für diese Anforderung festlegen, den Sie später für Referenzzwecke verwenden können. Wenn der Name zum Beispiel „Firma, lokales Büro, DIDs“ oder „New Yorker Büro, Nummern“ lautet, können wir diese Anforderung schnell auffinden, nachdem sie übermittelt und gespeichert wurde.",
+				"label": "Name der Portierungsanforderung",
+				"placeholder": "Lokale Nummern, AT&T"
+			},
+			"numbersType": {
+				"text1": "Für welchen Typ von Nummern möchten Sie eine Portierung anfordern?",
+				"text2": "(Alle Nummern in einer Portierungsanforderung müssen im gleichen Format angegeben sein.)",
+				"label": {
+					"local": "Lokale Nummern, USA",
+					"tollFree": "Gebührenfreie Nummern, USA"
+				}
+			},
+			"verifyOwner": {
+				"title": "Wir müssen feststellen, wer der Besitzer der Nummern ist, die Sie portieren möchten.",
+				"text1": "Zu diesem Zweck müssen Sie eine aktuelle Rechnung (aus den letzten 30 Tagen) von Ihrem Anbieter hochladen, die die Nummern enthält, die Sie portieren lassen möchten.",
+				"text2": "Dieser Nachweis ist gesetzlich vorgeschrieben."
+			},
+			"buttons": {
+				"next": "Telefonrechnung hochladen"
+			}
+		},
+		"accountVerification": {
+			"title": "Nachdem Sie Ihre Rechnung hochgeladen haben, können wir nun einige grundlegende Informationen überprüfen.",
+			"text": "Bitte achten Sie darauf, dass Sie die Informationen exakt so eingeben, wie sie in Ihrer Rechnung angegeben sind. Sollten irgendwelche Abweichungen zwischen Ihrer Portierungsanforderung und Ihrer Rechnung vorliegen, würden Anbieter Ihre Anforderung automatisch zurückweisen.",
+			"form": {
+				"legend": "Account-Verifizierung",
+				"text": "Manche Anbieter verwenden auch eine Account-Nummer, eine PIN (persönliche ID-Nummer) und eine BTN (Billing Telephone Number, Telefonrechnungsnummer), um ihre Kunden zu identifizieren. Wenn Ihr Account eine dieser Angaben enthält, müssen Sie diese hier angeben.",
+				"label": {
+					"carrier": "Anbieter",
+					"accountName": "Account-Name",
+					"billingAddress": "Rechnungsadresse",
+					"billVerification": "Verifizierung einer aktuellen Rechnung",
+					"acknowledgeBill": "Ich bestätige hiermit, dass diese Rechnung aus den letzten 30 Tagen stammt",
+					"accountNumber": "Kontonummer",
+					"pin": "PIN",
+					"btn": "BTN"
+				},
+				"placeholder": {
+					"street": "Straße und Hausnummer",
+					"city": "Ort",
+					"state": "Bundesland/Kanton",
+					"zip": "PLZ"
+				}
+			},
+			"buttons": {
+				"next": "Weiter – Nummern auswählen"
+			}
+		},
+		"addNumbers": {
+			"title": "Nun können wir festlegen, welche Nummern Sie portieren möchten.",
+			"text1": "Geben Sie die gewünschte Nummer ein, die portiert werden soll. Oder geben Sie mehrere Nummern hintereinander ein, jeweils mit einem einzelnen Leerzeichen voneinander getrennt.",
+			"text2": "Wenn es sich um eine größere Anzahl von Nummern handelt, können Sie diese auch per Kopieren und Einfügen einsetzen – denken Sie aber daran, dass außer Ziffern und Leerzeichen keine anderen Zeichen erlaubt sind.",
+			"textarea": {
+				"link": "Mehr Nummern hinzufügen",
+				"legend": "Zu portierende Nummern eingeben",
+				"button": "Nummern hinzufügen"
+			},
+			"list": {
+				"title": "Nummern in dieser Portierungsanforderung",
+				"text": "Sie haben noch keine Nummern für Ihre Portierungsanforderung hinzugefügt."
+			},
+			"portion": {
+				"errorMessage": "Anscheinend haben Sie eine aktuelle BTN Ihres Accounts als zu portierende Nummer ausgewählt. Das hätte zur Folge, dass der Anbieter diese Portierungsanforderung zurückweisen würde, wenn Sie nicht explizit angeben, um was für eine Art von Nummern es sich bei den unten aufgeführten Nummern handelt.",
+				"text1": "Stellen diese Nummern den gesamten aktuellen Account zu Ihrer Rechnung dar?",
+				"text2": "Oder stellen diese Nummern nur einen ausgewählten Teil der Nummern dar?",
+				"selection": {
+					"full": "Komplette Account-Portierung",
+					"portion": "Teil der Nummern"
+				}
+			},
+			"btn": {
+				"title": "Partielle Portierung – weitere Anforderungen",
+				"text": "Da Sie ein BTN zum Portieren Ihres aktuellen Accounts ausgewählt haben und Ihre Anforderung nur einen Teil der Nummern Ihres Accounts betrifft, müssen Sie eine neue BTN für diesen Anbieter wählen. Andernfalls wird der Anbieter Ihre Portierungsanforderung für diese Nummern ablehnen.",
+				"label": "Neue BTN"
+			},
+			"buttons": {
+				"next": {
+					"manual": {
+						"loa": "Weiter – Formular für die schriftliche Genehmigung (manuelle schriftliche Genehmigung, ohne elektronische Unterschrift)",
+						"resporg": "Weiter – Formular für die verantwortliche Organisation (manuelle RespOrg, ohne elektronische Unterschrift)"
+					},
+					"eSign": {
+						"loa": "Weiter – Formular für die schriftliche Genehmigung (elektronische Unterschrift für Account aktiviert)",
+						"resporg": "Weiter – Formular für die verantwortliche Organisation (elektronische Unterschrift für Account aktiviert)"
+					}
+				}
+			}
+		},
+		"uploadForm": {
+			"title": "Wir benötigen eine unterschriebene Kopie Ihres {{variable}}",
+			"text": "Bitte laden Sie das vorab generierte Formular „{{variable}}“ herunter. Überprüfen Sie genau, dass die Angaben korrekt sind. Unterschreiben Sie das Formular und laden Sie es dann wieder hoch.",
+			"link": "Mehr über {{variable}}'s erfahren Sie hier.",
+			"download": {
+				"title": "Schritt 1",
+				"text": "Laden Sie Ihr {{variable}} herunter",
+				"button": "Laden Sie das vorab ausgefüllte {{variable}} herunter"
+			},
+			"doubleCheck": {
+				"title": "Schritt 2",
+				"text": "Überprüfen Sie sorgfältig alle Angaben und Nummern in Ihrem {{variable}}, um sicherzustellen, dass uns kein Fehler unterlaufen ist. Anschließend Sie Ihr {{variable}}-Form unterschreiben."
+			},
+			"upload": {
+				"title": "Schritt 3",
+				"text": "Laden Sie Ihr {{variable}}-Form hoch",
+				"format": "Nur PDF-Format"
+			},
+			"button": "Weiter – Benachrichtigungen und zeitliche Planung"
+		},
+		"signForm": {
+			"title": "Sie können Ihr {{variable}} ganz bequem auch elektronisch unterzeichnen.",
+			"text": "Überprüfen Sie Ihr unten angezeigtes {{variable}}-Form sorgfältig und unterschreiben Sie es dann elektronisch, bevor Sie mit dieser Portierungsanforderung weitermachen.",
+			"button": "Weiter – Benachrichtigungen und zeitliche Planung"
+		},
+		"portNotify": {
+			"title": "Teilen Sie uns mit, wer bezüglich der Änderungen benachrichtigt werden soll, und wählen Sie ein Datum aus, an dem die Portierung erfolgen soll.",
+			"text": "Bitte geben Sie nun noch die letzten Informationen an.",
+			"email": {
+				"text1": "Wer soll benachrichtigt werden, wenn sich der Status dieser Portierungsanforderung ändert?",
+				"text2": "(Das können zum Beispiel Statusänderungen sein oder Benachrichtigungen, die weitere Aktionen verlangen.)",
+				"label": "Per E-Mail benachrichtigen"
+			},
+			"target": {
+				"text1": "Wann möchten Sie, dass diese Portierung erfolgt?",
+				"text2": "Hinweis: Wir können dieses Datum zwar nicht garantieren, werden Sie aber zu etwaigen Änderungen auf dem Laufenden halten.",
+				"text3": "Portierungen können je nach dem Anbieter innerhalb von 3 bis 30 Tagen erfolgen.",
+				"label": "Zieldatum"
+			},
+			"button": "Weiter – Portierungsanforderung überprüfen"
+		},
+		"portSubmit": {
+			"title": "Sie sind nun fast so weit, dass Sie Ihre Anforderung bezüglich der Portierung von {{variable}} Nummern absenden können.",
+			"text": "Bitte sehen Sie Ihre Anforderung noch einmal durch und bestätigen Sie die vier (4) unten angegebenen Erklärungen. Wenn Sie damit fertig sind, können Sie weitermachen und Ihre Portierungsanforderung absenden.",
+			"review": {
+				"title": "Überprüfung der Portierungsanforderung",
+				"label": {
+					"name": "Name der Portierungsanforderung",
+					"amount": "Anzahl der portierten Nummern",
+					"requested": "Angefordert am",
+					"scheduled": "Geplantes Datum für die Portierung"
+				}
+			},
+			"agree": {
+				"title": "WICHTIG! Bitte lesen Sie das Folgende durch und erklären Sie sich damit einverstanden:",
+				"label": {
+					"service": "Ich werde meinem bisherigen Anbieter erst kündigen, wenn alle Nummern vollständig übertragen wurden.",
+					"canceled": "Ich habe verstanden, dass mein bisheriger Anbieter alle anderen Nummern in meinem alten Account kündigen kann.",
+					"fee": "Ich habe verstanden, dass mein bisheriger Anbieter eine Gebühr aufgrund vorzeitiger Kündigung erheben kann.",
+					"standard": "Es gibt Standard-Telefonnummern ohne Spezialfunktionen (wie star-ring)."
+				}
+			},
+			"button": "Diese Portierungsanforderung übermitteln"
+		}
+	},
+
+	"__comment": "UI-2641",
+	"__version": "4.1",
+	"numberFeaturesMenu": {
+		"syncSuccess": "Sie haben {{number}} erfolgreich mit dem System synchronisiert."
+	},
+
+	"__comment": "UI-2765",
+	"__version": "4.1",
+	"storageSelector": {
+		"mainTitle": "Ihre Speicheroptionen.",
+		"subTitle": "Wählen Sie zwischen den folgenden Speicheroptionen, die für diesen Account verfügbar sind",
+		"select": "Ausgewählte Speicheroption verwenden"
+	},
+
+	"__comment": "UI-2788",
+	"__version": "4.1",
+	"storagePlanManager": {
+		"changeButton": "Speicheroption ändern",
+		"deleteButton": "Einstellungen entfernen",
+		"noPlans": "Keine Tarife für diesen Account konfiguriert.",
+		"notConfigured": "Dieser Tarif ist noch nicht konfiguriert. Klicken Sie hier, um eine Speicheroption auszuwählen.",
+		"mainTitleWithPlans": "Anscheinend hat dieser Account noch keinen Speicher für diesen Tarif konfiguriert.",
+		"subTitleWithPlans": "Für Ihren Account wurden {{variable}} Speicheroptionen gefunden. Bitte wählen Sie eine aus, um diesen Tarif zu aktivieren.",
+		"mainTitleNoPlans": "Sie haben noch keinen Connector in Ihrem Konto konfiguriert.",
+		"subTitleNoPlans": "Sie müssen eine Integrations-App (z. B. AWS Connector oder Google Drive Connector) aktivieren, um einen Speichertarif nutzen zu können.",
+		"chooseButton": "Speicheroption wählen",
+		"confirmChange": "Durch das Ändern von Speicheroptionen werden all Ihre aktuellen Ordnerkonfigurationen für die Speicherung aufgezeichneter Anrufe zurückgesetzt. Wenn Sie den Vorgang fortsetzen, werden Sie alle Speicherordner für aufgezeichnete Anrufe in diesem Konto erneut konfigurieren müssen.",
+		"confirmYes": "Ja, Speicheroptionen ändern",
+		"confirmTitle": "Warnung! Sind Sie sicher?",
+		"confirmDelete": "Ja, Einstellung entfernen",
+		"confirmDeleteText": "Hiermit wird dieser Servicetarif aus diesem Konto entfernt.",
+		"confirmDeleteTitle": "Warnung! Sind Sie sicher?",
+		"successUpdate": "Ihre Einstellungen für die Speicherung wurden erfolgreich aktualisiert!",
+		"successPathUpdate": "Sie haben erfolgreich den Pfad aktualisiert, unter dem dieser Speichertarif seine Dateien speichern wird."
+	},
+
+	"__comment": "UI-3147",
+	"__version": "4.3",
+	"deleteSmartUser": {
+		"__comment": "UI-2138: Neues Dialogfeld: Benutzer löschen",
+		"__version": "3.22",
+		"deleteDialog": {
+			"title": "Löschen von {{ name }} aus dem System",
+			"headerAdmin": "Sie versuchen gerade, einen ADMIN zu löschen! Wenn man einen Admin löscht, werden sein Benutzer und seine Voicemailbox gelöscht, und seine Geräte sind ihm nicht länger zugewiesen. Außerdem wird dieser Admin dann nicht mehr in der Lage sein, diese UI zu verwalten. Möchten Sie den Vorgang wirklich fortsetzen?",
+			"headerUser": "Durch das Löschen eines Benutzers werden dieser Benutzer und seine Voicemailboxen gelöscht. Seine Geräte und Nummern sind ihm nicht länger zugewiesen. Möchten Sie den Vorgang fortsetzen?",
+			"deleteUser": "Löschen",
+			"deleteUserName": "„{{variable}}“ löschen",
+			"proceed": "Fortfahren",
+			"deleteDevices": "Die Geräte dieses Benutzers ebenfalls entfernen",
+			"deleteDevicesHelp": "Wenn Sie diese Option nicht aktivieren, verlieren diese Geräte ihre Zuweisung und tauchen in der Liste freier Geräte auf.",
+			"__comment": "UI-2467: Beim Löschen eines Benutzers in Smart PBX werden auch Konferenzen entfernt",
+			"__version": "4.0",
+			"deleteConferences": "Die Konferenzen dieses Benutzers ebenfalls entfernen",
+			"deleteConferencesHelp": "Wenn Sie diese Option deaktiviert lassen, werden Sie die Konferenznummer des Benutzers nirgends anders verwenden können, da sie weiterhin von dieser Konferenz belegt sein wird."
+		}
+	}
+}

@@ -5,7 +5,7 @@ define(function(require) {
 		Handlebars = require('handlebars'),
 		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
-		toastr = require('toastr'),
+		Toastr = require('toastr'),
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg'),
 		timepicker = require('timepicker'),
@@ -15,15 +15,35 @@ define(function(require) {
 		footable = require('footable'),
 		mousetrap = require('mousetrap'),
 		Drop = require('drop'),
-		Clipboard = require('clipboard');
+		Clipboard = require('clipboard'),
+		moment = require('moment');
+
+	require('moment-timezone');
+	require('monthpicker');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
+			coalesce: function() {
+				var args = _.toArray(arguments);
+
+				if (args.length < 2) {
+					throw new Error('Handlebars Helper "coalesce" needs at least 2 parameters');
+				}
+
+				// Last argument is discarded because it is handlebars' options parameter
+				for (var i = 0; i < args.length - 1; i++) {
+					if (!_.isNil(args[i])) {
+						return args[i];
+					}
+				}
+				return null;
+			},
+
 			compare: function(lvalue, operator, rvalue, options) {
 				var operators, result;
 
 				if (arguments.length < 3) {
-					throw new Error('Handlerbars Helper "compare" needs 2 parameters');
+					throw new Error('Handlebars Helper "compare" needs 2 parameters');
 				}
 
 				if (options === undefined) {
@@ -45,7 +65,7 @@ define(function(require) {
 				};
 
 				if (!operators[operator]) {
-					throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
+					throw new Error('Handlebars Helper "compare" doesn\'t know the operator ' + operator);
 				}
 
 				result = operators[operator](lvalue, rvalue);
@@ -72,14 +92,24 @@ define(function(require) {
 				return data.value + ' ' + data.unit.symbol;
 			},
 
+			formatMacAddress: function(macAddress) {
+				return monster.util.formatMacAddress(macAddress);
+			},
+
 			formatPhoneNumber: function(phoneNumber) {
 				phoneNumber = (phoneNumber || '').toString();
 
 				return monster.util.formatPhoneNumber(phoneNumber);
 			},
 
-			formatPrice: function(price, decimals) {
-				return monster.util.formatPrice(price, decimals);
+			formatPrice: function() {
+				var args = _.toArray(arguments);
+
+				return monster.util.formatPrice({
+					price: _.size(args) >= 2 ? args[0] : 0,
+					digits: _.size(args) >= 3 ? args[1] : undefined,
+					withCurrency: _.size(args) >= 4 ? args[2] : undefined
+				});
 			},
 
 			formatVariableToDisplay: function(variable) {
@@ -88,6 +118,16 @@ define(function(require) {
 
 			friendlyTimer: function(seconds) {
 				return monster.util.friendlyTimer(seconds);
+			},
+
+			getUserFullName: function(pUser) {
+				var args = _.toArray(arguments);
+
+				// Handlebars always adds an additional argument for context
+				// If there is only one argument, it corresponds to this context object
+				var user = (args.length === 1) ? undefined : pUser;
+
+				return monster.util.getUserFullName(user);
 			},
 
 			ifInArray: function(elem, list, options) {
@@ -105,6 +145,13 @@ define(function(require) {
 				return options[monster.util.isAdmin(user) ? 'fn' : 'inverse'](this);
 			},
 
+			isReseller: function(pAccount, pOptions) {
+				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
+					options = !pOptions ? pAccount : pOptions;
+
+				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			},
+
 			isSuperDuper: function(pAccount, pOptions) {
 				var account = pAccount.hasOwnProperty('superduper_admin') ? pAccount : undefined,
 					options = !pOptions ? pAccount : pOptions;
@@ -112,11 +159,28 @@ define(function(require) {
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
 			},
 
-			isReseller: function(pAccount, pOptions) {
-				var account = pAccount.hasOwnProperty('is_reseller') ? pAccount : undefined,
-					options = !pOptions ? pAccount : pOptions;
+			languageSelector: function(options) {
+				var namedOptions = options.hash,
+					specialArgs = ['selectedLanguage', 'showDefault'],
+					args = _
+						.chain(namedOptions)
+						.pick(specialArgs)
+						.merge({
+							attributes: _.omit(namedOptions, specialArgs)
+						})
+						.value();
+				return new Handlebars.SafeString(
+					getLanguageSelectorTemplate(args)
+				);
+			},
 
-				return options[monster.util.isReseller(account) ? 'fn' : 'inverse'](this);
+			lookupPath: function(object, path, pDefaultValue) {
+				// If there are more than 3 arguments, it means that pDefaultValue is not the
+				// last argument (which corresponds to Handlebar's options parameter), so it
+				// should be the default value.
+				var defaultValue = (_.toArray(arguments).length > 3) ? pDefaultValue : undefined;
+
+				return _.get(object, path, defaultValue);
 			},
 
 			monsterCheckbox: function() {
@@ -144,6 +208,25 @@ define(function(require) {
 				}
 
 				return monster.template(monster.apps.core, 'monster-checkbox-template', templateData);
+			},
+
+			monsterNumberWrapper: function(number) {
+				return monster.ui.getTemplatePhoneNumber(number.toString());
+			},
+
+			monsterPanelText: function(title, type, className) {
+				var htmlContent = arguments[arguments.length - 1].fn(this),
+					validTypes = ['info', 'success', 'danger', 'warning'],
+					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
+					templateData = {
+						className: typeof className === 'string' ? className : '',
+						title: title,
+						content: new Handlebars.SafeString(htmlContent)
+					},
+					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
+					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
+
+				return new Handlebars.SafeString(template);
 			},
 
 			monsterRadio: function() {
@@ -215,27 +298,8 @@ define(function(require) {
 				return new Handlebars.SafeString(template);
 			},
 
-			monsterPanelText: function(title, type, className) {
-				var htmlContent = arguments[arguments.length - 1].fn(this),
-					validTypes = ['info', 'success', 'danger', 'warning'],
-					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
-					templateData = {
-						className: typeof className === 'string' ? className : '',
-						title: title,
-						content: new Handlebars.SafeString(htmlContent)
-					},
-					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
-					template = monster.template(monster.apps.core, 'monster-panel-text-' + type, templateData, false, false, true);
-
-				return new Handlebars.SafeString(template);
-			},
-
 			numberFeatures: function(features) {
 				return monster.ui.paintNumberFeaturesIcon(features);
-			},
-
-			monsterNumberWrapper: function(number) {
-				return monster.ui.getTemplatePhoneNumber(number.toString());
 			},
 
 			replaceVar: function(stringValue, variable) {
@@ -251,6 +315,24 @@ define(function(require) {
 					$el.find('[value="' + data + '"]').attr({ 'selected': 'selected' });
 				});
 				return $el.html();
+			},
+
+			svgIcon: function(id, options) {
+				return new Handlebars.SafeString(
+					monster.ui.getSvgIconTemplate({
+						id: id,
+						attributes: options.hash
+					})
+				);
+			},
+
+			telicon: function(id, options) {
+				return new Handlebars.SafeString(
+					monster.ui.getSvgIconTemplate({
+						id: _.startsWith(id, 'telicon2--') ? id : 'telicon2--' + id,
+						attributes: options.hash
+					})
+				);
 			},
 
 			times: function(max, options) {
@@ -350,6 +432,36 @@ define(function(require) {
 		initializeHandlebarsHelper();
 	}
 
+	/**
+	 * Determine the container of jQuery dialogs in the following order:
+	 * - visible fullScreenModal
+	 * - open myaccount submodule
+	 * - absolute container if isPersistent
+	 * - current app
+	 * @param  {Boolean} pIsPersistent Indicates whether or not to persist the
+	 *                                 dialog when switching app contexts
+	 * @return {jQuery}               Container of the dialog
+	 */
+	function getDialogAppendTo(pIsPersistent) {
+		var isPersistent = _.isBoolean(pIsPersistent)
+			? pIsPersistent
+			: false;
+		var $coreWrapper = $('.core-wrapper'),
+			$coreContent = $coreWrapper.find('.core-content'),
+			$coreAbsolute = $coreWrapper.find('.core-absolute'),
+			$myAccount = $coreAbsolute.find('#myaccount');
+
+		if ($coreAbsolute.find('.modal-full-screen-wrapper').is(':visible')) {
+			return $coreAbsolute.find('.modal-full-screen-wrapper:visible');
+		} else if ($myAccount.hasClass('myaccount-open')) {
+			return $myAccount.find('.myaccount-dialog-container');
+		} else if (isPersistent) {
+			return $coreAbsolute;
+		} else {
+			return $coreContent;
+		}
+	}
+
 	var ui = {
 
 		/**
@@ -385,6 +497,7 @@ define(function(require) {
 				dataToTemplate = {
 					hasBackground: options.hasBackground,
 					cssClass: options.cssClass,
+					cssId: options.cssId,
 					title: options.title,
 					text: options.text
 				},
@@ -652,67 +765,132 @@ define(function(require) {
 		},
 
 		dialog: function(content, options) {
-			var dialog = $('<div />').append(content),
-				coreApp = monster.apps.core,
-				i18n = coreApp.i18n.active(),
-				dialogType = typeof options !== 'undefined' && typeof options.dialogType !== 'undefined' ? options.dialogType : 'classic',
-				closeBtnText = i18n.close || 'X';
-
-			if (typeof options !== 'undefined' && typeof options.dialogType !== 'undefined') {
-				delete options.dialogType;
-			}
-
-			// delete options.dialogType;
-			$('input', content).keypress(function(e) {
-				if (e.keyCode === 13) {
-					e.preventDefault();
-					return false;
-				}
+			// Get options
+			var autoScroll = _.get(options, 'autoScroll', true);
+			var dialogType = _.get(options, 'dialogType', 'classic');
+			var hideClose = _.get(options, 'hideClose', false);
+			var isPersistent = _.get(options, 'isPersistent', false);
+			var onClose = _.get(options, 'onClose');
+			var open = _.get(options, 'open');
+			// Other variables/functions for internal use
+			var $dialogBody = $('<div />').append(content);
+			var $scrollableContainer = $dialogBody;
+			var $window = $(window);
+			var $body = $('body');
+			var coreApp = monster.apps.core;
+			var i18n = coreApp.i18n.active();
+			var closeBtnText = i18n.close || 'X';
+			var dialogPosition = [ 'center', 24 ];
+			var windowLastWidth = $window.width();
+			var getFullDialog = _.once(function() {
+				return $dialogBody.closest('.ui-dialog');
 			});
+			var setDialogSizes = function() {
+				var $dialog = getFullDialog();
+				var dialogMaxHeight = $window.height() - 48;	// 100% - 3rem
+				var dialogMaxWidth = $window.width() - 48;	// 100% - 3rem
+				var dialogHeight = $dialog.height();
+				var dialogHeightDiff = dialogMaxHeight - dialogHeight;
+
+				// Set max sizes
+				$scrollableContainer.css({
+					maxHeight: $scrollableContainer.height() + dialogHeightDiff
+				});
+				$dialog.css({
+					maxWidth: dialogMaxWidth
+				});
+				$dialogBody.css({
+					maxWidth: dialogMaxWidth
+				});
+
+				// Center
+				if (dialogLastWidth !== $dialog.width() || windowLastWidth !== $window.width() || $dialog.offset().top === 24) {
+					$dialogBody.dialog('option', 'position', dialogPosition);
+
+					dialogLastWidth = $dialog.width();
+					windowLastWidth = $window.width();
+				}
+			};
+			var windowResizeHandler = _.debounce(setDialogSizes, 100);
+			// Unset variables
+			var dialogLastWidth;
 
 			//Unoverridable options
 			var strictOptions = {
-					show: { effect: 'fade', duration: 200 },
-					hide: { effect: 'fade', duration: 200 },
-					zIndex: 20000,
-					close: function() {
-						$('div.popover').remove();
-						dialog.dialog('destroy');
-						dialog.remove();
+				// Values
+				appendTo: getDialogAppendTo(isPersistent),
+				draggable: false,
+				hide: {
+					effect: 'fade',
+					duration: 200
+				},
+				position: dialogPosition,
+				resizable: false,
+				show: {
+					effect: 'fade',
+					duration: 200
+				},
+				zIndex: 20000,
+				// Event handlers
+				close: function() {
+					// Clear events
+					$window.off('resize', windowResizeHandler);
 
-						if (typeof options.onClose === 'function') {
-							// jQuery FREAKS out and gets into an infinite loop if the following function kicks back an error. Hence the try/catch.
-							try {
-								options.onClose();
-							} catch (err) {
-								if (console && err.message && err.stack) {
-									console.log(err.message);
-									console.log(err.stack);
-								}
+					// Remove elements
+					$('div.popover').remove();
+					$dialogBody.dialog('destroy');
+					$dialogBody.remove();
+					$body.removeClass('monster-dialog-active');
+
+					// Execute close callback, if possible
+					if (_.isFunction(onClose)) {
+						// jQuery FREAKS out and gets into an infinite loop if the
+						// following function kicks back an error. Hence the try/catch.
+						try {
+							onClose();
+						} catch (err) {
+							if (console && err.message && err.stack) {
+								console.log(err.message);
+								console.log(err.stack);
 							}
 						}
 					}
 				},
-				//Default values
-				defaults = {
-					width: 'auto',
-					modal: true,
-					resizable: false,
-					// If a fullscreen modal is in use, append the dialog to it by default
-					appendTo: options && !options.hasOwnProperty('appendTo') && $('.core-absolute .modal-full-screen-wrapper').is(':visible')
-						? $('.core-absolute .modal-full-screen-wrapper:visible')
-						: undefined,
-					open: function(event, ui) {
-						if (options.hideClose) {
-							$('.ui-dialog-titlebar-close', ui.dialog | ui).hide();
-						}
+				open: function() {
+					$body.addClass('monster-dialog-active');
+					if (hideClose) {
+						getFullDialog().find('.ui-dialog-titlebar-close').hide();
 					}
-				};
+					if (_.isFunction(open)) {
+						open();
+					}
+				}
+			};
+			//Default options
+			var defaults = {
+				// Values
+				modal: true,
+				width: 'auto'
+			};
 
-			//Overwrite any defaults with settings passed in, and then overwrite any attributes with the unoverridable options.
-			options = $.extend(defaults, options || {}, strictOptions);
-			dialog.dialog(options);
+			// Overwrite any defaults with settings passed in,omitting the custom ones, or the
+			// ones that will be handled in a custom way. Then overwrite any attributes with the
+			// unoverridable options
+			options = _
+				.merge(defaults,
+					_.omit(options, [
+						'dialogType',
+						'hideClose',
+						'minHeight',
+						'minWidth',
+						'autoScroll'
+					]),
+					strictOptions);
 
+			$dialogBody.dialog(options);
+			dialogLastWidth = getFullDialog().width();
+
+			// Set dialog close button
 			switch (dialogType) {
 				case 'conference':
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
@@ -721,42 +899,70 @@ define(function(require) {
 					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
 					break;
 			}
-			dialog.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
+			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			return dialog;	   // Return the new div as an object, so that the caller can destroy it when they're ready.'
+			// Container is scrollable by default, so disable if required
+			if (!autoScroll) {
+				$scrollableContainer.css({
+					overflow: 'visible'
+				});
+			}
+
+			// Set initial sizes
+			setDialogSizes();
+
+			// Update position, in case size changed
+			$dialogBody.dialog('option', 'position', dialogPosition);
+
+			// Set event handlers
+			$('input', content).keypress(function(e) {
+				if (e.keyCode === 13) {
+					e.preventDefault();
+					return false;
+				}
+			});
+			$window.on('resize', windowResizeHandler);
+
+			return $dialogBody;	// Return the new div as an object, so that the caller can destroy it when they're ready.
 		},
 
 		charges: function(data, callbackOk, callbackCancel) {
 			var self = this,
 				coreApp = monster.apps.core,
 				i18n = coreApp.i18n.active(),
-				formatData = function(data) {
-					var renderData = [];
-
-					$.each(data, function(categoryName, category) {
-						if (categoryName !== 'activation_charges') {
-							$.each(category, function(itemName, item) {
-								var discount = item.single_discount_rate + (item.cumulative_discount_rate * item.cumulative_discount),
-									monthlyCharges = parseFloat(((item.rate * item.quantity) - discount) || 0).toFixed(2);
-								if (monthlyCharges > 0) {
-									renderData.push({
-										service: i18n.services.hasOwnProperty(itemName) ? i18n.services[itemName] : itemName.replace(/_/, ' '),
-										rate: item.rate.toFixed(2) || 0,
-										quantity: item.quantity || 0,
-										discount: discount > 0 ? parseFloat(discount).toFixed(2) : 0,
-										monthlyCharges: monthlyCharges
-									});
-								}
-							});
-						}
-					});
-
-					return renderData;
+				formatData = function(invoices) {
+					return {
+						showBookkeeper: _.size(invoices) > 1,
+						invoices: _.map(invoices, function(invoice) {
+							return {
+								bookkeeper: _.capitalize(invoice.bookkeeper.type),
+								items: _
+									.chain(invoice.items)
+									.filter(function(item) {
+										return item.quantity > 0;
+									})
+									.map(function(item) {
+										return {
+											service: _.has(i18n.services, item.item)
+												? i18n.services[item.item]
+												: monster.util.formatVariableToDisplay(item.item),
+											quantity: item.quantity || 0,
+											rate: item.rate || 0,
+											discount: item.discount > 0
+												? item.discount
+												: 0,
+											monthlyCharges: item.total
+										};
+									})
+									.orderBy('monthlyCharges', 'desc')
+									.value()
+							};
+						})
+					};
 				},
-				charges = data.activation_charges ? data.activation_charges.toFixed(2) : 0,
-				template = $(monster.template(coreApp, 'dialog-charges', {
-					activation_charges: charges,
-					charges: formatData(data)
+				template = $(coreApp.getTemplate({
+					name: 'dialog-charges',
+					data: formatData(data)
 				}));
 
 			return self.confirm(template, callbackOk, callbackCancel, {
@@ -920,83 +1126,96 @@ define(function(require) {
 		// Set to 'monthly', it will always set the end date to be one month away from the start date (unless it's after "today")
 		// container: jQuery Object. Container of the datepickers
 		initRangeDatepicker: function(options) {
-			var self = this,
-				container = options.container,
+			var timezone;
+
+			if (_.has(monster, 'apps.auth.currentUser.timezone')) {
+				timezone = monster.apps.auth.currentUser.timezone;
+			} else if (_.has(monster, 'apps.auth.currentAccount.timezone')) {
+				timezone = monster.apps.auth.currentAccount.timezone;
+			} else {
+				timezone = moment.tz.guess();
+			}
+
+			var container = options.container,
 				range = options.range || 7,
 				initRange = options.initRange || options.range || 1,
 				inputStartDate = container.find('#startDate'),
 				inputEndDate = container.find('#endDate'),
-				now = new Date(),
-				today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-				endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+				initDate = moment().tz(timezone),
+				today = moment(initDate).tz(timezone).startOf('day'),
+				startDate = _.get(
+					options,
+					'startDate',
+					today
+					),
+				endDate = moment(initDate).tz(timezone).endOf('day');
 
-			if (range === 'monthly') {
-				startDate.setMonth(startDate.getMonth() - 1);
+			if (options.startDate) {
+				startDate = moment(startDate).tz(timezone);
+			} else if (range === 'monthly') {
+				startDate = initDate.subtract(1, 'months');
 			} else {
-				startDate.setDate(startDate.getDate() - initRange);
+				startDate = initDate.subtract(initRange, 'days');
 			}
-			startDate.setDate(startDate.getDate() + 1);
 
 			monster.ui.datepicker(container.find('#startDate, #endDate'), {
 				beforeShow: customRange,
 				onSelect: customSelect
 			});
 
-			inputStartDate.datepicker('setDate', startDate);
-			inputEndDate.datepicker('setDate', endDate);
+			inputStartDate.datepicker('setDate', startDate.toDate());
+			inputEndDate.datepicker('setDate', endDate.toDate());
 
 			// customSelect runs every time the user selects a date in one of the date pickers.
 			// Features:
 			// If we select a day as the starting date, we want to automatically adjust the end day to be either startDay + range or today (the closest to the start date is chosen).
 			// If the "monthly" mode is on, we want to automatically set the endDate to be exactly one month after the startDate, unless it's after "today". (we had to do that since the # of days in a month varies)
 			function customSelect(dateText, input) {
-				var dateMin = inputStartDate.datepicker('getDate');
-
-				if (input.id === 'startDate') {
-					var dateMaxRange = new Date(dateMin);
-
-					if (range === 'monthly') {
-						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
-					} else {
-						dateMaxRange.setDate(dateMaxRange.getDate() + range);
-					}
-					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
-
-					if (dateMaxRange > today) {
-						dateMaxRange = today;
-					}
-
-					inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange, 'date'));
+				if (input.id !== 'startDate') {
+					return;
 				}
-			};
+
+				var dateMin = inputStartDate.datepicker('getDate'),
+					dateMaxRange;
+
+				dateMaxRange = moment(dateMin).tz(timezone);
+
+				if (range === 'monthly') {
+					dateMaxRange.add(1, 'months').subtract(1, 'days');
+				} else {
+					dateMaxRange.add((range - 1), 'days');
+				}
+
+				if (dateMaxRange.isAfter(today)) {
+					dateMaxRange = today;
+				}
+
+				inputEndDate.val(monster.util.toFriendlyDate(dateMaxRange.toDate(), 'date'));
+			}
 
 			// customRange runs every time the user clicks on a date picker, it will set which days are clickable in the datepicker.
 			// Features:
 			// If I click on the End Date, I shouldn't be able to select a day before the starting date, and I shouldn't be able to select anything after "today"
 			// If I click on the Start date, I should be able to select any day between the 1/1/2011 and "Today"
 			function customRange(input) {
-				var dateMin,
+				var dateMin = inputStartDate.datepicker('getDate'),
 					dateMax;
 
 				if (input.id === 'endDate') {
-					dateMin = inputStartDate.datepicker('getDate');
-
-					var dateMaxRange = new Date(dateMin);
+					var minMoment = moment(dateMin);
 
 					// If monthly mode, just increment the month for the maxDate otherwise, add the number of days.
 					if (range === 'monthly') {
-						dateMaxRange.setMonth(dateMaxRange.getMonth() + 1);
+						minMoment.add(1, 'months').subtract(1, 'days');
 					} else {
-						dateMaxRange.setDate(dateMaxRange.getDate() + range);
+						minMoment.add((range - 1), 'days');
 					}
-					dateMaxRange.setDate(dateMaxRange.getDate() - 1);
 
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
-					dateMax = dateMaxRange > today ? today : dateMaxRange;
+					dateMax = minMoment.isAfter(today) ? today.toDate() : minMoment.toDate();
 				} else if (input.id === 'startDate') {
-					dateMin = new Date(2011, 0, 0);
-					dateMax = new Date();
+					dateMin = moment({years: 2011}).startOf('year').toDate();
+					dateMax = moment().toDate();
 				}
 
 				return {
@@ -1143,6 +1362,10 @@ define(function(require) {
 			$.validator.addMethod('regex', function(value, element, regexpr) {
 				return regexpr.test(value);
 			});
+
+			$.validator.addMethod('phoneNumber', function(value, element) {
+				return monster.util.getFormatPhoneNumber(value).isValid;
+			}, localization.customRules.phoneNumber);
 
 			this.customValidationInitialized = true;
 		},
@@ -1521,9 +1744,15 @@ define(function(require) {
 						activeToolbarClass: 'selected',
 						fileUploadError: function(reason, detail) {
 							if (reason === 'unsupported-file-type') {
-								toastr.error(detail + i18n.toastr.error.format);
+								toast({
+									type: 'error',
+									message: detail + i18n.toastr.error.format
+								});
 							} else {
-								toastr.error(i18n.toastr.error.upload);
+								toast({
+									type: 'error',
+									message: i18n.toastr.error.upload
+								});
 								console.log('error uploading file', reason, detail);
 							}
 						}
@@ -1946,7 +2175,7 @@ define(function(require) {
 			var self = this,
 				args = pArgs || {},
 				menus = thisArg.appFlags._layout.menus,
-				parent = $('#monster_content'),
+				parent = thisArg.appFlags._layout.parent || $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				appContent = parent.find('.app-content-wrapper'),
 				menuId = $tab.parents('.navbar-menu').data('menu_id'),
@@ -1959,7 +2188,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						appLayoutClass = 'app-layout',
+						appLayoutClass = ['app-layout'],
 						subTab;
 
 					// Add 'active' class to menu element
@@ -2040,7 +2269,6 @@ define(function(require) {
 
 					parent
 						.find('.app-content-wrapper')
-							.hide()
 							.empty();
 
 					self.isTabLoadingInProgress = false;
@@ -2063,14 +2291,18 @@ define(function(require) {
 
 						// Override layout type if specified at the tab level
 						if (currentTab.hasOwnProperty('layout')) {
-							appLayoutClass += ' ' + currentTab.layout;
+							appLayoutClass.push(currentTab.layout);
 						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
-							appLayoutClass += ' ' + thisArg.appFlags._layout.appType;
+							appLayoutClass.push(thisArg.appFlags._layout.appType);
+						}
+
+						if (parent.find('header.app-header').is(':visible')) {
+							appLayoutClass.push('with-navbar');
 						}
 
 						parent
 							.find('.app-layout')
-								.prop('class', appLayoutClass + ' with-navbar');
+								.prop('class', appLayoutClass.join(' '));
 
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
@@ -2109,7 +2341,7 @@ define(function(require) {
 		 */
 		generateAppNavbar: function(thisArg) {
 			var self = this,
-				parent = $('#monster_content'),
+				parent = thisArg.appFlags._layout.parent || $('#monster_content'),
 				appHeader = parent.find('.app-header'),
 				menus = thisArg.appFlags._layout.menus,
 				navbarTemplate = monster.template(monster.apps.core, 'monster-app-navbar', { menus: menus }),
@@ -2171,14 +2403,16 @@ define(function(require) {
 		 */
 		generateAppLayout: function(thisArg, args) {
 			var self = this,
-				parent = $('#monster_content'),
+				parent = args.parent || $('#monster_content'),
 				tabs = args.menus.reduce(function(prev, curr) { return prev.concat(curr.tabs); }, []),
 				context = (function(args, tabs) {
 					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
 				})(args, tabs),
-				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
+				forceNavbar = _.get(args, 'forceNavbar', false),
+				hideNavbar = _.get(args, 'hideNavbar', false),
+				hasNavbar = !(_.size(tabs) <= 1),
 				dataTemplate = {
-					hasNavbar: hasNavbar,
+					hasNavbar: forceNavbar ? true : hideNavbar ? false : hasNavbar,
 					layout: (function(args, context) {
 						if (context.hasOwnProperty('layout')) {
 							return context.layout;
@@ -2214,9 +2448,7 @@ define(function(require) {
 				thisArg.appFlags._layout = args;
 			}
 
-			if (hasNavbar) {
-				self.generateAppNavbar(thisArg);
-			}
+			self.generateAppNavbar(thisArg);
 
 			callDefaultTabCallback();
 		},
@@ -2409,7 +2641,10 @@ define(function(require) {
 					loadedPages = [],
 					isAllDataLoaded = false,
 					allDataLoaded = function() {
-						//toastr.success(monster.apps.core.i18n.active().backendPagination.allDataLoaded);
+						// toast({
+						// 	type: 'success',
+						// 	message: monster.apps.core.i18n.active().backendPagination.allDataLoaded
+						// });
 						finalOptions.empty = monster.apps.core.i18n.active().backendPagination.emptyForSure;
 
 						isAllDataLoaded = true;
@@ -2816,7 +3051,7 @@ define(function(require) {
 						formattedNumber: formattedNumber.userFormat
 					},
 					options: {
-						hideFlag: options.hasOwnProperty('hideFlag') ? options.hideFlag : false
+						hideFlag: !formattedNumber.isValid || _.get(options, 'hideFlag', false)
 					}
 				},
 				template = monster.template(monster.apps.core, 'monster-number-wrapper', formattedData);
@@ -2855,7 +3090,10 @@ define(function(require) {
 			});
 
 			cb.on('success', function() {
-				toastr.success(monster.apps.core.i18n.active().clipboard.successCopy);
+				toast({
+					type: 'success',
+					message: monster.apps.core.i18n.active().clipboard.successCopy
+				});
 			});
 		},
 
@@ -2994,7 +3232,254 @@ define(function(require) {
 		}
 	};
 
+	/**
+	 * Gets a template to render `select` list of the languages that are supported by Monster UI
+	 *
+	 * @private
+	 * @param  {Object} args
+	 * @param  {String} [args.selectedLanguage]  IETF language tag
+	 * @param  {Boolean} [args.showDefault=false]  Whether or not to include a default option in the language list
+	 * @param  {Object} [args.attributes]  Collection of key/value corresponding to HTML attributes set on the `select` tag
+	 * @returns {String}  Language select list template
+	 */
+	function getLanguageSelectorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		var selectedLanguage = _.get(args, 'selectedLanguage'),
+			showDefault = _.get(args, 'showDefault', false),
+			attributes = _.get(args, 'attributes', {}),
+			languages;
+		if (!_.isUndefined(selectedLanguage) && !_.isString(selectedLanguage)) {
+			throw TypeError('"selectedLanguage" is not a string');
+		}
+		if (!_.isBoolean(showDefault)) {
+			throw TypeError('"showDefault" is not a boolean');
+		}
+		if (!_.isPlainObject(attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		// Delay language iteration until we know that all the parameters are valid, to avoid
+		// unnecessary processing
+		languages = _
+			.chain(monster.supportedLanguages)
+			.map(function(code) {
+				return {
+					value: code,
+					label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, code)
+				};
+			})
+			.sortBy('label')
+			.value();
+		if (showDefault) {
+			languages.unshift({
+				value: 'auto',
+				label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, 'auto')
+			});
+		}
+		return monster.template(monster.apps.core, 'monster-language-selector', {
+			attributes: attributes,
+			languages: languages,
+			selectedLanguage: selectedLanguage
+		});
+	};
+
+	/**
+	 * Get handlebars template to render an SVG icon
+	 * @param   {Object} args
+	 * @param   {String} args.id            Icon ID
+	 * @param   {String} [args.attributes]  Attributes to be added to the SVG tag
+	 * @return  {String}                    SVG icon template
+	 */
+	function getSvgIconTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (!_.isString(args.id)) {
+			throw TypeError('"id" is not a string');
+		}
+		if (_.has(args, 'attributes') && !_.isPlainObject(args.attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		var iconId = args.id;
+		var iconPrefix = iconId.substring(0, iconId.indexOf('--'));
+		var attributes = _.get(args, 'attributes', {});
+		attributes = mergeHtmlAttributes(attributes, {
+			'class': 'svg-icon ' + iconPrefix
+		});
+
+		return monster.template(monster.apps.core, 'monster-svg-icon', {
+			iconId: iconId,
+			attributes: attributes
+		});
+	}
+
+	/**
+	 * Generates a key-value pair editor
+	 * @param  {jQuery} $target  Container to append the widget to.
+	 * @param  {Object} [options]  Editor options
+	 * @param  {Object} [options.data]  Key-value data, as a plain object
+	 * @param  {String} [options.inputName]  Input name prefix
+	 * @param  {Object} [options.i18n]  Custom label translations
+	 * @param  {Object} [options.i18n.addLink]  Add row link label
+	 * @param  {String} [options.i18n.keyPlaceholder]  Key input placeholder
+	 * @param  {String} [options.i18n.valuePlaceholder]  Value input placeholder
+	 */
+	function keyValueEditor($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		var data = _.get(options, 'data', {});
+		var inputName = _.get(options, 'inputName', 'data');
+		var addLink = _.get(options, 'i18n.addLink');
+		var keyPlaceholder = _.get(options, 'i18n.keyPlaceholder');
+		var valuePlaceholder = _.get(options, 'i18n.valuePlaceholder');
+		if (!_.isPlainObject(data)) {
+			throw new TypeError('"options.data" is not a plain object');
+		}
+		if (!_.isNil(inputName) && !_.isString(inputName)) {
+			throw new TypeError('"options.inputName" is not a string');
+		}
+		if (!_.isNil(addLink) && !_.isString(addLink)) {
+			throw new TypeError('"options.i18n.addLink" is not a string');
+		}
+		if (!_.isNil(keyPlaceholder) && !_.isString(keyPlaceholder)) {
+			throw new TypeError('"options.i18n.keyPlaceholder" is not a string');
+		}
+		if (!_.isNil(valuePlaceholder) && !_.isString(valuePlaceholder)) {
+			throw new TypeError('"options.i18n.valuePlaceholder" is not a string');
+		}
+		var $editorTemplate = $(monster.template(monster.apps.core, 'monster-key-value-editor', {
+			addLink: addLink
+		}));
+		var $rowContainer = $editorTemplate.find('.monster-key-value-data-container');
+		var addRow = function(value, key, index) {
+			$rowContainer.append(monster.template(monster.apps.core, 'monster-key-value-editor-row', {
+				key: key,
+				value: value,
+				inputName: inputName + '[' + index + ']',
+				keyPlaceholder: keyPlaceholder,
+				valuePlaceholder: valuePlaceholder
+			}));
+		};
+		// Add initial rows
+		var counter = 0;
+		_.each(data, function(value, key, index) {
+			addRow(value, key, counter);
+			counter += 1;
+		});
+		// Bind events
+		$editorTemplate.find('.key-value-add').on('click', function(e) {
+			e.preventDefault();
+			addRow('', '', counter);
+			counter += 1;
+		});
+		$rowContainer.on('click', '.key-value-remove', function(e) {
+			e.preventDefault();
+			$(this).closest('.monster-key-value-editor-row').remove();
+			// Notice that the counter is not decremented on row remove. This is because its sole
+			// purpose is to guarantee a unique and ordered index of the rows, to allow the
+			// key-value pairs to be sorted in the same way as they are displayed in the editor
+			// when the values are retrieved as an array via monster.ui.getFormData()
+		});
+		// Append editor
+		$target.append($editorTemplate);
+		return $editorTemplate;
+	}
+
+	/**
+	 * Merges HTML attributes, mapped as JSON objects
+	 * @param   {Object} object  Destination object
+	 * @param   {Object} source  Source object
+	 * @returns {Object}         Returns `object` after merge
+	 */
+	function mergeHtmlAttributes(object, source) {
+		if (!_.isPlainObject(object)) {
+			throw new TypeError('"object" is not a plain object');
+		}
+		if (!_.isPlainObject(source)) {
+			throw new TypeError('"source" is not a plain object');
+		}
+
+		return _.mergeWith(object, source, function(objValue, srcValue, key) {
+			objValue = _.isNil(objValue) ? '' : objValue;
+			srcValue = _.isNil(srcValue) ? '' : srcValue;
+			if (key !== 'class') {
+				return _.toString(objValue) + _.toString(srcValue);
+			}
+			var srcClasses = _
+				.chain(srcValue)
+				.toString()
+				.split(/\s+/g) // Split by one or more whitespaces
+				.value();
+			return _
+				.chain(objValue)
+				.toString()
+				.split(/\s+/g) // Split by one or more whitespaces
+				.union(srcClasses)
+				.reject(_.isEmpty) // Reject empty strings that appear due to leading or trailing whitespaces, or empty string
+				.join(' ')
+				.value();
+		});
+	}
+
+	/**
+	 * Transforms a field into a jQuery MonthPicker element
+	 * @param  {jQuery} $target Input to transform
+	 * @param  {Object} options List of options
+	 * @return {jQuery}         MonthPicker instance
+	 */
+	function monthpicker($target, options) {
+		var selectedMonth = _.get(options, 'selectedMonth', null);
+		var minMonth = _.get(options, 'minMonth', null);
+		var maxMonth = _.get(options, 'maxMonth', null);
+
+		return $target.MonthPicker({
+			ShowIcon: false,
+			SelectedMonth: selectedMonth,
+			Duration: 250,
+			MinMonth: minMonth,
+			MaxMonth: maxMonth,
+			i18n: _.merge({
+				months: _
+					.chain(monster.apps.core.i18n.active().calendar.month)
+					.toArray()
+					.map(function(month) {
+						return month.substring(0, 3) + '.';
+					})
+					.value()
+			}, monster.apps.core.i18n.active().monthPicker)
+		});
+	}
+
+	/**
+	 * Wrapper for toast notification library
+	 * @param  {Object} args
+	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)
+	 * @param  {String} args.message  Message to display in toast
+	 * @param  {Object} args.options  Toast notification library options
+	 * @return {jQuery}               Toast element
+	 */
+	function toast(pArgs) {
+		var args = _.isObject(pArgs)
+			? pArgs
+			: {};
+		var type = args.hasOwnProperty('type')
+			? args.type
+			: 'info';
+		try {
+			return Toastr[type](args.message, args.title, args.options);
+		} catch (error) {
+			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
+		}
+	}
+
 	initialize();
+
+	ui.getSvgIconTemplate = getSvgIconTemplate;
+	ui.keyValueEditor = keyValueEditor;
+	ui.monthpicker = monthpicker;
+	ui.toast = toast;
 
 	return ui;
 });

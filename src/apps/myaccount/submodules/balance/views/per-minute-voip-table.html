@@ -3,14 +3,26 @@
 		<thead>
 			<tr>
 				<th data-type="html"></th>
-				<th>{{ i18n.balance.dateColumn }}</th>
-				<th data-type="html">{{ i18n.balance.fromColumn }}</th>
-				<th data-type="html">{{ i18n.balance.toColumn }}</th>
-				<th data-breakpoints="xs">{{ i18n.balance.accountColumn }}</th>
-				<th data-type="number">{{ i18n.balance.durationColumn }}</th>
-				{{#if @root.showCredits}}
-					<th>{{ i18n.balance.amountColumn }}</th>
-				{{/if}}
+				<th>
+					{{i18n.balance.dateColumn}}
+				</th>
+				<th data-type="html">
+					{{i18n.balance.fromColumn}}
+				</th>
+				<th data-type="html">
+					{{i18n.balance.toColumn}}
+				</th>
+				<th data-breakpoints="xs">
+					{{i18n.balance.accountColumn}}
+				</th>
+				<th>
+					{{i18n.balance.durationColumn}}
+				</th>
+			{{#if @root.showCredits}}
+				<th>
+					{{i18n.balance.amountColumn}}
+				</th>
+			{{/if}}
 			</tr>
 		</thead>
 		<tbody></tbody>

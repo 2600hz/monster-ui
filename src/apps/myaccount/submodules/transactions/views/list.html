@@ -1,0 +1,62 @@
+{{#each transactions}}
+	<div class="transaction-box{{#compare type "===" "credit"}} refund{{/compare}}">
+		<div class="expand-box{{#unless hasAddOns}} disabled{{/unless}} hidden">
+			<span class="container-icon">
+				<i class="fa fa-minus expanded"></i>
+				<i class="fa fa-plus collapsed"></i>
+			</span>
+		</div>
+		<div class="text-box {{#unless isApproved}}declined{{/unless}}">
+			<div class="title">
+				{{#unless isApproved}}
+					<i class="monster-red fa fa-exclamation-triangle"></i>
+					&nbsp;
+				{{/unless}}
+
+				{{ friendlyName }}
+
+				{{#unless isApproved}}
+					&nbsp;({{ errorMessage }})
+				{{/unless}}
+			</div>
+			<div class="date">{{toFriendlyDate timestamp}}</div>
+			<div class="price">
+				{{#compare type "===" "credit"}}-{{/compare}} {{formatPrice amount @root.priceDigits}}
+			</div>
+		</div>
+		{{#if hasAddOns}}
+			<div class="expandable">
+				<div class="table-content">
+					<table class="table">
+						<thead>
+							<tr>
+								<th></th>
+								<th>{{ @root.i18n.transactions.serviceTitle }}</th>
+								<th>{{ @root.i18n.transactions.rateTitle }}</th>
+								<th>{{ @root.i18n.transactions.quantityTitle }}</th>
+								<th>{{ @root.i18n.transactions.discount }}</th>
+								<th>{{ @root.i18n.transactions.monthlyChargesTitle }}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#services}}
+								<tr>
+									<td></td>
+									<td>{{ service }}</td>
+									<td>{{formatPrice rate }}</td>
+									<td>{{ quantity }}</td>
+									<td>{{ discount }}</td>
+									<td>{{formatPrice monthly_charges }}</td>
+									<td></td>
+								</tr>
+							{{/services}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		{{/if}}
+	</div>
+{{else}}
+	<div class="no-data">{{ i18n.transactions.noData }}</div>
+{{/each}}

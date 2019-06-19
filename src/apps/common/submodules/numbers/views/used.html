@@ -1,0 +1,76 @@
+<div id="actions_wrapper_used" class="actions-wrapper">
+	<div class="form-inline">
+		<div class="input-append pull-right search-custom">
+			<input class="span2" type="text" placeholder="{{ i18n.numbers.searchNumbers }}"/>
+			<button class="monster-button monster-button-success non-fixed search-numbers" type="button">
+				{{ i18n.numbers.go }}
+			</button>
+		</div>
+	</div>
+</div>
+<div class="accounts-numbers">
+	{{#each listAccounts}}
+		<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
+			{{#compare ../viewType '!==' 'pbx'}}
+				<div class="account-header">
+					<div class="left-part">
+					</div>
+					<div class="expandable">
+						{{ name }}
+						<span class="count">({{ countUsedNumbers }})</span>
+					</div>
+				</div>
+			{{/compare}}
+			<div class="numbers-wrapper">
+				{{#each usedNumbers}}
+					<div class="number-box disabled" data-state="{{this.state}}" data-phoneNumber="{{this.phoneNumber}}">
+						<div class="number-options"></div>
+
+						<div class="phone-number monster-phone-number" data-state="{{this.state}}"{{#compare this.state "!==" "in_service"}} data-toggle="tooltip" data-placement="top" data-original-title="{{ formatVariableToDisplay this.state }}"{{/compare}}>
+							{{#monsterNumberWrapper this.phoneNumber}}{{/monsterNumberWrapper}}
+						</div>
+
+						<div class="used-by">
+							{{#compare this.ownerType '===' 'user'}}
+								<i class="icon-telicon-seats"></i>
+							{{else}}
+								{{#compare this.ownerType '===' 'group'}}
+									<i class="fa fa-users"></i>
+								{{else}}
+									{{#compare this.ownerType '===' 'main'}}
+										<i class="icon-telicon-home"></i>
+									{{else}}
+										{{#compare this.ownerType '===' 'conference'}}
+											<i class="fa fa-comments"></i>
+										{{else}}
+											{{#compare this.ownerType '===' 'callflows'}}
+												<i class="fa fa-random"></i>
+											{{else}}
+												{{#compare this.ownerType '===' 'mobileUser'}}
+													<i class="icon-telicon-mobile-phone"></i>
+												{{/compare}}
+											{{/compare}}
+										{{/compare}}
+									{{/compare}}
+								{{/compare}}
+							{{/compare}}
+
+							{{ this.owner }}
+						</div>
+
+						<div class="features pull-right">
+							{{#numberFeatures features}}{{/numberFeatures}}
+							{{#compare this.state '===' 'port_in'}}
+								<i class="fa fa-exclamation-triangle monster-red active help-popover" data-toggle="tooltip" data-placement="top" data-original-title="{{@root.i18n.numbers.portIconHelp}}"></i>
+							{{/compare}}
+						</div>
+					</div>
+				{{else}}
+					<div class="number-box disabled no-data">
+						{{ @root.i18n.numbers.noUsedNumber }}
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	{{/each}}
+</div>

@@ -1,38 +1,24 @@
 # method()
 _If this method is complex, put a quick description of its behavior here_
 
-* [Syntax](#syntax)
-* [Parameters](#parameters)
-* [Return](#return)
-* [Description](#description)
-* [Examples](#examples)
-
 _Optionally, a screen shot of what the method do can be placed here_
 
-### Syntax
+## Syntax
 ```javascript
 method(param1[, param2]);
 ```
 
 ### Parameters
-* `param1` (mandatory)
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`param1` | _description_ | _`Type`_ | | `true`
+`param2` | _description_ | _`Type`_ | _`value`_ | `false`
 
- Type: 
+### Return value
 
- _description_
+## Description
+_Here goes an extensive explanation of how this method behaves_
 
-* `param2` (optional)
-
- Type:
-
- Default:
-
- _description_
-
-### Return
-
-### Description
-
-### Examples
-* Example 1
-* Example 2
+## Examples
+### Example 1
+### Example 2

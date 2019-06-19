@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var app = {
 		name: 'tutorial',
@@ -63,7 +62,9 @@ define(function(require) {
 		// subscription handlers
 		_render: function(container) {
 			var self = this,
-				skeletonTemplate = $(monster.template(self, 'layout')),
+				skeletonTemplate = $(self.getTemplate({
+					name: 'layout'
+				})),
 				parent = _.isEmpty(container) ? $('#monster_content') : container;
 
 			self.bindEvents(skeletonTemplate);
@@ -78,9 +79,12 @@ define(function(require) {
 
 			template.find('#search').on('click', function(e) {
 				self.searchNumbers(650, 15, function(listNumbers) {
-					var results = monster.template(self, 'results', {
-						numbers: listNumbers
-					});
+					var results = $(self.getTemplate({
+						name: 'results',
+						data: {
+							numbers: listNumbers
+						}
+					}));
 
 					template
 						.find('.results')

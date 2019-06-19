@@ -1,8 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		toastr = require('toastr');
+		monster = require('monster');
 
 	var failover = {
 
@@ -43,7 +42,11 @@ define(function(require) {
 					failover: dataNumber.failover,
 					phoneNumber: dataNumber.id
 				},
-				popupHtml = $(monster.template(self, 'failover-dialog', tmplData)),
+				popupHtml = $(self.getTemplate({
+					name: 'dialog',
+					data: tmplData,
+					submodule: 'failover'
+				})),
 				popup;
 
 			popupHtml.find('.failover-block[data-type="' + radio + '"]').addClass('selected');
@@ -79,9 +82,18 @@ define(function(require) {
 						self.failoverUpdateNumber(dataNumber.id, accountId, dataNumber,
 							function(data) {
 								var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-									template = monster.template(self, '!' + self.i18n.active().failover.successFailover, { phoneNumber: phoneNumber });
+									template = self.getTemplate({
+										name: '!' + self.i18n.active().failover.successFailover,
+										data: {
+											phoneNumber: phoneNumber
+										},
+										submodule: 'failover'
+									});
 
-								toastr.success(template);
+								monster.ui.toast({
+									type: 'success',
+									message: template
+								});
 
 								popup.dialog('destroy').remove();
 
@@ -109,9 +121,18 @@ define(function(require) {
 				self.failoverUpdateNumber(dataNumber.id, accountId, dataNumber,
 					function(data) {
 						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
-							template = monster.template(self, '!' + self.i18n.active().failover.successRemove, { phoneNumber: phoneNumber });
+							template = self.getTemplate({
+								name: '!' + self.i18n.active().failover.successRemove,
+								data: {
+									phoneNumber: phoneNumber
+								},
+								submodule: 'failover'
+							});
 
-						toastr.success(template);
+						monster.ui.toast({
+							type: 'success',
+							message: template
+						});
 
 						popup.dialog('destroy').remove();
 

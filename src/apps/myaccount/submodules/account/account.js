@@ -2,8 +2,7 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		timezone = require('monster-timezone'),
-		toastr = require('toastr');
+		timezone = require('monster-timezone');
 
 	var account = {
 		subscribe: {
@@ -16,7 +15,7 @@ define(function(require) {
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
 			self.callApi({
-				resource: 'accessList.get',
+				resource: 'accessLists.get',
 				data: {
 					accountId: editAccountId
 				},
@@ -46,7 +45,7 @@ define(function(require) {
 				$settingsItem = parent.find('li.settings-item[data-name="accountsmanager_access_list"]');
 
 			self.callApi({
-				resource: 'accessList.get',
+				resource: 'accessLists.get',
 				data: {
 					accountId: self.accountId
 				},
@@ -93,10 +92,15 @@ define(function(require) {
 			var self = this;
 
 			self.accountGetData(function(data) {
-				data.allowAccessList = monster.config.whitelabel.allowAccessList;
-				var accountTemplate = $(monster.template(self, 'account-layout', data));
+				var accountTemplate = $(self.getTemplate({
+					name: 'layout',
+					data: data,
+					submodule: 'account'
+				}));
 
-				self.renderEditAccessListForm(accountTemplate);
+				if (data.allowAccessList) {
+					self.renderEditAccessListForm(accountTemplate);
+				}
 
 				self.accountBindEvents(accountTemplate, data);
 
@@ -147,7 +151,7 @@ define(function(require) {
 				}
 
 				self.callApi({
-					resource: 'accessList.post',
+					resource: 'accessLists.update',
 					data: {
 						accountId: editAccountId,
 						data: cidrData,
@@ -155,7 +159,10 @@ define(function(require) {
 					},
 					success: function() {
 						self.refreshAccessListHeader(template);
-						toastr.success(self.i18n.active().account.postCidrSuccess);
+						monster.ui.toast({
+							type: 'success',
+							message: self.i18n.active().account.postCidrSuccess
+						});
 					},
 					error: function() {
 
@@ -205,6 +212,27 @@ define(function(require) {
 			var self = this;
 
 			monster.parallel({
+				accessLists: function(callback) {
+					self.callApi({
+						resource: 'accessLists.get',
+						data: {
+							accountId: self.accountId,
+							generateError: false
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						},
+						error: function(parsedError, error, globalHandler) {
+							if (error.status === 404) {
+								callback(null, {});
+							} else {
+								globalHandler(error, {
+									generateError: true
+								});
+							}
+						}
+					});
+				},
 				account: function(callback) {
 					self.callApi({
 						resource: 'account.get',
@@ -240,7 +268,10 @@ define(function(require) {
 
 			// Make sure the array does not contain duplicates
 			if (new Set(cidrList).size !== cidrList.length) {
-				toastr.error(self.i18n.active().account.errorDuplicate);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().account.errorDuplicate
+				});
 				return false;
 			}
 
@@ -249,7 +280,10 @@ define(function(require) {
 			//check the cidr list line by line, see if each line is a cidr
 			for (var i = 0; i < cidrList.length; i++) {
 				if (!cidrRegex.test(cidrList[i])) {
-					toastr.error(self.i18n.active().account.accessListInvalid);
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().account.accessListInvalid
+					});
 					return false;
 				}
 			}
@@ -260,10 +294,28 @@ define(function(require) {
 
 		accountFormatData: function(data, globalCallback) {
 			var self = this;
+			var whitelabel = monster.config.whitelabel;
+
+			data.outboundPrivacy = _.map(self.appFlags.common.outboundPrivacy, function(strategy) {
+				return {
+					key: strategy,
+					value: self.i18n.active().myAccountApp.common.outboundPrivacy.values[strategy]
+				};
+			});
 
 			if (!(data.account.hasOwnProperty('ui_flags') && data.account.ui_flags.hasOwnProperty('numbers_format'))) {
 				data.account.ui_flags = data.account.ui_flags || {};
 				data.account.ui_flags.numbers_format = 'international';
+			}
+
+			if (_.isEmpty(data.accessLists)) {
+				// Disable access lists when the kazoo module is unreachable
+				data.allowAccessList = false;
+			} else if (whitelabel.hasOwnProperty('allowAccessList')) {
+				// Enable/Disable access lists following config.js configuration
+				data.allowAccessList = whitelabel.allowAccessList;
+			} else {
+				data.allowAccessList = false;
 			}
 
 			globalCallback && globalCallback(data);

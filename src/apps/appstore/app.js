@@ -2,7 +2,6 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		toastr = require('toastr'),
 		isotope = require('isotope');
 
 	var app = {
@@ -12,6 +11,7 @@ define(function(require) {
 		css: [ 'app' ],
 
 		i18n: {
+			'de-DE': { customCss: false },
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
@@ -43,7 +43,9 @@ define(function(require) {
 
 		render: function(container) {
 			var self = this,
-				template = $(monster.template(self, 'app')),
+				template = $(self.getTemplate({
+					name: 'app'
+				})),
 				parent = container || $('#monster_content');
 
 			if (!monster.config.whitelabel.hasOwnProperty('hideAppStore') || monster.config.whitelabel.hideAppStore === false) {
@@ -56,7 +58,10 @@ define(function(require) {
 					.empty()
 					.append(template);
 			} else {
-				toastr.error(self.i18n.active().appStoreDisabled);
+				monster.ui.toast({
+					type: 'error',
+					message: self.i18n.active().appStoreDisabled
+				});
 			}
 		},
 
@@ -170,8 +175,11 @@ define(function(require) {
 		renderApps: function(parent, appstoreData) {
 			var self = this,
 				appList = appstoreData.apps,
-				template = $(monster.template(self, 'appList', {
-					apps: appList
+				template = $(self.getTemplate({
+					name: 'appList',
+					data: {
+						apps: appList
+					}
 				}));
 
 			parent
@@ -226,31 +234,41 @@ define(function(require) {
 							}
 							return val;
 						}),
-						template = $(monster.template(self, 'appPopup', {
-							isWhitelabeling: monster.util.isWhitelabeling(),
-							app: app,
-							users: users,
-							i18n: {
-								selectedUsers: selectedUsersLength,
-								totalUsers: users.length
+						template = $(self.getTemplate({
+							name: 'appPopup',
+							data: {
+								isWhitelabeling: monster.util.isWhitelabeling(),
+								app: app,
+								users: users,
+								i18n: {
+									selectedUsers: selectedUsersLength,
+									totalUsers: users.length
+								}
 							}
 						})),
-						rightContainer = template.find('.right-container');
+						rightContainer = template.find('.right-container'),
+						isActive = true;
 
 					if (!app.hasOwnProperty('allowed_users') || (app.allowed_users === 'specific' && (app.users || []).length === 0)) {
 						rightContainer.find('#app_switch').prop('checked', false);
 						rightContainer.find('.permissions-bloc').hide();
+						isActive = false;
 					} else if (app.allowed_users === 'admins') {
 						rightContainer.find('#app_popup_admin_only_radiobtn').prop('checked', true);
 					} else if (app.users && app.users.length > 0) {
 						rightContainer.find('#app_popup_specific_users_radiobtn').prop('checked', true);
 						rightContainer.find('.permissions-link').show();
-						rightContainer.find('#app_popup_select_users_link').html(
-							monster.template(self, '!' + self.i18n.active().selectUsersLink, { selectedUsers: selectedUsersLength })
-						);
+						rightContainer
+							.find('#app_popup_select_users_link')
+								.html(self.getTemplate({
+									name: '!' + self.i18n.active().selectUsersLink,
+									data: {
+										selectedUsers: selectedUsersLength
+									}
+								}));
 					}
 
-					self.bindPopupEvents(template, app, appstoreData);
+					self.bindPopupEvents(template, app, isActive);
 
 					rightContainer.find('.selected-users-number').html(selectedUsersLength);
 					rightContainer.find('.total-users-number').html(users.length);
@@ -262,7 +280,7 @@ define(function(require) {
 			});
 		},
 
-		bindPopupEvents: function(parent, app, appstoreData) {
+		bindPopupEvents: function(parent, app, isActive) {
 			var self = this,
 				userList = parent.find('.user-list'),
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
@@ -283,11 +301,37 @@ define(function(require) {
 							errorCallback && errorCallback();
 						}
 					});
+				},
+
+				appStorePopUpButtonDisable = function(disabled) {
+					parent.find('#appstore_popup_save').prop('disabled', disabled);
+				},
+
+				appStorePopUpDirtyCheck = function() {
+					var allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
+						selectedUsers = (allowedUsers === 'specific') ? (monster.ui.getFormData('app_popup_user_list_form').users || []) : app.users;
+
+					selectedUsers = _.map(selectedUsers, function(id) { return { id: id }; });
+
+					if (!_.isEqual(allowedUsers, app.allowed_users) || !_.isEqual(selectedUsers, app.users)) {
+						appStorePopUpButtonDisable(false);
+					} else {
+						appStorePopUpButtonDisable(true);
+					}
 				};
 
 			parent.find('#app_switch').on('change', function() {
-				if ($(this).is(':checked')) {
+				var appSwitch = $(this).is(':checked');
+
+				if (appSwitch !== isActive) {
+					appStorePopUpButtonDisable(false);
+				} else {
+					appStorePopUpButtonDisable(true);
+				}
+
+				if (appSwitch) {
 					parent.find('.permissions-bloc').slideDown();
+					appStorePopUpDirtyCheck();
 				} else {
 					parent.find('.permissions-bloc').slideUp();
 				}
@@ -300,6 +344,8 @@ define(function(require) {
 				} else {
 					parent.find('.permissions-link').hide();
 				}
+
+				appStorePopUpDirtyCheck();
 			});
 
 			parent.find('#app_popup_select_users_link').on('click', function(e) {
@@ -356,15 +402,22 @@ define(function(require) {
 						$(this).data('original', (this.checked ? 'check' : 'uncheck'));
 					});
 
-					parent.find('#app_popup_select_users_link').html(
-						monster.template(self, '!' + self.i18n.active().selectUsersLink, { selectedUsers: selectedUsers.length })
-					);
+					parent
+						.find('#app_popup_select_users_link')
+							.html(self.getTemplate({
+								name: '!' + self.i18n.active().selectUsersLink,
+								data: {
+									selectedUsers: selectedUsers.length
+								}
+							}));
 
 					parent.find('.user-list-view').hide();
 					parent.find('.app-details-view').show();
 				} else {
 					monster.ui.alert(self.i18n.active().alerts.noUserSelected);
 				}
+
+				appStorePopUpDirtyCheck();
 			});
 
 			parent.find('#appstore_popup_cancel').on('click', function() {

@@ -1,3 +1,5 @@
+title: Adding I18n to your application
+
 # Adding i18n to your application
 
 * [Create the i18n files](#create-the-i18n-files)
@@ -11,7 +13,7 @@
 
 Every single label or message in your application that may be read by an end-user should use the i18n system. You should never type in plain English directly in your HTML or JavaScript files, even if you're currently releasing your app in only one language.
 
-In this document, you will learn how to properly use the i18n system in Monster-UI. 
+In this document, you will learn how to properly use the i18n system in Monster-UI.
 
 ### Create the i18n files
 
@@ -135,18 +137,20 @@ The language is defined at both the Account and User level. By default, the user
 
 ![Timezone and Language settings](http://i.imgur.com/EkpuMDg.png)
 
-If the language is not defined in neither the Account nor the User, the browser language will be used.
+If the language is not defined in neither the Account nor the User, the cookie's language will be used.
 
 Determine the language when not user is logged in:
 
-| browser | config.js | language used |
+| cookie | config.js | language used |
 |:---:|:---:|:---:|
-| `en-US` | undefined  | `en-US` |
-| `en-US` | `en-GB`  | `en-GB` |
+| undefined | undefined | `en-US` |
+| undefined | `fr-FR` | `fr-FR` |
+| `fr-FR` | undefined | `fr-FR` |
+| `fr-FR` | `en-US` | `fr-FR` |
 
 Determine the language when a user is logged in:
 
-| browser | account | user | language used |
+| cookie | account | user | language used |
 |:---:|:---:|:---:|:---:|
 | `en-US` | undefined | undefined | `en-US` |
 | `en-US` | undefined | `en-GB` | `en-GB` |

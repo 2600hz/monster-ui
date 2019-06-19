@@ -1,0 +1,44 @@
+<li id="main_topbar_alerts">
+	<a href="javascript:void(0);" class="links" id="main_topbar_alerts_link" data-title="{{i18n.alerts.dropdownTitle}}" data-placement="bottom" data-toggle="tooltip">
+		{{telicon "bell"}}
+		{{#if showAlertCount}}
+			<span class="badge danger">{{alertCount}}</span>
+		{{/if}}
+	</a>
+	<div id="main_topbar_alerts_container" class="topbar-dropdown-container">
+		<div class="dropdown-header">
+			{{i18n.alerts.dropdownTitle}}
+		</div>
+		<div class="dropdown-body">
+			{{#each alertGroups}}
+				<div class="alert-group">
+					<div class="alert-header">
+						{{ tryI18n @root.i18n.alerts.alertTypes type }}
+					</div>
+					{{#each alerts}}
+						<div class="alert-item{{#if action}} actionable{{/if}}" data-alert_id="{{id}}"{{#if action}} data-alert_action="{{action}}"{{/if}}>
+							<div class="item-icon" {{#if iconPath}}style="background-image:url({{iconPath}})"{{/if}}></div>
+							<div class="item-body">
+								<div class="title">{{title}}</div>
+							{{#if metadata}}
+								<div class="subtitle">
+									{{#each metadata}}
+										{{ tryI18n @root.i18n.alerts.metadata key }}: {{value}}{{#unless @last}}, {{/unless}}
+									{{/each}}
+								</div>
+							{{/if}}
+								<div class="message">{{message}}</div>
+							{{#if clearable}}
+								<button class="button-clear">{{@root.i18n.alerts.clearButton}}</button>
+							{{/if}}
+							</div>
+						</div>
+					{{/each}}
+				</div>
+			{{/each}}
+			<div class="alert-group-empty">
+				{{i18n.alerts.noAlerts}}
+			</div>
+		</div>
+	</div>
+</li>
