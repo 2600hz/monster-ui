@@ -1765,18 +1765,6 @@ define(function(require) {
 			}
 		},
 
-		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
-			var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
-
-			for (var key in formData) {
-				if (key === '') {
-					delete formData[key];
-				}
-			}
-
-			return formData;
-		},
-
 		/**
 		 * @desc Wrapper of the Jquery date picker that uses the date format settings from the logged-in user if it exists.
 		 * @param target - mandatory jQuery Object
@@ -3232,6 +3220,18 @@ define(function(require) {
 		}
 	};
 
+	function getFormData(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
+		var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
+
+		for (var key in formData) {
+			if (key === '') {
+				delete formData[key];
+			}
+		}
+
+		return formData;
+	}
+
 	/**
 	 * Gets a template to render `select` list of the languages that are supported by Monster UI
 	 *
@@ -3476,6 +3476,7 @@ define(function(require) {
 
 	initialize();
 
+	ui.getFormData = getFormData;
 	ui.getSvgIconTemplate = getSvgIconTemplate;
 	ui.keyValueEditor = keyValueEditor;
 	ui.monthpicker = monthpicker;
