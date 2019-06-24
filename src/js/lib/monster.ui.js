@@ -3220,8 +3220,14 @@ define(function(require) {
 		}
 	};
 
-	function getFormData(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
-		var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
+	function getFormData(rootNode, delimiter, skipEmpty, nodeCallback) {
+		var formData;
+
+		try {
+			formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback);
+		} catch (error) {
+			formData = {};
+		}
 
 		for (var key in formData) {
 			if (key === '') {
