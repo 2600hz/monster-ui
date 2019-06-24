@@ -3245,6 +3245,7 @@ define(function(require) {
 
 		return formData;
 	}
+	ui.getFormData = getFormData;
 
 	/**
 	 * Gets a template to render `select` list of the languages that are supported by Monster UI
@@ -3327,6 +3328,7 @@ define(function(require) {
 			attributes: attributes
 		});
 	}
+	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	/**
 	 * Generates a key-value pair editor
@@ -3400,6 +3402,7 @@ define(function(require) {
 		$target.append($editorTemplate);
 		return $editorTemplate;
 	}
+	ui.keyValueEditor = keyValueEditor;
 
 	/**
 	 * Merges HTML attributes, mapped as JSON objects
@@ -3465,6 +3468,7 @@ define(function(require) {
 			}, monster.apps.core.i18n.active().monthPicker)
 		});
 	}
+	ui.monthpicker = monthpicker;
 
 	/**
 	 * Wrapper for toast notification library
@@ -3487,14 +3491,10 @@ define(function(require) {
 			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
 		}
 	}
+	ui.toast = toast;
 
 	initialize();
 
-	ui.getFormData = getFormData;
-	ui.getSvgIconTemplate = getSvgIconTemplate;
-	ui.keyValueEditor = keyValueEditor;
-	ui.monthpicker = monthpicker;
-	ui.toast = toast;
 
 	return ui;
 });
