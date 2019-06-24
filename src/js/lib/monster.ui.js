@@ -3220,6 +3220,14 @@ define(function(require) {
 		}
 	};
 
+	/**
+	 * Collect strucutred form data into a plain object
+	 * @param  {String} rootNode
+	 * @param  {String} [delimiter='.']
+	 * @param  {Boolean} [skipEmpty=false]
+	 * @param  {Function} [nodeCallback]
+	 * @return {Object}
+	 */
 	function getFormData(rootNode, delimiter, skipEmpty, nodeCallback) {
 		var formData;
 
