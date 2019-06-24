@@ -1765,18 +1765,6 @@ define(function(require) {
 			}
 		},
 
-		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
-			var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
-
-			for (var key in formData) {
-				if (key === '') {
-					delete formData[key];
-				}
-			}
-
-			return formData;
-		},
-
 		/**
 		 * @desc Wrapper of the Jquery date picker that uses the date format settings from the logged-in user if it exists.
 		 * @param target - mandatory jQuery Object
@@ -3233,6 +3221,33 @@ define(function(require) {
 	};
 
 	/**
+	 * Collect strucutred form data into a plain object
+	 * @param  {String} rootNode
+	 * @param  {String} [delimiter='.']
+	 * @param  {Boolean} [skipEmpty=false]
+	 * @param  {Function} [nodeCallback]
+	 * @return {Object}
+	 */
+	function getFormData(rootNode, delimiter, skipEmpty, nodeCallback) {
+		var formData;
+
+		try {
+			formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback);
+		} catch (error) {
+			formData = {};
+		}
+
+		for (var key in formData) {
+			if (key === '') {
+				delete formData[key];
+			}
+		}
+
+		return formData;
+	}
+	ui.getFormData = getFormData;
+
+	/**
 	 * Gets a template to render `select` list of the languages that are supported by Monster UI
 	 *
 	 * @private
@@ -3313,6 +3328,7 @@ define(function(require) {
 			attributes: attributes
 		});
 	}
+	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	/**
 	 * Generates a key-value pair editor
@@ -3386,6 +3402,7 @@ define(function(require) {
 		$target.append($editorTemplate);
 		return $editorTemplate;
 	}
+	ui.keyValueEditor = keyValueEditor;
 
 	/**
 	 * Merges HTML attributes, mapped as JSON objects
@@ -3451,6 +3468,7 @@ define(function(require) {
 			}, monster.apps.core.i18n.active().monthPicker)
 		});
 	}
+	ui.monthpicker = monthpicker;
 
 	/**
 	 * Wrapper for toast notification library
@@ -3473,13 +3491,10 @@ define(function(require) {
 			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
 		}
 	}
+	ui.toast = toast;
 
 	initialize();
 
-	ui.getSvgIconTemplate = getSvgIconTemplate;
-	ui.keyValueEditor = keyValueEditor;
-	ui.monthpicker = monthpicker;
-	ui.toast = toast;
 
 	return ui;
 });
