@@ -4,7 +4,7 @@ title: getFormData()
 
 ## Syntax
 ```javascript
-monster.ui.getFormData(rootNode[, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName]);
+monster.ui.getFormData(rootNode[, delimiter, skipEmpty, nodeCallback]);
 ```
 
 ### Parameters
