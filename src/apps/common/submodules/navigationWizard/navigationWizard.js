@@ -47,7 +47,6 @@ define(function(require) {
 								.addClass('completed');
 					}
 				});
-
 			} else {
 				throw new Error('A container must be provided.');
 			}
@@ -61,7 +60,6 @@ define(function(require) {
 				stepsCompleted = self.appFlags.stepsCompleted;
 
 			self.navigationWizardSetSelected(currentStep, args, stepsCompleted);
-			self.navigationWizardGenerateTemplate(currentStep, args);
 
 			//Clicking the next button
 			template
