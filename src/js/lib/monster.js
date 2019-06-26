@@ -660,6 +660,65 @@ define(function(require) {
 	};
 
 	/**
+	 * @private
+	 * @param  {Object} args
+	 * @param  {Function} args.callback
+	 * @param  {Object} args.error
+	 * @param  {String} args.errorMessage
+	 * @param  {Object} args.options
+	 */
+	function error401Handler(args) {
+		var callback = args.callback;
+		var error = args.error;
+		var errorMessage = args.errorMessage;
+		var options = args.options;
+
+		// If we have a 401 after being logged in, it means our session expired, or that it's a MFA denial of the relogin attempt
+		// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
+		monster.error('api', error, false);
+
+		// the prevent callback error key is added by our code. We want to let the system automatically attempt to relogin once before sending the error callback
+		// So to prevent the original error callback from being fired, we add that flag to the request when we attempt the request a second time
+		if (_.get(options, 'preventCallbackError', false)) {
+			monster.ui.alert('error', errorMessage, function() {
+				monster.util.logoutAndReload();
+			});
+		// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
+		} else if (!_.get(options, 'isRetryLoginRequest', false)) {
+			if (_privateFlags.lockRetryAttempt) {
+				_privateFlags.addRetryFunction(function() {
+					callback($.extend(true, options, {
+						authToken: monster.util.getAuthToken()
+					}));
+				});
+			} else {
+				// We added a new locking mechanism. Basically if your module use a parallel request, you could have 5 requests ending in a 401. We don't want to automatically re-login 5 times, so we lock the system
+				// Once the re-login is effective, we'll unlock it.
+				_privateFlags.lockRetryAttempt = true;
+
+				// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
+				// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
+				options.preventCallbackError = true;
+
+				monster.apps.auth.retryLogin({
+					isRetryLoginRequest: true
+				}, function(newToken) {
+					// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
+					callback($.extend(true, options, {
+						authToken: newToken,
+						preventCallbackError: false
+					}));
+					_privateFlags.unlockRetryFunctions();
+				}, function() {
+					monster.ui.alert('error', errorMessage, function() {
+						monster.util.logoutAndReload();
+					});
+				});
+			}
+		}
+	}
+
+	/**
 	 * Set missing/incorrect config.js properties required by the UI to function properly.
 	 */
 	function initConfig() {
