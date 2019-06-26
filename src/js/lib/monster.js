@@ -719,6 +719,38 @@ define(function(require) {
 	}
 
 	/**
+	 * @private
+	 * @param  {Object} args
+	 * @param  {Function} args.callback
+	 * @param  {Object} args.error
+	 * @param  {Object} args.options
+	 */
+	function error402Handler(args) {
+		var callback = args.callback;
+		var error = args.error;
+		var options = args.options;
+		var originalPreventCallbackError = options.preventCallbackError;
+
+		var parsedError = error;
+		if (_.has(error, 'responseText' && error.responseText)) {
+			parsedError = $.parseJSON(error.responseText);
+		}
+
+		// Prevent the execution of the custom error callback, as it is a
+		// charges notification that will be handled here
+		options.preventCallbackError = true;
+
+		// Notify the user about the charges
+		monster.ui.charges(parsedError.data, function() {
+			options.acceptCharges = true;
+			options.preventCallbackError = originalPreventCallbackError;
+			callback(options);
+		}, function() {
+			_.isFunction(options.onChargesCancelled) && options.onChargesCancelled();
+		});
+	}
+
+	/**
 	 * Set missing/incorrect config.js properties required by the UI to function properly.
 	 */
 	function initConfig() {
