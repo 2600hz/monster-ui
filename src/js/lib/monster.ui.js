@@ -3491,6 +3491,55 @@ define(function(require) {
 	ui.monthpicker = monthpicker;
 
 	/**
+	 * Transforms a field into a jQuery UI Spinner element
+	 * @param  {jQuery} $target  Input to transform
+	 * @param  {Object} options  List of options
+	 * @return {jQuery}          jQuery UI Spinner instance
+	 */
+	function spinner($target, pOptions) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!_.isPlainObject(pOptions)) {
+			throw TypeError('"options" is not a plain object');
+		}
+		$target.each(function() {
+			var $this = $(this);
+			$this.data('value', $this.val());
+		});
+		var options = _.merge({}, pOptions, {
+			change: function(e, ui) {
+				var $input = $(e.target),
+					value = $input.val(),
+					numericValue = _.toNumber(value),
+					valueHasChanged = false;
+				if (_.isNaN(numericValue)) {
+					value = $input.data('value');
+					valueHasChanged = true;
+				} else {
+					if (_.has(pOptions, 'min') && numericValue < pOptions.min) {
+						value = pOptions.min;
+						valueHasChanged = true;
+					}
+					if (_.has(pOptions, 'max') && numericValue > pOptions.max) {
+						value = pOptions.max;
+						valueHasChanged = true;
+					}
+					$input.data('value', value);
+				}
+				if (valueHasChanged) {
+					$input.val(value);
+				}
+				if (_.isFunction(pOptions.change)) {
+					pOptions.change(e, ui);
+				}
+			}
+		});
+		return $target.spinner(options);
+	};
+	ui.spinner = spinner;
+
+	/**
 	 * Wrapper for toast notification library
 	 * @param  {Object} args
 	 * @param  {String} args.type     Toast type, one of (success|error|warning|info)

@@ -50,6 +50,7 @@ pages:
     - 'docs/monster-ui/renderPDF().md'
     - 'docs/monster-ui/showPasswordStrength().md'
     - 'docs/monster-ui/slider().md'
+    - 'docs/monster-ui/spinner().md'
     - 'docs/monster-ui/timepicker().md'
     - 'docs/monster-ui/tooltips().md'
     - 'docs/monster-ui/validate().md'
