@@ -1001,6 +1001,14 @@ i.monster-password-strength {
 	background: $panel-background-color;
 	border-color: $french-gray2;
 
+	&:focus-within {
+		border-color: $primary-color;
+	}
+
+	&.monster-invalid {
+		border-color: #FF3D24;
+	}
+
 	.ui-spinner-button {
 		width: 20px;
 		background: linear-gradient(-180deg, $white 0%, #F4F4F5 100%);
