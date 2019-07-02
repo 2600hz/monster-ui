@@ -3510,10 +3510,10 @@ define(function(require) {
 		var options = _.merge({}, pOptions, {
 			change: function(e, ui) {
 				var $input = $(e.target),
-					value = $input.val(),
+					value = _.trim($input.val()),
 					numericValue = _.toNumber(value),
 					valueHasChanged = false;
-				if (_.isNaN(numericValue)) {
+				if (_.isEmpty(value) || _.isNaN(numericValue)) {
 					value = $input.data('value');
 					valueHasChanged = true;
 				} else {
