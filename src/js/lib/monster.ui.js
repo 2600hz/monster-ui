@@ -1374,7 +1374,37 @@ define(function(require) {
 		validate: function(form, options) {
 			var defaultOptions = {
 				errorClass: 'monster-invalid',
-				validClass: 'monster-valid'
+				validClass: 'monster-valid',
+				errorPlacement: function(error, element) {
+					var $element = $(element);
+					if ($element.hasClass('ui-spinner-input')) {
+						error.insertAfter($element.closest('.ui-spinner'));
+					} else {
+						$.validator.defaults.errorPlacement.call(this, error, element);
+					}
+				},
+				highlight: function(element, errorClass, validClass) {
+					var $element = $(element);
+					if ($element.hasClass('ui-spinner-input')) {
+						$element
+							.closest('.ui-spinner')
+								.addClass(errorClass)
+								.removeClass(validClass);
+					} else {
+						$.validator.defaults.highlight.call(this, element, errorClass, validClass);
+					}
+				},
+				unhighlight: function(element, errorClass, validClass) {
+					var $element = $(element);
+					if ($element.hasClass('ui-spinner-input')) {
+						$element
+							.closest('.ui-spinner')
+								.addClass(validClass)
+								.removeClass(errorClass);
+					} else {
+						$.validator.defaults.unhighlight.call(this, element, errorClass, validClass);
+					}
+				}
 			};
 
 			if (!this.customValidationInitialized) {
