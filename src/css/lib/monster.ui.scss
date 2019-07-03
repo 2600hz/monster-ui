@@ -231,8 +231,11 @@ label.monster-invalid {
 	color: red;
 }
 
-input.monster-invalid {
-	border: 1px solid #FF3D24;
+// Add specificity to override bootstrap styles
+input.monster-invalid, select.monster-invalid,
+input.monster-invalid[type="email"],
+input.monster-invalid[type="text"]:not(.search-query) {
+	border: 1px solid $danger-color;
 }
 
 /************************************************************/
