@@ -13,6 +13,11 @@ Key | Description | Type | Default | Required
 `$target` | Form element containing the fields to temporarily obfuscate. | `jQuery` | | `true`
 `options` | Lets you override default options ([jquery.disableAutoFill](https://github.com/terrylinooo/jquery.disableAutoFill#options)). | `Object` | | `false`
 
+### Errors
+
+* `"$target" is not a jQuery object`: `$target` is not a jQuery element
+* `"options" is not a plain object`: `options` is defined but not a plain object
+
 ## Description
 The `monster.ui.disableAutoFill()` method temporarily obfuscates form fields `name` attributes to disable browsers/password managers auto filling of username/password `input` elements.
 
