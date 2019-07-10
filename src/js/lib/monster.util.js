@@ -995,7 +995,7 @@ define(function(require) {
 			currency: monster.config.currencyCode
 		});
 
-		return formatter.format(base).replace('NaN', '');
+		return formatter.format(base).replace('NaN', '').trim();
 	}
 	util.getCurrencySymbol = getCurrencySymbol;
 
