@@ -18,6 +18,7 @@ define(function(require) {
 		Clipboard = require('clipboard'),
 		moment = require('moment');
 
+	require('disableAutoFill');
 	require('moment-timezone');
 	require('monthpicker');
 
@@ -3221,6 +3222,23 @@ define(function(require) {
 	};
 
 	/**
+	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
+	 * auto filling of username/password `input` elements.
+	 * @param  {jQuery} $target Form to obfuscate fields of
+	 * @param  {Object} [options] Plugin options
+	 */
+	function disableAutoFill($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!_.isUndefined(options) && !_.isPlainObject(options)) {
+			throw TypeError('"options" is not a plain object');
+		}
+		$target.disableAutoFill(options);
+	}
+	ui.disableAutoFill = disableAutoFill;
+
+	/**
 	 * Collect strucutred form data into a plain object
 	 * @param  {String} rootNode
 	 * @param  {String} [delimiter='.']
@@ -3494,7 +3512,6 @@ define(function(require) {
 	ui.toast = toast;
 
 	initialize();
-
 
 	return ui;
 });
