@@ -990,7 +990,7 @@ define(function(require) {
 	 */
 	function getCurrencySymbol() {
 		var base = NaN;
-		var formatter = new Intl.NumberFormat(monster.defaultLanguage, {
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
 			style: 'currency',
 			currency: monster.config.currencyCode
 		});
