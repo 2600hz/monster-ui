@@ -63,7 +63,7 @@ pages:
     - 'docs/monster-util/formatVariableToDisplay().md'
     - 'docs/monster-util/getBookkeepers().md'
     - 'docs/monster-util/getBusinessDate().md'
-    - 'docs/monster-util/getCurrencyCode().md'
+    - 'docs/monster-util/getCurrencySymbol().md'
     - 'docs/monster-util/getCurrentTimeZone().md'
     - 'docs/monster-util/getUrlVars().md'
     - 'docs/monster-util/getAuthToken().md'
