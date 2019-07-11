@@ -788,34 +788,34 @@ define(function(require) {
 
 		validateAccountAdministratorForm: function(formAccountAdministrator, callback) {
 			var self = this;
-			
+
 			monster.ui.validate(formAccountAdministrator, {
 				rules: {
 					'contact.billing.name': {
-					    required: true
+						required: true
 					},
 					'contact.billing.email': {
-					    required: true,
-					    email: true
+						required: true,
+						email: true
 					},
 					'contact.billing.number': {
-					    required: true
+						required: true
 					},
 					'contact.billing.street_address': {
-					    required: true
+						required: true
 					},
 					'contact.billing.locality': {
-					    required: true
+						required: true
 					},
 					'contact.billing.region': {
-					    required: true
+						required: true
 					},
 					'contact.billing.country': {
-					    required: true
+						required: true
 					},
 					'contact.billing.postal_code': {
-					    required: true,
-					    digits: true
+						required: true,
+						digits: true
 					}
 				}
 			});
@@ -844,10 +844,10 @@ define(function(require) {
 				settingsValidate = function(fieldName, dataForm, callback) {
 					var formPassword = template.find('#form_password');
 					var formAccountAdministrator = template.find('#form_account_administrator');
-					
+
 					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
 					// If the field is password, we start custom validation
-					
+
 					if (formPassword.length) {
 						self.validatePasswordForm(formPassword, callback);
 					// otherwise we don't have any validation for this field, we execute the callback
