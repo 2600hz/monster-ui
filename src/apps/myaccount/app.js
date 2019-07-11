@@ -297,8 +297,6 @@ define(function(require) {
 					self.showWalkthrough(template, function() {
 						self.updateWalkthroughFlagUser();
 					});
-				} else {
-					self.checkCreditCard(uiRestrictions);
 				}
 			}
 		},
@@ -561,19 +559,6 @@ define(function(require) {
 			}
 
 			params.callback && params.callback();
-		},
-
-		checkCreditCard: function(uiRestrictions) {
-			var self = this;
-
-			// If this is a sub-account of the super duper admin, has the billing tab, and is not the super duper admin itself.
-			if (monster.apps.auth.resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
-				self.hasCreditCards(function(response) {
-					if (response === false) {
-						self.showCreditCardTab();
-					}
-				});
-			}
 		},
 
 		hasCreditCards: function(callback) {
