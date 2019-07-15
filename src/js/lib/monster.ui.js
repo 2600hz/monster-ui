@@ -480,24 +480,29 @@ define(function(require) {
 
 			$target.chosen(options);
 
-			if (pOptions.tags) {
-				chosen = $target.data('chosen');
-
-				// Bind the keyup event to the search box input
-				chosen.container.find('input').on('keyup', function(e) {
-					// If we hit Enter and the results list is empty (no matches) add the option
-					if (e.which === 13 && chosen.dropdown.find('li.no-results').length > 0) {
-						var option = $('<option>').val(this.value).text(this.value);
-
-						// Add the new option
-						$target.prepend(option);
-						// Automatically select it
-						$target.find(option).prop('selected', true);
-						// Trigger the update
-						$target.trigger('chosen:updated');
-					}
-				});
+			if (!pOptions.tags) {
+				return;
 			}
+
+			chosen = $target.data('chosen');
+
+			// Bind the keyup event to the search box input
+			chosen.container.find('input').on('keyup', function(e) {
+				// If we hit Enter and the results list is empty (no matches) add the option
+				if (e.which !== 13 || chosen.dropdown.find('li.no-results').length === 0) {
+					return;
+				}
+
+				var newTag = $(this).val(),
+					option = $('<option>').val(newTag).text(newTag);
+
+				// Add the new option
+				$target.prepend(option);
+				// Automatically select it
+				$target.find(option).prop('selected', true);
+				// Trigger the update
+				$target.trigger('chosen:updated');
+			});
 		},
 
 		/**
