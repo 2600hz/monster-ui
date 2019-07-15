@@ -72,7 +72,15 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {jQuery} args.container  Element that will contain the app selector
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
-		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
+		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
+		 *                                            using the cached one
+		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
+		 *                                              displayed. This is applied on top of the
+		 *                                              selected scope, and takes precedence over
+		 *                                              args.excludedApps.
+		 * @param  {String[]} [args.excludedApps=[]]  List of App IDs of the apps to be excluded
+		 *                                             from the list. This is applied on top of the
+		 *                                             selected scope.
 		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
 		 * @param  {Function} [args.callback]  Optional callback to be executed after render
 		 */
@@ -80,6 +88,8 @@ define(function(require) {
 			var self = this,
 				scope = _.get(args, 'scope', 'all'),
 				forceFetch = _.get(args, 'forceFetch', false),
+				availableApps = _.get(args, 'availableApps'),
+				excludedApps = _.get(args, 'excludedApps'),
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
@@ -137,6 +147,23 @@ define(function(require) {
 					self.appSelectorSetStore('apps', _.keyBy(appList, 'id'));
 					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
 
+					// Filter apps
+					if (
+						!_.isUndefined(availableApps)
+						&& _.isArray(availableApps)
+					) {
+						appList = _.filter(appList, function(app) {
+							return _.includes(availableApps, app.id);
+						});
+					} else if (
+						!_.isUndefined(excludedApps)
+						&& _.isArray(excludedApps)
+					) {
+						appList = _.reject(appList, function(app) {
+							return _.includes(excludedApps, app.id);
+						});
+					}
+
 					// Init template after saving selected apps to store, so they can be rendered
 					$template = initTemplate(appList);
 
@@ -164,7 +191,14 @@ define(function(require) {
 		 * Render app selector as a dialog
 		 * @param  {Object} args
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
-		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
+		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
+		 *                                            using the cached one
+		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
+		 *                                              displayed. This is applied on top of the
+		 *                                              selected scope.
+		 * @param  {String[]} [args.excludedApps=[]]  List of App IDs of the apps to be excluded
+		 *                                             from the list. This is applied on top of the
+		 *                                             selected scope.
 		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
 		 * @param  {Object} [args.callbacks]  Callback functions
 		 * @param  {Function} [args.callbacks.accept]  Optional callback for accept action
@@ -180,7 +214,13 @@ define(function(require) {
 				$popupBody = $template.find('.popup-body'),
 				renderArgs = _
 					.chain(args)
-					.pick([ 'scope', 'forceFetch', 'selectedAppIds' ])
+					.pick([
+						'scope',
+						'forceFetch',
+						'availableApps',
+						'excludedApps',
+						'selectedAppIds'
+					])
 					.merge({
 						container: $popupBody,
 						callback: function() {
