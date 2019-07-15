@@ -74,11 +74,11 @@ define(function(require) {
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
 		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
 		 *                                            using the cached one
-		 * @param  {String[]} [args.showOnlyAppIds=[]]  List of IDs for the specific apps to be
+		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
 		 *                                              displayed. This is applied on top of the
 		 *                                              selected scope, and takes precedence over
-		 *                                              args.excludeAppIds.
-		 * @param  {String[]} [args.excludeAppIds=[]]  List of App IDs of the apps to be excluded
+		 *                                              args.excludedApps.
+		 * @param  {String[]} [args.excludedApps=[]]  List of App IDs of the apps to be excluded
 		 *                                             from the list. This is applied on top of the
 		 *                                             selected scope.
 		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
@@ -88,8 +88,8 @@ define(function(require) {
 			var self = this,
 				scope = _.get(args, 'scope', 'all'),
 				forceFetch = _.get(args, 'forceFetch', false),
-				showOnlyAppIds = _.get(args, 'showOnlyAppIds', []),
-				excludeAppIds = _.get(args, 'excludeAppIds', []),
+				availableApps = _.get(args, 'availableApps'),
+				excludedApps = _.get(args, 'excludedApps'),
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
 				initTemplate = function initTemplate(apps) {
@@ -148,13 +148,19 @@ define(function(require) {
 					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
 
 					// Filter apps
-					if (!_.isEmpty(showOnlyAppIds)) {
+					if (
+						!_.isUndefined(availableApps)
+						&& _.isArray(availableApps)
+					) {
 						appList = _.filter(appList, function(app) {
-							return _.includes(showOnlyAppIds, app.id);
+							return _.includes(availableApps, app.id);
 						});
-					} else if (!_.isEmpty(excludeAppIds)) {
+					} else if (
+						!_.isUndefined(excludedApps)
+						&& _.isArray(excludedApps)
+					) {
 						appList = _.reject(appList, function(app) {
-							return _.includes(excludeAppIds, app.id);
+							return _.includes(excludedApps, app.id);
 						});
 					}
 
@@ -187,10 +193,10 @@ define(function(require) {
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
 		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
 		 *                                            using the cached one
-		 * @param  {String[]} [args.showOnlyAppIds=[]]  List of IDs for the specific apps to be
+		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
 		 *                                              displayed. This is applied on top of the
 		 *                                              selected scope.
-		 * @param  {String[]} [args.excludeAppIds=[]]  List of App IDs of the apps to be excluded
+		 * @param  {String[]} [args.excludedApps=[]]  List of App IDs of the apps to be excluded
 		 *                                             from the list. This is applied on top of the
 		 *                                             selected scope.
 		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
@@ -211,8 +217,8 @@ define(function(require) {
 					.pick([
 						'scope',
 						'forceFetch',
-						'showOnlyAppIds',
-						'excludeAppIds',
+						'availableApps',
+						'excludedApps',
 						'selectedAppIds'
 					])
 					.merge({
