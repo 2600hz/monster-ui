@@ -475,9 +475,29 @@ define(function(require) {
 				options = _.merge({
 					search_contains: true,
 					width: '220px'
-				}, pOptions);
+				}, pOptions),
+				chosen;
 
 			$target.chosen(options);
+
+			if (pOptions.tags) {
+				chosen = $target.data('chosen');
+
+				// Bind the keyup event to the search box input
+				chosen.container.find('input').on('keyup', function(e) {
+					// If we hit Enter and the results list is empty (no matches) add the option
+					if (e.which === 13 && chosen.dropdown.find('li.no-results').length > 0) {
+						var option = $('<option>').val(this.value).text(this.value);
+
+						// Add the new option
+						$target.prepend(option);
+						// Automatically select it
+						$target.find(option).prop('selected', true);
+						// Trigger the update
+						$target.trigger('chosen:updated');
+					}
+				});
+			}
 		},
 
 		/**
