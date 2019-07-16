@@ -23,11 +23,6 @@
     // An Object for Helper functions.
     var _helper = {};
 
-    // Extend the Array: add "insert" function.
-    Array.prototype.insert = function (index, item) {
-        this.splice(index, 0, item);
-    };
-
     /**
      * Helper function - passwordListener
      * - Hide the original password string.
@@ -81,7 +76,7 @@
                 // User highlighted and overwrote a portion of the password
                 else {
                     realPassword.splice(currKeyupPos - 1, diff + 1);
-                    realPassword.insert(currKeyupPos - 1, tmpPassword[currKeyupPos - 1]);
+                    realPassword.splice(currKeyupPos - 1, 0, tmpPassword[currKeyupPos - 1]);
                 }
             }
 
