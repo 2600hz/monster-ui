@@ -528,9 +528,9 @@
 			},
 			crm: {
 				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration'},
-				'setIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration'},
-				'getTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_trigger'},
-				'setTriggers': { verb: 'PUT', url: 'accounts/{accountId}/crm_trigger'}
+				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration'},
+				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_trigger'},
+				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_trigger'}
 			}
 		},
 		authTokens = {};
