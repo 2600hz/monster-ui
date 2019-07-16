@@ -525,6 +525,12 @@
 				'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
 				'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
 				'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}' }
+			},
+			crm: {
+				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration'},
+				'setIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration'},
+				'getTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_trigger'},
+				'setTriggers': { verb: 'PUT', url: 'accounts/{accountId}/crm_trigger'}
 			}
 		},
 		authTokens = {};
