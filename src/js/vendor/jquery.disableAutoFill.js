@@ -85,7 +85,9 @@
                 }
             }
 
-            $(this).val(tmpPassword.replace(/./g, settings.hidingChar));
+            if (settings.hidingChar !== false) {
+                $(this).val(tmpPassword.replace(/./g, settings.hidingChar));
+            }
 
             if (settings.debugMode) {
                 console.log('Current keyup position: ' + currKeyupPos);
