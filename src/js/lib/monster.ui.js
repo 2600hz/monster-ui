@@ -494,12 +494,13 @@ define(function(require) {
 				}
 
 				var newTag = $(this).val(),
-					option = $('<option>').val(newTag).text(newTag);
+					option = $('<option>')
+						.val(newTag)
+						.text(newTag)
+						.prop('selected', true);
 
 				// Add the new option
 				$target.prepend(option);
-				// Automatically select it
-				$target.find(option).prop('selected', true);
 				// Trigger the update
 				$target.trigger('chosen:updated');
 			});
