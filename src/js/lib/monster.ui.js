@@ -476,20 +476,20 @@ define(function(require) {
 					search_contains: true,
 					width: '220px'
 				}, pOptions),
-				chosen;
+				instance;
 
 			$target.chosen(options);
 
-			if (!pOptions.tags) {
+			if (!_.get(pOptions, 'tags', false)) {
 				return;
 			}
 
-			chosen = $target.data('chosen');
+			instance = $target.data('chosen');
 
 			// Bind the keyup event to the search box input
-			chosen.container.find('input').on('keyup', function(e) {
+			instance.container.find('input').on('keyup', function(e) {
 				// If we hit Enter and the results list is empty (no matches) add the option
-				if (e.which !== 13 || chosen.dropdown.find('li.no-results').length === 0) {
+				if (e.which !== 13 || instance.dropdown.find('li.no-results').length === 0) {
 					return;
 				}
 
