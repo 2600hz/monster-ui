@@ -308,7 +308,7 @@ define(function(require) {
 							.value(),
 						numbers = _.get(
 							portRequest,
-							'ported_numbers',
+							'_read_only.ported_numbers',
 							_.get(portRequest, 'numbers')
 						),
 						unactionableStatuses = ['canceled', 'completed'],
