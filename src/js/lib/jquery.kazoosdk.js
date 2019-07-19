@@ -133,6 +133,11 @@
 				'getRecipientOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_overview' },
 				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
+			desktop: {
+				'getWindows': { verb: 'GET', url: 'accounts/{accountId}/desktop/windows' },
+				'getMac': { verb: 'GET', url: 'accounts/{accountId}/desktop/mac' },
+				'getLinux': { verb: 'GET', url: 'accounts/{accountId}/desktop/linux' }
+			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
