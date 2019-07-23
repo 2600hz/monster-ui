@@ -10,29 +10,33 @@ define(function(require) {
 		},
 
 		appFlags: {
+			// Default values just for reference, they will be overwritten anyways
 			navigationWizard: {
-				currentStep: 0
+				currentStep: 0,
+				wizardArgs: {}
 			}
 		},
 
 		navigationWizardRender: function(args) {
 			var self = this,
 				container = args.container,
-				currentStep = _.isUndefined(args.currentStep) ? 0 : args.currentStep,
+				currentStep = _.get(args, 'currentStep', 0),
 				stepsCompleted = _.get(args, 'stepsCompleted', []),
 				layout = $(self.getTemplate({
 					name: 'layout',
 					data: {
 						title: args.title,
 						steps: args.steps,
-						doneButton: args.doneButton ? args.doneButton : ''
+						doneButton: _.get(args, 'doneButton', '')
 					},
 					submodule: 'navigationWizard'
 				}));
 
 			if (container) {
 				self.appFlags.navigationWizard.currentStep = currentStep;
-				self.appFlags.navigationWizard.wizardArgs = _.merge({ template: layout }, args);
+				self.appFlags.navigationWizard.wizardArgs = _.merge({
+					template: layout
+				}, args);
 
 				self.navigationWizardBindEvents();
 
@@ -84,9 +88,10 @@ define(function(require) {
 						});
 
 						if (result.data) {
-							self.appFlags.navigationWizard.wizardArgs = _.merge({}, self.appFlags.navigationWizard.wizardArgs, {
-								data: result.data
-							});
+							self.appFlags.navigationWizard.wizardArgs = _.merge({},
+								self.appFlags.navigationWizard.wizardArgs, {
+									data: result.data
+								});
 						} else if (result.args) {
 							self.appFlags.navigationWizard.wizardArgs = result.args;
 						}
@@ -183,6 +188,10 @@ define(function(require) {
 		navigationWizardGoToStep: function(args) {
 			var self = this,
 				stepId = args.stepId;
+
+			if (stepId === self.appFlags.navigationWizard.currentStep) {
+				return;
+			}
 
 			//make sure we display page as previously selected
 			self.navigationWizardUnsetCurrentSelected();
