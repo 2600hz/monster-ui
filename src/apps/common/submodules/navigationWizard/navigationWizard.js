@@ -170,7 +170,7 @@ define(function(require) {
 
 			//Clicking on the menu item
 			template
-				.on('click', '.completed', function() {
+				.on('click', '.visited', function() {
 					var stepId = $(this).data('id');
 					self.navigationWizardGoToStep({
 						stepId: stepId
@@ -232,7 +232,7 @@ define(function(require) {
 
 			template
 				.find('.step[data-id="' + stepId + '"]')
-					.addClass('selected');
+					.addClass('selected visited');
 
 			//hide clear button if it's not a form
 			if (steps[stepId].default) {
