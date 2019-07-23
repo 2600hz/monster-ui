@@ -11,8 +11,7 @@ define(function(require) {
 
 		appFlags: {
 			navigationWizard: {
-				currentStep: 0,
-				stepsCompleted: []
+				currentStep: 0
 			}
 		},
 
@@ -20,7 +19,7 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				currentStep = _.isUndefined(args.currentStep) ? 0 : args.currentStep,
-				stepsCompleted = _.isUndefined(args.stepsCompleted) ? [] : args.stepsCompleted,
+				stepsCompleted = _.get(args, 'stepsCompleted', []),
 				layout = $(self.getTemplate({
 					name: 'layout',
 					data: {
@@ -33,7 +32,6 @@ define(function(require) {
 
 			if (container) {
 				self.appFlags.navigationWizard.currentStep = currentStep;
-				self.appFlags.navigationWizard.stepsCompleted = stepsCompleted;
 				self.appFlags.navigationWizard.wizardArgs = _.merge({ template: layout }, args);
 
 				self.navigationWizardBindEvents();
@@ -45,11 +43,13 @@ define(function(require) {
 				self.navigationWizardGenerateTemplate();
 
 				_.each(stepsCompleted, function(step) {
-					if (step !== currentStep) {
-						container
-							.find('.step[data-id="' + step + '"]')
-								.addClass('completed');
+					if (step === currentStep) {
+						return;
 					}
+
+					container
+						.find('.step[data-id="' + step + '"]')
+							.addClass('completed');
 				});
 			} else {
 				throw new Error('A container must be provided.');
@@ -73,8 +73,7 @@ define(function(require) {
 						event.preventDefault();
 
 						var currentStep = self.appFlags.navigationWizard.currentStep,
-							result = self.navigationWizardUtilForTemplate(),
-							stepsCompleted = self.appFlags.navigationWizard.stepsCompleted;
+							result = self.navigationWizardUtilForTemplate();
 
 						if (!result.valid) {
 							return;
@@ -91,8 +90,6 @@ define(function(require) {
 						} else if (result.args) {
 							self.appFlags.navigationWizard.wizardArgs = result.args;
 						}
-
-						stepsCompleted.push(currentStep);
 
 						currentStep += 1;
 
@@ -218,12 +215,9 @@ define(function(require) {
 				appFlags = self.appFlags,
 				wizardArgs = appFlags.navigationWizard.wizardArgs,
 				template = wizardArgs.template,
-				steps = wizardArgs.steps,
-				stepsCompleted = appFlags.navigationWizard.stepsCompleted;
+				steps = wizardArgs.steps;
 
 			self.appFlags.navigationWizard.currentStep = stepId;
-
-			stepsCompleted.push(stepId);
 
 			template
 				.find('.right-content')
