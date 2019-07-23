@@ -62,7 +62,9 @@ define(function(require) {
 				template = wizardArgs.template,
 				thisArg = wizardArgs.thisArg;
 
-			self.navigationWizardSetSelected(self.appFlags.navigationWizard.currentStep);
+			self.navigationWizardSetSelected({
+				stepId: self.appFlags.navigationWizard.currentStep
+			});
 
 			//Clicking the next button
 			template
@@ -74,25 +76,30 @@ define(function(require) {
 							result = self.navigationWizardUtilForTemplate(),
 							stepsCompleted = self.appFlags.navigationWizard.stepsCompleted;
 
-						if (result.valid === true) {
-							self.navigationWizardSetPreviousSelected();
-
-							if (result.data) {
-								//merge data
-								self.appFlags.navigationWizard.wizardArgs = _.merge({}, self.appFlags.navigationWizard.wizardArgs, {
-									data: result.data
-								});
-							} else if (result.args) {
-								self.appFlags.navigationWizard.wizardArgs = result.args;
-							}
-
-							stepsCompleted.push(currentStep);
-
-							currentStep += 1;
-
-							self.navigationWizardSetSelected(currentStep);
-							self.navigationWizardGenerateTemplate();
+						if (!result.valid) {
+							return;
 						}
+
+						self.navigationWizardUnsetCurrentSelected({
+							isCompleted: true
+						});
+
+						if (result.data) {
+							self.appFlags.navigationWizard.wizardArgs = _.merge({}, self.appFlags.navigationWizard.wizardArgs, {
+								data: result.data
+							});
+						} else if (result.args) {
+							self.appFlags.navigationWizard.wizardArgs = result.args;
+						}
+
+						stepsCompleted.push(currentStep);
+
+						currentStep += 1;
+
+						self.navigationWizardSetSelected({
+							stepId: currentStep
+						});
+						self.navigationWizardGenerateTemplate();
 					});
 
 			//Clicking the done/complete button
@@ -119,11 +126,13 @@ define(function(require) {
 
 						var currentStep = self.appFlags.navigationWizard.currentStep;
 
-						self.navigationWizardSetPreviousSelected();
+						self.navigationWizardUnsetCurrentSelected();
 
 						currentStep -= 1;
 
-						self.navigationWizardSetSelected(currentStep);
+						self.navigationWizardSetSelected({
+							stepId: currentStep
+						});
 						self.navigationWizardGenerateTemplate();
 					});
 
@@ -153,7 +162,9 @@ define(function(require) {
 						});
 
 						//re-render template with default values
-						self.navigationWizardSetSelected(currentStep);
+						self.navigationWizardSetSelected({
+							stepId: currentStep
+						});
 						self.navigationWizardGenerateTemplate();
 					});
 
@@ -177,52 +188,54 @@ define(function(require) {
 				stepId = args.stepId;
 
 			//make sure we display page as previously selected
-			self.navigationWizardSetPreviousSelected();
+			self.navigationWizardUnsetCurrentSelected();
 
 			//set new template and menu items to reflect that
-			self.navigationWizardSetSelected(stepId);
+			self.navigationWizardSetSelected({
+				stepId: stepId
+			});
 			self.navigationWizardGenerateTemplate();
 		},
 
-		navigationWizardSetPreviousSelected: function(args) {
+		navigationWizardUnsetCurrentSelected: function(args) {
 			var self = this,
+				isCompleted = _.get(args, 'isCompleted', false),
 				appFlags = self.appFlags,
 				currentStep = appFlags.navigationWizard.currentStep,
-				stepsCompleted = appFlags.navigationWizard.stepsCompleted,
-				template = appFlags.navigationWizard.wizardArgs.template;
+				$template = appFlags.navigationWizard.wizardArgs.template,
+				$currentStepItem = $template.find('div.step[data-id="' + currentStep + '"]');
 
-			template
-				.find('div.step[data-id="' + currentStep + '"]')
-					.removeClass('selected')
-						.addClass('completed');
+			$currentStepItem.removeClass('selected');
 
-			stepsCompleted.push(currentStep);
+			if (isCompleted) {
+				$currentStepItem.addClass('completed');
+			}
 		},
 
-		navigationWizardSetSelected: function(currentStep) {
+		navigationWizardSetSelected: function(args) {
 			var self = this,
+				stepId = args.stepId,
 				appFlags = self.appFlags,
 				wizardArgs = appFlags.navigationWizard.wizardArgs,
 				template = wizardArgs.template,
 				steps = wizardArgs.steps,
 				stepsCompleted = appFlags.navigationWizard.stepsCompleted;
 
-			self.appFlags.navigationWizard.currentStep = currentStep;
+			self.appFlags.navigationWizard.currentStep = stepId;
 
-			stepsCompleted.push(currentStep);
+			stepsCompleted.push(stepId);
 
 			template
 				.find('.right-content')
 					.empty()
-						.append(steps[currentStep].template);
+						.append(steps[stepId].template);
 
 			template
-				.find('.step[data-id="' + currentStep + '"]')
-					.removeClass('completed')
-						.addClass('selected');
+				.find('.step[data-id="' + stepId + '"]')
+					.addClass('selected');
 
 			//hide clear button if it's not a form
-			if (steps[currentStep].default) {
+			if (steps[stepId].default) {
 				template
 					.find('#clear')
 						.show();
@@ -233,14 +246,14 @@ define(function(require) {
 			}
 
 			//Hide back button in the first page
-			if (currentStep === 0) {
+			if (stepId === 0) {
 				template.find('.back').hide();
 			} else {
 				template.find('.back').show();
 			}
 
 			//Display done button
-			if ((steps.length - 1) === currentStep) {
+			if ((steps.length - 1) === stepId) {
 				template.find('#next').hide();
 				template.find('#done').show();
 			} else {

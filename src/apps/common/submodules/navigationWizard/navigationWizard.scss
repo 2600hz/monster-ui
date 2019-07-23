@@ -98,7 +98,7 @@
 	display: none;
 }
 
-#navigation_wizard_wrapper .nav .selected span, #navigation_wizard_wrapper .nav .completed i {
+#navigation_wizard_wrapper .nav .selected span, #navigation_wizard_wrapper .nav .completed:not(.selected) i {
 	display: block;
 }
 
