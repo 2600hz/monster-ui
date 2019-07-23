@@ -133,6 +133,11 @@
 				'getRecipientOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_overview' },
 				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
 			},
+			desktop: {
+				'getWindows': { verb: 'GET', url: 'accounts/{accountId}/desktop/windows' },
+				'getMac': { verb: 'GET', url: 'accounts/{accountId}/desktop/mac' },
+				'getLinux': { verb: 'GET', url: 'accounts/{accountId}/desktop/linux' }
+			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/devices' },
@@ -525,6 +530,12 @@
 				'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
 				'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
 				'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}' }
+			},
+			crm: {
+				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration'},
+				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration'},
+				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_trigger'},
+				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_trigger'}
 			}
 		},
 		authTokens = {};

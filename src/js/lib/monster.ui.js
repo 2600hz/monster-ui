@@ -3264,7 +3264,9 @@ define(function(require) {
 		if (!_.isUndefined(options) && !_.isPlainObject(options)) {
 			throw TypeError('"options" is not a plain object');
 		}
-		$target.disableAutoFill(options);
+		$target.disableAutoFill(_.merge({}, options, {
+			hidingChar: false
+		}));
 	}
 	ui.disableAutoFill = disableAutoFill;
 
