@@ -49,7 +49,7 @@ define(function(require) {
 
 					container
 						.find('.step[data-id="' + step + '"]')
-							.addClass('completed');
+							.addClass('completed visited');
 				});
 			} else {
 				throw new Error('A container must be provided.');
