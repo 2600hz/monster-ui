@@ -471,13 +471,43 @@ define(function(require) {
 		 * @param  {JavaScript Object} pOptions Map of options for chosen
 		 */
 		chosen: function($target, pOptions) {
-			var self = this,
+			var coreApp = monster.apps.core,
 				options = _.merge({
 					search_contains: true,
 					width: '220px'
-				}, pOptions);
+				}, pOptions),
+				instance;
+
+			if (_.get(options, 'tags', false) && !_.has(options, 'no_results_text')) {
+				options.no_results_text = coreApp.i18n.active().chosen.addNewTag;
+			}
 
 			$target.chosen(options);
+
+			if (!_.get(pOptions, 'tags', false)) {
+				return;
+			}
+
+			instance = $target.data('chosen');
+
+			// Bind the keyup event to the search box input
+			instance.container.find('input').on('keyup', function(e) {
+				// If we hit Enter and the results list is empty (no matches) add the option
+				if (e.which !== 13 || instance.dropdown.find('li.no-results').length === 0) {
+					return;
+				}
+
+				var newTag = $(this).val(),
+					option = $('<option>')
+						.val(newTag)
+						.text(newTag)
+						.prop('selected', true);
+
+				// Add the new option
+				$target.append(option);
+				// Trigger the update
+				$target.trigger('chosen:updated');
+			});
 		},
 
 		/**

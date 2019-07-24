@@ -1067,5 +1067,8 @@
 		"fr-FR": "French (fr-FR)",
 		"nl-NL": "Dutch (nl-NL)",
 		"ru-RU": "Russian (ru-RU)"
+	},
+	"chosen": {
+		"addNewTag": "Hit enter to add a new option."
 	}
 }
