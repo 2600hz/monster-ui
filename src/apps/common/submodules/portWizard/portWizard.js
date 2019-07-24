@@ -1333,13 +1333,7 @@ define(function(require) {
 							function(requestId, waterfallCallback) {
 								// Add request ID to args object, to know that the request
 								// has already been saved at this point
-								args = _.merge({
-									data: {
-										request: {
-											id: requestId
-										}
-									}
-								}, args);
+								_.set(args, 'data.request.id', requestId);
 
 								// Update port request state
 								self.portWizardRequestUpdateState({
