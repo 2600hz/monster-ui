@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
-		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
 		Toastr = require('toastr'),
 		validate = require('validate'),
@@ -18,6 +17,7 @@ define(function(require) {
 		Clipboard = require('clipboard'),
 		moment = require('moment');
 
+	require('chosen');
 	require('disableAutoFill');
 	require('moment-timezone');
 	require('monthpicker');
