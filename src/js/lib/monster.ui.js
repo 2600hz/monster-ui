@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
-		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
 		Toastr = require('toastr'),
 		validate = require('validate'),
@@ -18,6 +17,8 @@ define(function(require) {
 		Clipboard = require('clipboard'),
 		moment = require('moment');
 
+	require('chosen');
+	require('disableAutoFill');
 	require('moment-timezone');
 	require('monthpicker');
 
@@ -157,6 +158,30 @@ define(function(require) {
 					options = !pOptions ? pAccount : pOptions;
 
 				return options[monster.util.isSuperDuper(account) ? 'fn' : 'inverse'](this);
+			},
+
+			languageSelector: function(options) {
+				var namedOptions = options.hash,
+					specialArgs = ['selectedLanguage', 'showDefault'],
+					args = _
+						.chain(namedOptions)
+						.pick(specialArgs)
+						.merge({
+							attributes: _.omit(namedOptions, specialArgs)
+						})
+						.value();
+				return new Handlebars.SafeString(
+					getLanguageSelectorTemplate(args)
+				);
+			},
+
+			lookupPath: function(object, path, pDefaultValue) {
+				// If there are more than 3 arguments, it means that pDefaultValue is not the
+				// last argument (which corresponds to Handlebar's options parameter), so it
+				// should be the default value.
+				var defaultValue = (_.toArray(arguments).length > 3) ? pDefaultValue : undefined;
+
+				return _.get(object, path, defaultValue);
 			},
 
 			monsterCheckbox: function() {
@@ -439,22 +464,6 @@ define(function(require) {
 	}
 
 	var ui = {
-
-		/**
-		 * Chosen plugin wrapper used to apply the same default options
-		 * @param  {jQuery Object} $target  <select> tag to call chosen on
-		 * @param  {JavaScript Object} pOptions Map of options for chosen
-		 */
-		chosen: function($target, pOptions) {
-			var self = this,
-				options = _.merge({
-					search_contains: true,
-					width: '220px'
-				}, pOptions);
-
-			$target.chosen(options);
-		},
-
 		/**
 		 * Show a loading view if a request starts before inoking the callback
 		 * to insert a template in the container once all requests finish
@@ -742,6 +751,7 @@ define(function(require) {
 
 		dialog: function(content, options) {
 			// Get options
+			var autoScroll = _.get(options, 'autoScroll', true);
 			var dialogType = _.get(options, 'dialogType', 'classic');
 			var hideClose = _.get(options, 'hideClose', false);
 			var isPersistent = _.get(options, 'isPersistent', false);
@@ -858,7 +868,7 @@ define(function(require) {
 						'hideClose',
 						'minHeight',
 						'minWidth',
-						'scrollableContainer'
+						'autoScroll'
 					]),
 					strictOptions);
 
@@ -876,13 +886,18 @@ define(function(require) {
 			}
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
 
-			// Make container scrollable
-			$scrollableContainer.css({
-				overflow: 'auto'
-			});
+			// Container is scrollable by default, so disable if required
+			if (!autoScroll) {
+				$scrollableContainer.css({
+					overflow: 'visible'
+				});
+			}
 
 			// Set initial sizes
 			setDialogSizes();
+
+			// Update position, in case size changed
+			$dialogBody.dialog('option', 'position', dialogPosition);
 
 			// Set event handlers
 			$('input', content).keypress(function(e) {
@@ -1333,6 +1348,10 @@ define(function(require) {
 				return regexpr.test(value);
 			});
 
+			$.validator.addMethod('phoneNumber', function(value, element) {
+				return monster.util.getFormatPhoneNumber(value).isValid;
+			}, localization.customRules.phoneNumber);
+
 			this.customValidationInitialized = true;
 		},
 
@@ -1729,18 +1748,6 @@ define(function(require) {
 			} else {
 				return target.find(cssId);
 			}
-		},
-
-		getFormData: function(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName) {
-			var formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback, useIdIfEmptyName);
-
-			for (var key in formData) {
-				if (key === '') {
-					delete formData[key];
-				}
-			}
-
-			return formData;
 		},
 
 		/**
@@ -2154,7 +2161,7 @@ define(function(require) {
 							parent: parent,
 							container: parent.find('.app-content-wrapper')
 						},
-						appLayoutClass = 'app-layout',
+						appLayoutClass = ['app-layout'],
 						subTab;
 
 					// Add 'active' class to menu element
@@ -2235,7 +2242,6 @@ define(function(require) {
 
 					parent
 						.find('.app-content-wrapper')
-							.hide()
 							.empty();
 
 					self.isTabLoadingInProgress = false;
@@ -2258,14 +2264,18 @@ define(function(require) {
 
 						// Override layout type if specified at the tab level
 						if (currentTab.hasOwnProperty('layout')) {
-							appLayoutClass += ' ' + currentTab.layout;
+							appLayoutClass.push(currentTab.layout);
 						} else if (thisArg.appFlags._layout.hasOwnProperty('appType')) {
-							appLayoutClass += ' ' + thisArg.appFlags._layout.appType;
+							appLayoutClass.push(thisArg.appFlags._layout.appType);
+						}
+
+						if (parent.find('header.app-header').is(':visible')) {
+							appLayoutClass.push('with-navbar');
 						}
 
 						parent
 							.find('.app-layout')
-								.prop('class', appLayoutClass + ' with-navbar');
+								.prop('class', appLayoutClass.join(' '));
 
 						(currentTab.hasOwnProperty('menus') ? currentTab.menus[0].tabs[0] : currentTab).callback.call(thisArg, finalArgs);
 					}
@@ -2371,9 +2381,11 @@ define(function(require) {
 				context = (function(args, tabs) {
 					return tabs[0].hasOwnProperty('menus') ? tabs[0].menus[0].tabs[0] : tabs[0];
 				})(args, tabs),
-				hasNavbar = args.hasOwnProperty('forceNavbar') ? args.forceNavbar : (tabs.length === 1 ? false : true),
+				forceNavbar = _.get(args, 'forceNavbar', false),
+				hideNavbar = _.get(args, 'hideNavbar', false),
+				hasNavbar = !(_.size(tabs) <= 1),
 				dataTemplate = {
-					hasNavbar: hasNavbar,
+					hasNavbar: forceNavbar ? true : hideNavbar ? false : hasNavbar,
 					layout: (function(args, context) {
 						if (context.hasOwnProperty('layout')) {
 							return context.layout;
@@ -2409,9 +2421,7 @@ define(function(require) {
 				thisArg.appFlags._layout = args;
 			}
 
-			if (hasNavbar) {
-				self.generateAppNavbar(thisArg);
-			}
+			self.generateAppNavbar(thisArg);
 
 			callDefaultTabCallback();
 		},
@@ -3196,6 +3206,165 @@ define(function(require) {
 	};
 
 	/**
+	 * Chosen plugin wrapper used to apply the same default options
+	 * @param  {jQuery} $target  <select> element to invoke chosen on
+	 * @param  {Object} pOptions Options for widget
+	 */
+	function chosen($target, pOptions) {
+		var i18n = monster.apps.core.i18n.active().chosen;
+		var defaultChosenOptions = {
+			search_contains: true,
+			width: '220px'
+		};
+		var defaultCustomOptions = {
+			tags: false
+		};
+		var options = _.merge(
+			{},
+			defaultCustomOptions,
+			defaultChosenOptions,
+			pOptions
+		);
+		var instance;
+
+		if (
+			options.tags
+			&& !_.has(options, 'no_results_text')
+		) {
+			options.no_results_text = i18n.addNewTag;
+		}
+
+		$target.chosen(options);
+
+		if (!options.tags) {
+			return;
+		}
+
+		instance = $target.data('chosen');
+
+		// Bind the keyup event to the search box input
+		instance.search_field.on('keyup', function(event) {
+			// If we hit Enter and the results list is empty (no matches) add the option
+			if (
+				event.which !== 13
+				|| instance.dropdown.is('.no-results:visible')
+			) {
+				return;
+			}
+
+			var newOptionValue = $(this).val();
+			var $newOption = $('<option>')
+				.val(newOptionValue)
+				.text(newOptionValue)
+				.prop('selected', true);
+
+			// Add the new option
+			$target
+				.append($newOption)
+				.trigger('chosen:updated');
+		});
+	}
+	ui.chosen = chosen;
+
+	/**
+	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
+	 * auto filling of username/password `input` elements.
+	 * @param  {jQuery} $target Form to obfuscate fields of
+	 * @param  {Object} [options] Plugin options
+	 */
+	function disableAutoFill($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!_.isUndefined(options) && !_.isPlainObject(options)) {
+			throw TypeError('"options" is not a plain object');
+		}
+		$target.disableAutoFill(_.merge({}, options, {
+			hidingChar: false
+		}));
+	}
+	ui.disableAutoFill = disableAutoFill;
+
+	/**
+	 * Collect strucutred form data into a plain object
+	 * @param  {String} rootNode
+	 * @param  {String} [delimiter='.']
+	 * @param  {Boolean} [skipEmpty=false]
+	 * @param  {Function} [nodeCallback]
+	 * @return {Object}
+	 */
+	function getFormData(rootNode, delimiter, skipEmpty, nodeCallback) {
+		var formData;
+
+		try {
+			formData = form2object(rootNode, delimiter, skipEmpty, nodeCallback);
+		} catch (error) {
+			formData = {};
+		}
+
+		for (var key in formData) {
+			if (key === '') {
+				delete formData[key];
+			}
+		}
+
+		return formData;
+	}
+	ui.getFormData = getFormData;
+
+	/**
+	 * Gets a template to render `select` list of the languages that are supported by Monster UI
+	 *
+	 * @private
+	 * @param  {Object} args
+	 * @param  {String} [args.selectedLanguage]  IETF language tag
+	 * @param  {Boolean} [args.showDefault=false]  Whether or not to include a default option in the language list
+	 * @param  {Object} [args.attributes]  Collection of key/value corresponding to HTML attributes set on the `select` tag
+	 * @returns {String}  Language select list template
+	 */
+	function getLanguageSelectorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		var selectedLanguage = _.get(args, 'selectedLanguage'),
+			showDefault = _.get(args, 'showDefault', false),
+			attributes = _.get(args, 'attributes', {}),
+			languages;
+		if (!_.isUndefined(selectedLanguage) && !_.isString(selectedLanguage)) {
+			throw TypeError('"selectedLanguage" is not a string');
+		}
+		if (!_.isBoolean(showDefault)) {
+			throw TypeError('"showDefault" is not a boolean');
+		}
+		if (!_.isPlainObject(attributes)) {
+			throw TypeError('"attributes" is not a plain object');
+		}
+		// Delay language iteration until we know that all the parameters are valid, to avoid
+		// unnecessary processing
+		languages = _
+			.chain(monster.supportedLanguages)
+			.map(function(code) {
+				return {
+					value: code,
+					label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, code)
+				};
+			})
+			.sortBy('label')
+			.value();
+		if (showDefault) {
+			languages.unshift({
+				value: 'auto',
+				label: monster.util.tryI18n(monster.apps.core.i18n.active().monsterLanguages, 'auto')
+			});
+		}
+		return monster.template(monster.apps.core, 'monster-language-selector', {
+			attributes: attributes,
+			languages: languages,
+			selectedLanguage: selectedLanguage
+		});
+	};
+
+	/**
 	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
 	 * @param   {String} args.id            Icon ID
@@ -3224,6 +3393,7 @@ define(function(require) {
 			attributes: attributes
 		});
 	}
+	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	/**
 	 * Generates a key-value pair editor
@@ -3297,6 +3467,7 @@ define(function(require) {
 		$target.append($editorTemplate);
 		return $editorTemplate;
 	}
+	ui.keyValueEditor = keyValueEditor;
 
 	/**
 	 * Merges HTML attributes, mapped as JSON objects
@@ -3362,6 +3533,7 @@ define(function(require) {
 			}, monster.apps.core.i18n.active().monthPicker)
 		});
 	}
+	ui.monthpicker = monthpicker;
 
 	/**
 	 * Wrapper for toast notification library
@@ -3384,13 +3556,9 @@ define(function(require) {
 			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
 		}
 	}
+	ui.toast = toast;
 
 	initialize();
-
-	ui.getSvgIconTemplate = getSvgIconTemplate;
-	ui.keyValueEditor = keyValueEditor;
-	ui.monthpicker = monthpicker;
-	ui.toast = toast;
 
 	return ui;
 });

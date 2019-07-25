@@ -259,24 +259,6 @@ define(function(require) {
 			return isReseller;
 		},
 
-		// Function returning map of URL parameters
-		// Optional key, returns value of specific GET parameter
-		// keepHashes was added because having hashes sometimes crashed some requests
-		getUrlVars: function(key, pKeepHashes) {
-			var vars = {},
-				hashes = window.location.search.substring(1).split('&'),
-				hash,
-				keepHashes = pKeepHashes || false;
-
-			for (var i = 0; i < hashes.length; i++) {
-				hash = hashes[i].split('=');
-				vars[hash[0]] = keepHashes ? hash[1] : (hash[1] || '').replace(/#/g, '');
-			}
-
-			// If we were looking for a specific key, then we only return that value, otherwise, return the full map of GET parameters
-			return key ? vars[key] : vars;
-		},
-
 		/****************** Helpers not documented because people shoudln't need to use them *******************/
 
 		// Helper only used in conference app, takes seconds and transforms it into a timer
@@ -905,6 +887,7 @@ define(function(require) {
 			? matches.slice(0, 6).join(':')
 			: '';
 	}
+	util.formatMacAddress = formatMacAddress;
 
 	/**
 	 * Phone number formatting according to user preferences.
@@ -920,6 +903,7 @@ define(function(require) {
 			? _.get(phoneNumber, 'userFormat')
 			: _.toString(input);
 	}
+	util.formatPhoneNumber = formatPhoneNumber;
 
 	/**
 	 * Decimal and currency formatting for prices
@@ -962,6 +946,7 @@ define(function(require) {
 
 		return formatter.format(price);
 	}
+	util.formatPrice = formatPrice;
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
@@ -997,6 +982,7 @@ define(function(require) {
 				.value()
 		]);
 	}
+	util.getBookkeepers = getBookkeepers;
 
 	/**
 	 * Return the symbol of the currency used through the UI
@@ -1004,13 +990,14 @@ define(function(require) {
 	 */
 	function getCurrencySymbol() {
 		var base = NaN;
-		var formatter = new Intl.NumberFormat(monster.defaultLanguage, {
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
 			style: 'currency',
 			currency: monster.config.currencyCode
 		});
 
-		return formatter.format(base).replace('NaN', '');
+		return formatter.format(base).replace('NaN', '').trim();
 	}
+	util.getCurrencySymbol = getCurrencySymbol;
 
 	/**
 	 * Returns the timezone of the currently authenticated session
@@ -1025,6 +1012,7 @@ define(function(require) {
 			|| _.get(monster, 'apps.auth.currentAccount.timezone')
 			|| moment.tz.guess();
 	}
+	util.getCurrentTimeZone = getCurrentTimeZone;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
@@ -1089,6 +1077,7 @@ define(function(require) {
 
 		return formattedData;
 	}
+	util.getFormatPhoneNumber = getFormatPhoneNumber;
 
 	/**
 	 * Determine the date format from a specific or current user's settings
@@ -1172,6 +1161,118 @@ define(function(require) {
 			? _.get(number, '_read_only.features_available', [])
 			: numberFeatures;
 	}
+	util.getNumberFeatures = getNumberFeatures;
+
+	/**
+	 * Returns map of URL parameters, with the option to return the value of a specific parameter
+	 * @param  {String} [key]
+	 * @return {Object|Array|String|undefined}
+	 */
+	function getUrlVars(key) {
+		/**
+		 * @param  {String} location
+		 * @return {String}
+		 */
+		var getQueryString = function(location) {
+			var hash = location.hash;
+			var search;
+
+			if (
+				!_.isEmpty(hash)
+				&& _.includes(hash, '?')
+			) {
+				search = hash.split('?')[1];
+			} else {
+				search = location.search.slice(1);
+			}
+
+			return search;
+		};
+		/**
+		 * @param  {String} queryString
+		 * @return {Object}
+		 */
+		var parseQueryString = function(queryString) {
+			var pair;
+			var paramKey;
+			var paramValue;
+
+			// if query string is empty exit early
+			if (!queryString) {
+				return {};
+			}
+
+			return _
+				.chain(queryString)
+				// anything after # is not part of the query string, so get rid of it
+				.split('#', 1)
+				.toString()
+				// split our query string into its component parts
+				.split('&')
+				// prase query string key/value pairs
+				.transform(function(acc, component) {
+					// separate each component in key/value pair
+					pair = component.split('=');
+
+					// set parameter name and value (use 'true' if empty)
+					paramKey = pair[0];
+					paramValue = _.isUndefined(pair[1]) ? true : pair[1];
+
+					// if the paramKey ends with square brackets, e.g. colors[] or colors[2]
+					if (paramKey.match(/\[(\d+)?\]$/)) {
+						// create key if it doesn't exist
+						var key = paramKey.replace(/\[(\d+)?\]/, '');
+						if (!acc[key]) {
+							acc[key] = [];
+						}
+
+						// if it's an indexed array e.g. colors[2]
+						if (paramKey.match(/\[\d+\]$/)) {
+							// get the index value and add the entry at the appropriate position
+							var index = /\[(\d+)\]/.exec(paramKey)[1];
+							acc[key][index] = paramValue;
+						} else {
+							// otherwise add the value to the end of the array
+							acc[key].push(paramValue);
+						}
+					} else {
+						// we're dealing with a string
+						if (!acc[paramKey]) {
+							// if it doesn't exist, create property
+							acc[paramKey] = paramValue;
+						} else if (
+							acc[paramKey]
+							&& _.isString(acc[paramKey])
+						) {
+							// if property does exist and it's a string, convert it to an array
+							acc[paramKey] = [acc[paramKey]];
+							acc[paramKey].push(paramValue);
+						} else {
+							// otherwise add the property
+							acc[paramKey].push(paramValue);
+						}
+					}
+				}, {})
+				.value();
+		};
+		/**
+		 * @param  {Object} params
+		 * @return {Object|Array|String|undefined}
+		 */
+		var resolveKey = function(params) {
+			return _.isUndefined(key)
+				? params
+				: _.get(params, key, undefined);
+		};
+		var getUrlParams = _.flow(
+			getQueryString,
+			parseQueryString,
+			resolveKey
+		);
+
+		return getUrlParams(window.location);
+	}
+	util.getUrlVars = getUrlVars;
 
 	/**
 	 * Returns the full name of a specific user or, if missing, of the currently
@@ -1207,6 +1308,7 @@ define(function(require) {
 			}
 		});
 	}
+	util.getUserFullName = getUserFullName;
 
 	/**
 	 * Converts a Gregorian timestamp into a Date instance
@@ -1222,6 +1324,7 @@ define(function(require) {
 		}
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
+	util.gregorianToDate = gregorianToDate;
 
 	/**
 	 * Determine if a specific number feature is enabled on the current account
@@ -1245,6 +1348,7 @@ define(function(require) {
 				true
 			);
 	}
+	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
@@ -1295,6 +1399,7 @@ define(function(require) {
 				.join('')
 				.value();
 	}
+	util.randomString = randomString;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
@@ -1334,6 +1439,7 @@ define(function(require) {
 			.tz(tz)
 			.format(format);
 	}
+	util.toFriendlyDate = toFriendlyDate;
 
 	/**
 	 * Normalize phone number by using E.164 format
@@ -1349,6 +1455,7 @@ define(function(require) {
 			? _.get(phoneNumber, 'e164Number')
 			: _.replace(input, /[^0-9+]/g, '');
 	}
+	util.unformatPhoneNumber = unformatPhoneNumber;
 
 	/**
 	 * Converts a Unix timestamp into a Date instance
@@ -1381,21 +1488,6 @@ define(function(require) {
 		}
 		return new Date(timestamp);
 	}
-
-	util.formatMacAddress = formatMacAddress;
-	util.formatPhoneNumber = formatPhoneNumber;
-	util.formatPrice = formatPrice;
-	util.getBookkeepers = getBookkeepers;
-	util.getCurrencySymbol = getCurrencySymbol;
-	util.getCurrentTimeZone = getCurrentTimeZone;
-	util.getFormatPhoneNumber = getFormatPhoneNumber;
-	util.getNumberFeatures = getNumberFeatures;
-	util.getUserFullName = getUserFullName;
-	util.gregorianToDate = gregorianToDate;
-	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
-	util.randomString = randomString;
-	util.toFriendlyDate = toFriendlyDate;
-	util.unformatPhoneNumber = unformatPhoneNumber;
 	util.unixToDate = unixToDate;
 
 	return util;

@@ -16,6 +16,8 @@ In order to add dynamic data in our views, we needed a templating engine. And Ha
     - [ifInArray](#ifinarray)
     - [isPrivLevelAdmin](#isprivleveladmin)
     - [isSuperDuper](#issuperduper)
+    - [languageSelector](#languageSelector)
+    - [lookupPath](#lookupPath)
     - [monsterCheckbox](#monstercheckbox)
     - [monsterNumberWrapper](#monsternumberwrapper)
     - [monsterPanelText](#monsterpaneltext)
@@ -182,6 +184,56 @@ This is a predetermined conditional helper letting you render content only if th
 {{#isSuperDuper optionalAccountObject}}
 ...
 {{/isSuperDuper}}
+```
+
+#### languageSelector
+This inline helper displays a `select` list of the languages supported by Monster UI.
+
+```handlebars
+{{languageSelector}}
+```
+
+You can specify the value of the selected language, and whether or not to display a "Default" option, via the `selectedLanguage` and `showDefault` options.
+
+```handlebars
+{{languageSelector selectedLanguage="en-US" showDefault="true"}}
+```
+
+You can provide HTML attributes as well:
+
+```handlebars
+{{languageSelector name="user_language" class="list-selector" multiple=""}}
+```
+
+#### lookupPath
+This helper allows to get a value from a specific `path` of an `object`. Optionally a `defaultValue` can be passed as third parameter, and it will be returned if the resolved value is `undefined`.
+
+```handlebars
+{{lookupPath object path defaultValue}}
+```
+
+Let's say we have an object like:
+```javascript
+var basket = {
+  fruits: {
+    apples: 5,
+    pears: 3,
+    bananas: 1
+  },
+  vegetables: {
+    carrots: 5
+  }
+}
+```
+
+Then, in the HTML template you could do something like this:
+```handlebars
+The basket has {{lookupPath basket "fruits.apples" "0"}} apples and {{lookupPath basket "vegetables.potatoes" "0"}} potatoes.
+```
+
+The final output would be something like:
+```text
+The basket has 5 apples and 0 potatoes.
 ```
 
 #### monsterCheckbox

@@ -1,13 +1,11 @@
 <div id="{{appId}}_app_container" class="app-layout{{#compare layout "!==" "default"}} {{layout}}{{/compare}}{{#if hasNavbar}} with-navbar{{/if}}">
-{{#if hasNavbar}}
-	<header class="app-header">
+	<header class="app-header"{{#unless hasNavbar}} style="display: none"{{/unless}}>
 		<div class="app-navbar-bg">
 			<div class="app-navbar-wrapper">
 				<nav class="app-navbar monster-navbar"></nav>
 			</div>
 		</div>
 	</header>
-{{/if}}
 
 	<div class="app-content-wrapper"></div>
 </div>

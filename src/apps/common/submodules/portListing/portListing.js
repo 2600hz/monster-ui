@@ -308,7 +308,7 @@ define(function(require) {
 							.value(),
 						numbers = _.get(
 							portRequest,
-							'ported_numbers',
+							'_read_only.ported_numbers',
 							_.get(portRequest, 'numbers')
 						),
 						unactionableStatuses = ['canceled', 'completed'],
@@ -1160,7 +1160,14 @@ define(function(require) {
 						id: request.account_id,
 						name: self.portListingGet(['accountNamesById', request.account_id])
 					},
-					amount: _.size(request.numbers),
+					amount: _
+						.chain(request)
+						.get(
+							'_read_only.ported_numbers',
+							_.get(request, 'numbers', {})
+						)
+						.size()
+						.value(),
 					carrier: {
 						winning: _.get(request, 'winning_carrier', self.i18n.active().portListing.misc.unknownCarrier),
 						losing: _.get(request, 'carrier', self.i18n.active().portListing.misc.unknownCarrier)
