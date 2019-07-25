@@ -88,12 +88,11 @@ define(function(require) {
 						});
 
 						if (result.data) {
-							self.appFlags.navigationWizard.wizardArgs = _.merge({},
-								self.appFlags.navigationWizard.wizardArgs, {
-									data: result.data
-								});
+							_.merge(wizardArgs, {
+								data: result.data
+							});
 						} else if (result.args) {
-							self.appFlags.navigationWizard.wizardArgs = result.args;
+							_.merge(wizardArgs, result.args);
 						}
 
 						currentStep += 1;
@@ -110,8 +109,7 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate(),
-							wizardArgs = self.appFlags.navigationWizard.wizardArgs;
+						var result = self.navigationWizardUtilForTemplate();
 
 						if (!result.valid) {
 							return;
@@ -144,8 +142,6 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var wizardArgs = self.appFlags.navigationWizard.wizardArgs;
-
 						thisArg[wizardArgs.cancel](wizardArgs);
 					});
 
@@ -156,10 +152,9 @@ define(function(require) {
 						event.preventDefault();
 
 						var currentStep = self.appFlags.navigationWizard.currentStep,
-							wizardArgs = self.appFlags.navigationWizard.wizardArgs,
 							step = wizardArgs.steps[currentStep];
 
-						self.appFlags.navigationWizard.wizardArgs = _.merge({}, wizardArgs, {
+						_.merge(wizardArgs, {
 							data: step.default
 						});
 
