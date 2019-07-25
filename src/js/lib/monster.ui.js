@@ -464,52 +464,6 @@ define(function(require) {
 	}
 
 	var ui = {
-
-		/**
-		 * Chosen plugin wrapper used to apply the same default options
-		 * @param  {jQuery Object} $target  <select> tag to call chosen on
-		 * @param  {JavaScript Object} pOptions Map of options for chosen
-		 */
-		chosen: function($target, pOptions) {
-			var coreApp = monster.apps.core,
-				options = _.merge({
-					search_contains: true,
-					width: '220px'
-				}, pOptions),
-				instance;
-
-			if (_.get(options, 'tags', false) && !_.has(options, 'no_results_text')) {
-				options.no_results_text = coreApp.i18n.active().chosen.addNewTag;
-			}
-
-			$target.chosen(options);
-
-			if (!_.get(pOptions, 'tags', false)) {
-				return;
-			}
-
-			instance = $target.data('chosen');
-
-			// Bind the keyup event to the search box input
-			instance.container.find('input').on('keyup', function(e) {
-				// If we hit Enter and the results list is empty (no matches) add the option
-				if (e.which !== 13 || instance.dropdown.find('li.no-results').length === 0) {
-					return;
-				}
-
-				var newTag = $(this).val(),
-					option = $('<option>')
-						.val(newTag)
-						.text(newTag)
-						.prop('selected', true);
-
-				// Add the new option
-				$target.append(option);
-				// Trigger the update
-				$target.trigger('chosen:updated');
-			});
-		},
-
 		/**
 		 * Show a loading view if a request starts before inoking the callback
 		 * to insert a template in the container once all requests finish
@@ -3250,6 +3204,67 @@ define(function(require) {
 			});
 		}
 	};
+
+	/**
+	 * Chosen plugin wrapper used to apply the same default options
+	 * @param  {jQuery} $target  <select> element to invoke chosen on
+	 * @param  {Object} pOptions Options for widget
+	 */
+	function chosen($target, pOptions) {
+		var i18n = monster.apps.core.i18n.active().chosen;
+		var defaultChosenOptions = {
+			search_contains: true,
+			width: '220px'
+		};
+		var defaultCustomOptions = {
+			tags: false
+		};
+		var options = _.merge(
+			{},
+			defaultCustomOptions,
+			defaultChosenOptions,
+			pOptions
+		);
+		var instance;
+
+		if (
+			options.tags
+			&& !_.has(options, 'no_results_text')
+		) {
+			options.no_results_text = i18n.addNewTag;
+		}
+
+		$target.chosen(options);
+
+		if (!options.tags) {
+			return;
+		}
+
+		instance = $target.data('chosen');
+
+		// Bind the keyup event to the search box input
+		instance.search_field.on('keyup', function(event) {
+			// If we hit Enter and the results list is empty (no matches) add the option
+			if (
+				event.which !== 13
+				|| instance.dropdown.is('.no-results:visible')
+			) {
+				return;
+			}
+
+			var newOptionValue = $(this).val();
+			var $newOption = $('<option>')
+				.val(newOptionValue)
+				.text(newOptionValue)
+				.prop('selected', true);
+
+			// Add the new option
+			$target
+				.append($newOption)
+				.trigger('chosen:updated');
+		});
+	}
+	ui.chosen = chosen;
 
 	/**
 	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
