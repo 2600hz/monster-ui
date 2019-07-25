@@ -1321,35 +1321,54 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.portWizardHelperSavePort(_.merge({}, args, {
-							stopErrorPropagation: true,
-							success: function(requestId) {
+						monster.waterfall([
+							function(waterfallCallback) {
+								self.portWizardHelperSavePort(_.merge({}, args, {
+									stopErrorPropagation: true,
+									success: function(requestId) {
+										waterfallCallback(null, requestId);
+									}
+								}));
+							},
+							function(requestId, waterfallCallback) {
+								// Add request ID to args object, to know that the request
+								// has already been saved at this point
+								_.set(args, 'data.request.id', requestId);
+
+								// Update port request state
 								self.portWizardRequestUpdateState({
 									data: {
 										portRequestId: requestId,
 										state: 'submitted'
 									},
 									success: function() {
-										globalCallback();
+										waterfallCallback(null);
 									},
 									error: function(parsedError, groupedErrors) {
-										var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
-
-										if (processedErrors.failedWizardStep === 'billUpload') {
-											self.portWizardRenderBillUpload(args);
-										} else if (processedErrors.failedWizardStep === 'addNumbers') {
-											self.portWizardRenderAddNumbers(args);
-										} else if (processedErrors.failedWizardStep === 'portNotify') {
-											self.portWizardRenderPortNotify(args);
-										} else {
-											self.portWizardRenderPortInfo(args);
-										}
-
-										self.portWizardShowErrors(processedErrors);
+										waterfallCallback(groupedErrors);
 									}
 								});
 							}
-						}));
+						], function(groupedErrors) {
+							if (!groupedErrors) {
+								globalCallback();
+								return;
+							}
+
+							var processedErrors = self.portWizardProcessKnownErrors(groupedErrors);
+
+							if (processedErrors.failedWizardStep === 'billUpload') {
+								self.portWizardRenderBillUpload(args);
+							} else if (processedErrors.failedWizardStep === 'addNumbers') {
+								self.portWizardRenderAddNumbers(args);
+							} else if (processedErrors.failedWizardStep === 'portNotify') {
+								self.portWizardRenderPortNotify(args);
+							} else {
+								self.portWizardRenderPortInfo(args);
+							}
+
+							self.portWizardShowErrors(processedErrors);
+						});
 					});
 
 			template
@@ -1475,6 +1494,7 @@ define(function(require) {
 							data: self.portWizardNormalizePortRequestData(args.data.request)
 						},
 						success: function(portRequest) {
+							_.set(args, 'data.request.id', portRequest.id);
 							callback(null, portRequest);
 						},
 						error: function(parsedError, error) {
