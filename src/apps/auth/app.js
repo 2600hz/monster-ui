@@ -105,8 +105,26 @@ define(function(require) {
 				} else {
 					window.location = sso.login;
 				}
+			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
+				// If it has state and code key, then it's most likely a SSO Redirect
+				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
+					// Once we set our token we refresh the page to get rid of new URL params from auth callback
+					self.buildCookiesFromSSOResponse(authData);
+
+					window.location.href = window.location.protocol + '//' + window.location.host;
+				}, errorAuth);
 			} else if (urlParams.hasOwnProperty('recovery')) {
 				self.checkRecoveryId(urlParams.recovery, successfulAuth);
+			} else if (urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
+				// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
+				//APIkey generated tokens require UserId parameter to login.
+				self.authenticateAuthToken(urlParams.t, function(authData) {
+					authData.data.owner_id = urlParams.u;
+					successfulAuth(authData);
+				}, errorAuth);
+			} else if (urlParams.hasOwnProperty('t')) {
+				// Username/password generated tokens do not require anything else to log in.
+				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			} else if (monster.cookies.has('monster-auth')) {
 				// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
 				var cookieData = monster.cookies.getJson('monster-auth');
@@ -118,24 +136,6 @@ define(function(require) {
 					};
 
 					successfulAuth && successfulAuth(data);
-				}, errorAuth);
-			} else if (urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
-				// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
-				//APIkey generated tokens require UserId parameter to login.
-				self.authenticateAuthToken(urlParams.t, function(authData) {
-					authData.data.owner_id = urlParams.u;
-					successfulAuth(authData);
-				}, errorAuth);
-			} else if (urlParams.hasOwnProperty('t')) {
-				// Username/password generated tokens do not require anything else to log in.
-				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
-			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-				// If it has state and code key, then it's most likely a SSO Redirect
-				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
-					// Once we set our token we refresh the page to get rid of new URL params from auth callback
-					self.buildCookiesFromSSOResponse(authData);
-
-					window.location.href = window.location.protocol + '//' + window.location.host;
 				}, errorAuth);
 			} else {
 				// Default case, we didn't find any way to log in automatically, we render the login page
