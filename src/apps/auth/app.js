@@ -64,19 +64,24 @@ define(function(require) {
 			self.triggerLoginMechanism();
 		},
 
-		// Order of importance: Cookie > GET Parameters > External Auth > Default Case
+		/**
+		 * Triggers authentication method depending on app state:
+		 * 1. Custom autentication app
+		 * 2. Signle sign-on autentication
+		 * 3. Signle sign-on redirect
+		 * 4. Password recovery redirect
+		 * 5. API key generated token authentication
+		 * 6. User generated token authentication
+		 * 7. Cookie authentication
+		 */
 		triggerLoginMechanism: function() {
 			var self = this,
 				urlParams = monster.util.getUrlVars(),
-				successfulAuth = function(authData) {
-					self._afterSuccessfulAuth(authData);
-				},
-				errorAuth = function() {
-					self.renderLoginPage();
-				};
+				successfulAuth = self._afterSuccessfulAuth.bind(self),
+				errorAuth = self.renderLoginPage.bind(self);
 
-			// First check if there is a custom authentication mechanism
 			if (monster.config.whitelabel.hasOwnProperty('authentication')) {
+			// Custom authentication app
 				self.customAuth = monster.config.whitelabel.authentication;
 
 				var options = {
@@ -88,6 +93,7 @@ define(function(require) {
 					app.render(self.appFlags.mainContainer);
 				}, options);
 			} else if (monster.config.whitelabel.hasOwnProperty('sso')) {
+			// Single sign-on authentication
 				var sso = monster.config.whitelabel.sso,
 					token = monster.cookies.get(sso.cookie.name);
 
@@ -106,7 +112,7 @@ define(function(require) {
 					window.location = sso.login;
 				}
 			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-				// If it has state and code key, then it's most likely a SSO Redirect
+			// Single sign-on redirect
 				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
 					// Once we set our token we refresh the page to get rid of new URL params from auth callback
 					self.buildCookiesFromSSOResponse(authData);
@@ -114,19 +120,20 @@ define(function(require) {
 					window.location.href = window.location.protocol + '//' + window.location.host;
 				}, errorAuth);
 			} else if (urlParams.hasOwnProperty('recovery')) {
+			// Password recovery redirect
 				self.checkRecoveryId(urlParams.recovery, successfulAuth);
 			} else if (urlParams.hasOwnProperty('u') && urlParams.hasOwnProperty('t')) {
-				// Otherwise, we check if some GET parameters are defined, and if they're formatted properly
-				//APIkey generated tokens require UserId parameter to login.
+			// API key generated token authentication (userId required to login as a specific user)
 				self.authenticateAuthToken(urlParams.t, function(authData) {
 					authData.data.owner_id = urlParams.u;
 					successfulAuth(authData);
 				}, errorAuth);
 			} else if (urlParams.hasOwnProperty('t')) {
-				// Username/password generated tokens do not require anything else to log in.
+			// User generated token authentication
+				console.log('t');
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			} else if (monster.cookies.has('monster-auth')) {
-				// otherwise, we handle it ourself, and we check if the authentication cookie exists, try to log in with its information
+			// Cookie authentication
 				var cookieData = monster.cookies.getJson('monster-auth');
 
 				self.authenticateAuthToken(cookieData.authToken, function(data) {
@@ -138,7 +145,7 @@ define(function(require) {
 					successfulAuth && successfulAuth(data);
 				}, errorAuth);
 			} else {
-				// Default case, we didn't find any way to log in automatically, we render the login page
+			// Login page rendering
 				self.renderLoginPage();
 			}
 		},
