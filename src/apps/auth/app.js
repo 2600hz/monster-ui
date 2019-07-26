@@ -66,9 +66,9 @@ define(function(require) {
 
 		/**
 		 * Triggers authentication method depending on app state:
-		 * 1. Custom autentication app
-		 * 2. Signle sign-on autentication
-		 * 3. Signle sign-on redirect
+		 * 1. Custom authentication app
+		 * 2. Single sign-on authentication
+		 * 3. Single sign-on redirect
 		 * 4. Password recovery redirect
 		 * 5. API key generated token authentication
 		 * 6. User generated token authentication
