@@ -68,7 +68,7 @@ define(function(require) {
 		 * Triggers authentication method depending on app state:
 		 * 1. Custom authentication app
 		 * 2. Single sign-on authentication
-		 * 3. Single sign-on redirect
+		 * 3. OAuth redirect
 		 * 4. Password recovery redirect
 		 * 5. API key generated token authentication
 		 * 6. User generated token authentication
@@ -112,7 +112,7 @@ define(function(require) {
 					window.location = sso.login;
 				}
 			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-			// Single sign-on redirect
+			// OAuth redirect
 				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
 					// Once we set our token we refresh the page to get rid of new URL params from auth callback
 					self.buildCookiesFromSSOResponse(authData);
@@ -130,7 +130,6 @@ define(function(require) {
 				}, errorAuth);
 			} else if (urlParams.hasOwnProperty('t')) {
 			// User generated token authentication
-				console.log('t');
 				self.authenticateAuthToken(urlParams.t, successfulAuth, errorAuth);
 			} else if (monster.cookies.has('monster-auth')) {
 			// Cookie authentication
