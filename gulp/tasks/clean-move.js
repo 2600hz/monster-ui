@@ -21,7 +21,9 @@ const cleanDistDev = () => gulp
 const moveBuiltFilesToDist = () => gulp
 	.src([
 		join(tmp, '**', '*'),
-		'!' + join(tmp, '**', '*.scss')
+		'!' + join(tmp, '**', '*.scss'),
+		'!' + join(tmp, 'apps', '*', 'tests'),	// Exclude tests folder from apps
+		'!' + join(tmp, 'apps', '*', 'tests', '**', '**')	// Exclude tests folder contents
 	])
 	.pipe(gulp.dest(dist));
 
