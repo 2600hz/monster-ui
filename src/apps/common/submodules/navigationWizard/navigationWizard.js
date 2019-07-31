@@ -66,6 +66,10 @@ define(function(require) {
 				template = wizardArgs.template,
 				thisArg = wizardArgs.thisArg;
 
+			monster.sub('common.navigationWizard.arguments', function(callback) {
+				callback(wizardArgs);
+			});
+
 			self.navigationWizardSetSelected({
 				stepId: self.appFlags.navigationWizard.currentStep
 			});
@@ -117,6 +121,20 @@ define(function(require) {
 
 						thisArg[wizardArgs.done](wizardArgs);
 					});
+
+			template
+					.find('#save_app')
+						.on('click', function(event) {
+							event.preventDefault();
+
+							var result = self.navigationWizardUtilForTemplate();
+
+							if (!result.valid) {
+								return;
+							}
+
+							thisArg[wizardArgs.done](wizardArgs);
+						});
 
 			//Clicking the back button
 			template
