@@ -3523,12 +3523,12 @@ define(function(require) {
 	ui.monthpicker = monthpicker;
 
 	/**
-	 * Transforms a field into a jQuery UI Spinner element
+	 * Transforms a field into a number picker, using the jQuery UI Spinner widget
 	 * @param  {jQuery} $target  Input to transform
 	 * @param  {Object} [options]  List of options
 	 * @return {jQuery}          jQuery UI Spinner instance
 	 */
-	function spinner($target, pOptions) {
+	function numberPicker($target, pOptions) {
 		if (!($target instanceof $)) {
 			throw TypeError('"$target" is not a jQuery object');
 		}
@@ -3569,7 +3569,7 @@ define(function(require) {
 		});
 		return $target.spinner(options);
 	};
-	ui.spinner = spinner;
+	ui.numberPicker = numberPicker;
 
 	/**
 	 * Wrapper for toast notification library
