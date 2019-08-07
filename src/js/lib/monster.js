@@ -568,33 +568,13 @@ define(function(require) {
 					monster.pub('monster.requestEnd', requestOptions.requestEventParams);
 				},
 				onRequestError: function(error, requestOptions) {
-					var parsedError = error,
-						requestOptions = requestOptions || { generateError: true };
-
-					if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
-						parsedError = $.parseJSON(error.responseText);
-					}
+					var requestOptions = requestOptions || { generateError: true };
 
 					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						// Handle the "Payment Required" status
-						var parsedError = error,
-							originalPreventCallbackError = requestOptions.preventCallbackError;
-
-						if ('responseText' in error && error.responseText) {
-							parsedError = $.parseJSON(error.responseText);
-						}
-
-						// Prevent the execution of the custom error callback, as it is a
-						// charges notification that will be handled here
-						requestOptions.preventCallbackError = true;
-
-						// Notify the user about the charges
-						monster.ui.charges(parsedError.data, function() {
-							requestOptions.acceptCharges = true;
-							requestOptions.preventCallbackError = originalPreventCallbackError;
-							monster.kazooSdk.request(requestOptions);
-						}, function() {
-							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
+						error402Handler({
+							requestHandler: monster.kazooSdk.request,
+							error: error,
+							options: requestOptions
 						});
 					} else if (monster.util.isLoggedIn() && error.status === 401) {
 						// If we have a 401 after being logged in, it means our session expired, or that it's a MFA denial of the relogin attempt
