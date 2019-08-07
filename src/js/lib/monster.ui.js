@@ -3525,14 +3525,14 @@ define(function(require) {
 	/**
 	 * Transforms a field into a jQuery UI Spinner element
 	 * @param  {jQuery} $target  Input to transform
-	 * @param  {Object} options  List of options
+	 * @param  {Object} [options]  List of options
 	 * @return {jQuery}          jQuery UI Spinner instance
 	 */
 	function spinner($target, pOptions) {
 		if (!($target instanceof $)) {
 			throw TypeError('"$target" is not a jQuery object');
 		}
-		if (!_.isPlainObject(pOptions)) {
+		if (!_.isUndefined(pOptions) && !_.isPlainObject(pOptions)) {
 			throw TypeError('"options" is not a plain object');
 		}
 		$target.each(function() {
