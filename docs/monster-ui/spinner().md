@@ -16,6 +16,8 @@ Key | Description | Type | Default | Required
 ## Description
 This helper will transform a field into a jQuery UI Spinner Widget.
 
+However, compared to the default widget setup, this control won't allow to be left empty, nor to enter non-numeric or out of range values (if `min` and `max` parameters were provided for the latter).
+
 ## Examples
 ### Create a spinner with a max and min limits
 ```javascript
