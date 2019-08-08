@@ -86,7 +86,7 @@
 	font-weight: bold !important;
 }
 
-#navigation_wizard_wrapper .nav .completed, #navigation_wizard_wrapper .nav .selected {
+#navigation_wizard_wrapper .nav .visited {
 	cursor: pointer;
 }
 
@@ -98,7 +98,7 @@
 	display: none;
 }
 
-#navigation_wizard_wrapper .nav .selected span, #navigation_wizard_wrapper .nav .completed i {
+#navigation_wizard_wrapper .nav .selected span, #navigation_wizard_wrapper .nav .completed:not(.selected) i {
 	display: block;
 }
 

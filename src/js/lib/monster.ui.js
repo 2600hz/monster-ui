@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
-		chosen = require('chosen'),
 		bhotkeys = require('hotkeys'),
 		Toastr = require('toastr'),
 		validate = require('validate'),
@@ -18,6 +17,7 @@ define(function(require) {
 		Clipboard = require('clipboard'),
 		moment = require('moment');
 
+	require('chosen');
 	require('disableAutoFill');
 	require('moment-timezone');
 	require('monthpicker');
@@ -464,22 +464,6 @@ define(function(require) {
 	}
 
 	var ui = {
-
-		/**
-		 * Chosen plugin wrapper used to apply the same default options
-		 * @param  {jQuery Object} $target  <select> tag to call chosen on
-		 * @param  {JavaScript Object} pOptions Map of options for chosen
-		 */
-		chosen: function($target, pOptions) {
-			var self = this,
-				options = _.merge({
-					search_contains: true,
-					width: '220px'
-				}, pOptions);
-
-			$target.chosen(options);
-		},
-
 		/**
 		 * Show a loading view if a request starts before inoking the callback
 		 * to insert a template in the container once all requests finish
@@ -3252,6 +3236,67 @@ define(function(require) {
 			});
 		}
 	};
+
+	/**
+	 * Chosen plugin wrapper used to apply the same default options
+	 * @param  {jQuery} $target  <select> element to invoke chosen on
+	 * @param  {Object} pOptions Options for widget
+	 */
+	function chosen($target, pOptions) {
+		var i18n = monster.apps.core.i18n.active().chosen;
+		var defaultChosenOptions = {
+			search_contains: true,
+			width: '220px'
+		};
+		var defaultCustomOptions = {
+			tags: false
+		};
+		var options = _.merge(
+			{},
+			defaultCustomOptions,
+			defaultChosenOptions,
+			pOptions
+		);
+		var instance;
+
+		if (
+			options.tags
+			&& !_.has(options, 'no_results_text')
+		) {
+			options.no_results_text = i18n.addNewTag;
+		}
+
+		$target.chosen(options);
+
+		if (!options.tags) {
+			return;
+		}
+
+		instance = $target.data('chosen');
+
+		// Bind the keyup event to the search box input
+		instance.search_field.on('keyup', function(event) {
+			// If we hit Enter and the results list is empty (no matches) add the option
+			if (
+				event.which !== 13
+				|| instance.dropdown.is('.no-results:visible')
+			) {
+				return;
+			}
+
+			var newOptionValue = $(this).val();
+			var $newOption = $('<option>')
+				.val(newOptionValue)
+				.text(newOptionValue)
+				.prop('selected', true);
+
+			// Add the new option
+			$target
+				.append($newOption)
+				.trigger('chosen:updated');
+		});
+	}
+	ui.chosen = chosen;
 
 	/**
 	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
