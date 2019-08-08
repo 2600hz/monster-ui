@@ -47,9 +47,9 @@ define({
 
 *For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration/)*.
 
-### Build
+### Build/Serve (locally)
 
-Use the `gulp` command to build and launch the web server
+Use the `gulp` command to build and launch the web server locally
 
 ```
 gulp
@@ -58,6 +58,14 @@ gulp
 Access your development environment at `http://localhost:3000/`
 
 *If you are using Node <6.0.0, you need to require the file `.babelregister.js` while running gulp. For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
+
+Other build commands include:
+
+- `gulp build-dev`: Build for dev (compiles SASS but leaves most of the JS as-is)
+- `gulp serve-dev`: Same as `gulp`, this will build/serve locally and watch for changes with Browsersync
+- `gulp build-prod`: Build for production (compiles SASS and handlebar templates, transpiles JS with Babel, and minifies JS/CSS)
+- `gulp serve-prod`: Build and serve for production
+- `gulp lint`: Run ESlint
 
 ## Using Docker
 
