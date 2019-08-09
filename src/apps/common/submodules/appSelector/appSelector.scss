@@ -186,17 +186,33 @@
 					box-sizing: border-box;
 					width: 100%;
 					background-color: $panel-background-color;
-					box-shadow: inset 0px 1px 0px 0px $french-gray2;
 					cursor: pointer;
 					display: flex;
 					flex-wrap: wrap;
+					box-shadow: inset 0px 1px 0px 0px $white,
+						inset 0px -1px 0px 0px $white;
 
-					&:hover {
-						background-color: $background-primary-color;
+					&:hover, &.selected {
+						background-color: $french-pass;
 					}
 
-					&.selected {
-						background-color: $french-pass;
+					&.even:not(.selected) .text-container {
+						background-color: $athens-gray;
+
+						&:hover {
+							background-color: transparent;
+							transition: none;
+						}
+					}
+
+					.text-container {
+						width: 100%;
+						transition: background-color 250ms linear;
+
+						&:hover {
+							background-color: transparent;
+							transition: none;
+						}
 					}
 
 					.app-icon {

@@ -145,6 +145,8 @@ define(function(require) {
 				callback: function(appList) {
 					var $template;
 
+					appList = _.sortBy(appList, 'label');
+
 					self.appSelectorSetStore('apps', _.keyBy(appList, 'id'));
 					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
 
@@ -165,6 +167,13 @@ define(function(require) {
 						});
 					}
 
+					// Mark initial even elements
+					appList = _.map(appList, function(app, index) {
+						return _.merge({
+							isEven: (index % 2 === 0)
+						}, app);
+					});
+
 					// Init template after saving selected apps to store, so they can be rendered
 					$template = initTemplate(appList);
 
@@ -180,13 +189,7 @@ define(function(require) {
 					// If not, all items will be hidden, because Isotope is not able to calculate
 					// its positions properly.
 					$template.find('.app-selector-body .app-list').isotope({
-						itemSelector: '.app-item',
-						getSortData: {
-							name: function($elem) {
-								return $elem.find('.app-title').text();
-							}
-						},
-						sortBy: 'name'
+						itemSelector: '.app-item'
 					});
 				}
 			});
@@ -298,6 +301,20 @@ define(function(require) {
 					if (appCount === 0) {
 						return;
 					}
+
+					var rowCount = 0;
+
+					$appList
+						.find('.app-item' + currentFilters.classNames + currentFilters.data)
+							.each(function() {
+								var $this = $(this);
+								if (rowCount % 2 === 0) {
+									$this.addClass('even');
+								} else {
+									$this.removeClass('even');
+								}
+								rowCount += 1;
+							});
 
 					$appList.isotope({
 						filter: _.chain(currentFilters).values().join('').value()
