@@ -46,6 +46,7 @@ pages:
     - 'docs/monster-ui/loadTab().md'
     - 'docs/monster-ui/mask().md'
     - 'docs/monster-ui/monthpicker().md'
+    - 'docs/monster-ui/numberPicker().md'
     - 'docs/monster-ui/protectField().md'
     - 'docs/monster-ui/renderJSON().md'
     - 'docs/monster-ui/renderPDF().md'
