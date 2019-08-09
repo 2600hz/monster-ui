@@ -31,7 +31,7 @@
 		width: 100%;
 		height: 70px;
 		padding: 1rem;
-		background-color: #f4f4f5;
+		background-color: $athens-gray;
 		border-top: 1px solid $french-gray2;
 
 		button {
@@ -53,8 +53,8 @@
 		overflow-x: hidden;
 		overflow-y: auto;
 		box-shadow: inset -1px 0px 0px 0px $french-gray2;
-		font-size: 14px;
-		line-height: 14px;
+		font-size: 0.875rem;
+		line-height: 0.875rem;
 
 		ul.nav {
 			margin-top: 1.5rem;
@@ -154,8 +154,8 @@
 				width: 100%;
 				height: auto;
 				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-				font-size: 14px;
-				line-height: 14px;
+				font-size: 0.875rem;
+				line-height: 0.875rem;
 			}
 			.search-icon {
 				margin-left: -1.75rem;
@@ -211,6 +211,30 @@
 					}
 					.app-description {
 						width: 100%;
+					}
+				}
+
+				.no-apps-item {
+					padding: 2.5rem;
+					background-color: $athens-gray;
+					box-shadow: inset 0px -1px 0px 0px $french-gray2;
+
+					.no-apps-icon {
+						margin-bottom: 1rem;
+
+						.svg-icon {
+							width: 2rem;
+							height: 2rem;
+							color: $french-gray2;
+						}
+					}
+
+					.no-apps-description {
+						font-size: 0.875rem;
+					}
+
+					.no-apps-icon, .no-apps-description {
+						text-align: center;
 					}
 				}
 			}

@@ -104,6 +104,7 @@ define(function(require) {
 						dataTemplate = {
 							apps: apps,
 							filters: filters,
+							scope: scope,
 							selectedAppIds: selectedAppIds,
 							selectedApps: self.appSelectorGetAppsByIds(selectedAppIds)
 						},
@@ -131,7 +132,7 @@ define(function(require) {
 					});
 
 					self.appSelectorBindEvents({
-						apps: apps,
+						appCount: apps.length,
 						template: $template
 					});
 
@@ -170,6 +171,10 @@ define(function(require) {
 					$container.append($template);
 
 					_.has(args, 'callback') && args.callback();
+
+					if (_.isEmpty(appList)) {
+						return;
+					}
 
 					// Init Isotope after callback, so the app list is already displayed.
 					// If not, all items will be hidden, because Isotope is not able to calculate
@@ -272,11 +277,12 @@ define(function(require) {
 		/**
 		 * Bind app selector events
 		 * @param  {Object} args
-		 * @param  {Array} args.apps  List of available apps
+		 * @param  {Array} args.appCount  Available apps count
 		 * @param  {jQuery} args.template  App selector template
 		 */
 		appSelectorBindEvents: function(args) {
 			var self = this,
+				appCount = args.appCount,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
@@ -289,6 +295,10 @@ define(function(require) {
 					data: ''
 				},
 				applyFilters = function() {
+					if (appCount === 0) {
+						return;
+					}
+
 					$appList.isotope({
 						filter: _.chain(currentFilters).values().join('').value()
 					});

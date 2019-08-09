@@ -1079,6 +1079,11 @@
 			"admin": "Admin Apps ({{variable}})",
 			"system_admin": "System Admin Apps ({{variable}})"
 		},
+		"noApps": {
+			"account": "There are no applications available on this account.",
+			"all": "There are no applications available.",
+			"user": "There are no applications available for the current user."
+		},
 		"searchBox": "Search",
 		"selectedApps": "Applications Selected"
 	}

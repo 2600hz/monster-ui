@@ -19,11 +19,11 @@
 				</span>
 			</div>
 			<div class="selected-list">
-				{{#each selectedApps}}
-					<div class="app-icon-container show" data-id="{{id}}">
-						<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image:url({{icon}})"{{/if}}></div>
-					</div>
-				{{/each}}
+			{{#each selectedApps}}
+				<div class="app-icon-container show" data-id="{{id}}">
+					<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image:url({{icon}})"{{/if}}></div>
+				</div>
+			{{/each}}
 			</div>
 		</div>
 		<div class="app-selector-group">
@@ -42,6 +42,15 @@
 					</div>
 					<div class="app-description">
 						{{description}}
+					</div>
+				</li>
+			{{else}}
+				<li class="no-apps-item">
+					<div class="no-apps-icon">
+						{{telicon "apps"}}
+					</div>
+					<div class="no-apps-description">
+						{{tryI18n i18n.appSelector.noApps scope}}
 					</div>
 				</li>
 			{{/each}}
