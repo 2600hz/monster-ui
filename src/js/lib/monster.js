@@ -668,9 +668,10 @@ define(function(require) {
 				monster.apps.auth.retryLogin({
 					isRetryLoginRequest: true
 				}, function(newToken) {
+					monster.apps.auth.setKazooAPIToken(newToken);
+
 					// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
 					requestHandler($.extend(true, options, {
-						authToken: newToken,
 						preventCallbackError: false
 					}));
 					_privateFlags.unlockRetryFunctions();
