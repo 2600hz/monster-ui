@@ -594,7 +594,7 @@ define(function(require) {
 	 */
 	function defineRequest(id, request, app) {
 		var headersToRemove = _.map(request.removeHeaders, _.toLower);
-		var apiUrl = request.apiRoot || app.apiUrl || this.config.api.default;
+		var apiUrl = request.apiRoot || app.apiUrl || monster.config.api.default;
 		var settings = {
 			cache: _.get(request, 'cache', false),
 			url: apiUrl + request.url,
