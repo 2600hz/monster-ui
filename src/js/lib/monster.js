@@ -177,10 +177,10 @@ define(function(require) {
 
 			settings.error = function requestError(error) {
 				var parsedError,
-					handleError = function(error, options) {
+					handleError = function(error, requestOptions) {
 						parsedError = error;
 
-						var generateError = options && options.hasOwnProperty('generateError') ? options.generateError : settings.customFlags.generateError;
+						var generateError = _.get(requestOptions, 'generateError', settings.customFlags.generateError);
 
 						monster.pub('monster.requestEnd');
 
@@ -190,10 +190,12 @@ define(function(require) {
 
 						// If we have a 401 after being logged in, it means our session expired
 						if (monster.util.isLoggedIn() && error.status === 401) {
-							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
-							monster.error('api', error, false);
-
-							monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
+							error401Handler({
+								requestHandler: self.request.bind(self),
+								error: error,
+								errorMessage: monster.apps.core.i18n.active().authenticationIssue,
+								options: requestOptions
+							});
 						} else {
 							// Added this to be able to display more data in the UI
 							error.monsterData = {
@@ -205,9 +207,11 @@ define(function(require) {
 						}
 					};
 
-				handleError(error);
+				handleError(error, options);
 
-				options.error && options.error(parsedError, error, handleError);
+				if (!_.get(options, 'preventCallbackError', false)) {
+					options.error && options.error(parsedError, error, handleError);
+				}
 			};
 
 			settings.success = function requestSuccess(resp) {
