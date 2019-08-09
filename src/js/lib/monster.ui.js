@@ -1353,15 +1353,17 @@ define(function(require) {
 			}, localization.customRules.phoneNumber);
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {
-				var compValue = (param instanceof jQuery ? param : $(param)).val();
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val();
 
-				return _.isEmpty(compValue) || (this.optional(element) || value <= compValue);
+				return (_.isEmpty(compValue) || !$compElement.is(':visisble')) || (this.optional(element) || value <= compValue);
 			});
 
 			$.validator.addMethod('greaterThan', function(value, element, param) {
-				var compValue = (param instanceof jQuery ? param : $(param)).val();
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val();
 
-				return _.isEmpty(compValue) || (this.optional(element) || value >= compValue);
+				return (_.isEmpty(compValue) || !$compElement.is(':visisble')) || (this.optional(element) || value >= compValue);
 			});
 
 			this.customValidationInitialized = true;
