@@ -1355,13 +1355,13 @@ define(function(require) {
 			$.validator.addMethod('lowerThan', function(value, element, param) {
 				var compValue = (param instanceof jQuery ? param : $(param)).val();
 
-				return this.optional(element) || value <= compValue;
+				return _.isEmpty(compValue) || (this.optional(element) || value <= compValue);
 			});
 
 			$.validator.addMethod('greaterThan', function(value, element, param) {
 				var compValue = (param instanceof jQuery ? param : $(param)).val();
 
-				return this.optional(element) || value >= compValue;
+				return _.isEmpty(compValue) || (this.optional(element) || value >= compValue);
 			});
 
 			this.customValidationInitialized = true;
