@@ -156,6 +156,8 @@
 			"min": "Please enter a value greater than or equal to {0}."
 		},
 		"customRules": {
+			"lowerThan": "Should be lower than maximum",
+			"greaterThan": "Should be greater than minimum",
 			"phoneNumber": "Please enter a valid phone number",
 			"hexadecimal": "Please only enter hexadecimal digits",
 			"checkList": "Already exists",
