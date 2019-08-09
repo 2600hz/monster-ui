@@ -1352,6 +1352,20 @@ define(function(require) {
 				return monster.util.getFormatPhoneNumber(value).isValid;
 			}, localization.customRules.phoneNumber);
 
+			$.validator.addMethod('lowerThan', function(value, element, param) {
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val();
+
+				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || value <= compValue);
+			}, localization.customRules.lowerThan);
+
+			$.validator.addMethod('greaterThan', function(value, element, param) {
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val();
+
+				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || value >= compValue);
+			}, localization.customRules.greaterThan);
+
 			this.customValidationInitialized = true;
 		},
 
