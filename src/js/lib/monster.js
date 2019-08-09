@@ -97,52 +97,6 @@ define(function(require) {
 			return prepend + '_=' + (new Date()).getTime();
 		},
 
-		_defineRequest: function(id, request, app) {
-			if (request.hasOwnProperty('removeHeaders')) {
-				request.removeHeaders = $.map(request.removeHeaders, function(header) { return header.toLowerCase(); });
-			}
-
-			var self = this,
-				// If an apiRoot is defined, force it, otherwise takes either the apiUrl of the app, or the default api url
-				apiUrl = request.apiRoot ? request.apiRoot : (app.apiUrl ? app.apiUrl : this.config.api.default),
-				hasRemoveHeaders = request.hasOwnProperty('removeHeaders'),
-				settings = {
-					cache: request.cache || false,
-					url: apiUrl + request.url,
-					type: request.dataType || 'json',
-					method: request.verb || 'get',
-					contentType: request.type || 'application/json',
-					crossOrigin: true,
-					processData: false,
-					customFlags: {
-						generateError: request.generateError === false ? false : true
-					},
-					before: function(ampXHR, settings) {
-						monster.pub('monster.requestStart');
-
-						if (!hasRemoveHeaders || (hasRemoveHeaders && request.removeHeaders.indexOf('x-auth-token') < 0)) {
-							ampXHR.setRequestHeader('X-Auth-Token', app.getAuthToken());
-						}
-
-						_.each(request.headers, function(val, key) {
-							if (!hasRemoveHeaders || request.removeHeaders.indexOf(key.toLowerCase()) < 0) {
-								ampXHR.setRequestHeader(key, val);
-							}
-						});
-
-						return true;
-					}
-				};
-
-			if (hasRemoveHeaders) {
-				if (request.removeHeaders.indexOf('content-type') > -1) {
-					delete settings.contentType;
-				}
-			}
-
-			this._requests[id] = settings;
-		},
-
 		request: function(options) {
 			var self = this,
 				settings = _.extend({}, this._requests[options.resource]);
@@ -623,6 +577,54 @@ define(function(require) {
 			return md5(string);
 		}
 	};
+
+	/**
+	 * @param  {String} id Resource identifier
+	 * @param  {Object} request Request settings
+	 * @param  {String} request.url
+	 * @param  {Array} [request.removeHeaders
+	 * @param  {String} [request.apiRoot]
+	 * @param  {Boolean} [request.cache=false]
+	 * @param  {String} [request.dataType='json']
+	 * @param  {String} [request.verb='get']
+	 * @param  {String} [request.type='application/json']
+	 * @param  {Boolean} [request.generateError=true]
+	 * @param  {Object} [request.headers]
+	 * @param {Object} app Application context
+	 */
+	function defineRequest(id, request, app) {
+		var headersToRemove = _.map(request.removeHeaders, _.toLower);
+		var apiUrl = request.apiRoot || app.apiUrl || this.config.api.default;
+		var settings = {
+			cache: _.get(request, 'cache', false),
+			url: apiUrl + request.url,
+			type: request.dataType || 'json',
+			method: request.verb || 'get',
+			contentType: _.includes(headersToRemove, 'content-type')
+				? false
+				: _.get(request, 'type', 'application/json'),
+			crossOrigin: true,
+			processData: false,
+			customFlags: {
+				generateError: _.get(request, 'generateError', true)
+			},
+			before: function(ampXHR) {
+				monster.pub('monster.requestStart');
+
+				_.set(request.headers, 'X-Auth-Token', app.getAuthToken());
+
+				_.forEach(request.headers, function(value, key) {
+					if (_.includes(headersToRemove, _.toLower(key))) {
+						return;
+					}
+					ampXHR.setRequestHeader(key, value);
+				});
+			}
+		};
+
+		_.set(monster, ['_requests', id], settings);
+	}
+	monster._defineRequest = defineRequest;
 
 	/**
 	 * @private
