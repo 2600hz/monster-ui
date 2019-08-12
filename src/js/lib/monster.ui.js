@@ -1356,14 +1356,14 @@ define(function(require) {
 				var $compElement = param instanceof jQuery ? param : $(param),
 					compValue = $compElement.val();
 
-				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || value <= compValue);
+				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || _.toNumber(value) <= _.toNumber(compValue));
 			}, localization.customRules.lowerThan);
 
 			$.validator.addMethod('greaterThan', function(value, element, param) {
 				var $compElement = param instanceof jQuery ? param : $(param),
 					compValue = $compElement.val();
 
-				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || value >= compValue);
+				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || _.toNumber(value) >= _.toNumber(compValue));
 			}, localization.customRules.greaterThan);
 
 			this.customValidationInitialized = true;
