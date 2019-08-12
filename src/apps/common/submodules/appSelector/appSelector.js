@@ -188,9 +188,7 @@ define(function(require) {
 					// Init Isotope after callback, so the app list is already displayed.
 					// If not, all items will be hidden, because Isotope is not able to calculate
 					// its positions properly.
-					$template.find('.app-selector-body .app-list').isotope({
-						itemSelector: '.app-item'
-					});
+					$template.find('.app-selector-body .app-list').isotope();
 				}
 			});
 		},
@@ -316,9 +314,15 @@ define(function(require) {
 								rowCount += 1;
 							});
 
-					$appList.isotope({
-						filter: _.chain(currentFilters).values().join('').value()
-					});
+					if (rowCount > 0) {
+						$appList.isotope({
+							filter: '.app-item' + _.chain(currentFilters).values().join('').value()
+						});
+					} else {
+						$appList.isotope({
+							filter: '.no-apps-item'
+						});
+					}
 				};
 
 			// Filter by tag

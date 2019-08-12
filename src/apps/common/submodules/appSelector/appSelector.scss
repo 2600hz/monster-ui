@@ -183,79 +183,82 @@
 			overflow-y: auto;
 			border-top: solid 1px $french-gray2;
 
-			.app-list {
+			ul.app-list {
 				margin-left: 0;
 
-				.app-item {
+				li {
 					box-sizing: border-box;
 					width: 100%;
-					background-color: $panel-background-color;
-					cursor: pointer;
-					display: flex;
-					flex-wrap: wrap;
-					box-shadow: inset 0px 1px 0px 0px $white,
-						inset 0px -1px 0px 0px $white;
 
-					&:hover, &.selected {
-						background-color: $french-pass;
+					&.app-item {
+						background-color: $panel-background-color;
+						cursor: pointer;
+						display: flex;
+						flex-wrap: wrap;
+						box-shadow: inset 0px 1px 0px 0px $white,
+							inset 0px -1px 0px 0px $white;
+
+						&:hover, &.selected {
+							background-color: $french-pass;
+						}
+
+						&.even:not(.selected) .text-container {
+							background-color: $athens-gray;
+
+							&:hover {
+								background-color: transparent;
+								transition: none;
+							}
+						}
+
+						.text-container {
+							width: 100%;
+							transition: background-color 250ms linear;
+
+							&:hover {
+								background-color: transparent;
+								transition: none;
+							}
+						}
+
+						.app-icon {
+							flex: initial;
+							margin-right: 0.75rem;
+							margin-bottom: 0.75rem;
+						}
+						.app-title {
+							flex: 1;
+							margin-bottom: 0.75rem;
+							align-self: center;
+						}
+						.app-description {
+							width: 100%;
+						}
 					}
 
-					&.even:not(.selected) .text-container {
+					&.no-apps-item {
+						padding: 2.5rem;
 						background-color: $athens-gray;
+						box-shadow: inset 0px -1px 0px 0px $french-gray2;
 
-						&:hover {
-							background-color: transparent;
-							transition: none;
+						.no-apps-icon {
+							margin-bottom: 1rem;
+
+							.svg-icon {
+								width: 2rem;
+								height: 2rem;
+								color: $french-gray2;
+							}
 						}
-					}
 
-					.text-container {
-						width: 100%;
-						transition: background-color 250ms linear;
-
-						&:hover {
-							background-color: transparent;
-							transition: none;
+						.no-apps-description {
+							color: $woodsmoke;
+							font-size: 0.875rem;
 						}
-					}
 
-					.app-icon {
-						flex: initial;
-						margin-right: 0.75rem;
-						margin-bottom: 0.75rem;
-					}
-					.app-title {
-						flex: 1;
-						margin-bottom: 0.75rem;
-						align-self: center;
-					}
-					.app-description {
-						width: 100%;
-					}
-				}
-
-				.no-apps-item {
-					padding: 2.5rem;
-					background-color: $athens-gray;
-					box-shadow: inset 0px -1px 0px 0px $french-gray2;
-
-					.no-apps-icon {
-						margin-bottom: 1rem;
-
-						.svg-icon {
-							width: 2rem;
-							height: 2rem;
-							color: $french-gray2;
+						.no-apps-icon, .no-apps-description {
+							text-align: center;
 						}
-					}
-
-					.no-apps-description {
-						color: $woodsmoke;
-						font-size: 0.875rem;
-					}
-
-					.no-apps-icon, .no-apps-description {
-						text-align: center;
 					}
 				}
 			}

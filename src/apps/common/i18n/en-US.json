@@ -1084,7 +1084,10 @@
 			"all": "There are no applications available.",
 			"user": "There are no applications available for the current user."
 		},
-		"searchBox": "Search",
+		"search": {
+			"placeholder": "Search",
+			"noResults": "No matching results were found."
+		},
 		"selectedApps": "Applications Selected"
 	}
 }

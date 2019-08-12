@@ -28,7 +28,7 @@
 		</div>
 		<div class="app-selector-group">
 			<div class="search-box">
-				<input type="text" class="search-query" placeholder="{{i18n.appSelector.searchBox}}">
+				<input type="text" class="search-query" placeholder="{{i18n.appSelector.search.placeholder}}">
 				{{telicon "search" class="search-icon"}}
 			</div>
 		</div>
@@ -46,16 +46,24 @@
 						</div>
 					</div>
 				</li>
-			{{else}}
-				<li class="no-apps-item">
-					<div class="no-apps-icon">
-						{{telicon "apps"}}
-					</div>
-					<div class="no-apps-description">
-						{{tryI18n i18n.appSelector.noApps scope}}
-					</div>
-				</li>
 			{{/each}}
+			<li class="no-apps-item">
+			{{#if apps.length}}
+				<div class="no-apps-icon">
+					{{telicon "search"}}
+				</div>
+				<div class="no-apps-description">
+					{{i18n.appSelector.search.noResults}}
+				</div>
+			{{else}}
+				<div class="no-apps-icon">
+					{{telicon "apps"}}
+				</div>
+				<div class="no-apps-description">
+					{{tryI18n i18n.appSelector.noApps scope}}
+				</div>
+			{{/if}}
+			</li>
 			</ul>
 		</div>
 	</div>
