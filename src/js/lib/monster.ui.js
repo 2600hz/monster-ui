@@ -1354,16 +1354,20 @@ define(function(require) {
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {
 				var $compElement = param instanceof jQuery ? param : $(param),
-					compValue = $compElement.val();
+					compValue = $compElement.val(),
+					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+					isValid = _.toNumber(value) <= _.toNumber(compValue);
 
-				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || _.toNumber(value) <= _.toNumber(compValue));
+				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 			}, localization.customRules.lowerThan);
 
 			$.validator.addMethod('greaterThan', function(value, element, param) {
 				var $compElement = param instanceof jQuery ? param : $(param),
-					compValue = $compElement.val();
+					compValue = $compElement.val(),
+					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+					isValid = _.toNumber(value) >= _.toNumber(compValue);
 
-				return (_.isEmpty(compValue) || !$compElement.is(':visible')) || (this.optional(element) || _.toNumber(value) >= _.toNumber(compValue));
+				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 			}, localization.customRules.greaterThan);
 
 			this.customValidationInitialized = true;
