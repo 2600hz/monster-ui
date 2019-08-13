@@ -139,7 +139,7 @@
 				'getMapping': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
 				'createMapping': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/mappings' },
 				'updateMapping': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
-				'patchMapping': { varb: 'PATCH', url: 'aacounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'patchMapping': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
 				'deleteMapping': { verb: 'DELETE', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
 				'getCallLog': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/call_logs' },
 				
