@@ -19,12 +19,14 @@ workflows:
               only: /^\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
+              
       - build:
           filters:
             tags:
               only: /^\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
+              
       - build_centos7:
           requires:
             - mkdocs
