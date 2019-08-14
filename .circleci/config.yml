@@ -61,10 +61,10 @@ jobs:
           key: dependency-cache-centos-{{ checksum "package.json" }}
       - run:
           name: Install dependencies from package.json
-          command: sudo npm install
+          command: npm install
       - run:
           name: Run a production build
-          command: sudo gulp build-prod
+          command: gulp build-prod
       - run:
           name: Generating version info
           command: |
