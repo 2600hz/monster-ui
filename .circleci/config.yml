@@ -49,7 +49,7 @@ jobs:
       
   build_centos7:
     docker:
-      - image: offical2600hz/monster-ui-packager:1.2-centos-7
+      - image: offical2600hz/monster-ui-packager:1.0-centos-7
         user: circleci
     shell: /bin/bash --login
     working_directory: /home/circleci/2600hz/monster-ui
