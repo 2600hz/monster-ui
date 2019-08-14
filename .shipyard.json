@@ -1,6 +1,6 @@
 {
     "name": "monster-ui-core",
-    "base_branch": "origin/master",
+    "base_branch": "origin/4.3",
     "metapackage": {
         "name": "monster-ui",
         "type": "dependency"
