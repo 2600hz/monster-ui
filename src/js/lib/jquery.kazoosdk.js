@@ -141,8 +141,7 @@
 				'updateMapping': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
 				'patchMapping': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
 				'deleteMapping': { verb: 'DELETE', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
-				'getCallLog': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/call_logs' },
-				
+				'getCallLog': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/call_logs' }
 			},
 			dashboards: {
 				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/dashboards/ensure_started' },
