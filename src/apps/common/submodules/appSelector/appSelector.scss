@@ -206,6 +206,10 @@
 
 						&.selected {
 							background-color: $french-pass;
+
+							&:hover {
+								background-color: darken($french-pass, 5%);
+							}
 						}
 
 						&.even:not(.selected) .text-container {
