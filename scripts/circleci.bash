@@ -2,7 +2,7 @@
 
 if [ ! -d $MONSTER_ROOT ]; then
     echo Cloning kazoo into $MONSTER_ROOT
-    git clone https://github.com/2600hz/kazoo $MONSTER_ROOT
+    git clone https://github.com/2600hz/monster-ui $MONSTER_ROOT
 fi
 
 if [ -f "$HOME/project/.base_branch" ]; then
