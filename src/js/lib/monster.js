@@ -664,19 +664,23 @@ define(function(require) {
 				// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
 				options.preventCallbackError = true;
 
-				monster.apps.auth.retryLogin({
-					isRetryLoginRequest: true
-				}, function(newToken) {
-					// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
-					requestHandler($.extend(true, options, {
-						authToken: newToken,
-						preventCallbackError: false
-					}));
-					_privateFlags.unlockRetryFunctions();
-				}, function() {
-					monster.ui.alert('error', errorMessage, function() {
-						monster.util.logoutAndReload();
-					});
+				monster.pub('auth.retryLogin', {
+					additionalArgs: {
+						isRetryLoginRequest: true
+					},
+					success: function(newToken) {
+						// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
+						requestHandler($.extend(true, options, {
+							authToken: newToken,
+							preventCallbackError: false
+						}));
+						_privateFlags.unlockRetryFunctions();
+					},
+					error: function() {
+						monster.ui.alert('error', errorMessage, function() {
+							monster.util.logoutAndReload();
+						});
+					}
 				});
 			}
 		}
