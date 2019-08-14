@@ -126,6 +126,23 @@
 			contactList: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 			},
+			crm: {
+				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration' },
+				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration' },
+				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers'},
+				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/triggers' },
+				'updateTrigger': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'patchTrigger': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'deleteTrigger': { verb: 'DELETE', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'listMappings': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/mappings' },
+				'getMapping': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'createMapping': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/mappings' },
+				'updateMapping': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'patchMapping': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'deleteMapping': { verb: 'DELETE', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'getCallLog': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/call_logs' }
+			},
 			dashboards: {
 				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/dashboards/ensure_started' },
 				'getQueueDetails': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
@@ -530,12 +547,6 @@
 				'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
 				'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
 				'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}' }
-			},
-			crm: {
-				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration'},
-				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration'},
-				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_trigger'},
-				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_trigger'}
 			}
 		},
 		authTokens = {};
