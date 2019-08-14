@@ -37,8 +37,8 @@ define(function(require) {
 		'whitelabel.allowAccessList': [_.isBoolean, false],
 		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
 		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
-		'whitelabel.bookkeepers.http': [_.isBoolean, true],
-		'whitelabel.bookkeepers.kazoo': [_.isBoolean, true],
+		'whitelabel.bookkeepers.payphone': [_.isBoolean, true],
+		'whitelabel.bookkeepers.iou': [_.isBoolean, true],
 		'whitelabel.companyName': [_.isString, '2600Hz'],
 		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
 		'whitelabel.hideAppStore': [_.isBoolean, false],
@@ -737,9 +737,9 @@ define(function(require) {
 	}
 
 	monster.defaultLanguage = defaultLanguage;
-
 	monster.initConfig = initConfig;
 	monster.setDefaultLanguage = setDefaultLanguage;
+	monster.supportedLanguages = supportedLanguages;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager

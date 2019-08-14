@@ -1,7 +1,11 @@
 <div id="navigation_wizard_wrapper">
 	<div class="header">
-		<h4>{{title}}</h4>
-		<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
+		<div class="nav-title">
+			<h4>{{title}}</h4>
+		</div>
+		<div class="actions">
+			<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
+		</div>
 	</div>
 
 	<div class="left-content">
@@ -23,26 +27,23 @@
 	</div>
 
 	<div class="footer">
-		<form class="input-container form-row" id="form_navigation_buttons">
-			<div class="actions">
-				<a href="javascript:void(0);" id="clear">
-					{{i18n.navigationWizard.buttons.clear}}
-				</a>
-				<button class="monster-button back">
-					{{i18n.navigationWizard.buttons.back}}
-				</button>
-				<button id="next" class="monster-button">
-					{{i18n.navigationWizard.buttons.next}}
-				</button>
-				<button id="done" class="monster-button">
-					{{#unless doneButton}}
-						{{i18n.navigationWizard.buttons.done}}
-					{{else}}
-						{{doneButton}}
-					{{/unless}}
-				</button>
-			</div>
-		</form>
-
+		<div class="actions">
+			<a href="javascript:void(0);" id="clear">
+				{{i18n.navigationWizard.buttons.clear}}
+			</a>
+			<button class="monster-button back">
+				{{i18n.navigationWizard.buttons.back}}
+			</button>
+			<button id="next" class="monster-button">
+				{{i18n.navigationWizard.buttons.next}}
+			</button>
+			<button id="done" class="monster-button">
+				{{#unless doneButton}}
+					{{i18n.navigationWizard.buttons.done}}
+				{{else}}
+					{{doneButton}}
+				{{/unless}}
+			</button>
+		</div>
 	</div>
 </div>

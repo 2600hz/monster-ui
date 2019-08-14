@@ -78,32 +78,53 @@ define(function(require) {
 							? event.originalEvent.dataTransfer.files[0]
 							: event.target.files[0],
 						reader = new FileReader(),
-						maxFileSize = args.maxFileSize || self.appFlags.dragableUploads.maxFileSize;
+						maxFileSize = args.maxFileSize || self.appFlags.dragableUploads.maxFileSize,
+						fileSize = monster.util.formatBytes(maxFileSize || self.appFlags.dragableUploads.maxFileSize);
 
-					if (file && _.includes(args.allowedFiles, file.type) && file.size <= maxFileSize) {
-						reader.onload = function(event) {
-							self.appFlags.dragableUploads.files.push({
-								name: file.name,
-								size: file.size,
-								data: event.target.result,
-								bytes: monster.util.formatBytes(file.size)
-							});
-
-							$fileDrop
-								.removeClass('error uploaded')
-								.addClass('success');
-
-							self.dragableUploadsRenderFileList(template);
-						};
-
-						reader.readAsDataURL(file);
-					} else {
+					if (file && !_.includes(args.allowedFiles, file.type)) {
 						$fileDrop
 							.removeClass('success uploaded')
 							.addClass('error');
 
-						self.dragableUploadsRenderFileList(template);
+						$fileDrop.find('.file-drop-error-message').text(self.i18n.active().dragableUploads.invalidFileFormatError);
+
+						return;
+					} else if (file.size >= maxFileSize) {
+						var maxFileZiseError = self.getTemplate({
+							name: '!' + self.i18n.active().dragableUploads.fileSizeExceded,
+							data: {
+								maxFileSize: fileSize.value + '' + fileSize.unit.symbol
+							}
+						});
+
+						$fileDrop
+							.removeClass('success uploaded')
+							.addClass('error');
+
+						$fileDrop.find('.file-drop-error-message').text(maxFileZiseError);
+
+						return;
 					}
+
+					reader.onload = function(event) {
+						self.appFlags.dragableUploads.files.push({
+							name: file.name,
+							size: file.size,
+							data: event.target.result,
+							bytes: monster.util.formatBytes(file.size)
+						});
+
+						$fileDrop
+							.removeClass('error uploaded')
+							.addClass('success');
+
+						if (args.singleFileSelection) {
+							args.callback(null, self.appFlags.dragableUploads.files);
+						}
+					};
+
+					reader.readAsDataURL(file);
+					self.dragableUploadsRenderFileList(template);
 				};
 
 			$fileDrop

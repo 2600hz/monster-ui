@@ -55,6 +55,7 @@ Now click on "New Document", and we'll create that document.
 	}
 
 So let's go through those different attributes:
+
 * `name`: define the name of your app in there. It needs to match the name of the folder of your app,
 * `api_url`: define the URL of the Kazoo API to request,
 * `source_url`: this defines where the Monster-UI framework will try to get the sources of your app. For now this needs to be hosted on the same server as the Monster-UI,

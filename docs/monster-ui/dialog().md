@@ -19,6 +19,7 @@ Here is a list of the customization settings specific to Monster UI.
 
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
+`autoScroll` | Whether or not to allow the dialog content to be scrollable. | `Boolean` | `true` | `false`
 `dialogType` | Type of dialog, which determines the closing button style. | `String('conference' | 'classic')` | `classic` | `false`
 `isPersistent` | Whether or not to keep the dialog open when another app is loaded. | `Boolean` | `false` | `false`
 `onClose` | A function to be executed when the dialog is closed. | `Function` | | `false`
