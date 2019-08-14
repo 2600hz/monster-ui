@@ -5,22 +5,21 @@ if [ ! -d $MONSTER_ROOT ]; then
     git clone https://github.com/2600hz/monster-ui $MONSTER_ROOT
 fi
 
-if [ -f "$HOME/project/.base_branch" ]; then
-    BASE_BRANCH="$(cat $HOME/project/.base_branch)"
-else
+if [ -z $BASE_BRANCH ]; then
     BASE_BRANCH="origin/master"
 fi
 
 cd $MONSTER_ROOT
 
+if [ ! -d ${APP_PATH} ]; then
+	ln -s ${APP_DIR} ${MONSTER_ROOT}/${APP_PATH}
+    echo adding submodule to $MONSTER_ROOT
+    git submodule add -f ${CIRCLE_REPOSITORY_URL} ${APP_PATH}
+fi
+
 echo resetting kazoo to $BASE_BRANCH
 git fetch --prune
 git rebase $BASE_BRANCH
-
-if [ ! -d $APP_PATH ]; then
-    echo adding submodule to $MONSTER_ROOT
-    git submodule add ${CIRCLE_REPOSITORY_URL} $APP_PATH
-fi
 
 cd $APP_PATH
 
