@@ -1,7 +1,10 @@
 {
     "name": "monster-ui-core",
     "base_branch": "origin/master",
-    "metapackage": "monster-ui",
+    "metapackage": {
+        "name": "monster-ui",
+        "type": "dependency"
+    },
     "base_core": null,
     "template": "monster-ui-core.spec.tmpl",
     "package": {
