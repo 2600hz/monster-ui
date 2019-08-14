@@ -161,6 +161,7 @@
 				font-size: 0.875rem;
 				line-height: 0.875rem;
 			}
+
 			.search-icon {
 				margin-left: -1.75rem;
 				color: $manatee;
@@ -184,7 +185,10 @@
 			border-top: solid 1px $french-gray2;
 
 			ul.app-list {
+				margin-bottom: 0;
 				margin-left: 0;
+				border-bottom: solid 1px $french-gray2;
+				list-style-type: none;
 
 				li {
 					box-sizing: border-box;
@@ -193,12 +197,14 @@
 					&.app-item {
 						background-color: $panel-background-color;
 						cursor: pointer;
-						display: flex;
-						flex-wrap: wrap;
 						box-shadow: inset 0px 1px 0px 0px $white,
 							inset 0px -1px 0px 0px $white;
 
-						&:hover, &.selected {
+						&:hover {
+							background-color: #e9f5ff;
+						}
+
+						&.selected {
 							background-color: $french-pass;
 						}
 
@@ -212,6 +218,9 @@
 						}
 
 						.text-container {
+							box-sizing: border-box;
+							display: flex;
+							flex-wrap: wrap;
 							width: 100%;
 							transition: background-color 250ms linear;
 
@@ -226,20 +235,29 @@
 							margin-right: 0.75rem;
 							margin-bottom: 0.75rem;
 						}
+
 						.app-title {
 							flex: 1;
 							margin-bottom: 0.75rem;
+							font-size: 0.875rem;
+							font-weight: 600;
 							align-self: center;
 						}
+
 						.app-description {
 							width: 100%;
+							padding-right: 25%;
+							font-size: 0.75rem;
+							line-height: 1rem;
+							white-space: nowrap;
+							overflow-x: hidden;
+							text-overflow: ellipsis;
 						}
 					}
 
 					&.no-apps-item {
 						padding: 2.5rem;
 						background-color: $athens-gray;
-						box-shadow: inset 0px -1px 0px 0px $french-gray2;
 
 						.no-apps-icon {
 							margin-bottom: 1rem;

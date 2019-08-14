@@ -188,7 +188,10 @@ define(function(require) {
 					// Init Isotope after callback, so the app list is already displayed.
 					// If not, all items will be hidden, because Isotope is not able to calculate
 					// its positions properly.
-					$template.find('.app-selector-body .app-list').isotope();
+					$template.find('.app-selector-body .app-list').isotope({
+						itemSelector: 'li',
+						filter: '.app-item'
+					});
 				}
 			});
 		},
