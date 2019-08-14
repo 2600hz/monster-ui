@@ -8,7 +8,7 @@ workflows:
       - build_centos7:
           requires:
             - mkdocs
-          
+
   build_release:
     jobs:
       - mkdocs:
@@ -17,7 +17,7 @@ workflows:
               only: /^\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
-     
+
       - build_centos7:
           requires:
             - mkdocs
@@ -26,7 +26,7 @@ workflows:
               only: /^\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
-             
+
 jobs:
   mkdocs:
     docker:
@@ -36,7 +36,7 @@ jobs:
       - run: sudo pip install PyYAML
       - run: ./scripts/validate_mkdocs.py
       - run: ./scripts/reconcile_docs_to_index.bash
-      
+
   build_centos7:
     docker:
       - image: offical2600hz/monster-ui-packager:1.0-centos-7
@@ -80,7 +80,7 @@ jobs:
             echo "build version for ${PACKAGE_NAME} version: ${VERSION} release: ${RELEASE}"
       - run:
           name: Preparing source
-          command: |           
+          command: |
             cd $BUILD_ROOT
             ./package_docs
             cd $BUILD_SOURCES
@@ -98,7 +98,7 @@ jobs:
             cp -r ${BUILD_SOURCES}/* ${ARTIFACTS_NAME}/.
             tar -cf ${ARTIFACTS_NAME}.tar ${ARTIFACTS_NAME}
             cp ${ARTIFACTS_NAME}.tar ${BUILD_SOURCES}/.
-            
+
       - run:
           name: Building package
           command: |
