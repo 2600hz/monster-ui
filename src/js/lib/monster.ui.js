@@ -1352,14 +1352,64 @@ define(function(require) {
 				return monster.util.getFormatPhoneNumber(value).isValid;
 			}, localization.customRules.phoneNumber);
 
+			$.validator.addMethod('lowerThan', function(value, element, param) {
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val(),
+					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+					isValid = _.toNumber(value) <= _.toNumber(compValue);
+
+				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
+			}, localization.customRules.lowerThan);
+
+			$.validator.addMethod('greaterThan', function(value, element, param) {
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val(),
+					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+					isValid = _.toNumber(value) >= _.toNumber(compValue);
+
+				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
+			}, localization.customRules.greaterThan);
+
 			this.customValidationInitialized = true;
 		},
 
 		validate: function(form, options) {
-			var defaultOptions = {
-				errorClass: 'monster-invalid',
-				validClass: 'monster-valid'
-			};
+			var defaultValidatorHighlightHandler = $.validator.defaults.highlight,
+				defaultValidatorUnhighlightHandler = $.validator.defaults.unhighlight,
+				defaultOptions = {
+					errorClass: 'monster-invalid',
+					validClass: 'monster-valid',
+					errorPlacement: function(error, element) {
+						var $element = $(element);
+						if ($element.hasClass('ui-spinner-input')) {
+							error.insertAfter($element.closest('.ui-spinner'));
+						} else {
+							error.insertAfter(element);
+						}
+					},
+					highlight: function(element, errorClass, validClass) {
+						var $element = $(element);
+						if ($element.hasClass('ui-spinner-input')) {
+							$element
+								.closest('.ui-spinner')
+									.addClass(errorClass)
+									.removeClass(validClass);
+						} else {
+							defaultValidatorHighlightHandler.call(this, element, errorClass, validClass);
+						}
+					},
+					unhighlight: function(element, errorClass, validClass) {
+						var $element = $(element);
+						if ($element.hasClass('ui-spinner-input')) {
+							$element
+								.closest('.ui-spinner')
+									.addClass(validClass)
+									.removeClass(errorClass);
+						} else {
+							defaultValidatorUnhighlightHandler.call(this, element, errorClass, validClass);
+						}
+					}
+				};
 
 			if (!this.customValidationInitialized) {
 				this.initCustomValidation();
@@ -3534,6 +3584,55 @@ define(function(require) {
 		});
 	}
 	ui.monthpicker = monthpicker;
+
+	/**
+	 * Transforms a field into a number picker, using the jQuery UI Spinner widget
+	 * @param  {jQuery} $target  Input to transform
+	 * @param  {Object} [options]  List of options
+	 * @return {jQuery}          jQuery UI Spinner instance
+	 */
+	function numberPicker($target, pOptions) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!_.isUndefined(pOptions) && !_.isPlainObject(pOptions)) {
+			throw TypeError('"options" is not a plain object');
+		}
+		$target.each(function() {
+			var $this = $(this);
+			$this.data('value', $this.val());
+		});
+		var options = _.merge({}, pOptions, {
+			change: function(e, ui) {
+				var $input = $(e.target),
+					value = _.trim($input.val()),
+					numericValue = _.toNumber(value),
+					valueHasChanged = false;
+				if (_.isEmpty(value) || _.isNaN(numericValue)) {
+					value = $input.data('value');
+					valueHasChanged = true;
+				} else {
+					if (_.has(pOptions, 'min') && numericValue < pOptions.min) {
+						value = pOptions.min;
+						valueHasChanged = true;
+					}
+					if (_.has(pOptions, 'max') && numericValue > pOptions.max) {
+						value = pOptions.max;
+						valueHasChanged = true;
+					}
+					$input.data('value', value);
+				}
+				if (valueHasChanged) {
+					$input.val(value);
+				}
+				if (_.isFunction(pOptions.change)) {
+					pOptions.change(e, ui);
+				}
+			}
+		});
+		return $target.spinner(options);
+	};
+	ui.numberPicker = numberPicker;
 
 	/**
 	 * Wrapper for toast notification library
