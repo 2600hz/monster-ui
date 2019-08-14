@@ -56,7 +56,6 @@ define(function(require) {
 		lockRetryAttempt: false,
 		retryFunctions: [],
 		unlockRetryFunctions: function() {
-			console.log(this.retryFunctions);
 			_.each(this.retryFunctions, function(fun) {
 				fun();
 			});
@@ -654,9 +653,7 @@ define(function(require) {
 		} else if (!_.get(options, 'isRetryLoginRequest', false)) {
 			if (_privateFlags.lockRetryAttempt) {
 				_privateFlags.addRetryFunction(function() {
-					requestHandler($.extend(true, options, {
-						authToken: monster.util.getAuthToken()
-					}));
+					requestHandler(options);
 				});
 			} else {
 				// We added a new locking mechanism. Basically if your module use a parallel request, you could have 5 requests ending in a 401. We don't want to automatically re-login 5 times, so we lock the system
@@ -670,10 +667,9 @@ define(function(require) {
 				monster.apps.auth.retryLogin({
 					isRetryLoginRequest: true
 				}, function(newToken) {
-					monster.apps.auth.setKazooAPIToken(newToken);
-
 					// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
 					requestHandler($.extend(true, options, {
+						authToken: newToken,
 						preventCallbackError: false
 					}));
 					_privateFlags.unlockRetryFunctions();
