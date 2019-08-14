@@ -58,7 +58,7 @@ jobs:
           paths:
             - .
       - restore_cache:
-          key: dependency-cache-centos-{{ checksum "package.json" }}
+          key: dependency-cache-centos-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies from package.json
           command: npm install
@@ -107,6 +107,6 @@ jobs:
       - store_artifacts:
           path: /home/circleci/2600hz/packager/RPMS
       - save_cache:
-          key: dependency-cache-centos-{{ checksum "package.json" }}
+          key: dependency-cache-centos-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
