@@ -21,7 +21,6 @@ workflows:
       - build_centos7:
           requires:
             - mkdocs
-            - build
           filters:
             tags:
               only: /^\d+\.\d+\.\d+$/
