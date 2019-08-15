@@ -12,7 +12,7 @@ fi
 cd $MONSTER_ROOT
 
 if [ ! -d ${APP_PATH} ]; then
-    ln -s ${APP_DIR} ${MONSTER_ROOT}/${APP_PATH} 
+    cp -R ${APP_DIR} ${MONSTER_ROOT}/${APP_PATH} 
     echo adding submodule to $MONSTER_ROOT
     git submodule add -f ${CIRCLE_REPOSITORY_URL} ${APP_PATH}
 fi
