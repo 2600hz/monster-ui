@@ -614,7 +614,10 @@ define(function(require) {
 					.clone()
 					.merge({
 						'X-Auth-Token': app.getAuthToken()
-					})
+					}, _.has(monster.config, 'kazooClusterId')
+						? { 'X-Kazoo-Cluster-ID': monster.config.kazooClusterId }
+						: {}
+					)
 					.omitBy(function(value, key) {
 						return _.includes(headersToRemove, _.toLower(key));
 					})
