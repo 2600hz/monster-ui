@@ -586,6 +586,7 @@
 		"draganddrop": "Drag and drop files here or",
 		"browse": "browse",
 		"invalidFileFormatError": "Error! Invalid file format.",
+		"fileSizeExceded": "Your file exceeds the allow max file size ({{maxFileSize}})",
 		"tryagain": "Try again!",
 		"chooseFile": "Choose a new file",
 		"success": "Done!",
