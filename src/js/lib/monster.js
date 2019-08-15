@@ -610,7 +610,7 @@ define(function(require) {
 			before: function(ampXHR) {
 				monster.pub('monster.requestStart');
 
-				_.set(request.headers, 'X-Auth-Token', app.getAuthToken());
+				_.set(request, ['headers', 'X-Auth-Token'], app.getAuthToken());
 
 				_.forEach(request.headers, function(value, key) {
 					if (_.includes(headersToRemove, _.toLower(key))) {
