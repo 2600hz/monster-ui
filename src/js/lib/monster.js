@@ -678,10 +678,11 @@ define(function(require) {
 					additionalArgs: {
 						isRetryLoginRequest: true
 					},
-					success: function(newToken) {
-						// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
-						requestHandler($.extend(true, options, {
-							authToken: newToken,
+					success: function() {
+						requestHandler($.extend(true, {}, options, {
+							// Used to feed the updated token to the SDK (when requestHandler() references monster.kazooSdk.request())
+							authToken: monster.util.getAuthToken(),
+							// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
 							preventCallbackError: false
 						}));
 						_privateFlags.unlockRetryFunctions();
