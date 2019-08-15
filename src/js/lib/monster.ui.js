@@ -1349,8 +1349,26 @@ define(function(require) {
 			});
 
 			$.validator.addMethod('phoneNumber', function(value, element) {
-				return monster.util.getFormatPhoneNumber(value).isValid;
+				return this.optional(element) || monster.util.getFormatPhoneNumber(value).isValid;
 			}, localization.customRules.phoneNumber);
+
+			$.validator.addMethod('lowerThan', function(value, element, param) {
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val(),
+					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+					isValid = _.toNumber(value) <= _.toNumber(compValue);
+
+				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
+			}, localization.customRules.lowerThan);
+
+			$.validator.addMethod('greaterThan', function(value, element, param) {
+				var $compElement = param instanceof jQuery ? param : $(param),
+					compValue = $compElement.val(),
+					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+					isValid = _.toNumber(value) >= _.toNumber(compValue);
+
+				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
+			}, localization.customRules.greaterThan);
 
 			this.customValidationInitialized = true;
 		},
