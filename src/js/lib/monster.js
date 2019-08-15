@@ -608,14 +608,21 @@ define(function(require) {
 				generateError: _.get(request, 'generateError', true)
 			},
 			before: function(ampXHR) {
+				var headers = _
+					.chain(request)
+					.get('headers', {})
+					.clone()
+					.merge({
+						'X-Auth-Token': app.getAuthToken()
+					})
+					.omitBy(function(value, key) {
+						return _.includes(headersToRemove, _.toLower(key));
+					})
+					.value();
+
 				monster.pub('monster.requestStart');
 
-				_.set(request, ['headers', 'X-Auth-Token'], app.getAuthToken());
-
-				_.forEach(request.headers, function(value, key) {
-					if (_.includes(headersToRemove, _.toLower(key))) {
-						return;
-					}
+				_.forEach(headers, function(value, key) {
 					ampXHR.setRequestHeader(key, value);
 				});
 			}
