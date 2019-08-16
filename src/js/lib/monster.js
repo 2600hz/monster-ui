@@ -608,14 +608,24 @@ define(function(require) {
 				generateError: _.get(request, 'generateError', true)
 			},
 			before: function(ampXHR) {
+				var headers = _
+					.chain(request)
+					.get('headers', {})
+					.clone()
+					.merge({
+						'X-Auth-Token': app.getAuthToken()
+					}, _.has(monster.config, 'kazooClusterId')
+						? { 'X-Kazoo-Cluster-ID': monster.config.kazooClusterId }
+						: {}
+					)
+					.omitBy(function(value, key) {
+						return _.includes(headersToRemove, _.toLower(key));
+					})
+					.value();
+
 				monster.pub('monster.requestStart');
 
-				_.set(request.headers, 'X-Auth-Token', app.getAuthToken());
-
-				_.forEach(request.headers, function(value, key) {
-					if (_.includes(headersToRemove, _.toLower(key))) {
-						return;
-					}
+				_.forEach(headers, function(value, key) {
 					ampXHR.setRequestHeader(key, value);
 				});
 			}
@@ -668,10 +678,11 @@ define(function(require) {
 					additionalArgs: {
 						isRetryLoginRequest: true
 					},
-					success: function(newToken) {
-						// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
-						requestHandler($.extend(true, options, {
-							authToken: newToken,
+					success: function() {
+						requestHandler($.extend(true, {}, options, {
+							// Used to feed the updated token to the SDK (when requestHandler() references monster.kazooSdk.request())
+							authToken: monster.util.getAuthToken(),
+							// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
 							preventCallbackError: false
 						}));
 						_privateFlags.unlockRetryFunctions();
