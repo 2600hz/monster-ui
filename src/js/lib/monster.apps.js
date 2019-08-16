@@ -348,33 +348,47 @@ define(function() {
 			});
 		},
 
+		/**
+		 * @param  {Object} app
+		 * @param  {Function} [globalCallback]
+		 */
 		loadDependencies: function(app, globalCallback) {
 			var self = this,
-				listRequests = {},
-				externalPath = app.appPath + '/external/',
-				deps = app.externalScripts || [];
+				dependencies = _
+					.chain(app)
+					.get('externalScripts', [])
+					.map(function(dependency) {
+						return function(callback) {
+							monster.getScript(app.appPath + '/external/' + dependency + '.js', function() {
+								callback(null);
+							});
+						};
+					})
+					.value(),
+				extensions = _
+					.chain(monster.appsStore)
+					.get([app.name, 'extensions'], [])
+					.map(function(extension) {
+						return function(callback) {
+							if (_.has(monster.apps, extension)) {
+								return callback(null);
+							}
+							self._loadApp(extension, function() {
+								callback(null);
+							});
+						};
+					})
+					.value();
 
-			if (monster.appsStore && monster.appsStore[app.name] && monster.appsStore[app.name].pluginsApps) {
-				_.each(monster.appsStore[app.name].pluginsApps, function(plugin) {
-					self._loadApp(plugin);
-				});
-			}
-
-			if (deps.length > 0) {
-				_.each(deps, function(name) {
-					listRequests[name] = function(callback) {
-						monster.getScript(externalPath + name + '.js', function() {
-							callback(null, {});
-						});
-					};
-				});
-
-				monster.parallel(listRequests, function(err, results) {
+			monster.parallel(
+				_.concat(
+					dependencies,
+					extensions
+				),
+				function(err, results) {
 					globalCallback && globalCallback();
-				});
-			} else {
-				globalCallback && globalCallback();
-			}
+				}
+			);
 		},
 
 		_addAppCss: function(app) {
