@@ -104,6 +104,7 @@ define(function(require) {
 						dataTemplate = {
 							apps: apps,
 							filters: filters,
+							scope: scope,
 							selectedAppIds: selectedAppIds,
 							selectedApps: self.appSelectorGetAppsByIds(selectedAppIds)
 						},
@@ -131,7 +132,7 @@ define(function(require) {
 					});
 
 					self.appSelectorBindEvents({
-						apps: apps,
+						appCount: apps.length,
 						template: $template
 					});
 
@@ -143,6 +144,8 @@ define(function(require) {
 				forceFetch: forceFetch,
 				callback: function(appList) {
 					var $template;
+
+					appList = _.sortBy(appList, 'label');
 
 					self.appSelectorSetStore('apps', _.keyBy(appList, 'id'));
 					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
@@ -164,6 +167,13 @@ define(function(require) {
 						});
 					}
 
+					// Mark initial even elements
+					appList = _.map(appList, function(app, index) {
+						return _.merge({
+							isEven: (index % 2 === 0)
+						}, app);
+					});
+
 					// Init template after saving selected apps to store, so they can be rendered
 					$template = initTemplate(appList);
 
@@ -171,17 +181,16 @@ define(function(require) {
 
 					_.has(args, 'callback') && args.callback();
 
+					if (_.isEmpty(appList)) {
+						return;
+					}
+
 					// Init Isotope after callback, so the app list is already displayed.
 					// If not, all items will be hidden, because Isotope is not able to calculate
 					// its positions properly.
 					$template.find('.app-selector-body .app-list').isotope({
-						itemSelector: '.app-item',
-						getSortData: {
-							name: function($elem) {
-								return $elem.find('.app-title').text();
-							}
-						},
-						sortBy: 'name'
+						itemSelector: 'li',
+						filter: '.app-item'
 					});
 				}
 			});
@@ -272,11 +281,12 @@ define(function(require) {
 		/**
 		 * Bind app selector events
 		 * @param  {Object} args
-		 * @param  {Array} args.apps  List of available apps
+		 * @param  {Array} args.appCount  Available apps count
 		 * @param  {jQuery} args.template  App selector template
 		 */
 		appSelectorBindEvents: function(args) {
 			var self = this,
+				appCount = args.appCount,
 				$template = args.template,
 				$appFilters = $template.find('.app-selector-menu .app-filter'),
 				$appSelectorBody = $template.find('.app-selector-body'),
@@ -289,9 +299,33 @@ define(function(require) {
 					data: ''
 				},
 				applyFilters = function() {
-					$appList.isotope({
-						filter: _.chain(currentFilters).values().join('').value()
-					});
+					if (appCount === 0) {
+						return;
+					}
+
+					var rowCount = 0;
+
+					$appList
+						.find('.app-item' + currentFilters.classNames + currentFilters.data)
+							.each(function() {
+								var $this = $(this);
+								if (rowCount % 2 === 0) {
+									$this.addClass('even');
+								} else {
+									$this.removeClass('even');
+								}
+								rowCount += 1;
+							});
+
+					if (rowCount > 0) {
+						$appList.isotope({
+							filter: '.app-item' + _.chain(currentFilters).values().join('').value()
+						});
+					} else {
+						$appList.isotope({
+							filter: '.no-apps-item'
+						});
+					}
 				};
 
 			// Filter by tag

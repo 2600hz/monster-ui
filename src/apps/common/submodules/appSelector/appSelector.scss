@@ -31,7 +31,7 @@
 		width: 100%;
 		height: 70px;
 		padding: 1rem;
-		background-color: #f4f4f5;
+		background-color: $athens-gray;
 		border-top: 1px solid $french-gray2;
 
 		button {
@@ -53,21 +53,25 @@
 		overflow-x: hidden;
 		overflow-y: auto;
 		box-shadow: inset -1px 0px 0px 0px $french-gray2;
-		font-size: 14px;
-		line-height: 14px;
+		font-size: 0.875rem;
+		line-height: 0.875rem;
 
 		ul.nav {
 			margin-top: 1.5rem;
 
-			> li {
-				a:hover {
-					background-color: $background-primary-color;
+			> li a {
+				color: $woodsmoke;
+
+				&:hover {
+					color: $woodsmoke;
+					background-color: $athens-gray;
+					box-shadow: inset -1px 0px 0px 0px $french-gray2;
 				}
 
-				a.active {
-					background-color: $background-primary-color;
-					border-right: solid 3px $primary-color;
-					color: $primary-color;
+				&.active {
+					background-color: #e9f5ff;
+					border-right: solid 3px #2297ff;
+					color: #2297ff;
 					font-weight: 600;
 				}
 			}
@@ -154,9 +158,10 @@
 				width: 100%;
 				height: auto;
 				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-				font-size: 14px;
-				line-height: 14px;
+				font-size: 0.875rem;
+				line-height: 0.875rem;
 			}
+
 			.search-icon {
 				margin-left: -1.75rem;
 				color: $manatee;
@@ -179,38 +184,99 @@
 			overflow-y: auto;
 			border-top: solid 1px $french-gray2;
 
-			.app-list {
+			ul.app-list {
+				margin-bottom: 0;
 				margin-left: 0;
+				border-bottom: solid 1px $french-gray2;
+				list-style-type: none;
 
-				.app-item {
+				li {
 					box-sizing: border-box;
 					width: 100%;
-					background-color: $panel-background-color;
-					box-shadow: inset 0px 1px 0px 0px $french-gray2;
-					cursor: pointer;
-					display: flex;
-					flex-wrap: wrap;
 
-					&:hover {
-						background-color: $background-primary-color;
+					&.app-item {
+						background-color: $panel-background-color;
+						cursor: pointer;
+						box-shadow: inset 0px 1px 0px 0px $white,
+							inset 0px -1px 0px 0px $white;
+
+						&:hover {
+							background-color: #e9f5ff;
+						}
+
+						&.selected {
+							background-color: $french-pass;
+						}
+
+						&.even:not(.selected) .text-container {
+							background-color: $athens-gray;
+
+							&:hover {
+								background-color: transparent;
+								transition: none;
+							}
+						}
+
+						.text-container {
+							box-sizing: border-box;
+							display: flex;
+							flex-wrap: wrap;
+							width: 100%;
+							transition: background-color 250ms linear;
+
+							&:hover {
+								background-color: transparent;
+								transition: none;
+							}
+						}
+
+						.app-icon {
+							flex: initial;
+							margin-right: 0.75rem;
+							margin-bottom: 0.75rem;
+						}
+
+						.app-title {
+							flex: 1;
+							margin-bottom: 0.75rem;
+							font-size: 0.875rem;
+							font-weight: 600;
+							align-self: center;
+						}
+
+						.app-description {
+							width: 100%;
+							padding-right: 25%;
+							font-size: 0.75rem;
+							line-height: 1rem;
+							white-space: nowrap;
+							overflow-x: hidden;
+							text-overflow: ellipsis;
+						}
 					}
 
-					&.selected {
-						background-color: $french-pass;
-					}
+					&.no-apps-item {
+						padding: 2.5rem;
+						background-color: $athens-gray;
 
-					.app-icon {
-						flex: initial;
-						margin-right: 0.75rem;
-						margin-bottom: 0.75rem;
-					}
-					.app-title {
-						flex: 1;
-						margin-bottom: 0.75rem;
-						align-self: center;
-					}
-					.app-description {
-						width: 100%;
+						.no-apps-icon {
+							margin-bottom: 1rem;
+
+							.svg-icon {
+								width: 2rem;
+								height: 2rem;
+								color: $french-gray2;
+							}
+						}
+
+						.no-apps-description {
+							color: $woodsmoke;
+							font-size: 0.875rem;
+						}
+
+						.no-apps-icon, .no-apps-description {
+							text-align: center;
+						}
 					}
 				}
 			}
