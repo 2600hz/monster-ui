@@ -384,12 +384,13 @@ define(function(require) {
 						monster.appsStore = _.keyBy(results.appsStore, 'name');
 
 						_.each(monster.appsStore, function(app) {
-							if (app.hasOwnProperty('extends')) {
-								_.each(app.extends, function(extended) {
-									monster.appsStore[extended].pluginsApps = monster.appsStore[extended].pluginsApps || [];
-									monster.appsStore[extended].pluginsApps.push(app.name);
-								})
+							if (!_.has(app, 'extends')) {
+								return;
 							}
+							_.each(app.extends, function(extended) {
+								monster.appsStore[extended].extensions = monster.appsStore[extended].extensions || [];
+								monster.appsStore[extended].extensions.push(app.name);
+							});
 						});
 
 						self.currentUser = results.user;
