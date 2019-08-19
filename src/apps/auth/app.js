@@ -43,6 +43,7 @@ define(function(require) {
 			'auth.logout': '_logout',
 			'auth.clickLogout': '_clickLogout',
 			'auth.initApp': '_initApp',
+			'auth.retryLogin': 'retryLogin',
 			'auth.afterAuthenticate': '_afterSuccessfulAuth',
 			'auth.showTrialInfo': 'showTrialInfo',
 			'auth.loginToSSOProvider': 'loginToSSOProvider',
@@ -381,6 +382,16 @@ define(function(require) {
 						}
 
 						monster.appsStore = _.keyBy(results.appsStore, 'name');
+
+						_.each(monster.appsStore, function(app) {
+							if (!_.has(app, 'extends')) {
+								return;
+							}
+							_.each(app.extends, function(extended) {
+								monster.appsStore[extended].extensions = monster.appsStore[extended].extensions || [];
+								monster.appsStore[extended].extensions.push(app.name);
+							});
+						});
 
 						self.currentUser = results.user;
 						// This account will remain unchanged, it should be used by non-masqueradable apps
@@ -1362,27 +1373,32 @@ define(function(require) {
 			});
 		},
 
-		retryLogin: function(additionalArgs, success, error) {
+		/**
+		 * @param  {Object} [args]
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
+		 * @param  {Object} [args.additionalArgs]
+		 */
+		retryLogin: function(args) {
 			var self = this,
-				loginData;
+				success = _.get(args, 'success'),
+				error = _.get(args, 'error'),
+				additionalArgs = _.get(args, 'additionalArgs'),
+				cookieData = monster.cookies.getJson('monster-auth'),
+				loginData = {
+					account_name: _.get(cookieData, 'accountName'),
+					credentials: _.get(cookieData, 'credentials')
+				};
 
-			if (monster.cookies.has('monster-auth')) {
-				var cookieData = monster.cookies.getJson('monster-auth');
-
-				if (cookieData.hasOwnProperty('credentials') && cookieData.hasOwnProperty('accountName')) {
-					loginData = {
-						credentials: cookieData.credentials,
-						account_name: cookieData.accountName
-					};
-				}
-			}
-
-			if (loginData) {
+			if (
+				_.isUndefined(loginData.account_name)
+				|| _.isUndefined(loginData.credentials)
+			) {
+				error && error();
+			} else {
 				self.putAuth(loginData, function(data) {
 					success && success(data.auth_token);
 				}, error, false, additionalArgs);
-			} else {
-				error && error();
 			}
 		},
 
