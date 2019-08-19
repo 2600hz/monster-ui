@@ -142,12 +142,24 @@ define(function(require) {
 						}
 
 						// If we have a 401 after being logged in, it means our session expired
-						if (monster.util.isLoggedIn() && error.status === 401) {
+						if (
+							error.status === 401
+							&& monster.util.isLoggedIn()
+						) {
 							error401Handler({
 								requestHandler: self.request.bind(self),
 								error: error,
 								errorMessage: monster.apps.core.i18n.active().authenticationIssue,
 								options: requestOptions
+							});
+						} else if (
+							error.status === 402
+							&& !_.has(options, 'acceptCharges')
+						) {
+							error402Handler({
+								requestHandler: self.request.bind(self),
+								error: error,
+								options: options
 							});
 						} else {
 							// Added this to be able to display more data in the UI
@@ -525,36 +537,22 @@ define(function(require) {
 					monster.pub('monster.requestEnd', requestOptions.requestEventParams);
 				},
 				onRequestError: function(error, requestOptions) {
-					var parsedError = error,
-						requestOptions = requestOptions || { generateError: true };
+					var requestOptions = requestOptions || { generateError: true };
 
-					if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
-						parsedError = $.parseJSON(error.responseText);
-					}
-
-					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						// Handle the "Payment Required" status
-						var parsedError = error,
-							originalPreventCallbackError = requestOptions.preventCallbackError;
-
-						if ('responseText' in error && error.responseText) {
-							parsedError = $.parseJSON(error.responseText);
-						}
-
-						// Prevent the execution of the custom error callback, as it is a
-						// charges notification that will be handled here
-						requestOptions.preventCallbackError = true;
-
-						// Notify the user about the charges
-						monster.ui.charges(parsedError.data, function() {
-							requestOptions.acceptCharges = true;
-							requestOptions.preventCallbackError = originalPreventCallbackError;
-							monster.kazooSdk.request(requestOptions);
-						}, function() {
-							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
-						});
-					} else if (monster.util.isLoggedIn() && error.status === 401) {
+					if (
+						error.status === 401
+						&& monster.util.isLoggedIn()
+					) {
 						error401Handler({
+							requestHandler: monster.kazooSdk.request,
+							error: error,
+							options: requestOptions
+						});
+					} else if (
+						error.status === 402
+						&& !_.has(requestOptions, 'acceptCharges')
+					) {
+						error402Handler({
 							requestHandler: monster.kazooSdk.request,
 							error: error,
 							options: requestOptions
@@ -695,6 +693,38 @@ define(function(require) {
 				});
 			}
 		}
+	}
+
+	/**
+	 * @private
+	 * @param  {Object} args
+	 * @param  {Function} args.requestHandler
+	 * @param  {Object} args.error
+	 * @param  {Object} args.options
+	 */
+	function error402Handler(args) {
+		var requestHandler = args.requestHandler;
+		var error = args.error;
+		var options = args.options;
+		var originalPreventCallbackError = options.preventCallbackError;
+		var parsedError = error;
+
+		if (_.has(error, 'responseText') && error.responseText) {
+			parsedError = $.parseJSON(error.responseText);
+		}
+
+		// Prevent the execution of the custom error callback, as it is a
+		// charges notification that will be handled here
+		options.preventCallbackError = true;
+
+		// Notify the user about the charges
+		monster.ui.charges(parsedError.data, function() {
+			options.acceptCharges = true;
+			options.preventCallbackError = originalPreventCallbackError;
+			requestHandler(options);
+		}, function() {
+			_.isFunction(options.onChargesCancelled) && options.onChargesCancelled();
+		});
 	}
 
 	/**
