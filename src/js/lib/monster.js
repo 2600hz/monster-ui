@@ -194,6 +194,12 @@ define(function(require) {
 							monster.error('api', error, false);
 
 							monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
+						} else if (typeof options.acceptCharges === 'undefined' && error.status === 402) {
+							self.error402Handler({
+								requestHandler: self.request.bind(self),
+								error: error,
+								options: options
+							});
 						} else {
 							// Added this to be able to display more data in the UI
 							error.monsterData = {
