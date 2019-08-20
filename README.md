@@ -57,7 +57,7 @@ gulp
 
 Access your development environment at `http://localhost:3000/`
 
-*If you are using Node <6.0.0, you need to require the file `.babelregister.js` while running gulp. For more info on how the `gulp` command works, head to the [dedicated](/docs/gulpCommand.md) documentation*
+*For more info on how the `gulp` command works, head over to the [dedicated documentation](/docs/gulpCommand.md)*.
 
 ## Using Docker
 
