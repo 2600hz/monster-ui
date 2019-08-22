@@ -49,6 +49,7 @@ define(function(require) {
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
 		'whitelabel.countryCode': [isCountryCode, defaultCountryCode],
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
+		'whitelabel.showPAssertedIdentity': [_.isBoolean, false],
 		'whitelabel.useDropdownApploader': [_.isBoolean, false]
 	};
 
