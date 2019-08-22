@@ -1349,7 +1349,7 @@ define(function(require) {
 			});
 
 			$.validator.addMethod('phoneNumber', function(value, element) {
-				return monster.util.getFormatPhoneNumber(value).isValid;
+				return this.optional(element) || monster.util.getFormatPhoneNumber(value).isValid;
 			}, localization.customRules.phoneNumber);
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {

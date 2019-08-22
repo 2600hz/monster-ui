@@ -1,12 +1,12 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('lodash'),
-		monster = require('monster');
+		_ = require('lodash');
 
 	var navigationWizard = {
 		subscribe: {
 			'common.navigationWizard.render': 'navigationWizardRender',
-			'common.navigationWizard.goToStep': 'navigationWizardGoToStep'
+			'common.navigationWizard.goToStep': 'navigationWizardGoToStep',
+			'common.navigationWizard.arguments': 'navigationWizardArguments'
 		},
 
 		appFlags: {
@@ -65,10 +65,6 @@ define(function(require) {
 				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
 				template = wizardArgs.template,
 				thisArg = wizardArgs.thisArg;
-
-			monster.sub('common.navigationWizard.arguments', function(callback) {
-				callback(wizardArgs);
-			});
 
 			self.navigationWizardSetSelected({
 				stepId: self.appFlags.navigationWizard.currentStep
@@ -214,6 +210,12 @@ define(function(require) {
 				stepId: stepId
 			});
 			self.navigationWizardGenerateTemplate();
+		},
+
+		navigationWizardArguments: function(callback) {
+			var self = this;
+
+			callback(self.appFlags.navigationWizard.wizardArgs);
 		},
 
 		navigationWizardUnsetCurrentSelected: function(args) {
