@@ -92,6 +92,7 @@ pages:
       - 'docs/monster-util/dataFlags/get().md'
   - 'docs/svgIcons.md'
 - 'Contributing':
+  - 'docs/branchWorkflow.md'
   - 'docs/codingStandards.md'
   - 'docs/javascriptStyleGuide.md'
   - 'docs/linting.md'
