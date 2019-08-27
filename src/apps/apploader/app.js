@@ -366,7 +366,7 @@ define(function(require) {
 			self.getAppList({
 				scope: 'user',
 				forceFetch: true,
-				callback: callback
+				success: callback
 			});
 		},
 
@@ -418,13 +418,13 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {('all'|'account'|'user')} [args.scope='all']  App list scope
 		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
-		 * @param  {Function} [args.callback]  Callback funtion to send the retrieved app list
+		 * @param  {Function} [args.success]  Callback function to send the retrieved app list
+		 * @param  {Function} [args.error]  Callback function to notify errors
 		 */
 		getAppList: function(args) {
 			var self = this,
 				scope = _.get(args, 'scope', 'all'),
-				forceFetch = _.get(args, 'forceFetch', false),
-				callback = args.callback;
+				forceFetch = _.get(args, 'forceFetch', false);
 
 			monster.waterfall([
 				// Get all apps
@@ -549,10 +549,10 @@ define(function(require) {
 				}
 			], function(err, appList) {
 				if (err) {
-					return;
+					return _.has(args, 'error') && args.error(err);
 				}
 
-				callback && callback(appList);
+				_.has(args, 'success') && args.success(appList);
 			});
 		},
 
