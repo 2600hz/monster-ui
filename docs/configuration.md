@@ -114,6 +114,7 @@ Key | Description | Type | Default | Required
 `sso` | Cookie information to force a specific SSO provider to be used. | `Object` | | `false`
 `sso_providers` | List of SSO providers available on login. | `Array` | | `false`
 `showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
+`showPAssertedIdentity` | Whether or not to render the P-Asserted-Identity section under Callflows app > Account Settings > Caller-ID. | `Boolean` | `false` | `false`
 `social` | List of social network to expose on the login page. | `Array` | | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 
