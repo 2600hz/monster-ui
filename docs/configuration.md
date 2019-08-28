@@ -59,7 +59,7 @@ Key | Description | Type | Default | Required
 `build` | Information about the build. | `Object`([#build](#build)) | | `readonly`
 `showAllCallflows` | Whether or not to show all restricted callflows in the Callflows app | `Boolean` | `false` | `false`
 `showJsErrors` | Whether or not to show JavaScript errors when they happen. | `Boolean` | `false` | `false`
-`kazooVersion` | Backend verison number (set during authentication). | `String` | | `readonly`
+`kazooVersion` | Backend version number (set during authentication). | `String` | | `readonly`
 
 
 #### `build`
