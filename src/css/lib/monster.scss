@@ -33,11 +33,11 @@ h1 {
 }
 
 .monster-link.orange {
-	color: #f8a506;
+	color: $yellow-sea;
 }
 
 .monster-link.orange {
-	color: #f8a506;
+	color: $yellow-sea;
 }
 
 .monster-link i {
@@ -65,7 +65,7 @@ h1 {
 	}
 
 	&.orange {
-		color: #f8a506;
+		color: $yellow-sea;
 	}
 }
 
@@ -198,7 +198,7 @@ h1 {
 .monster-button-warning {
 	color: #8f6b00;
 	border-color: #f0b400;
-	background: #f8a506;
+	background: $yellow-sea;
 	&.dropdown-toggle {
 		min-width: 20px;
 		.caret {
@@ -1171,7 +1171,7 @@ label[class*='monster-radio'].prepend-label > span {
 	color: #ff3d24 !important;
 }
 .monster-orange {
-	color: #f8a506 !important;
+	color: $yellow-sea !important;
 }
 .monster-purple {
 	color: #d2e !important;
@@ -2107,7 +2107,7 @@ table.monster-table {
 .monster-statuses .node.warning i,
 .monster-statuses .node.warning .status,
 .monster-statuses .node.warning .status a {
-	color: #f8a506;
+	color: $yellow-sea;
 }
 
 .monster-statuses .node.warning .status {
