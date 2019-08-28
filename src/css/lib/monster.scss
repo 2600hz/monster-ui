@@ -59,21 +59,14 @@ h1 {
 .monster-link:not(.disabled):focus {
 	color: #666;
 	text-decoration: underline;
-}
 
-.monster-link.blue:hover,
-.monster-link.blue:focus {
-	color: $primary-color;
-}
+	&.blue {
+		color: $primary-color;
+	}
 
-.monster-link.orange:hover,
-.monster-link.orange:focus {
-	color: #f8a506;
-}
-
-.monster-link.orange:hover,
-.monster-link.orange:focus {
-	color: #f8a506;
+	&.orange {
+		color: #f8a506;
+	}
 }
 
 
