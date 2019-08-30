@@ -142,7 +142,7 @@ define(function(require) {
 			monster.pub('apploader.getAppList', {
 				scope: scope,
 				forceFetch: forceFetch,
-				callback: function(appList) {
+				success: function(appList) {
 					var $template;
 
 					appList = _.sortBy(appList, 'label');
