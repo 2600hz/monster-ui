@@ -14,6 +14,6 @@ Key | Description | Type | Default | Required
 `type` | Type of mask to apply. | `String('phoneNumber' | 'macAddress')` | | `true`
 
 ## Description
-This helper is a wrapper over the [jQuery Mark plugin][mark-plugin].
+This helper is a wrapper over the [jQuery Mask plugin][mask-plugin].
 
-[mark-plugin]: https://igorescobar.github.io/jQuery-Mask-Plugin/
+[mask-plugin]: https://igorescobar.github.io/jQuery-Mask-Plugin/
