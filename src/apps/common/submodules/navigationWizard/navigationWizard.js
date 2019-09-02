@@ -84,6 +84,7 @@ define(function(require) {
 
 						self.navigationWizardChangeStep({
 							stepId: navigationWizardFlags.currentStep + 1,
+							eventType: 'next',
 							validateCurrentStep: true,
 							completeCurrentStep: true
 						});
@@ -95,7 +96,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate();
+						var result = self.navigationWizardUtilForTemplate({
+							eventType: 'done'
+						});
 
 						if (!result.valid) {
 							return;
@@ -109,7 +112,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate();
+						var result = self.navigationWizardUtilForTemplate({
+							eventType: 'save'
+						});
 
 						if (!result.valid) {
 							return;
@@ -124,8 +129,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						self.navigationWizardGoToStep({
-							stepId: navigationWizardFlags.currentStep - 1
+						self.navigationWizardChangeStep({
+							stepId: navigationWizardFlags.currentStep - 1,
+							eventType: 'back'
 						});
 					});
 
@@ -179,8 +185,7 @@ define(function(require) {
 
 			self.navigationWizardChangeStep({
 				stepId: stepId,
-				validateCurrentStep: self.appFlags.navigationWizard.validateOnStepChange,
-				completeCurrentStep: false	// Step status won't change
+				eventType: 'goto'
 			});
 		},
 
@@ -271,31 +276,44 @@ define(function(require) {
 			thisArg[template](wizardArgs);
 		},
 
-		navigationWizardUtilForTemplate: function() {
+		/**
+		 * Executes the method to validate and process the current step data
+		 * @param  {Object} args
+		 * @param  {('back'|'done'|'goto'|'next'|'save')} args.eventType Type of event that
+		 *                                                               triggered the execution of
+		 *                                                               the util method
+		 */
+		navigationWizardUtilForTemplate: function(args) {
 			var self = this,
-				appFlags = self.appFlags,
-				wizardArgs = appFlags.navigationWizard.wizardArgs,
+				eventType = args.eventType,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				wizardArgs = navigationWizardFlags.wizardArgs,
 				thisArg = wizardArgs.thisArg,
 				steps = wizardArgs.steps,
-				currentStep = appFlags.navigationWizard.currentStep,
+				currentStep = navigationWizardFlags.currentStep,
 				util = steps[currentStep].util;
 
-			return thisArg[util](wizardArgs.template, wizardArgs);
+			return thisArg[util](wizardArgs.template, wizardArgs, {
+				eventType: eventType,
+				stepAlreadyCompleted: navigationWizardFlags.currentStep <= navigationWizardFlags.lastCompletedStep
+			});
 		},
 
 		/**
 		 * Move to a specific wizard step
 		 * @param  {Object} args
 		 * @param  {String} args.stepId  Destination step identifier
-		 * @param  {Boolean} args.validateCurrentStep  Validate the current step, before moving to
-		 *                                             the new one
-		 * @param  {Boolean} args.completeCurrentStep  Mark the current step as completed, if valid
+		 * @param  {('back'|'goto'|'next')} args.eventType  Type of event that triggered the change
+		 * @param  {Boolean} [args.validateCurrentStep=this.appFlags.navigationWizard.validateOnStepChange]  Validate the current step,
+		 *                                                                                              before moving to the new one
+		 * @param  {Boolean} [args.completeCurrentStep=false]  Mark the current step as completed, if valid
 		 */
 		navigationWizardChangeStep: function(args) {
 			var self = this,
 				stepId = args.stepId,
-				validateCurrentStep = args.validateCurrentStep,
-				completeCurrentStep = args.completeCurrentStep,
+				eventType = args.eventType,
+				validateCurrentStep = _.get(args, 'validateCurrentStep', self.appFlags.navigationWizard.validateOnStepChange),
+				completeCurrentStep = _.get(args, 'completeCurrentStep', false),
 				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
 				result;
 
@@ -304,7 +322,9 @@ define(function(require) {
 			}
 
 			if (validateCurrentStep) {
-				result = self.navigationWizardUtilForTemplate();
+				result = self.navigationWizardUtilForTemplate({
+					eventType: eventType
+				});
 
 				if (!result.valid) {
 					return;
