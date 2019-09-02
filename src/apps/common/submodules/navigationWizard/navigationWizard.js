@@ -175,17 +175,12 @@ define(function(require) {
 		 */
 		navigationWizardGoToStep: function(args) {
 			var self = this,
-				stepId = args.stepId,
-				navigationWizardFlags = self.appFlags.navigationWizard,
-				validateOnStepChange = navigationWizardFlags.validateOnStepChange,
-				currentStepIsIncomplete = navigationWizardFlags.currentStep > navigationWizardFlags.lastCompletedStep;
+				stepId = args.stepId;
 
 			self.navigationWizardChangeStep({
 				stepId: stepId,
-				validateCurrentStep: validateOnStepChange,
-				completeCurrentStep: validateOnStepChange
-					&& currentStepIsIncomplete
-					&& stepId < navigationWizardFlags.currentStep
+				validateCurrentStep: self.appFlags.navigationWizard.validateOnStepChange,
+				completeCurrentStep: false	// Step status won't change
 			});
 		},
 
