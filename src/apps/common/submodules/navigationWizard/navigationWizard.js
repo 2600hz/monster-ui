@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('lodash');
+		_ = require('lodash'),
+		monster = require('monster');
 
 	var navigationWizard = {
 		subscribe: {
@@ -12,6 +13,7 @@ define(function(require) {
 		appFlags: {
 			// Default values just for reference, they will be overwritten anyways
 			navigationWizard: {
+				cancelConfirmation: false,
 				currentStep: 0,
 				validateOnStepChange: false,
 				wizardArgs: {}
@@ -37,11 +39,11 @@ define(function(require) {
 				throw new Error('A container must be provided.');
 			}
 
-			navigationWizardFlags.currentStep = _.get(args, 'currentStep', 0);
-			navigationWizardFlags.validateOnStepChange = _.get(args, 'validateOnStepChange', false);
-			navigationWizardFlags.wizardArgs = _.merge({
+			// Set global values for submodule at appFlags
+			_.merge(navigationWizardFlags, _.pick(args, 'cancelConfirmation', 'currentStep', 'validateOnStepChange'));
+			navigationWizardFlags.wizardArgs = _.merge(args, {
 				template: layout
-			}, args);
+			});
 
 			_.each(stepsCompleted, function(step) {
 				if (step === navigationWizardFlags.currentStep) {
@@ -127,7 +129,29 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						thisArg[wizardArgs.cancel](wizardArgs);
+						monster.waterfall([
+							function(waterfallCallback) {
+								if (!navigationWizardFlags.cancelConfirmation) {
+									return waterfallCallback(null, true);
+								}
+
+								monster.ui.confirm(
+									self.i18n.active().navigationWizard.cancelDialogMessage,
+									function() {
+										waterfallCallback(null, true);
+									},
+									function() {
+										waterfallCallback(null, false);
+									}
+								);
+							}
+						], function(err, result) {
+							if (!result) {
+								return;
+							}
+
+							thisArg[wizardArgs.cancel](wizardArgs);
+						});
 					});
 
 			//Clicking the clear link
