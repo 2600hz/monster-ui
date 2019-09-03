@@ -33,36 +33,36 @@ define(function(require) {
 					submodule: 'navigationWizard'
 				}));
 
-			if (container) {
-				navigationWizardFlags.currentStep = _.get(args, 'currentStep', 0);
-				navigationWizardFlags.validateOnStepChange = _.get(args, 'validateOnStepChange', false);
-				navigationWizardFlags.wizardArgs = _.merge({
-					template: layout
-				}, args);
-
-				self.navigationWizardBindEvents();
-
-				container
-					.empty()
-					.append(layout);
-
-				self.navigationWizardGenerateTemplate();
-
-				_.each(stepsCompleted, function(step) {
-					if (step === navigationWizardFlags.currentStep) {
-						return;
-					}
-					if (step > _.get(navigationWizardFlags, 'lastCompletedStep', -1)) {
-						navigationWizardFlags.lastCompletedStep = step;
-					}
-
-					container
-						.find('.step[data-id="' + step + '"]')
-							.addClass('completed visited');
-				});
-			} else {
+			if (!container) {
 				throw new Error('A container must be provided.');
 			}
+
+			navigationWizardFlags.currentStep = _.get(args, 'currentStep', 0);
+			navigationWizardFlags.validateOnStepChange = _.get(args, 'validateOnStepChange', false);
+			navigationWizardFlags.wizardArgs = _.merge({
+				template: layout
+			}, args);
+
+			_.each(stepsCompleted, function(step) {
+				if (step === navigationWizardFlags.currentStep) {
+					return;
+				}
+				if (step > _.get(navigationWizardFlags, 'lastCompletedStep', -1)) {
+					navigationWizardFlags.lastCompletedStep = step;
+				}
+
+				container
+					.find('.step[data-id="' + step + '"]')
+						.addClass('completed visited');
+			});
+
+			self.navigationWizardBindEvents();
+
+			container
+				.empty()
+				.append(layout);
+
+			self.navigationWizardGenerateTemplate();
 		},
 
 		navigationWizardBindEvents: function() {
@@ -96,15 +96,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate({
+						self.navigationWizardComplete({
 							eventType: 'done'
 						});
-
-						if (!result.valid) {
-							return;
-						}
-
-						thisArg[wizardArgs.done](wizardArgs);
 					});
 
 			template
@@ -112,15 +106,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
-						var result = self.navigationWizardUtilForTemplate({
+						self.navigationWizardComplete({
 							eventType: 'save'
 						});
-
-						if (!result.valid) {
-							return;
-						}
-
-						thisArg[wizardArgs.done](wizardArgs);
 					});
 
 			//Clicking the back button
@@ -349,6 +337,25 @@ define(function(require) {
 				stepId: stepId
 			});
 			self.navigationWizardGenerateTemplate();
+		},
+
+		/**
+		 * Completes the wizard by validating the current step and invoking its done function
+		 * @param  {Object} args
+		 * @param  {('save'|'done')} args.eventType  Type of event that invoked the wizard completion
+		 */
+		navigationWizardComplete: function(args) {
+			var self = this,
+				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				result = self.navigationWizardUtilForTemplate({
+					eventType: args.eventType
+				});
+
+			if (!result.valid) {
+				return;
+			}
+
+			_.get(wizardArgs.thisArg, wizardArgs.done)(wizardArgs);
 		}
 	};
 
