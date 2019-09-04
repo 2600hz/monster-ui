@@ -20,6 +20,35 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Renders the navigation wizard component
+		 * @param  {Object} args
+		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
+		 *                               button is clicked. It must be defined as a property of
+		 *                               thisArg.
+		 * @param  {Boolean} args.cancelConfirmation  Whether or not to ask the user for
+		 *                                            confirmation on wizard cancellation
+		 * @param  {jQuery} args.container  Element that will contain the wizard
+		 * @param  {Object} [args.data]  Initial data
+		 * @param  {String} args.done  Name of the function to be invoked when completing the
+		 *                             wizard. It must be defined as a property of thisArg.
+		 * @param  {String} [args.doneButton]  Text to be displayed in the wizard done button
+		 * @param  {Object[]} args.steps  List of steps with their configuration parameters
+		 * @param  {String} args.steps[].description  Step description, to be displayed in the menu
+		 * @param  {String} args.steps[].label  Step label, to be displayed in the left menu
+		 * @param  {String} args.steps[].template  Name of the function to render the step. It must
+		 *                                         be defined as a property of thisArg.
+		 * @param  {String} args.steps[].util  Name of the function to validate and process the
+		 *                                     step data. It must be defined as a property of
+		 *                                     thisArg.
+		 * @param  {Number[]} [args.stepsCompleted=[]]  Indexes of the steps that are already
+		 *                                              completed
+		 * @param  {Any} args.thisArg  Reference to the object where the wizard is invoked
+		 * @param  {String} args.title  Title of the wizard
+		 * @param  {Boolean} args.validateOnStepChange  Whether or not to invoke the validation
+		 *                                              function for the current step, before
+		 *                                              moving to another step
+		 */
 		navigationWizardRender: function(args) {
 			var self = this,
 				container = args.container,
@@ -67,6 +96,9 @@ define(function(require) {
 			self.navigationWizardGenerateTemplate();
 		},
 
+		/**
+		 * Bind wizard events
+		 */
 		navigationWizardBindEvents: function() {
 			var self = this,
 				navigationWizardFlags = self.appFlags.navigationWizard,
@@ -199,12 +231,22 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Passes the wizard arguments to the specified callback
+		 * @param  {Function} callback  Callback
+		 */
 		navigationWizardArguments: function(callback) {
 			var self = this;
 
 			callback(self.appFlags.navigationWizard.wizardArgs);
 		},
 
+		/**
+		 * Unsets the current step, and marks it as completed if required
+		 * @param  {Object} args
+		 * @param  {Boolean} [args.isCompleted=false]  Whether or not to mark the current step as
+		 *                                             completed
+		 */
 		navigationWizardUnsetCurrentSelected: function(args) {
 			var self = this,
 				isCompleted = _.get(args, 'isCompleted', false),
@@ -226,6 +268,11 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Sets another wizard step as the current selected step
+		 * @param  {Object} args
+		 * @param  {Number} args.stepId  Step index
+		 */
 		navigationWizardSetSelected: function(args) {
 			var self = this,
 				stepId = args.stepId,
@@ -273,6 +320,9 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Invokes the render function for the current step
+		 */
 		navigationWizardGenerateTemplate: function() {
 			var self = this,
 				appFlags = self.appFlags,
