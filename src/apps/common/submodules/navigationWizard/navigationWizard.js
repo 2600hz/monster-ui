@@ -53,7 +53,6 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				stepsCompleted = _.get(args, 'stepsCompleted', []),
-				navigationWizardFlags = self.appFlags.navigationWizard,
 				layout = $(self.getTemplate({
 					name: 'layout',
 					data: {
@@ -62,17 +61,25 @@ define(function(require) {
 						doneButton: _.get(args, 'doneButton', '')
 					},
 					submodule: 'navigationWizard'
-				}));
+				})),
+				navigationWizardFlags = {
+					cancelConfirmation: false,
+					currentStep: 0,
+					validateOnStepChange: false,
+					wizardArgs: _.merge(args, {
+						template: layout
+					})
+				};
 
 			if (!container) {
 				throw new Error('A container must be provided.');
 			}
 
 			// Set global values for submodule at appFlags
-			_.merge(navigationWizardFlags, _.pick(args, 'cancelConfirmation', 'currentStep', 'validateOnStepChange'));
-			navigationWizardFlags.wizardArgs = _.merge(args, {
-				template: layout
-			});
+			self.appFlags.navigationWizard = _.merge(
+				navigationWizardFlags,
+				_.pick(args, 'cancelConfirmation', 'currentStep', 'validateOnStepChange')
+			);
 
 			_.each(stepsCompleted, function(step) {
 				if (step === navigationWizardFlags.currentStep) {
