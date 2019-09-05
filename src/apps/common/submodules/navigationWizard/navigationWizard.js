@@ -13,7 +13,7 @@ define(function(require) {
 		appFlags: {
 			// Default values just for reference, they will be overwritten anyways
 			navigationWizard: {
-				cancelConfirmation: false,
+				askForConfirmationOnCancel: false,
 				currentStep: 0,
 				validateOnStepChange: false,
 				wizardArgs: {}
@@ -23,11 +23,11 @@ define(function(require) {
 		/**
 		 * Renders the navigation wizard component
 		 * @param  {Object} args
+		 * @param  {Boolean} [args.askForConfirmationOnCancel=false]  Whether or not to ask the user for
+		 *                                                            confirmation on wizard cancellation
 		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
 		 *                               button is clicked. It must be defined as a property of
 		 *                               thisArg.
-		 * @param  {Boolean} args.cancelConfirmation  Whether or not to ask the user for
-		 *                                            confirmation on wizard cancellation
 		 * @param  {jQuery} args.container  Element that will contain the wizard
 		 * @param  {Object} [args.data]  Initial data
 		 * @param  {String} args.done  Name of the function to be invoked when completing the
@@ -45,9 +45,9 @@ define(function(require) {
 		 *                                              completed
 		 * @param  {Any} args.thisArg  Reference to the object where the wizard is invoked
 		 * @param  {String} args.title  Title of the wizard
-		 * @param  {Boolean} args.validateOnStepChange  Whether or not to invoke the validation
-		 *                                              function for the current step, before
-		 *                                              moving to another step
+		 * @param  {Boolean} [args.validateOnStepChange=false]  Whether or not to invoke the validation
+		 *                                                      function for the current step, before
+		 *                                                      moving to another step
 		 */
 		navigationWizardRender: function(args) {
 			var self = this,
@@ -62,24 +62,20 @@ define(function(require) {
 					},
 					submodule: 'navigationWizard'
 				})),
-				navigationWizardFlags = {
-					cancelConfirmation: false,
+				navigationWizardFlagsDefaults = {
+					askForConfirmationOnCancel: false,
 					currentStep: 0,
-					validateOnStepChange: false,
-					wizardArgs: _.merge(args, {
-						template: layout
-					})
-				};
+					validateOnStepChange: false
+				},
+				navigationWizardFlags = _.merge(
+					{},
+					navigationWizardFlagsDefaults,
+					_.pick(args, 'askForConfirmationOnCancel', 'currentStep', 'validateOnStepChange')
+				);
 
 			if (!container) {
 				throw new Error('A container must be provided.');
 			}
-
-			// Set global values for submodule at appFlags
-			self.appFlags.navigationWizard = _.merge(
-				navigationWizardFlags,
-				_.pick(args, 'cancelConfirmation', 'currentStep', 'validateOnStepChange')
-			);
 
 			_.each(stepsCompleted, function(step) {
 				if (step === navigationWizardFlags.currentStep) {
@@ -93,6 +89,10 @@ define(function(require) {
 					.find('.step[data-id="' + step + '"]')
 						.addClass('completed visited');
 			});
+
+			navigationWizardFlags.wizardArgs = args;
+			navigationWizardFlags.wizardArgs.template = layout;
+			self.appFlags.navigationWizard = navigationWizardFlags;
 
 			self.navigationWizardBindEvents();
 
@@ -170,7 +170,7 @@ define(function(require) {
 
 						monster.waterfall([
 							function(waterfallCallback) {
-								if (!navigationWizardFlags.cancelConfirmation) {
+								if (!navigationWizardFlags.askForConfirmationOnCancel) {
 									return waterfallCallback(null, true);
 								}
 
@@ -184,8 +184,8 @@ define(function(require) {
 									}
 								);
 							}
-						], function(err, result) {
-							if (!result) {
+						], function(err, cancelWizard) {
+							if (!cancelWizard) {
 								return;
 							}
 
