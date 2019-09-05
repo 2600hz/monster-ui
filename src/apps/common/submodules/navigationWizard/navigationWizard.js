@@ -13,6 +13,7 @@ define(function(require) {
 		appFlags: {
 			// Default values just for reference, they will be overwritten anyways
 			navigationWizard: {
+				autoScrollToInvalidInput: false,
 				askForConfirmationOnCancel: false,
 				currentStep: 0,
 				validateOnStepChange: false,
@@ -25,6 +26,9 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Boolean} [args.askForConfirmationOnCancel=false]  Whether or not to ask the user for
 		 *                                                            confirmation on wizard cancellation
+		 * @param  {Boolean} [args.autoScrollToInvalidInput=false] Whether ot not to automatically scroll
+		 *                                                         to the first invalid input, after step
+		 *                                                         validation fails
 		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
 		 *                               button is clicked. It must be defined as a property of
 		 *                               thisArg.
@@ -64,13 +68,20 @@ define(function(require) {
 				})),
 				navigationWizardFlagsDefaults = {
 					askForConfirmationOnCancel: false,
+					autoScrollToInvalidInput: false,
 					currentStep: 0,
 					validateOnStepChange: false
 				},
 				navigationWizardFlags = _.merge(
 					{},
 					navigationWizardFlagsDefaults,
-					_.pick(args, 'askForConfirmationOnCancel', 'currentStep', 'validateOnStepChange')
+					_.pick(
+						args,
+						'askForConfirmationOnCancel',
+						'autoScrollToInvalidInput',
+						'currentStep',
+						'validateOnStepChange'
+					)
 				);
 
 			if (!container) {
@@ -361,12 +372,33 @@ define(function(require) {
 				thisArg = wizardArgs.thisArg,
 				steps = wizardArgs.steps,
 				currentStep = navigationWizardFlags.currentStep,
-				util = steps[currentStep].util;
+				util = steps[currentStep].util,
+				$template = wizardArgs.template,
+				result = thisArg[util]($template, wizardArgs, {
+					eventType: eventType,
+					completeStep: completeStep
+				});
 
-			return thisArg[util](wizardArgs.template, wizardArgs, {
-				eventType: eventType,
-				completeStep: completeStep
-			});
+			if (!result.valid && navigationWizardFlags.autoScrollToInvalidInput && _.get(result, 'autoScrollToInvalidInput', true)) {
+				var $firstInvalidInput = $template.find('.monster-invalid:visible').first();
+
+				// Scroll using both html and body elements, for cross-browser compatibility
+				// References:
+				// * https://stackoverflow.com/a/6677069/806975
+				// * https://stackoverflow.com/q/5231459/806975
+				$([document.documentElement, document.body]).animate(
+					{
+						scrollTop: $firstInvalidInput.offset().top - 32	// 2rem=32px to leave some extra space in case the element has a top label
+					},
+					250,
+					'swing',
+					function() {
+						$firstInvalidInput.focus();
+					}
+				);
+			}
+
+			return result;
 		},
 
 		/**
