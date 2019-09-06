@@ -1039,8 +1039,9 @@
 			"clear": "Clear",
 			"back": "Back",
 			"done": "Done"
-    }
-  },
+		},
+		"cancelDialogMessage": "Any modified data will be lost. Are you sure that you want to leave the wizard?"
+	},
 	"__comment": "UI-3147: Migrate Smart PBX user deletion to common submodule",
 	"__version": "4.3",
 	"deleteSmartUser": {
