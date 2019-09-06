@@ -69,12 +69,12 @@ Notice how `<latest>` is appended to the branch name.
 Log the commits in the `<TICKET-#>` branch and take note of the first and last SHA-1 hashes for the commits related to the work on that branch. Those references will be used to cherry-pick your changes into the `<latest>-<TICKET-#>` branch.
 
 ```shell
-~/monster-ui (<latest>)$ git cherry-pick <first-sha-1>^..<last-sha-1>
+~/monster-ui (<latest>-<TICKET-#>)$ git cherry-pick <first-sha-1>^..<last-sha-1>
 ```
 
 ### Push your mirror feature branch
 ```shell
-~/monster-ui (<latest>)$ git push origin <latest>-<TICKET-#>
+~/monster-ui (<latest>-<TICKET-#>)$ git push origin <latest>-<TICKET-#>
 ```
 
 ### Create a pull request

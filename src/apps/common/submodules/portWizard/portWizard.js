@@ -1781,7 +1781,8 @@ define(function(require) {
 			self.callApi({
 				resource: 'port.changeState',
 				data: _.merge({
-					accountId: self.portWizardGet('accountId')
+					accountId: self.portWizardGet('accountId'),
+					generateError: false
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
