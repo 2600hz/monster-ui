@@ -435,6 +435,7 @@
 				'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/services' },
 				'bulkChange': { verb: 'POST', url: 'accounts/{accountId}/services/' },
 				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'getAuditSummary': { verb: 'GET', url: 'accounts/{accountId}/services/audit_summary' },
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
 				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
 				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
