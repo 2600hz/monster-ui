@@ -384,8 +384,9 @@ define(function(require) {
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				isCurrentStepCompleted = navigationWizardFlags.currentStep <= navigationWizardFlags.lastCompletedStep,
 				movingForward = stepId > navigationWizardFlags.currentStep,
-				validateCurrentStep = navigationWizardFlags.validateOnStepChange || movingForward,
-				completeCurrentStep = isCurrentStepCompleted || movingForward,
+				validateOnStepChange = navigationWizardFlags.validateOnStepChange,
+				validateCurrentStep = validateOnStepChange || movingForward,
+				completeCurrentStep = !validateOnStepChange || isCurrentStepCompleted || movingForward,
 				result;
 
 			if (stepId === navigationWizardFlags.currentStep) {
@@ -405,7 +406,7 @@ define(function(require) {
 
 			//make sure we display page as previously selected
 			self.navigationWizardUnsetCurrentSelected({
-				isCompleted: _.get(result, 'valid', false) && completeCurrentStep
+				isCompleted: _.get(result, 'valid', !validateCurrentStep) && completeCurrentStep
 			});
 
 			if (_.has(result, 'data')) {
