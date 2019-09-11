@@ -78,14 +78,15 @@ define(function(require) {
 			}
 
 			_.each(stepsCompleted, function(step) {
-				if (step === navigationWizardFlags.currentStep) {
-					return;
-				}
 				if (step > _.get(navigationWizardFlags, 'lastCompletedStep', -1)) {
 					navigationWizardFlags.lastCompletedStep = step;
 				}
 
-				container
+				if (step === navigationWizardFlags.currentStep) {
+					return;
+				}
+
+				layout
 					.find('.step[data-id="' + step + '"]')
 						.addClass('completed visited');
 			});
@@ -383,8 +384,9 @@ define(function(require) {
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				isCurrentStepCompleted = navigationWizardFlags.currentStep <= navigationWizardFlags.lastCompletedStep,
 				movingForward = stepId > navigationWizardFlags.currentStep,
-				validateCurrentStep = navigationWizardFlags.validateOnStepChange || movingForward,
-				completeCurrentStep = isCurrentStepCompleted || movingForward,
+				validateOnStepChange = navigationWizardFlags.validateOnStepChange,
+				validateCurrentStep = validateOnStepChange || movingForward,
+				completeCurrentStep = !validateOnStepChange || isCurrentStepCompleted || movingForward,
 				result;
 
 			if (stepId === navigationWizardFlags.currentStep) {
@@ -404,7 +406,7 @@ define(function(require) {
 
 			//make sure we display page as previously selected
 			self.navigationWizardUnsetCurrentSelected({
-				isCompleted: _.get(result, 'valid', false) && completeCurrentStep
+				isCompleted: _.get(result, 'valid', !validateCurrentStep) && completeCurrentStep
 			});
 
 			if (_.has(result, 'data')) {
