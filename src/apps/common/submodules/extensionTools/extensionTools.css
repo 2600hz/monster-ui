@@ -1,5 +1,5 @@
 #extension_tools_get_dialog {
-	width: 420px;
+	min-width: 420px;
 	padding: 15px;
 }
 
