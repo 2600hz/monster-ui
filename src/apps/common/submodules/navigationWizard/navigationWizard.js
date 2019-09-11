@@ -78,14 +78,15 @@ define(function(require) {
 			}
 
 			_.each(stepsCompleted, function(step) {
-				if (step === navigationWizardFlags.currentStep) {
-					return;
-				}
 				if (step > _.get(navigationWizardFlags, 'lastCompletedStep', -1)) {
 					navigationWizardFlags.lastCompletedStep = step;
 				}
 
-				container
+				if (step === navigationWizardFlags.currentStep) {
+					return;
+				}
+
+				layout
 					.find('.step[data-id="' + step + '"]')
 						.addClass('completed visited');
 			});
