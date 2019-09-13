@@ -400,7 +400,6 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:f
 	box-shadow: none;
 	border-color: $primary-color;
 }
-
 label[class*='monster-checkbox'],
 label[class*='monster-radio'] {
 	position: relative;
@@ -409,102 +408,114 @@ label[class*='monster-radio'] {
 	min-height: 20px;
 	margin: 0;
 	cursor: pointer;
+
+	& > input {
+		position: absolute;
+		width: 0;
+		opacity: 0;
+	}
+	& > span {
+		display: inline-block;
+		line-height: 20px;
+		height: 20px;
+		margin: 0 0 0 14px;
+		padding: 0 0 0 6px;
+	}
+	& > i {
+		box-sizing: border-box;
+		position: absolute;
+		top: 3px;
+		left: 0;
+		width: 14px;
+		height: 14px;
+		border: solid 1px $french-gray2;
+		border-radius: 2px;
+		background: $panel-background-color;
+	}
+	& > input:checked ~ i {
+		border: 1px solid #006bca;
+		background: $primary-color;
+
+		&::after {
+			opacity: 1;
+		}
+	}
+	& > input:focus ~ i::after,
+	&:hover > input ~ i::after {
+		opacity: 1;
+		border-color: #c0c0c9;
+	}
+	& > input:checked:focus ~ i::after,
+	&:hover > input:checked ~ i::after {
+		border-color: #e0e0e9;
+	}
+	&.prepend-label > i {
+		right: 0;
+		left: initial;
+	}
+	&.prepend-label > span {
+		margin: 0 14px 0 0;
+		padding: 0 6px 0 0;
+	}
 }
-label[class*='monster-checkbox'] > input,
-label[class*='monster-radio'] > input {
-	position: absolute;
-	width: 0;
-	opacity: 0;
+label[class*='monster-checkbox'] {
+	& > input:checked ~ i::after  {
+		box-shadow: -1px 1px 1px 0px #67869C;
+	}
+	& > i::after {
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: 6px;
+		height: 3px;
+		content: '';
+		-webkit-transform: rotate(-45deg);
+		   -moz-transform: rotate(-45deg);
+			-ms-transform: rotate(-45deg);
+			 -o-transform: rotate(-45deg);
+				transform: rotate(-45deg);
+		opacity: 0;
+		border: 2px solid #fff;
+		border-top: none;
+		border-right: none;
+		background: transparent;
+	}
+	/*& > input:focus ~ i {
+		box-shadow: 0 0 2px 1px #0087e0;
+	}*/
 }
-label[class*='monster-checkbox'] > span,
-label[class*='monster-radio'] > span {
-	display: inline-block;
-	line-height: 20px;
-	height: 20px;
-	margin: 0 0 0 14px;
-	padding: 0 0 0 6px;
-}
-label[class*='monster-checkbox'] > i,
-label[class*='monster-radio'] > i {
-	box-sizing: border-box;
-	position: absolute;
-	top: 3px;
-	left: 0;
-	width: 14px;
-	height: 14px;
-	border: solid 1px #606069;
-	border-radius: 2px;
-}
-label[class*='monster-radio'] > i {
-	border-radius: 20px;
-}
-/*label[class*='monster-checkbox'] > input:focus ~ i {
-	box-shadow: 0 0 2px 1px #0087e0;
-}*/
-label[class*='monster-checkbox'] > input:checked ~ i,
-label[class*='monster-radio'] > input:checked ~ i {
-	border: 1px solid #777;
-	background: $primary-color;
-}
-label[class*='monster-checkbox'] > input:checked ~ i::after,
-label[class*='monster-radio'] > input:checked ~ i::after {
-	opacity: 1;
-}
-label[class*='monster-checkbox'] > input:focus ~ i::after,
-label[class*='monster-checkbox']:hover > input ~ i::after,
-label[class*='monster-radio'] > input:focus ~ i::after,
-label[class*='monster-radio']:hover > input ~ i::after {
-	opacity: 1;
-	border-color: #c0c0c9;
-}
-label[class*='monster-checkbox'] > input:checked:focus ~ i::after,
-label[class*='monster-checkbox']:hover > input:checked ~ i::after,
-label[class*='monster-radio'] > input:checked:focus ~ i::after,
-label[class*='monster-radio']:hover > input:checked ~ i::after {
-	border-color: #e0e0e9;
-}
-label[class*='monster-checkbox'] > i::after {
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 6px;
-	height: 3px;
-	content: '';
-	-webkit-transform: rotate(-45deg);
-	   -moz-transform: rotate(-45deg);
-		-ms-transform: rotate(-45deg);
-		 -o-transform: rotate(-45deg);
-			transform: rotate(-45deg);
-	opacity: 0;
-	border: 3px solid #fff;
-	border-top: none;
-	border-right: none;
-	background: transparent;
-}
-label[class*="monster-radio"] > i::after {
-	content: '';
-	position: absolute;
-	width: 6px;
-	height: 6px;
-	background: #fff;
-	top: 3px;
-	left: 3px;
-	border-radius: 10px;
-	opacity: 0;
+label[class*='monster-radio'] {
+	& > i {
+		border-radius: 20px;
+
+		&::after {
+			content: '';
+			position: absolute;
+			width: 6px;
+			height: 6px;
+			background: #fff;
+			top: 3px;
+			left: 3px;
+			border-radius: 10px;
+			opacity: 0;
+		}
+	}
 }
 label.monster-checkbox-large,
 label.monster-radio-large {
 	min-width: 20px;
-}
-label.monster-checkbox-large > span,
-label.monster-radio-large > span {
-	margin-left: 20px;
-}
-label.monster-checkbox-large > i,
-label.monster-radio-large > i {
-	top: 0;
-	width: 20px;
-	height: 20px;
+
+	& > span {
+		margin-left: 20px;
+	}
+	& > i {
+		top: 0;
+		width: 20px;
+		height: 20px;
+	}
+	&.prepend-label > span {
+		margin-right: 20px;
+	}
 }
 label.monster-checkbox-large > i::after {
 	width: 10px;
@@ -516,20 +527,6 @@ label.monster-radio-large > i::after {
 	height: 10px;
 	top: 4px;
 	left: 4px;
-}
-label[class*='monster-checkbox'].prepend-label > i,
-label[class*='monster-radio'].prepend-label > i {
-	right: 0;
-	left: initial;
-}
-label[class*='monster-checkbox'].prepend-label > span,
-label[class*='monster-radio'].prepend-label > span {
-	margin: 0 14px 0 0;
-	padding: 0 6px 0 0;
-}
-.monster-checkbox-large.prepend-label > span,
-.monster-radio-large.prepend-label > span {
-	margin-right: 20px;
 }
 
 /************************************************************/
