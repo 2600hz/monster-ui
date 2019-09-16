@@ -949,6 +949,7 @@ define(function(require) {
 
 	/**
 	 * Decimal and currency formatting for prices
+	 * @deprecated
 	 * @param  {Object}  args
 	 * @param  {Number}  args.price        Price to format (number or string
 	 *                                     representation of a number).
