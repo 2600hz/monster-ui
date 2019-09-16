@@ -69,34 +69,40 @@ monster.util.formatNumber({
 ### Format as currency number
 ```javascript
 monster.util.formatNumber({
+  style: 'currency',
   number: 5
 });
 // output: "$5.00"
 
 monster.util.formatNumber({
+  style: 'currency',
   number: '5.5'
 });
 // output: "$5.50"
 
 monster.util.formatNumber({
+  style: 'currency',
   number: 5,
   digits: 3
 });
 // output: "$5.000"
 
 monster.util.formatNumber({
+  style: 'currency',
   number: 5.5,
   digits: 3
 });
 // output: "$5.556"
 
 monster.util.formatNumber({
+  style: 'currency',
   number: '5',
   digits: 1
 });
 // output: "$5.0"
 
 monster.util.formatNumber({
+  style: 'currency',
   number: -5
 });
 // output: "-$5.00"
@@ -104,33 +110,39 @@ monster.util.formatNumber({
 ### Format as percent number
 ```javascript
 monster.util.formatNumber({
+  style: 'percent',
   number: .5
 });
 // output: "50%"
 
 monster.util.formatNumber({
+  style: 'percent',
   number: '.5'
 });
 // output: "50%"
 
 monster.util.formatNumber({
+  style: 'percent',
   number: 0.5
 });
 // output: "50%"
 
 monster.util.formatNumber({
+  style: 'percent',
   number: .5432,
   digits: 3
 });
 // output: "54.320%"
 
 monster.util.formatNumber({
+  style: 'percent',
   number: '.55555',
   digits: 2
 });
 // output: "55.56%"
 
 monster.util.formatNumber({
+  style: 'percent',
   number: -5,
   digits: 2
 });
