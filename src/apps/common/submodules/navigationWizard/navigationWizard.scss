@@ -6,9 +6,10 @@
 
 #navigation_wizard_wrapper .header {
 	display: flex;
+	position: relative;
 	justify-content: space-between;
 	padding: 13px 24px;
-	box-shadow: inset 0 -1px 0 0 #BCBCC2,
+	box-shadow: inset 0 -1px 0 0 $french-gray2,
 		0 1px 4px 0 rgba($woodsmoke, 0.24);
 }
 
