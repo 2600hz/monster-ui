@@ -332,7 +332,7 @@
 }
 
 #appList a:hover {
-	color: #22A5FF;
+	color: $primary-color;
 }
 
 /* Hide Dropdowns by Default */
@@ -387,6 +387,6 @@
 }
 
 #appList a[data-name="appstore"]:hover {
-	color: #22A5FF;
+	color: $primary-color;
 }
 

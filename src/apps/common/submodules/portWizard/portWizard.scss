@@ -48,7 +48,7 @@
 }
 
 #port_wizard p.title-help a {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .single-group {
@@ -101,7 +101,7 @@
 #port_wizard .form legend {
 	font-size: 16px;
 	font-weight: 600;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .form legend.important {
@@ -140,7 +140,7 @@
 
 #port_wizard .row-fluid h4.title {
 	font-weight: normal;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .steps {
@@ -154,7 +154,7 @@
 	font-size: 16px;
 	font-weight: 600;
 	margin: 0 0 15px;
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .steps span.label-button {
@@ -231,7 +231,7 @@
 }
 
 #port_wizard .portion-item.active .portion {
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }
 
 #port_wizard .portion-item .portion.partial {
@@ -256,7 +256,7 @@
 }
 
 #port_wizard .portion-item.active .portion::before {
-	border-color: #22a5ff;
+	border-color: $primary-color;
 }
 
 #port_wizard .portion.partial::after {
@@ -266,7 +266,7 @@
 }
 
 #port_wizard .portion-item.active .portion.partial::after {
-	border-bottom-color: #22a5ff;
+	border-bottom-color: $primary-color;
 }
 
 #port_wizard .portion-item .title {
@@ -277,7 +277,7 @@
 }
 
 #port_wizard .portion-item.active .title {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .textarea-wrapper .collapse {
@@ -287,7 +287,7 @@
 
 #port_wizard .textarea-wrapper .collapse,
 #port_wizard .textarea-wrapper .collapse i {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .textarea-wrapper .collapse i {
@@ -348,7 +348,7 @@
 }
 
 #port_wizard .list-wrapper .item i:not(.warning):hover {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 #port_wizard .list-wrapper .item.warning,
