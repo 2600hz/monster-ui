@@ -13,7 +13,7 @@ define(function(require) {
 		appFlags: {
 			// Default values just for reference, they will be overwritten anyways
 			navigationWizard: {
-				askForConfirmationOnCancel: false,
+				askForConfirmationBeforeLeave: false,
 				currentStep: 0,
 				validateOnStepChange: false,
 				wizardArgs: {}
@@ -23,8 +23,9 @@ define(function(require) {
 		/**
 		 * Renders the navigation wizard component
 		 * @param  {Object} args
-		 * @param  {Boolean} [args.askForConfirmationOnCancel=false]  Whether or not to ask the user for
-		 *                                                            confirmation on wizard cancellation
+		 * @param  {Boolean} [args.askForConfirmationBeforeLeave=false]  Whether or not to ask the user for
+		 *                                                               confirmation when leaving the wizard,
+		 *                                                               due to cancellation or page unload
 		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
 		 *                               button is clicked. It must be defined as a property of
 		 *                               thisArg.
@@ -63,14 +64,14 @@ define(function(require) {
 					submodule: 'navigationWizard'
 				})),
 				navigationWizardFlagsDefaults = {
-					askForConfirmationOnCancel: false,
+					askForConfirmationBeforeLeave: false,
 					currentStep: 0,
 					validateOnStepChange: false
 				},
 				navigationWizardFlags = _.merge(
 					{},
 					navigationWizardFlagsDefaults,
-					_.pick(args, 'askForConfirmationOnCancel', 'currentStep', 'validateOnStepChange')
+					_.pick(args, 'askForConfirmationBeforeLeave', 'currentStep', 'validateOnStepChange')
 				);
 
 			if (!container) {
@@ -117,6 +118,12 @@ define(function(require) {
 			self.navigationWizardSetSelected({
 				stepId: navigationWizardFlags.currentStep
 			});
+
+			if (navigationWizardFlags.askForConfirmationBeforeLeave) {
+				$(window).on('beforeunload', function() {
+					return self.i18n.active().navigationWizard.cancelDialogMessage;
+				});
+			}
 
 			//Clicking the next button
 			template
@@ -171,7 +178,7 @@ define(function(require) {
 
 						monster.waterfall([
 							function(waterfallCallback) {
-								if (!navigationWizardFlags.askForConfirmationOnCancel) {
+								if (!navigationWizardFlags.askForConfirmationBeforeLeave) {
 									return waterfallCallback(null, true);
 								}
 
