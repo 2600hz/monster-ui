@@ -127,7 +127,7 @@
 .dialog-charges .charges-element td:nth-child(odd) {
 	font-weight: bold;
 	min-width: 100px;
-	color: #22a5ff;
+	color: $primary-color;
 }
 .dialog-charges .charges-element th {
 	font-weight: normal;
@@ -384,7 +384,7 @@ input.monster-invalid[type="text"]:not(.search-query) {
 	font-size: 16px;
 	margin-bottom: 20px;
 	padding-bottom: 15px;
-	color: #22a5ff;
+	color: $primary-color;
 	border-bottom: 1px solid #c0c0c9;
 }
 .items-selector .box-selector .box-content {
@@ -425,7 +425,7 @@ input.monster-invalid[type="text"]:not(.search-query) {
 	cursor: -webkit-grabbing;
 	cursor:    -moz-grabbing;
 	cursor: move;
-	background-color: #22a5ff;
+	background-color: $primary-color;
 	color: #fff;
 }
 .items-selector .box-selector .item-selector.ui-sortable-helper .item-handle {

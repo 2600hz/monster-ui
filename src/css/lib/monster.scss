@@ -1159,7 +1159,7 @@ label.monster-radio-large > i::after {
 	color: #fff !important;
 }
 .monster-blue {
-	color: #22a5ff !important;
+	color: $primary-color !important;
 }
 .monster-green {
 	color: #33db24 !important;
@@ -1745,7 +1745,7 @@ table.monster-table {
 
 .monster-navbar.alternative-skin .navbar-menu-item-link.active {
 	background: #FFF;
-	border-top: 2px solid #22a5ff;
+	border-top: 2px solid $primary-color;
 }
 
 /************************************************************/
@@ -2074,7 +2074,7 @@ table.monster-table {
 }
 
 .monster-statuses .node.in-progress:not(:last-child) .iconography::after {
-	background-color: #22a5ff;
+	background-color: $primary-color;
 }
 
 .monster-statuses .node i {
@@ -2092,7 +2092,7 @@ table.monster-table {
 }
 
 .monster-statuses .node.in-progress i {
-	color: #22a5ff;
+	color: $primary-color;
 }
 
 .monster-statuses .node.in-progress .status,
