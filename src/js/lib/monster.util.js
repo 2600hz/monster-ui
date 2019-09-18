@@ -925,7 +925,8 @@ define(function(require) {
 		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
 			style: style,
 			currency: monster.config.currencyCode,
-			minimumFractionDigits: digits
+			minimumFractionDigits: digits,
+			maximumFractionDigits: digits
 		});
 		return formatter.format(number);
 	}
