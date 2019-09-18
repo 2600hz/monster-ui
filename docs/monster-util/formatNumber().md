@@ -13,7 +13,7 @@ monster.util.formatNumber(args);
 Key | Description | Type | Default | Required
 --- | --- | --- | --- | ---
 `number` | Number to format. | `Number`, `String` | | `true`
-`digits` | Minimum number of fractional digits (the default for plain number and percent formatting is 0; the default for currency formatting is the number of minor unit digits provided by the [ISO 4217 currency code list](https://www.currency-iso.org/en/home/tables/table-a1.html) (2 if the list doesn't provide that information).). | `Number` | | `false`
+`digits` | Exact number of fractional digits to use (will pad with 0(s) and round as needed to enforce `digits`). | `Number` | | `false`
 `style` | Formatting style to use. | `String('currency'|'decimal'|'percent')` | `decimal` | `false`
 
 ### Return value
