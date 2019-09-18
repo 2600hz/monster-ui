@@ -893,7 +893,7 @@ define(function(require) {
 	 * Wrapper over Intl.NumberFormat constructor's format function
 	 * @param  {Object} args
 	 * @param  {Number|String} args.number Number to format.
-	 * @param  {Number} [args.digits] Minimum fractional digits to use.
+	 * @param  {Number} [args.digits] Exact number of fractional digits.
 	 * @param  {('currency'|'decimal'|'percent')} [args.style='decimal'] Formating style to use.
 	 * @return {String}      String representation of `number`
 	 */
