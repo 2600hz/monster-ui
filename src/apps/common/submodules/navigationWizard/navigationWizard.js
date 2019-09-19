@@ -120,7 +120,7 @@ define(function(require) {
 			});
 
 			if (navigationWizardFlags.askForConfirmationBeforeExit) {
-				$(window).on('beforeunload.navigationWizard', function() {
+				$(window).on('beforeunload.navigationWizard.unbindBeforeLogout', function(e) {
 					if (!_.isEmpty($('#navigation_wizard_wrapper'))) {
 						return self.i18n.active().navigationWizard.cancelDialogMessage;
 					}
