@@ -156,6 +156,13 @@ define(function(require) {
 			var self = this,
 				navbar = $('.core-topbar'),
 				currentApp = navbar.find('#main_topbar_current_app'),
+				unsetDisplay = function() {
+					// Used to unset the display inline style that may be set by jQuery's fadeIn
+					// function, which is 'block' by default when the element is not displayed
+					// (display: none), so it does not override the display property set via CSS
+					// classes
+					$(this).css('display', '');
+				},
 				defaultApp;
 
 			if (appName === 'myaccount') {
@@ -177,9 +184,8 @@ define(function(require) {
 
 					navbar
 						.find('#main_topbar_current_app_name')
-						.data('originalName', 'appstore');
-
-					navbar.find('#main_topbar_current_app_name').fadeIn(100);
+							.data('originalName', 'appstore')
+							.fadeIn(100, unsetDisplay);
 				} else {
 					var originalName = navbar.find('#main_topbar_current_app_name').data('name');
 
@@ -193,9 +199,8 @@ define(function(require) {
 
 						navbar
 							.find('#main_topbar_current_app_name')
-							.data('originalName', originalName);
-
-						navbar.find('#main_topbar_current_app_name').fadeIn(100);
+								.data('originalName', originalName)
+								.fadeIn(100, unsetDisplay);
 					});
 				}
 			} else {
@@ -217,7 +222,8 @@ define(function(require) {
 							data: defaultApp
 						})));
 
-					navbar.find('#main_topbar_current_app_name').fadeIn(100);
+					navbar.find('#main_topbar_current_app_name')
+						.fadeIn(100, unsetDisplay);
 				} else {
 					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
 						currentApp
@@ -227,7 +233,8 @@ define(function(require) {
 								data: defaultApp
 							})));
 
-						navbar.find('#main_topbar_current_app_name').fadeIn(100);
+						navbar.find('#main_topbar_current_app_name')
+							.fadeIn(100, unsetDisplay);
 					});
 				}
 			}

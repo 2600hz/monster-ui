@@ -925,7 +925,7 @@ define(function(require) {
 					});
 
 			link
-				.css('background-color', '#22a5ff')
+				.css('background-color', '#2297FF')
 				.animate({
 					backgroundColor: '#f6f6f6'
 				}, 2000);

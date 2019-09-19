@@ -1,6 +1,6 @@
 <div class="app-selector">
 	<div class="app-selector-menu">
-		<ul class="nav nav-list">
+		<ul class="nav nav-list text-non-selectable">
 		{{#each filters}}
 			<li class="nav-item">
 				<a href="javascript:void(0);" data-filter="{{filter}}" class="app-filter text-container{{#if @first}} active{{/if}}">
@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div class="app-selector-list">
-			<ul class="app-list">
+			<ul class="app-list text-non-selectable">
 			{{#each apps}}
 				<li class="app-item{{#each tags}} {{this}}{{/each}}{{#ifInArray id @root.selectedAppIds}} selected{{/ifInArray}}{{#if isEven}} even{{/if}}" data-id="{{id}}" data-name="{{toLowerCase label}}">
 					<div class="text-container">
