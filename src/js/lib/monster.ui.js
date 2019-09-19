@@ -1376,9 +1376,50 @@ define(function(require) {
 		validate: function(form, options) {
 			var defaultValidatorHighlightHandler = $.validator.defaults.highlight,
 				defaultValidatorUnhighlightHandler = $.validator.defaults.unhighlight,
+				autoScrollOnInvalid = _.get(options, 'autoScrollOnInvalid', false),
 				defaultOptions = {
 					errorClass: 'monster-invalid',
 					validClass: 'monster-valid',
+					invalidHandler: function(event, validator) {
+						if (!autoScrollOnInvalid) {
+							return;
+						}
+
+						var $form = $(event.target),
+							errorItem = _.head(validator.errorList),
+							$invalidElement = $(errorItem.element),
+							scrollTo = $invalidElement.offset().top,
+							invalidElementId = $invalidElement.attr('id'),
+							$label;
+
+						// Try to find element's label, if there's any
+						if (!_.isEmpty(invalidElementId)) {
+							$label = $form.find('label[for="' + invalidElementId + '"]');
+						}
+						if (_.isEmpty($label)) {
+							$label = $invalidElement.closest('label', validator.target);
+						}
+
+						// Get scroll position
+						if (!_.isEmpty($label)) {
+							scrollTo = Math.min(scrollTo, $label.offset().top);
+						}
+						if (scrollTo >= 8) {
+							scrollTo -= 8;	// 0.5rem=8px, to add an extra margin at the top
+						}
+
+						// Animate scroll and focus
+						$([document.documentElement, document.body]).animate(
+							{
+								scrollTop: scrollTo
+							},
+							250,
+							'swing',
+							function() {
+								$invalidElement.focus();
+							}
+						);
+					},
 					errorPlacement: function(error, element) {
 						var $element = $(element);
 						if ($element.hasClass('ui-spinner-input')) {
@@ -1415,7 +1456,7 @@ define(function(require) {
 				this.initCustomValidation();
 			}
 
-			return form.validate($.extend(true, defaultOptions, options));
+			return form.validate(_.merge({}, defaultOptions, _.omit(options, 'autoScrollOnInvalid')));
 		},
 
 		valid: function(form) {
