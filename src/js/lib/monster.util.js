@@ -479,6 +479,10 @@ define(function(require) {
 		logoutAndReload: function() {
 			var self = this;
 
+			// Unbind window events before logout, via namespace (useful for events like
+			// 'beforeunload', which may block the logout action)
+			$(window).off('.unbindBeforeLogout');
+
 			self.resetAuthCookies();
 
 			self.reload();
