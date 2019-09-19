@@ -120,8 +120,13 @@ define(function(require) {
 			});
 
 			if (navigationWizardFlags.askForConfirmationBeforeExit) {
-				$(window).on('beforeunload', function() {
-					return self.i18n.active().navigationWizard.cancelDialogMessage;
+				$(window).on('beforeunload.navigationWizard', function() {
+					if (!_.isEmpty($('#navigation_wizard_wrapper'))) {
+						return self.i18n.active().navigationWizard.cancelDialogMessage;
+					}
+
+					// If wizard is no longer in the DOM, then unbind its events
+					return self.navigationWizardUnbindEvents();
 				});
 			}
 
@@ -198,6 +203,8 @@ define(function(require) {
 							}
 
 							thisArg[wizardArgs.cancel](wizardArgs);
+
+							self.navigationWizardUnbindEvents();
 						});
 					});
 
@@ -229,6 +236,13 @@ define(function(require) {
 						stepId: stepId
 					});
 				});
+		},
+
+		/**
+		 * Unbinds global event handlers set by the navigation wizard
+		 */
+		navigationWizardUnbindEvents: function() {
+			$(window).off('beforeunload.navigationWizard');
 		},
 
 		/**
@@ -449,6 +463,8 @@ define(function(require) {
 			}
 
 			wizardArgs.thisArg[wizardArgs.done](wizardArgs);
+
+			self.navigationWizardUnbindEvents();
 		}
 	};
 
