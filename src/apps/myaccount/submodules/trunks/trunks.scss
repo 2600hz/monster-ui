@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 #myaccount .myaccount-content .trunks-content .title-bar .title-box.message-box {
 	height: 60px;
 	float: right;
@@ -30,7 +32,7 @@
 }
 
 .ui-slider-range {
-	background: #22a5ff;
+	background: $primary-color;
 }
 
 #myaccount .myaccount-content .trunks-content .slider-wrapper .ui-slider {
@@ -52,7 +54,7 @@
 #myaccount .myaccount-content .trunks-content .slider-wrapper .slider-value {
 	position: absolute;
 	top: 0px;
-	color: #22a5ff;
+	color: $primary-color;
 	border: solid 1px #0297e5;
 	padding: 6px 4px;
 	font-size: 24px;
@@ -71,11 +73,11 @@
 	bottom: -7px;
 	transform: translateX(-50%);
 	position: absolute;
-	
+
 }
 
 #myaccount .myaccount-content .trunks-content .slider-wrapper .slider-value:before {
-	border-color: #22a5ff transparent;
+	border-color: $primary-color transparent;
 	border-style: solid;
 	border-width: 9px 6px 0;
 	content: "";

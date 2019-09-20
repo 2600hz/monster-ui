@@ -329,25 +329,32 @@ define(function(require) {
 				};
 
 			// Filter by tag
-			$appFilters.on('click', function() {
-				var $this = $(this),
-					filter;
+			$appFilters
+				.on('dragstart', function() {
+					// Make items non-draggable
+					return false;
+				})
+				.on('click', function(e) {
+					e.preventDefault();
 
-				if ($this.hasClass('active')) {
-					return;
-				}
+					var $this = $(this),
+						filter;
 
-				filter = $this.data('filter');
-				currentFilters.classNames = (filter === 'all') ? '' : '.' + filter;
-				currentFilters.data = '';
+					if ($this.hasClass('active')) {
+						return;
+					}
 
-				$searchInput.val('');
+					filter = $this.data('filter');
+					currentFilters.classNames = (filter === 'all') ? '' : '.' + filter;
+					currentFilters.data = '';
 
-				$appFilters.removeClass('active');
-				$this.addClass('active');
+					$searchInput.val('');
 
-				applyFilters();
-			});
+					$appFilters.removeClass('active');
+					$this.addClass('active');
+
+					applyFilters();
+				});
 
 			// Search
 			$searchInput.on('keyup', _.debounce(function(e) {
