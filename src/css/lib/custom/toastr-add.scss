@@ -1,17 +1,19 @@
+@import "../../partials/base";
+
 .toast-success {
-	background-color: #33DB24 !important;
+	background-color: $success-color !important;
 }
 
 .toast-error {
-	background-color: #FF3D24 !important;
+	background-color: $error-color !important;
 }
 
 .toast-info {
-	background-color: #22A5FF !important;
+	background-color: $primary-color !important;
 }
 
 .toast-warning {
-	background-color: #FFCC33 !important;
+	background-color: $sunglow !important;
 }
 
 #toast-container > div {

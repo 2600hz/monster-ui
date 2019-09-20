@@ -1066,7 +1066,7 @@ define(function(require) {
 
 		loginClick: function(data) {
 			var self = this,
-				loginUsername = $('#login').val(),
+				loginUsername = $('#login').val().toLowerCase(),
 				loginPassword = $('#password').val(),
 				loginAccountName = $('#account_name').val(),
 				hashedCreds = monster.md5(loginUsername + ':' + loginPassword),

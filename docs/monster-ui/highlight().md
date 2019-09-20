@@ -17,7 +17,7 @@ Key | Description | Type | Default | Required
 ### options
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`startColor` | Color of the initial highlight. | `String` | `#22a5ff` | `false`
+`startColor` | Color of the initial highlight. | `String` | `#2297FF` | `false`
 `endColor` | Color to fade to. | `String` | `#F2F2F2` | `false`
 `timer` | Total duration of the highlight in milliseconds. | `Number` | `2000` | `false`
 `callback` | Executed once the fading of the highlight is complete. | `Function` | | `false`

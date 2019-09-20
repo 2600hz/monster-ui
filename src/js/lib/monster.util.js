@@ -894,6 +894,49 @@ define(function(require) {
 	util.formatMacAddress = formatMacAddress;
 
 	/**
+	 * Wrapper over Intl.NumberFormat constructor's format function
+	 * @param  {Object} args
+	 * @param  {Number|String} args.number Number to format.
+	 * @param  {Number} [args.digits] Exact number of fractional digits.
+	 * @param  {('currency'|'decimal'|'percent')} [args.style='decimal'] Formating style to use.
+	 * @return {String}      String representation of `number`
+	 */
+	function formatNumber(args) {
+		var styles = ['currency', 'decimal', 'percent'];
+		if (
+			!(_.isNumber(args.number) || _.isString(args.number))
+			|| _.isNaN(args.number)
+			|| (_.isString(args.number) && _.chain(args.number).toNumber().isNaN().value())
+			|| (_.isString(args.number) && _.isEmpty(args.number))
+		) {
+			throw new TypeError('"number" is not a valid number or not castable into a number');
+		}
+		if (
+			!_.isUndefined(args.digits)
+			&& (!_.isInteger(args.digits) || args.digits < 0)
+		) {
+			throw new TypeError('"digits" is not a positive integer');
+		}
+		if (
+			!_.isUndefined(args.style)
+			&& !_.includes(styles, args.style)
+		) {
+			throw new TypeError('"style" is not one of ' + styles.join(', '));
+		}
+		var number = _.toNumber(args.number);
+		var style = _.get(args, 'style', 'decimal');
+		var digits = _.get(args, 'digits', undefined);
+		var formatter = new Intl.NumberFormat(monster.config.whitelabel.language, {
+			style: style,
+			currency: monster.config.currencyCode,
+			minimumFractionDigits: digits,
+			maximumFractionDigits: digits
+		});
+		return formatter.format(number);
+	}
+	util.formatNumber = formatNumber;
+
+	/**
 	 * Phone number formatting according to user preferences.
 	 * @param  {Number|String} phoneNumber Input to format as phone number
 	 * @return {String}                    Input formatted as phone number
@@ -911,6 +954,7 @@ define(function(require) {
 
 	/**
 	 * Decimal and currency formatting for prices
+	 * @deprecated
 	 * @param  {Object}  args
 	 * @param  {Number}  args.price        Price to format (number or string
 	 *                                     representation of a number).
