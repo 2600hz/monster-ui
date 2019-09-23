@@ -13,7 +13,7 @@ define(function(require) {
 		appFlags: {
 			// Default values just for reference, they will be overwritten anyways
 			navigationWizard: {
-				askForConfirmationOnCancel: false,
+				askForConfirmationBeforeExit: false,
 				currentStep: 0,
 				validateOnStepChange: false,
 				wizardArgs: {}
@@ -23,8 +23,9 @@ define(function(require) {
 		/**
 		 * Renders the navigation wizard component
 		 * @param  {Object} args
-		 * @param  {Boolean} [args.askForConfirmationOnCancel=false]  Whether or not to ask the user for
-		 *                                                            confirmation on wizard cancellation
+		 * @param  {Boolean} [args.askForConfirmationBeforeExit=false]  Whether or not to ask the user for
+		 *                                                               confirmation when leaving the wizard,
+		 *                                                               due to cancellation or page unload
 		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
 		 *                               button is clicked. It must be defined as a property of
 		 *                               thisArg.
@@ -63,14 +64,14 @@ define(function(require) {
 					submodule: 'navigationWizard'
 				})),
 				navigationWizardFlagsDefaults = {
-					askForConfirmationOnCancel: false,
+					askForConfirmationBeforeExit: false,
 					currentStep: 0,
 					validateOnStepChange: false
 				},
 				navigationWizardFlags = _.merge(
 					{},
 					navigationWizardFlagsDefaults,
-					_.pick(args, 'askForConfirmationOnCancel', 'currentStep', 'validateOnStepChange')
+					_.pick(args, 'askForConfirmationBeforeExit', 'currentStep', 'validateOnStepChange')
 				);
 
 			if (!container) {
@@ -117,6 +118,17 @@ define(function(require) {
 			self.navigationWizardSetSelected({
 				stepId: navigationWizardFlags.currentStep
 			});
+
+			if (navigationWizardFlags.askForConfirmationBeforeExit) {
+				$(window).on('beforeunload.navigationWizard.unbindBeforeLogout', function(e) {
+					if (!_.isEmpty($('#navigation_wizard_wrapper'))) {
+						return self.i18n.active().navigationWizard.cancelDialogMessage;
+					}
+
+					// If wizard is no longer in the DOM, then unbind its events
+					return self.navigationWizardUnbindEvents();
+				});
+			}
 
 			//Clicking the next button
 			template
@@ -171,7 +183,7 @@ define(function(require) {
 
 						monster.waterfall([
 							function(waterfallCallback) {
-								if (!navigationWizardFlags.askForConfirmationOnCancel) {
+								if (!navigationWizardFlags.askForConfirmationBeforeExit) {
 									return waterfallCallback(null, true);
 								}
 
@@ -191,6 +203,8 @@ define(function(require) {
 							}
 
 							thisArg[wizardArgs.cancel](wizardArgs);
+
+							self.navigationWizardUnbindEvents();
 						});
 					});
 
@@ -222,6 +236,13 @@ define(function(require) {
 						stepId: stepId
 					});
 				});
+		},
+
+		/**
+		 * Unbinds global event handlers set by the navigation wizard
+		 */
+		navigationWizardUnbindEvents: function() {
+			$(window).off('beforeunload.navigationWizard');
 		},
 
 		/**
@@ -442,6 +463,8 @@ define(function(require) {
 			}
 
 			wizardArgs.thisArg[wizardArgs.done](wizardArgs);
+
+			self.navigationWizardUnbindEvents();
 		}
 	};
 
