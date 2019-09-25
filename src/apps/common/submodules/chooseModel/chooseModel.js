@@ -234,7 +234,7 @@ define(function(require) {
 						}));
 				templateDevice.find('.block-footer').slideDown(function() {
 					popup.animate({
-						scrollTop: popup.offset().top
+						scrollTop: popup.find('.block-device-info').offset().top
 					}, 250, function() {
 						templateDevice.find('#name').focus();
 					});
