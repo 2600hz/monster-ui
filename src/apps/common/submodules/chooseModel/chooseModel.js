@@ -233,7 +233,9 @@ define(function(require) {
 							submodule: 'chooseModel'
 						}));
 				templateDevice.find('.block-footer').slideDown(function() {
-					$('html, body').animate({ scrollTop: templateDevice.find('div.block-device-info div.title-bar').offset().top }, function() {
+					popup.animate({
+						scrollTop: popup.offset().top
+					}, 250, function() {
 						templateDevice.find('#name').focus();
 					});
 				});
