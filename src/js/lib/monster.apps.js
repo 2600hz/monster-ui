@@ -364,7 +364,10 @@ define(function() {
 					.get([app.name, 'extensions'], [])
 					.map(function(extension) {
 						return function(callback) {
-							if (_.has(monster.apps, extension)) {
+							if (
+								!_.has(monster.appsStore, extension)
+								|| _.has(monster.apps, extension)
+							) {
 								return callback(null);
 							}
 							self._loadApp(extension, function() {
