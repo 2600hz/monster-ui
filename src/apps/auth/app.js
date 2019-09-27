@@ -384,7 +384,10 @@ define(function(require) {
 						monster.appsStore = _.keyBy(results.appsStore, 'name');
 
 						_.each(monster.appsStore, function(app) {
-							if (!_.has(app, 'extends')) {
+							if (
+								!_.has(app, 'extends')
+								|| !_.isArray(app.extends)
+							) {
 								return;
 							}
 							_.each(app.extends, function(extended) {
