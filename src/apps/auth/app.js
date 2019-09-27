@@ -154,7 +154,7 @@ define(function(require) {
 			var self = this,
 				tmp = JSON.parse(atob(decodeURIComponent(params.state))),
 				url = window.location.protocol + '//' + window.location.host,
-				data = $.extend(true, {redirect_uri: url}, tmp, params);
+				data = $.extend(true, { redirect_uri: url }, tmp, params);
 
 			self.authenticateAuthCallback(data, function(authData) {
 				success && success(authData);
