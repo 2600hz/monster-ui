@@ -397,6 +397,9 @@ define(function(require) {
 								) {
 									return;
 								}
+								if (_.chain(monster.appsStore).get([extended, 'extensions'], []).includes(app.name).value()) {
+									return;
+								}
 								if (!_.has(monster.appsStore, [extended, 'extensions'])) {
 									_.set(monster.appsStore, [extended, 'extensions'], []);
 								}
