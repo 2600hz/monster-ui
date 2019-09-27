@@ -391,6 +391,12 @@ define(function(require) {
 								return;
 							}
 							_.each(app.extends, function(extended) {
+								if (
+									!_.isString(extended)
+									|| !_.has(monster.appsStore, extended)
+								) {
+									return;
+								}
 								monster.appsStore[extended].extensions = monster.appsStore[extended].extensions || [];
 								monster.appsStore[extended].extensions.push(app.name);
 							});
