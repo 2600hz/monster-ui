@@ -397,7 +397,9 @@ define(function(require) {
 								) {
 									return;
 								}
-								monster.appsStore[extended].extensions = monster.appsStore[extended].extensions || [];
+								if (!_.has(monster.appsStore, [extended, 'extensions'])) {
+									_.set(monster.appsStore, [extended, 'extensions'], []);
+								}
 								monster.appsStore[extended].extensions.push(app.name);
 							});
 						});
