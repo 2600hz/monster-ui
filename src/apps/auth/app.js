@@ -154,7 +154,7 @@ define(function(require) {
 			var self = this,
 				tmp = JSON.parse(atob(decodeURIComponent(params.state))),
 				url = window.location.protocol + '//' + window.location.host,
-				data = $.extend(true, {redirect_uri: url}, tmp, params);
+				data = $.extend(true, { redirect_uri: url }, tmp, params);
 
 			self.authenticateAuthCallback(data, function(authData) {
 				success && success(authData);
@@ -384,11 +384,25 @@ define(function(require) {
 						monster.appsStore = _.keyBy(results.appsStore, 'name');
 
 						_.each(monster.appsStore, function(app) {
-							if (!_.has(app, 'extends')) {
+							if (
+								!_.has(app, 'extends')
+								|| !_.isArray(app.extends)
+							) {
 								return;
 							}
 							_.each(app.extends, function(extended) {
-								monster.appsStore[extended].extensions = monster.appsStore[extended].extensions || [];
+								if (
+									!_.isString(extended)
+									|| !_.has(monster.appsStore, extended)
+								) {
+									return;
+								}
+								if (_.chain(monster.appsStore).get([extended, 'extensions'], []).includes(app.name).value()) {
+									return;
+								}
+								if (!_.has(monster.appsStore, [extended, 'extensions'])) {
+									_.set(monster.appsStore, [extended, 'extensions'], []);
+								}
 								monster.appsStore[extended].extensions.push(app.name);
 							});
 						});
