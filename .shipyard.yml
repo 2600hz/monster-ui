@@ -2,10 +2,10 @@
 name: monster-ui-core
 base_branch: origin/master
 metapackage:
-  name: meta-monster-ui
-  type: required
-  branch: master
-  package: monster-ui-core
+  - name: meta-monster-ui
+    type: required
+    branch: master
+    package: monster-ui-core
 base_core: 
 template: monster-ui-core.spec.tmpl
 package:
