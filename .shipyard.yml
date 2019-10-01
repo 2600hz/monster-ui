@@ -3,7 +3,9 @@ name: monster-ui-core
 base_branch: origin/4.3
 metapackage:
   name: monster-ui
-  type: dependency
+  type: required
+  branch: "4.3"
+  package: monster-ui-core
 base_core: 
 template: monster-ui-core.spec.tmpl
 package:
@@ -21,4 +23,4 @@ package:
     license: MPL1.1
     group: Productivity/Telephony
     url: http://www.2600hz.org/
-    vendor: http://www.2600hz.org/
+    vendor: 2600hz
