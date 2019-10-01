@@ -2,7 +2,7 @@
 name: monster-ui-core
 base_branch: origin/4.3
 metapackage:
-  - name: monster-ui
+  - name: meta-monster-ui
     type: required
     branch: "4.3"
     package: monster-ui-core
