@@ -174,10 +174,6 @@
 }
 
 @media print {
-	.core-topbar-wrapper {
-		display: none;
-	}
-
 	#navigation_wizard_wrapper {
 		.header {
 			display: none;
@@ -195,18 +191,5 @@
 		.footer {
 			display: none;
 		}
-	}
-
-	/*
-	// Print Telicon v2 icons using inherited color, overriding bootstrap rule for color printing
-	symbol[id^="telicon2"] {
-		&, * {
-			color: inherit !important;
-		}
-	}
-	*/
-
-	@page {
-		margin: 0.75in;
 	}
 }
