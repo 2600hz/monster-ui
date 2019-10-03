@@ -26,3 +26,15 @@
 	/* Prevent the icon from shrinking inside a flex container */
 	flex-shrink: 0;
 }
+
+/*
+@media print {
+	// Print Telicon v2 icons using inherited color, overriding bootstrap rule
+	// to force black color on print
+	symbol[id^="telicon2"] {
+		&, * {
+			color: inherit !important;
+		}
+	}
+}
+*/
