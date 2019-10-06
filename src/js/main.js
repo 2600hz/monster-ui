@@ -53,7 +53,7 @@ require.config({
 		'vfs_fonts': 'js/vendor/pdfmake/build/vfs_fonts',
 		'postal': 'js/vendor/postal-2.0.4.min',
 		'popup-redirect': 'js/vendor/popup-redirect',
-		'randomColor': 'js/vendor/randomColor',
+		'randomColor': 'js/vendor/randomColor.min',
 		'renderjson': 'js/vendor/renderjson',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
 		'signals': 'js/vendor/signals.min',
