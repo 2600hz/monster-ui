@@ -11,7 +11,7 @@ require.config({
 		'config': 'js/config',
 		'cookies': 'js/vendor/js.cookie.min',
 		'crossroads': 'js/vendor/crossroads.min',
-		'disableAutoFill': 'js/vendor/jquery.disableAutoFill',
+		'disableAutoFill': 'js/vendor/jquery.disableAutoFill.min',
 		'drop': 'js/vendor/drop',
 		'duo': 'js/vendor/duo.min',
 		'file-saver': 'js/vendor/file-saver-1.3.2.min',
