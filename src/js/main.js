@@ -11,7 +11,6 @@ require.config({
 		'config': 'js/config',
 		'cookies': 'js/vendor/js.cookie',
 		'crossroads': 'js/vendor/crossroads.min',
-		'ddslick': 'js/vendor/jquery.ddslick.min',
 		'disableAutoFill': 'js/vendor/jquery.disableAutoFill',
 		'drop': 'js/vendor/drop',
 		'duo': 'js/vendor/duo.min',
@@ -71,7 +70,6 @@ require.config({
 		'card': ['jquery'],
 		'chosen': ['jquery'],
 		'crossroads': ['signals'],
-		'ddslick': ['jquery'],
 		'drop': ['tether'],
 		'fileupload': ['jquery'],
 		'footable': {

@@ -29,7 +29,6 @@ const libsToExcludeFromApp = [
 	'config',
 	'cookies',
 	'crossroads',
-	'ddslick',
 	'disableAutoFill',
 	'drop',
 	'duo',

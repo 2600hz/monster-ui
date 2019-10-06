@@ -4,7 +4,6 @@ define(function(require) {
 		async = require('async'),
 		card = require('card'),
 		Cookies = require('cookies'),
-		ddslick = require('ddslick'),
 		fileupload = require('fileupload'),
 		form2object = require('form2object'),
 		handlebars = require('handlebars'),
