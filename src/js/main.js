@@ -18,7 +18,7 @@ require.config({
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/vendor/footable.min',
 		'form2object': 'js/vendor/form2object.min',
-		'handlebars': 'js/vendor/handlebars-v4.4.1',
+		'handlebars': 'js/vendor/handlebars-v4.4.1.min',
 		'hasher': 'js/vendor/hasher.min',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
 		'introJs': 'js/vendor/intro.min',
