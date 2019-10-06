@@ -34,7 +34,7 @@ require.config({
 		'md5': 'js/vendor/md5.min',
 		'modernizr': 'js/vendor/modernizr-2.6.2.min',
 		'moment': 'js/vendor/moment.min',
-		'moment-timezone': 'js/vendor/moment-timezone',
+		'moment-timezone': 'js/vendor/moment-timezone.min',
 		'monster': 'js/lib/monster',
 		'monster-apps': 'js/lib/monster.apps',
 		'monster-routing': 'js/lib/monster.routing',
