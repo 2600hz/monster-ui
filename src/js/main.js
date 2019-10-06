@@ -61,7 +61,7 @@ require.config({
 		'templates': 'js/templates',
 		'tether': 'js/vendor/tether.min',
 		'timepicker': 'js/vendor/jquery.timepicker.min',
-		'toastr': 'js/vendor/toastr-1.3.0',
+		'toastr': 'js/vendor/toastr-1.3.0.min',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
 		'validate': 'js/vendor/jquery.validate.min',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min'
