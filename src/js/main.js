@@ -54,7 +54,7 @@ require.config({
 		'postal': 'js/vendor/postal-2.0.4.min',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'randomColor': 'js/vendor/randomColor.min',
-		'renderjson': 'js/vendor/renderjson',
+		'renderjson': 'js/vendor/renderjson.min',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
 		'signals': 'js/vendor/signals.min',
 		'templates': 'js/templates',
