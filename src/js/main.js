@@ -17,7 +17,7 @@ require.config({
 		'file-saver': 'js/vendor/file-saver-1.3.2.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/vendor/footable.min',
-		'form2object': 'js/vendor/form2object',
+		'form2object': 'js/vendor/form2object.min',
 		'handlebars': 'js/vendor/handlebars-v4.4.1',
 		'hasher': 'js/vendor/hasher.min',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
