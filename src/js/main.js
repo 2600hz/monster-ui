@@ -4,7 +4,7 @@ require.config({
 	paths: {
 		'async': 'js/vendor/async.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
-		'card': 'js/vendor/card',
+		'card': 'js/vendor/card.min',
 		'chart': 'js/vendor/Chart.min',
 		'chosen': 'js/vendor/jquery.chosen.min',
 		'clipboard': 'js/vendor/clipboard.min',
