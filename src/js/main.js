@@ -51,7 +51,7 @@ require.config({
 		'pdfjs-dist/build/pdf.worker': 'js/vendor/pdfjs/build/pdf.worker',
 		'pdfmake': 'js/vendor/pdfmake/build/pdfmake.min',
 		'vfs_fonts': 'js/vendor/pdfmake/build/vfs_fonts',
-		'postal': 'js/vendor/postal-2.0.4',
+		'postal': 'js/vendor/postal-2.0.4.min',
 		'popup-redirect': 'js/vendor/popup-redirect',
 		'randomColor': 'js/vendor/randomColor',
 		'renderjson': 'js/vendor/renderjson',
