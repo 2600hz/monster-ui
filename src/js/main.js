@@ -33,7 +33,7 @@ require.config({
 		'mask': 'js/vendor/jquery.mask.min',
 		'md5': 'js/vendor/md5.min',
 		'modernizr': 'js/vendor/modernizr-2.6.2.min',
-		'moment': 'js/vendor/moment',
+		'moment': 'js/vendor/moment.min',
 		'moment-timezone': 'js/vendor/moment-timezone',
 		'monster': 'js/lib/monster',
 		'monster-apps': 'js/lib/monster.apps',
