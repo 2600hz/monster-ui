@@ -21,6 +21,7 @@ pages:
 - 'References':
   - 'appContext':
     - 'docs/appContext/callApi().md'
+    - 'docs/appContext/getTemplate().md'
   - 'monster':
     - 'docs/monster/getTemplate().md'
     - 'docs/monster/parallel().md'

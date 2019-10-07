@@ -3,7 +3,7 @@ title: getTemplate()
 # monster.getTemplate()
 
 ## Syntax
-```javascript
+```js
 monster.getTemplate(args);
 ```
 
@@ -29,45 +29,26 @@ The `monster.getTemplate()` method allows you to request templates simply by spe
 You can use the same getTemplate method and bypass the app property by using `this.getTemplate(args)` within the right scope in an app.
 
 ## Examples
-### Load template with no data into the DOM
-```javascript
-function renderApp(container) {
-  var template = $(monster.getTemplate({
-    app: app,
-    name: 'app'
-  }));
-
-  container
-    .empty()
-    .append(template);
-}
-
-// Do something with `renderApp`
+### Load template with no data
+```js
+var $template = $(monster.getTemplate({
+  app: app,
+  name: 'helloWorld'
+}));
 ```
-### Load template with data into the DOM
-```javascript
-function renderApp(container) {
-  getUserData(app.userId, function(userData) {
-    var dataToTemplate = {
-      userId: app.userId,
-      userData: userData
-    };
-    var template = $(monster.getTemplate({
-      app: app,
-      name: 'app',
-      data: dataToTemplate
-    }));
-
-    container
-      .empty()
-      .append(template);
-  });
-}
-
-// Do something with `renderApp`
+### Load template with data
+```js
+var $template = $(monster.getTemplate({
+  app: app,
+  name: 'userInfo',
+  data: {
+    firstName: 'Clark',
+    lastname: 'Kent'
+  }
+}));
 ```
 ### Load a string template in a Toastr Notification or Monster Alert
-```javascript
+```js hl_lines="7 8 9 10 11 12 21 22 23 24 25 25 26"
 function renderUserCreate(newUserData) {
   requestCreateUser({
     data: {
@@ -100,6 +81,4 @@ function renderUserCreate(newUserData) {
     }
   });
 }
-
-// Do something with `renderUserCreate`
 ```
