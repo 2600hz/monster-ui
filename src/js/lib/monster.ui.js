@@ -3358,6 +3358,26 @@ define(function(require) {
 	ui.chosen = chosen;
 
 	/**
+	 * Transforms a select field into a searchable list of countries.
+	 * @param  {jQuery} $target  Select input on which the method will be applied
+	 * @param  {String|String[]} selectedValues  List of selected values
+	 */
+	function countrySelector($target, selectedValues, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!$target.is('select')) {
+			throw TypeError('"$target" is not a select input');
+		}
+		var itemsTemplate = getCountrySelectorTemplate({
+			selectedValues: selectedValues
+		});
+		$target.append(itemsTemplate);
+		ui.chosen($target, options);
+	}
+	ui.countrySelector = countrySelector;
+
+	/**
 	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
 	 * auto filling of username/password `input` elements.
 	 * @param  {jQuery} $target Form to obfuscate fields of
@@ -3375,6 +3395,40 @@ define(function(require) {
 		}));
 	}
 	ui.disableAutoFill = disableAutoFill;
+
+	/**
+	 * Gets a template to render the option items for a `select` list of the countries
+	 *
+	 * @private
+	 * @param {Object} args
+	 * @param {String|String[]} [args.selectedValues]  The value or values to be selected
+	 */
+	function getCountrySelectorTemplate(args) {
+		if (!_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		var selectedValues = _.get(args, 'selectedValues', []),
+			countries;
+		if (!_.isString(selectedValues) && !_.isArray(selectedValues)) {
+			throw TypeError('"selectedValues" is not a string nor an array');
+		}
+		// Delay countries iteration until we know that all the parameters are valid, to avoid
+		// unnecessary processing
+		countries = _
+			.chain(monster.timezone.getCountries())
+			.map(function(name, key) {
+				return {
+					value: key,
+					label: name
+				};
+			})
+			.sortBy('label')
+			.value();
+		return monster.template(monster.apps.core, 'monster-country-selector', {
+			countries: countries,
+			selectedCountries: selectedValues
+		});
+	}
 
 	/**
 	 * Collect strucutred form data into a plain object
@@ -3562,6 +3616,8 @@ define(function(require) {
 
 	/**
 	 * Merges HTML attributes, mapped as JSON objects
+	 *
+	 * @private
 	 * @param   {Object} object  Destination object
 	 * @param   {Object} source  Source object
 	 * @returns {Object}         Returns `object` after merge
