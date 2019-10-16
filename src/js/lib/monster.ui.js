@@ -3327,11 +3327,11 @@ define(function(require) {
 
 		$target.chosen(options);
 
-		if (!options.tags) {
-			return;
-		}
-
 		instance = $target.data('chosen');
+
+		if (!options.tags) {
+			return instance;
+		}
 
 		// Bind the keyup event to the search box input
 		instance.search_field.on('keyup', function(event) {
@@ -3354,6 +3354,8 @@ define(function(require) {
 				.append($newOption)
 				.trigger('chosen:updated');
 		});
+
+		return instance;
 	}
 	ui.chosen = chosen;
 
@@ -3373,7 +3375,49 @@ define(function(require) {
 			selectedValues: selectedValues
 		});
 		$target.append(itemsTemplate);
-		ui.chosen($target, options);
+		var chosenInstance = ui.chosen($target, options),
+			getItemTemplate = function(args) {
+				return $(monster.template(monster.apps.core, 'monster-country-selector-item', {
+					label: args.label,
+					code: args.code
+				}));
+			},
+			updateSelectedItems = function() {
+				var $selectedItem = chosenInstance
+					.container
+						.find('.chosen-single>span:not(:has(span.monster-country-item-label))');
+				if ($selectedItem.length === 0) {
+					return;
+				}
+				var code = $target.find('option:selected').prop('value'),
+					label = $selectedItem.html(),
+					$newSelectedItem = getItemTemplate({
+						label: label,
+						code: code
+					});
+				$selectedItem.empty().append($newSelectedItem);
+			};
+		chosenInstance.container.addClass('monster-country-selector');
+		// Add images to list items
+		chosenInstance.container.on('click.chosen, mousedown.chosen, keyup.chosen', function() {
+			var $items = chosenInstance
+				.container
+					.find('.chosen-results li:not(.monster-country-item)');
+			$items.each(function() {
+				var $this = $(this),
+					optionIndex = $this.attr('data-option-array-index'),
+					option = chosenInstance.form_field.options[optionIndex],
+					$newItem = getItemTemplate({
+						label: $this.html(),
+						code: option.value
+					});
+				$this.addClass('monster-country-item').empty().append($newItem);
+			});
+		});
+		//Change image on chosen selected element when form changes.
+		$target.on('chosen:hiding_dropdown', updateSelectedItems);
+		// Update initial selected item
+		updateSelectedItems();
 	}
 	ui.countrySelector = countrySelector;
 
@@ -3416,10 +3460,10 @@ define(function(require) {
 		// unnecessary processing
 		countries = _
 			.chain(monster.timezone.getCountries())
-			.map(function(name, key) {
+			.map(function(label, code) {
 				return {
-					value: key,
-					label: name
+					code: code,
+					label: label
 				};
 			})
 			.sortBy('label')
