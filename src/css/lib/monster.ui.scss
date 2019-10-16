@@ -995,3 +995,22 @@ i.monster-password-strength {
 		font-size: 0.75rem;
 	}
 }
+
+/************************************************************/
+/***************** MONSTER COUNTRY SELECTOR *****************/
+/************************************************************/
+
+.monster-country-selector.chosen-container-single {
+	span.monster-country-item-label {
+		// The tag name was used to add specificity, to override the default chosen styles
+		display: inline;
+		margin-right: 0.75rem;
+	}
+	.monster-country-item-flag {
+		display: inline-block;
+		width: 1.125rem;
+		height: 1.125rem;
+		margin-bottom: -1px;
+		margin-top: -5px;	// To keep item container's height
+	}
+}

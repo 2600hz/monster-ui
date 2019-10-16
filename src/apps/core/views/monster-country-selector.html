@@ -1,5 +1,7 @@
 {{#select selectedCountries}}
 	{{#each countries}}
-		<option value="{{value}}">{{label}}</option>
+		<option value="{{code}}">
+			{{label}}
+		</option>
 	{{/each}}
 {{/select}}
