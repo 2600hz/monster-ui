@@ -3363,8 +3363,8 @@ define(function(require) {
 	/**
 	 * Transforms a select field into a searchable list of countries.
 	 * @param  {jQuery} $target  <select> element on which the list will be built
-	 * @param  {String|String[]} selectedValues  List of selected values
-	 * @param  {Object} options  Options for widget
+	 * @param  {String|String[]} [selectedValues]  List of selected values
+	 * @param  {Object} [options]  Options for widget
 	 * @returns  {Object}  Chosen instance
 	 */
 	function countrySelector($target, selectedValues, options) {
@@ -3377,7 +3377,7 @@ define(function(require) {
 		if (!_.isUndefined(selectedValues) && !_.isString(selectedValues) && !_.isArray(selectedValues)) {
 			throw TypeError('"selectedValues" is not a string nor an array');
 		}
-		if (!_.isPlainObject(options)) {
+		if (!_.isUndefined(selectedValues) && !_.isPlainObject(options)) {
 			throw TypeError('"options" is not a plain object');
 		}
 
