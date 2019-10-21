@@ -3374,11 +3374,20 @@ define(function(require) {
 		if (!$target.is('select')) {
 			throw TypeError('"$target" is not a select input');
 		}
+		if (!_.isUndefined(selectedValues) && !_.isString(selectedValues) && !_.isArray(selectedValues)) {
+			throw TypeError('"selectedValues" is not a string nor an array');
+		}
+		if (!_.isPlainObject(options)) {
+			throw TypeError('"options" is not a plain object');
+		}
+
+		var selectedValues = _.isUndefined(selectedValues) ? [] : selectedValues,
+			showEmptyOption = _.get(options, 'showEmptyOption', false);
 
 		// Render items
 		var itemsTemplate = getCountrySelectorTemplate({
 			selectedValues: selectedValues,
-			showEmptyOption: _.get(options, 'showEmptyOption', false)
+			showEmptyOption: showEmptyOption
 		});
 		$target.append(itemsTemplate);
 
@@ -3474,30 +3483,23 @@ define(function(require) {
 	 *
 	 * @private
 	 * @param {Object} args
-	 * @param {String|String[]} [args.selectedValues]  The value or values to be selected
+	 * @param {String|String[]} args.selectedValues  The value or values to be selected
+	 * @param {Boolean} args.showEmptyOption  Whether or not to add an empty option to the list
+	 * @returns  {String}  Country selector template
 	 */
 	function getCountrySelectorTemplate(args) {
-		if (!_.isPlainObject(args)) {
-			throw TypeError('"args" is not a plain object');
-		}
-		var selectedValues = _.get(args, 'selectedValues', []),
-			showEmptyOption = _.get(args, 'showEmptyOption', false),
-			countries;
-		if (!_.isString(selectedValues) && !_.isArray(selectedValues)) {
-			throw TypeError('"selectedValues" is not a string nor an array');
-		}
-		// Delay countries iteration until we know that all the parameters are valid, to avoid
-		// unnecessary processing
-		countries = _
-			.chain(monster.timezone.getCountries())
-			.map(function(label, code) {
-				return {
-					code: code,
-					label: label
-				};
-			})
-			.sortBy('label')
-			.value();
+		var selectedValues = args.selectedValues,
+			showEmptyOption = args.showEmptyOption,
+			countries = _
+				.chain(monster.timezone.getCountries())
+				.map(function(label, code) {
+					return {
+						code: code,
+						label: label
+					};
+				})
+				.sortBy('label')
+				.value();
 		return monster.template(monster.apps.core, 'monster-country-selector', {
 			countries: countries,
 			selectedCountries: selectedValues,
