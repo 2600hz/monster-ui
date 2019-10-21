@@ -3300,6 +3300,7 @@ define(function(require) {
 	 * Chosen plugin wrapper used to apply the same default options
 	 * @param  {jQuery} $target  <select> element to invoke chosen on
 	 * @param  {Object} pOptions Options for widget
+	 * @returns  {Object}  Chosen instance
 	 */
 	function chosen($target, pOptions) {
 		var i18n = monster.apps.core.i18n.active().chosen;
@@ -3361,8 +3362,10 @@ define(function(require) {
 
 	/**
 	 * Transforms a select field into a searchable list of countries.
-	 * @param  {jQuery} $target  Select input on which the method will be applied
+	 * @param  {jQuery} $target  <select> element on which the list will be built
 	 * @param  {String|String[]} selectedValues  List of selected values
+	 * @param  {Object} options  Options for widget
+	 * @returns  {Object}  Chosen instance
 	 */
 	function countrySelector($target, selectedValues, options) {
 		if (!($target instanceof $)) {
@@ -3371,53 +3374,78 @@ define(function(require) {
 		if (!$target.is('select')) {
 			throw TypeError('"$target" is not a select input');
 		}
+
+		// Render items
 		var itemsTemplate = getCountrySelectorTemplate({
 			selectedValues: selectedValues
 		});
 		$target.append(itemsTemplate);
+
+		// Initialize chosen, and define functions to render flags
 		var chosenInstance = ui.chosen($target, options),
-			getItemTemplate = function(args) {
-				return $(monster.template(monster.apps.core, 'monster-country-selector-item', {
-					label: args.label,
-					code: args.code
-				}));
+			replaceItem = function($item, code) {
+				var newItem = monster.template(
+					monster.apps.core,
+					'monster-country-selector-item',
+					{
+						label: $item.html(),
+						code: code
+					}
+				);
+				$item.empty().append(newItem);
 			},
 			updateSelectedItems = function() {
-				var $selectedItem = chosenInstance
-					.container
-						.find('.chosen-single>span:not(:has(span.monster-country-item-label))');
-				if ($selectedItem.length === 0) {
-					return;
-				}
-				var code = $target.find('option:selected').prop('value'),
-					label = $selectedItem.html(),
-					$newSelectedItem = getItemTemplate({
-						label: label,
-						code: code
+				if (chosenInstance.is_multiple) {
+					var $selectedItems = chosenInstance
+						.search_choices
+							.find('li>span')
+								.not(':has(span.monster-country-item-label)');
+					if ($selectedItems.length === 0) {
+						return;
+					}
+					$selectedItems.each(function() {
+						var $this = $(this),
+							optionIndex = $this
+								.nextAll('.search-choice-close')
+									.attr('data-option-array-index'),
+							option = chosenInstance.form_field.options[optionIndex];
+						replaceItem($this, option.value);
 					});
-				$selectedItem.empty().append($newSelectedItem);
+				} else {
+					var $selectedItem = chosenInstance
+						.container
+							.find('.chosen-single>span')
+								.not(':has(span.monster-country-item-label)');
+					if ($selectedItem.length === 0) {
+						return;
+					}
+					replaceItem($selectedItem, $target.val());
+				}
 			};
 		chosenInstance.container.addClass('monster-country-selector');
-		// Add images to list items
+
+		// Add flags to item list
 		chosenInstance.container.on('click.chosen, mousedown.chosen, keyup.chosen', function() {
 			var $items = chosenInstance
 				.container
-					.find('.chosen-results li:not(.monster-country-item)');
+					.find('.chosen-results li')
+						.not('.monster-country-item');
 			$items.each(function() {
 				var $this = $(this),
 					optionIndex = $this.attr('data-option-array-index'),
-					option = chosenInstance.form_field.options[optionIndex],
-					$newItem = getItemTemplate({
-						label: $this.html(),
-						code: option.value
-					});
-				$this.addClass('monster-country-item').empty().append($newItem);
+					option = chosenInstance.form_field.options[optionIndex];
+				$this.addClass('monster-country-item');
+				replaceItem($this, option.value);
 			});
 		});
-		//Change image on chosen selected element when form changes.
+
+		// Change flag if necessary, when dropdown is hidden
 		$target.on('chosen:hiding_dropdown', updateSelectedItems);
+
 		// Update initial selected item
 		updateSelectedItems();
+
+		return chosenInstance;
 	}
 	ui.countrySelector = countrySelector;
 
