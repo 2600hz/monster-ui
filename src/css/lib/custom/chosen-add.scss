@@ -54,8 +54,14 @@
 }
 
 
-.chosen-container-single .chosen-single span {
-	color: #444;
+.chosen-container-single .chosen-single {
+	span {
+		color: #444;
+	}
+
+	&.chosen-default span {
+		color: #999999;
+	}
 }
 
 .control-group.warning {
