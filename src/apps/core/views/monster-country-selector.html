@@ -1,4 +1,8 @@
 {{#select selectedCountries}}
+	{{#if showEmptyOption}}
+		<option value="">
+		</option>
+	{{/if}}
 	{{#each countries}}
 		<option value="{{code}}">
 			{{label}}
