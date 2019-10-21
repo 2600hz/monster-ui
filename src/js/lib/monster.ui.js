@@ -3377,7 +3377,8 @@ define(function(require) {
 
 		// Render items
 		var itemsTemplate = getCountrySelectorTemplate({
-			selectedValues: selectedValues
+			selectedValues: selectedValues,
+			showEmptyOption: _.get(options, 'showEmptyOption', false)
 		});
 		$target.append(itemsTemplate);
 
@@ -3414,7 +3415,7 @@ define(function(require) {
 				} else {
 					var $selectedItem = chosenInstance
 						.container
-							.find('.chosen-single>span')
+							.find('.chosen-single:not(.chosen-default)>span')
 								.not(':has(span.monster-country-item-label)');
 					if ($selectedItem.length === 0) {
 						return;
@@ -3480,6 +3481,7 @@ define(function(require) {
 			throw TypeError('"args" is not a plain object');
 		}
 		var selectedValues = _.get(args, 'selectedValues', []),
+			showEmptyOption = _.get(args, 'showEmptyOption', false),
 			countries;
 		if (!_.isString(selectedValues) && !_.isArray(selectedValues)) {
 			throw TypeError('"selectedValues" is not a string nor an array');
@@ -3498,7 +3500,8 @@ define(function(require) {
 			.value();
 		return monster.template(monster.apps.core, 'monster-country-selector', {
 			countries: countries,
-			selectedCountries: selectedValues
+			selectedCountries: selectedValues,
+			showEmptyOption: showEmptyOption
 		});
 	}
 
