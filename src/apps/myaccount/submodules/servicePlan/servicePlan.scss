@@ -1,0 +1,69 @@
+@import '../../../../css/partials/base.scss';
+
+.service-plan-content-wrapper {
+	& > *:not(:first-child) {
+		margin-top: 20px;
+	}
+	.fancy-header {
+		.left-image {
+			width: 57px;
+		}
+
+	 	.right-block .main-title {
+			font-size: 30px;
+			font-weight: bold;
+		}
+	}
+
+	.action-bar {
+		height: 40px;
+		width: 100%;
+
+		& > * {
+			float: left;
+		}
+
+		.date-selection select {
+			margin-bottom: 0px;
+		}
+	}
+
+	/* Table Customization */
+	table.table {
+		border: solid 1px $french-gray;
+
+		th {
+			text-align: center;
+			background: $background-primary-color;
+			color: $font-primary-color;
+			text-shadow: none;
+			border-bottom: solid 1px $french-gray;
+
+			&:first-child,
+			&:last-child {
+				width: 10px;
+				padding: 0;
+			}
+		}
+
+		tr {
+			background: #fff;
+
+			td {
+				text-align: center;
+				border: none;
+
+				&:first-child,
+				&:last-child {
+					width: 10px;
+					padding: 0;
+					border: none;
+				}
+			}
+
+			&:not(:first-child) td {
+				border-top: solid 1px $french-gray;
+			}
+		}
+	}
+}
