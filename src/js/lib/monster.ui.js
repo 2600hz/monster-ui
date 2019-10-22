@@ -3784,6 +3784,45 @@ define(function(require) {
 	}
 	ui.toast = toast;
 
+	function maxlength(target, args) {
+		var $this = $(target),
+			size = args.size,
+			customClass = args.customClass || '',
+			type = args.type,
+			currentLenght = $this.val().length,
+			allowedChars = size - currentLenght,
+			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().maxlength.label).prepend($('<span>').text(allowedChars)),
+			checkLength = function(event) {
+				var $target = $(event.target);
+
+				currentLenght = type === 'div' ? $target[0].textContent.length : $target.val().length;
+				allowedChars = size - currentLenght;
+
+				if (allowedChars <= 0 || allowedChars > size) {
+					label.addClass('maxlength-error');
+
+					event.preventDefault();
+					return false;
+				} else {
+					label
+						.removeClass('maxlength-error')
+						.empty()
+						.text(monster.apps.core.i18n.active().maxlength.label).prepend($('<span>').text(allowedChars));
+				}
+			};
+
+		$this.after(label);
+
+		$this.on('keypress', function(event) {
+			checkLength(event);
+		});
+
+		$this.on('keyup', function(event) {
+			checkLength(event);
+		});
+	}
+	ui.maxlength = maxlength;
+
 	initialize();
 
 	return ui;
