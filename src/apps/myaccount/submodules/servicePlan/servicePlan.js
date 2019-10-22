@@ -5,25 +5,37 @@ define(function(require) {
 
 	return {
 		subscribe: {
+			'myaccount.servicePlan.getTemplate': '_servicePlanGetTemplate',
 			'myaccount.servicePlan.renderContent': '_servicePlanRender'
 		},
 
 		_servicePlanRender: function(args) {
 			var self = this;
-			var initTemplate = function(result) {
-				var template = $(self.getTemplate({
-					name: 'layout',
-					data: self.servicePlanFormat(result),
-					submodule: 'servicePlan'
-				}));
-				self.servicePlanBindEvents(template);
-				monster.pub('myaccount.renderSubmodule', template);
-				return template;
-			};
+
+			self._servicePlanGetTemplate({
+				callback: function($template) {
+					self.servicePlanBindEvents($template);
+					monster.pub('myaccount.renderSubmodule', $template);
+					args.hasOwnProperty('callback') && args.callback($template);
+				}
+			});
+		},
+
+		_servicePlanGetTemplate: function(args) {
+			var self = this,
+				initTemplate = function initTemplate(result) {
+					var $template = $(self.getTemplate({
+						name: 'layout',
+						data: self.servicePlanFormat(result),
+						submodule: 'servicePlan'
+					}));
+					return $template;
+				};
+
 			self.servicePlanRequestGetSummary({
 				success: function(result) {
-					var template = initTemplate(result);
-					args.hasOwnProperty('callback') && args.callback(template);
+					var $template = initTemplate(result);
+					_.has(args, 'callback') && args.callback($template);
 				}
 			});
 		},
