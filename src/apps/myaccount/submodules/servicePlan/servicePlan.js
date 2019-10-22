@@ -21,8 +21,16 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} [args.accountId]
+		 * @param  {Object} [args.servicePlan]
+		 * @param  {Function} args.callback
+		 */
 		_servicePlanGetTemplate: function(args) {
 			var self = this,
+				accountId = _.get(args, 'accountId'),
+				servicePlan = _.get(args, 'servicePlan'),
 				initTemplate = function initTemplate(result) {
 					var $template = $(self.getTemplate({
 						name: 'layout',
@@ -32,34 +40,56 @@ define(function(require) {
 					return $template;
 				};
 
-			self.servicePlanRequestGetSummary({
-				success: function(result) {
-					var $template = initTemplate(result);
-					_.has(args, 'callback') && args.callback($template);
+			monster.waterfall([
+				function(cb) {
+					if (!_.isUndefined(servicePlan)) {
+						return cb(null, servicePlan);
+					}
+					self.servicePlanRequestGetSummary({
+						data: {
+							accountId: accountId
+						},
+						success: function(result) {
+							cb(null, result);
+						}
+					});
 				}
+			], function(err, result) {
+				var $template = initTemplate(result);
+				_.has(args, 'callback') && args.callback($template);
 			});
 		},
 
-		servicePlanFormat: function(data) {
+		/**
+		 * @param  {Object} servicePlan
+		 * @param  {Object[]} servicePlan.invoices
+		 * @return {Object}
+		 */
+		servicePlanFormat: function(servicePlan) {
 			var self = this;
+
 			return {
-				showBookkeeper: _.size(data.invoices) > 1,
-				hasSubscriptions: _.has(data, 'billing_cycle.next'),
-				hasServicePlan: !_.isEmpty(data.invoices),
-				totalAmount: _.reduce(data.invoices, function(acc, invoice) {
-					_.forEach(invoice.items, function(item) {
-						acc += item.total;
-					});
-					return acc;
-				}, 0),
-				dueDate: _.has(data, 'billing_cycle.next')
-					? monster.util.toFriendlyDate(data.billing_cycle.next, 'date')
+				showBookkeeper: _.size(servicePlan.invoices) > 1,
+				hasSubscriptions: _.has(servicePlan, 'billing_cycle.next'),
+				hasServicePlan: !_.isEmpty(servicePlan.invoices),
+				totalAmount: _
+					.chain(servicePlan.invoices)
+					.sumBy(function(invoice) {
+						return _
+							.chain(invoice)
+							.get('items', [])
+							.sumBy('total')
+							.value();
+					}),
+				dueDate: _.has(servicePlan, 'billing_cycle.next')
+					? monster.util.toFriendlyDate(servicePlan.billing_cycle.next, 'date')
 					: '?',
-				invoices: _.map(data.invoices, function(invoice, index) {
+				invoices: _.map(servicePlan.invoices, function(invoice, index) {
 					return {
-						bookkeeper: invoice.bookkeeper.name || 'Invoice ' + (index + 1),
+						bookkeeper: _.get(invoice, 'bookkeeper.name', 'Invoice ' + (index + 1)),
 						items: _
-							.chain(invoice.items)
+							.chain(invoice)
+							.get('items', [])
 							.filter(function(item) {
 								return item.billable > 0;
 							})
