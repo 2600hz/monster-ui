@@ -9,12 +9,15 @@ define(function(require) {
 			'myaccount.servicePlan.renderContent': '_servicePlanRender'
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {Function} [args.callback]
+		 */
 		_servicePlanRender: function(args) {
 			var self = this;
 
 			self._servicePlanGetTemplate({
 				callback: function($template) {
-					self.servicePlanBindEvents($template);
 					monster.pub('myaccount.renderSubmodule', $template);
 					args.hasOwnProperty('callback') && args.callback($template);
 				}
@@ -25,19 +28,33 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Object} [args.accountId]
 		 * @param  {Object} [args.servicePlan]
+		 * @param  {Boolean} [args.allowActions=true]
 		 * @param  {Function} args.callback
 		 */
 		_servicePlanGetTemplate: function(args) {
 			var self = this,
+				callback = args.callback,
 				accountId = _.get(args, 'accountId'),
 				servicePlan = _.get(args, 'servicePlan'),
-				initTemplate = function initTemplate(result) {
+				allowActions = _.get(args, 'allowActions', true),
+				initTemplate = function initTemplate(dataToTemplate) {
 					var $template = $(self.getTemplate({
 						name: 'layout',
-						data: self.servicePlanFormat(result),
+						data: dataToTemplate,
 						submodule: 'servicePlan'
 					}));
 					return $template;
+				},
+				formatDataToTemplate = function formatDataToTemplate(result) {
+					var formattedServicePlan = self.servicePlanFormat(result),
+						invoices = formattedServicePlan.invoices;
+
+					return _.merge({
+						hasServicePlan: !_.isEmpty(invoices),
+						showActions: allowActions,
+						showBookkeeper: _.size(invoices) > 1,
+						showDueDate: !_.isUndefined(formattedServicePlan.dueDate)
+					}, formattedServicePlan);
 				};
 
 			monster.waterfall([
@@ -55,8 +72,13 @@ define(function(require) {
 					});
 				}
 			], function(err, result) {
-				var $template = initTemplate(result);
-				_.has(args, 'callback') && args.callback($template);
+				var funcs = [formatDataToTemplate, initTemplate],
+					getTemplate;
+				if (allowActions) {
+					funcs.push(self.servicePlanBindEvents.bind(self));
+				}
+				getTemplate = _.flow(funcs);
+				callback(getTemplate(result));
 			});
 		},
 
@@ -69,9 +91,6 @@ define(function(require) {
 			var self = this;
 
 			return {
-				showBookkeeper: _.size(servicePlan.invoices) > 1,
-				hasSubscriptions: _.has(servicePlan, 'billing_cycle.next'),
-				hasServicePlan: !_.isEmpty(servicePlan.invoices),
 				totalAmount: _
 					.chain(servicePlan.invoices)
 					.sumBy(function(invoice) {
@@ -80,10 +99,9 @@ define(function(require) {
 							.get('items', [])
 							.sumBy('total')
 							.value();
-					}),
-				dueDate: _.has(servicePlan, 'billing_cycle.next')
-					? monster.util.toFriendlyDate(servicePlan.billing_cycle.next, 'date')
-					: '?',
+					})
+					.value(),
+				dueDate: _.get(servicePlan, 'billing_cycle.next'),
 				invoices: _.map(servicePlan.invoices, function(invoice, index) {
 					return {
 						bookkeeper: _.get(invoice, 'bookkeeper.name', 'Invoice ' + (index + 1)),
@@ -125,6 +143,8 @@ define(function(require) {
 					+ '/services/summary?depth=4&identifier=items&accept=csv&auth_token='
 					+ self.getAuthToken();
 			});
+
+			return parent;
 		},
 
 		servicePlanRequestGetSummary: function(args) {

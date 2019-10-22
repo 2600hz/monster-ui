@@ -1,3 +1,6 @@
+.service-plan-content-wrapper > *:not(:first-child) {
+	margin-top: 20px;
+}
 .service-plan-content-wrapper .fancy-header .left-image {
 	width: 57px;
 }
@@ -8,7 +11,6 @@
 }
 
 .service-plan-content-wrapper .action-bar {
-	margin-bottom: 20px;
 	height: 40px;
 	width: 100%;
 }
