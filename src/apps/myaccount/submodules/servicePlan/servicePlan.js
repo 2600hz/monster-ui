@@ -91,16 +91,13 @@ define(function(require) {
 			var self = this;
 
 			return {
-				totalAmount: _
-					.chain(servicePlan.invoices)
-					.sumBy(function(invoice) {
-						return _
-							.chain(invoice)
-							.get('items', [])
-							.sumBy('total')
-							.value();
-					})
-					.value(),
+				totalAmount: _.sumBy(servicePlan.invoices, function(invoice) {
+					return _
+						.chain(invoice)
+						.get('items', [])
+						.sumBy('total')
+						.value();
+				}),
 				dueDate: _.get(servicePlan, 'billing_cycle.next'),
 				invoices: _.map(servicePlan.invoices, function(invoice, index) {
 					return {
