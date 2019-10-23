@@ -95,7 +95,10 @@ define(function(require) {
 					return _
 						.chain(invoice)
 						.get('items', [])
-						.sumBy('total')
+						.map(function(item) {
+							return _.get(item, 'total', 0);
+						})
+						.sum()
 						.value();
 				}),
 				dueDate: _.get(servicePlan, 'billing_cycle.next'),
