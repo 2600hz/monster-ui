@@ -3363,22 +3363,26 @@ define(function(require) {
 	/**
 	 * Transforms a select field into a searchable list of countries.
 	 * @param  {jQuery} $target  <select> element on which the list will be built
-	 * @param  {String|String[]} [selectedValues]  List of selected values
-	 * @param  {Object} [options]  Options for widget
+	 * @param  {Object} [args]  Additional arguments for the widget
+	 * @param  {String|String[]} [args.selectedValues]  List of selected values
+	 * @param  {Object} [args.options]  Options for widget
 	 * @returns  {Object}  Chosen instance
 	 */
-	function countrySelector($target, selectedValues, options) {
+	function countrySelector($target, args) {
 		if (!($target instanceof $)) {
 			throw TypeError('"$target" is not a jQuery object');
 		}
 		if (!$target.is('select')) {
 			throw TypeError('"$target" is not a select input');
 		}
+
+		var selectedValues = _.get(args, 'selectedValues'),
+			options = _.get(args, 'options');
 		if (!_.isUndefined(selectedValues) && !_.isString(selectedValues) && !_.isArray(selectedValues)) {
-			throw TypeError('"selectedValues" is not a string nor an array');
+			throw TypeError('"args.selectedValues" is not a string nor an array');
 		}
-		if (!_.isUndefined(selectedValues) && !_.isPlainObject(options)) {
-			throw TypeError('"options" is not a plain object');
+		if (!_.isUndefined(options) && !_.isPlainObject(options)) {
+			throw TypeError('"args.options" is not a plain object');
 		}
 
 		var selectedValues = _.isUndefined(selectedValues) ? [] : selectedValues,
