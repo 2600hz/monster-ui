@@ -14,7 +14,7 @@ Key | Description | Type | Default | Required
 `options` | List of options for [jQuery Chosen plugin][chosenOptions]. | `Object` | | `false`
 
 ### Return value
-An object representing the jQuery Chosen widget.
+jQuery Chosen widget instance.
 
 ## Description
 This helper will transform a field into a jQuery Chosen element.
