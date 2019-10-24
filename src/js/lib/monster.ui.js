@@ -7,7 +7,6 @@ define(function(require) {
 		Toastr = require('toastr'),
 		validate = require('validate'),
 		wysiwyg = require('wysiwyg'),
-		timepicker = require('timepicker'),
 		introJs = require('introJs'),
 		mask = require('mask'),
 		renderJSON = require('renderjson'),
@@ -21,6 +20,7 @@ define(function(require) {
 	require('disableAutoFill');
 	require('moment-timezone');
 	require('monthpicker');
+	require('timepicker');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
