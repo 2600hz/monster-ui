@@ -1,6 +1,7 @@
 
 require.config({
 	waitSeconds: 200,
+	baseUrl: '../',
 	paths: {
 		'async': 'js/vendor/async.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
