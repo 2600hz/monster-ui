@@ -1878,28 +1878,6 @@ define(function(require) {
 		},
 
 		/**
-		 * Wrapper for the jQuery timepicker init function that automatically sets the time format
-		 * to the currently logged-in user's preferences if it exists and defaults to the 24 hours
-		 * format if it does not.
-		 * @param  {jQuery Object} target   <input> or <select> element where the dropdown is appended
-		 * @param  {Object} pOptions        optional listing of parameters used to build the dropdown
-		 * @return {jQuery Object}          the instance of the timepicker is linked to this element
-		 */
-		timepicker: function(target, pOptions) {
-			var self = this,
-				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
-							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode')
-							? monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
-				defaultOptions = {
-					timeFormat: is12hMode ? 'g:ia' : 'G:i',
-					lang: monster.apps.core.i18n.active().timepicker
-				},
-				options = $.extend(true, {}, defaultOptions, pOptions);
-
-			return target.timepicker(options);
-		},
-
-		/**
 		 * @desc Two columns UI element with sortable items
 		 * @param target - mandatory jQuery Object
 		 * @param data - mandatory object of items
@@ -3674,6 +3652,33 @@ define(function(require) {
 		return $target.spinner(options);
 	};
 	ui.numberPicker = numberPicker;
+
+	/**
+	 * Wrapper for the jQuery timepicker widget constructor that automatically sets the time format
+	 * to the currently logged-in user's preferences if it exists, and defaults to 24h formatting if
+	 * it does not.
+	 * @param  {jQuery} $target <input> or <select> element to append the widget to
+	 * @param  {Object} [options] jQuery timepicker widget options
+	 * @return {jQuery}         jQuery timepicker widget instance
+	 */
+	function timepicker($target, options) {
+		if (!($target instanceof $)) {
+			throw new TypeError('"$target" is not a jQuery object');
+		}
+		if (
+			!_.isUndefined(options)
+			&& !_.isPlainObject(options)
+		) {
+			throw new TypeError('"options" is not a plain object');
+		}
+		var is12hMode = _.get(monster, 'apps.auth.currentUser.ui_flags.twelve_hours_mode', false);
+		var strict = {
+			timeFormat: is12hMode ? 'g:ia' : 'G:i',
+			lang: monster.apps.core.i18n.active().timepicker
+		};
+		return $target.timepicker(_.merge({}, options, strict));
+	}
+	ui.timepicker = timepicker;
 
 	/**
 	 * Wrapper for toast notification library
