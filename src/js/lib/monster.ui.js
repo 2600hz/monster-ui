@@ -19,6 +19,7 @@ define(function(require) {
 
 	require('chosen');
 	require('disableAutoFill');
+	require('image-select');
 	require('moment-timezone');
 	require('monthpicker');
 
@@ -3396,68 +3397,8 @@ define(function(require) {
 		$target.append(itemsTemplate);
 
 		// Initialize chosen, and define functions to render flags
-		var chosenInstance = ui.chosen($target, options),
-			replaceItem = function($item, code) {
-				var newItem = monster.template(
-					monster.apps.core,
-					'monster-country-selector-item',
-					{
-						label: $item.html(),
-						code: code
-					}
-				);
-				$item.empty().append(newItem);
-			},
-			updateSelectedItems = function() {
-				if (chosenInstance.is_multiple) {
-					var $selectedItems = chosenInstance
-						.search_choices
-							.find('li>span')
-								.not(':has(span.monster-country-item-label)');
-					if ($selectedItems.length === 0) {
-						return;
-					}
-					$selectedItems.each(function() {
-						var $this = $(this),
-							optionIndex = $this
-								.nextAll('.search-choice-close')
-									.attr('data-option-array-index'),
-							option = chosenInstance.form_field.options[optionIndex];
-						replaceItem($this, option.value);
-					});
-				} else {
-					var $selectedItem = chosenInstance
-						.container
-							.find('.chosen-single:not(.chosen-default)>span')
-								.not(':has(span.monster-country-item-label)');
-					if ($selectedItem.length === 0) {
-						return;
-					}
-					replaceItem($selectedItem, $target.val());
-				}
-			};
+		var chosenInstance = ui.chosen($target, options);
 		chosenInstance.container.addClass('monster-country-selector');
-
-		// Add flags to item list
-		chosenInstance.container.on('click.chosen, mousedown.chosen, keyup.chosen', function() {
-			var $items = chosenInstance
-				.container
-					.find('.chosen-results li')
-						.not('.monster-country-item');
-			$items.each(function() {
-				var $this = $(this),
-					optionIndex = $this.attr('data-option-array-index'),
-					option = chosenInstance.form_field.options[optionIndex];
-				$this.addClass('monster-country-item');
-				replaceItem($this, option.value);
-			});
-		});
-
-		// Change flag if necessary, when dropdown is hidden
-		$target.on('chosen:hiding_dropdown', updateSelectedItems);
-
-		// Update initial selected item
-		updateSelectedItems();
 
 		return chosenInstance;
 	}
