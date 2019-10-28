@@ -3396,9 +3396,17 @@ define(function(require) {
 		});
 		$target.append(itemsTemplate);
 
-		// Initialize chosen, and define functions to render flags
-		var chosenInstance = ui.chosen($target, options);
-		chosenInstance.container.addClass('monster-country-selector');
+		// Initialize chosen
+		var itemTemplate = monster.template(monster.apps.core, 'monster-country-selector-item'),
+			chosenInstance = ui.chosen(
+				$target,
+				_.merge({
+					html_template: itemTemplate
+				}, options)
+			);
+		chosenInstance
+			.container
+				.addClass('monster-country-selector')
 
 		return chosenInstance;
 	}
