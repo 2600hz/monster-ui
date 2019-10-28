@@ -1002,25 +1002,12 @@ i.monster-password-strength {
 
 .monster-country-selector.chosen-container {
 	span.monster-country-item-label {
-		// The tag name was used to add specificity, to override the default chosen styles
 		display: inline;
 	}
-	.monster-country-item-flag {
-		display: inline-block;
-		width: 1.125rem;
-		height: 1.125rem;
-		margin-left: 0.75rem;
-		// Bottom and top margins to keep item container's height
-		margin-bottom: -4px;
-		margin-top: -2px;
-		background-size: contain;
-	}
-	&.chosen-container-single .chosen-single {
-		.monster-country-item-label, .monster-country-item-flag {
-			margin-right: 0;
-		}
-	}
-	&.chosen-container-multi .chosen-choices .monster-country-item-flag {
-		margin-left: 0.5rem;
+	img.monster-country-item-flag {
+		width: 1rem;
+		max-height: 1rem;
+		margin: -3px 6px 0 0;
+		padding: 0;
 	}
 }
