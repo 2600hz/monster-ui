@@ -3784,8 +3784,16 @@ define(function(require) {
 	}
 	ui.toast = toast;
 
-	function maxlength(target, args) {
-		var $this = $(target),
+	/**
+	 * Helper to display characters remaining inline
+	 * @param {jQuery}  $target Field to be checked
+	 * @param {Object}  args
+	 * @param {Integer} args.size The maxlength to be validated
+	 * @param {String}  [args.customClass] Custom class for the label if needed
+	 * @param {String}  [args.type] Used to support rich text editors
+	 */
+	function charsRemaining($target, args) {
+		var $this = $($target),
 			size = args.size,
 			customClass = args.customClass || '',
 			type = args.type,
@@ -3821,7 +3829,7 @@ define(function(require) {
 			checkLength(event);
 		});
 	}
-	ui.maxlength = maxlength;
+	ui.charsRemaining = charsRemaining;
 
 	initialize();
 
