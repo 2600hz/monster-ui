@@ -3707,6 +3707,14 @@ define(function(require) {
 	 * @param {String}  [args.type] Used to support rich text editors
 	 */
 	function charsRemaining($target, args) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		if (!_.isUndefined(args) && !_.isPlainObject(args)) {
+			throw TypeError('"options" is not a plain object');
+		}
+
 		var $this = $($target),
 			size = args.size,
 			customClass = args.customClass || '',
