@@ -3370,43 +3370,43 @@ define(function(require) {
 	 * @returns  {Object}  Chosen instance
 	 */
 	function countrySelector($target, args) {
-		if (!($target instanceof $)) {
+		if (!($target instanceof jQuery)) {
 			throw TypeError('"$target" is not a jQuery object');
 		}
 		if (!$target.is('select')) {
 			throw TypeError('"$target" is not a select input');
 		}
-
-		var selectedValues = _.get(args, 'selectedValues'),
-			options = _.get(args, 'options');
-		if (!_.isUndefined(selectedValues) && !_.isString(selectedValues) && !_.isArray(selectedValues)) {
+		if (!_.isUndefined(args) && !_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (
+			_.has(args, 'selectedValues')
+			&& !(_.isString(args.selectedValues) || _.isArray(args.selectedValues))
+		) {
 			throw TypeError('"args.selectedValues" is not a string nor an array');
 		}
-		if (!_.isUndefined(options) && !_.isPlainObject(options)) {
+		if (_.has(args, 'options') && !_.isPlainObject(args.options)) {
 			throw TypeError('"args.options" is not a plain object');
 		}
-
-		var selectedValues = _.isUndefined(selectedValues) ? [] : selectedValues,
-			showEmptyOption = _.get(options, 'showEmptyOption', false);
-
-		// Render items
+		var selectedValues = _.get(args, 'selectedValues', []);
+		var options = _.get(args, 'options', {});
+		var showEmptyOption = _.get(options, 'showEmptyOption', false);
 		var itemsTemplate = getCountrySelectorTemplate({
 			selectedValues: selectedValues,
 			showEmptyOption: showEmptyOption
 		});
+		var itemTemplate = monster.template(monster.apps.core, 'monster-country-selector-item');
+		var chosenOptions = _.merge({
+			html_template: itemTemplate
+		}, options);
+		var chosenInstance;
+
+		// Append items to select element
 		$target.append(itemsTemplate);
 
 		// Initialize chosen
-		var itemTemplate = monster.template(monster.apps.core, 'monster-country-selector-item'),
-			chosenInstance = ui.chosen(
-				$target,
-				_.merge({
-					html_template: itemTemplate
-				}, options)
-			);
-		chosenInstance
-			.container
-				.addClass('monster-country-selector')
+		chosenInstance = ui.chosen($target, chosenOptions);
+		chosenInstance.container.addClass('monster-country-selector');
 
 		return chosenInstance;
 	}
