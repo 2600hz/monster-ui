@@ -34,7 +34,7 @@ The `monster.ui.charsRemaining()` method show the remaining characters for the p
 ```javascript
 var $template = $(appContent.getTemplate({
     name: 'myTemplate'
-  })),
+  }));
 
 monster.ui.charsRemaining($template.find('#summary'), {
   size: 50
