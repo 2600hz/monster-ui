@@ -13,6 +13,9 @@ Key | Description | Type | Default | Required
 `$target` | Select element to invoke the chosen plugin on. | `jQuery` | | `true`
 `options` | List of options for [jQuery Chosen plugin][chosenOptions]. | `Object` | | `false`
 
+### Return value
+jQuery Chosen widget instance.
+
 ## Description
 This helper will transform a field into a jQuery Chosen element.
 

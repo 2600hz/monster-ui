@@ -1,0 +1,11 @@
+{{#select selectedCountries}}
+	{{#if showEmptyOption}}
+		<option value="">
+		</option>
+	{{/if}}
+	{{#each countries}}
+		<option value="{{code}}" data-img-src="css/assets/flags/24/{{code}}.png">
+			{{label}}
+		</option>
+	{{/each}}
+{{/select}}

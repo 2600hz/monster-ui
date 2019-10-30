@@ -9,6 +9,9 @@
 
 	width: 220px;
 }
+.chosen-container.chosen-container-multi .chosen-choices li.search-field input.default[type="text"] {
+	color: #999999;
+}
 .chosen-container .chosen-single {
 	line-height: 30px;
 
@@ -54,8 +57,14 @@
 }
 
 
-.chosen-container-single .chosen-single span {
-	color: #444;
+.chosen-container-single .chosen-single {
+	span {
+		color: #444;
+	}
+
+	&.chosen-default span {
+		color: #999999;
+	}
 }
 
 .control-group.warning {

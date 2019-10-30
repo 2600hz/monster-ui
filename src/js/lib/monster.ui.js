@@ -19,6 +19,7 @@ define(function(require) {
 
 	require('chosen');
 	require('disableAutoFill');
+	require('image-select');
 	require('moment-timezone');
 	require('monthpicker');
 
@@ -3300,6 +3301,7 @@ define(function(require) {
 	 * Chosen plugin wrapper used to apply the same default options
 	 * @param  {jQuery} $target  <select> element to invoke chosen on
 	 * @param  {Object} pOptions Options for widget
+	 * @returns  {Object}  Chosen instance
 	 */
 	function chosen($target, pOptions) {
 		var i18n = monster.apps.core.i18n.active().chosen;
@@ -3327,11 +3329,11 @@ define(function(require) {
 
 		$target.chosen(options);
 
-		if (!options.tags) {
-			return;
-		}
-
 		instance = $target.data('chosen');
+
+		if (!options.tags) {
+			return instance;
+		}
 
 		// Bind the keyup event to the search box input
 		instance.search_field.on('keyup', function(event) {
@@ -3354,8 +3356,61 @@ define(function(require) {
 				.append($newOption)
 				.trigger('chosen:updated');
 		});
+
+		return instance;
 	}
 	ui.chosen = chosen;
+
+	/**
+	 * Transforms a select field into a searchable list of countries.
+	 * @param  {jQuery} $target  <select> element on which the list will be built
+	 * @param  {Object} [args]  Additional arguments for the widget
+	 * @param  {String|String[]} [args.selectedValues]  List of selected values
+	 * @param  {Object} [args.options]  Options for widget
+	 * @returns  {Object}  Chosen instance
+	 */
+	function countrySelector($target, args) {
+		if (!($target instanceof jQuery)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!$target.is('select')) {
+			throw TypeError('"$target" is not a select input');
+		}
+		if (!_.isUndefined(args) && !_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (
+			_.has(args, 'selectedValues')
+			&& !(_.isString(args.selectedValues) || _.isArray(args.selectedValues))
+		) {
+			throw TypeError('"args.selectedValues" is not a string nor an array');
+		}
+		if (_.has(args, 'options') && !_.isPlainObject(args.options)) {
+			throw TypeError('"args.options" is not a plain object');
+		}
+		var selectedValues = _.get(args, 'selectedValues', []);
+		var options = _.get(args, 'options', {});
+		var showEmptyOption = _.get(options, 'showEmptyOption', false);
+		var itemsTemplate = getCountrySelectorTemplate({
+			selectedValues: selectedValues,
+			showEmptyOption: showEmptyOption
+		});
+		var itemTemplate = monster.template(monster.apps.core, 'monster-country-selector-item');
+		var chosenOptions = _.merge({
+			html_template: itemTemplate
+		}, options);
+		var chosenInstance;
+
+		// Append items to select element
+		$target.append(itemsTemplate);
+
+		// Initialize chosen
+		chosenInstance = ui.chosen($target, chosenOptions);
+		chosenInstance.container.addClass('monster-country-selector');
+
+		return chosenInstance;
+	}
+	ui.countrySelector = countrySelector;
 
 	/**
 	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
@@ -3375,6 +3430,35 @@ define(function(require) {
 		}));
 	}
 	ui.disableAutoFill = disableAutoFill;
+
+	/**
+	 * Gets a template to render the option items for a `select` list of the countries
+	 *
+	 * @private
+	 * @param {Object} args
+	 * @param {String|String[]} args.selectedValues  The value or values to be selected
+	 * @param {Boolean} args.showEmptyOption  Whether or not to add an empty option to the list
+	 * @returns  {String}  Country selector template
+	 */
+	function getCountrySelectorTemplate(args) {
+		var selectedValues = args.selectedValues,
+			showEmptyOption = args.showEmptyOption,
+			countries = _
+				.chain(monster.timezone.getCountries())
+				.map(function(label, code) {
+					return {
+						code: code,
+						label: label
+					};
+				})
+				.sortBy('label')
+				.value();
+		return monster.template(monster.apps.core, 'monster-country-selector', {
+			countries: countries,
+			selectedCountries: selectedValues,
+			showEmptyOption: showEmptyOption
+		});
+	}
 
 	/**
 	 * Collect strucutred form data into a plain object
@@ -3562,6 +3646,8 @@ define(function(require) {
 
 	/**
 	 * Merges HTML attributes, mapped as JSON objects
+	 *
+	 * @private
 	 * @param   {Object} object  Destination object
 	 * @param   {Object} source  Source object
 	 * @returns {Object}         Returns `object` after merge
