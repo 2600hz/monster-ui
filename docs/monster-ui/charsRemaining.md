@@ -39,3 +39,4 @@ var $template = $(appContent.getTemplate({
 monster.ui.charsRemaining($template.find('#summary'), {
   size: 50
 });
+```
