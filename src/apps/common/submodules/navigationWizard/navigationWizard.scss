@@ -1,6 +1,11 @@
 @import "../../../../css/partials/base";
 
 #navigation_wizard_wrapper {
+
+	/************************************************************/
+	/*********************** WIZARD FRAME ***********************/
+	/************************************************************/
+
 	background-color: $white;
 
 	.header {
@@ -171,10 +176,8 @@
 		background: #2ED022;
 		color: #071F05;
 	}
-}
 
-@media print {
-	#navigation_wizard_wrapper {
+	@media print {
 		.header {
 			display: none;
 		}
@@ -190,6 +193,143 @@
 
 		.footer {
 			display: none;
+		}
+	}
+
+	/************************************************************/
+	/*********************** WIZARD STEPS ***********************/
+	/************************************************************/
+	.wizard-step {
+		padding: 2rem 1.5rem;
+
+		.iconography-small {
+			margin-top: -3px;	// To not to alter container's height
+			font-size: 14px;
+			width: 14px;
+			height: 14px;
+		}
+
+		.iconography-medium {
+			font-size: 1rem;
+			width: 1rem;
+			height: 1rem;
+		}
+
+		.iconography-large {
+			font-size: 1.25rem;
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+
+		.iconography-help {
+			color: $manatee;
+
+			&:hover {
+				color: $shark2;
+			}
+		}
+
+		.input-hidden {
+			display: none;
+		}
+
+		.help-tip {
+			display: inline-block;
+			margin-left: 0.5rem;
+
+			&.help-tip-section, &.help-tip-button {
+				margin-left: 0.75rem;
+			}
+
+			&.help-tip-button {
+				margin-top: 9px;
+			}
+		}
+
+		.text-success, .text-danger {
+			.iconography-medium {
+				margin-top: -2px;
+			}
+		}
+
+		.text-success {
+			color: $success-color;
+		}
+
+		.text-danger {
+			color: $danger-color;
+		}
+
+		.monster-button {
+			background: linear-gradient(-180deg, $foreground-primary-color 0%, $athens-gray 100%);
+
+			&:hover {
+				background: linear-gradient(-180deg, $athens-gray 0%, $white-lilac 100%);
+			}
+		}
+
+		.btn-group {
+			.monster-button {
+				border-radius: 0;
+
+				&:first-of-type {
+					border-top-left-radius: 2px;
+					border-bottom-left-radius: 2px;
+				}
+
+				&:last-of-type {
+					border-top-right-radius: 2px;
+					border-bottom-right-radius: 2px;
+				}
+			}
+
+			label.monster-button {
+				margin-bottom: 0;
+				display: inline-block;
+			}
+		}
+
+		.radio-button:checked + .monster-button {
+			background: $color-highlight;
+			color: $woodsmoke;
+		}
+
+		.step-title {
+			padding-bottom: 1.5rem;
+			font-size: 23px;
+			line-height: 1.875rem;
+			color: $woodsmoke;
+		}
+
+		.monster-button.step-action {
+			min-width: 2.375rem;	// To override monster-button's default min-width
+			height: 2.375rem;
+			margin-left: 0.75rem;
+			padding: 0.5rem;
+		}
+
+
+		.section-title {
+			margin-top: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 0.75rem;
+			border-bottom: solid 1px $french-gray2;
+			line-height: 1rem;
+			font-size: 1rem;
+			font-weight: 600;
+			color: $woodsmoke;
+
+			.help-tip {
+				color: $midgray2;
+
+				&:hover {
+					color: $woodsmoke;
+				}
+
+				.iconography-medium {
+					margin-top: -0.25rem;
+				}
+			}
 		}
 	}
 }
