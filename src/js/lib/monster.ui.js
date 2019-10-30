@@ -1378,6 +1378,12 @@ define(function(require) {
 			var defaultValidatorHighlightHandler = $.validator.defaults.highlight,
 				defaultValidatorUnhighlightHandler = $.validator.defaults.unhighlight,
 				autoScrollOnInvalid = _.get(options, 'autoScrollOnInvalid', false),
+				isSpinnerElement = function($element) {
+					return $element.hasClass('ui-spinner-input');
+				},
+				isChosenElement = function($element) {
+					return $element.is('select:hidden') && $element.next('.chosen-container').length === 1;
+				},
 				defaultOptions = {
 					errorClass: 'monster-invalid',
 					validClass: 'monster-valid',
@@ -1423,33 +1429,31 @@ define(function(require) {
 					},
 					errorPlacement: function(error, element) {
 						var $element = $(element);
-						if ($element.hasClass('ui-spinner-input')) {
+						if (isSpinnerElement($element)) {
 							error.insertAfter($element.closest('.ui-spinner'));
+						} else if (isChosenElement($element)) {
+							error.insertAfter($element.next());
 						} else {
 							error.insertAfter(element);
 						}
 					},
 					highlight: function(element, errorClass, validClass) {
 						var $element = $(element);
-						if ($element.hasClass('ui-spinner-input')) {
-							$element
-								.closest('.ui-spinner')
-									.addClass(errorClass)
-									.removeClass(validClass);
-						} else {
-							defaultValidatorHighlightHandler.call(this, element, errorClass, validClass);
+						if (isSpinnerElement($element)) {
+							element = $element.closest('.ui-spinner').get(0);
+						} else if (isChosenElement($element)) {
+							element = $element.next().get(0);
 						}
+						defaultValidatorHighlightHandler.call(this, element, errorClass, validClass);
 					},
 					unhighlight: function(element, errorClass, validClass) {
 						var $element = $(element);
-						if ($element.hasClass('ui-spinner-input')) {
-							$element
-								.closest('.ui-spinner')
-									.addClass(validClass)
-									.removeClass(errorClass);
-						} else {
-							defaultValidatorUnhighlightHandler.call(this, element, errorClass, validClass);
+						if (isSpinnerElement($element)) {
+							element = $element.closest('.ui-spinner').get(0);
+						} else if (isChosenElement($element)) {
+							element = $element.next().get(0);
 						}
+						defaultValidatorUnhighlightHandler.call(this, element, errorClass, validClass);
 					}
 				};
 
