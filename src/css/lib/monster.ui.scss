@@ -995,3 +995,19 @@ i.monster-password-strength {
 		font-size: 0.75rem;
 	}
 }
+
+/************************************************************/
+/***************** MONSTER COUNTRY SELECTOR *****************/
+/************************************************************/
+
+.monster-country-selector.chosen-container {
+	span.monster-country-item-label {
+		display: inline;
+	}
+	img.monster-country-item-flag {
+		width: 1rem;
+		max-height: 1rem;
+		margin: -3px 6px 0 0;
+		padding: 0;
+	}
+}
