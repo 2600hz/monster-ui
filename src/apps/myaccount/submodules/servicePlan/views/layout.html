@@ -1,32 +1,34 @@
 <div class="service-plan-content-wrapper">
 	{{#if hasServicePlan}}
-		{{#if hasSubscriptions}}
-			<div class="title-bar clearfix">
-				<div class="title-box">
-					<div class="value">
-						{{ dueDate }}
-					</div>
-					<div class="title">
-						{{ i18n.servicePlan.dueOn }}
-					</div>
+		<div class="title-bar clearfix">
+		{{#if showDueDate}}
+			<div class="title-box">
+				<div class="value">
+					{{toFriendlyDate dueDate 'date'}}
 				</div>
-				<div class="title-box pull-right">
-					<div class="value">
-						{{ formatPrice totalAmount 2 }}
-					</div>
-					<div class="title">
-						{{ i18n.servicePlan.dueAmount }}
-					</div>
+				<div class="title">
+					{{ i18n.servicePlan.dueOn }}
 				</div>
 			</div>
 		{{/if}}
+			<div class="title-box pull-right">
+				<div class="value">
+					{{ formatPrice totalAmount 2 }}
+				</div>
+				<div class="title">
+					{{ i18n.servicePlan.dueAmount }}
+				</div>
+			</div>
+		</div>
 
+	{{#if showActions}}
 		<div class="action-bar">
 			<button type="button" id="download" class="action-number monster-button-secondary">
 				<i class="fa fa-download"></i>
 				{{ i18n.download }}
 			</button>
 		</div>
+	{{/if}}
 
 		{{#each invoices}}
 		<div class="table-content">
@@ -59,7 +61,9 @@
 							<td></td>
 						</tr>
 					{{else}}
-						<tr><td colspan="6" class="no-data">{{ @root.i18n.servicePlan.empty }}</tr>
+						<tr>
+							<td colspan="7" class="no-data">{{ @root.i18n.servicePlan.empty }}</td>
+						</tr>
 					{{/each}}
 				</tbody>
 			</table>
