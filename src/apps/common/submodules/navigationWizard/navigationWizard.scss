@@ -336,6 +336,7 @@ $media-size-medium: "(max-width : 980px)";
 
 			.help-tip {
 				color: $midgray2;
+				cursor: pointer;
 
 				&:hover {
 					color: $woodsmoke;
@@ -344,6 +345,10 @@ $media-size-medium: "(max-width : 980px)";
 				.iconography-medium {
 					margin-top: -0.25rem;
 				}
+			}
+
+			.tooltip {
+				font-weight: normal;
 			}
 		}
 
