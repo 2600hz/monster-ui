@@ -195,7 +195,7 @@ define(function(require){
 				listenersToKeep = [];
 
 			if(self.bindings.hasOwnProperty(binding)) {
-				_.each(binding.listeners, function(listener) {
+				_.each(self.bindings[binding].listeners, function(listener) {
 					if(!(listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
 						listenersToKeep.push(listener);
 					}
