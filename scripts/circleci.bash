@@ -9,6 +9,12 @@ if [ -z $BASE_BRANCH ]; then
     BASE_BRANCH="origin/master"
 fi
 
+if [[ $BASE_BRANCH != "origin/master" ]]; then
+    CORE_IDENTITY=`curl https://api.github.com/repos/2600hz/monster-ui/git/refs/tags | grep "refs" | sed 's|[^0-9\.]||g' | sort --version-sort | grep "${BASE_BRANCH#origin/}" | tail -1`
+else
+    CORE_IDENTITY='master'
+fi
+
 cd $MONSTER_ROOT
 
 if [ ! -d ${APP_PATH} ]; then
@@ -17,9 +23,9 @@ if [ ! -d ${APP_PATH} ]; then
     git submodule add -f ${CIRCLE_REPOSITORY_URL} ${APP_PATH}
 fi
 
-echo resetting kazoo to $BASE_BRANCH
+echo resetting monster-ui-core to $CORE_IDENTITY
 git fetch --prune
-git rebase $BASE_BRANCH
+git checkout $CORE_IDENTITY
 
 cd $APP_PATH
 

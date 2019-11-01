@@ -172,3 +172,24 @@
 	background: #2ED022;
 	color: #071F05;
 }
+
+@media print {
+	#navigation_wizard_wrapper {
+		.header {
+			display: none;
+		}
+
+		.left-content {
+			display: none;
+		}
+
+		.right-content {
+			margin: 0;
+			border: none;
+		}
+
+		.footer {
+			display: none;
+		}
+	}
+}

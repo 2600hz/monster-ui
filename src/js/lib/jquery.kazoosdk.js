@@ -440,7 +440,8 @@
 				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
 				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
 				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' },
-				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' }
+				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' },
+				'updateManualQuantities': { verb: 'POST', url: 'accounts/{accountId}/services/manual' }
 			},
 			slackIntegration: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/slack_integration' },

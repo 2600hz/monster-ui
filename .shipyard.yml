@@ -1,0 +1,26 @@
+---
+name: monster-ui-core
+base_branch: origin/master
+metapackage:
+  - name: meta-monster-ui
+    type: required
+    branch: master
+    package: monster-ui-core
+base_core: 
+template: monster-ui-core.spec.tmpl
+package:
+  centos7:
+    name: monster-ui-core
+    description: |
+      The web interface built by 2600hz to play with Kazoo.
+      This framework is enhanced by separately packaged
+      applications that provide configuration, maintenance
+      and troubleshooting capabilities for the entire
+      communication platform.  If you need help you can
+      contact us via the dev mailing list or on IRC
+      at #2600hz on FreeNode.
+    summary: 2600Hz Kazoo Monster User Interface
+    license: MPL1.1
+    group: Productivity/Telephony
+    url: http://www.2600hz.org/
+    vendor: 2600hz

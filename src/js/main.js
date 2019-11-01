@@ -19,9 +19,10 @@ require.config({
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/vendor/footable.min',
 		'form2object': 'js/vendor/form2object',
-		'handlebars': 'js/vendor/handlebars-v4.0.5',
+		'handlebars': 'js/vendor/handlebars-v4.4.1',
 		'hasher': 'js/vendor/hasher.min',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
+		'image-select': 'js/vendor/ImageSelect.jquery',
 		'introJs': 'js/vendor/intro.min',
 		'isotope': 'js/vendor/jquery.isotope.min',
 		'jquery': 'js/vendor/jquery-1.9.1.min',
@@ -80,6 +81,7 @@ require.config({
 		'footable-filter': ['footable'],
 		'footable-sort': ['footable'],
 		'hasher': ['signals'],
+		'image-select': ['chosen'],
 		'jqueryui': ['jquery'],
 		'kazoo': {
 			'exports': 'kazoo'
