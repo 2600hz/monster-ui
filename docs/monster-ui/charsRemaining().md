@@ -32,7 +32,7 @@ The `monster.ui.charsRemaining()` method indicates the remaining count of charac
 </div>
 ```
 ```javascript
-var $template = $(appContent.getTemplate({
+var $template = $(appContext.getTemplate({
     name: 'myTemplate'
   }));
 
