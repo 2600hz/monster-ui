@@ -22,7 +22,7 @@ Key | Description | Type | Default | Required
 * `"args" is not a plain object`: `args` is defined but not a plain object
 
 ## Description
-The `monster.ui.charsRemaining()` method show the remaining characters for the provided element
+The `monster.ui.charsRemaining()` method indicates the remaining count of characters in `$target` up to `args.size`.
 
 ## Example
 
