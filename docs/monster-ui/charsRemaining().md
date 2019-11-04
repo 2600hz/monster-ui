@@ -12,7 +12,7 @@ Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `$target` | Form element to be checked. | `jQuery` | | `true`
 `args` | Aguments to setup the helper | `Object` | | `true`
-`args.size` | The maxlength to be validated | `Integer` | | `true`
+`args.size` | The maxlength to be validated | `Number` | | `true`
 `args.customClass` | Custom class for the label if needed | `String` | | `false`
 `args.type` | Used to support rich text editors | `String` | | `false`
 
