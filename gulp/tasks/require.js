@@ -40,6 +40,7 @@ const libsToExcludeFromApp = [
 	'handlebars',
 	'hasher',
 	'hotkeys',
+	'image-select',
 	'introJs',
 	'isotope',
 	'jquery',

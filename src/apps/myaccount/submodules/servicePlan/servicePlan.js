@@ -5,49 +5,109 @@ define(function(require) {
 
 	return {
 		subscribe: {
+			'myaccount.servicePlan.getTemplate': '_servicePlanGetTemplate',
 			'myaccount.servicePlan.renderContent': '_servicePlanRender'
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {Function} [args.callback]
+		 */
 		_servicePlanRender: function(args) {
 			var self = this;
-			var initTemplate = function(result) {
-				var template = $(self.getTemplate({
-					name: 'layout',
-					data: self.servicePlanFormat(result),
-					submodule: 'servicePlan'
-				}));
-				self.servicePlanBindEvents(template);
-				monster.pub('myaccount.renderSubmodule', template);
-				return template;
-			};
-			self.servicePlanRequestGetSummary({
-				success: function(result) {
-					var template = initTemplate(result);
-					args.hasOwnProperty('callback') && args.callback(template);
+
+			self._servicePlanGetTemplate({
+				callback: function($template) {
+					monster.pub('myaccount.renderSubmodule', $template);
+					args.hasOwnProperty('callback') && args.callback($template);
 				}
 			});
 		},
 
-		servicePlanFormat: function(data) {
-			var self = this;
-			return {
-				showBookkeeper: _.size(data.invoices) > 1,
-				hasSubscriptions: _.has(data, 'billing_cycle.next'),
-				hasServicePlan: !_.isEmpty(data.invoices),
-				totalAmount: _.reduce(data.invoices, function(acc, invoice) {
-					_.forEach(invoice.items, function(item) {
-						acc += item.total;
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} [args.accountId]
+		 * @param  {Object} [args.servicePlan]
+		 * @param  {Boolean} [args.allowActions=true]
+		 * @param  {Function} args.callback
+		 */
+		_servicePlanGetTemplate: function(args) {
+			var self = this,
+				callback = args.callback,
+				accountId = _.get(args, 'accountId'),
+				servicePlan = _.get(args, 'servicePlan'),
+				allowActions = _.get(args, 'allowActions', true),
+				initTemplate = function initTemplate(dataToTemplate) {
+					var $template = $(self.getTemplate({
+						name: 'layout',
+						data: dataToTemplate,
+						submodule: 'servicePlan'
+					}));
+					return $template;
+				},
+				formatDataToTemplate = function formatDataToTemplate(result) {
+					var formattedServicePlan = self.servicePlanFormat(result),
+						invoices = formattedServicePlan.invoices;
+
+					return _.merge({
+						hasServicePlan: !_.isEmpty(invoices),
+						showActions: allowActions,
+						showBookkeeper: _.size(invoices) > 1,
+						showDueDate: !_.isUndefined(formattedServicePlan.dueDate)
+					}, formattedServicePlan);
+				};
+
+			monster.waterfall([
+				function(cb) {
+					if (!_.isUndefined(servicePlan)) {
+						return cb(null, servicePlan);
+					}
+					self.servicePlanRequestGetSummary({
+						data: {
+							accountId: accountId
+						},
+						success: function(result) {
+							cb(null, result);
+						}
 					});
-					return acc;
-				}, 0),
-				dueDate: _.has(data, 'billing_cycle.next')
-					? monster.util.toFriendlyDate(data.billing_cycle.next, 'date')
-					: '?',
-				invoices: _.map(data.invoices, function(invoice, index) {
+				}
+			], function(err, result) {
+				var funcs = [formatDataToTemplate, initTemplate],
+					getTemplate;
+				if (allowActions) {
+					funcs.push(self.servicePlanBindEvents.bind(self));
+				}
+				getTemplate = _.flow(funcs);
+				callback(getTemplate(result));
+			});
+		},
+
+		/**
+		 * @param  {Object} servicePlan
+		 * @param  {Object[]} servicePlan.invoices
+		 * @return {Object}
+		 */
+		servicePlanFormat: function(servicePlan) {
+			var self = this;
+
+			return {
+				totalAmount: _.sumBy(servicePlan.invoices, function(invoice) {
+					return _
+						.chain(invoice)
+						.get('items', [])
+						.map(function(item) {
+							return _.get(item, 'total', 0);
+						})
+						.sum()
+						.value();
+				}),
+				dueDate: _.get(servicePlan, 'billing_cycle.next'),
+				invoices: _.map(servicePlan.invoices, function(invoice, index) {
 					return {
-						bookkeeper: invoice.bookkeeper.name || 'Invoice ' + (index + 1),
+						bookkeeper: _.get(invoice, 'bookkeeper.name', 'Invoice ' + (index + 1)),
 						items: _
-							.chain(invoice.items)
+							.chain(invoice)
+							.get('items', [])
 							.filter(function(item) {
 								return item.billable > 0;
 							})
@@ -83,6 +143,8 @@ define(function(require) {
 					+ '/services/summary?depth=4&identifier=items&accept=csv&auth_token='
 					+ self.getAuthToken();
 			});
+
+			return parent;
 		},
 
 		servicePlanRequestGetSummary: function(args) {
