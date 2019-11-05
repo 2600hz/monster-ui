@@ -1073,7 +1073,7 @@
 	"chosen": {
 		"addNewTag": "Hit enter to add a new option."
 	},
-	"maxlength": {
+	"charsRemaining": {
 		"label": "Characters Remaining"
 	}
 }
