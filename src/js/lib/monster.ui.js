@@ -3715,13 +3715,12 @@ define(function(require) {
 			throw TypeError('"options" is not a plain object');
 		}
 
-		var $this = $($target),
-			size = args.size,
+		var size = args.size,
 			customClass = args.customClass || '',
 			type = args.type,
-			currentLenght = $this.val().length,
+			currentLenght = $target.val().length,
 			allowedChars = size - currentLenght,
-			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().maxlength.label).prepend($('<span>').text(allowedChars)),
+			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend($('<span>').text(allowedChars)),
 			checkLength = function(event) {
 				var $target = $(event.target);
 
@@ -3729,25 +3728,21 @@ define(function(require) {
 				allowedChars = size - currentLenght;
 
 				if (allowedChars <= 0 || allowedChars > size) {
-					label.addClass('maxlength-error');
+					label.addClass('chars-remaining-error');
 
 					event.preventDefault();
 					return false;
 				} else {
 					label
-						.removeClass('maxlength-error')
+						.removeClass('chars-remaining-error')
 						.empty()
-						.text(monster.apps.core.i18n.active().maxlength.label).prepend($('<span>').text(allowedChars));
+						.text(monster.apps.core.i18n.active().charsRemaining.label).prepend($('<span>').text(allowedChars));
 				}
 			};
 
-		$this.after(label);
+		$target.after(label);
 
-		$this.on('keypress', function(event) {
-			checkLength(event);
-		});
-
-		$this.on('keyup', function(event) {
+		$target.on('keypress keyup', function(event) {
 			checkLength(event);
 		});
 	}
