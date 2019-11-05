@@ -31,6 +31,7 @@ The `monster.ui.charsRemaining()` method indicates the remaining count of charac
 ## Example
 
 ```html
+// myTemplate.html
 <div>
   <input type="text" name="summary" id="summary">
 </div>
