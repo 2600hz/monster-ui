@@ -3804,14 +3804,14 @@ define(function(require) {
 
 		var size = args.size,
 			customClass = args.customClass || '',
-			type = args.type,
-			currentLenght = $target.val().length,
+			checkCurrentLength = function() {
+				return $target.prop('tagName') === 'DIV' ? $target[0].textContent.length : $target.val().length;
+			},
+			currentLenght = checkCurrentLength(),
 			allowedChars = size - currentLenght,
 			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend($('<span>').text(allowedChars)),
 			checkLength = function(event) {
-				var $target = $(event.target);
-
-				currentLenght = type === 'div' ? $target[0].textContent.length : $target.val().length;
+				currentLenght = checkCurrentLength();
 				allowedChars = size - currentLenght;
 
 				if (allowedChars <= 0 || allowedChars > size) {
