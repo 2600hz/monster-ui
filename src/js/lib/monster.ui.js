@@ -3809,10 +3809,13 @@ define(function(require) {
 			},
 			currentLenght = checkCurrentLength(),
 			allowedChars = size - currentLenght,
-			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend($('<span>').text(allowedChars)),
+			allowedCharsLabel = $('<span>'),
+			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend(allowedCharsLabel.text(allowedChars)),
 			checkLength = function(event) {
 				currentLenght = checkCurrentLength();
 				allowedChars = size - currentLenght;
+
+				allowedCharsLabel.text(allowedChars);
 
 				if (allowedChars <= 0 || allowedChars > size) {
 					label.addClass('chars-remaining-error');
@@ -3820,10 +3823,7 @@ define(function(require) {
 					event.preventDefault();
 					return false;
 				} else {
-					label
-						.removeClass('chars-remaining-error')
-						.empty()
-						.text(monster.apps.core.i18n.active().charsRemaining.label).prepend($('<span>').text(allowedChars));
+					label.removeClass('chars-remaining-error');
 				}
 			};
 
