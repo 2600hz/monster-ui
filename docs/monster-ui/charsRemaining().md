@@ -18,7 +18,6 @@ Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `args.size` | The maxlength to be validated | `Integer` | | `true`
 `args.customClass` | Custom class for the label if needed | `String` | | `false`
-`args.type` | Used to support rich text editors | `String` | | `false`
 
 ### Errors
 
