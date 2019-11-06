@@ -3791,7 +3791,6 @@ define(function(require) {
 	 * @param {Object}  args
 	 * @param {Integer} args.size The maxlength to be validated
 	 * @param {String}  [args.customClass] Custom class for the label if needed
-	 * @param {String}  [args.type] Used to support rich text editors
 	 */
 	function charsRemaining($target, args) {
 		if (!($target instanceof $)) {
