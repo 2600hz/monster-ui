@@ -461,9 +461,9 @@ define(function(require) {
 			return key ? vars[key] : vars;
 		},
 
-		/****************** Helpers not documented because people shoudln't need to use them *******************/
+		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
-		// Helper only used in conference app, takes seconds and transforms it into a timer
+		// Takes seconds and transforms it into a timer
 		friendlyTimer: function(pSeconds, pMode) {
 			var mode = pMode || 'normal',
 				seconds = Math.floor(pSeconds),
@@ -500,7 +500,7 @@ define(function(require) {
 			} else {
 				displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
 
-				if (hours) {
+				if (hours || days) {
 					displayTime = format2Digits(hours) + ':' + displayTime;
 				}
 
