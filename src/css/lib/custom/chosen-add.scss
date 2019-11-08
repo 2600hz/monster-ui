@@ -1,67 +1,69 @@
 @import "../../partials/base";
 
-.chosen-container .chosen-drop {
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-	        box-sizing: border-box;
+.chosen-container {
+	.chosen-drop {
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+				box-sizing: border-box;
 
-	border-color: $primary-color;
+		border-color: $primary-color;
 
-	width: 220px;
+		width: 220px;
+	}
+	&.chosen-container-multi .chosen-choices li.search-field input.default[type="text"] {
+		color: #999999;
+	}
+	.chosen-single {
+		line-height: 30px;
+
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+				box-sizing: border-box;
+
+		width: inherit;
+		height: 30px;
+
+		border: 1px solid $input-border-color;
+		border-radius: 2px;
+		background: #fff;
+		box-shadow: none;
+
+		div b {
+			position: relative;
+			background-color: transparent;
+			background-image: none !important;
+
+			&:before {
+				position: absolute;
+				top: 50%;
+				right: 7px;
+				content: '';
+
+				-webkit-transform: translateY(-50%);
+				   -moz-transform: translateY(-50%);
+					-ms-transform: translateY(-50%);
+					 -o-transform: translateY(-50%);
+						transform: translateY(-50%);
+
+				border-width: 6px 4px 0;
+				border-style: solid;
+				border-color: #000 transparent;
+			}
+		}
+	}
+	&.chosen-with-drop .chosen-single {
+		border-color: $primary-color;
+		background: #fff;
+	}
+	.chosen-results li.highlighted {
+		background: $primary-color;
+	}
 }
-.chosen-container.chosen-container-multi .chosen-choices li.search-field input.default[type="text"] {
-	color: #999999;
-}
-.chosen-container .chosen-single {
-	line-height: 30px;
-
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-	        box-sizing: border-box;
-
-	width: inherit;
-	height: 30px;
-
-	border: 1px solid $input-border-color;
-	border-radius: 2px;
-	background: #fff;
-	box-shadow: none;
-}
-.chosen-container.chosen-with-drop .chosen-single {
-	border-color: $primary-color;
-	background: #fff;
-}
-.chosen-container .chosen-results li.highlighted {
-	background: $primary-color;
-}
-.chosen-container .chosen-single div b {
-	position: relative;
-	background-color: transparent;
-	background-image: none !important;
-}
-.chosen-container .chosen-single div b:before {
-	position: absolute;
-	top: 50%;
-	right: 7px;
-	content: '';
-
-	-webkit-transform: translateY(-50%);
-	   -moz-transform: translateY(-50%);
-	    -ms-transform: translateY(-50%);
-	     -o-transform: translateY(-50%);
-	        transform: translateY(-50%);
-
-	border-width: 6px 4px 0;
-	border-style: solid;
-	border-color: #000 transparent;
-}
-
 
 .chosen-container-single .chosen-single {
 	span {
 		color: #444;
 	}
-
 	&.chosen-default span {
 		color: #999999;
 	}
@@ -75,12 +77,11 @@
 			color: #c09853;
 		}
 	}
-
 	.chosen-container.chosen-with-drop {
-		.chosen-single, .chosen-drop {
+		.chosen-single,
+		.chosen-drop {
 			border-color: #a47e3c;
 		}
-
 		.chosen-single {
 			box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset, #dbc59e 0px 0px 6px;
 		}
@@ -89,32 +90,36 @@
 
 /********* FIREFOX DROPDOWN STYLE *******/
 @-moz-document url-prefix() {
-	.chosen-container .chosen-single div b {
-		-moz-box-sizing: border-box;
-		border: solid 1px #aaa;
-		background: #e0e0e0;
-	}
-	.chosen-container .chosen-single div b:before {
-		top: 13px;
-		right: 4px;
-		-webkit-transform: none;
-		border-width: 6px 4px 0;
-		border-color: #555 transparent;
-	}
-	.chosen-container .chosen-single div b:after {
-		position: absolute;
-		top: 8px;
-		right: 4px;
-		content: '';
-		border-width: 6px 4px 0;
-		border-style: solid;
-		border-color: #e0e0e0 transparent;
-	}
-	.chosen-container.chosen-with-drop .chosen-single div b:before {
-		border-color: #000 transparent;
-	}
-	.chosen-container.chosen-with-drop .chosen-single div b {
-		border-color: #7eb4ea;
-		background: #e7f2fc;
+	.chosen-container {
+		.chosen-single div b {
+			-moz-box-sizing: border-box;
+			border: solid 1px #aaa;
+			background: #e0e0e0;
+
+			&:before {
+				top: 13px;
+				right: 4px;
+				-webkit-transform: none;
+				border-width: 6px 4px 0;
+				border-color: #555 transparent;
+			}
+			&:after {
+				position: absolute;
+				top: 8px;
+				right: 4px;
+				content: '';
+				border-width: 6px 4px 0;
+				border-style: solid;
+				border-color: #e0e0e0 transparent;
+			}
+		}
+		&.chosen-with-drop .chosen-single div b {
+			border-color: #7eb4ea;
+			background: #e7f2fc;
+
+			&:before {
+				border-color: #000 transparent;
+			}
+		}
 	}
 }
