@@ -11,13 +11,13 @@ monster.ui.charsRemaining($target, args);
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `$target` | Form element to be checked. | `jQuery` | | `true`
-`args` | Aguments to setup the helper | `Object` | | `true`
+`args` | Aguments to setup the helper | `Object`([#/args](#args)) | | `true`
 
-### args
+#### args
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`args.size` | The maxlength to be validated | `Integer` | | `true`
-`args.customClass` | Custom class for the label if needed | `String` | | `false`
+`size` | Prevent the user to enter more than this number of characters | `Number` | | `true`
+`customClass` | Custom class for the label if needed | `String` | | `false`
 
 ### Errors
 
