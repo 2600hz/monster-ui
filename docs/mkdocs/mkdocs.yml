@@ -35,6 +35,7 @@ pages:
     - 'docs/monster-ui/codecSelector().md'
     - 'docs/monster-ui/confirm().md'
     - 'docs/monster-ui/charsRemaining().md'
+    - 'docs/monster-ui/countrySelector().md'
     - 'docs/monster-ui/datepicker().md'
     - 'docs/monster-ui/dialog().md'
     - 'docs/monster-ui/disableAutoFill().md'

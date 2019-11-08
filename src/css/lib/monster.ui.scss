@@ -234,7 +234,10 @@ label.monster-invalid {
 // Add specificity to override bootstrap styles
 input.monster-invalid, select.monster-invalid,
 input.monster-invalid[type="email"],
-input.monster-invalid[type="text"]:not(.search-query) {
+input.monster-invalid[type="text"]:not(.search-query),
+.ui-widget.ui-spinner.monster-invalid,
+.chosen-container-single.monster-invalid .chosen-single,
+.chosen-container-multi.monster-invalid .chosen-choices {
 	border: 1px solid $danger-color;
 }
 
@@ -993,5 +996,21 @@ i.monster-password-strength {
 
 	.key-value-add {
 		font-size: 0.75rem;
+	}
+}
+
+/************************************************************/
+/***************** MONSTER COUNTRY SELECTOR *****************/
+/************************************************************/
+
+.monster-country-selector.chosen-container {
+	span.monster-country-item-label {
+		display: inline;
+	}
+	img.monster-country-item-flag {
+		width: 1rem;
+		max-height: 1rem;
+		margin: -3px 6px 0 0;
+		padding: 0;
 	}
 }

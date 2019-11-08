@@ -117,8 +117,8 @@ define(function(require) {
 				fromDate = template.find('input.filter-from').datepicker('getDate'),
 				toDate = template.find('input.filter-to').datepicker('getDate'),
 				filters = $.extend({}, {
-					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-					created_to: monster.util.dateToEndOfGregorianDay(toDate)
+					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
+					created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
 				}, optFilters || {});
 
 			monster.parallel({
@@ -433,8 +433,8 @@ define(function(require) {
 			monster.ui.footable(template.find('.footable'), {
 				getData: function(filters, callback) {
 					filters = $.extend(true, filters, {
-						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-						created_to: monster.util.dateToEndOfGregorianDay(toDate)
+						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
 					});
 
 					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback);
@@ -892,8 +892,8 @@ define(function(require) {
 			var self = this,
 				from = template.find('input.filter-from').datepicker('getDate'),
 				to = template.find('input.filter-to').datepicker('getDate'),
-				dlFrom = monster.util.dateToBeginningOfGregorianDay(from),
-				dlTo = monster.util.dateToEndOfGregorianDay(to),
+				dlFrom = monster.util.dateToBeginningOfGregorianDay(from, 'UTC'),
+				dlTo = monster.util.dateToEndOfGregorianDay(to, 'UTC'),
 				type = template.find('.tab-type-ledger.active').data('type'),
 				url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/' + type + '?created_from=' + dlFrom + '&created_to=' + dlTo + '&accept=csv&auth_token=' + self.getAuthToken();
 
