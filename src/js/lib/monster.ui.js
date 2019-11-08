@@ -3785,6 +3785,55 @@ define(function(require) {
 	}
 	ui.toast = toast;
 
+	/**
+	 * Helper to display characters remaining inline
+	 * @param {jQuery}  $target Field to be checked
+	 * @param {Object}  args
+	 * @param {Integer} args.size The maxlength to be validated
+	 * @param {String}  [args.customClass] Custom class for the label if needed
+	 */
+	function charsRemaining($target, args) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		if (!_.isUndefined(args) && !_.isPlainObject(args)) {
+			throw TypeError('"options" is not a plain object');
+		}
+
+		var size = args.size,
+			customClass = args.customClass || '',
+			checkCurrentLength = function() {
+				return $target.prop('tagName') === 'DIV' ? $target[0].textContent.length : $target.val().length;
+			},
+			currentLenght = checkCurrentLength(),
+			allowedChars = size - currentLenght,
+			allowedCharsLabel = $('<span>'),
+			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend(allowedCharsLabel.text(allowedChars)),
+			checkLength = function(event) {
+				currentLenght = checkCurrentLength();
+				allowedChars = size - currentLenght;
+
+				allowedCharsLabel.text(allowedChars);
+
+				if (allowedChars <= 0 || allowedChars > size) {
+					label.addClass('chars-remaining-error');
+
+					event.preventDefault();
+					return false;
+				} else {
+					label.removeClass('chars-remaining-error');
+				}
+			};
+
+		$target.after(label);
+
+		$target.on('keypress keyup', function(event) {
+			checkLength(event);
+		});
+	}
+	ui.charsRemaining = charsRemaining;
+
 	initialize();
 
 	return ui;
