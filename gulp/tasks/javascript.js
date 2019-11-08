@@ -56,16 +56,18 @@ export const lint = () => gulp
 	.pipe(eslint.format());
 
 /**
- * Compile with Babel
+ * Compile *.js files in /apps/** and /js/lib to ES5 with Babel
  */
 export const compileJs = () => gulp
 	.src([
 		join(tmp, 'apps', '**', '*.js'),
-	])
+		join(tmp, 'js', 'lib', '**', '*.js')
+	], { base: tmp })
 	.pipe(babel({
 		babelrc: false,
+		compact: true,
 		ignore: ['**/node_modules'],
 		plugins: ['babel-plugin-transform-object-rest-spread'],
 		presets: ['env']
 	}))
-	.pipe(gulp.dest(join(tmp, 'apps')));
+	.pipe(gulp.dest(tmp));

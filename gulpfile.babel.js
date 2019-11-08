@@ -41,6 +41,7 @@ const buildApp = gulp.series(
 	moveFilesToTmp,
 	compileSass,
 	templatesApp,
+	compileJs,
 	require,
 	minifyJsApp,
 	minifyCssApp,
