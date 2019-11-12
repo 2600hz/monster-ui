@@ -297,8 +297,6 @@ define(function(require) {
 					self.showWalkthrough(template, function() {
 						self.updateWalkthroughFlagUser();
 					});
-				} else {
-					self.checkCreditCard(uiRestrictions);
 				}
 			}
 		},
@@ -563,19 +561,6 @@ define(function(require) {
 			params.callback && params.callback();
 		},
 
-		checkCreditCard: function(uiRestrictions) {
-			var self = this;
-
-			// If this is a sub-account of the super duper admin, has the billing tab, and is not the super duper admin itself.
-			if (monster.apps.auth.resellerId === monster.config.resellerId && uiRestrictions.billing.show_tab && !monster.util.isSuperDuper()) {
-				self.hasCreditCards(function(response) {
-					if (response === false) {
-						self.showCreditCardTab();
-					}
-				});
-			}
-		},
-
 		hasCreditCards: function(callback) {
 			var self = this,
 				response = false;
@@ -786,6 +771,45 @@ define(function(require) {
 			}
 		},
 
+		validateAccountAdministratorForm: function(formAccountAdministrator, callback) {
+			var self = this;
+
+			monster.ui.validate(formAccountAdministrator, {
+				rules: {
+					'contact.billing.name': {
+						required: true
+					},
+					'contact.billing.email': {
+						required: true,
+						email: true
+					},
+					'contact.billing.number': {
+						required: true
+					},
+					'contact.billing.street_address': {
+						required: true
+					},
+					'contact.billing.locality': {
+						required: true
+					},
+					'contact.billing.region': {
+						required: true
+					},
+					'contact.billing.country': {
+						required: true
+					},
+					'contact.billing.postal_code': {
+						required: true,
+						digits: true
+					}
+				}
+			});
+
+			if (monster.ui.valid(formAccountAdministrator)) {
+				callback && callback();
+			}
+		},
+
 		_myaccountEvents: function(args) {
 			var self = this,
 				data = args.data,
@@ -804,12 +828,16 @@ define(function(require) {
 				},
 				settingsValidate = function(fieldName, dataForm, callback) {
 					var formPassword = template.find('#form_password');
+					var formAccountAdministrator = template.find('#form_account_administrator');
 
 					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
 					// If the field is password, we start custom validation
+
 					if (formPassword.length) {
 						self.validatePasswordForm(formPassword, callback);
 					// otherwise we don't have any validation for this field, we execute the callback
+					} else if (formAccountAdministrator.length) {
+						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
 					} else {
 						callback && callback();
 					}
@@ -897,7 +925,7 @@ define(function(require) {
 					});
 
 			link
-				.css('background-color', '#22a5ff')
+				.css('background-color', '#2297FF')
 				.animate({
 					backgroundColor: '#f6f6f6'
 				}, 2000);

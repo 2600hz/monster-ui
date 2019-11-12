@@ -227,6 +227,7 @@ body,
 	.core-topbar #main_topbar_current_app_icon {
 		transform: none;
 		vertical-align: middle;
+		margin-bottom: 5px;
 	}
 	.core-topbar #main_topbar_current_app_name,
 	.core-topbar #main_topbar_trial {
@@ -853,4 +854,19 @@ body,
 .warning-socket-content {
 	padding-bottom: 100px;
 	width: 600px;
+}
+
+
+/************************************************************/
+/*********************** PRINT STYLES ***********************/
+/************************************************************/
+
+@media print {
+	.core-topbar-wrapper {
+		display: none;
+	}
+
+	@page {
+		margin: 0.75in;
+	}
 }

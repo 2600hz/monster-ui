@@ -12,15 +12,17 @@ require.config({
 		'cookies': 'js/vendor/js.cookie',
 		'crossroads': 'js/vendor/crossroads.min',
 		'ddslick': 'js/vendor/jquery.ddslick.min',
+		'disableAutoFill': 'js/vendor/jquery.disableAutoFill',
 		'drop': 'js/vendor/drop',
 		'duo': 'js/vendor/duo.min',
 		'file-saver': 'js/vendor/file-saver-1.3.2.min',
 		'fileupload': 'js/lib/jquery.fileupload',
 		'footable': 'js/vendor/footable.min',
 		'form2object': 'js/vendor/form2object',
-		'handlebars': 'js/vendor/handlebars-v4.0.5',
+		'handlebars': 'js/vendor/handlebars-v4.4.1',
 		'hasher': 'js/vendor/hasher.min',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
+		'image-select': 'js/vendor/ImageSelect.jquery',
 		'introJs': 'js/vendor/intro.min',
 		'isotope': 'js/vendor/jquery.isotope.min',
 		'jquery': 'js/vendor/jquery-1.9.1.min',
@@ -79,6 +81,7 @@ require.config({
 		'footable-filter': ['footable'],
 		'footable-sort': ['footable'],
 		'hasher': ['signals'],
+		'image-select': ['chosen'],
 		'jqueryui': ['jquery'],
 		'kazoo': {
 			'exports': 'kazoo'
@@ -120,16 +123,16 @@ require([
 		'monster-webphone',
 		'templates'
 	], function(
-			apps,
-			routing,
-			socket,
-			timezone,
-			ua,
-			ui,
-			util,
-			webphone,
-			templates
-		) {
+		apps,
+		routing,
+		socket,
+		timezone,
+		ua,
+		ui,
+		util,
+		webphone,
+		templates
+	) {
 		monster.apps = apps;
 		monster.routing = routing;
 		monster.socket = socket;

@@ -1,0 +1,70 @@
+<div class="app-selector">
+	<div class="app-selector-menu">
+		<ul class="nav nav-list text-non-selectable">
+		{{#each filters}}
+			<li class="nav-item">
+				<a href="javascript:void(0);" data-filter="{{filter}}" class="app-filter text-container{{#if @first}} active{{/if}}">
+					{{replaceVar (tryI18n @root.i18n.appSelector.filters filter) count}}
+				</a>
+			</li>
+		{{/each}}
+		</ul>
+	</div>
+	<div class="app-selector-body">
+		<div class="app-selector-group">
+			<div class="selected-title">
+				<span class="selected-text">
+					<span class="selected-count">{{selectedApps.length}}</span>
+					<span>{{i18n.appSelector.selectedApps}}</span>
+				</span>
+			</div>
+			<div class="selected-list">
+			{{#each selectedApps}}
+				<div class="app-icon-container show" data-id="{{id}}">
+					<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image:url({{icon}})"{{/if}}></div>
+				</div>
+			{{/each}}
+			</div>
+		</div>
+		<div class="app-selector-group">
+			<div class="search-box">
+				<input type="text" class="search-query" placeholder="{{i18n.appSelector.search.placeholder}}">
+				{{telicon "search" class="search-icon"}}
+			</div>
+		</div>
+		<div class="app-selector-list">
+			<ul class="app-list text-non-selectable">
+			{{#each apps}}
+				<li class="app-item{{#each tags}} {{this}}{{/each}}{{#ifInArray id @root.selectedAppIds}} selected{{/ifInArray}}{{#if isEven}} even{{/if}}" data-id="{{id}}" data-name="{{toLowerCase label}}">
+					<div class="text-container">
+						<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
+						<div class="app-title">
+							{{label}}
+						</div>
+						<div class="app-description">
+							{{description}}
+						</div>
+					</div>
+				</li>
+			{{/each}}
+				<li class="no-apps-item">
+				{{#if apps.length}}
+					<div class="no-apps-icon">
+						{{telicon "search"}}
+					</div>
+					<div class="no-apps-description">
+						{{i18n.appSelector.search.noResults}}
+					</div>
+				{{else}}
+					<div class="no-apps-icon">
+						{{telicon "apps"}}
+					</div>
+					<div class="no-apps-description">
+						{{tryI18n i18n.appSelector.noApps scope}}
+					</div>
+				{{/if}}
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

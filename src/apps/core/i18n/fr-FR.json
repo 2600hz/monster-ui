@@ -599,5 +599,15 @@
 		"ZA": "Afrique du Sud",
 		"ZM": "Zambie",
 		"ZW": "Zimbabwe"
+	},
+
+	"monsterLanguages": {
+		"auto": "Par Défaut",
+		"de-DE": "Allemand (de-DE)",
+		"en-US": "Anglais (en-US)",
+		"es-ES": "Espagnol (es-ES)",
+		"fr-FR": "Français (fr-FR)",
+		"nl-NL": "Néerlandais (nl-NL)",
+		"ru-RU": "Russe (ru-RU)"
 	}
 }

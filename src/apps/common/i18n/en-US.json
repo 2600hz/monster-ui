@@ -586,6 +586,7 @@
 		"draganddrop": "Drag and drop files here or",
 		"browse": "browse",
 		"invalidFileFormatError": "Error! Invalid file format.",
+		"fileSizeExceded": "Your file exceeds the allow max file size ({{maxFileSize}})",
 		"tryagain": "Try again!",
 		"chooseFile": "Choose a new file",
 		"success": "Done!",
@@ -1038,8 +1039,9 @@
 			"clear": "Clear",
 			"back": "Back",
 			"done": "Done"
-    }
-  },
+		},
+		"cancelDialogMessage": "Any modified data will be lost. Are you sure that you want to leave the wizard?"
+	},
 	"__comment": "UI-3147: Migrate Smart PBX user deletion to common submodule",
 	"__version": "4.3",
 	"deleteSmartUser": {
@@ -1059,5 +1061,34 @@
 			"deleteConferences": "Also remove this user's conferences from the system",
 			"deleteConferencesHelp": "If you leave this option unchecked, you won't be able to use the user's conference number anywhere else, as it will still be used by that conference."
 		}
+	},
+
+	"appSelector": {
+		"dialog": {
+			"title": "Select Applications",
+			"acceptButton": "Select Applications"
+		},
+		"filters": {
+			"all": "All Apps ({{variable}})",
+			"installed": "My Apps ({{variable}})",
+			"reseller": "Reseller Apps ({{variable}})",
+			"carrier": "Carrier Apps ({{variable}})",
+			"developer": "Developer Apps ({{variable}})",
+			"end_user": "End User Apps ({{variable}})",
+			"reporting": "Reporting Apps ({{variable}})",
+			"integration": "Integrations ({{variable}})",
+			"admin": "Admin Apps ({{variable}})",
+			"system_admin": "System Admin Apps ({{variable}})"
+		},
+		"noApps": {
+			"account": "There are no applications available on this account.",
+			"all": "There are no applications available.",
+			"user": "There are no applications available for the current user."
+		},
+		"search": {
+			"placeholder": "Search",
+			"noResults": "No matching results were found."
+		},
+		"selectedApps": "Applications Selected"
 	}
 }

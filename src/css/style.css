@@ -23,6 +23,8 @@
 @import url('vendor/footable/footable.standalone.min.css');
 @import url('lib/custom/footable-add.css');
 
+@import url('vendor/image-select/ImageSelect.css');
+
 @import url('vendor/introjs.css');
 @import url('lib/custom/introjs-add.css');
 

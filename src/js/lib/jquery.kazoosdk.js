@@ -126,12 +126,34 @@
 			contactList: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/contact_list' }
 			},
+			crm: {
+				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration' },
+				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration' },
+				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers'},
+				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/triggers' },
+				'updateTrigger': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'patchTrigger': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'deleteTrigger': { verb: 'DELETE', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
+				'listMappings': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/mappings' },
+				'getMapping': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'createMapping': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/mappings' },
+				'updateMapping': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'patchMapping': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'deleteMapping': { verb: 'DELETE', url: 'accounts/{accountId}/crm_integration/mappings/{mappingId}' },
+				'getCallLog': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/call_logs' }
+			},
 			dashboards: {
 				'getEnsureStarted': { verb: 'GET', url: 'accounts/{accountId}/dashboards/ensure_started' },
 				'getQueueDetails': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
 				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
 				'getRecipientOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_overview' },
 				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
+			},
+			desktop: {
+				'getWindows': { verb: 'GET', url: 'accounts/{accountId}/desktop/windows' },
+				'getMac': { verb: 'GET', url: 'accounts/{accountId}/desktop/mac' },
+				'getLinux': { verb: 'GET', url: 'accounts/{accountId}/desktop/linux' }
 			},
 			device: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}' },
@@ -413,11 +435,17 @@
 				'listAssigned': { verb: 'GET', url: 'accounts/{accountId}/services' },
 				'bulkChange': { verb: 'POST', url: 'accounts/{accountId}/services/' },
 				'getSummary': { verb: 'GET', url: 'accounts/{accountId}/services/summary' },
+				'getAuditSummary': { verb: 'GET', url: 'accounts/{accountId}/services/audit_summary' },
 				'listAvailable': { verb: 'GET', url: 'accounts/{accountId}/services/available' },
 				'quote': { verb: 'POST', url: 'accounts/{accountId}/services/quote' },
 				'topup': { verb: 'POST', url: 'accounts/{accountId}/services/topup' },
 				'listEditable': { verb: 'GET', url: 'accounts/{accountId}/services/editable' },
-				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' }
+				'listOverrides': { verb: 'GET', url: 'accounts/{accountId}/services/overrides' },
+				'updateManualQuantities': { verb: 'POST', url: 'accounts/{accountId}/services/manual' }
+			},
+			slackIntegration: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/slack_integration' },
+				'listUsers': { verb: 'GET', url: 'accounts/{accountId}/slack_integration/user_listing' }
 			},
 			storage: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/storage' },

@@ -10,15 +10,15 @@ In this document, we will go over the basics of validation in Monster-UI, and th
 
 First, validation is done on html forms, so you need to make sure that all the fields that you want to validate are nested in a `<form>` tag.
 
-Then, you need to set up validation on your form, by using the _monster.ui.validate(form, options)_ method. This will activate the validation on the provided form.
-Note: You should not call directly the _validate(options)_ method from the plugin, it will be called by the _monster.ui.validate(form, options)_ method.
+Then, you need to set up validation on your form, by using the `monster.ui.validate(form, options)` method. This will activate the validation on the provided form.
+Note: You should not call directly the `validate(options)` method from the plugin, it will be called by the `monster.ui.validate(form, options)` method.
 
 ```
 	var formToValidate = template.find('#demoapp_form');
 	monster.ui.validate(formToValidate);
 ```
 
-Finally, you can use the _monster.ui.valid(form)_ to "run" the validation. This method will return _true_ if the validation succeeded, or _false_ if it failed.
+Finally, you can use the `monster.ui.valid(form)` to "run" the validation. This method will return `true` if the validation succeeded, or `false` if it failed.
 
 ```
 	if(!monster.ui.valid(formToValidate)) {
@@ -33,7 +33,7 @@ The content and position of these labels can be customized using the validate op
 
 ### Standard validation rules
 
-The validation plugin comes with a set of standard rules that should cover most of your validation needs. There are two ways to define them: with inline html or through the _monster.ui.validate_ method.
+The validation plugin comes with a set of standard rules that should cover most of your validation needs. There are two ways to define them: with inline html or through the `monster.ui.validate` method.
 
 ##### Inline rules
 
@@ -54,8 +54,10 @@ Some of the basic validation rules can be defined directly inside the html, usin
 
 ##### Through the _monster.ui.validate_ method
 
-The _monster.ui.validate_ method has an option parameter that can contain a _rules_. This object should be a map with input names as keys and maps of rules as value.
+The `monster.ui.validate` method has an option parameter that can contain a `rules` object. This object should be a map with input names as keys and maps of rules as value.
+
 Let's say we want an required input that contains digits only, and an optional input that contains an URL. Here's what it would look like:
+
 ```
 <form id="demoapp_form">
 	<input type="text" name="digits_input">
@@ -94,11 +96,16 @@ We didn't make a simplified function to add custom rules directly within your ap
 
 ### Other options
 
-Several different options can be set in the _monster.ui.validate_ method, below is a quick overview of those options. See [here][validate] for the complete list.
+Several different options can be set in the `monster.ui.validate` method, below is a quick overview of those options. See [here][validate] for the complete list.
 
-*	The _messages_ option will allow you to customize the content of the appended error labels. This is only if you want to override the default messages.
-*	The _errorPlacement_ option will allow you to choose where to append your error labels.
-*	The _errorClass_ option will allow you to set a custom class for your error labels. This is not advised as it will replace the _monster-invalid_ class.
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`autoScrollOnInvalid` | Scroll the viewport to display the first error in the form after validation, if there is any. This is a specific setting for Monster UI. | `Boolean` | `false` | `false`
+`messages` | Allows you to customize the content of the appended error labels. This is only if you want to override the default messages. | `Object` | | `false`
+`errorPlacement` | Allows you to choose where to append your error labels. | `Function` | | `false`
+`errorClass` | Allows you to set a custom class for your error labels. This is not advised as it will replace the _monster-invalid_ class. | `String` | `monster-invalid` | `false`
+
+Example:
 
 ```
 monster.ui.validate(formToValidate, {
@@ -117,7 +124,8 @@ monster.ui.validate(formToValidate, {
 	errorPlacement: function(error, element) {
 		error.appendTo(element.parent());
 	},
-	errorClass: "demoapp-invalid"
+	errorClass: "demoapp-invalid",
+	autoScrollOnInvalid: true
 });
 ```
 

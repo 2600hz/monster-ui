@@ -37,8 +37,8 @@ define(function(require) {
 		'whitelabel.allowAccessList': [_.isBoolean, false],
 		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
 		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
-		'whitelabel.bookkeepers.http': [_.isBoolean, true],
-		'whitelabel.bookkeepers.kazoo': [_.isBoolean, true],
+		'whitelabel.bookkeepers.payphone': [_.isBoolean, true],
+		'whitelabel.bookkeepers.iou': [_.isBoolean, true],
 		'whitelabel.companyName': [_.isString, '2600Hz'],
 		'whitelabel.disableNumbersFeatures': [_.isBoolean, false],
 		'whitelabel.hideAppStore': [_.isBoolean, false],
@@ -49,6 +49,7 @@ define(function(require) {
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
 		'whitelabel.countryCode': [isCountryCode, defaultCountryCode],
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
+		'whitelabel.showPAssertedIdentity': [_.isBoolean, false],
 		'whitelabel.useDropdownApploader': [_.isBoolean, false]
 	};
 
@@ -56,7 +57,6 @@ define(function(require) {
 		lockRetryAttempt: false,
 		retryFunctions: [],
 		unlockRetryFunctions: function() {
-			console.log(this.retryFunctions);
 			_.each(this.retryFunctions, function(fun) {
 				fun();
 			});
@@ -97,52 +97,6 @@ define(function(require) {
 			return prepend + '_=' + (new Date()).getTime();
 		},
 
-		_defineRequest: function(id, request, app) {
-			if (request.hasOwnProperty('removeHeaders')) {
-				request.removeHeaders = $.map(request.removeHeaders, function(header) { return header.toLowerCase(); });
-			}
-
-			var self = this,
-				// If an apiRoot is defined, force it, otherwise takes either the apiUrl of the app, or the default api url
-				apiUrl = request.apiRoot ? request.apiRoot : (app.apiUrl ? app.apiUrl : this.config.api.default),
-				hasRemoveHeaders = request.hasOwnProperty('removeHeaders'),
-				settings = {
-					cache: request.cache || false,
-					url: apiUrl + request.url,
-					type: request.dataType || 'json',
-					method: request.verb || 'get',
-					contentType: request.type || 'application/json',
-					crossOrigin: true,
-					processData: false,
-					customFlags: {
-						generateError: request.generateError === false ? false : true
-					},
-					before: function(ampXHR, settings) {
-						monster.pub('monster.requestStart');
-
-						if (!hasRemoveHeaders || (hasRemoveHeaders && request.removeHeaders.indexOf('x-auth-token') < 0)) {
-							ampXHR.setRequestHeader('X-Auth-Token', app.getAuthToken());
-						}
-
-						_.each(request.headers, function(val, key) {
-							if (!hasRemoveHeaders || request.removeHeaders.indexOf(key.toLowerCase()) < 0) {
-								ampXHR.setRequestHeader(key, val);
-							}
-						});
-
-						return true;
-					}
-				};
-
-			if (hasRemoveHeaders) {
-				if (request.removeHeaders.indexOf('content-type') > -1) {
-					delete settings.contentType;
-				}
-			}
-
-			this._requests[id] = settings;
-		},
-
 		request: function(options) {
 			var self = this,
 				settings = _.extend({}, this._requests[options.resource]);
@@ -177,10 +131,10 @@ define(function(require) {
 
 			settings.error = function requestError(error) {
 				var parsedError,
-					handleError = function(error, options) {
+					handleError = function(error, requestOptions) {
 						parsedError = error;
 
-						var generateError = options && options.hasOwnProperty('generateError') ? options.generateError : settings.customFlags.generateError;
+						var generateError = _.get(requestOptions, 'generateError', settings.customFlags.generateError);
 
 						monster.pub('monster.requestEnd');
 
@@ -189,11 +143,25 @@ define(function(require) {
 						}
 
 						// If we have a 401 after being logged in, it means our session expired
-						if (monster.util.isLoggedIn() && error.status === 401) {
-							// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
-							monster.error('api', error, false);
-
-							monster.ui.alert('error', monster.apps.core.i18n.active().authenticationIssue);
+						if (
+							error.status === 401
+							&& monster.util.isLoggedIn()
+						) {
+							error401Handler({
+								requestHandler: self.request.bind(self),
+								error: error,
+								errorMessage: monster.apps.core.i18n.active().authenticationIssue,
+								options: requestOptions
+							});
+						} else if (
+							error.status === 402
+							&& !_.has(options, 'acceptCharges')
+						) {
+							error402Handler({
+								requestHandler: self.request.bind(self),
+								error: error,
+								options: options
+							});
 						} else {
 							// Added this to be able to display more data in the UI
 							error.monsterData = {
@@ -205,9 +173,11 @@ define(function(require) {
 						}
 					};
 
-				handleError(error);
+				handleError(error, options);
 
-				options.error && options.error(parsedError, error, handleError);
+				if (!_.get(options, 'preventCallbackError', false)) {
+					options.error && options.error(parsedError, error, handleError);
+				}
 			};
 
 			settings.success = function requestSuccess(resp) {
@@ -568,79 +538,26 @@ define(function(require) {
 					monster.pub('monster.requestEnd', requestOptions.requestEventParams);
 				},
 				onRequestError: function(error, requestOptions) {
-					var parsedError = error,
-						requestOptions = requestOptions || { generateError: true };
+					var requestOptions = requestOptions || { generateError: true };
 
-					if ('responseText' in error && error.responseText && error.getResponseHeader('content-type') === 'application/json') {
-						parsedError = $.parseJSON(error.responseText);
-					}
-
-					if (error.status === 402 && typeof requestOptions.acceptCharges === 'undefined') {
-						// Handle the "Payment Required" status
-						var parsedError = error,
-							originalPreventCallbackError = requestOptions.preventCallbackError;
-
-						if ('responseText' in error && error.responseText) {
-							parsedError = $.parseJSON(error.responseText);
-						}
-
-						// Prevent the execution of the custom error callback, as it is a
-						// charges notification that will be handled here
-						requestOptions.preventCallbackError = true;
-
-						// Notify the user about the charges
-						monster.ui.charges(parsedError.data, function() {
-							requestOptions.acceptCharges = true;
-							requestOptions.preventCallbackError = originalPreventCallbackError;
-							monster.kazooSdk.request(requestOptions);
-						}, function() {
-							requestOptions.onChargesCancelled && requestOptions.onChargesCancelled();
+					if (
+						error.status === 401
+						&& monster.util.isLoggedIn()
+					) {
+						error401Handler({
+							requestHandler: monster.kazooSdk.request,
+							error: error,
+							options: requestOptions
 						});
-					} else if (monster.util.isLoggedIn() && error.status === 401) {
-						// If we have a 401 after being logged in, it means our session expired, or that it's a MFA denial of the relogin attempt
-						// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
-						monster.error('api', error, false);
-
-						// the prevent callback error key is added by our code. We want to let the system automatically attempt to relogin once before sending the error callback
-						// So to prevent the original error callback from being fired, we add that flag to the request when we attempt the request a second time
-						if (!requestOptions.hasOwnProperty('preventCallbackError') || requestOptions.preventCallbackError === false) {
-							// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
-							if (!requestOptions.hasOwnProperty('isRetryLoginRequest') || requestOptions.isRetryLoginRequest === false) {
-								if (!_privateFlags.lockRetryAttempt) {
-									// We added a new locking mechanism. Basically if your module use a parallel request, you could have 5 requests ending in a 401. We don't want to automatically re-login 5 times, so we lock the system
-									// Once the re-login is effective, we'll unlock it.
-									_privateFlags.lockRetryAttempt = true;
-
-									// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
-									// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
-									requestOptions.preventCallbackError = true;
-
-									monster.apps.auth.retryLogin({ isRetryLoginRequest: true }, function(newToken) {
-										// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
-										var updatedRequestOptions = $.extend(true, requestOptions, { preventCallbackError: false, authToken: newToken });
-
-										monster.kazooSdk.request(updatedRequestOptions);
-
-										_privateFlags.unlockRetryFunctions();
-									},
-									function() {
-										monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-											monster.util.logoutAndReload();
-										});
-									});
-								} else {
-									_privateFlags.addRetryFunction(function() {
-										var updatedRequestOptions = $.extend(true, requestOptions, { authToken: monster.util.getAuthToken() });
-
-										monster.kazooSdk.request(updatedRequestOptions);
-									});
-								}
-							}
-						} else {
-							monster.ui.alert('error', monster.apps.core.i18n.active().invalidCredentialsMessage, function() {
-								monster.util.logoutAndReload();
-							});
-						}
+					} else if (
+						error.status === 402
+						&& !_.has(requestOptions, 'acceptCharges')
+					) {
+						error402Handler({
+							requestHandler: monster.kazooSdk.request,
+							error: error,
+							options: requestOptions
+						});
 					} else {
 						monster.error('api', error, requestOptions.generateError);
 					}
@@ -658,6 +575,158 @@ define(function(require) {
 			return md5(string);
 		}
 	};
+
+	/**
+	 * @param  {String} id Resource identifier
+	 * @param  {Object} request Request settings
+	 * @param  {String} request.url
+	 * @param  {Array} [request.removeHeaders
+	 * @param  {String} [request.apiRoot]
+	 * @param  {Boolean} [request.cache=false]
+	 * @param  {String} [request.dataType='json']
+	 * @param  {String} [request.verb='get']
+	 * @param  {String} [request.type='application/json']
+	 * @param  {Boolean} [request.generateError=true]
+	 * @param  {Object} [request.headers]
+	 * @param {Object} app Application context
+	 */
+	function defineRequest(id, request, app) {
+		var headersToRemove = _.map(request.removeHeaders, _.toLower);
+		var apiUrl = request.apiRoot || app.apiUrl || monster.config.api.default;
+		var settings = {
+			cache: _.get(request, 'cache', false),
+			url: apiUrl + request.url,
+			type: request.dataType || 'json',
+			method: request.verb || 'get',
+			contentType: _.includes(headersToRemove, 'content-type')
+				? false
+				: _.get(request, 'type', 'application/json'),
+			crossOrigin: true,
+			processData: false,
+			customFlags: {
+				generateError: _.get(request, 'generateError', true)
+			},
+			before: function(ampXHR) {
+				var headers = _
+					.chain(request)
+					.get('headers', {})
+					.clone()
+					.merge({
+						'X-Auth-Token': app.getAuthToken()
+					}, _.has(monster.config, 'kazooClusterId')
+						? { 'X-Kazoo-Cluster-ID': monster.config.kazooClusterId }
+						: {}
+					)
+					.omitBy(function(value, key) {
+						return _.includes(headersToRemove, _.toLower(key));
+					})
+					.value();
+
+				monster.pub('monster.requestStart');
+
+				_.forEach(headers, function(value, key) {
+					ampXHR.setRequestHeader(key, value);
+				});
+			}
+		};
+
+		_.set(monster, ['_requests', id], settings);
+	}
+	monster._defineRequest = defineRequest;
+
+	/**
+	 * @private
+	 * @param  {Object} args
+	 * @param  {Function} args.requestHandler
+	 * @param  {Object} args.error
+	 * @param  {String} [args.errorMessage]
+	 * @param  {Object} args.options
+	 */
+	function error401Handler(args) {
+		var requestHandler = args.requestHandler;
+		var error = args.error;
+		var errorMessage = _.get(args, 'errorMessage', monster.apps.core.i18n.active().invalidCredentialsMessage);
+		var options = args.options;
+
+		// If we have a 401 after being logged in, it means our session expired, or that it's a MFA denial of the relogin attempt
+		// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
+		monster.error('api', error, false);
+
+		// the prevent callback error key is added by our code. We want to let the system automatically attempt to relogin once before sending the error callback
+		// So to prevent the original error callback from being fired, we add that flag to the request when we attempt the request a second time
+		if (_.get(options, 'preventCallbackError', false)) {
+			monster.ui.alert('error', errorMessage, function() {
+				monster.util.logoutAndReload();
+			});
+		// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
+		} else if (!_.get(options, 'isRetryLoginRequest', false)) {
+			if (_privateFlags.lockRetryAttempt) {
+				_privateFlags.addRetryFunction(function() {
+					requestHandler(options);
+				});
+			} else {
+				// We added a new locking mechanism. Basically if your module use a parallel request, you could have 5 requests ending in a 401. We don't want to automatically re-login 5 times, so we lock the system
+				// Once the re-login is effective, we'll unlock it.
+				_privateFlags.lockRetryAttempt = true;
+
+				// Because onRequestError is executed before error in the JS SDK, we can set this flag to prevent the execution of the custom error callback
+				// This way we can handle the 401 properly, try again with a new auth token, and continue the normal flow of the ui
+				options.preventCallbackError = true;
+
+				monster.pub('auth.retryLogin', {
+					additionalArgs: {
+						isRetryLoginRequest: true
+					},
+					success: function() {
+						requestHandler($.extend(true, {}, options, {
+							// Used to feed the updated token to the SDK (when requestHandler() references monster.kazooSdk.request())
+							authToken: monster.util.getAuthToken(),
+							// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
+							preventCallbackError: false
+						}));
+						_privateFlags.unlockRetryFunctions();
+					},
+					error: function() {
+						monster.ui.alert('error', errorMessage, function() {
+							monster.util.logoutAndReload();
+						});
+					}
+				});
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 * @param  {Object} args
+	 * @param  {Function} args.requestHandler
+	 * @param  {Object} args.error
+	 * @param  {Object} args.options
+	 */
+	function error402Handler(args) {
+		var requestHandler = args.requestHandler;
+		var error = args.error;
+		var options = args.options;
+		var originalPreventCallbackError = options.preventCallbackError;
+		var parsedError = error;
+
+		if (_.has(error, 'responseText') && error.responseText) {
+			parsedError = $.parseJSON(error.responseText);
+		}
+
+		// Prevent the execution of the custom error callback, as it is a
+		// charges notification that will be handled here
+		options.preventCallbackError = true;
+
+		// Notify the user about the charges
+		monster.ui.charges(parsedError.data, function() {
+			options.acceptCharges = true;
+			options.preventCallbackError = originalPreventCallbackError;
+			requestHandler(options);
+		}, function() {
+			_.isFunction(options.onChargesCancelled) && options.onChargesCancelled();
+		});
+	}
 
 	/**
 	 * Set missing/incorrect config.js properties required by the UI to function properly.
@@ -737,9 +806,9 @@ define(function(require) {
 	}
 
 	monster.defaultLanguage = defaultLanguage;
-
 	monster.initConfig = initConfig;
 	monster.setDefaultLanguage = setDefaultLanguage;
+	monster.supportedLanguages = supportedLanguages;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager

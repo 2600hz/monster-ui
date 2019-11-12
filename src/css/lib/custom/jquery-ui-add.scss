@@ -191,7 +191,7 @@
 	border-color: $primary-color;
 }
 
-
+/************** MONTHPICKER **************/
 /**
  * jquery.monthpicker.css
  */
@@ -294,6 +294,39 @@
 					border-bottom: none;
 					border-left: none;
 				}
+			}
+		}
+	}
+}
+
+/*************** SPINNER ***************/
+.ui-widget.ui-spinner {
+	border-radius: 2px;
+	background: $panel-background-color;
+	border-color: $french-gray2;
+
+	&:focus-within {
+		border-color: $primary-color;
+	}
+
+	.ui-spinner-button {
+		width: 20px;
+		background: linear-gradient(-180deg, $white 0%, #F4F4F5 100%);
+		border-left: 1px solid $french-gray2;
+
+		&.ui-corner-tr {
+			border-bottom: 1px solid $french-gray2;
+		}
+
+		&.ui-corner-br {
+			height: 18px;
+		}
+
+		.ui-icon{
+			margin-left: 2px;
+
+			.ui-icon-triangle-1-n {
+				margin-top: -10px;
 			}
 		}
 	}
