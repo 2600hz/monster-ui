@@ -113,6 +113,6 @@ jobs:
       - store_artifacts:
           path: /home/circleci/2600hz/packager/RPMS
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-centos-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
