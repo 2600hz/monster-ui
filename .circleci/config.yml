@@ -86,7 +86,6 @@ jobs:
             cp -R ${APP_DIR}/dist/* ${BUILD_SOURCES}/
       - run:
           name: Building CHANGELOG and VERSION files
-          Preparing source
           command: |
             cd $BUILD_ROOT
             ./package_docs
