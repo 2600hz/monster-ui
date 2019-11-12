@@ -24,6 +24,56 @@ jobs:
       - run:
           name: Install dependencies from package.json
           command: npm install
+      - run:
+          name: Run a production build
+          command: gulp build-prod
+      - run:
+          name: Generating version info
+          command: |
+            cd $BUILD_ROOT
+            VERSION=$(./version)
+            RELEASE=$(./release)
+            PACKAGE_NAME=$(./package_name)
+            echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
+            echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "export RELEASE=${RELEASE}" >> $BASH_ENV
+            PACKAGE_NAME=$(./package_name)
+            echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
+            echo "build version for ${PACKAGE_NAME} version: ${VERSION} release: ${RELEASE}"
+      - run:
+          name: Extracting build artifacts
+          command: |
+            cd $BUILD_SOURCES
+            echo " - copy build into artifacts"
+            cp -R ${APP_DIR}/dist/* ${BUILD_SOURCES}/
+      - run:
+          name: Building CHANGELOG and VERSION files
+          Preparing source
+          command: |
+            cd $BUILD_ROOT
+            ./package_docs
+            echo " - generate build version and changelog"
+      - run:
+          name: Preparing source tar
+          command: |
+            cd $BUILD_ROOT
+            echo " - removing files that should not be packaged in the source tar"
+            rm -rf ${BUILD_SOURCES}/.??*
+            rm -rf ${BUILD_SOURCES}/doc*
+            rm -rf ${BUILD_SOURCES}/*.md
+            echo " - creating the source tar"
+            ARTIFACTS_NAME=${PACKAGE_NAME}-${VERSION}
+            mkdir -p ${ARTIFACTS_NAME}
+            cp -r ${BUILD_SOURCES}/* ${ARTIFACTS_NAME}/.
+            tar -cf ${ARTIFACTS_NAME}.tar ${ARTIFACTS_NAME}
+            cp ${ARTIFACTS_NAME}.tar ${BUILD_SOURCES}/.
+      - run:
+          name: Building package
+          command: |
+            cd $BUILD_ROOT
+            ./build
+      - store_artifacts:
+          path: /home/circleci/2600hz/packager/RPMS
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
