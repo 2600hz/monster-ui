@@ -1378,6 +1378,9 @@ define(function(require) {
 			var defaultValidatorHighlightHandler = $.validator.defaults.highlight,
 				defaultValidatorUnhighlightHandler = $.validator.defaults.unhighlight,
 				autoScrollOnInvalid = _.get(options, 'autoScrollOnInvalid', false),
+				isElementInstanceOf = function($element, key) {
+					return !!$element.data(key);
+				},
 				defaultOptions = {
 					errorClass: 'monster-invalid',
 					validClass: 'monster-valid',
@@ -1423,33 +1426,31 @@ define(function(require) {
 					},
 					errorPlacement: function(error, element) {
 						var $element = $(element);
-						if ($element.hasClass('ui-spinner-input')) {
+						if (isElementInstanceOf($element, 'uiSpinner')) {
 							error.insertAfter($element.closest('.ui-spinner'));
+						} else if (isElementInstanceOf($element, 'chosen')) {
+							error.insertAfter($element.next());
 						} else {
 							error.insertAfter(element);
 						}
 					},
 					highlight: function(element, errorClass, validClass) {
 						var $element = $(element);
-						if ($element.hasClass('ui-spinner-input')) {
-							$element
-								.closest('.ui-spinner')
-									.addClass(errorClass)
-									.removeClass(validClass);
-						} else {
-							defaultValidatorHighlightHandler.call(this, element, errorClass, validClass);
+						if (isElementInstanceOf($element, 'uiSpinner')) {
+							element = $element.closest('.ui-spinner').get(0);
+						} else if (isElementInstanceOf($element, 'chosen')) {
+							element = $element.next().get(0);
 						}
+						defaultValidatorHighlightHandler.call(this, element, errorClass, validClass);
 					},
 					unhighlight: function(element, errorClass, validClass) {
 						var $element = $(element);
-						if ($element.hasClass('ui-spinner-input')) {
-							$element
-								.closest('.ui-spinner')
-									.addClass(validClass)
-									.removeClass(errorClass);
-						} else {
-							defaultValidatorUnhighlightHandler.call(this, element, errorClass, validClass);
+						if (isElementInstanceOf($element, 'uiSpinner')) {
+							element = $element.closest('.ui-spinner').get(0);
+						} else if (isElementInstanceOf($element, 'chosen')) {
+							element = $element.next().get(0);
 						}
+						defaultValidatorUnhighlightHandler.call(this, element, errorClass, validClass);
 					}
 				};
 
@@ -3783,6 +3784,55 @@ define(function(require) {
 		}
 	}
 	ui.toast = toast;
+
+	/**
+	 * Helper to display characters remaining inline
+	 * @param {jQuery}  $target Field to be checked
+	 * @param {Object}  args
+	 * @param {Integer} args.size The maxlength to be validated
+	 * @param {String}  [args.customClass] Custom class for the label if needed
+	 */
+	function charsRemaining($target, args) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		if (!_.isUndefined(args) && !_.isPlainObject(args)) {
+			throw TypeError('"options" is not a plain object');
+		}
+
+		var size = args.size,
+			customClass = args.customClass || '',
+			checkCurrentLength = function() {
+				return $target.prop('tagName') === 'DIV' ? $target[0].textContent.length : $target.val().length;
+			},
+			currentLenght = checkCurrentLength(),
+			allowedChars = size - currentLenght,
+			allowedCharsLabel = $('<span>'),
+			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend(allowedCharsLabel.text(allowedChars)),
+			checkLength = function(event) {
+				currentLenght = checkCurrentLength();
+				allowedChars = size - currentLenght;
+
+				allowedCharsLabel.text(allowedChars);
+
+				if (allowedChars <= 0 || allowedChars > size) {
+					label.addClass('chars-remaining-error');
+
+					event.preventDefault();
+					return false;
+				} else {
+					label.removeClass('chars-remaining-error');
+				}
+			};
+
+		$target.after(label);
+
+		$target.on('keypress keyup', function(event) {
+			checkLength(event);
+		});
+	}
+	ui.charsRemaining = charsRemaining;
 
 	initialize();
 
