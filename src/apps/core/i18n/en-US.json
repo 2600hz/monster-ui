@@ -1072,5 +1072,8 @@
 	},
 	"chosen": {
 		"addNewTag": "Hit enter to add a new option."
+	},
+	"charsRemaining": {
+		"label": "Characters Remaining"
 	}
 }
