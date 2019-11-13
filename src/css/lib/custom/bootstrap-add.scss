@@ -90,6 +90,7 @@ pre {
 	}
 
 	&.dropup {
+		.dropdown-menu,
 		.dropdown-menu.pull-right {
 			&::after {
 				top: initial;
@@ -97,7 +98,6 @@ pre {
 				border-top: 6px solid white;
 				border-bottom: none;
 			}
-
 			&::before {
 				top: initial;
 				bottom: -7px;
