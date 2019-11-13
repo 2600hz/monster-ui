@@ -79,26 +79,31 @@ jobs:
             echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
             echo "build version for ${PACKAGE_NAME} version: ${VERSION} release: ${RELEASE}"
       - run:
-          name: Preparing source
+          name: Extracting build artifacts
           command: |
-            cd $BUILD_ROOT
-            ./package_docs
             cd $BUILD_SOURCES
             echo " - copy build into artifacts"
             cp -R ${APP_DIR}/dist/* ${BUILD_SOURCES}/
+      - run:
+          name: Building CHANGELOG and VERSION files
+          command: |
+            cd $BUILD_ROOT
+            ./package_docs
             echo " - generate build version and changelog"
+      - run:
+          name: Preparing source tar
+          command: |
+            cd $BUILD_ROOT
             echo " - removing files that should not be packaged in the source tar"
             rm -rf ${BUILD_SOURCES}/.??*
             rm -rf ${BUILD_SOURCES}/doc*
             rm -rf ${BUILD_SOURCES}/*.md
             echo " - creating the source tar"
-            cd $BUILD_ROOT
             ARTIFACTS_NAME=${PACKAGE_NAME}-${VERSION}
             mkdir -p ${ARTIFACTS_NAME}
             cp -r ${BUILD_SOURCES}/* ${ARTIFACTS_NAME}/.
             tar -cf ${ARTIFACTS_NAME}.tar ${ARTIFACTS_NAME}
             cp ${ARTIFACTS_NAME}.tar ${BUILD_SOURCES}/.
-
       - run:
           name: Building package
           command: |
