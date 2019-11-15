@@ -247,18 +247,6 @@ define(function(require) {
 			return isMasquerading;
 		},
 
-		// Function returning a Boolean indicating whether the logged in account is a reseller or not.
-		isReseller: function() {
-			var self = this,
-				isReseller = false;
-
-			if (monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.originalAccount.hasOwnProperty('is_reseller')) {
-				isReseller = monster.apps.auth.originalAccount.is_reseller;
-			}
-
-			return isReseller;
-		},
-
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
 		// Takes seconds and transforms it into a timer
@@ -1397,6 +1385,12 @@ define(function(require) {
 			);
 	}
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
+
+	// Function returning a Boolean indicating whether the logged in account is a reseller or not.
+	function isReseller() {
+		return _.get(monster, 'apps.auth.originalAccount.is_reseller', false);
+	}
+	util.isReseller = isReseller;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
