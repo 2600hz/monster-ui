@@ -1387,8 +1387,9 @@ define(function(require) {
 	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 
 	// Function returning a Boolean indicating whether the logged in account is a reseller or not.
-	function isReseller() {
-		return _.get(monster, 'apps.auth.originalAccount.is_reseller', false);
+	function isReseller(pAccount) {
+		var account = pAccount || _.get(monster, 'apps.auth.originalAccount', {});
+		return _.get(account, 'is_reseller', false);
 	}
 	util.isReseller = isReseller;
 
