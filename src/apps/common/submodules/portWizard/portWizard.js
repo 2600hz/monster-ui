@@ -160,9 +160,25 @@ define(function(require) {
 		 * @param  {Object} args
 		 */
 		portWizardNameAndNumbersRender: function(args) {
-			var self = this;
+			var self = this,
+				$container = args.container,
+				nameAndNumbersData = _.get(args.data, 'nameAndNumbers', {}),
+				initTemplate = function() {
+					var $template = $(self.getTemplate({
+						name: 'step-nameAndNumbers',
+						data: {
+							data: nameAndNumbersData
+						},
+						submodule: 'portWizard'
+					}));
 
-			// TODO: Not implemented
+					return $template;
+				};
+
+			self.portWizardRenderStep({
+				container: $container,
+				initTemplate: initTemplate
+			});
 		},
 
 		/**
@@ -354,6 +370,48 @@ define(function(require) {
 				globalCallback = self.portWizardGet('globalCallback');
 
 			globalCallback();
+		},
+
+		/**************************************************
+		 *               Utility functions                *
+		 **************************************************/
+
+		/**
+		 * Render a step view
+		 * @param  {Object} args
+		 * @param  {jQuery} args.container  Wizard container element
+		 * @param  {Function}  [args.loadData]  Optional load callback, which can be used to load
+		 *                                      data for the template before its initialization
+		 * @param  {Function}  args.initTemplate  Template initialization callback
+		 */
+		portWizardRenderStep: function(args) {
+			var self = this,
+				loadData = args.loadData,
+				initTemplate = args.initTemplate,
+				$container = args.container,
+				seriesFunctions = [
+					function(seriesCallback) {
+						monster.ui.insertTemplate($container.find('.right-content'), function(insertTemplateCallback) {
+							seriesCallback(null, insertTemplateCallback);
+						});
+					}
+				];
+
+			if (_.isFunction(loadData)) {
+				seriesFunctions.push(loadData);
+			}
+
+			monster.series(seriesFunctions, function(err, results) {
+				if (err) {
+					return;
+				}
+
+				var insertTemplateCallback = results[0],
+					data = _.get(results, 1);
+
+				// Deferred, to ensure that the loading template does not replace the step template
+				_.defer(insertTemplateCallback, initTemplate(data), self.wizardScrollToTop);
+			});
 		},
 
 		/*****************************************************************************************

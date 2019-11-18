@@ -394,3 +394,11 @@
 #port_wizard_error_dialog {
 	text-align: left;
 }
+
+#navigation_wizard_wrapper .wizard-step {
+	&#step_name_and_numbers {
+		#numbers_to_port_numbers {
+			min-height: 16rem;
+		}
+	}
+}
