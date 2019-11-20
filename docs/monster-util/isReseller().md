@@ -10,18 +10,22 @@ monster.util.isReseller([account]);
 ### Parameters
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`account` | Account with the same format as an account returned by a GET on the /account/{accountId} API. | `Object` | | `false`
+`account` | Account with the same format as an account returned by a GET on the /account/{accountId} API. | `Object` | `monster.apps.auth.originalAccount` | `false`
 
 ### Return value
 A `Boolean` indicating whether or not the logged in account is a reseller.
 
 ## Description
-This method checks if an account is a reseller or not. A reseller account is an account with the `is_reseller` attribute set to true.
+The `monster.util#isReseller` method checks if the account provided is a reseller or not. If not `account` is provided, the check is made against the original account.
 
-## Example
+## Examples
 ```javascript
 if(monster.util.isReseller()) {
-	// do something if account is a reseller
+	// do something if original account is a reseller
+}
+
+if(monster.util.isReseller(someOtherAccount)) {
+  // do something if someOtherAccount is a reseller
 };
 ```
 
