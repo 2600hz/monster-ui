@@ -935,6 +935,10 @@ define(function(require) {
 			container.find('#back_to_search').click(function(ev) {
 				ev.preventDefault();
 
+				if (args.singleSelect) {
+					self.appFlags.isSelectedNumbersEmpty = true;
+				}
+
 				searchResultDiv.find('.result-content-div .left-div').scrollTop(0);
 				searchResultDiv.slideUp(function() {
 					container.find('#search_top_div').slideDown();
