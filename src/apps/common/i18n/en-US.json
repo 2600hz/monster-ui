@@ -1,4 +1,36 @@
 {
+	"commonApp": {
+		"portWizard": {
+			"doneButton": "Submit Port Request",
+			"steps": {
+				"nameAndNumbers": {
+					"label": "Name + Numbers",
+					"description": "Name your port request for future reference and choose the numbers you want to port."
+				},
+				"carrierSelection": {
+					"label": "Carrier Selection",
+					"description": "Review numbers, select a winning carrier, and figure out what documents are required for your port."
+				},
+				"ownershipConfirmation": {
+					"label": "Ownership Confirmation",
+					"description": "Upload and review your most recent invoice from the losing carrier."
+				},
+				"requiredDocuments": {
+					"label": "Required Documents",
+					"description": "Upload any other required documents and forms for your port request."
+				},
+				"dateAndNotifications": {
+					"label": "Desired Date + Notifications",
+					"description": "Select a desired target date for this port to complete, and designate who should receive updates."
+				},
+				"review": {
+					"label": "Review + Confirm",
+					"description": "Please review and confirm all your information before submitting your number port request."
+				}
+			}
+		}
+	},
+
 	"accountBrowser": {
 		"missingInfo": "Missing Information",
 		"addAccount": "Add New Account",
