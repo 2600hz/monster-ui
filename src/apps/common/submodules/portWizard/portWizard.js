@@ -85,25 +85,35 @@ define(function(require) {
 		/**
 		 * @param  {jQuery} [args.container]
 		 * @param  {String} [args.data.accountId]
+		 * @param  {String} [args.data.portRequestId]
 		 * @param  {Function} [args.globalCallback]
-		 * @param  {Object} [args.data.portRequestId]
 		 */
 		portWizardRender: function(args) {
 			var self = this,
 				accountId = _.get(args, 'data.accountId', self.accountId),
 				globalCallback = _.get(args, 'globalCallback', function() {}),
 				portRequestId = _.get(args, 'data.portRequestId'),
-				container,
+				i18n = self.i18n.active().commonApp.portWizard,
+				i18nSteps = i18n.steps,
+				stepNames = [
+					'nameAndNumbers',
+					'carrierSelection',
+					'ownershipConfirmation',
+					'requiredDocuments',
+					'dateAndNotifications',
+					'review'
+				],
+				$container,
 				callback;
 
 			if (args.container instanceof jQuery) {
-				container = args.container;
+				$container = args.container;
 				callback = globalCallback;
 			} else {
 				var modal = monster.ui.fullScreenModal(null, {
 					inverseBg: true
 				});
-				container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content');
+				$container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content');
 				callback = function() {
 					modal.close();
 
@@ -113,50 +123,242 @@ define(function(require) {
 
 			self.portWizardSet({
 				accountId: accountId,
-				container: container,
 				globalCallback: callback
 			});
 
-			monster.parallel({
-				portRequest: function(callback) {
-					if (_.isUndefined(portRequestId)) {
-						callback(null);
-						return;
-					}
-					self.portWizardRequestGetPort({
-						data: {
-							portRequestId: portRequestId
-						},
-						success: function(portRequest) {
-							callback(null, portRequest);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
-				}
-			}, function(err, result) {
-				if (err) {
-					callback();
-					return;
-				}
-				var portRequest = _.merge({
-					ui_flags: {},
-					numbers: {}
-				}, _.get(result, 'portRequest', {}));
+			monster.pub('common.navigationWizard.render', {
+				thisArg: self,
+				data: {},
+				container: $container,
+				steps: _.map(stepNames, function(stepName) {
+					var pascalCasedStepName = _.upperFirst(stepName);
 
-				self.portWizardSet('attachments', {});
-				self.portWizardSet('portRequest', portRequest);
-
-				self.portWizardRenderPortInfo({
-					container: self.portWizardGet('container'),
-					data: {
-						attachments: self.portWizardGet('attachments'),
-						request: self.portWizardGet('portRequest')
-					}
-				});
+					return {
+						label: _.get(i18nSteps, [ stepName, 'label' ]),
+						description: _.get(i18nSteps, [ stepName, 'description' ]),
+						template: 'portWizard' + pascalCasedStepName + 'Render',
+						util: 'portWizard' + pascalCasedStepName + 'Util'
+					};
+				}),
+				title: i18n.title,
+				cancel: 'portWizardClose',
+				done: 'portWizardSubmit',
+				doneButton: i18n.doneButton,
+				validateOnStepChange: true,
+				askForConfirmationBeforeExit: true
 			});
 		},
+
+		/**************************************************
+		 *                  Wizard steps                  *
+		 **************************************************/
+
+		/* NAME AND NUMBERS STEP */
+
+		/**
+		 * Render the Name + Numbers step
+		 * @param  {Object} args
+		 */
+		portWizardNameAndNumbersRender: function(args) {
+			var self = this;
+
+			// TODO: Not implemented
+		},
+
+		/**
+		 * Utility funcion to validate the Name + Numbers form and extract data
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
+		 */
+		portWizardNameAndNumbersUtil: function($template, args) {
+			var self = this;
+
+			// TODO: Not implemented
+
+			return {
+				valid: true
+			};
+		},
+
+		/* CARRIER SELECTION STEP */
+
+		/**
+		 * Render the Carrier Selection step
+		 * @param  {Object} args
+		 */
+		portWizardCarrierSelectionRender: function(args) {
+			var self = this;
+
+			// TODO: Not implemented
+		},
+
+		/**
+		 * Utility funcion to validate the Carrier Selection form and extract data
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
+		 */
+		portWizardCarrierSelectionUtil: function($template, args) {
+			var self = this;
+
+			// TODO: Not implemented
+
+			return {
+				valid: true
+			};
+		},
+
+		/* OWNERSHIP CONFIRMATION STEP */
+
+		/**
+		 * Render the Ownership Confirmation step
+		 * @param  {Object} args
+		 */
+		portWizardOwnershipConfirmationRender: function(args) {
+			var self = this;
+
+			// TODO: Not implemented
+		},
+
+		/**
+		 * Utility funcion to validate the Ownership Confirmation form and extract data
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
+		 */
+		portWizardOwnershipConfirmationUtil: function($template, args) {
+			var self = this;
+
+			// TODO: Not implemented
+
+			return {
+				valid: true
+			};
+		},
+
+		/* REQUIRED DOCUMENTS STEP */
+
+		/**
+		 * Render the Required Documents step
+		 * @param  {Object} args
+		 */
+		portWizardRequiredDocumentsRender: function(args) {
+			var self = this;
+
+			// TODO: Not implemented
+		},
+
+		/**
+		 * Utility funcion to validate the Required Documents form and extract data
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
+		 */
+		portWizardRequiredDocumentsUtil: function($template, args) {
+			var self = this;
+
+			// TODO: Not implemented
+
+			return {
+				valid: true
+			};
+		},
+
+		/* DATE AND NOTIFICATIONS STEP */
+
+		/**
+		 * Render the Desired Date + Notifications step
+		 * @param  {Object} args
+		 */
+		portWizardDateAndNotificationsRender: function(args) {
+			var self = this;
+
+			// TODO: Not implemented
+		},
+
+		/**
+		 * Utility funcion to validate the Desired Date + Notifications form and extract data
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
+		 */
+		portWizardDateAndNotificationsUtil: function($template, args) {
+			var self = this;
+
+			// TODO: Not implemented
+
+			return {
+				valid: true
+			};
+		},
+
+		/* REVIEW */
+
+		/**
+		 * Render Review + Confirm step
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 */
+		portWizardReviewRender: function(args) {
+			var self = this;
+
+			// TODO: Not implemented
+		},
+
+		/**
+		 * Utility funcion to extract Review data. Not used, as this is only a review step, so it
+		 * does not provide any new data.
+		 * @returns  {Object}  Object that contains a `valid` flag value
+		 */
+		portWizardReviewUtil: function() {
+			var self = this;
+
+			// TODO: Not implemented
+
+			return {
+				valid: true
+			};
+		},
+
+		/**************************************************
+		 *                 Wizard actions                 *
+		 **************************************************/
+
+		/* SUBMIT */
+
+		/**
+		 * Submits the current port request
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that was stored across steps
+		 */
+		portWizardSubmit: function(args) {
+			var self = this,
+				globalCallback = self.portWizardGet('globalCallback');
+
+			globalCallback();
+		},
+
+		/* CLOSE WIZARD */
+
+		/**
+		 * Closes the wizard, by invoking the global callback
+		 */
+		portWizardClose: function() {
+			var self = this,
+				globalCallback = self.portWizardGet('globalCallback');
+
+			globalCallback();
+		},
+
+		/*****************************************************************************************
+		 *                                    OLD PORT WIZARD                                    *
+		 *****************************************************************************************/
 
 		/**************************************************
 		 *               Templates rendering              *
