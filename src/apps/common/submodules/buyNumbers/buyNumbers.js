@@ -35,8 +35,7 @@ define(function(require) {
 		appFlags: {
 			searchLimit: 15,
 			selectedCountryCode: monster.config.whitelabel.countryCode,
-			isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook'),
-			isSelectedNumbersEmpty: true
+			isPhonebookConfigured: monster.config.api.hasOwnProperty('phonebook')
 		},
 
 		/**
@@ -242,7 +241,6 @@ define(function(require) {
 							.removeClass('disabled')
 							.prop('disabled', false);
 					});
-					self.appFlags.isSelectedNumbersEmpty = true;
 					container
 						.find('#single_select_info')
 							.removeClass('hidden');
@@ -264,7 +262,6 @@ define(function(require) {
 							.addClass('disabled')
 							.prop('disabled', true);
 					});
-					self.appFlags.isSelectedNumbersEmpty = false;
 					container
 						.find('#single_select_info')
 							.addClass('hidden');
@@ -1033,7 +1030,7 @@ define(function(require) {
 			resultDiv.empty().append(searchResultsList);
 
 			if (args.singleSelect) {
-				if (!self.appFlags.isSelectedNumbersEmpty) {
+				if (!_.isEmpty(args.selectedNumbers)) {
 					$.each(resultDiv.find('.add-number'), function() {
 						$(this)
 							.addClass('disabled')
