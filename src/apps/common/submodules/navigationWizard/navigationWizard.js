@@ -37,8 +37,14 @@ define(function(require) {
 		 * @param  {Object[]} args.steps  List of steps with their configuration parameters
 		 * @param  {String} args.steps[].description  Step description, to be displayed in the menu
 		 * @param  {String} args.steps[].label  Step label, to be displayed in the left menu
-		 * @param  {String} args.steps[].template  Name of the function to render the step. It must
-		 *                                         be defined as a property of thisArg.
+		 * @param  {String} [args.steps[].template]  Name of the function to render the step. It must
+		 *                                           be defined as a property of thisArg.
+		 * @param  {Object} [args.steps[].render]  Parameters used to render the step asynchronously.
+		 *                                         If defined, the `template` argument is ignored in
+		 *                                         favor of this one to render the step.
+		 * @param  {Function} args.steps[].render.callback  Function to build the step template
+		 *                                                  asynchronously.
+		 * @param  {Object} [args.steps[].render.options]  Options to be passed to the loading template.
 		 * @param  {String} args.steps[].util  Name of the function to validate and process the
 		 *                                     step data. It must be defined as a property of
 		 *                                     thisArg.
@@ -214,6 +220,10 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
+						if ($(this).hasClass('disabled')) {
+							return;
+						}
+
 						var currentStep = navigationWizardFlags.currentStep,
 							step = wizardArgs.steps[currentStep];
 
@@ -249,15 +259,16 @@ define(function(require) {
 		 * Go to a specific step that has been already completed
 		 * @param  {Object} args
 		 * @param  {String} args.stepId  Destination step identifier
+		 * @param  {Object} [args.args]  New arguments for the step
+		 * @param  {Boolean} [args.reload=false]  Force the step to reload, if the stepId is the
+		 *                                        same current step
 		 */
 		navigationWizardGoToStep: function(args) {
-			var self = this,
-				stepId = args.stepId;
+			var self = this;
 
-			self.navigationWizardChangeStep({
-				stepId: stepId,
+			self.navigationWizardChangeStep(_.merge({
 				eventType: 'goto'
-			});
+			}, args));
 		},
 
 		/**
@@ -359,10 +370,17 @@ define(function(require) {
 				thisArg = wizardArgs.thisArg,
 				steps = wizardArgs.steps,
 				currentStep = appFlags.navigationWizard.currentStep,
-				template = steps[currentStep].template;
+				currentStepData = steps[currentStep],
+				template = currentStepData.template,
+				render = currentStepData.render;
 
 			self.appFlags.navigationWizard.currentStep = currentStep;
-			thisArg[template](wizardArgs);
+
+			if (_.isUndefined(render)) {
+				thisArg[template](wizardArgs);
+			} else {
+				self.navigationWizardRenderStepTemplate(render);
+			}
 		},
 
 		/**
@@ -396,11 +414,16 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String} args.stepId  Destination step identifier
 		 * @param  {('back'|'goto'|'next')} args.eventType  Type of event that triggered the change
+		 * @param  {Object} [args.args]  New arguments for the step
+		 * @param  {Boolean} [args.reload=false]  Force the step to reload, if the stepId is the
+		 *                                        same current step
 		 */
 		navigationWizardChangeStep: function(args) {
 			var self = this,
 				stepId = args.stepId,
 				eventType = args.eventType,
+				reload = _.get(args, 'reload', false),
+				newArgs = _.get(args, 'args', {}),
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				isCurrentStepCompleted = navigationWizardFlags.currentStep <= navigationWizardFlags.lastCompletedStep,
@@ -410,7 +433,7 @@ define(function(require) {
 				completeCurrentStep = !validateOnStepChange || isCurrentStepCompleted || movingForward,
 				result;
 
-			if (stepId === navigationWizardFlags.currentStep) {
+			if (stepId === navigationWizardFlags.currentStep && !reload) {
 				return;
 			}
 
@@ -425,11 +448,12 @@ define(function(require) {
 				}
 			}
 
-			//make sure we display page as previously selected
+			// Make sure we display page as previously selected
 			self.navigationWizardUnsetCurrentSelected({
 				isCompleted: _.get(result, 'valid', !validateCurrentStep) && completeCurrentStep
 			});
 
+			// Merge results data
 			if (_.has(result, 'data')) {
 				_.merge(wizardArgs, {
 					data: result.data
@@ -438,7 +462,10 @@ define(function(require) {
 				_.merge(wizardArgs, result.args);
 			}
 
-			//set new template and menu items to reflect that
+			// Merge new args
+			_.merge(wizardArgs, newArgs);
+
+			// Set new template and menu items to reflect that
 			self.navigationWizardSetSelected({
 				stepId: stepId
 			});
@@ -465,6 +492,72 @@ define(function(require) {
 			wizardArgs.thisArg[wizardArgs.done](wizardArgs);
 
 			self.navigationWizardUnbindEvents();
+		},
+
+		/**
+		 * Render a step view
+		 * @param  {Object} args
+		 * @param  {Function}  args.callback  Function to build the step template
+		 * @param  {Object}  arg.options  Load template options
+		 */
+		navigationWizardRenderStepTemplate: function(args) {
+			var self = this,
+				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				$wizardTemplate = wizardArgs.template,
+				$wizardFooterActions = $wizardTemplate.find('.footer .actions'),
+				thisArg = wizardArgs.thisArg,
+				$container = wizardArgs.container,
+				renderStepTemplate = args.callback,
+				loadTemplateOptions = _.get(args, 'options', {}),
+				enableFooterActions = function(enable) {
+					var $buttons = $wizardFooterActions.find('button'),
+						$links = $wizardFooterActions.find('a');
+
+					$buttons.prop('disabled', !enable);
+
+					if (enable) {
+						$links.removeClass('disabled');
+					} else {
+						$links.addClass('disabled');
+					}
+				};
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					enableFooterActions(false);
+					waterfallCallback(null);
+				},
+				function(waterfallCallback) {
+					monster.ui.insertTemplate($container.find('.right-content'), function(appendTemplateCallback) {
+						waterfallCallback(null, appendTemplateCallback);
+					}, loadTemplateOptions);
+				},
+				function(appendTemplateCallback, waterfallCallback) {
+					var renderCallback = function(renderCallbackArgs) {
+						var results = _.merge({}, renderCallbackArgs, {
+							appendTemplateCallback: appendTemplateCallback
+						});
+
+						waterfallCallback(null, results);
+					};
+
+					renderStepTemplate.call(thisArg, wizardArgs, renderCallback);
+				}
+			], function(err, results) {
+				var appendTemplateCallback = results.appendTemplateCallback,
+					$template = results.template,
+					afterRenderCallback = results.callback,
+					insertTemplateCallback = function() {
+						if (_.isFunction(afterRenderCallback)) {
+							afterRenderCallback();
+						}
+
+						enableFooterActions(true);
+					};
+
+				// Deferred, to ensure that the loading template does not replace the step template
+				_.defer(appendTemplateCallback, $template, insertTemplateCallback);
+			});
 		}
 	};
 
