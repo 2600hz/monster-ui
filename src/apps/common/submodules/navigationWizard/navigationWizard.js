@@ -363,17 +363,16 @@ define(function(require) {
 				thisArg = wizardArgs.thisArg,
 				steps = wizardArgs.steps,
 				currentStep = appFlags.navigationWizard.currentStep,
-				template = steps[currentStep].template,
-				render = steps[currentStep].render;
+				currentStepData = steps[currentStep],
+				template = currentStepData.template,
+				render = currentStepData.render;
 
 			self.appFlags.navigationWizard.currentStep = currentStep;
 
-			if (_.isFunction(render)) {
-				self.navigationWizardRenderStepTemplate({
-					renderStepTemplate: render
-				});
-			} else {
+			if (_.isUndefined(render)) {
 				thisArg[template](wizardArgs);
+			} else {
+				self.navigationWizardRenderStepTemplate(render);
 			}
 		},
 
@@ -482,7 +481,8 @@ define(function(require) {
 		/**
 		 * Render a step view
 		 * @param  {Object} args
-		 * @param  {Function}  args.renderStepTemplate  Function to render the step template
+		 * @param  {Function}  args.callback  Function to render the step template
+		 * @param  {Object}  arg.options  Load template options
 		 */
 		navigationWizardRenderStepTemplate: function(args) {
 			var self = this,
@@ -491,7 +491,8 @@ define(function(require) {
 				$wizardFooterActions = $wizardTemplate.find('.footer .actions'),
 				thisArg = wizardArgs.thisArg,
 				$container = wizardArgs.container,
-				renderStepTemplate = args.renderStepTemplate,
+				renderStepTemplate = args.callback,
+				loadTemplateOptions = _.get(args, 'options', {}),
 				enableFooterActions = function(enable) {
 					var $buttons = $wizardFooterActions.find('button'),
 						$links = $wizardFooterActions.find('a');
@@ -513,7 +514,7 @@ define(function(require) {
 				function(waterfallCallback) {
 					monster.ui.insertTemplate($container.find('.right-content'), function(appendTemplateCallback) {
 						waterfallCallback(null, appendTemplateCallback);
-					});
+					}, loadTemplateOptions);
 				},
 				function(appendTemplateCallback, waterfallCallback) {
 					var renderCallback = function(renderCallbackArgs) {
