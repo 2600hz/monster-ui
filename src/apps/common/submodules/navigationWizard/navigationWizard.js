@@ -37,8 +37,14 @@ define(function(require) {
 		 * @param  {Object[]} args.steps  List of steps with their configuration parameters
 		 * @param  {String} args.steps[].description  Step description, to be displayed in the menu
 		 * @param  {String} args.steps[].label  Step label, to be displayed in the left menu
-		 * @param  {String} args.steps[].template  Name of the function to render the step. It must
-		 *                                         be defined as a property of thisArg.
+		 * @param  {String} [args.steps[].template]  Name of the function to render the step. It must
+		 *                                           be defined as a property of thisArg.
+		 * @param  {Object} [args.steps[].render]  Parameters used to render the step asynchronously.
+		 *                                         If defined, the `template` argument is ignored in
+		 *                                         favor of this one to render the step.
+		 * @param  {Function} args.steps[].render.callback  Function to build the step template
+		 *                                                  asynchronously.
+		 * @param  {Object} [args.steps[].render.options]  Options to be passed to the loading template.
 		 * @param  {String} args.steps[].util  Name of the function to validate and process the
 		 *                                     step data. It must be defined as a property of
 		 *                                     thisArg.
@@ -481,7 +487,7 @@ define(function(require) {
 		/**
 		 * Render a step view
 		 * @param  {Object} args
-		 * @param  {Function}  args.callback  Function to render the step template
+		 * @param  {Function}  args.callback  Function to build the step template
 		 * @param  {Object}  arg.options  Load template options
 		 */
 		navigationWizardRenderStepTemplate: function(args) {
