@@ -214,6 +214,10 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
+						if ($(this).hasClass('disabled')) {
+							return;
+						}
+
 						var currentStep = navigationWizardFlags.currentStep,
 							step = wizardArgs.steps[currentStep];
 
@@ -359,10 +363,18 @@ define(function(require) {
 				thisArg = wizardArgs.thisArg,
 				steps = wizardArgs.steps,
 				currentStep = appFlags.navigationWizard.currentStep,
-				template = steps[currentStep].template;
+				template = steps[currentStep].template,
+				render = steps[currentStep].render;
 
 			self.appFlags.navigationWizard.currentStep = currentStep;
-			thisArg[template](wizardArgs);
+
+			if (_.isFunction(render)) {
+				self.navigationWizardRenderStepTemplate({
+					renderStepTemplate: render
+				});
+			} else {
+				thisArg[template](wizardArgs);
+			}
 		},
 
 		/**
@@ -465,6 +477,67 @@ define(function(require) {
 			wizardArgs.thisArg[wizardArgs.done](wizardArgs);
 
 			self.navigationWizardUnbindEvents();
+		},
+
+		/**
+		 * Render a step view
+		 * @param  {Object} args
+		 * @param  {Function}  args.renderStepTemplate  Function to render the step template
+		 */
+		navigationWizardRenderStepTemplate: function(args) {
+			var self = this,
+				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				$wizardTemplate = wizardArgs.template,
+				$wizardFooterActions = $wizardTemplate.find('.footer .actions'),
+				thisArg = wizardArgs.thisArg,
+				$container = wizardArgs.container,
+				renderStepTemplate = args.renderStepTemplate,
+				enableFooterActions = function(enable) {
+					var $buttons = $wizardFooterActions.find('button'),
+						$links = $wizardFooterActions.find('a');
+
+					$buttons.prop('disabled', !enable);
+
+					if (enable) {
+						$links.removeClass('disabled');
+					} else {
+						$links.addClass('disabled');
+					}
+				};
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					enableFooterActions(false);
+					waterfallCallback(null);
+				},
+				function(waterfallCallback) {
+					monster.ui.insertTemplate($container.find('.right-content'), function(appendTemplateCallback) {
+						waterfallCallback(null, appendTemplateCallback);
+					});
+				},
+				function(appendTemplateCallback, waterfallCallback) {
+					var renderCallback = function(renderCallbackArgs) {
+						var results = _.merge({}, renderCallbackArgs, {
+							appendTemplateCallback: appendTemplateCallback
+						});
+
+						waterfallCallback(null, results);
+					};
+
+					renderStepTemplate.call(thisArg, wizardArgs, renderCallback);
+				}
+			], function(err, results) {
+				var appendTemplateCallback = results.appendTemplateCallback,
+					$template = results.template,
+					afterRenderCallback = results.callback,
+					insertTemplateCallback = function() {
+						afterRenderCallback();
+						enableFooterActions(true);
+					};
+
+				// Deferred, to ensure that the loading template does not replace the step template
+				_.defer(appendTemplateCallback, $template, insertTemplateCallback);
+			});
 		}
 	};
 
