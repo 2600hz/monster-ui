@@ -259,15 +259,16 @@ define(function(require) {
 		 * Go to a specific step that has been already completed
 		 * @param  {Object} args
 		 * @param  {String} args.stepId  Destination step identifier
+		 * @param  {Object} [args.args]  New arguments for the step
+		 * @param  {Boolean} [args.reload=false]  Force the step to reload, if the stepId is the
+		 *                                        same current step
 		 */
 		navigationWizardGoToStep: function(args) {
-			var self = this,
-				stepId = args.stepId;
+			var self = this;
 
-			self.navigationWizardChangeStep({
-				stepId: stepId,
+			self.navigationWizardChangeStep(_.merge({
 				eventType: 'goto'
-			});
+			}, args));
 		},
 
 		/**
@@ -413,11 +414,16 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String} args.stepId  Destination step identifier
 		 * @param  {('back'|'goto'|'next')} args.eventType  Type of event that triggered the change
+		 * @param  {Object} [args.args]  New arguments for the step
+		 * @param  {Boolean} [args.reload=false]  Force the step to reload, if the stepId is the
+		 *                                        same current step
 		 */
 		navigationWizardChangeStep: function(args) {
 			var self = this,
 				stepId = args.stepId,
 				eventType = args.eventType,
+				reload = _.get(args, 'reload', false),
+				newArgs = _.get(args, 'args', {}),
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				isCurrentStepCompleted = navigationWizardFlags.currentStep <= navigationWizardFlags.lastCompletedStep,
@@ -427,7 +433,7 @@ define(function(require) {
 				completeCurrentStep = !validateOnStepChange || isCurrentStepCompleted || movingForward,
 				result;
 
-			if (stepId === navigationWizardFlags.currentStep) {
+			if (stepId === navigationWizardFlags.currentStep && !reload) {
 				return;
 			}
 
@@ -442,11 +448,12 @@ define(function(require) {
 				}
 			}
 
-			//make sure we display page as previously selected
+			// Make sure we display page as previously selected
 			self.navigationWizardUnsetCurrentSelected({
 				isCompleted: _.get(result, 'valid', !validateCurrentStep) && completeCurrentStep
 			});
 
+			// Merge results data
 			if (_.has(result, 'data')) {
 				_.merge(wizardArgs, {
 					data: result.data
@@ -455,7 +462,10 @@ define(function(require) {
 				_.merge(wizardArgs, result.args);
 			}
 
-			//set new template and menu items to reflect that
+			// Merge new args
+			_.merge(wizardArgs, newArgs);
+
+			// Set new template and menu items to reflect that
 			self.navigationWizardSetSelected({
 				stepId: stepId
 			});
