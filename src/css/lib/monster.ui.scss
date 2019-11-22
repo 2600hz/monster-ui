@@ -1014,3 +1014,11 @@ i.monster-password-strength {
 		padding: 0;
 	}
 }
+
+/************************************************************/
+/************************ DATEPICKER ************************/
+/************************************************************/
+input.hasDatepicker[readonly] {
+	background-color: $panel-background-color;
+	cursor: pointer;
+}
