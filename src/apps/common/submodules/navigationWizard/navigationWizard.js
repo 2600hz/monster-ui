@@ -538,7 +538,10 @@ define(function(require) {
 					$template = results.template,
 					afterRenderCallback = results.callback,
 					insertTemplateCallback = function() {
-						afterRenderCallback();
+						if (_.isFunction(afterRenderCallback)) {
+							afterRenderCallback();
+						}
+
 						enableFooterActions(true);
 					};
 
