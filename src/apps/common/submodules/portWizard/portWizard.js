@@ -165,12 +165,44 @@ define(function(require) {
 				nameAndNumbersData = _.get(args.data, 'nameAndNumbers', {}),
 				initTemplate = function() {
 					var $template = $(self.getTemplate({
-						name: 'step-nameAndNumbers',
-						data: {
-							data: nameAndNumbersData
+							name: 'step-nameAndNumbers',
+							data: {
+								data: nameAndNumbersData
+							},
+							submodule: 'portWizard'
+						})),
+						$form = $template.find('form');
+
+					monster.ui.validate($form, {
+						rules: {
+							'numbersToPort.numbers': {
+								custom: function(element) {
+									var numbersText = $(element).val();
+
+									return _
+										.chain(numbersText)
+										.split(',')
+										.reject(function(value) {
+											return _
+												.chain(value)
+												.trim()
+												.isEmpty()
+												.value();
+										})
+										.map(monster.util.getFormatPhoneNumber)
+										.every('isValid')
+										.value();
+								}
+							}
 						},
-						submodule: 'portWizard'
-					}));
+						messages: {
+							'numbersToPort.numbers': {
+								custom: 'One or more numbers are invalid'
+							}
+						},
+						onfocusout: self.portWizardValidateFormField,
+						autoScrollOnInvalid: true
+					});
 
 					return $template;
 				};
@@ -189,13 +221,37 @@ define(function(require) {
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
 		portWizardNameAndNumbersUtil: function($template, args) {
-			var self = this;
+			var self = this,
+				$form = $template.find('form'),
+				isValid = monster.ui.valid($form),
+				nameAndNumbersData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				nameAndNumbersData = monster.ui.getFormData($form.get(0));
+
+				// Clean nameAndNumbers data, to avoid keeping old data inadvertently when merging
+				// the new data
+				delete args.data.nameAndNumbers;
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					nameAndNumbers: nameAndNumbersData
+				}
 			};
+		},
+
+		/**
+		 * Validates a form input field
+		 * @param  {Element} element  Input element
+		 */
+		portWizardValidateFormField: function(element, event) {
+			console.log('this, element & event', this, element, event);
+			/*
+			$(element).valid();
+			*/
+			this.element(element);
 		},
 
 		/* CARRIER SELECTION STEP */
