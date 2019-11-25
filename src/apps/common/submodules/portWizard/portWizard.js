@@ -224,6 +224,22 @@ define(function(require) {
 			if (isValid) {
 				nameAndNumbersData = monster.ui.getFormData($form.get(0));
 
+				// Extract and format numbers
+				nameAndNumbersData.numbersToPort.formattedNumbers = _
+					.chain(nameAndNumbersData.numbersToPort.numbers)
+					.split(',')
+					.map(_.trim)
+					.reject(_.isEmpty)
+					.map(monster.util.getFormatPhoneNumber)
+					.uniqBy('e164Number')
+					.value();
+
+				nameAndNumbersData.numbersToPort.numbers = _
+					.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
+					.map('originalNumber')
+					.join(', ')
+					.value();
+
 				// Clean nameAndNumbers data, to avoid keeping old data inadvertently when merging
 				// the new data
 				delete args.data.nameAndNumbers;
