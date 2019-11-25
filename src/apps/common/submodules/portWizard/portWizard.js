@@ -182,13 +182,8 @@ define(function(require) {
 									return _
 										.chain(numbersText)
 										.split(',')
-										.reject(function(value) {
-											return _
-												.chain(value)
-												.trim()
-												.isEmpty()
-												.value();
-										})
+										.map(_.trim)
+										.reject(_.isEmpty)
 										.map(monster.util.getFormatPhoneNumber)
 										.every('isValid')
 										.value();
@@ -240,18 +235,6 @@ define(function(require) {
 					nameAndNumbers: nameAndNumbersData
 				}
 			};
-		},
-
-		/**
-		 * Validates a form input field
-		 * @param  {Element} element  Input element
-		 */
-		portWizardValidateFormField: function(element, event) {
-			console.log('this, element & event', this, element, event);
-			/*
-			$(element).valid();
-			*/
-			this.element(element);
 		},
 
 		/* CARRIER SELECTION STEP */
@@ -468,6 +451,14 @@ define(function(require) {
 				// Deferred, to ensure that the loading template does not replace the step template
 				_.defer(insertTemplateCallback, initTemplate(data), self.wizardScrollToTop);
 			});
+		},
+
+		/**
+		 * Validates a form input field
+		 * @param  {Element} element  Input element
+		 */
+		portWizardValidateFormField: function(element, event) {
+			$(element).valid();
 		},
 
 		/*****************************************************************************************
