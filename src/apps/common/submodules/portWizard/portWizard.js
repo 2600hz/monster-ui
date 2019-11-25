@@ -128,7 +128,13 @@ define(function(require) {
 
 			monster.pub('common.navigationWizard.render', {
 				thisArg: self,
-				data: {},
+				data: {
+					nameAndNumbers: {
+						numbersToPort: {
+							type: 'local'
+						}
+					}
+				},
 				container: $container,
 				steps: _.map(stepNames, function(stepName) {
 					var pascalCasedStepName = _.upperFirst(stepName);
