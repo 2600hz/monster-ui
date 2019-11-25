@@ -142,7 +142,9 @@ define(function(require) {
 					return {
 						label: _.get(i18nSteps, [ stepName, 'label' ]),
 						description: _.get(i18nSteps, [ stepName, 'description' ]),
-						template: 'portWizard' + pascalCasedStepName + 'Render',
+						render: {
+							callback: _.get(self, 'portWizard' + pascalCasedStepName + 'Render')
+						},
 						util: 'portWizard' + pascalCasedStepName + 'Util'
 					};
 				}),
@@ -163,11 +165,11 @@ define(function(require) {
 
 		/**
 		 * Render the Name + Numbers step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardNameAndNumbersRender: function(args) {
+		portWizardNameAndNumbersRender: function(args, callback) {
 			var self = this,
-				$container = args.container,
 				nameAndNumbersData = _.get(args.data, 'nameAndNumbers', {}),
 				initTemplate = function() {
 					var $template = $(self.getTemplate({
@@ -208,9 +210,9 @@ define(function(require) {
 					return $template;
 				};
 
-			self.portWizardRenderStep({
-				container: $container,
-				initTemplate: initTemplate
+			callback({
+				template: initTemplate(),
+				callback: self.portWizardScrollToTop
 			});
 		},
 
@@ -263,12 +265,18 @@ define(function(require) {
 
 		/**
 		 * Render the Carrier Selection step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardCarrierSelectionRender: function(args) {
+		portWizardCarrierSelectionRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -292,12 +300,18 @@ define(function(require) {
 
 		/**
 		 * Render the Ownership Confirmation step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardOwnershipConfirmationRender: function(args) {
+		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -321,12 +335,18 @@ define(function(require) {
 
 		/**
 		 * Render the Required Documents step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardRequiredDocumentsRender: function(args) {
+		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -350,12 +370,18 @@ define(function(require) {
 
 		/**
 		 * Render the Desired Date + Notifications step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardDateAndNotificationsRender: function(args) {
+		portWizardDateAndNotificationsRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -379,13 +405,19 @@ define(function(require) {
 
 		/**
 		 * Render Review + Confirm step
-		 * @param  {Object} args
+		 * @param  {Object} args Wizard args
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardReviewRender: function(args) {
+		portWizardReviewRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -438,41 +470,10 @@ define(function(require) {
 		 **************************************************/
 
 		/**
-		 * Render a step view
-		 * @param  {Object} args
-		 * @param  {jQuery} args.container  Wizard container element
-		 * @param  {Function}  [args.loadData]  Optional load callback, which can be used to load
-		 *                                      data for the template before its initialization
-		 * @param  {Function}  args.initTemplate  Template initialization callback
+		 * Scroll window to top
 		 */
-		portWizardRenderStep: function(args) {
-			var self = this,
-				loadData = args.loadData,
-				initTemplate = args.initTemplate,
-				$container = args.container,
-				seriesFunctions = [
-					function(seriesCallback) {
-						monster.ui.insertTemplate($container.find('.right-content'), function(insertTemplateCallback) {
-							seriesCallback(null, insertTemplateCallback);
-						});
-					}
-				];
-
-			if (_.isFunction(loadData)) {
-				seriesFunctions.push(loadData);
-			}
-
-			monster.series(seriesFunctions, function(err, results) {
-				if (err) {
-					return;
-				}
-
-				var insertTemplateCallback = results[0],
-					data = _.get(results, 1);
-
-				// Deferred, to ensure that the loading template does not replace the step template
-				_.defer(insertTemplateCallback, initTemplate(data), self.wizardScrollToTop);
-			});
+		portWizardScrollToTop: function() {
+			window.scrollTo(0, 0);
 		},
 
 		/**
