@@ -1371,6 +1371,23 @@ define(function(require) {
 				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 			}, localization.customRules.greaterThan);
 
+			$.validator.addMethod('custom', function(value, element, result) {
+				var isResultBoolean = _.isBoolean(result),
+					isResultValid = isResultBoolean ? result : _.get(result, 'valid', false),
+					errorMessage = isResultBoolean ? undefined : _.get(result, 'message'),
+					isElementValid = this.optional(element) || isResultValid;
+
+				if (isElementValid) {
+					$(element).removeData('errorMessage');
+				} else {
+					$(element).data('errorMessage', errorMessage);
+				}
+
+				return isElementValid;
+			}, function(params, element) {
+				return $(element).data('errorMessage') || localization.invalid;
+			});
+
 			this.customValidationInitialized = true;
 		},
 

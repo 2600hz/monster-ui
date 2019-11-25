@@ -173,7 +173,8 @@
 			"__version": "v4.1",
 			"protocol": "Please include the \"://\" characters."
 		},
-		"required": "Required."
+		"required": "Required.",
+		"invalid": "Invalid."
 	},
 	"warning": "Warning!",
 	"confirmCharges": {
