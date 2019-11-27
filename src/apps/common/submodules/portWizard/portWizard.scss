@@ -1,5 +1,8 @@
 @import '../../../../css/partials/base';
-@import 'partials/_step-nameAndNumbers.scss';
+
+#port_wizard_control {
+	@import 'partials/_step-nameAndNumbers.scss';
+}
 
 #port_wizard {
 	background-color: $background-primary-color;

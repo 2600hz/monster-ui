@@ -1,11 +1,7 @@
-#navigation_wizard_wrapper .wizard-step {
-	&#step_name_and_numbers {
-		#numbers_to_port_numbers {
-			min-height: 16rem;
+#step_name_and_numbers.wizard-step #numbers_to_port_numbers {
+	min-height: 16rem;
 
-			&.monster-invalid + label.monster-invalid {
-				position: static;
-			}
-		}
+	&.monster-invalid + label.monster-invalid {
+		position: static;
 	}
 }
