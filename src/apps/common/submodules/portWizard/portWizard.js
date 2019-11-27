@@ -2,7 +2,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		moment = require('moment'),
-		monster = require('monster');
+		monster = require('monster'),
+		Papa = require('papaparse');
 
 	var portWizard = {
 
@@ -209,6 +210,10 @@ define(function(require) {
 						autoScrollOnInvalid: true
 					});
 
+					self.portWizardNameAndNumbersBindEvents({
+						template: $template
+					});
+
 					return $template;
 				};
 
@@ -261,6 +266,175 @@ define(function(require) {
 					nameAndNumbers: nameAndNumbersData
 				}
 			};
+		},
+
+		/**
+		 * Bind Name + Number step events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		*/
+		portWizardNameAndNumbersBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				$numbersArea = $template.find('#numbers_to_port_numbers'),
+				$fileInput = $template.find('#numbers_to_port_file'),
+				$fileNameInput = $template.find('#numbers_to_port_filename');
+
+			// Display the open file dialog when clicking any part of the file selector container.
+			// The click event handler was set to the container instead of the input and the button
+			// individually because the input is disabled, so the click event there is ignored.
+			$template
+				.find('.file-selector')
+					.on('click', function(e) {
+						// Check if the event has not been triggered programmatically,
+						// to prevent recursion
+						if (_.isUndefined(e.originalEvent)) {
+							return;
+						}
+
+						e.preventDefault();
+
+						$fileInput.trigger('click');
+					});
+
+			$fileInput.on('change', function(e) {
+				var file = e.target.files[0];
+
+				self.portWizardNameAndNumbersProcessFile({
+					file: file,
+					numbersArea: $numbersArea,
+					fileNameInput: $fileNameInput
+				});
+			});
+		},
+
+		/**
+		 * Process the uploaded numbers CSV file
+		 * @param  {Object} args
+		 * @param  {Object} args.file  File data
+		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
+		 * @param  {jQuery} args.fileNameInput  Text input that is used to display the uploaded file name
+		 */
+		portWizardNameAndNumbersProcessFile: function(args) {
+			var self = this,
+				file = args.file,
+				$fileNameInput = args.fileNameInput,
+				isValid = file.name.match('.+(.csv)$'),
+				invalidMessageTemplate = self.getTemplate({
+					name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.file,
+					data: {
+						type: file.type
+					}
+				}),
+				onParsedFile = function(results) {
+					var toastArgs;
+
+					if (results.numbersCount === 0) {
+						toastArgs = {
+							type: 'warning',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.noNumbers,
+								data: results
+							})
+						};
+					} else {
+						toastArgs = {
+							type: 'success',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.success,
+								data: results
+							})
+						};
+					}
+
+					monster.ui.toast(toastArgs);
+				},
+				parseFileArgs = _
+					.chain(args)
+					.pick('file', 'numbersArea')
+					.merge({
+						callback: onParsedFile
+					})
+					.value();
+
+			if (!isValid) {
+				monster.ui.toast({
+					type: 'error',
+					message: invalidMessageTemplate
+				});
+
+				return;
+			}
+
+			self.portWizardNameAndNumbersParseFile(parseFileArgs);
+
+			$fileNameInput.val(file.name);
+		},
+
+		/**
+		 * Parses the uploaded CSV file to extract the phone numbers
+		 * @param  {Object} args
+		 * @param  {Object} args.file  File data
+		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
+		 * @param  {Function} args.callback  Callback function to be executed once the parsing and
+		 *                                   number extraction has been completed
+		 */
+		portWizardNameAndNumbersParseFile: function(args) {
+			var self = this,
+				file = args.file,
+				$numbersArea = args.numbersArea,
+				callback = args.callback;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					Papa.parse(file, {
+						header: false,
+						skipEmptyLines: true,
+						complete: function(results) {
+							waterfallCallback(null, results);
+						}
+					});
+				},
+				function(results, waterfallCallback) {
+					var entries = _.flatten(results.data),
+						numbers = _
+							.chain(entries)
+							.map(_.trim)
+							.reject(_.isEmpty)
+							.map(monster.util.getFormatPhoneNumber)
+							.filter('isValid')
+							.map('e164Number')
+							.uniq()
+							.value();
+
+					waterfallCallback(null, entries, numbers);
+				},
+				function(entries, numbers, waterfallCallback) {
+					var countData = {
+						entriesCount: entries.length,
+						numbersCount: numbers.length
+					};
+
+					if (_.isEmpty(numbers)) {
+						waterfallCallback(null, countData);
+						return;
+					}
+
+					$numbersArea.val(function(i, text) {
+						var trimmedText = _.trim(text);
+
+						if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
+							trimmedText += ', ';
+						}
+
+						return trimmedText + _.join(numbers, ', ');
+					}).focus();
+
+					waterfallCallback(null, countData);
+				}
+			], function(err, results) {
+				callback(results);
+			});
 		},
 
 		/* CARRIER SELECTION STEP */
