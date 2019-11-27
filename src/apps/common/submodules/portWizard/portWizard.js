@@ -241,7 +241,7 @@ define(function(require) {
 
 				nameAndNumbersData.numbersToPort.numbers = _
 					.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
-					.map('originalNumber')
+					.map('e164Number')
 					.join(', ')
 					.value();
 
