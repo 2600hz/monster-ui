@@ -1350,16 +1350,12 @@ define(function(require) {
 			});
 
 			$.validator.addMethod('phoneNumber', function(value, element) {
-				var isString = _.isString(value),
-					isArray = _.isArray(value),
-					isStringValid = isString && monster.util.getFormatPhoneNumber(value).isValid,
-					isArrayValid = isArray
-						&& _
-							.chain(value)
-							.map(monster.util.getFormatPhoneNumber)
-							.every('isValid')
-							.value();
-				return this.optional(element) || isStringValid || isArrayValid;
+				return this.optional(element) || _
+					.chain([value])
+					.flatten()
+					.map(monster.util.getFormatPhoneNumber)
+					.every('isValid')
+					.value();
 			}, localization.customRules.phoneNumber);
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {
