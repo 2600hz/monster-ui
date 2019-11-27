@@ -184,23 +184,20 @@ define(function(require) {
 					monster.ui.validate($form, {
 						rules: {
 							'numbersToPort.numbers': {
-								custom: function(element) {
-									var numbersText = $(element).val();
-
+								phoneNumber: true,
+								normalizer: function(value) {
 									return _
-										.chain(numbersText)
+										.chain(value)
 										.split(',')
 										.map(_.trim)
 										.reject(_.isEmpty)
-										.map(monster.util.getFormatPhoneNumber)
-										.every('isValid')
 										.value();
 								}
 							}
 						},
 						messages: {
 							'numbersToPort.numbers': {
-								custom: 'One or more numbers are invalid'
+								phoneNumber: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers
 							}
 						},
 						onfocusout: self.portWizardValidateFormField,

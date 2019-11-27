@@ -27,6 +27,9 @@
 						},
 						"placeholders": {
 							"numbers": "Separate individual numbers with a comma"
+						},
+						"errors": {
+							"numbers": "One or more numbers are invalid"
 						}
 					}
 				},
