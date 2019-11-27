@@ -30,6 +30,8 @@ define(function(require) {
 		 *                               button is clicked. It must be defined as a property of
 		 *                               thisArg.
 		 * @param  {jQuery} args.container  Element that will contain the wizard
+		 * @param  {String} [args.controlId]  ID to be set to the wizard control
+		 * @param  {String} [args.cssClass]  CSS class to be assigned to the wizard control
 		 * @param  {Object} [args.data]  Initial data
 		 * @param  {String} args.done  Name of the function to be invoked when completing the
 		 *                             wizard. It must be defined as a property of thisArg.
@@ -60,13 +62,21 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				stepsCompleted = _.get(args, 'stepsCompleted', []),
+				templateDataDefaults = {
+					doneButton: ''
+				},
+				templateDataArgs = _.pick(args, [
+					'controlId',
+					'cssClass',
+					'doneButton',
+					'title',
+					'steps'
+				]),
+				// Use assign instead of merge because only a shallow copy is needed
+				templateData = _.assign(templateDataDefaults, templateDataArgs),
 				layout = $(self.getTemplate({
 					name: 'layout',
-					data: {
-						title: args.title,
-						steps: args.steps,
-						doneButton: _.get(args, 'doneButton', '')
-					},
+					data: templateData,
 					submodule: 'navigationWizard'
 				})),
 				navigationWizardFlagsDefaults = {

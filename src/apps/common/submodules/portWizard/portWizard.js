@@ -128,6 +128,7 @@ define(function(require) {
 
 			monster.pub('common.navigationWizard.render', {
 				thisArg: self,
+				controlId: 'port_wizard_control',
 				data: {
 					nameAndNumbers: {
 						numbersToPort: {
