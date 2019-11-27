@@ -399,6 +399,10 @@ $media-size-medium: "(max-width : 980px)";
 				width: 33.3333%;
 			}
 
+			.flex-item-3-2 {
+				width: 66.6667%;
+			}
+
 			.flex-item-4 {
 				width: 25%;
 			}
@@ -414,6 +418,10 @@ $media-size-medium: "(max-width : 980px)";
 
 				.flex-item-3 {
 					width: 50%;
+				}
+
+				.flex-item-3-2 {
+					width: 100%;
 				}
 
 				.flex-item-4 {
