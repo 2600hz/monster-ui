@@ -183,7 +183,11 @@ define(function(require) {
 
 					monster.ui.validate($form, {
 						rules: {
+							portRequestName: {
+								required: true
+							},
 							'numbersToPort.numbers': {
+								required: true,
 								phoneNumber: true,
 								normalizer: function(value) {
 									return _

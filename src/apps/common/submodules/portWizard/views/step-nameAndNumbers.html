@@ -11,7 +11,7 @@
 						<label for="port_request_name">
 							{{nameAndNumbersI18n.portRequestName.labels.name}}
 						</label>
-						<input class="input-block-level" type="text" name="portRequestName" id="port_request_name" placeholder="{{nameAndNumbersI18n.portRequestName.labels.name}}" required value="{{@root.data.portRequestName}}">
+						<input class="input-block-level" type="text" name="portRequestName" id="port_request_name" placeholder="{{nameAndNumbersI18n.portRequestName.labels.name}}" value="{{@root.data.portRequestName}}">
 					</div>
 				</div>
 			</div>
@@ -46,7 +46,7 @@
 					</div>
 					<div class="flex-row-container">
 						<div class="flex-item-3-2">
-							<textarea name="numbersToPort.numbers" id="numbers_to_port_numbers" required>
+							<textarea name="numbersToPort.numbers" id="numbers_to_port_numbers">
 								{{@root.data.numbersToPort.numbers}}
 							</textarea>
 							<label class="field-foot-notice">
