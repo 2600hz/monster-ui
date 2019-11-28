@@ -1,52 +1,54 @@
 <div id="navigation_wizard_wrapper">
-	<div class="navigation-header">
-		<div class="nav-title">
-			<h4>{{title}}</h4>
-		</div>
-		<div class="actions">
-			<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
-		</div>
-	</div>
-
-	<div class="flex-main-container">
-		<div class="left-content">
-			<div class="nav">
-				<ol>
-				{{#each steps}}
-					<div class="step" data-id="{{@key}}">
-						<span class="fa fa-circle"></span>
-						<i class="fa fa-check-circle"></i>
-						<i class="fa fa-exclamation-triangle"></i>
-						<li>{{this.label}}</li>
-						<span class="description">{{this.description}}</span>
-					</div>
-				{{/each}}
-				</ol>
+	<div{{#if controlId}} id="{{controlId}}"{{/if}}{{#if cssClass}} class="{{cssClass}}"{{/if}}>
+		<div class="navigation-header">
+			<div class="nav-title">
+				<h4>{{title}}</h4>
+			</div>
+			<div class="actions">
+				<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
 			</div>
 		</div>
 
-		<div class="right-content">
-		</div>
-	</div>
+		<div class="flex-main-container">
+			<div class="left-content">
+				<div class="nav">
+					<ol>
+					{{#each steps}}
+						<div class="step" data-id="{{@key}}">
+							<span class="fa fa-circle"></span>
+							<i class="fa fa-check-circle"></i>
+							<i class="fa fa-exclamation-triangle"></i>
+							<li>{{this.label}}</li>
+							<span class="description">{{this.description}}</span>
+						</div>
+					{{/each}}
+					</ol>
+				</div>
+			</div>
 
-	<div class="footer">
-		<div class="actions">
-			<a href="javascript:void(0);" id="clear">
-				{{i18n.navigationWizard.buttons.clear}}
-			</a>
-			<button class="monster-button back">
-				{{i18n.navigationWizard.buttons.back}}
-			</button>
-			<button id="next" class="monster-button">
-				{{i18n.navigationWizard.buttons.next}}
-			</button>
-			<button id="done" class="monster-button">
-				{{#unless doneButton}}
-					{{i18n.navigationWizard.buttons.done}}
-				{{else}}
-					{{doneButton}}
-				{{/unless}}
-			</button>
+			<div class="right-content">
+			</div>
+		</div>
+
+		<div class="footer">
+			<div class="actions">
+				<a href="javascript:void(0);" id="clear">
+					{{i18n.navigationWizard.buttons.clear}}
+				</a>
+				<button class="monster-button back">
+					{{i18n.navigationWizard.buttons.back}}
+				</button>
+				<button id="next" class="monster-button">
+					{{i18n.navigationWizard.buttons.next}}
+				</button>
+				<button id="done" class="monster-button">
+					{{#unless doneButton}}
+						{{i18n.navigationWizard.buttons.done}}
+					{{else}}
+						{{doneButton}}
+					{{/unless}}
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
