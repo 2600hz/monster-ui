@@ -128,7 +128,14 @@ define(function(require) {
 
 			monster.pub('common.navigationWizard.render', {
 				thisArg: self,
-				data: {},
+				controlId: 'port_wizard_control',
+				data: {
+					nameAndNumbers: {
+						numbersToPort: {
+							type: 'local'
+						}
+					}
+				},
 				container: $container,
 				steps: _.map(stepNames, function(stepName) {
 					var pascalCasedStepName = _.upperFirst(stepName);
@@ -136,7 +143,9 @@ define(function(require) {
 					return {
 						label: _.get(i18nSteps, [ stepName, 'label' ]),
 						description: _.get(i18nSteps, [ stepName, 'description' ]),
-						template: 'portWizard' + pascalCasedStepName + 'Render',
+						render: {
+							callback: _.get(self, 'portWizard' + pascalCasedStepName + 'Render')
+						},
 						util: 'portWizard' + pascalCasedStepName + 'Util'
 					};
 				}),
@@ -157,12 +166,56 @@ define(function(require) {
 
 		/**
 		 * Render the Name + Numbers step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardNameAndNumbersRender: function(args) {
-			var self = this;
+		portWizardNameAndNumbersRender: function(args, callback) {
+			var self = this,
+				nameAndNumbersData = _.get(args.data, 'nameAndNumbers', {}),
+				initTemplate = function() {
+					var $template = $(self.getTemplate({
+							name: 'step-nameAndNumbers',
+							data: {
+								data: nameAndNumbersData
+							},
+							submodule: 'portWizard'
+						})),
+						$form = $template.find('form');
 
-			// TODO: Not implemented
+					monster.ui.validate($form, {
+						rules: {
+							portRequestName: {
+								required: true
+							},
+							'numbersToPort.numbers': {
+								required: true,
+								phoneNumber: true,
+								normalizer: function(value) {
+									return _
+										.chain(value)
+										.split(',')
+										.map(_.trim)
+										.reject(_.isEmpty)
+										.value();
+								}
+							}
+						},
+						messages: {
+							'numbersToPort.numbers': {
+								phoneNumber: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers
+							}
+						},
+						onfocusout: self.portWizardValidateFormField,
+						autoScrollOnInvalid: true
+					});
+
+					return $template;
+				};
+
+			callback({
+				template: initTemplate(),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -173,12 +226,40 @@ define(function(require) {
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
 		portWizardNameAndNumbersUtil: function($template, args) {
-			var self = this;
+			var self = this,
+				$form = $template.find('form'),
+				isValid = monster.ui.valid($form),
+				nameAndNumbersData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				nameAndNumbersData = monster.ui.getFormData($form.get(0));
+
+				// Extract and format numbers
+				nameAndNumbersData.numbersToPort.formattedNumbers = _
+					.chain(nameAndNumbersData.numbersToPort.numbers)
+					.split(',')
+					.map(_.trim)
+					.reject(_.isEmpty)
+					.map(monster.util.getFormatPhoneNumber)
+					.uniqBy('e164Number')
+					.value();
+
+				nameAndNumbersData.numbersToPort.numbers = _
+					.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
+					.map('e164Number')
+					.join(', ')
+					.value();
+
+				// Clean nameAndNumbers data, to avoid keeping old data inadvertently when merging
+				// the new data
+				delete args.data.nameAndNumbers;
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					nameAndNumbers: nameAndNumbersData
+				}
 			};
 		},
 
@@ -186,12 +267,18 @@ define(function(require) {
 
 		/**
 		 * Render the Carrier Selection step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardCarrierSelectionRender: function(args) {
+		portWizardCarrierSelectionRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -215,12 +302,18 @@ define(function(require) {
 
 		/**
 		 * Render the Ownership Confirmation step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardOwnershipConfirmationRender: function(args) {
+		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -244,12 +337,18 @@ define(function(require) {
 
 		/**
 		 * Render the Required Documents step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardRequiredDocumentsRender: function(args) {
+		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -273,12 +372,18 @@ define(function(require) {
 
 		/**
 		 * Render the Desired Date + Notifications step
-		 * @param  {Object} args
+		 * @param  {Object} args  Wizard args
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardDateAndNotificationsRender: function(args) {
+		portWizardDateAndNotificationsRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -302,13 +407,19 @@ define(function(require) {
 
 		/**
 		 * Render Review + Confirm step
-		 * @param  {Object} args
+		 * @param  {Object} args Wizard args
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
-		portWizardReviewRender: function(args) {
+		portWizardReviewRender: function(args, callback) {
 			var self = this;
 
 			// TODO: Not implemented
+
+			callback({
+				template: $(''),
+				callback: self.portWizardScrollToTop
+			});
 		},
 
 		/**
@@ -354,6 +465,25 @@ define(function(require) {
 				globalCallback = self.portWizardGet('globalCallback');
 
 			globalCallback();
+		},
+
+		/**************************************************
+		 *               Utility functions                *
+		 **************************************************/
+
+		/**
+		 * Scroll window to top
+		 */
+		portWizardScrollToTop: function() {
+			window.scrollTo(0, 0);
+		},
+
+		/**
+		 * Validates a form input field
+		 * @param  {Element} element  Input element
+		 */
+		portWizardValidateFormField: function(element, event) {
+			$(element).valid();
 		},
 
 		/*****************************************************************************************

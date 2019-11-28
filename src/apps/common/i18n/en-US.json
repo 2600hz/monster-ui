@@ -5,7 +5,33 @@
 			"steps": {
 				"nameAndNumbers": {
 					"label": "Name + Numbers",
-					"description": "Name your port request for future reference and choose the numbers you want to port."
+					"description": "Name your port request for future reference and choose the numbers you want to port.",
+					"title": "Name this port request and list the numbers you want to port",
+					"portRequestName": {
+						"labels": {
+							"name": "Port Request Name"
+						}
+					},
+					"numbersToPort": {
+						"title": "Numbers to Port",
+						"description": "Please input the numbers you wish to port below. Please note that ALL numbers you wish to port MUST be from the same carrier. If the numbers you input below are not from the same carrier, you will need to submit a port request for each carrier that you wish to port from.",
+						"labels": {
+							"numberType": "Number Type:",
+							"types": {
+								"local": "Standard DID(s)",
+								"tollFree": "Toll-free Numbers"
+							}
+						},
+						"notices": {
+							"numbers": "<strong>All numbers</strong> must match the selected number type, and be formatted in the same manner."
+						},
+						"placeholders": {
+							"numbers": "Separate individual numbers with a comma"
+						},
+						"errors": {
+							"numbers": "One or more numbers are invalid"
+						}
+					}
 				},
 				"carrierSelection": {
 					"label": "Carrier Selection",
