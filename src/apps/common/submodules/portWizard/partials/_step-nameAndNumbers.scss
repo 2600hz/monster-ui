@@ -1,0 +1,7 @@
+#step_name_and_numbers.wizard-step #numbers_to_port_numbers {
+	min-height: 16rem;
+
+	&.monster-invalid + label.monster-invalid {
+		position: static;
+	}
+}
