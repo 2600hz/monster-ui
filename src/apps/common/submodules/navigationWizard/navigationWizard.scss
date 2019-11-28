@@ -282,6 +282,8 @@ $media-size-medium: "(max-width : 980px)";
 		}
 
 		.btn-group {
+			height: 38px;
+
 			.monster-button {
 				border-radius: 0;
 
@@ -354,13 +356,19 @@ $media-size-medium: "(max-width : 980px)";
 			display: flex;
 
 			.flex-initial {
-				display: block;
 				flex: 0 0 initial;
+
+				&:not(.flex-container):not(.flex-row-container) {
+					display: block;
+				}
 			}
 
 			.flex-fit {
 				display: block;
-				flex: 1;
+
+				&:not(.flex-container):not(.flex-row-container) {
+					display: block;
+				}
 			}
 		}
 
@@ -389,6 +397,10 @@ $media-size-medium: "(max-width : 980px)";
 				width: 33.3333%;
 			}
 
+			.flex-item-3-2 {
+				width: 66.6667%;
+			}
+
 			.flex-item-4 {
 				width: 25%;
 			}
@@ -404,6 +416,10 @@ $media-size-medium: "(max-width : 980px)";
 
 				.flex-item-3 {
 					width: 50%;
+				}
+
+				.flex-item-3-2 {
+					width: 100%;
 				}
 
 				.flex-item-4 {
@@ -424,8 +440,12 @@ $media-size-medium: "(max-width : 980px)";
 
 		.step-body {
 			label {
-				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button) {
-					margin-bottom: 8px;
+				&:not(.monster-checkbox-large)
+					:not(.monster-switch)
+					:not(.monster-button)
+					:not(.label-button)
+					:not(.field-foot-notice) {
+					margin-bottom: 0.5rem;
 					line-height: 14px;
 				}
 
@@ -433,11 +453,30 @@ $media-size-medium: "(max-width : 980px)";
 					padding-right: 1rem;
 					margin-right: 1.25rem;
 				}
+
+				&.label-button {
+					align-self: center;
+					margin-right: 1rem;
+					margin-bottom: 0;
+				}
+
+				&.field-foot-notice {
+					margin-top: 0.25rem;
+					line-height: 1.25rem;
+				}
 			}
 
 			input, select {
 				margin-bottom: 0;
 				height: 38px;
+			}
+
+			textarea {
+				display: block;
+				box-sizing: border-box;
+				width: 100%;
+				margin-bottom: 0;
+				padding: 0.75rem;
 			}
 
 			.chosen-container.chosen-container-single {
