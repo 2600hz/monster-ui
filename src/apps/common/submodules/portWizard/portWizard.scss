@@ -1,5 +1,9 @@
 @import '../../../../css/partials/base';
 
+#port_wizard_control {
+	@import 'partials/_step-nameAndNumbers.scss';
+}
+
 #port_wizard {
 	background-color: $background-primary-color;
 	padding: 40px 20px;
