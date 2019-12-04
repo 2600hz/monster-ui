@@ -58,7 +58,6 @@ define(function(require) {
 		initializeSocketEvents: function(socket) {
 			var self = this;
 
-
 			socket.onclose = function(data) {
 				monster.pub('socket.disconnected');
 				self.connected = false;
