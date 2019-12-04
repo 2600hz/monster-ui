@@ -37,7 +37,8 @@
 						},
 						"messages": {
 							"file": {
-								"success": "CSV file read. {{entriesCount}} entries read, and {{numbersCount}} distinct valid numbers extracted.",
+								"allNumbers": "CSV file read. {{numbersCount}} distinct valid numbers extracted.",
+								"someNumbers": "CSV file read. {{entriesCount}} entries read, and {{numbersCount}} distinct valid numbers extracted.",
 								"noNumbers": "CSV file read. However {{numbersCount}} valid numbers were found, from {{entriesCount}} entries read."
 							}
 						}

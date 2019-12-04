@@ -327,27 +327,36 @@ define(function(require) {
 					}
 				}),
 				onParsedFile = function(results) {
-					var toastArgs;
+					var messageTypes = [
+							{
+								type: 'error',
+								i18nProp: 'noNumbers'
+							},
+							{
+								type: 'warning',
+								i18nProp: 'someNumbers'
+							},
+							{
+								type: 'success',
+								i18nProp: 'allNumbers'
+							}
+						],
+						isAnyNumber = results.numbersCount !== 0,
+						areAllNumbersValid = isAnyNumber && results.numbersCount === results.entriesCount,
+						messageIndex = _.toNumber(isAnyNumber) + _.toNumber(areAllNumbersValid),
+						messageData = _.get(messageTypes, messageIndex),
+						messageTemplate = monster.util.tryI18n(
+							self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
+							messageData.i18nProp
+						);
 
-					if (results.numbersCount === 0) {
-						toastArgs = {
-							type: 'warning',
-							message: self.getTemplate({
-								name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.noNumbers,
-								data: results
-							})
-						};
-					} else {
-						toastArgs = {
-							type: 'success',
-							message: self.getTemplate({
-								name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.success,
-								data: results
-							})
-						};
-					}
-
-					monster.ui.toast(toastArgs);
+					monster.ui.toast({
+						type: messageData.type,
+						message: self.getTemplate({
+							name: '!' + messageTemplate,
+							data: results
+						})
+					});
 				},
 				parseFileArgs = _
 					.chain(args)
