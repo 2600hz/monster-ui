@@ -326,44 +326,50 @@ define(function(require) {
 						type: file.type
 					}
 				}),
-				onParsedFile = function(results) {
-					var messageTypes = [
-							{
-								type: 'error',
-								i18nProp: 'noNumbers'
-							},
-							{
-								type: 'warning',
-								i18nProp: 'someNumbers'
-							},
-							{
-								type: 'success',
-								i18nProp: 'allNumbers'
-							}
-						],
-						isAnyNumber = results.numbersCount !== 0,
-						areAllNumbersValid = isAnyNumber && results.numbersCount === results.entriesCount,
-						messageIndex = _.toNumber(isAnyNumber) + _.toNumber(areAllNumbersValid),
-						messageData = _.get(messageTypes, messageIndex),
-						messageTemplate = monster.util.tryI18n(
-							self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
-							messageData.i18nProp
-						);
+				callbacks = {
+					success: function(results) {
+						var messageTypes = [
+								{
+									type: 'error',
+									i18nProp: 'noNumbers'
+								},
+								{
+									type: 'warning',
+									i18nProp: 'someNumbers'
+								},
+								{
+									type: 'success',
+									i18nProp: 'allNumbers'
+								}
+							],
+							isAnyNumber = results.numbersCount !== 0,
+							areAllNumbersValid = isAnyNumber && results.numbersCount === results.entriesCount,
+							messageIndex = _.toNumber(isAnyNumber) + _.toNumber(areAllNumbersValid),
+							messageData = _.get(messageTypes, messageIndex),
+							messageTemplate = monster.util.tryI18n(
+								self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
+								messageData.i18nProp
+							);
 
-					monster.ui.toast({
-						type: messageData.type,
-						message: self.getTemplate({
-							name: '!' + messageTemplate,
-							data: results
-						})
-					});
+						monster.ui.toast({
+							type: messageData.type,
+							message: self.getTemplate({
+								name: '!' + messageTemplate,
+								data: results
+							})
+						});
+					},
+					error: function() {
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
+						});
+					}
 				},
 				parseFileArgs = _
 					.chain(args)
 					.pick('file', 'numbersArea')
-					.merge({
-						callback: onParsedFile
-					})
+					.merge(callbacks)
 					.value();
 
 			if (!isValid) {
@@ -385,14 +391,14 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Object} args.file  File data
 		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
-		 * @param  {Function} args.callback  Callback function to be executed once the parsing and
-		 *                                   number extraction has been completed
+		 * @param  {Function} args.successs  Callback function to be executed once the parsing and
+		 *                                   number extraction has been completed successfully
+		 * @param  {Function} args.error  Callback function to be executed if the file parsing fails
 		 */
 		portWizardNameAndNumbersParseFile: function(args) {
 			var self = this,
 				file = args.file,
-				$numbersArea = args.numbersArea,
-				callback = args.callback;
+				$numbersArea = args.numbersArea;
 
 			monster.waterfall([
 				function(waterfallCallback) {
@@ -401,6 +407,9 @@ define(function(require) {
 						skipEmptyLines: true,
 						complete: function(results) {
 							waterfallCallback(null, results);
+						},
+						error: function(error) {
+							waterfallCallback(error);
 						}
 					});
 				},
@@ -442,7 +451,11 @@ define(function(require) {
 					waterfallCallback(null, countData);
 				}
 			], function(err, results) {
-				callback(results);
+				if (err) {
+					return args.error(err);
+				}
+
+				args.success(results);
 			});
 		},
 

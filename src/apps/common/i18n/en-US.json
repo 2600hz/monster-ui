@@ -38,8 +38,9 @@
 						"messages": {
 							"file": {
 								"allNumbers": "CSV file read. {{numbersCount}} distinct valid numbers extracted.",
-								"someNumbers": "CSV file read. {{entriesCount}} entries read, and {{numbersCount}} distinct valid numbers extracted.",
-								"noNumbers": "CSV file read. However {{numbersCount}} valid numbers were found, from {{entriesCount}} entries read."
+								"parseError": "An error occurred while trying to parse the file. Check if the file exists and the data is properly formatted.",
+								"noNumbers": "CSV file read. However {{numbersCount}} valid numbers were found, from {{entriesCount}} entries read.",
+								"someNumbers": "CSV file read. {{entriesCount}} entries read, and {{numbersCount}} distinct valid numbers extracted."
 							}
 						}
 					}
