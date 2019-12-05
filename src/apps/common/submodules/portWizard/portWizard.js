@@ -2,7 +2,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		moment = require('moment'),
-		monster = require('monster');
+		monster = require('monster'),
+		Papa = require('papaparse');
 
 	var portWizard = {
 
@@ -209,6 +210,10 @@ define(function(require) {
 						autoScrollOnInvalid: true
 					});
 
+					self.portWizardNameAndNumbersBindEvents({
+						template: $template
+					});
+
 					return $template;
 				};
 
@@ -261,6 +266,208 @@ define(function(require) {
 					nameAndNumbers: nameAndNumbersData
 				}
 			};
+		},
+
+		/**
+		 * Bind Name + Number step events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		*/
+		portWizardNameAndNumbersBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				$numbersArea = $template.find('#numbers_to_port_numbers'),
+				$fileInput = $template.find('#numbers_to_port_file'),
+				$fileNameInput = $template.find('#numbers_to_port_filename');
+
+			// Display the open file dialog when clicking any part of the file selector container.
+			// The click event handler was set to the container instead of the input and the button
+			// individually because the input is disabled, so the click event there is ignored.
+			$template
+				.find('.file-selector')
+					.on('click', function(e) {
+						// Check if the event has not been triggered programmatically,
+						// to prevent recursion
+						if (_.isUndefined(e.originalEvent)) {
+							return;
+						}
+
+						e.preventDefault();
+
+						$fileInput.trigger('click');
+					});
+
+			$fileInput.on('change', function(e) {
+				var file = e.target.files[0];
+
+				self.portWizardNameAndNumbersProcessFile({
+					file: file,
+					fileNameInput: $fileNameInput,
+					numbersArea: $numbersArea
+				});
+			});
+		},
+
+		/**
+		 * Process the uploaded numbers CSV file
+		 * @param  {Object} args
+		 * @param  {Object} args.file  File data
+		 * @param  {jQuery} args.fileNameInput  Text input that is used to display the uploaded file name
+		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
+		 */
+		portWizardNameAndNumbersProcessFile: function(args) {
+			var self = this,
+				file = args.file,
+				$fileNameInput = args.fileNameInput,
+				$numbersArea = args.numbersArea,
+				isValid = file.name.match('.+(.csv)$'),
+				invalidMessageTemplate = self.getTemplate({
+					name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.file,
+					data: {
+						type: file.type
+					}
+				}),
+				callbacks = {
+					success: function(results) {
+						monster.parallel([
+							function(parallelCallback) {
+								self.portWizardNameAndNumbersNotifyFileParsingResult(results);
+
+								parallelCallback(null);
+							},
+							function(parallelCallback) {
+								$numbersArea.val(function(i, text) {
+									var trimmedText = _.trim(text);
+
+									if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
+										trimmedText += ', ';
+									}
+
+									return trimmedText + _.join(results.numbers, ', ');
+								}).focus();
+
+								parallelCallback(null);
+							}
+						]);
+					},
+					error: function() {
+						monster.ui.toast({
+							type: 'error',
+							message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
+						});
+					}
+				},
+				parseFileArgs = _
+					.chain(args)
+					.pick('file', 'numbersArea')
+					.merge(callbacks)
+					.value();
+
+			if (!isValid) {
+				monster.ui.toast({
+					type: 'error',
+					message: invalidMessageTemplate
+				});
+
+				return;
+			}
+
+			self.portWizardNameAndNumbersParseFile(parseFileArgs);
+
+			$fileNameInput.val(file.name);
+		},
+
+		/**
+		 * Parses the uploaded CSV file to extract the phone numbers
+		 * @param  {Object} args
+		 * @param  {Object} args.file  File data
+		 * @param  {Function} args.successs  Callback function to be executed once the parsing and
+		 *                                   number extraction has been completed successfully
+		 * @param  {Function} args.error  Callback function to be executed if the file parsing fails
+		 */
+		portWizardNameAndNumbersParseFile: function(args) {
+			var self = this,
+				file = args.file;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					Papa.parse(file, {
+						header: false,
+						skipEmptyLines: true,
+						complete: function(results) {
+							waterfallCallback(null, results);
+						},
+						error: function(error) {
+							waterfallCallback(error);
+						}
+					});
+				},
+				function(results, waterfallCallback) {
+					var entries = _.flatten(results.data),
+						numbers = _
+							.chain(entries)
+							.map(_.trim)
+							.reject(_.isEmpty)
+							.map(monster.util.getFormatPhoneNumber)
+							.filter('isValid')
+							.map('e164Number')
+							.uniq()
+							.value(),
+						numbersData = {
+							entriesCount: entries.length,
+							numbersCount: numbers.length,
+							numbers: numbers
+						};
+
+					waterfallCallback(null, numbersData);
+				}
+			], function(err, results) {
+				if (err) {
+					return args.error(err);
+				}
+
+				args.success(results);
+			});
+		},
+
+		/**
+		 * Notify the file parsing result through a toast message
+		 * @param  {Object} args
+		 * @param  {Number} args.entriesCount  Total read entries
+		 * @param  {Number} args.numbersCount  Count of valid unique phone numbers found
+		 */
+		portWizardNameAndNumbersNotifyFileParsingResult: function(args) {
+			var self = this,
+				messageTypes = [
+					{
+						type: 'error',
+						i18nProp: 'noNumbers'
+					},
+					{
+						type: 'warning',
+						i18nProp: 'someNumbers'
+					},
+					{
+						type: 'success',
+						i18nProp: 'allNumbers'
+					}
+				],
+				isAnyNumber = args.numbersCount !== 0,
+				areAllNumbersValid = isAnyNumber && args.numbersCount === args.entriesCount,
+				messageIndex = _.toNumber(isAnyNumber) + _.toNumber(areAllNumbersValid),
+				messageData = _.get(messageTypes, messageIndex),
+				messageTemplate = monster.util.tryI18n(
+					self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
+					messageData.i18nProp
+				);
+
+			monster.ui.toast({
+				type: messageData.type,
+				message: self.getTemplate({
+					name: '!' + messageTemplate,
+					data: args
+				})
+			});
 		},
 
 		/* CARRIER SELECTION STEP */
