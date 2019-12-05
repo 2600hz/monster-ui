@@ -302,8 +302,8 @@ define(function(require) {
 
 				self.portWizardNameAndNumbersProcessFile({
 					file: file,
-					numbersArea: $numbersArea,
-					fileNameInput: $fileNameInput
+					fileNameInput: $fileNameInput,
+					numbersArea: $numbersArea
 				});
 			});
 		},
@@ -312,13 +312,14 @@ define(function(require) {
 		 * Process the uploaded numbers CSV file
 		 * @param  {Object} args
 		 * @param  {Object} args.file  File data
-		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
 		 * @param  {jQuery} args.fileNameInput  Text input that is used to display the uploaded file name
+		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
 		 */
 		portWizardNameAndNumbersProcessFile: function(args) {
 			var self = this,
 				file = args.file,
 				$fileNameInput = args.fileNameInput,
+				$numbersArea = args.numbersArea,
 				isValid = file.name.match('.+(.csv)$'),
 				invalidMessageTemplate = self.getTemplate({
 					name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.file,
@@ -350,6 +351,16 @@ define(function(require) {
 								self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
 								messageData.i18nProp
 							);
+
+						$numbersArea.val(function(i, text) {
+							var trimmedText = _.trim(text);
+
+							if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
+								trimmedText += ', ';
+							}
+
+							return trimmedText + _.join(results.numbers, ', ');
+						}).focus();
 
 						monster.ui.toast({
 							type: messageData.type,
@@ -390,15 +401,13 @@ define(function(require) {
 		 * Parses the uploaded CSV file to extract the phone numbers
 		 * @param  {Object} args
 		 * @param  {Object} args.file  File data
-		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
 		 * @param  {Function} args.successs  Callback function to be executed once the parsing and
 		 *                                   number extraction has been completed successfully
 		 * @param  {Function} args.error  Callback function to be executed if the file parsing fails
 		 */
 		portWizardNameAndNumbersParseFile: function(args) {
 			var self = this,
-				file = args.file,
-				$numbersArea = args.numbersArea;
+				file = args.file;
 
 			monster.waterfall([
 				function(waterfallCallback) {
@@ -423,32 +432,14 @@ define(function(require) {
 							.filter('isValid')
 							.map('e164Number')
 							.uniq()
-							.value();
+							.value(),
+						numbersData = {
+							entriesCount: entries.length,
+							numbersCount: numbers.length,
+							numbers: numbers
+						};
 
-					waterfallCallback(null, entries, numbers);
-				},
-				function(entries, numbers, waterfallCallback) {
-					var countData = {
-						entriesCount: entries.length,
-						numbersCount: numbers.length
-					};
-
-					if (_.isEmpty(numbers)) {
-						waterfallCallback(null, countData);
-						return;
-					}
-
-					$numbersArea.val(function(i, text) {
-						var trimmedText = _.trim(text);
-
-						if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
-							trimmedText += ', ';
-						}
-
-						return trimmedText + _.join(numbers, ', ');
-					}).focus();
-
-					waterfallCallback(null, countData);
+					waterfallCallback(null, numbersData);
 				}
 			], function(err, results) {
 				if (err) {
