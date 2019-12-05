@@ -53,6 +53,21 @@
 								{{{nameAndNumbersI18n.numbersToPort.notices.numbers}}}
 							</label>
 						</div>
+						<div class="numbers-file-upload flex-item-3">
+							<label for="numbers_to_port_file">
+								{{nameAndNumbersI18n.numbersToPort.labels.file}}
+							</label>
+							<div class="file-selector">
+								<input type="text" id="numbers_to_port_filename" readonly />
+								<button id="numbers_to_port_file_button" class="monster-button">
+									{{nameAndNumbersI18n.numbersToPort.labels.fileButton}}
+								</button>
+								<input type="file" name="numbersToPort.file" id="numbers_to_port_file" accept=".csv" multiple />
+							</div>
+							<label class="field-foot-notice">
+								{{{nameAndNumbersI18n.numbersToPort.notices.numbers}}}
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
