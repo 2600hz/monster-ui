@@ -329,46 +329,26 @@ define(function(require) {
 				}),
 				callbacks = {
 					success: function(results) {
-						var messageTypes = [
-								{
-									type: 'error',
-									i18nProp: 'noNumbers'
-								},
-								{
-									type: 'warning',
-									i18nProp: 'someNumbers'
-								},
-								{
-									type: 'success',
-									i18nProp: 'allNumbers'
-								}
-							],
-							isAnyNumber = results.numbersCount !== 0,
-							areAllNumbersValid = isAnyNumber && results.numbersCount === results.entriesCount,
-							messageIndex = _.toNumber(isAnyNumber) + _.toNumber(areAllNumbersValid),
-							messageData = _.get(messageTypes, messageIndex),
-							messageTemplate = monster.util.tryI18n(
-								self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
-								messageData.i18nProp
-							);
+						monster.parallel([
+							function(parallelCallback) {
+								self.portWizardNameAndNumbersNotifyFileParsingResult(results);
 
-						$numbersArea.val(function(i, text) {
-							var trimmedText = _.trim(text);
+								parallelCallback(null);
+							},
+							function(parallelCallback) {
+								$numbersArea.val(function(i, text) {
+									var trimmedText = _.trim(text);
 
-							if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
-								trimmedText += ', ';
+									if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
+										trimmedText += ', ';
+									}
+
+									return trimmedText + _.join(results.numbers, ', ');
+								}).focus();
+
+								parallelCallback(null);
 							}
-
-							return trimmedText + _.join(results.numbers, ', ');
-						}).focus();
-
-						monster.ui.toast({
-							type: messageData.type,
-							message: self.getTemplate({
-								name: '!' + messageTemplate,
-								data: results
-							})
-						});
+						]);
 					},
 					error: function() {
 						monster.ui.toast({
@@ -447,6 +427,46 @@ define(function(require) {
 				}
 
 				args.success(results);
+			});
+		},
+
+		/**
+		 * Notify the file parsing result through a toast message
+		 * @param  {Object} args
+		 * @param  {Number} args.entriesCount  Total read entries
+		 * @param  {Number} args.numbersCount  Count of valid unique phone numbers found
+		 */
+		portWizardNameAndNumbersNotifyFileParsingResult: function(args) {
+			var self = this,
+				messageTypes = [
+					{
+						type: 'error',
+						i18nProp: 'noNumbers'
+					},
+					{
+						type: 'warning',
+						i18nProp: 'someNumbers'
+					},
+					{
+						type: 'success',
+						i18nProp: 'allNumbers'
+					}
+				],
+				isAnyNumber = args.numbersCount !== 0,
+				areAllNumbersValid = isAnyNumber && args.numbersCount === args.entriesCount,
+				messageIndex = _.toNumber(isAnyNumber) + _.toNumber(areAllNumbersValid),
+				messageData = _.get(messageTypes, messageIndex),
+				messageTemplate = monster.util.tryI18n(
+					self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file,
+					messageData.i18nProp
+				);
+
+			monster.ui.toast({
+				type: messageData.type,
+				message: self.getTemplate({
+					name: '!' + messageTemplate,
+					data: args
+				})
 			});
 		},
 
