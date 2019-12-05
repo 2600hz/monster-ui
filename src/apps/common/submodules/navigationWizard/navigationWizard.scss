@@ -465,10 +465,12 @@ $media-size-medium: "(max-width : 980px)";
 				&.field-foot-notice {
 					margin-top: 0.25rem;
 					line-height: 1.25rem;
+					font-size: 0.75rem;
 				}
 			}
 
 			input, select {
+				box-sizing: border-box;
 				margin-bottom: 0;
 				height: 38px;
 			}
