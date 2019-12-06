@@ -9,6 +9,12 @@ define(function(require) {
 
 		// Defines API requests not included in the SDK
 		requests: {
+			'phonebook.lookupNumbers': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'lnp/lookup',
+				verb: 'POST',
+				generateError: false
+			}
 		},
 
 		// Define the events available for other apps
@@ -478,13 +484,95 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardCarrierSelectionRender: function(args, callback) {
-			var self = this;
+			var self = this,
+				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
+				numbers = _.map(formattedNumbers, 'e164Number'),
+				initTemplateMultiple = function(dataTemplate) {
+					dataTemplate.errorType = 'noWinnerCarriers';
+					var $template = $(self.getTemplate({
+						name: 'step-carrierSelection-multiple',
+						data: {
+							data: dataTemplate
+						},
+						submodule: 'portWizard'
+					}));
 
-			// TODO: Not implemented
+					// TODO: Event binding
 
-			callback({
-				template: $(''),
-				callback: self.portWizardScrollToTop
+					return $template;
+				},
+				initTemplateSingle = function(dataTemplate) {
+					var $template = $(self.getTemplate({
+						name: 'step-carrierSelection-single',
+						data: {
+							data: dataTemplate
+						},
+						submodule: 'portWizard'
+					}));
+
+					// TODO: Event binding and form validation
+
+					return $template;
+				};
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardCarrierSelectionGetNumberCarriers({
+						numbers: numbers,
+						success: function(carrierData) {
+							waterfallCallback(null, carrierData);
+						},
+						error: function() {
+							waterfallCallback(true);
+						}
+					});
+				},
+				function(carrierData, waterfallCallback) {
+					var numbersByLosingCarrier = carrierData.numbersByLosingCarrier,
+						winningCarriers = carrierData.winningCarriers,
+						losingCarriersCount = _.size(numbersByLosingCarrier),
+						isSingleLosingCarrier = losingCarriersCount === 1,
+						isSingleLosingCarrierUnknown = _
+							.chain(numbersByLosingCarrier)
+							.keys()
+							.head()
+							.isEqual('Unknown')
+							.value(),
+						noWinningCarriers = _.isEmpty(winningCarriers),
+						errorType = isSingleLosingCarrierUnknown
+							? 'unknownLosingCarriers'
+							: noWinningCarriers
+								? 'noWinnerCarriers'
+								: isSingleLosingCarrier
+									? 'none'
+									: 'multipleLosingCarriers',
+						shouldDisplaySingleTemplate = errorType === 'none',
+						dataTemplate = shouldDisplaySingleTemplate
+							? {
+								numbers: formattedNumbers,
+								winningCarriers: winningCarriers
+							}
+							: {
+								errorType: errorType,
+								numbersByLosingCarrier: numbersByLosingCarrier,
+								losingCarriersCount: _.size(numbersByLosingCarrier)
+							},
+						$template = shouldDisplaySingleTemplate
+							? initTemplateSingle(dataTemplate)
+							: initTemplateMultiple(dataTemplate);
+
+					waterfallCallback(null, $template);
+				}
+			], function(err, $template) {
+				if (err) {
+					// TODO: Handle Phonebook not available error
+					return;
+				}
+
+				callback({
+					template: $template,
+					callback: self.portWizardScrollToTop
+				});
 			});
 		},
 
@@ -503,6 +591,68 @@ define(function(require) {
 			return {
 				valid: true
 			};
+		},
+
+		/**
+		 * Get the losing and winning carriers for the phone numbers
+		 * @param  {Object} args
+		 * @param  {String} args.numbers  Phone numbers to look up
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} [args.error]  Error callback
+		 */
+		portWizardCarrierSelectionGetNumberCarriers: function(args) {
+			var self = this,
+				numbers = args.numbers;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardRequestPhoneNumbersLookup({
+						numbers: numbers,
+						success: function(data) {
+							waterfallCallback(null, data.numbers);
+						},
+						error: function() {
+							waterfallCallback(true);
+						}
+					});
+				},
+				function(numbersData, waterfallCallback) {
+					var numbersByLosingCarrier = _
+							.groupBy(numbers, function(number) {
+								return _.get(numbersData, [
+									number,
+									'losing_carrier',
+									'name'
+								], 'Unknown');
+							}),
+						winningCarriers = _
+							.chain(numbersData)
+							.map('carriers')
+							.reduce(function(commonCarriers, numberCarriers) {
+								var portableCarriers = _
+									.chain(numberCarriers)
+									.filter('portability')
+									.map('name')
+									.value();
+
+								return _.isEmpty(commonCarriers)
+									? portableCarriers
+									: _.intersection(commonCarriers, portableCarriers);
+							}, [])
+							.value();
+
+					waterfallCallback(null, {
+						numbersByLosingCarrier: numbersByLosingCarrier,
+						winningCarriers: winningCarriers
+					});
+				}
+			], function(err, results) {
+				if (err) {
+					return _.has(args, 'error') && args.error();
+				}
+
+				args.success(results);
+			});
 		},
 
 		/* OWNERSHIP CONFIRMATION STEP */
@@ -672,6 +822,38 @@ define(function(require) {
 				globalCallback = self.portWizardGet('globalCallback');
 
 			globalCallback();
+		},
+
+		/**************************************************
+		 *                  API requests                  *
+		 **************************************************/
+
+		/**
+		 * Lookups details for a list of numbers
+		 * @param  {Object} args
+		 * @param  {String[]} args.numbers Phone numbers to look up
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} [args.error]  Error callback
+		 */
+		portWizardRequestPhoneNumbersLookup: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'phonebook.lookupNumbers',
+				data: {
+					data: {
+						numbers: args.numbers
+					}
+				},
+				success: function(data) {
+					args.success(data.data);
+				},
+				error: function(data, status) {
+					// TODO: Handle Phonebook not available error
+
+					_.has(args, 'error') && args.error();
+				}
+			});
 		},
 
 		/**************************************************
