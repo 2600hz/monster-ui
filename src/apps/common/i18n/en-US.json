@@ -94,6 +94,12 @@
 				"review": {
 					"label": "Review + Confirm",
 					"description": "Please review and confirm all your information before submitting your number port request."
+				},
+				"general": {
+					"errors": {
+						"phonebookUnavailable": "It was not possible to lookup the number information. Check if the Phonebook feature is available for your installation.",
+						"lookupNumbersError": "An error occurred while trying to lookup for phone numbers information."
+					}
 				}
 			}
 		}

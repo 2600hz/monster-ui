@@ -522,8 +522,8 @@ define(function(require) {
 						success: function(carrierData) {
 							waterfallCallback(null, carrierData);
 						},
-						error: function() {
-							waterfallCallback(true);
+						error: function(errorData) {
+							waterfallCallback(errorData);
 						}
 					});
 				},
@@ -564,15 +564,29 @@ define(function(require) {
 					waterfallCallback(null, $template);
 				}
 			], function(err, $template) {
-				if (err) {
-					// TODO: Handle Phonebook not available error
-					return;
+				if (!(_.isUndefined(err) || _.get(err, 'phonebookUnavailable'))) {
+					return monster.ui.alert(
+						'error',
+						self.i18n.active().commonApp.portWizard.steps.general.errors.lookupNumbersError
+					);
 				}
 
-				callback({
-					template: $template,
-					callback: self.portWizardScrollToTop
+				if (_.isUndefined(err)) {
+					return callback({
+						template: $template,
+						callback: self.portWizardScrollToTop
+					});
+				}
+
+				// Phonebook is not available, so go to previous step and notify
+				monster.pub('common.navigationWizard.goToStep', {
+					stepId: 0
 				});
+
+				monster.ui.alert(
+					'error',
+					self.i18n.active().commonApp.portWizard.steps.general.errors.phonebookUnavailable
+				);
 			});
 		},
 
@@ -611,8 +625,8 @@ define(function(require) {
 						success: function(data) {
 							waterfallCallback(null, data.numbers);
 						},
-						error: function() {
-							waterfallCallback(true);
+						error: function(errorData) {
+							waterfallCallback(errorData);
 						}
 					});
 				},
@@ -648,7 +662,7 @@ define(function(require) {
 				}
 			], function(err, results) {
 				if (err) {
-					return _.has(args, 'error') && args.error();
+					return _.has(args, 'error') && args.error(err);
 				}
 
 				args.success(results);
@@ -849,9 +863,11 @@ define(function(require) {
 					args.success(data.data);
 				},
 				error: function(data, status) {
-					// TODO: Handle Phonebook not available error
+					var errorData = {
+						phonebookUnavailable: data.status === 0
+					};
 
-					_.has(args, 'error') && args.error();
+					_.has(args, 'error') && args.error(errorData);
 				}
 			});
 		},
