@@ -1,5 +1,6 @@
 title: Using Postman as a CRUD
 
+Needs updating, methods are obsolete @yumminova
 # Using Postman as a CRUD
 
 * [Install Postman](#install-postman)
