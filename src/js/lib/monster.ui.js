@@ -15,7 +15,8 @@ define(function(require) {
 		mousetrap = require('mousetrap'),
 		Drop = require('drop'),
 		Clipboard = require('clipboard'),
-		moment = require('moment');
+		moment = require('moment'),
+		simplemde = require('simplemde');
 
 	require('chosen');
 	require('disableAutoFill');
@@ -1463,6 +1464,28 @@ define(function(require) {
 
 		valid: function(form) {
 			return form.valid();
+		},
+
+		/**
+		 * @desc Convert the 'target' in to Markdown editor
+		 * @param target - mandatory jQuery object
+		 * @param options - optional object to overwrite the default configs
+		 */
+		simplemde: function($target, options) {
+			if (!($target instanceof $)) {
+				throw TypeError('"$target" is not a jQuery object');
+			}
+
+			if (!_.isUndefined(options) && !_.isPlainObject(options)) {
+				throw TypeError('"options" is not a plain object');
+			}
+
+			new simplemde(_.merge({
+				element: $target[0],
+				status: false,
+				autosave: false,
+				spellChecker: false
+			}, options));
 		},
 
 		/**
