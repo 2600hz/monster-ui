@@ -3,7 +3,9 @@ define(function(require) {
 		_ = require('lodash'),
 		moment = require('moment'),
 		monster = require('monster'),
-		Papa = require('papaparse');
+		Papa = require('papaparse'),
+		JSZip = require('jszip'),
+		FileSaver = require('file-saver');
 
 	var portWizard = {
 
@@ -485,6 +487,7 @@ define(function(require) {
 		 */
 		portWizardCarrierSelectionRender: function(args, callback) {
 			var self = this,
+				portRequestName = _.get(args.data, 'nameAndNumbers.portRequestName'),
 				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
 				numbers = _.map(formattedNumbers, 'e164Number'),
 				initTemplateMultiple = function(dataTemplate) {
@@ -496,7 +499,11 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
-					// TODO: Event binding
+					self.portWizardCarrierSelectionMultipleBindEvents({
+						portRequestName: portRequestName,
+						numbersByLosingCarrier: dataTemplate.numbersByLosingCarrier,
+						template: $template
+					});
 
 					return $template;
 				},
@@ -596,6 +603,54 @@ define(function(require) {
 			return {
 				valid: true
 			};
+		},
+
+		/**
+		 * Bind events for Carrier Selection step (multiple losing carriers)
+		 * @param  {Object} args
+		 * @param  {String} args.portRequestName  Port request name
+		 * @param  {Object} args.numbersByLosingCarrier  Numbers grouped by losing carrier
+		 * @param  {jQuery} args.template  Step template
+		 */
+		portWizardCarrierSelectionMultipleBindEvents: function(args) {
+			var self = this,
+				portRequestName = args.portRequestName,
+				numbersByLosingCarrier = args.numbersByLosingCarrier,
+				$template = args.template;
+
+			$template.find('#download_number_files')
+				.on('click', function(e) {
+					e.preventDefault();
+
+					self.portWizardCarrierSelectionMultipleDownloadNumbers({
+						fileName: _.snakeCase(portRequestName) + '.zip',
+						numbersByLosingCarrier: numbersByLosingCarrier
+					});
+				});
+		},
+
+		/**
+		 * Download phone numbers for multiple losing carriers
+		 * @param  {Object} args
+		 * @param  {String} args.fileName  Default name of the ZIP file to be generated
+		 * @param  {Object} args.numbersByLosingCarrier  Numbers grouped by losing carrier
+		 */
+		portWizardCarrierSelectionMultipleDownloadNumbers: function(args) {
+			var self = this,
+				zipFileName = args.fileName,
+				numbersByLosingCarrier = args.numbersByLosingCarrier,
+				zip = new JSZip(),
+				blob;
+
+			_.each(numbersByLosingCarrier, function(numbers, carrier) {
+				var csvFileName = _.snakeCase(carrier) + '.csv',
+					formattedNumbers = _.join(numbers, '\n');
+
+				zip.file(csvFileName, formattedNumbers);
+			});
+
+			blob = zip.generate({ type: 'blob' });
+			saveAs(blob, zipFileName);
 		},
 
 		/**
