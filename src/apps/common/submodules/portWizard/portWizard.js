@@ -564,14 +564,14 @@ define(function(require) {
 					waterfallCallback(null, $template);
 				}
 			], function(err, $template) {
-				if (!(_.isUndefined(err) || _.get(err, 'phonebookUnavailable'))) {
+				if (!(_.isNil(err) || _.get(err, 'phonebookUnavailable'))) {
 					return monster.ui.alert(
 						'error',
 						self.i18n.active().commonApp.portWizard.steps.general.errors.lookupNumbersError
 					);
 				}
 
-				if (_.isUndefined(err)) {
+				if (_.isNil(err)) {
 					return callback({
 						template: $template,
 						callback: self.portWizardScrollToTop
