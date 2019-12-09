@@ -7,7 +7,8 @@ define(function(require) {
 		subscribe: {
 			'common.navigationWizard.render': 'navigationWizardRender',
 			'common.navigationWizard.goToStep': 'navigationWizardGoToStep',
-			'common.navigationWizard.arguments': 'navigationWizardArguments'
+			'common.navigationWizard.arguments': 'navigationWizardArguments',
+			'common.navigationWizard.setButtonProps': 'navigationWizardSetButtonProperties'
 		},
 
 		appFlags: {
@@ -15,6 +16,7 @@ define(function(require) {
 			navigationWizard: {
 				askForConfirmationBeforeExit: false,
 				currentStep: 0,
+				buttons: {},
 				validateOnStepChange: false,
 				wizardArgs: {}
 			}
@@ -69,8 +71,20 @@ define(function(require) {
 					},
 					submodule: 'navigationWizard'
 				})),
+				buttonSelectors = {
+					back: '.back',
+					cancel: '#cancel',
+					clear: '#clear',
+					done: '#done',
+					next: '#next'
+				},
 				navigationWizardFlagsDefaults = {
 					askForConfirmationBeforeExit: false,
+					buttons: _.mapValues(buttonSelectors, function(selector) {
+						return {
+							element: layout.find(selector)
+						};
+					}),
 					currentStep: 0,
 					validateOnStepChange: false
 				},
@@ -557,6 +571,39 @@ define(function(require) {
 
 				// Deferred, to ensure that the loading template does not replace the step template
 				_.defer(appendTemplateCallback, $template, insertTemplateCallback);
+			});
+		},
+
+		navigationWizardSetButtonProperties: function(args) {
+			var self = this,
+				buttonProps = _.isArray(args) ? args : [args];
+
+			_.each(buttonProps, function(props) {
+				var buttonName = props.button,
+					button = _.get(self.appFlags.navigationWizard.buttons, buttonName),
+					buttonElement = button.element;
+
+				if (_.has(props, 'display')) {
+					if (_.get(props, 'display')) {
+						buttonElement.show();
+					} else {
+						buttonElement.hide();
+					}
+				}
+
+				if (_.has(props, 'content')) {
+					button.content = buttonElement.children();
+
+					buttonElement
+						.empty()
+						.append(props.content);
+				} else if (_.get(props, 'resetContent', true) && _.has(button, 'content')) {
+					buttonElement
+						.empty()
+						.append(button.content);
+
+					delete button.content;
+				}
 			});
 		}
 	};
