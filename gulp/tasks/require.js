@@ -83,7 +83,8 @@ const libsToExcludeFromApp = [
 	'touch-punch',
 	'validate',
 	'vfs_fonts',
-	'wysiwyg'
+	'wysiwyg',
+	'simplemde'
 ];
 
 const getConfigRequire = () => ({

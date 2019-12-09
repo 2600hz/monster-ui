@@ -65,7 +65,8 @@ require.config({
 		'toastr': 'js/vendor/toastr-1.3.0',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
 		'validate': 'js/vendor/jquery.validate.min',
-		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min'
+		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min',
+		'simplemde': 'js/vendor/simplemde.min'
 	},
 	shim: {
 		'bootstrap': ['jqueryui'],
