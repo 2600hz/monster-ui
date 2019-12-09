@@ -399,6 +399,11 @@ $media-size-medium: "(max-width : 980px)";
 			margin-left: -0.75rem;
 			margin-right: -0.75rem;
 
+			&.flex-align-top {
+				// Align items to top, to not stretch to the row's height
+				align-items: flex-start;
+			}
+
 			[class^="flex-item"],
 			[class*=" flex-item"] {
 				flex: 0 0 auto;
