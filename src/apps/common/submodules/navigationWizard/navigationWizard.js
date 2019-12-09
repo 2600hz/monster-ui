@@ -574,6 +574,14 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Set wizard button properties
+		 * @param  {Object|Array} args  Single button properties, or list of buttons properties
+		 * @param  {String} [args.button]  Button name
+		 * @param  {Boolean} [args.display]  Whether to display or hide the button
+		 * @param  {jQuery|String|Element} [args.content]  Button new content
+		 * @param  {jQuery|String|Element} [args.resetContent]  Reset button content to its default
+		 */
 		navigationWizardSetButtonProperties: function(args) {
 			var self = this,
 				buttonProps = _.isArray(args) ? args : [args];
