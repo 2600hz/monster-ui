@@ -499,6 +499,17 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
+					monster.pub('common.navigationWizard.setButtonProps', [
+						{
+							button: 'next',
+							display: false
+						},
+						{
+							button: 'back',
+							content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
+						}
+					]);
+
 					self.portWizardCarrierSelectionMultipleBindEvents({
 						portRequestName: portRequestName,
 						numbersByLosingCarrier: dataTemplate.numbersByLosingCarrier,
