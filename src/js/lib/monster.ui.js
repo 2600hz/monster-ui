@@ -1467,9 +1467,9 @@ define(function(require) {
 		},
 
 		/**
-		 * @desc Convert the 'target' in to Markdown editor
+		 * Convert the 'target' in to Markdown editor
 		 * @param target - mandatory jQuery object
-		 * @param options - optional object to overwrite the default configs
+		 * @param [options] - optional object to overwrite the default configs
 		 */
 		simplemde: function($target, options) {
 			if (!($target instanceof $)) {
