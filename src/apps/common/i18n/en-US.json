@@ -65,7 +65,7 @@
 									"title": "Unknown losing carrier",
 									"message": "The losing carrier must be known. The numbers must also all be portable to the same winning carrier."
 								},
-								"noWinnerCarriers": {
+								"noWinningCarriers": {
 									"title": "No winning carrier",
 									"message": "The numbers must all be portable to the same winning carrier."
 								}

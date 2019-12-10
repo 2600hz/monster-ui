@@ -541,7 +541,7 @@ define(function(require) {
 						errorType = isSingleLosingCarrierUnknown
 							? 'unknownLosingCarriers'
 							: noWinningCarriers
-								? 'noWinnerCarriers'
+								? 'noWinningCarriers'
 								: isSingleLosingCarrier
 									? 'none'
 									: 'multipleLosingCarriers',
@@ -609,7 +609,7 @@ define(function(require) {
 		/**
 		 * Get the losing and winning carriers for the phone numbers
 		 * @param  {Object} args
-		 * @param  {String} args.numbers  Phone numbers to look up
+		 * @param  {String[]} args.numbers  Phone numbers to look up
 		 * @param  {Function} args.success  Success callback
 		 * @param  {Function} [args.error]  Error callback
 		 */
