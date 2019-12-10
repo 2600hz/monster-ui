@@ -245,6 +245,7 @@ $media-size-medium: "(max-width : 980px)";
 	/*********************** WIZARD STEPS ***********************/
 	/************************************************************/
 	.wizard-step {
+		color: $woodsmoke;
 		padding: 2rem 1.5rem;
 
 		.iconography-small {
@@ -266,12 +267,22 @@ $media-size-medium: "(max-width : 980px)";
 			height: 1.25rem;
 		}
 
+		.iconography-xlarge {
+			font-size: 2.5rem;
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+
 		.iconography-help {
 			color: $manatee;
 
 			&:hover {
 				color: $shark2;
 			}
+		}
+
+		.iconography-button-left {
+			margin-right: 0.5rem;
 		}
 
 		.input-hidden {
@@ -305,11 +316,22 @@ $media-size-medium: "(max-width : 980px)";
 			color: $danger-color;
 		}
 
+		.text-block {
+			margin-bottom: 1rem;
+		}
+
 		.monster-button {
 			background: linear-gradient(-180deg, $foreground-primary-color 0%, $athens-gray 100%);
 
 			&:hover {
 				background: linear-gradient(-180deg, $athens-gray 0%, $white-lilac 100%);
+			}
+
+			&.step-action {
+				min-width: 2.375rem;	// To override monster-button's default min-width
+				height: 2.375rem;
+				margin-left: 0.75rem;
+				padding: 0.5rem;
 			}
 		}
 
@@ -406,6 +428,10 @@ $media-size-medium: "(max-width : 980px)";
 		.flex-container {
 			display: flex;
 
+			&.flex-justify-end {
+				justify-content: flex-end;
+			}
+
 			.flex-initial {
 				flex: 0 0 initial;
 
@@ -424,10 +450,16 @@ $media-size-medium: "(max-width : 980px)";
 		}
 
 		.flex-row-container {
-			display: flex;
+			@extend .flex-container;
+
 			flex-wrap: wrap;
 			margin-left: -0.75rem;
 			margin-right: -0.75rem;
+
+			&.flex-align-top {
+				// Align items to top, to not stretch to the row's height
+				align-items: flex-start;
+			}
 
 			[class^="flex-item"],
 			[class*=" flex-item"] {
@@ -460,31 +492,35 @@ $media-size-medium: "(max-width : 980px)";
 				width: 75%;
 			}
 
+			.flex-item-5 {
+				width: 20%;
+			}
+
 			@include media-medium-or-print {
 				.flex-item-2 {
 					width: 100%;
 				}
 
-				.flex-item-3 {
+				.flex-item-3, .flex-item-4 {
 					width: 50%;
 				}
 
-				.flex-item-3-2 {
+				.flex-item-3-2, .flex-item-4-3 {
 					width: 100%;
 				}
 
-				.flex-item-4 {
-					width: 50%;
-				}
-
-				.flex-item-4-3 {
-					width: 100%;
+				.flex-item-5 {
+					width: 33.3333%;
 				}
 			}
 
 			@include media-small {
 				.flex-item-3 {
 					width: 100%;
+				}
+
+				.flex-item-5 {
+					width: 50%;
 				}
 			}
 		}
