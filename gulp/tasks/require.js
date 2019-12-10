@@ -76,6 +76,7 @@ const libsToExcludeFromApp = [
 	'renderjson',
 	'reqwest',
 	'signals',
+	'simplemde',
 	'templates',
 	'tether',
 	'timepicker',
@@ -83,8 +84,7 @@ const libsToExcludeFromApp = [
 	'touch-punch',
 	'validate',
 	'vfs_fonts',
-	'wysiwyg',
-	'simplemde'
+	'wysiwyg'
 ];
 
 const getConfigRequire = () => ({

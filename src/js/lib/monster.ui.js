@@ -1468,10 +1468,10 @@ define(function(require) {
 
 		/**
 		 * Convert the 'target' in to Markdown editor
-		 * @param target - mandatory jQuery object
-		 * @param [options] - optional object to overwrite the default configs
+		 * @param {jQuery} target - mandatory jQuery object
+		 * @param {Object} options - optional object to overwrite the default configs
 		 */
-		simplemde: function($target, options) {
+		markdownEditor: function($target, options) {
 			if (!($target instanceof $)) {
 				throw TypeError('"$target" is not a jQuery object');
 			}
@@ -1480,7 +1480,7 @@ define(function(require) {
 				throw TypeError('"options" is not a plain object');
 			}
 
-			new simplemde(_.merge({
+			return new simplemde(_.merge({
 				element: $target[0],
 				status: false,
 				autosave: false,
