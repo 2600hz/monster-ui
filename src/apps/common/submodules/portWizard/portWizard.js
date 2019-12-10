@@ -9,6 +9,12 @@ define(function(require) {
 
 		// Defines API requests not included in the SDK
 		requests: {
+			'phonebook.lookupNumbers': {
+				apiRoot: monster.config.api.phonebook,
+				url: 'lnp/lookup',
+				verb: 'POST',
+				generateError: false
+			}
 		},
 
 		// Define the events available for other apps
@@ -478,13 +484,100 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardCarrierSelectionRender: function(args, callback) {
-			var self = this;
+			var self = this,
+				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
+				numbers = _.map(formattedNumbers, 'e164Number'),
+				initTemplateMultiple = function(dataTemplate) {
+					var $template = $(self.getTemplate({
+						name: 'step-carrierSelection-multiple',
+						data: {
+							data: dataTemplate
+						},
+						submodule: 'portWizard'
+					}));
 
-			// TODO: Not implemented
+					// TODO: Event binding
 
-			callback({
-				template: $(''),
-				callback: self.portWizardScrollToTop
+					return $template;
+				},
+				initTemplateSingle = function(dataTemplate) {
+					var $template = $(self.getTemplate({
+						name: 'step-carrierSelection-single',
+						data: {
+							data: dataTemplate
+						},
+						submodule: 'portWizard'
+					}));
+
+					// TODO: Event binding and form validation
+
+					return $template;
+				};
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardCarrierSelectionGetNumberCarriers({
+						numbers: numbers,
+						success: function(carrierData) {
+							waterfallCallback(null, carrierData);
+						},
+						error: function(errorData) {
+							waterfallCallback(errorData);
+						}
+					});
+				},
+				function(carrierData, waterfallCallback) {
+					var numbersByLosingCarrier = carrierData.numbersByLosingCarrier,
+						winningCarriers = carrierData.winningCarriers,
+						losingCarriersCount = _.size(numbersByLosingCarrier),
+						isSingleLosingCarrier = losingCarriersCount === 1,
+						isSingleLosingCarrierUnknown = isSingleLosingCarrier && _.has(numbersByLosingCarrier, 'Unknown'),
+						noWinningCarriers = _.isEmpty(winningCarriers),
+						errorType = isSingleLosingCarrierUnknown
+							? 'unknownLosingCarriers'
+							: noWinningCarriers
+								? 'noWinningCarriers'
+								: isSingleLosingCarrier
+									? 'none'
+									: 'multipleLosingCarriers',
+						shouldDisplaySingleTemplate = errorType === 'none',
+						dataTemplate = shouldDisplaySingleTemplate
+							? {
+								numbers: formattedNumbers,
+								winningCarriers: winningCarriers
+							}
+							: {
+								errorType: errorType,
+								numbersByLosingCarrier: numbersByLosingCarrier,
+								losingCarriersCount: _.size(numbersByLosingCarrier)
+							},
+						$template = shouldDisplaySingleTemplate
+							? initTemplateSingle(dataTemplate)
+							: initTemplateMultiple(dataTemplate);
+
+					waterfallCallback(null, $template);
+				}
+			], function(err, $template) {
+				var errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
+					? 'phonebookUnavailable'
+					: 'lookupNumbersError';
+
+				if (_.isNil(err)) {
+					return callback({
+						template: $template,
+						callback: self.portWizardScrollToTop
+					});
+				}
+
+				// Phonebook is not available, so go to previous step and notify
+				monster.pub('common.navigationWizard.goToStep', {
+					stepId: 0
+				});
+
+				monster.ui.alert(
+					'error',
+					monster.util.tryI18n(self.i18n.active().commonApp.portWizard.steps.general.errors, errorMessageKey)
+				);
 			});
 		},
 
@@ -503,6 +596,65 @@ define(function(require) {
 			return {
 				valid: true
 			};
+		},
+
+		/**
+		 * Get the losing and winning carriers for the phone numbers
+		 * @param  {Object} args
+		 * @param  {String[]} args.numbers  Phone numbers to look up
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} args.error  Error callback
+		 */
+		portWizardCarrierSelectionGetNumberCarriers: function(args) {
+			var self = this,
+				numbers = args.numbers;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardRequestPhoneNumbersLookup({
+						numbers: numbers,
+						success: function(data) {
+							waterfallCallback(null, data.numbers);
+						},
+						error: function(errorData) {
+							waterfallCallback(errorData);
+						}
+					});
+				},
+				function(numbersData, waterfallCallback) {
+					var findCommonCarriers = _.spread(_.intersection),
+						numbersByLosingCarrier = _
+							.groupBy(numbers, function(number) {
+								return _.get(numbersData, [
+									number,
+									'losing_carrier',
+									'name'
+								], 'Unknown');
+							}),
+						winningCarriers = _
+							.chain(numbersData)
+							.map(function(numberData) {
+								return _
+									.chain(numberData.carriers)
+									.filter('portability')
+									.map('name')
+									.value();
+							})
+							.thru(findCommonCarriers)
+							.value();
+
+					waterfallCallback(null, {
+						numbersByLosingCarrier: numbersByLosingCarrier,
+						winningCarriers: winningCarriers
+					});
+				}
+			], function(err, results) {
+				if (err) {
+					return args.error(err);
+				}
+
+				args.success(results);
+			});
 		},
 
 		/* OWNERSHIP CONFIRMATION STEP */
@@ -675,6 +827,38 @@ define(function(require) {
 		},
 
 		/**************************************************
+		 *                  API requests                  *
+		 **************************************************/
+
+		/**
+		 * Lookups details for a list of numbers
+		 * @param  {Object} args
+		 * @param  {String[]} args.numbers Phone numbers to look up
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} args.error  Error callback
+		 */
+		portWizardRequestPhoneNumbersLookup: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'phonebook.lookupNumbers',
+				data: {
+					data: {
+						numbers: args.numbers
+					}
+				},
+				success: function(data) {
+					args.success(data.data);
+				},
+				error: function(data, error, globalHandler) {
+					args.error({
+						isPhonebookUnavailable: _.includes([0, 500], error.status)
+					});
+				}
+			});
+		},
+
+		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
 
@@ -689,7 +873,7 @@ define(function(require) {
 		 * Validates a form input field
 		 * @param  {Element} element  Input element
 		 */
-		portWizardValidateFormField: function(element, event) {
+		portWizardValidateFormField: function(element) {
 			$(element).valid();
 		},
 
