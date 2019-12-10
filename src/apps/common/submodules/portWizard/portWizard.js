@@ -531,12 +531,7 @@ define(function(require) {
 						winningCarriers = carrierData.winningCarriers,
 						losingCarriersCount = _.size(numbersByLosingCarrier),
 						isSingleLosingCarrier = losingCarriersCount === 1,
-						isSingleLosingCarrierUnknown = _
-							.chain(numbersByLosingCarrier)
-							.keys()
-							.head()
-							.isEqual('Unknown')
-							.value(),
+						isSingleLosingCarrierUnknown = isSingleLosingCarrier && _.has(numbersByLosingCarrier, 'Unknown'),
 						noWinningCarriers = _.isEmpty(winningCarriers),
 						errorType = isSingleLosingCarrierUnknown
 							? 'unknownLosingCarriers'
@@ -630,7 +625,8 @@ define(function(require) {
 					});
 				},
 				function(numbersData, waterfallCallback) {
-					var numbersByLosingCarrier = _
+					var findCommonCarriers = _.spread(_.intersection),
+						numbersByLosingCarrier = _
 							.groupBy(numbers, function(number) {
 								return _.get(numbersData, [
 									number,
@@ -640,18 +636,14 @@ define(function(require) {
 							}),
 						winningCarriers = _
 							.chain(numbersData)
-							.map('carriers')
-							.reduce(function(commonCarriers, numberCarriers) {
-								var portableCarriers = _
-									.chain(numberCarriers)
+							.map(function(numberData) {
+								return _
+									.chain(numberData.carriers)
 									.filter('portability')
 									.map('name')
 									.value();
-
-								return _.isEmpty(commonCarriers)
-									? portableCarriers
-									: _.intersection(commonCarriers, portableCarriers);
-							}, [])
+							})
+							.thru(findCommonCarriers)
 							.value();
 
 					waterfallCallback(null, {
