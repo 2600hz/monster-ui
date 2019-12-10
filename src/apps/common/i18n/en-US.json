@@ -47,7 +47,37 @@
 				},
 				"carrierSelection": {
 					"label": "Carrier Selection",
-					"description": "Review numbers, select a winning carrier, and figure out what documents are required for your port."
+					"description": "Review numbers, select a winning carrier, and figure out what documents are required for your port.",
+					"multipleLosingCarriers": {
+						"title": "Oops! Something is wrong with the numbers you provided.",
+						"noticeAndDownload": {
+							"labels": {
+								"multipleLosingCarriersDescription": "To streamline your porting experience, a .csv output file has been generated for each losing carrier listed below. You will need to take each of these .csv files and submit an individual port request for each losing carrier.",
+								"unsupportedCarrierDescription": "To streamline your porting experience, a .csv output file has been generated for each losing carrier listed below, so you can review their numbers easily.",
+								"downloadFilesButton": "Download All {{variable}} .csv Files"
+							},
+							"notices": {
+								"multipleLosingCarriers": {
+									"title": "Multiple losing carriers",
+									"message": "The losing carrier must match on each number that you wish to port. The numbers must also all be portable to the same winning carrier."
+								},
+								"unknownLosingCarriers": {
+									"title": "Unknown losing carrier",
+									"message": "The losing carrier must be known. The numbers must also all be portable to the same winning carrier."
+								},
+								"noWinningCarriers": {
+									"title": "No winning carrier",
+									"message": "The numbers must all be portable to the same winning carrier."
+								}
+							}
+						},
+						"losingCarriers": {
+							"title": "Losing Carriers ({{variable}})",
+							"formats": {
+								"numberCount": "({{variable}} Numbers)"
+							}
+						}
+					}
 				},
 				"ownershipConfirmation": {
 					"label": "Ownership Confirmation",
@@ -64,6 +94,12 @@
 				"review": {
 					"label": "Review + Confirm",
 					"description": "Please review and confirm all your information before submitting your number port request."
+				},
+				"general": {
+					"errors": {
+						"phonebookUnavailable": "It was not possible to lookup the number information. Check if the Phonebook feature is available for your installation.",
+						"lookupNumbersError": "An error occurred while trying to lookup for phone numbers information."
+					}
 				}
 			}
 		}
