@@ -488,7 +488,6 @@ define(function(require) {
 				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
 				numbers = _.map(formattedNumbers, 'e164Number'),
 				initTemplateMultiple = function(dataTemplate) {
-					dataTemplate.errorType = 'noWinnerCarriers';
 					var $template = $(self.getTemplate({
 						name: 'step-carrierSelection-multiple',
 						data: {
