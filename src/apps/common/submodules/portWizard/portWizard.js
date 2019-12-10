@@ -558,12 +558,9 @@ define(function(require) {
 					waterfallCallback(null, $template);
 				}
 			], function(err, $template) {
-				if (!(_.isNil(err) || _.get(err, 'phonebookUnavailable'))) {
-					return monster.ui.alert(
-						'error',
-						self.i18n.active().commonApp.portWizard.steps.general.errors.lookupNumbersError
-					);
-				}
+				var errorMessageKey = _.get(err, 'phonebookUnavailable', false)
+					? 'phonebookUnavailable'
+					: 'lookupNumbersError';
 
 				if (_.isNil(err)) {
 					return callback({
@@ -579,7 +576,7 @@ define(function(require) {
 
 				monster.ui.alert(
 					'error',
-					self.i18n.active().commonApp.portWizard.steps.general.errors.phonebookUnavailable
+					monster.util.tryI18n(self.i18n.active().commonApp.portWizard.steps.general.errors, errorMessageKey)
 				);
 			});
 		},
@@ -853,12 +850,14 @@ define(function(require) {
 				success: function(data) {
 					args.success(data.data);
 				},
-				error: function(data, status) {
+				error: function(data, error, globalHandler) {
 					var errorData = {
-						phonebookUnavailable: data.status === 0
+						phonebookUnavailable: _.includes([0, 500], error.status)
 					};
 
 					_.has(args, 'error') && args.error(errorData);
+
+					globalHandler(data);
 				}
 			});
 		},
