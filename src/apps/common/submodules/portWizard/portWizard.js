@@ -877,7 +877,7 @@ define(function(require) {
 		 * Validates a form input field
 		 * @param  {Element} element  Input element
 		 */
-		portWizardValidateFormField: function(element, event) {
+		portWizardValidateFormField: function(element) {
 			$(element).valid();
 		},
 
