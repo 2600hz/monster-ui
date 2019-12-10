@@ -558,7 +558,7 @@ define(function(require) {
 					waterfallCallback(null, $template);
 				}
 			], function(err, $template) {
-				var errorMessageKey = _.get(err, 'phonebookUnavailable', false)
+				var errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
 					? 'phonebookUnavailable'
 					: 'lookupNumbersError';
 
@@ -603,7 +603,7 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String[]} args.numbers  Phone numbers to look up
 		 * @param  {Function} args.success  Success callback
-		 * @param  {Function} [args.error]  Error callback
+		 * @param  {Function} args.error  Error callback
 		 */
 		portWizardCarrierSelectionGetNumberCarriers: function(args) {
 			var self = this,
@@ -650,7 +650,7 @@ define(function(require) {
 				}
 			], function(err, results) {
 				if (err) {
-					return _.has(args, 'error') && args.error(err);
+					return args.error(err);
 				}
 
 				args.success(results);
@@ -835,7 +835,7 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String[]} args.numbers Phone numbers to look up
 		 * @param  {Function} args.success  Success callback
-		 * @param  {Function} [args.error]  Error callback
+		 * @param  {Function} args.error  Error callback
 		 */
 		portWizardRequestPhoneNumbersLookup: function(args) {
 			var self = this;
@@ -851,13 +851,9 @@ define(function(require) {
 					args.success(data.data);
 				},
 				error: function(data, error, globalHandler) {
-					var errorData = {
-						phonebookUnavailable: _.includes([0, 500], error.status)
-					};
-
-					_.has(args, 'error') && args.error(errorData);
-
-					globalHandler(data);
+					args.error({
+						isPhonebookUnavailable: _.includes([0, 500], error.status)
+					});
 				}
 			});
 		},
