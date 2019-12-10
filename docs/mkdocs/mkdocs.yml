@@ -48,6 +48,7 @@ pages:
     - 'docs/monster-ui/loadTab().md'
     - 'docs/monster-ui/mask().md'
     - 'docs/monster-ui/monthpicker().md'
+    - 'docs/monster-ui/markdownEditor().md'
     - 'docs/monster-ui/numberPicker().md'
     - 'docs/monster-ui/protectField().md'
     - 'docs/monster-ui/renderJSON().md'
@@ -58,7 +59,6 @@ pages:
     - 'docs/monster-ui/tooltips().md'
     - 'docs/monster-ui/validate().md'
     - 'docs/monster-ui/wysiwyg().md'
-    - 'docs/monster-ui/simplemde().md'
   - 'monster.util':
     - 'docs/monster-util/canAddExternalNumbers().md'
     - 'docs/monster-util/canImpersonate().md'
