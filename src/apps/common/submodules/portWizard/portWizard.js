@@ -561,7 +561,8 @@ define(function(require) {
 						shouldDisplaySingleTemplate = errorType === 'none',
 						dataTemplate = shouldDisplaySingleTemplate
 							? {
-								numbers: formattedNumbers,
+								numbers: _.map(formattedNumbers, 'e164Number'),
+								numbersCount: _.size(formattedNumbers),
 								winningCarriers: winningCarriers
 							}
 							: {

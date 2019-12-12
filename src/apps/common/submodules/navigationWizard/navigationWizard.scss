@@ -331,6 +331,24 @@ $media-size-medium: "(max-width : 980px)";
 			color: $woodsmoke;
 		}
 
+		.search-box {
+			width: 100%;
+
+			.search-query {
+				box-sizing: border-box;
+				width: 100%;
+				height: auto;
+				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+				font-size: 0.875rem;
+				line-height: 0.875rem;
+			}
+
+			.search-icon {
+				margin-left: -1.75rem;
+				color: $manatee;
+			}
+		}
+
 		.step-title {
 			padding-bottom: 1.5rem;
 			font-size: 23px;
@@ -435,6 +453,10 @@ $media-size-medium: "(max-width : 980px)";
 
 			.flex-item-5 {
 				width: 20%;
+			}
+
+			.flex-item-6 {
+				width: 16.6666%;
 			}
 
 			@include media-medium-or-print {
