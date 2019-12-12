@@ -28,6 +28,7 @@ require.config({
 		'jquery': 'js/vendor/jquery-1.9.1.min',
 		'jqueryui': 'js/vendor/jquery-ui-1.10.3.custom.min',
 		'jstz': 'js/vendor/jstz.min',
+		'jszip': 'js/vendor/jszip.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'libphonenumber': 'js/vendor/libphonenumber-js.min',
