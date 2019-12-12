@@ -31,6 +31,7 @@ require.config({
 		'jqueryui': 'js/vendor/jquery-ui-1.10.3.custom.min',
 		'jsoneditor': 'js/vendor/jsoneditor/jsoneditor-8.6.8.min',
 		'jstz': 'js/vendor/jstz.min',
+		'jszip': 'js/vendor/jszip.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'libphonenumber': 'js/vendor/libphonenumber-js.min',
