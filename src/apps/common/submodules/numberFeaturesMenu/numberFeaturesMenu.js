@@ -82,6 +82,14 @@ define(function(require) {
 				monster.pub('common.numberRenameCarrier.renderPopup', args);
 			});
 
+			template.find('.im-number').on('click', function() {
+				if ($(this).parents('.account-section').length) {
+					args.accountId = template.parents('.account-section').data('id');
+				}
+
+				monster.pub('common.numberIM.renderPopup', args);
+			});
+
 			template.find('.sync-number').on('click', function() {
 				var accountId = self.accountId;
 

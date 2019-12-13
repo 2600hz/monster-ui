@@ -1,0 +1,30 @@
+/* number_im POPUP */
+.trunkstore_popup.number_im {
+	width: 510px;
+}
+
+.trunkstore_popup.number_im form,
+.trunkstore_popup.number_im input {
+	margin: 0;
+}
+
+.trunkstore_popup.number_im .popup-content {
+	padding: 15px 25px;
+}
+
+.trunkstore_popup.number_im .popup-content:not(:first-child) {
+	border-top: 1px solid #ccc;
+}
+
+.trunkstore_popup.number_im .popup-content .popup-label {
+	margin: 0 10px 0 0;
+	display: inline-block;
+}
+
+.trunkstore_popup.number_im .help-box {
+	margin-top: 20px;
+}
+
+.trunkstore_popup.number_im .popup-actions .cancel-link {
+	margin-right: 10px;
+}
