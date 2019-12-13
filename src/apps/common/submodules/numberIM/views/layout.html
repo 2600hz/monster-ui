@@ -1,0 +1,22 @@
+<div class="trunkstore_popup number_im clearfix">
+	<form id="number_im">
+		<div class="popup-content">
+			<label class="popup-label" for="number_sms_enabled">{{ i18n.numberIM.sms.title }}</label>
+            {{#monsterSwitch}}<input type="checkbox" id="number_sms_enabled" name="sms.enabled"{{#if sms.enabled}} checked="checked"{{/if}}></input>{{/monsterSwitch}}
+            <br/>
+            <br/>
+            <label class="popup-label" for="number_mms_enabled">{{ i18n.numberIM.mms.title }}</label>
+            {{#monsterSwitch}}<input type="checkbox" id="number_mms_enabled" name="mms.enabled"{{#if mms.enabled}} checked="checked"{{/if}}></input>{{/monsterSwitch}}
+
+            {{#monsterText}}
+                {{i18n.numberIM.help}}
+            {{/monsterText}}
+		</div>
+		<div class="popup-content popup-actions clearfix">
+			<div class="pull-right">
+				<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+				<button type="button" class="monster-button monster-button-success save">{{ i18n.saveChanges }}</button>
+			</div>
+		</div>
+	</form>
+</div>
