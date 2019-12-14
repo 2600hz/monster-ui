@@ -1,0 +1,20 @@
+/* number_im POPUP */
+.trunkstore_popup.numberIm {
+	width: 510px;
+	margin: 0;
+
+	.popup-content {
+		padding: 15px 25px;
+	}
+
+	.form-actions {
+		display: flex;
+		justify-content: flex-end;
+		margin: 0;
+		padding: 15px 25px;
+
+		& > button:not(:last-child) {
+			margin-right: 10px;
+		}
+	}
+}
