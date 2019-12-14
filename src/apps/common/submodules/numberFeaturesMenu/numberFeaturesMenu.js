@@ -87,7 +87,7 @@ define(function(require) {
 					args.accountId = template.parents('.account-section').data('id');
 				}
 
-				monster.pub('common.numberIM.renderPopup', args);
+				monster.pub('common.numberIm.renderPopup', args);
 			});
 
 			template.find('.sync-number').on('click', function() {

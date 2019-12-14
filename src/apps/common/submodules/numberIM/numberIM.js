@@ -3,18 +3,27 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var numberIM = {
-		requests: {
-		},
+	var numberIm = {
 
 		subscribe: {
-			'common.numberIM.renderPopup': 'numberIMEdit'
+			'common.numberIm.renderPopup': 'numberImEdit'
 		},
-		numberIMEdit: function(args) {
+
+		/**
+		 * @param  {Object} args
+		 * @param  {String} args.phoneNumber
+		 * @param  {Object} [args.accountId]
+		 * @param  {Function} [args.callbacks.success]
+		 * @param  {Function} [args.callbacks.error]
+		 */
+		numberImEdit: function(args) {
 			var self = this,
 				argsCommon = {
-					success: function(dataNumber) {
-						self.numberIMRender(dataNumber, args.accountId, args.callbacks);
+					success: function(numberData) {
+						self.numberImRender(_.merge({
+							numberData: numberData,
+							accountId: args.accountId
+						}, args.callbacks));
 					},
 					number: args.phoneNumber
 				};
@@ -26,31 +35,50 @@ define(function(require) {
 			monster.pub('common.numbers.editFeatures', argsCommon);
 		},
 
-		numberIMRender: function(dataNumber, pAccountId, callbacks) {
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} args.numberData
+		 * @param  {Object} [args.accountId]
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
+		 */
+		numberImRender: function(args) {
 			var self = this,
-				accountId = pAccountId || self.accountId,
+				numberData = args.numberData,
+				accountId = _.get(args, 'accountId', self.accountId),
+				success = _.get(args, 'success', function() {}),
+				error = _.get(args, 'error', function() {}),
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: dataNumber.im || {},
-					submodule: 'numberIM'
+					data: numberData.im || {},
+					submodule: 'numberIm'
 				})),
 				popup;
 
 			popup_html.find('.save').on('click', function(ev) {
 				ev.preventDefault();
-				var IMFormData = monster.ui.getFormData('number_im');
 
-				$.extend(true, dataNumber, { im: IMFormData });
+				var $this = $(this),
+					formData = monster.ui.getFormData('form_number_im');
 
-				self.numberIMUpdateNumber(dataNumber.id, accountId, dataNumber,
-					function(data) {
-						var phoneNumber = monster.util.formatPhoneNumber(data.data.id),
+				$this.prop('disabled', 'disabled');
+
+				self.numberImPatchNumber({
+					data: {
+						accountId: accountId,
+						phoneNumber: encodeURIComponent(numberData.id),
+						data: {
+							im: formData
+						}
+					},
+					success: function(number) {
+						var phoneNumber = monster.util.formatPhoneNumber(number.id),
 							template = self.getTemplate({
-								name: '!' + self.i18n.active().numberIM.successUpdate,
+								name: '!' + self.i18n.active().numberIm.successUpdate,
 								data: {
 									phoneNumber: phoneNumber
 								},
-								submodule: 'numberIM'
+								submodule: 'numberIm'
 							});
 
 						monster.ui.toast({
@@ -58,48 +86,55 @@ define(function(require) {
 							message: template
 						});
 
-						popup.dialog('destroy').remove();
+						popup.dialog('close');
 
-						callbacks.success && callbacks.success(data);
+						success({
+							data: number
+						});
 					},
-					function(data) {
-						callbacks.error && callbacks.error(data);
+					error: function(dataError) {
+						$this.prop('disabled', false);
+						error(dataError);
 					}
-				);
+				});
 			});
 
 			popup_html.find('.cancel-link').on('click', function(e) {
 				e.preventDefault();
-				popup.dialog('destroy').remove();
+				popup.dialog('close');
 			});
 
 			popup = monster.ui.dialog(popup_html, {
-				title: self.i18n.active().numberIM.dialogTitle
+				title: self.i18n.active().numberIm.dialogTitle
 			});
 		},
 
-		numberIMUpdateNumber: function(phoneNumber, accountId, data, success, error) {
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} args.data.phoneNumber
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
+		 */
+		numberImPatchNumber: function(args) {
 			var self = this;
 
-			// The back-end doesn't let us set features anymore, they return the field based on the key set on that document.
-			delete data.features;
-
 			self.callApi({
-				resource: 'numbers.update',
-				data: {
-					accountId: accountId,
-					phoneNumber: encodeURIComponent(phoneNumber),
-					data: data
+				resource: 'numbers.patch',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data, status) {
+					_.has(args, 'success') && args.success(data.data);
 				},
-				success: function(_data, status) {
-					success && success(_data);
+				error: function(parsedError) {
+					_.has(args, 'error') && args.error(parsedError);
 				},
-				error: function(_data, status) {
-					error && error(_data);
+				onChargesCancelled: function() {
+					_.has(args, 'error') && args.error();
 				}
 			});
 		}
 	};
 
-	return numberIM;
+	return numberIm;
 });
