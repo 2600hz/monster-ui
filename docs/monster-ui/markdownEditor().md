@@ -1,7 +1,7 @@
 title: markdownEditor()
 
 # monster.ui.markdownEditor()
-The `monster.ui.markdownEditor()` function convert a simple textarea into a markdown editor.
+The `monster.ui.markdownEditor()` method converts a simple textarea into a markdown editor.
 
 ![](images/markdownEditor-preview.png)
 
@@ -14,11 +14,11 @@ monster.ui.markdownEditor(target[, options]);
 
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
-`target` | A jQuery object that will be converted to markdow editor. | `jQuery` | | `true`
-`options` | This will be a JavaScript Object, see the plugin [markdownEditor docs](https://simplemde.com/) for reference. | `Object`([#/options](#options)) | | `false`
+`target` | A jQuery object to be converted into a markdown editor. | `jQuery` | | `true`
+`options` | List of options used to instantiate a markdown editor (available [options](https://github.com/sparksuite/simplemde-markdown-editor#configuration)). | `Object`([#/options](#options)) | | `false`
 
 ## Description
-The `monster.ui.markdownEditor()` method convert a simple textarea element into a powerful markdown editor which is specified by the `target` parameter. The toolbar can be customized or hidden completely, please see [markdownEditor docs](https://simplemde.com/) for reference.
+The `monster.ui.markdownEditor()` method converts a simple textarea element into a powerful markdown editor which is specified by the `target` parameter. The toolbar can be customized or hidden completely, please see [markdownEditor docs](https://simplemde.com/) for reference.
 
 To initialize the default markdown editor, the only parameter needed is `target`:
 ```javascript
