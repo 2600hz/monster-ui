@@ -19,7 +19,7 @@
 				</div>
 				<div class="flex-row-container number-list">
 				{{#each @root.data.numbers}}
-					<div class="flex-item-6 number-list-item">
+					<div data-e164="{{this}}" class="flex-item-6 number-item">
 						{{formatPhoneNumber this}}
 					</div>
 				{{/each}}

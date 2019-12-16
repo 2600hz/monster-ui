@@ -527,6 +527,11 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
+					self.portWizardCarrierSelectionSingleBindEvents({
+						formattedNumbers: formattedNumbers,
+						template: $template
+					});
+
 					// TODO: Event binding and form validation
 
 					return $template;
@@ -663,6 +668,46 @@ define(function(require) {
 
 			blob = zip.generate({ type: 'blob' });
 			saveAs(blob, zipFileName);
+		},
+
+		portWizardCarrierSelectionSingleBindEvents: function(args) {
+			var self = this,
+				formattedNumbers = args.formattedNumbers,
+				$template = args.template,
+				$numberList = $template.find('.number-list');
+
+			$template
+				.find('input.search-query')
+					.on('keyup', _.debounce(function(e) {
+						var value = _.trim($(this).val()),
+							$elementsToShow = $(),
+							$elementsToHide = $();
+
+						_.each(formattedNumbers, function(formattedNumberData) {
+							var $numberItem = $numberList.find('[data-e164="' + formattedNumberData.e164Number + '"]'),
+								shouldDisplayNumberItem = _
+									.chain(formattedNumberData)
+									.pick([
+										'e164Number',
+										'nationalFormat',
+										'internationalFormat',
+										'userFormat'
+									])
+									.some(function(formattedNumber) {
+										return _.includes(formattedNumber, value);
+									})
+									.value();
+
+							if (shouldDisplayNumberItem) {
+								$elementsToShow = $elementsToShow.add($numberItem);
+							} else {
+								$elementsToHide = $elementsToHide.add($numberItem);
+							}
+						});
+
+						$elementsToShow.removeClass('number-item-hidden');
+						$elementsToHide.addClass('number-item-hidden');
+					}));
 		},
 
 		/**
