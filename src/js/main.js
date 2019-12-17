@@ -59,6 +59,7 @@ require.config({
 		'renderjson': 'js/vendor/renderjson',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
 		'signals': 'js/vendor/signals.min',
+		'simplemde': 'js/vendor/simplemde.min',
 		'templates': 'js/templates',
 		'tether': 'js/vendor/tether.min',
 		'timepicker': 'js/vendor/jquery.timepicker.min',
