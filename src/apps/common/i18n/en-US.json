@@ -86,6 +86,16 @@
 							"placeholders": {
 								"searchNumbers": "Search numbers"
 							}
+						},
+						"designateWinningCarrier": {
+							"title": "Designate a Winning Carrier",
+							"labels": {
+								"losingCarrier": "Losing Carrier",
+								"winningCarrier": "Winning Carrier"
+							},
+							"placeholders": {
+								"winningCarrier": "Select based on best quality"
+							}
 						}
 					}
 				},
