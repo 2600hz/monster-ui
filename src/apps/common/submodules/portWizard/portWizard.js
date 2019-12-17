@@ -672,11 +672,17 @@ define(function(require) {
 			saveAs(blob, zipFileName);
 		},
 
+		/**
+		 * Bind events for Carrier Selection step (single losing carrier view)
+		 * @param  {Object} args
+		 * @param  {Array} args.formattedNumbers  Formatted phone numbers
+		 * @param  {jQuery} args.template  Template
+		 */
 		portWizardCarrierSelectionSingleBindEvents: function(args) {
 			var self = this,
 				formattedNumbers = args.formattedNumbers,
-				numbersShown = _.map(formattedNumbers, 'e164Number'),
 				$template = args.template,
+				numbersShown = _.map(formattedNumbers, 'e164Number'),
 				$elements = $template.find('.number-list .number-item'),
 				$elementsShown = $elements,
 				filterNumberElements = function(filterText) {
@@ -739,7 +745,7 @@ define(function(require) {
 				};
 
 			$template
-				.find('input.search-query')
+				.find('#numbers_to_port_search_numbers')
 					.on('keyup', _.debounce(function() {
 						var value = _.trim($(this).val());
 
