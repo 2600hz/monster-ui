@@ -1090,5 +1090,18 @@
 			"noResults": "No matching results were found."
 		},
 		"selectedApps": "Applications Selected"
+	},
+
+	"numberIm": {
+		"sms" : {
+			"title": "SMS Services"
+		},
+		"mms" : {
+			"title": "MMS Services"
+		},
+		"label": "Messaging",
+		"help": "Enable or Disable messaging feature for this number.",
+		"dialogTitle": "Configure Messaging",
+		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}"
 	}
 }
