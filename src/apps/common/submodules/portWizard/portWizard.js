@@ -559,16 +559,30 @@ define(function(require) {
 		 * Utility funcion to validate the Carrier Selection form and extract data
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
-		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                                completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardCarrierSelectionUtil: function($template, args) {
-			var self = this;
+		portWizardCarrierSelectionUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				formData,
+				carrierSelectionData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				formData = monster.ui.getFormData($form.get(0));
+				carrierSelectionData = {
+					winningCarrier: _.get(formData, 'designateWinningCarrier.winningCarrier')
+				};
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					carrierSelection: carrierSelectionData
+				}
 			};
 		},
 
@@ -713,7 +727,8 @@ define(function(require) {
 						data: dataTemplate
 					},
 					submodule: 'portWizard'
-				}));
+				})),
+				$form = $template.find('form');
 
 			monster.ui.mask($template.find('.search-query'), 'phoneNumber');
 
@@ -722,7 +737,15 @@ define(function(require) {
 				template: $template
 			});
 
-			// TODO: Form validation
+			monster.ui.validate($form, {
+				rules: {
+					'designateWinningCarrier.winningCarrier': {
+						required: true
+					}
+				},
+				onfocusout: self.portWizardValidateFormField,
+				autoScrollOnInvalid: true
+			});
 
 			return $template;
 		},
