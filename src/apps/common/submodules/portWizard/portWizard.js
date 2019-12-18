@@ -489,13 +489,12 @@ define(function(require) {
 			var self = this,
 				portRequestName = _.get(args.data, 'nameAndNumbers.portRequestName'),
 				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
-				numbers = _.map(formattedNumbers, 'e164Number'),
 				carrierSelectionData = _.get(args.data, 'carrierSelection');
 
 			monster.waterfall([
 				function(waterfallCallback) {
 					self.portWizardCarrierSelectionGetNumberCarriers({
-						numbers: numbers,
+						formattedNumbers: formattedNumbers,
 						success: function(carrierData) {
 							waterfallCallback(null, carrierData);
 						},
@@ -521,7 +520,6 @@ define(function(require) {
 						shouldDisplaySingleTemplate = errorType === 'none',
 						$template = shouldDisplaySingleTemplate
 							? self.portWizardCarrierSelectionSingleGetTemplate({
-								formattedNumbers: formattedNumbers,
 								numbersCarrierData: numbersCarrierData,
 								carrierSelectionData: carrierSelectionData
 							})
@@ -588,7 +586,15 @@ define(function(require) {
 				numbersByLosingCarrier = args.numbersByLosingCarrier,
 				dataTemplate = {
 					errorType: errorType,
-					numbersByLosingCarrier: numbersByLosingCarrier,
+					numbersByLosingCarrier: _
+						.chain(numbersByLosingCarrier)
+						.map(function(carrierNumberGroup) {
+							return {
+								carrier: carrierNumberGroup.carrier,
+								numbers: _.map(carrierNumberGroup.numbers, 'e164Number')
+							};
+						})
+						.value(),
 					losingCarriersCount: _.size(numbersByLosingCarrier)
 				},
 				$template = $(self.getTemplate({
@@ -656,11 +662,15 @@ define(function(require) {
 				zip = new JSZip(),
 				blob;
 
-			_.each(numbersByLosingCarrier, function(numbers, carrier) {
-				var csvFileName = _.snakeCase(carrier) + '.csv',
-					formattedNumbers = _.join(numbers, '\n');
+			_.each(numbersByLosingCarrier, function(carrierNumberGroup) {
+				var csvFileName = _.snakeCase(carrierNumberGroup.carrier) + '.csv',
+					csvFormattedNumbers = _
+						.chain(carrierNumberGroup.numbers)
+						.map('e164Number')
+						.join('\n')
+						.value();
 
-				zip.file(csvFileName, formattedNumbers);
+				zip.file(csvFileName, csvFormattedNumbers);
 			});
 
 			blob = zip.generate({ type: 'blob' });
@@ -670,15 +680,15 @@ define(function(require) {
 		/**
 		 * Get template for Carrier Selection step (single losing carrier view)
 		 * @param  {Object} args
-		 * @param  {Array} args.formattedNumbers  Formatted phone numbers data
 		 * @param  {Object} args.numbersCarrierData  Carrier data for the port request phone numbers
 		 * @param  {Object} args.carrierSelectionData  Carrier selection step data
 		 */
 		portWizardCarrierSelectionSingleGetTemplate: function(args) {
 			var self = this,
-				formattedNumbers = args.formattedNumbers,
 				numbersCarrierData = args.numbersCarrierData,
 				carrierSelectionData = args.carrierSelectionData,
+				carrierNumberGroup = _.head(numbersCarrierData.numbersByLosingCarrier),
+				formattedNumbers = carrierNumberGroup.numbers,
 				numbers = _.map(formattedNumbers, 'e164Number'),
 				dataTemplate = {
 					numbersToPort: {
@@ -686,11 +696,7 @@ define(function(require) {
 						count: _.size(numbers)
 					},
 					designateWinningCarrier: {
-						losingCarrier: _
-							.chain(numbersCarrierData.numbersByLosingCarrier)
-							.keys()
-							.head()
-							.value(),
+						losingCarrier: carrierNumberGroup.carrier,
 						winningCarrier: _.get(carrierSelectionData, 'winningCarrier', ''),
 						winningCarrierList: _
 							.map(numbersCarrierData.winningCarriers, function(carrierName) {
@@ -805,18 +811,18 @@ define(function(require) {
 		/**
 		 * Get the losing and winning carriers for the phone numbers
 		 * @param  {Object} args
-		 * @param  {String[]} args.numbers  Phone numbers to look up
+		 * @param  {String[]} args.formattedNumbers  Formatted phone numbers to look up
 		 * @param  {Function} args.success  Success callback
 		 * @param  {Function} args.error  Error callback
 		 */
 		portWizardCarrierSelectionGetNumberCarriers: function(args) {
 			var self = this,
-				numbers = args.numbers;
+				formattedNumbers = args.formattedNumbers;
 
 			monster.waterfall([
 				function(waterfallCallback) {
 					self.portWizardRequestPhoneNumbersLookup({
-						numbers: numbers,
+						numbers: _.map(formattedNumbers, 'e164Number'),
 						success: function(data) {
 							waterfallCallback(null, data.numbers);
 						},
@@ -828,13 +834,25 @@ define(function(require) {
 				function(numbersData, waterfallCallback) {
 					var findCommonCarriers = _.spread(_.intersection),
 						numbersByLosingCarrier = _
-							.groupBy(numbers, function(number) {
+							.chain(formattedNumbers)
+							.groupBy(function(formattedNumber) {
 								return _.get(numbersData, [
-									number,
+									formattedNumber.e164Number,
 									'losing_carrier',
 									'name'
 								], 'Unknown');
-							}),
+							})
+							.map(function(groupedFormattedNumbers, carrierName) {
+								return {
+									carrier: carrierName,
+									numbers: _.sortBy(groupedFormattedNumbers, 'e164Number')
+								};
+							})
+							.sortBy(function(carrierNumberGroup) {
+								// Place the Unknown group at the top
+								return carrierNumberGroup.carrier === 'Unknown' ? '' : carrierNumberGroup.carrier;
+							})
+							.value(),
 						winningCarriers = _
 							.chain(numbersData)
 							.map(function(numberData) {
