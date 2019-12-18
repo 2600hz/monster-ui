@@ -527,7 +527,14 @@ define(function(require) {
 						submodule: 'portWizard'
 					}));
 
-					// TODO: Event binding and form validation
+					monster.ui.mask($template.find('.search-query'), 'phoneNumber');
+
+					self.portWizardCarrierSelectionSingleBindEvents({
+						formattedNumbers: formattedNumbers,
+						template: $template
+					});
+
+					// TODO: Form validation
 
 					return $template;
 				};
@@ -561,7 +568,8 @@ define(function(require) {
 						shouldDisplaySingleTemplate = errorType === 'none',
 						dataTemplate = shouldDisplaySingleTemplate
 							? {
-								numbers: formattedNumbers,
+								numbers: _.map(formattedNumbers, 'e164Number'),
+								numbersCount: _.size(formattedNumbers),
 								winningCarriers: winningCarriers
 							}
 							: {
@@ -662,6 +670,81 @@ define(function(require) {
 
 			blob = zip.generate({ type: 'blob' });
 			saveAs(blob, zipFileName);
+		},
+
+		portWizardCarrierSelectionSingleBindEvents: function(args) {
+			var self = this,
+				formattedNumbers = args.formattedNumbers,
+				numbersShown = _.map(formattedNumbers, 'e164Number'),
+				$template = args.template,
+				$elements = $template.find('.number-list .number-item'),
+				$elementsShown = $elements,
+				filterNumberElements = function(filterText) {
+					var $elementsToShow = $(),
+						$elementsToHide = $elementsShown,
+						numbersToShow = _
+							.chain(formattedNumbers)
+							.filter(function(formattedNumberData) {
+								return _
+									.chain(formattedNumberData)
+									.pick([
+										'e164Number',
+										'nationalFormat',
+										'internationalFormat',
+										'userFormat'
+									])
+									.some(function(formattedNumber) {
+										return _.includes(formattedNumber, filterText);
+									})
+									.value();
+							})
+							.map('e164Number')
+							.value(),
+						hiddenElementsCount = 0;
+
+					if (_.isEqual(numbersShown, numbersToShow)) {
+						return;
+					}
+
+					_.each(numbersToShow, function(number) {
+						var $numberItem = $elements.filter('[data-e164="' + number + '"]');
+						$elementsToShow = $elementsToShow.add($numberItem);
+					});
+
+					numbersShown = numbersToShow;
+					$elementsShown = $elementsToShow;
+
+					monster.waterfall([
+						function(waterfallCallback) {
+							if ($elementsToHide.length === 0) {
+								return waterfallCallback(null);
+							}
+							$elementsToHide.fadeOut(150, function() {
+								// The complete callback function is called once per element
+								hiddenElementsCount += 1;
+								if (hiddenElementsCount < $elementsToHide.length) {
+									return;
+								}
+
+								waterfallCallback(null);
+							});
+						}
+					], function() {
+						if ($elementsToShow.length === 0) {
+							return;
+						}
+
+						$elementsToShow.fadeIn(150);
+					});
+				};
+
+			$template
+				.find('input.search-query')
+					.on('keyup', _.debounce(function() {
+						var value = _.trim($(this).val());
+
+						filterNumberElements(value);
+					}, 350));
 		},
 
 		/**

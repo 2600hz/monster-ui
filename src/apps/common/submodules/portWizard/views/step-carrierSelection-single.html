@@ -1,2 +1,31 @@
 <div id="step_carrier_selection" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.carrierSelection.singleLosingCarrier as |carrierSelectionSingleI18n|}}
+	<div class="step-title">
+		{{carrierSelectionSingleI18n.title}}
+	</div>
+	<div class="step-body">
+		<div class="step-section">
+			<div class="section-title">
+				{{replaceVar carrierSelectionSingleI18n.numbersToPort.title @root.data.numbersCount}}
+			</div>
+			<div class="section-body">
+				<div class="flex-row-container">
+					<div class="flex-item-3">
+						<div class="search-box">
+							<input type="text" class="search-query" placeholder="{{carrierSelectionSingleI18n.numbersToPort.placeholders.searchNumbers}}">
+							{{telicon "search" class="search-icon"}}
+						</div>
+					</div>
+				</div>
+				<div class="flex-row-container number-list">
+				{{#each @root.data.numbers}}
+					<div data-e164="{{this}}" class="flex-item-6 number-item">
+						{{formatPhoneNumber this}}
+					</div>
+				{{/each}}
+				</div>
+			</div>
+		</div>
+	</div>
+{{/with}}
 </div>
