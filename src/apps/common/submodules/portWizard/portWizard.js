@@ -508,7 +508,7 @@ define(function(require) {
 						winningCarriers = numbersCarrierData.winningCarriers,
 						losingCarriersCount = _.size(numbersByLosingCarrier),
 						isSingleLosingCarrier = losingCarriersCount === 1,
-						isSingleLosingCarrierUnknown = isSingleLosingCarrier && _.has(numbersByLosingCarrier, 'Unknown'),
+						isSingleLosingCarrierUnknown = isSingleLosingCarrier && numbersByLosingCarrier[0].carrier === 'Unknown',
 						noWinningCarriers = _.isEmpty(winningCarriers),
 						errorType = isSingleLosingCarrierUnknown
 							? 'unknownLosingCarriers'
