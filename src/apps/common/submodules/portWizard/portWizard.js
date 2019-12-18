@@ -483,6 +483,12 @@ define(function(require) {
 		/**
 		 * Render the Carrier Selection step
 		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} args.data.nameAndNumbers  Name and numbers step data
+		 * @param  {String} args.data.nameAndNumbers.portRequestName  Port request name
+		 * @param  {Object} args.data.nameAndNumbers.numbersToPort  Data related to the numbers to be ported
+		 * @param  {Array} args.data.nameAndNumbers.numbersToPort.formattedNumbers  Formatted data for the phone numbers to be ported
+		 * @param  {Object} [args.data.carrierSelection]  Data specific for the current step
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardCarrierSelectionRender: function(args, callback) {
@@ -587,11 +593,11 @@ define(function(require) {
 		},
 
 		/**
-		 * Get template for Carrier Selection step (multiple losing carriers view)
+		 * Get the template for Carrier Selection step (multiple losing carriers view)
 		 * @param  {Object} args
 		 * @param  {String} args.portRequestName  Port request name
 		 * @param  {String} args.errorType  Error type for carrier selection
-		 * @param  {Object} args.numbersByLosingCarrier  Phone numbers grouped by losing carrier
+		 * @param  {Array} args.numbersByLosingCarrier  Phone numbers grouped by losing carrier
 		 */
 		portWizardCarrierSelectionMultipleGetTemplate: function(args) {
 			var self = this,
@@ -643,7 +649,7 @@ define(function(require) {
 		 * Bind events for Carrier Selection step (multiple losing carriers view)
 		 * @param  {Object} args
 		 * @param  {String} args.portRequestName  Port request name
-		 * @param  {Object} args.numbersByLosingCarrier  Numbers grouped by losing carrier
+		 * @param  {Array} args.numbersByLosingCarrier  Numbers grouped by losing carrier
 		 * @param  {jQuery} args.template  Step template
 		 */
 		portWizardCarrierSelectionMultipleBindEvents: function(args) {
@@ -692,9 +698,9 @@ define(function(require) {
 		},
 
 		/**
-		 * Get template for Carrier Selection step (single losing carrier view)
+		 * Get the template for Carrier Selection step (single losing carrier view)
 		 * @param  {Object} args
-		 * @param  {Object} args.numbersCarrierData  Carrier data for the port request phone numbers
+		 * @param  {Object} args.numbersCarrierData  Carrier data for the phone numbers to be ported
 		 * @param  {Object} args.carrierSelectionData  Carrier selection step data
 		 */
 		portWizardCarrierSelectionSingleGetTemplate: function(args) {
@@ -836,7 +842,7 @@ define(function(require) {
 		/**
 		 * Get the losing and winning carriers for the phone numbers
 		 * @param  {Object} args
-		 * @param  {String[]} args.formattedNumbers  Formatted phone numbers to look up
+		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to look up
 		 * @param  {Function} args.success  Success callback
 		 * @param  {Function} args.error  Error callback
 		 */
@@ -1078,7 +1084,7 @@ define(function(require) {
 		 **************************************************/
 
 		/**
-		 * Lookups details for a list of numbers
+		 * Looks up carrier details for a list of numbers
 		 * @param  {Object} args
 		 * @param  {String[]} args.numbers Phone numbers to look up
 		 * @param  {Function} args.success  Success callback
