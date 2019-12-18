@@ -78,6 +78,15 @@
 							}
 						},
 						"backButton": "Back to Numbers Input"
+					},
+					"singleLosingCarrier": {
+						"title": "Please review the selected numbers and designate a winning carrier.",
+						"numbersToPort": {
+							"title": "Numbers to Port ({{variable}})",
+							"placeholders": {
+								"searchNumbers": "Search numbers"
+							}
+						}
 					}
 				},
 				"ownershipConfirmation": {
