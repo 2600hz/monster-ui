@@ -740,6 +740,7 @@ define(function(require) {
 				numbersShown = _.map(formattedNumbers, 'e164Number'),
 				$elements = $template.find('.number-list .number-item'),
 				$elementsShown = $elements,
+				removeSpaces = _.partialRight(_.replace, /\s/g, ''),
 				filterNumberElements = function(filterText) {
 					var $elementsToShow = $(),
 						$elementsToHide = $elementsShown,
@@ -754,6 +755,7 @@ define(function(require) {
 										'internationalFormat',
 										'userFormat'
 									])
+									.map(removeSpaces)
 									.some(function(formattedNumber) {
 										return _.includes(formattedNumber, filterText);
 									})
@@ -802,7 +804,7 @@ define(function(require) {
 			$template
 				.find('#numbers_to_port_search_numbers')
 					.on('keyup', _.debounce(function() {
-						var value = _.trim($(this).val());
+						var value = removeSpaces($(this).val());
 
 						filterNumberElements(value);
 					}, 350));
