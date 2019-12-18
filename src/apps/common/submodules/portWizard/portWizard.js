@@ -490,54 +490,7 @@ define(function(require) {
 				portRequestName = _.get(args.data, 'nameAndNumbers.portRequestName'),
 				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
 				numbers = _.map(formattedNumbers, 'e164Number'),
-				initTemplateMultiple = function(dataTemplate) {
-					var $template = $(self.getTemplate({
-						name: 'step-carrierSelection-multiple',
-						data: {
-							data: dataTemplate
-						},
-						submodule: 'portWizard'
-					}));
-
-					monster.pub('common.navigationWizard.setButtonProps', [
-						{
-							button: 'next',
-							display: false
-						},
-						{
-							button: 'back',
-							content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
-						}
-					]);
-
-					self.portWizardCarrierSelectionMultipleBindEvents({
-						portRequestName: portRequestName,
-						numbersByLosingCarrier: dataTemplate.numbersByLosingCarrier,
-						template: $template
-					});
-
-					return $template;
-				},
-				initTemplateSingle = function(dataTemplate) {
-					var $template = $(self.getTemplate({
-						name: 'step-carrierSelection-single',
-						data: {
-							data: dataTemplate
-						},
-						submodule: 'portWizard'
-					}));
-
-					monster.ui.mask($template.find('.search-query'), 'phoneNumber');
-
-					self.portWizardCarrierSelectionSingleBindEvents({
-						formattedNumbers: formattedNumbers,
-						template: $template
-					});
-
-					// TODO: Form validation
-
-					return $template;
-				};
+				carrierSelectionData = _.get(args.data, 'carrierSelection');
 
 			monster.waterfall([
 				function(waterfallCallback) {
@@ -551,9 +504,9 @@ define(function(require) {
 						}
 					});
 				},
-				function(carrierData, waterfallCallback) {
-					var numbersByLosingCarrier = carrierData.numbersByLosingCarrier,
-						winningCarriers = carrierData.winningCarriers,
+				function(numbersCarrierData, waterfallCallback) {
+					var numbersByLosingCarrier = numbersCarrierData.numbersByLosingCarrier,
+						winningCarriers = numbersCarrierData.winningCarriers,
 						losingCarriersCount = _.size(numbersByLosingCarrier),
 						isSingleLosingCarrier = losingCarriersCount === 1,
 						isSingleLosingCarrierUnknown = isSingleLosingCarrier && _.has(numbersByLosingCarrier, 'Unknown'),
@@ -566,20 +519,17 @@ define(function(require) {
 									? 'none'
 									: 'multipleLosingCarriers',
 						shouldDisplaySingleTemplate = errorType === 'none',
-						dataTemplate = shouldDisplaySingleTemplate
-							? {
-								numbers: _.map(formattedNumbers, 'e164Number'),
-								numbersCount: _.size(formattedNumbers),
-								winningCarriers: winningCarriers
-							}
-							: {
-								errorType: errorType,
-								numbersByLosingCarrier: numbersByLosingCarrier,
-								losingCarriersCount: _.size(numbersByLosingCarrier)
-							},
 						$template = shouldDisplaySingleTemplate
-							? initTemplateSingle(dataTemplate)
-							: initTemplateMultiple(dataTemplate);
+							? self.portWizardCarrierSelectionSingleGetTemplate({
+								formattedNumbers: formattedNumbers,
+								numbersCarrierData: numbersCarrierData,
+								carrierSelectionData: carrierSelectionData
+							})
+							: self.portWizardCarrierSelectionMultipleGetTemplate({
+								portRequestName: portRequestName,
+								errorType: errorType,
+								numbersByLosingCarrier: numbersByLosingCarrier
+							});
 
 					waterfallCallback(null, $template);
 				}
@@ -625,7 +575,52 @@ define(function(require) {
 		},
 
 		/**
-		 * Bind events for Carrier Selection step (multiple losing carriers)
+		 * Get template for Carrier Selection step (multiple losing carriers view)
+		 * @param  {Object} args
+		 * @param  {String} args.portRequestName  Port request name
+		 * @param  {String} args.errorType  Error type for carrier selection
+		 * @param  {Object} args.numbersByLosingCarrier  Phone numbers grouped by losing carrier
+		 */
+		portWizardCarrierSelectionMultipleGetTemplate: function(args) {
+			var self = this,
+				portRequestName = args.portRequestName,
+				errorType = args.errorType,
+				numbersByLosingCarrier = args.numbersByLosingCarrier,
+				dataTemplate = {
+					errorType: errorType,
+					numbersByLosingCarrier: numbersByLosingCarrier,
+					losingCarriersCount: _.size(numbersByLosingCarrier)
+				},
+				$template = $(self.getTemplate({
+					name: 'step-carrierSelection-multiple',
+					data: {
+						data: dataTemplate
+					},
+					submodule: 'portWizard'
+				}));
+
+			monster.pub('common.navigationWizard.setButtonProps', [
+				{
+					button: 'next',
+					display: false
+				},
+				{
+					button: 'back',
+					content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
+				}
+			]);
+
+			self.portWizardCarrierSelectionMultipleBindEvents({
+				portRequestName: portRequestName,
+				numbersByLosingCarrier: numbersByLosingCarrier,
+				template: $template
+			});
+
+			return $template;
+		},
+
+		/**
+		 * Bind events for Carrier Selection step (multiple losing carriers view)
 		 * @param  {Object} args
 		 * @param  {String} args.portRequestName  Port request name
 		 * @param  {Object} args.numbersByLosingCarrier  Numbers grouped by losing carrier
@@ -673,9 +668,63 @@ define(function(require) {
 		},
 
 		/**
+		 * Get template for Carrier Selection step (single losing carrier view)
+		 * @param  {Object} args
+		 * @param  {Array} args.formattedNumbers  Formatted phone numbers data
+		 * @param  {Object} args.numbersCarrierData  Carrier data for the port request phone numbers
+		 * @param  {Object} args.carrierSelectionData  Carrier selection step data
+		 */
+		portWizardCarrierSelectionSingleGetTemplate: function(args) {
+			var self = this,
+				formattedNumbers = args.formattedNumbers,
+				numbersCarrierData = args.numbersCarrierData,
+				carrierSelectionData = args.carrierSelectionData,
+				numbers = _.map(formattedNumbers, 'e164Number'),
+				dataTemplate = {
+					numbersToPort: {
+						numbers: numbers,
+						count: _.size(numbers)
+					},
+					designateWinningCarrier: {
+						losingCarrier: _
+							.chain(numbersCarrierData.numbersByLosingCarrier)
+							.keys()
+							.head()
+							.value(),
+						winningCarrier: _.get(carrierSelectionData, 'winningCarrier', ''),
+						winningCarrierList: _
+							.map(numbersCarrierData.winningCarriers, function(carrierName) {
+								return {
+									value: carrierName,
+									label: _.startCase(carrierName)
+								};
+							})
+					}
+				},
+				$template = $(self.getTemplate({
+					name: 'step-carrierSelection-single',
+					data: {
+						data: dataTemplate
+					},
+					submodule: 'portWizard'
+				}));
+
+			monster.ui.mask($template.find('.search-query'), 'phoneNumber');
+
+			self.portWizardCarrierSelectionSingleBindEvents({
+				formattedNumbers: formattedNumbers,
+				template: $template
+			});
+
+			// TODO: Form validation
+
+			return $template;
+		},
+
+		/**
 		 * Bind events for Carrier Selection step (single losing carrier view)
 		 * @param  {Object} args
-		 * @param  {Array} args.formattedNumbers  Formatted phone numbers
+		 * @param  {Array} args.formattedNumbers  Formatted phone numbers data
 		 * @param  {jQuery} args.template  Template
 		 */
 		portWizardCarrierSelectionSingleBindEvents: function(args) {
