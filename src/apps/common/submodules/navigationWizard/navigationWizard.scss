@@ -496,6 +496,10 @@ $media-size-medium: "(max-width : 980px)";
 				width: 20%;
 			}
 
+			.flex-item-6 {
+				width: 16.6666%;
+			}
+
 			@include media-medium-or-print {
 				.flex-item-2 {
 					width: 100%;
