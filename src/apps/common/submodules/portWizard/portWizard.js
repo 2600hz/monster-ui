@@ -654,7 +654,7 @@ define(function(require) {
 		 */
 		portWizardCarrierSelectionMultipleBindEvents: function(args) {
 			var self = this,
-				portRequestName = args.portRequestName,
+				fileName = _.snakeCase(args.portRequestName) + '.zip',
 				numbersByLosingCarrier = args.numbersByLosingCarrier,
 				$template = args.template;
 
@@ -663,7 +663,7 @@ define(function(require) {
 					e.preventDefault();
 
 					self.portWizardCarrierSelectionMultipleDownloadNumbers({
-						fileName: _.snakeCase(portRequestName) + '.zip',
+						fileName: fileName,
 						numbersByLosingCarrier: numbersByLosingCarrier
 					});
 				});
