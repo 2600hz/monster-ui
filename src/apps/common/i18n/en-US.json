@@ -93,6 +93,9 @@
 								"losingCarrier": "Losing Carrier",
 								"winningCarrier": "Winning Carrier"
 							},
+							"help": {
+								"winningCarrier": "Select a winning carrier based on best quality, from our list of supported carriers"
+							},
 							"placeholders": {
 								"winningCarrier": "Select based on best quality"
 							}
