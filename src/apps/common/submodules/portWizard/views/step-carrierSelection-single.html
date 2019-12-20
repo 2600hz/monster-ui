@@ -66,6 +66,30 @@
 					</div>
 				</div>
 			</div>
+			<div class="step-section">
+				<div class="section-title">
+					{{carrierSelectionSingleI18n.requiredDocuments.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-2">
+							{{carrierSelectionSingleI18n.requiredDocuments.description}}
+						</div>
+					</div>
+					<div class="flex-row-container document-list">
+					{{#each @root.requiredDocuments as |document|}}
+						<div class="flex-item-1 flex-row-container document-item">
+							<div class="flex-item flex-initial document-icon">
+								{{telicon "file"}}
+							</div>
+							<div class="flex-item flex-fit">
+								{{tryI18n @root.i18n.commonApp.portWizard.steps.general.documents document}}
+							</div>
+						</div>
+					{{/each}}
+					</div>
+				</div>
+			</div>
 		</form>
 	</div>
 {{/with}}

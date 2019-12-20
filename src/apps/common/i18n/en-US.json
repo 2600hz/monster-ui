@@ -107,6 +107,10 @@
 							"placeholders": {
 								"winningCarrier": "Select based on best quality"
 							}
+						},
+						"requiredDocuments": {
+							"title": "Required Documents",
+							"description": "The following documents are required, and must be properly filled out in order for this port request to be submitted."
 						}
 					}
 				},
@@ -127,6 +131,19 @@
 					"description": "Please review and confirm all your information before submitting your number port request."
 				},
 				"general": {
+					"documents": {
+						"LOA": "DIDWW LOA for a particular country",
+						"CountryInfo": "Specific information for a particular country",
+						"Invoice": "Latest Invoice",
+						"AccountNum": "Account number required",
+						"TaxID": "Local TAX / VAT ID or company registration number",
+						"CustomerID": "ID / Passport copy / Company Registration certificate",
+						"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
+						"LocalAddr": "End-user’s local address from the same city as the number to be ported",
+						"ServiceAddr": "End-user’s Service address in the same country",
+						"ReleaseLetter": "Letter of Release from the losing provider",
+						"PaymentProof": "Latest Proof of Payment"
+					},
 					"errors": {
 						"phonebookUnavailable": "It was not possible to lookup the number information. Check if the Phonebook feature is available for your installation.",
 						"lookupNumbersError": "An error occurred while trying to lookup for phone numbers information."

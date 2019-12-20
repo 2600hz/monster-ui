@@ -809,6 +809,7 @@ define(function(require) {
 								label: _.startCase(carrierName)
 							};
 						}),
+					requiredDocuments: numbersCarrierData.requiredDocuments,
 					data: {
 						designateWinningCarrier: {
 							losingCarrier: carrierNumberGroup.carrier,
