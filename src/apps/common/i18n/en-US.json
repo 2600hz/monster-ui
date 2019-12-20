@@ -57,17 +57,25 @@
 								"downloadFilesButton": "Download All {{variable}} .csv Files"
 							},
 							"notices": {
+								"countryNotSupported": {
+									"title": "Country not supported",
+									"message": "The numbers that you wish to be ported belong to a country that is not currently supported."
+								},
+								"multipleCountries": {
+									"title": "Multiple countries",
+									"message": "The numbers that you wish to be ported must belong to the same country. The numbers must also all be portable to the same winning carrier."
+								},
 								"multipleLosingCarriers": {
 									"title": "Multiple losing carriers",
 									"message": "The losing carrier must match on each number that you wish to port. The numbers must also all be portable to the same winning carrier."
 								},
-								"unknownLosingCarriers": {
-									"title": "Unknown losing carrier",
-									"message": "The losing carrier must be known. The numbers must also all be portable to the same winning carrier."
-								},
 								"noWinningCarriers": {
 									"title": "No winning carrier",
 									"message": "The numbers must all be portable to the same winning carrier."
+								},
+								"unknownLosingCarriers": {
+									"title": "Unknown losing carrier",
+									"message": "The losing carrier must be known. The numbers must also all be portable to the same winning carrier."
 								}
 							}
 						},

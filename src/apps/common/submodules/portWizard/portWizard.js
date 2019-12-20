@@ -52,7 +52,7 @@ define(function(require) {
 					}
 				},
 				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']
-			}
+					}
 		},
 
 		/**
@@ -493,8 +493,10 @@ define(function(require) {
 		 */
 		portWizardCarrierSelectionRender: function(args, callback) {
 			var self = this,
-				portRequestName = _.get(args.data, 'nameAndNumbers.portRequestName'),
-				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
+				nameAndNumbersData = args.data.nameAndNumbers,
+				portRequestName = nameAndNumbersData.portRequestName,
+				numbersType = nameAndNumbersData.numbersToPort.type,
+				formattedNumbers = nameAndNumbersData.numbersToPort.formattedNumbers,
 				carrierSelectionData = _.get(args.data, 'carrierSelection');
 
 			monster.waterfall([
@@ -515,25 +517,37 @@ define(function(require) {
 						losingCarriersCount = _.size(numbersByLosingCarrier),
 						isSingleLosingCarrier = losingCarriersCount === 1,
 						isSingleLosingCarrierUnknown = isSingleLosingCarrier && numbersByLosingCarrier[0].carrier === 'Unknown',
-						noWinningCarriers = _.isEmpty(winningCarriers),
-						errorType = isSingleLosingCarrierUnknown
-							? 'unknownLosingCarriers'
-							: noWinningCarriers
-								? 'noWinningCarriers'
-								: isSingleLosingCarrier
-									? 'none'
-									: 'multipleLosingCarriers',
-						shouldDisplaySingleTemplate = errorType === 'none',
-						$template = shouldDisplaySingleTemplate
-							? self.portWizardCarrierSelectionSingleGetTemplate({
-								numbersCarrierData: numbersCarrierData,
-								carrierSelectionData: carrierSelectionData
-							})
-							: self.portWizardCarrierSelectionMultipleGetTemplate({
-								portRequestName: portRequestName,
-								errorType: errorType,
-								numbersByLosingCarrier: numbersByLosingCarrier
-							});
+						noWinningCarriers = isSingleLosingCarrier && _.isEmpty(winningCarriers),
+						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
+						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
+						isCountrySupported = _.has(self.appFlags.portWizard.requiredDocuments.requirementsByCountries, numbersCountryCode),
+						errorType = !isSingleLosingCarrier
+							? 'multipleLosingCarriers'
+							: isSingleLosingCarrierUnknown
+								? 'unknownLosingCarriers'
+								: noWinningCarriers
+									? 'noWinningCarriers'
+									: !isSameCountry
+										? 'multipleCountries'
+										: isCountrySupported
+											? 'none'
+											: 'countryNotSupported';
+
+					waterfallCallback(null, _.merge({
+						countryCode: numbersCountryCode,
+						errorType: errorType
+					}, numbersCarrierData));
+				},
+				function(numbersCarrierData, waterfallCallback) {
+					var $template = (numbersCarrierData.errorType === 'none')
+						? self.portWizardCarrierSelectionSingleGetTemplate({
+							numbersCarrierData: numbersCarrierData,
+							carrierSelectionData: carrierSelectionData
+						})
+						: self.portWizardCarrierSelectionMultipleGetTemplate({
+							portRequestName: portRequestName,
+							numbersCarrierData: numbersCarrierData
+						});
 
 					waterfallCallback(null, $template);
 				}
@@ -596,14 +610,15 @@ define(function(require) {
 		 * Get the template for Carrier Selection step (multiple losing carriers view)
 		 * @param  {Object} args
 		 * @param  {String} args.portRequestName  Port request name
-		 * @param  {String} args.errorType  Error type for carrier selection
-		 * @param  {Array} args.numbersByLosingCarrier  Phone numbers grouped by losing carrier
+		 * @param  {Object} args.numbersCarrierData  Carrier data for the phone numbers to be ported
+		 * @param  {String} args.numbersCarrierData.errorType  Error type for carrier selection
+		 * @param  {Array} args.numbersCarrierData.numbersByLosingCarrier  Phone numbers grouped by losing carrier
 		 */
 		portWizardCarrierSelectionMultipleGetTemplate: function(args) {
 			var self = this,
 				portRequestName = args.portRequestName,
-				errorType = args.errorType,
-				numbersByLosingCarrier = args.numbersByLosingCarrier,
+				errorType = args.numbersCarrierData.errorType,
+				numbersByLosingCarrier = args.numbersCarrierData.numbersByLosingCarrier,
 				dataTemplate = {
 					errorType: errorType,
 					numbersByLosingCarrier: _
@@ -718,14 +733,14 @@ define(function(require) {
 					designateWinningCarrier: {
 						losingCarrier: carrierNumberGroup.carrier,
 						winningCarrier: _.get(carrierSelectionData, 'winningCarrier', ''),
-						winningCarrierList: _
-							.map(numbersCarrierData.winningCarriers, function(carrierName) {
-								return {
-									value: carrierName,
-									label: _.startCase(carrierName)
-								};
+					winningCarrierList: _
+						.map(numbersCarrierData.winningCarriers, function(carrierName) {
+							return {
+								value: carrierName,
+								label: _.startCase(carrierName)
+							};
 							})
-					}
+						}
 				},
 				$template = $(self.getTemplate({
 					name: 'step-carrierSelection-single',
