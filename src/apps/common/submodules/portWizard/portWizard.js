@@ -730,23 +730,23 @@ define(function(require) {
 						numbers: numbers,
 						count: _.size(numbers)
 					},
-					designateWinningCarrier: {
-						losingCarrier: carrierNumberGroup.carrier,
-						winningCarrier: _.get(carrierSelectionData, 'winningCarrier', ''),
 					winningCarrierList: _
 						.map(numbersCarrierData.winningCarriers, function(carrierName) {
 							return {
 								value: carrierName,
 								label: _.startCase(carrierName)
 							};
-							})
+						}),
+					data: {
+						designateWinningCarrier: {
+							losingCarrier: carrierNumberGroup.carrier,
+							winningCarrier: _.get(carrierSelectionData, 'winningCarrier', '')
 						}
+					}
 				},
 				$template = $(self.getTemplate({
 					name: 'step-carrierSelection-single',
-					data: {
-						data: dataTemplate
-					},
+					data: dataTemplate,
 					submodule: 'portWizard'
 				})),
 				$form = $template.find('form');

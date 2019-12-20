@@ -7,7 +7,7 @@
 		<form id="form_carrier_selection">
 			<div class="step-section">
 				<div class="section-title">
-					{{replaceVar carrierSelectionSingleI18n.numbersToPort.title @root.data.numbersToPort.count}}
+					{{replaceVar carrierSelectionSingleI18n.numbersToPort.title @root.numbersToPort.count}}
 				</div>
 				<div class="section-body">
 					<div class="flex-row-container">
@@ -19,7 +19,7 @@
 						</div>
 					</div>
 					<div class="flex-row-container number-list">
-					{{#each @root.data.numbersToPort.numbers}}
+					{{#each @root.numbersToPort.numbers}}
 						<div data-e164="{{this}}" class="flex-item-6 number-item">
 							{{formatPhoneNumber this}}
 						</div>
@@ -57,7 +57,7 @@
 								<option value="">
 									{{carrierSelectionSingleI18n.designateWinningCarrier.placeholders.winningCarrier}}
 								</option>
-								{{#each @root.data.designateWinningCarrier.winningCarrierList}}
+								{{#each @root.winningCarrierList}}
 									<option value="{{value}}">{{label}}</option>
 								{{/each}}
 							{{/select}}
