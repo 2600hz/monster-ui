@@ -461,6 +461,11 @@ $media-size-medium: "(max-width : 980px)";
 				align-items: flex-start;
 			}
 
+			&.flex-align-bottom {
+				// Align items to bottom, to not stretch to the row's height
+				align-items: flex-end;
+			}
+
 			[class^="flex-item"],
 			[class*=" flex-item"] {
 				flex: 0 0 auto;
@@ -561,6 +566,7 @@ $media-size-medium: "(max-width : 980px)";
 			input, select {
 				box-sizing: border-box;
 				margin-bottom: 0;
+				min-height: 38px;
 				height: 38px;
 			}
 
