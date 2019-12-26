@@ -51,7 +51,60 @@ define(function(require) {
 						}
 					}
 				},
-				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']
+				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				requiredDocuments: {
+					documents: [
+						'LOA',
+						'CountryInfo',
+						'Invoice',
+						'AccountNum',
+						'TaxID',
+						'CustomerID',
+						'LegalAuth',
+						'LocalAddr',
+						'ServiceAddr',
+						'ReleaseLetter',
+						'PaymentProof'
+					],
+					requirementsByCountries: {
+						AT: { local: [0, 2, 3, 5], tollFree: [0, 1, 2] },
+						AU: { local: [0, 2], tollFree: [0, 2] },
+						BE: { local: [0, 2, 8], tollFree: [0, 2] },
+						BR: { local: [0, 2, 4, 5], tollFree: [0, 2, 5] },
+						CA: { local: [0, 2, 8], tollFree: [0, 2, 8] },
+						CH: { local: [0, 2], tollFree: [0, 1, 2] },
+						CL: { local: [0, 1, 2, 5], tollFree: [] },
+						CR: { local: [], tollFree: [0, 2, 5, 6] },
+						CZ: { local: [0, 2, 9], tollFree: [0, 2] },
+						DE: { local: [1, 2, 7, 9], tollFree: [1, 2] },
+						DK: { local: [0, 2], tollFree: [0, 2] },
+						ES: { local: [0, 2, 4], tollFree: [0, 2, 4] },
+						FI: { local: [0, 2, 4], tollFree: [0, 2, 4, 6] },
+						FR: { local: [0, 1, 2, 7], tollFree: [0, 1, 2, 8] },
+						GB: { local: [0, 2], tollFree: [0, 2] },
+						GR: { local: [0, 2, 4, 5], tollFree: [] },
+						HR: { local: [1, 2, 5], tollFree: [] },
+						IE: { local: [0, 2], tollFree: [0, 2] },
+						IL: { local: [0, 2, 5, 7], tollFree: [] },
+						IT: { local: [0, 2, 4, 8], tollFree: [0, 2, 4, 8] },
+						LT: { local: [0, 2, 5], tollFree: [0, 2] },
+						LU: { local: [0, 2, 8], tollFree: [0, 2] },
+						LV: { local: [0, 2], tollFree: [] },
+						MX: { local: [0, 1, 2, 5, 6], tollFree: [0, 1, 2, 5, 6] },
+						NL: { local: [0, 1, 2, 7], tollFree: [0, 1, 2] },
+						NO: { local: [0, 2, 5], tollFree: [0, 2, 5] },
+						NZ: { local: [0, 2], tollFree: [0, 2] },
+						PA: { local: [1, 2, 5, 10], tollFree: [] },
+						PE: { local: [1, 2, 5, 6], tollFree: [] },
+						PR: { local: [0, 2], tollFree: [] },
+						RO: { local: [0, 2, 5, 9], tollFree: [0, 2, 5] },
+						SE: { local: [0, 2], tollFree: [0, 2] },
+						SI: { local: [0, 2], tollFree: [] },
+						SK: { local: [0, 2, 9], tollFree: [0, 2] },
+						US: { local: [0, 2, 8], tollFree: [0, 2, 8] },
+						ZA: { local: [0, 1, 2, 5, 7, 10], tollFree: [] }
+					}
+				}
 			}
 		},
 
@@ -493,8 +546,10 @@ define(function(require) {
 		 */
 		portWizardCarrierSelectionRender: function(args, callback) {
 			var self = this,
-				portRequestName = _.get(args.data, 'nameAndNumbers.portRequestName'),
-				formattedNumbers = _.get(args.data, 'nameAndNumbers.numbersToPort.formattedNumbers'),
+				nameAndNumbersData = args.data.nameAndNumbers,
+				portRequestName = nameAndNumbersData.portRequestName,
+				numbersType = nameAndNumbersData.numbersToPort.type,
+				formattedNumbers = nameAndNumbersData.numbersToPort.formattedNumbers,
 				carrierSelectionData = _.get(args.data, 'carrierSelection');
 
 			monster.waterfall([
@@ -515,25 +570,56 @@ define(function(require) {
 						losingCarriersCount = _.size(numbersByLosingCarrier),
 						isSingleLosingCarrier = losingCarriersCount === 1,
 						isSingleLosingCarrierUnknown = isSingleLosingCarrier && numbersByLosingCarrier[0].carrier === 'Unknown',
-						noWinningCarriers = _.isEmpty(winningCarriers),
-						errorType = isSingleLosingCarrierUnknown
-							? 'unknownLosingCarriers'
-							: noWinningCarriers
-								? 'noWinningCarriers'
-								: isSingleLosingCarrier
-									? 'none'
-									: 'multipleLosingCarriers',
-						shouldDisplaySingleTemplate = errorType === 'none',
-						$template = shouldDisplaySingleTemplate
-							? self.portWizardCarrierSelectionSingleGetTemplate({
-								numbersCarrierData: numbersCarrierData,
-								carrierSelectionData: carrierSelectionData
-							})
-							: self.portWizardCarrierSelectionMultipleGetTemplate({
-								portRequestName: portRequestName,
-								errorType: errorType,
-								numbersByLosingCarrier: numbersByLosingCarrier
-							});
+						noWinningCarriers = isSingleLosingCarrier && _.isEmpty(winningCarriers),
+						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
+						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
+						isCountrySupported = _.has(self.appFlags.portWizard.requiredDocuments.requirementsByCountries, numbersCountryCode),
+						errorType = !isSingleLosingCarrier
+							? 'multipleLosingCarriers'
+							: isSingleLosingCarrierUnknown
+								? 'unknownLosingCarriers'
+								: noWinningCarriers
+									? 'noWinningCarriers'
+									: !isSameCountry
+										? 'multipleCountries'
+										: isCountrySupported
+											? 'none'
+											: 'countryNotSupported';
+
+					waterfallCallback(null, _.merge({
+						countryCode: numbersCountryCode,
+						errorType: errorType
+					}, numbersCarrierData));
+				},
+				function(numbersCarrierData, waterfallCallback) {
+					if (numbersCarrierData.errorType !== 'none') {
+						return waterfallCallback(null, numbersCarrierData);
+					}
+
+					var requiredDocumentsData = self.appFlags.portWizard.requiredDocuments,
+						getDocumentByIndex = _.partial(_.get, requiredDocumentsData.documents),
+						requiredDocuments = _
+							.chain(requiredDocumentsData.requirementsByCountries)
+							.get([numbersCarrierData.countryCode, numbersType])
+							.map(getDocumentByIndex)
+							.value();
+
+					self.portWizardSet('requiredDocuments', requiredDocuments);
+
+					waterfallCallback(null, _.assign(numbersCarrierData, {
+						requiredDocuments: requiredDocuments
+					}));
+				},
+				function(numbersCarrierData, waterfallCallback) {
+					var $template = (numbersCarrierData.errorType === 'none')
+						? self.portWizardCarrierSelectionSingleGetTemplate({
+							numbersCarrierData: numbersCarrierData,
+							carrierSelectionData: carrierSelectionData
+						})
+						: self.portWizardCarrierSelectionMultipleGetTemplate({
+							portRequestName: portRequestName,
+							numbersCarrierData: numbersCarrierData
+						});
 
 					waterfallCallback(null, $template);
 				}
@@ -596,14 +682,15 @@ define(function(require) {
 		 * Get the template for Carrier Selection step (multiple losing carriers view)
 		 * @param  {Object} args
 		 * @param  {String} args.portRequestName  Port request name
-		 * @param  {String} args.errorType  Error type for carrier selection
-		 * @param  {Array} args.numbersByLosingCarrier  Phone numbers grouped by losing carrier
+		 * @param  {Object} args.numbersCarrierData  Carrier data for the phone numbers to be ported
+		 * @param  {String} args.numbersCarrierData.errorType  Error type for carrier selection
+		 * @param  {Array} args.numbersCarrierData.numbersByLosingCarrier  Phone numbers grouped by losing carrier
 		 */
 		portWizardCarrierSelectionMultipleGetTemplate: function(args) {
 			var self = this,
 				portRequestName = args.portRequestName,
-				errorType = args.errorType,
-				numbersByLosingCarrier = args.numbersByLosingCarrier,
+				errorType = args.numbersCarrierData.errorType,
+				numbersByLosingCarrier = args.numbersCarrierData.numbersByLosingCarrier,
 				dataTemplate = {
 					errorType: errorType,
 					numbersByLosingCarrier: _
@@ -715,23 +802,24 @@ define(function(require) {
 						numbers: numbers,
 						count: _.size(numbers)
 					},
-					designateWinningCarrier: {
-						losingCarrier: carrierNumberGroup.carrier,
-						winningCarrier: _.get(carrierSelectionData, 'winningCarrier', ''),
-						winningCarrierList: _
-							.map(numbersCarrierData.winningCarriers, function(carrierName) {
-								return {
-									value: carrierName,
-									label: _.startCase(carrierName)
-								};
-							})
+					winningCarrierList: _
+						.map(numbersCarrierData.winningCarriers, function(carrierName) {
+							return {
+								value: carrierName,
+								label: _.startCase(carrierName)
+							};
+						}),
+					requiredDocuments: numbersCarrierData.requiredDocuments,
+					data: {
+						designateWinningCarrier: {
+							losingCarrier: carrierNumberGroup.carrier,
+							winningCarrier: _.get(carrierSelectionData, 'winningCarrier', '')
+						}
 					}
 				},
 				$template = $(self.getTemplate({
 					name: 'step-carrierSelection-single',
-					data: {
-						data: dataTemplate
-					},
+					data: dataTemplate,
 					submodule: 'portWizard'
 				})),
 				$form = $template.find('form');
