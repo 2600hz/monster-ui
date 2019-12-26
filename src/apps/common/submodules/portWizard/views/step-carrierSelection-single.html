@@ -4,28 +4,69 @@
 		{{carrierSelectionSingleI18n.title}}
 	</div>
 	<div class="step-body">
-		<div class="step-section">
-			<div class="section-title">
-				{{replaceVar carrierSelectionSingleI18n.numbersToPort.title @root.data.numbersCount}}
+		<form id="form_carrier_selection">
+			<div class="step-section">
+				<div class="section-title">
+					{{replaceVar carrierSelectionSingleI18n.numbersToPort.title @root.data.numbersToPort.count}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-3">
+							<div class="input-box iconography-input-left">
+								<input type="text" id="numbers_to_port_search_numbers" placeholder="{{carrierSelectionSingleI18n.numbersToPort.placeholders.searchNumbers}}">
+								{{telicon "search" class="iconography"}}
+							</div>
+						</div>
+					</div>
+					<div class="flex-row-container number-list">
+					{{#each @root.data.numbersToPort.numbers}}
+						<div data-e164="{{this}}" class="flex-item-6 number-item">
+							{{formatPhoneNumber this}}
+						</div>
+					{{/each}}
+					</div>
+				</div>
 			</div>
-			<div class="section-body">
-				<div class="flex-row-container">
-					<div class="flex-item-3">
-						<div class="search-box">
-							<input type="text" class="search-query" placeholder="{{carrierSelectionSingleI18n.numbersToPort.placeholders.searchNumbers}}">
-							{{telicon "search" class="search-icon"}}
+			<div class="step-section">
+				<div class="section-title">
+					{{carrierSelectionSingleI18n.designateWinningCarrier.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container flex-align-bottom">
+						<div class="flex-item-3">
+							<div class="input-box iconography-input-left">
+								<label for="designate_winning_carrier_losing_carrier">
+									{{carrierSelectionSingleI18n.designateWinningCarrier.labels.losingCarrier}}
+								</label>
+								<input id="designate_winning_carrier_losing_carrier" class="input-block-level" type="text" value="{{@root.data.designateWinningCarrier.losingCarrier}}" disabled>
+								{{telicon "lock" class="iconography"}}
+							</div>
+						</div>
+						<div class="flex-item flex-initial">
+							{{telicon "arrow-right--circle" class="field-middle-icon"}}
+						</div>
+						<div class="flex-item-3">
+							<label for="designate_winning_carrier_winning_carrier">
+								{{carrierSelectionSingleI18n.designateWinningCarrier.labels.winningCarrier}}
+								<span class="help-tip" title="{{carrierSelectionSingleI18n.designateWinningCarrier.help.winningCarrier}}" data-toggle="tooltip">
+									{{telicon "question--circle" class="iconography-small iconography-help"}}
+								</span>
+							</label>
+							<select id="designate_winning_carrier_winning_carrier" name="designateWinningCarrier.winningCarrier" class="input-block-level">
+							{{#select @root.data.designateWinningCarrier.winningCarrier}}
+								<option value="">
+									{{carrierSelectionSingleI18n.designateWinningCarrier.placeholders.winningCarrier}}
+								</option>
+								{{#each @root.data.designateWinningCarrier.winningCarrierList}}
+									<option value="{{value}}">{{label}}</option>
+								{{/each}}
+							{{/select}}
+							</select>
 						</div>
 					</div>
 				</div>
-				<div class="flex-row-container number-list">
-				{{#each @root.data.numbers}}
-					<div data-e164="{{this}}" class="flex-item-6 number-item">
-						{{formatPhoneNumber this}}
-					</div>
-				{{/each}}
-				</div>
 			</div>
-		</div>
+		</form>
 	</div>
 {{/with}}
 </div>

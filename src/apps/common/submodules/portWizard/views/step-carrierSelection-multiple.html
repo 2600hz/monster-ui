@@ -38,18 +38,18 @@
 				{{replaceVar carrierSelectionMultipleI18n.losingCarriers.title @root.data.losingCarriersCount}}
 			</div>
 			<div class="section-body">
-			{{#each @root.data.numbersByLosingCarrier as |numbers carrier|}}
+			{{#each @root.data.numbersByLosingCarrier as |carrierNumberGroup|}}
 				<div class="flex-row-container flex-align-top">
 					<div class="flex-item-4">
 						<div class="carrier-name">
-							{{carrier}}
+							{{carrierNumberGroup.carrier}}
 						</div>
 						<div class="carrier-number-count">
-							{{replaceVar carrierSelectionMultipleI18n.losingCarriers.formats.numberCount numbers.length}}
+							{{replaceVar carrierSelectionMultipleI18n.losingCarriers.formats.numberCount carrierNumberGroup.numbers.length}}
 						</div>
 					</div>
 					<div class="flex-item-4-3 flex-row-container number-list">
-					{{#each numbers}}
+					{{#each carrierNumberGroup.numbers}}
 						<div class="flex-item-5 number-item">
 							{{formatPhoneNumber this}}
 						</div>
