@@ -32,6 +32,12 @@ define(function(require) {
 					],
 					maxSize: 8
 				},
+				csvFiles: {
+					mimeTypes: [
+						'text/csv'
+					],
+					maxSize: 5
+				},
 				knownErrors: {
 					billUpload: {
 						carrier_error_7203: {}
@@ -339,56 +345,64 @@ define(function(require) {
 				$template = args.template,
 				$numbersArea = $template.find('#numbers_to_port_numbers'),
 				$fileInput = $template.find('#numbers_to_port_file'),
-				$fileNameInput = $template.find('#numbers_to_port_filename');
+				i18n = self.i18n.active().commonApp.portWizard.steps.general,
+				csvFilesRestrictions = self.appFlags.portWizard.csvFiles;
 
-			// Display the open file dialog when clicking any part of the file selector container.
-			// The click event handler was set to the container instead of the input and the button
-			// individually because the input is disabled, so the click event there is ignored.
-			$template
-				.find('.file-selector')
-					.on('click', function(e) {
-						// Check if the event has not been triggered programmatically,
-						// to prevent recursion
-						if (_.isUndefined(e.originalEvent)) {
-							return;
-						}
-
-						e.preventDefault();
-
-						$fileInput.trigger('click');
+			$fileInput.fileUpload({
+				wrapperClass: 'file-selector',
+				inputOnly: true,
+				inputPlaceholder: i18n.placeholders.file,
+				enableInputClick: true,
+				btnClass: 'monster-button',
+				btnText: i18n.labels.fileButton,
+				mimeTypes: csvFilesRestrictions.mimeTypes,
+				maxSize: csvFilesRestrictions.maxSize,
+				dataFormat: 'text',
+				success: function(results) {
+					self.portWizardNameAndNumbersProcessFile({
+						fileText: results[0].file,
+						numbersArea: $numbersArea
 					});
+				},
+				error: function(errorsList) {
+					var errorType = _
+							.chain(errorsList)
+							.pick('mimeTypes', 'size')
+							.map(function(files, errorType) {
+								return _.isEmpty(files) ? false : errorType;
+							})
+							.filter()
+							.concat([ 'unknown' ])
+							.sortBy()
+							.head()
+							.value(),
+						message = self.getTemplate({
+							name: '!' + monster.util.tryI18n(i18n.errors.file, errorType),
+							data: {
+								mimeTypes: _.join(csvFilesRestrictions.mimeTypes, ', '),
+								maxSize: csvFilesRestrictions.maxSize
+							}
+						});
 
-			$fileInput.on('change', function(e) {
-				var file = e.target.files[0];
-
-				self.portWizardNameAndNumbersProcessFile({
-					file: file,
-					fileNameInput: $fileNameInput,
-					numbersArea: $numbersArea
-				});
+					monster.ui.toast({
+						type: 'error',
+						message: message
+					});
+				}
 			});
 		},
 
 		/**
 		 * Process the uploaded numbers CSV file
 		 * @param  {Object} args
-		 * @param  {Object} args.file  File data
-		 * @param  {jQuery} args.fileNameInput  Text input that is used to display the uploaded file name
+		 * @param  {Object} args.fileText  File text data
 		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
 		 */
 		portWizardNameAndNumbersProcessFile: function(args) {
 			var self = this,
-				file = args.file,
-				$fileNameInput = args.fileNameInput,
 				$numbersArea = args.numbersArea,
-				isValid = file.name.match('.+(.csv)$'),
-				invalidMessageTemplate = self.getTemplate({
-					name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.file,
-					data: {
-						type: file.type
-					}
-				}),
-				callbacks = {
+				parseFileArgs = {
+					fileText: args.fileText,
 					success: function(results) {
 						monster.parallel([
 							function(parallelCallback) {
@@ -417,42 +431,26 @@ define(function(require) {
 							message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
 						});
 					}
-				},
-				parseFileArgs = _
-					.chain(args)
-					.pick('file', 'numbersArea')
-					.merge(callbacks)
-					.value();
-
-			if (!isValid) {
-				monster.ui.toast({
-					type: 'error',
-					message: invalidMessageTemplate
-				});
-
-				return;
-			}
+				};
 
 			self.portWizardNameAndNumbersParseFile(parseFileArgs);
-
-			$fileNameInput.val(file.name);
 		},
 
 		/**
 		 * Parses the uploaded CSV file to extract the phone numbers
 		 * @param  {Object} args
-		 * @param  {Object} args.file  File data
+		 * @param  {String} args.fileText  File text
 		 * @param  {Function} args.successs  Callback function to be executed once the parsing and
 		 *                                   number extraction has been completed successfully
 		 * @param  {Function} args.error  Callback function to be executed if the file parsing fails
 		 */
 		portWizardNameAndNumbersParseFile: function(args) {
 			var self = this,
-				file = args.file;
+				fileText = args.fileText;
 
 			monster.waterfall([
 				function(waterfallCallback) {
-					Papa.parse(file, {
+					Papa.parse(fileText, {
 						header: false,
 						skipEmptyLines: true,
 						complete: function(results) {
