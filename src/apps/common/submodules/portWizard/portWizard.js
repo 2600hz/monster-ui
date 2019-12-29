@@ -345,48 +345,16 @@ define(function(require) {
 				$template = args.template,
 				$numbersArea = $template.find('#numbers_to_port_numbers'),
 				$fileInput = $template.find('#numbers_to_port_file'),
-				i18n = self.i18n.active().commonApp.portWizard.steps.general,
 				csvFilesRestrictions = self.appFlags.portWizard.csvFiles;
 
-			$fileInput.fileUpload({
-				wrapperClass: 'file-selector',
-				inputOnly: true,
-				inputPlaceholder: i18n.placeholders.file,
-				enableInputClick: true,
-				btnClass: 'monster-button',
-				btnText: i18n.labels.fileButton,
-				mimeTypes: csvFilesRestrictions.mimeTypes,
-				maxSize: csvFilesRestrictions.maxSize,
+			self.portWizardInitUploadInput({
+				fileInput: $fileInput,
+				fileRestrictions: csvFilesRestrictions,
 				dataFormat: 'text',
 				success: function(results) {
 					self.portWizardNameAndNumbersProcessFile({
 						fileText: results[0].file,
 						numbersArea: $numbersArea
-					});
-				},
-				error: function(errorsList) {
-					var errorType = _
-							.chain(errorsList)
-							.pick('mimeTypes', 'size')
-							.map(function(files, errorType) {
-								return _.isEmpty(files) ? false : errorType;
-							})
-							.filter()
-							.concat([ 'unknown' ])
-							.sortBy()
-							.head()
-							.value(),
-						message = self.getTemplate({
-							name: '!' + monster.util.tryI18n(i18n.errors.file, errorType),
-							data: {
-								mimeTypes: _.join(csvFilesRestrictions.mimeTypes, ', '),
-								maxSize: csvFilesRestrictions.maxSize
-							}
-						});
-
-					monster.ui.toast({
-						type: 'error',
-						message: message
 					});
 				}
 			});
@@ -1195,11 +1163,70 @@ define(function(require) {
 					});
 				}
 			});
-		},
+					},
 
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
+
+		 /**
+		  * Initialize a file input field
+		  * @param  {Object} args
+		  * @param  {jQuery} args.fileInput  File input element
+		  * @param  {Object} args.fileRestrictions  File restrictions
+		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
+		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
+		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will be loaded
+		  * @param  {Function} args.success  Success callback
+		  * @param  {Function} [args.error]  Error callback
+		  */
+		portWizardInitUploadInput: function(args) {
+			var self = this,
+				$fileInput = args.fileInput,
+				fileRestrictions = args.fileRestrictions,
+				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
+				i18n = self.i18n.active().commonApp.portWizard.steps.general;
+
+			$fileInput.fileUpload({
+				wrapperClass: 'file-selector',
+				inputOnly: true,
+				inputPlaceholder: i18n.placeholders.file,
+				enableInputClick: true,
+				btnClass: 'monster-button',
+				btnText: i18n.labels.fileButton,
+				mimeTypes: fileRestrictions.mimeTypes,
+				maxSize: fileRestrictions.maxSize,
+				dataFormat: dataFormat,
+				success: args.success,
+				error: function(errorsList) {
+					var errorType = _
+							.chain(errorsList)
+							.pick('mimeTypes', 'size')
+							.map(function(files, errorType) {
+								return _.isEmpty(files) ? false : errorType;
+							})
+							.filter()
+							.concat([ 'unknown' ])
+							.sortBy()
+							.head()
+							.value(),
+						message = self.getTemplate({
+							name: '!' + monster.util.tryI18n(i18n.errors.file, errorType),
+							data: {
+								mimeTypes: _.join(fileRestrictions.mimeTypes, ', '),
+								maxSize: fileRestrictions.maxSize
+							}
+						});
+
+					monster.ui.toast({
+						type: 'error',
+						message: message
+					});
+
+					_.has(args, 'error') && args.error();
+				}
+			});
+		},
 
 		/**
 		 * Scroll window to top
