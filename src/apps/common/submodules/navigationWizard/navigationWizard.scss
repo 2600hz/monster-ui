@@ -494,11 +494,8 @@ $media-size-medium: "(max-width : 980px)";
 
 		.step-body {
 			label {
-				&:not(.monster-checkbox-large)
-					:not(.monster-switch)
-					:not(.monster-button)
-					:not(.label-button)
-					:not(.field-foot-notice) {
+				// Keep all the pseudo-classes together, or they will be interpreted as descendants if any whitespace is between them
+				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field) {
 					margin-bottom: 0.5rem;
 					line-height: 14px;
 				}
@@ -518,6 +515,19 @@ $media-size-medium: "(max-width : 980px)";
 					margin-top: 0.25rem;
 					line-height: 1.25rem;
 					font-size: 0.75rem;
+				}
+				&.form-field {
+					margin-bottom: 0;
+					line-height: 14px;
+
+					input, select {
+						margin-top: 0.5rem;
+					}
+
+					select {
+						display: block;
+						width: 100%;
+					}
 				}
 			}
 
