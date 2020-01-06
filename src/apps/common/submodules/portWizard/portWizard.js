@@ -630,9 +630,7 @@ define(function(require) {
 
 			if (isValid) {
 				formData = monster.ui.getFormData($form.get(0));
-				carrierSelectionData = {
-					winningCarrier: _.get(formData, 'designateWinningCarrier.winningCarrier')
-				};
+				carrierSelectionData = _.get(formData, 'designateWinningCarrier');
 			}
 
 			return {
