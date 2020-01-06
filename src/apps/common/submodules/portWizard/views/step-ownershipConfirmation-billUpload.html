@@ -1,0 +1,28 @@
+<div id="step_ownership_confirmation" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.ownershipConfirmation as |ownershipConfirmationI18n|}}
+	<div class="step-title">
+		{{replaceVar ownershipConfirmationI18n.title @root.losingCarrier}}
+	</div>
+	<div class="step-body">
+		<div class="step-section">
+			<div class="section-body">
+				<div class="flex-row-container">
+					<div class="flex-item-2">
+						<label for="bill_upload_recent_bill">
+							{{ownershipConfirmationI18n.billUpload.labels.recentBill}}
+						</label>
+						<input class="input-block-level" type="file" id="bill_upload_recent_bill" placeholder="{{ownershipConfirmationI18n.billUpload.placeholders.recentBill}}" accept=".pdf" />
+					</div>
+				</div>
+				<div class="flex-row-container">
+					<div class="flex-item-2">
+						{{#monsterCheckbox ownershipConfirmationI18n.billUpload.labels.acknowledgeBillDate}}
+							<input type="checkbox" id="bill_upload_acknowledge_bill_date" disabled/>
+						{{/monsterCheckbox}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{{/with}}
+</div>

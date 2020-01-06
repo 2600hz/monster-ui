@@ -113,7 +113,77 @@
 				},
 				"ownershipConfirmation": {
 					"label": "Ownership Confirmation",
-					"description": "Upload and review your most recent invoice from the losing carrier."
+					"description": "Upload and review your most recent invoice from the losing carrier.",
+					"title": "Upload a copy of your most recent bill from {{variable}} and verify some key info.",
+					"billUpload": {
+						"labels": {
+							"recentBill": "Most recent bill",
+							"acknowledgeBillDate": "I acknowledge the date on this bill is within the last 30 days"
+						}
+					},
+					"accountOwnership": {
+						"labels": {
+							"carrier": "Carrier",
+							"billName": "Account Name on Bill"
+						},
+						"placeholders": {
+							"carrier": "Name of carrier",
+							"billName": "Account name"
+						}
+					},
+					"serviceAddress": {
+						"title": "Service Address",
+						"labels": {
+							"streetPreDir": "Street Pre-direction",
+							"streetNumber": "Street Number",
+							"streetName": "Street Name",
+							"streetType": "Street Type",
+							"streetPostDir": "Street Post-direction",
+							"addressLine2": "Address Line 2",
+							"city": "City",
+							"state": "State/ Region/ Province",
+							"zip": "Zip/ Postal Code",
+							"country": "Country",
+							"directionals": {
+								"N": "N",
+								"S": "S",
+								"E": "E",
+								"W": "W",
+								"NE": "NE",
+								"NW": "NW",
+								"SE": "SE",
+								"SW": "SW"
+							},
+							"unspecifiedDir": "- Unspecified -"
+						},
+						"help": {
+							"streetPreDir": "A word preceding the street name that indicates the directional taken by the thoroughfare from an arbitrary starting point.",
+							"streetPostDir": "A word following the street name that indicates the directional taken by the thoroughfare from an arbitrary strating point."
+						},
+						"notices": {
+							"directionalNotRequired": "Not required unless specifically stated on bill."
+						},
+						"placeholders": {
+							"state": "State, region or province",
+							"zip": "Postal code"
+						}
+					},
+					"accountInfo": {
+						"description": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
+						"labels": {
+							"accountNumber": "Account Number",
+							"pinNumber": "PIN Number",
+							"btnNumber": "BTN Number"
+						},
+						"help": {
+							"btnNumber": "The Billing Telephone Number (BTN) is the number where the subscriber's account is billed and set up."
+						}
+					},
+					"latestBill": {
+						"labels": {
+							"uploadDifferentFile": "Upload a Different File"
+						}
+					}
 				},
 				"requiredDocuments": {
 					"label": "Required Documents",
@@ -157,7 +227,8 @@
 						"file": "No file selected..."
 					}
 				}
-			}
+			},
+			"title": "Creating a New Port Request"
 		}
 	},
 
