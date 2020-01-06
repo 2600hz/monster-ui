@@ -355,6 +355,14 @@ $media-size-medium: "(max-width : 980px)";
 			color: $woodsmoke;
 		}
 
+		.step-section {
+			margin-top: 1rem;
+
+			.section-title {
+				margin-top: 0;
+			}
+		}
+
 		.section-title {
 			margin-top: 1rem;
 			margin-bottom: 1.5rem;
@@ -513,6 +521,7 @@ $media-size-medium: "(max-width : 980px)";
 
 				&.field-foot-notice {
 					margin-top: 0.25rem;
+					margin-bottom: 0;
 					line-height: 1.25rem;
 					font-size: 0.75rem;
 				}
