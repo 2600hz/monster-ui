@@ -347,7 +347,7 @@ define(function(require) {
 				$fileInput = $template.find('#numbers_to_port_file'),
 				csvFilesRestrictions = self.appFlags.portWizard.csvFiles;
 
-			self.portWizardInitUploadInput({
+			self.portWizardInitFileUploadInput({
 				fileInput: $fileInput,
 				fileRestrictions: csvFilesRestrictions,
 				dataFormat: 'text',
@@ -368,40 +368,39 @@ define(function(require) {
 		 */
 		portWizardNameAndNumbersProcessFile: function(args) {
 			var self = this,
-				$numbersArea = args.numbersArea,
-				parseFileArgs = {
-					fileText: args.fileText,
-					success: function(results) {
-						monster.parallel([
-							function(parallelCallback) {
-								self.portWizardNameAndNumbersNotifyFileParsingResult(results);
+				$numbersArea = args.numbersArea;
 
-								parallelCallback(null);
-							},
-							function(parallelCallback) {
-								$numbersArea.val(function(i, text) {
-									var trimmedText = _.trim(text);
+			self.portWizardNameAndNumbersParseFile({
+				fileText: args.fileText,
+				success: function(results) {
+					monster.parallel([
+						function(parallelCallback) {
+							self.portWizardNameAndNumbersNotifyFileParsingResult(results);
 
-									if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
-										trimmedText += ', ';
-									}
+							parallelCallback(null);
+						},
+						function(parallelCallback) {
+							$numbersArea.val(function(i, text) {
+								var trimmedText = _.trim(text);
 
-									return trimmedText + _.join(results.numbers, ', ');
-								}).focus();
+								if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
+									trimmedText += ', ';
+								}
 
-								parallelCallback(null);
-							}
-						]);
-					},
-					error: function() {
-						monster.ui.toast({
-							type: 'error',
-							message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
-						});
-					}
-				};
+								return trimmedText + _.join(results.numbers, ', ');
+							}).focus();
 
-			self.portWizardNameAndNumbersParseFile(parseFileArgs);
+							parallelCallback(null);
+						}
+					]);
+				},
+				error: function() {
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
+					});
+				}
+			});
 		},
 
 		/**
@@ -1163,13 +1162,13 @@ define(function(require) {
 					});
 				}
 			});
-					},
+		},
 
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
 
-		 /**
+		/**
 		  * Initialize a file input field
 		  * @param  {Object} args
 		  * @param  {jQuery} args.fileInput  File input element
@@ -1180,7 +1179,7 @@ define(function(require) {
 		  * @param  {Function} args.success  Success callback
 		  * @param  {Function} [args.error]  Error callback
 		  */
-		portWizardInitUploadInput: function(args) {
+		portWizardInitFileUploadInput: function(args) {
 			var self = this,
 				$fileInput = args.fileInput,
 				fileRestrictions = args.fileRestrictions,
