@@ -16,7 +16,8 @@ define(function(require) {
 		Drop = require('drop'),
 		Clipboard = require('clipboard'),
 		moment = require('moment'),
-		simplemde = require('simplemde');
+		simplemde = require('simplemde'),
+		marked = require('marked');
 
 	require('chosen');
 	require('disableAutoFill');
@@ -1486,6 +1487,14 @@ define(function(require) {
 				autosave: false,
 				spellChecker: false
 			}, options));
+		},
+
+		/**
+		 * Render markdown back to HTML
+		 * @param {String} content - mandatory Content to be converted from markdown to HTML
+		 */
+		markdownToHtml: function(content) {
+			return marked(content);
 		},
 
 		/**
