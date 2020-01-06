@@ -30,7 +30,7 @@ define(function(require) {
 					mimeTypes: [
 						'application/pdf'
 					],
-					maxSize: 8
+					maxSize: 5
 				},
 				csvFiles: {
 					mimeTypes: [
@@ -969,12 +969,13 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardOwnershipConfirmationRender: function(args, callback) {
-			var self = this;
-
-			// TODO: Not implemented
+			var self = this,
+				$template = _.has(args.data, 'ownershipConfirmation.latestBill')
+					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate(args)
+					: self.portWizardOwnershipConfirmationBillUploadGetTemplate(args);
 
 			callback({
-				template: $(''),
+				template: $template,
 				callback: self.portWizardScrollToTop
 			});
 		},
@@ -994,6 +995,164 @@ define(function(require) {
 			return {
 				valid: true
 			};
+		},
+
+		/**
+		 * Get the template for Ownership Confirmation step (bill upload view)
+		 * @param  {Object} args  Wizard args
+		 */
+		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
+			var self = this,
+				$template = $(self.getTemplate({
+					name: 'step-ownershipConfirmation-billUpload',
+					data: {
+						losingCarrier: args.data.carrierSelection.losingCarrier
+					},
+					submodule: 'portWizard'
+				}));
+
+			self.portWizardOwnershipConfirmationBillUploadBindEvents({
+				template: $template
+			});
+
+			return $template;
+		},
+
+		/**
+		 * Bind Ownership Confirmation step events (bill upload view)
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 */
+		portWizardOwnershipConfirmationBillUploadBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				$billUploadInput = $template.find('#bill_upload_recent_bill'),
+				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
+				pdfFilesRestrictions = self.appFlags.portWizard.attachments,
+				latestBill;
+
+			self.portWizardInitFileUploadInput({
+				fileInput: $billUploadInput,
+				fileRestrictions: pdfFilesRestrictions,
+				success: function(results) {
+					latestBill = results[0];
+
+					$billAckCheckbox.prop('disabled', false);
+				}
+			});
+
+			$billAckCheckbox.on('change', function() {
+				if (!this.checked) {
+					return;
+				}
+
+				monster.pub('common.navigationWizard.goToStep', {
+					stepId: 2,
+					args: {
+						data: {
+							ownershipConfirmation: {
+								latestBill: latestBill
+							}
+						}
+					},
+					reload: true
+				});
+			});
+		},
+
+		/**
+		 * Get the template for Ownership Confirmation step (account information view)
+		 * @param  {Object} args  Wizard args
+		 */
+		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
+			var self = this,
+				data = args.data,
+				ownershipConfirmationData = data.ownershipConfirmation,
+				defaultCountry = monster.config.whitelabel.countryCode,
+				$template = $(self.getTemplate({
+					name: 'step-ownershipConfirmation-accountInfo',
+					data: {
+						data: ownershipConfirmationData,
+						directionals: self.appFlags.portWizard.cardinalDirections,
+						losingCarrier: data.carrierSelection.losingCarrier
+					},
+					submodule: 'portWizard'
+				})),
+				$billRenderContainer = $template.find('#latest_bill_document_container');
+
+			monster.ui.renderPDF(
+				ownershipConfirmationData.latestBill.file,
+				$billRenderContainer
+			);
+
+			$template
+				.find('input[data-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('mask');
+						$this.mask(mask);
+					});
+
+			$template
+				.find('input[data-monster-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('monster-mask');
+						monster.ui.mask($this, mask);
+					});
+
+			monster.ui.countrySelector(
+				$template.find('#service_address_country'),
+				{
+					selectedValues: _.get(ownershipConfirmationData, 'serviceAddress.country', defaultCountry)
+				}
+			);
+
+			monster.ui.tooltips($template);
+
+			self.portWizardOwnershipConfirmationAccountInfoBindEvents({
+				template: $template,
+				data: ownershipConfirmationData
+			});
+
+			return $template;
+		},
+
+		/**
+		 * Bind Ownership Confirmation step events (account information view)
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 * @param  {Object} args.data  Step data
+		 */
+		portWizardOwnershipConfirmationAccountInfoBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				data = args.data,
+				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
+				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
+				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
+				$billRenderContainer = $template.find('#latest_bill_document_container'),
+				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+
+			self.portWizardInitFileUploadInput({
+				fileInput: $billUploadInput,
+				fileRestrictions: pdfFilesRestrictions,
+				hidden: true,
+				success: function(results) {
+					data.latestBill = results[0];
+
+					monster.ui.renderPDF(
+						data.latestBill.file,
+						$billRenderContainer
+					);
+				}
+			});
+
+			$changeBillLink.on('click', function(e) {
+				e.preventDefault();
+
+				$billUploadInput.trigger('click');
+			});
 		},
 
 		/* REQUIRED DOCUMENTS STEP */
@@ -1174,6 +1333,7 @@ define(function(require) {
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
 		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will be loaded
+		  * @param  {Boolean} [args.hidden=false]  Hide file selector from view
 		  * @param  {Function} args.success  Success callback
 		  * @param  {Function} [args.error]  Error callback
 		  */
@@ -1182,14 +1342,17 @@ define(function(require) {
 				$fileInput = args.fileInput,
 				fileRestrictions = args.fileRestrictions,
 				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
+				hidden = _.get(args, 'hidden', false),
+				displayTextInput = !hidden,
 				i18n = self.i18n.active().commonApp.portWizard.steps.general;
 
 			$fileInput.fileUpload({
 				wrapperClass: 'file-selector',
-				inputOnly: true,
-				inputPlaceholder: i18n.placeholders.file,
-				enableInputClick: true,
+				inputOnly: displayTextInput,
+				inputPlaceholder: displayTextInput ? i18n.placeholders.file : null,
+				enableInputClick: displayTextInput,
 				btnClass: 'monster-button',
+				bigBtnClass: hidden ? 'hidden' : null,
 				btnText: i18n.labels.fileButton,
 				mimeTypes: fileRestrictions.mimeTypes,
 				maxSize: fileRestrictions.maxSize,
