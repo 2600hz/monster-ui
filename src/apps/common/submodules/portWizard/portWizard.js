@@ -250,6 +250,13 @@ define(function(require) {
 						})),
 						$form = $template.find('form');
 
+					monster.pub('common.navigationWizard.setButtonProps', [
+						{
+							button: 'back',
+							resetContent: true
+						}
+					]);
+
 					monster.ui.validate($form, {
 						rules: {
 							portRequestName: {
