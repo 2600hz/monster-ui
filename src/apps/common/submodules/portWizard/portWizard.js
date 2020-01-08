@@ -992,15 +992,26 @@ define(function(require) {
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                           completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardOwnershipConfirmationUtil: function($template, args) {
-			var self = this;
+		portWizardOwnershipConfirmationUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				ownershipConfirmationData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					ownershipConfirmation: ownershipConfirmationData
+				}
 			};
 		},
 
@@ -1085,7 +1096,8 @@ define(function(require) {
 					},
 					submodule: 'portWizard'
 				})),
-				$billRenderContainer = $template.find('#latest_bill_document_container');
+				$billRenderContainer = $template.find('#latest_bill_document_container'),
+				$form = $template.find('form');
 
 			monster.ui.renderPDF(
 				ownershipConfirmationData.latestBill.file,
@@ -1120,6 +1132,69 @@ define(function(require) {
 			self.portWizardOwnershipConfirmationAccountInfoBindEvents({
 				template: $template,
 				data: ownershipConfirmationData
+			});
+
+			monster.ui.validate($form, {
+				rules: {
+					'accountOwnership.carrier': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'accountOwnership.billName': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.streetNumber': {
+						required: true,
+						digits: true,
+						minlength: 1,
+						maxlength: 8
+					},
+					'serviceAddress.streetName': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.streetType': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.locality': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.region': {
+						required: true,
+						minlength: 2,
+						maxlength: 2
+					},
+					'serviceAddress.postalCode': {
+						required: true,
+						digits: true,
+						minlength: 5,
+						maxlength: 5
+					},
+					'serviceAddress.country': {
+						required: true
+					},
+					'accountInfo.accountNumber': {
+						required: true,
+						maxlength: 128
+					},
+					'accountInfo.pin': {
+						maxlength: 15
+					},
+					'accountInfo.btn': {
+						required: true,
+						maxlength: 20
+					}
+				},
+				onfocusout: self.portWizardValidateFormField,
+				autoScrollOnInvalid: true
 			});
 
 			return $template;
