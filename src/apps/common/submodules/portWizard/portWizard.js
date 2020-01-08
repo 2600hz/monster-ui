@@ -1444,10 +1444,8 @@ define(function(require) {
 					var errorType = _
 							.chain(errorsList)
 							.pick('mimeTypes', 'size')
-							.map(function(files, errorType) {
-								return _.isEmpty(files) ? false : errorType;
-							})
-							.filter()
+							.omitBy(_.isEmpty)
+							.keys()
 							.concat([ 'unknown' ])
 							.sortBy()
 							.head()
