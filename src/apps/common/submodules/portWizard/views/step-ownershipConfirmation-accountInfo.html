@@ -9,9 +9,9 @@
 			</span>
 		{{/if}}
 		{{#if ../hasContent}}	{{!-- Necessary to know if there is a @partial-block to render, and to avoid endless recursion --}}
-			{{> @partial-block value=(lookup (lookup @root.data section) ../name)}}
+			{{> @partial-block section=../section name=../name value=(lookup (lookup @root.data ../section) ../name)}}
 		{{else}}
-			<input class="input-block-level" type="text" name="{{section}}.{{../name}}" placeholder="{{coalesce (lookup sectionI18n.placeholders ../name) (tryI18n sectionI18n.labels ../name)}}"{{#if ../mask}} data-mask="{{../mask}}"{{else}}{{#if ../monsterMask}} data-monster-mask="{{../monsterMask}}"{{/if}}{{/if}} value="{{lookup (lookup @root.data section) ../name}}">
+			<input class="input-block-level" type="text" name="{{../section}}.{{../name}}" placeholder="{{coalesce (lookup sectionI18n.placeholders ../name) (tryI18n sectionI18n.labels ../name)}}"{{#if ../mask}} data-mask="{{../mask}}"{{else}}{{#if ../monsterMask}} data-monster-mask="{{../monsterMask}}"{{/if}}{{/if}} value="{{lookup (lookup @root.data ../section) ../name}}">
 		{{/if}}
 		</label>
 	{{/with}}
@@ -20,7 +20,7 @@
 
 {{#*inline "directionalDropdown"}}
 	{{#with @root.i18n.commonApp.portWizard.steps.ownershipConfirmation as |ownershipConfirmationI18n|}}
-		<select name="{{../name}}">
+		<select name="{{../section}}.{{../name}}">
 		{{#select ../value}}
 			<option value="">
 				{{ownershipConfirmationI18n.serviceAddress.labels.unspecifiedDir}}
