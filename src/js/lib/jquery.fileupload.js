@@ -154,7 +154,6 @@
 		});
 
 		wrapper.delegate('#file_upload_input_'.concat(id), 'keydown', function(event) {
-			console.log('event.which', event.which);
 			switch (event.which) {
 				case 8:
 				case 46:
