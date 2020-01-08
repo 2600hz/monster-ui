@@ -45,45 +45,47 @@
 	</div>
 	<div class="step-body flex-row-container">
 		<div class="flex-item-2">
-			<div class="step-section">
-				<div class="section-body flex-row-container">
-					{{> formFieldPartial section="accountOwnership" name="carrier"}}
-					{{> formFieldPartial section="accountOwnership" name="billName"}}
-				</div>
-			</div>
-			<div class="step-section">
-				<div class="section-title">
-					{{ownershipConfirmationI18n.serviceAddress.title}}
-				</div>
-				<div class="section-body flex-row-container">
-					{{#> formFieldPartial section="serviceAddress" name="streetPreDir" hasContent=true}}
-						{{> directionalDropdown}}
-					{{/formFieldPartial}}
-					{{> formFieldPartial section="serviceAddress" name="streetNumber" mask="000000000"}}
-					{{> formFieldPartial section="serviceAddress" name="streetName"}}
-					{{> formFieldPartial section="serviceAddress" name="streetType"}}
-					{{#> formFieldPartial section="serviceAddress" name="streetPostDir" hasContent=true}}
-						{{> directionalDropdown}}
-					{{/formFieldPartial}}
-					{{> formFieldPartial section="serviceAddress" name="addressLine2"}}
-					{{> formFieldPartial section="serviceAddress" name="city"}}
-					{{> formFieldPartial section="serviceAddress" name="state"}}
-					{{> formFieldPartial section="serviceAddress" name="zip" monsterMask="zipCode"}}
-					{{#> formFieldPartial section="serviceAddress" name="country" hasContent=true}}
-						<select id="service_address_country" name="serviceAddress.country"></select>
-					{{/formFieldPartial}}
-				</div>
-			</div>
-			<div class="step-section">
-				<div class="section-body flex-row-container">
-					<div class="flex-item-1">
-						{{ownershipConfirmationI18n.accountInfo.description}}
+			<form id="form_ownership_confirmation">
+				<div class="step-section">
+					<div class="section-body flex-row-container">
+						{{> formFieldPartial section="accountOwnership" name="carrier"}}
+						{{> formFieldPartial section="accountOwnership" name="billName"}}
 					</div>
-					{{> formFieldPartial section="accountInfo" name="accountNumber"}}
-					{{> formFieldPartial section="accountInfo" name="pinNumber"}}
-					{{> formFieldPartial section="accountInfo" name="btnNumber"}}
 				</div>
-			</div>
+				<div class="step-section">
+					<div class="section-title">
+						{{ownershipConfirmationI18n.serviceAddress.title}}
+					</div>
+					<div class="section-body flex-row-container">
+						{{#> formFieldPartial section="serviceAddress" name="streetPreDir" hasContent=true}}
+							{{> directionalDropdown}}
+						{{/formFieldPartial}}
+						{{> formFieldPartial section="serviceAddress" name="streetNumber" mask="000000000"}}
+						{{> formFieldPartial section="serviceAddress" name="streetName"}}
+						{{> formFieldPartial section="serviceAddress" name="streetType"}}
+						{{#> formFieldPartial section="serviceAddress" name="streetPostDir" hasContent=true}}
+							{{> directionalDropdown}}
+						{{/formFieldPartial}}
+						{{> formFieldPartial section="serviceAddress" name="addressLine2"}}
+						{{> formFieldPartial section="serviceAddress" name="locality"}}
+						{{> formFieldPartial section="serviceAddress" name="region"}}
+						{{> formFieldPartial section="serviceAddress" name="postalCode" monsterMask="zipCode"}}
+						{{#> formFieldPartial section="serviceAddress" name="country" hasContent=true}}
+							<select id="service_address_country" name="serviceAddress.country"></select>
+						{{/formFieldPartial}}
+					</div>
+				</div>
+				<div class="step-section">
+					<div class="section-body flex-row-container">
+						<div class="flex-item-1">
+							{{ownershipConfirmationI18n.accountInfo.description}}
+						</div>
+						{{> formFieldPartial section="accountInfo" name="accountNumber"}}
+						{{> formFieldPartial section="accountInfo" name="pin"}}
+						{{> formFieldPartial section="accountInfo" name="btn"}}
+					</div>
+				</div>
+			</form>
 		</div>
 		<div class="flex-item-2">
 			<div class="step-section">

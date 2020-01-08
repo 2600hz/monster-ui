@@ -140,9 +140,9 @@
 							"streetType": "Street Type",
 							"streetPostDir": "Street Post-direction",
 							"addressLine2": "Address Line 2",
-							"city": "City",
-							"state": "State/ Region/ Province",
-							"zip": "Zip/ Postal Code",
+							"locality": "City",
+							"region": "State/ Region/ Province",
+							"postalCode": "Zip/ Postal Code",
 							"country": "Country",
 							"directionals": {
 								"N": "N",
@@ -164,19 +164,19 @@
 							"directionalNotRequired": "Not required unless specifically stated on bill."
 						},
 						"placeholders": {
-							"state": "State, region or province",
-							"zip": "Postal code"
+							"region": "State, region or province",
+							"postalCode": "Postal code"
 						}
 					},
 					"accountInfo": {
 						"description": "Certain carriers also use an Account Number, a Personal Identification Number (PIN), and/also a Billing Telephone Number (BTN) to identify accounts. If your account contains either of these, you must provide them here.",
 						"labels": {
 							"accountNumber": "Account Number",
-							"pinNumber": "PIN Number",
-							"btnNumber": "BTN Number"
+							"pin": "PIN Number",
+							"btn": "BTN Number"
 						},
 						"help": {
-							"btnNumber": "The Billing Telephone Number (BTN) is the number where the subscriber's account is billed and set up."
+							"btn": "The Billing Telephone Number (BTN) is the number where the subscriber's account is billed and set up."
 						}
 					},
 					"latestBill": {
