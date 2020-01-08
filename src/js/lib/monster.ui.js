@@ -1490,7 +1490,7 @@ define(function(require) {
 		},
 
 		/**
-		 * Render markdown back to HTML
+		 * Render markdown as HTML
 		 * @param {String} content - mandatory Content to be converted from markdown to HTML
 		 */
 		markdownToHtml: function(content) {
