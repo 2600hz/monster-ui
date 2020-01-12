@@ -529,11 +529,13 @@ $media-size-medium: "(max-width : 980px)";
 					margin-bottom: 0;
 					line-height: 14px;
 
-					input, select {
+					> input,
+					> select,
+					> .file-selector {
 						margin-top: 0.5rem;
 					}
 
-					select {
+					> select {
 						display: block;
 						width: 100%;
 					}
