@@ -1421,7 +1421,7 @@ define(function(require) {
 					});
 				}
 			});
-		},
+						},
 
 		/**************************************************
 		 *               Utility functions                *
@@ -1431,10 +1431,13 @@ define(function(require) {
 		  * Initialize a file input field
 		  * @param  {Object} args
 		  * @param  {jQuery} args.fileInput  File input element
+		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
+		  *                                   text field
 		  * @param  {Object} args.fileRestrictions  File restrictions
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
-		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will be loaded
+		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will
+		  *                                                           be loaded
 		  * @param  {Boolean} [args.hidden=false]  Hide file selector from view
 		  * @param  {Function} args.success  Success callback
 		  * @param  {Function} [args.error]  Error callback
@@ -1442,6 +1445,7 @@ define(function(require) {
 		portWizardInitFileUploadInput: function(args) {
 			var self = this,
 				$fileInput = args.fileInput,
+				filesList = _.chain(args).pick('fileName').values().value(),
 				fileRestrictions = args.fileRestrictions,
 				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
 				hidden = _.get(args, 'hidden', false),
@@ -1452,6 +1456,7 @@ define(function(require) {
 				wrapperClass: 'file-selector',
 				inputOnly: displayTextInput,
 				inputPlaceholder: displayTextInput ? i18n.placeholders.file : null,
+				filesList: filesList,
 				enableInputClick: displayTextInput,
 				btnClass: 'monster-button',
 				bigBtnClass: hidden ? 'hidden' : null,
