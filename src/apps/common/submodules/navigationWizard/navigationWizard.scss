@@ -588,6 +588,7 @@ $media-size-medium: "(max-width : 980px)";
 
 			.file-selector {
 				display: flex;
+				position: relative;	// To display error messages properly
 
 				input {
 					&[type="text"] {
@@ -610,6 +611,10 @@ $media-size-medium: "(max-width : 980px)";
 					flex: initial;
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
+				}
+
+				.monster-invalid {
+					top: 38px;
 				}
 			}
 
