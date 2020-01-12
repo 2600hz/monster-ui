@@ -115,19 +115,27 @@ define(function(require) {
 		},
 
 		/**
+		 * Build the store path
+		 * @param  {Array|String} [path]
+		 */
+		portWizardBuildStorePath: function(path) {
+			var store = ['_store', 'portWizard'];
+			return _.isNil(path)
+				? store
+				: _.flatten([store, _.isString(path) ? path.split('.') : path]);
+		},
+
+		/**
 		 * Store getter
 		 * @param  {Array|String} [path]
 		 * @param  {*} [defaultValue]
 		 * @return {*}
 		 */
 		portWizardGet: function(path, defaultValue) {
-			var self = this,
-				store = ['_store', 'portWizard'];
+			var self = this;
 			return _.get(
 				self,
-				_.isUndefined(path)
-					? store
-					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+				self.portWizardBuildStorePath(path),
 				defaultValue
 			);
 		},
@@ -139,14 +147,23 @@ define(function(require) {
 		 */
 		portWizardSet: function(path, value) {
 			var self = this,
-				hasValue = _.toArray(arguments).length === 2,
-				store = ['_store', 'portWizard'];
+				hasValue = _.toArray(arguments).length === 2;
 			_.set(
 				self,
-				hasValue
-					? _.flatten([store, _.isString(path) ? path.split('.') : path])
-					: store,
+				self.portWizardBuildStorePath(hasValue ? path : null),
 				hasValue ? value : path
+			);
+		},
+
+		/**
+		 * Store un-setter
+		 * @param  {Array|String} [path]
+		 */
+		portWizardUnset: function(path) {
+			var self = this;
+			_.unset(
+				self,
+				self.portWizardBuildStorePath(path)
 			);
 		},
 
