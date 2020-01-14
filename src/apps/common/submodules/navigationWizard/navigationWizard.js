@@ -651,7 +651,7 @@ define(function(require) {
 				}
 
 				if (_.has(props, 'content')) {
-					button.content = buttonElement.children();
+					button.content = buttonElement.contents();
 
 					buttonElement
 						.empty()
