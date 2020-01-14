@@ -6,7 +6,8 @@
 			inputOnly: false,
 			multiple: false,
 			resultType: '[]',
-			dataFormat: 'dataURL'
+			dataFormat: 'dataURL',
+			enableInputClick: false
 		};
 
 	$.fn.fileUpload = function(args) {
@@ -31,6 +32,13 @@
 			}
 
 			wrapper.insertAfter(fileInput).append(fileInput, input, button);
+
+			if (options.enableInputClick) {
+				input
+					.on('click', function() {
+						fileInput.trigger('click');
+					});
+			}
 		} else {
 			wrapper.insertAfter(fileInput).append(fileInput, input, button);
 			bigButton.insertBefore(wrapper);
@@ -120,9 +128,9 @@
 						var color = input.css('color'),
 							bgColor = input.css('backgroundColor');
 
-						input.animate({'color': bgColor}, 300, function() {
+						input.animate({ 'color': bgColor }, 300, function() {
 							input.val(names);
-							input.animate({'color': color}, 300);
+							input.animate({ 'color': color }, 300);
 						});
 					} else {
 						input.val(names);

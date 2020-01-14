@@ -30,7 +30,13 @@ define(function(require) {
 					mimeTypes: [
 						'application/pdf'
 					],
-					maxSize: 8
+					maxSize: 5
+				},
+				csvFiles: {
+					mimeTypes: [
+						'text/csv'
+					],
+					maxSize: 5
 				},
 				knownErrors: {
 					billUpload: {
@@ -244,6 +250,13 @@ define(function(require) {
 						})),
 						$form = $template.find('form');
 
+					monster.pub('common.navigationWizard.setButtonProps', [
+						{
+							button: 'back',
+							resetContent: true
+						}
+					]);
+
 					monster.ui.validate($form, {
 						rules: {
 							portRequestName: {
@@ -339,120 +352,79 @@ define(function(require) {
 				$template = args.template,
 				$numbersArea = $template.find('#numbers_to_port_numbers'),
 				$fileInput = $template.find('#numbers_to_port_file'),
-				$fileNameInput = $template.find('#numbers_to_port_filename');
+				csvFilesRestrictions = self.appFlags.portWizard.csvFiles;
 
-			// Display the open file dialog when clicking any part of the file selector container.
-			// The click event handler was set to the container instead of the input and the button
-			// individually because the input is disabled, so the click event there is ignored.
-			$template
-				.find('.file-selector')
-					.on('click', function(e) {
-						// Check if the event has not been triggered programmatically,
-						// to prevent recursion
-						if (_.isUndefined(e.originalEvent)) {
-							return;
-						}
-
-						e.preventDefault();
-
-						$fileInput.trigger('click');
+			self.portWizardInitFileUploadInput({
+				fileInput: $fileInput,
+				fileRestrictions: csvFilesRestrictions,
+				dataFormat: 'text',
+				success: function(results) {
+					self.portWizardNameAndNumbersProcessFile({
+						fileText: results[0].file,
+						numbersArea: $numbersArea
 					});
-
-			$fileInput.on('change', function(e) {
-				var file = e.target.files[0];
-
-				self.portWizardNameAndNumbersProcessFile({
-					file: file,
-					fileNameInput: $fileNameInput,
-					numbersArea: $numbersArea
-				});
+				}
 			});
 		},
 
 		/**
 		 * Process the uploaded numbers CSV file
 		 * @param  {Object} args
-		 * @param  {Object} args.file  File data
-		 * @param  {jQuery} args.fileNameInput  Text input that is used to display the uploaded file name
+		 * @param  {Object} args.fileText  File text data
 		 * @param  {jQuery} args.numbersArea  Text Area that contains the port request's phone numbers
 		 */
 		portWizardNameAndNumbersProcessFile: function(args) {
 			var self = this,
-				file = args.file,
-				$fileNameInput = args.fileNameInput,
-				$numbersArea = args.numbersArea,
-				isValid = file.name.match('.+(.csv)$'),
-				invalidMessageTemplate = self.getTemplate({
-					name: '!' + self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.file,
-					data: {
-						type: file.type
-					}
-				}),
-				callbacks = {
-					success: function(results) {
-						monster.parallel([
-							function(parallelCallback) {
-								self.portWizardNameAndNumbersNotifyFileParsingResult(results);
+				$numbersArea = args.numbersArea;
 
-								parallelCallback(null);
-							},
-							function(parallelCallback) {
-								$numbersArea.val(function(i, text) {
-									var trimmedText = _.trim(text);
+			self.portWizardNameAndNumbersParseFile({
+				fileText: args.fileText,
+				success: function(results) {
+					monster.parallel([
+						function(parallelCallback) {
+							self.portWizardNameAndNumbersNotifyFileParsingResult(results);
 
-									if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
-										trimmedText += ', ';
-									}
+							parallelCallback(null);
+						},
+						function(parallelCallback) {
+							$numbersArea.val(function(i, text) {
+								var trimmedText = _.trim(text);
 
-									return trimmedText + _.join(results.numbers, ', ');
-								}).focus();
+								if (!(_.isEmpty(trimmedText) || _.endsWith(trimmedText, ','))) {
+									trimmedText += ', ';
+								}
 
-								parallelCallback(null);
-							}
-						]);
-					},
-					error: function() {
-						monster.ui.toast({
-							type: 'error',
-							message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
-						});
-					}
+								return trimmedText + _.join(results.numbers, ', ');
+							}).focus();
+
+							parallelCallback(null);
+						}
+					]);
 				},
-				parseFileArgs = _
-					.chain(args)
-					.pick('file', 'numbersArea')
-					.merge(callbacks)
-					.value();
-
-			if (!isValid) {
-				monster.ui.toast({
-					type: 'error',
-					message: invalidMessageTemplate
-				});
-
-				return;
-			}
-
-			self.portWizardNameAndNumbersParseFile(parseFileArgs);
-
-			$fileNameInput.val(file.name);
+				error: function() {
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.messages.file.parseError
+					});
+				}
+			});
 		},
 
 		/**
 		 * Parses the uploaded CSV file to extract the phone numbers
 		 * @param  {Object} args
-		 * @param  {Object} args.file  File data
+		 * @param  {String} args.fileText  File text
 		 * @param  {Function} args.successs  Callback function to be executed once the parsing and
 		 *                                   number extraction has been completed successfully
 		 * @param  {Function} args.error  Callback function to be executed if the file parsing fails
 		 */
 		portWizardNameAndNumbersParseFile: function(args) {
 			var self = this,
-				file = args.file;
+				fileText = args.fileText;
 
 			monster.waterfall([
 				function(waterfallCallback) {
-					Papa.parse(file, {
+					Papa.parse(fileText, {
 						header: false,
 						skipEmptyLines: true,
 						complete: function(results) {
@@ -665,9 +637,7 @@ define(function(require) {
 
 			if (isValid) {
 				formData = monster.ui.getFormData($form.get(0));
-				carrierSelectionData = {
-					winningCarrier: _.get(formData, 'designateWinningCarrier.winningCarrier')
-				};
+				carrierSelectionData = _.get(formData, 'designateWinningCarrier');
 			}
 
 			return {
@@ -1006,12 +976,13 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardOwnershipConfirmationRender: function(args, callback) {
-			var self = this;
-
-			// TODO: Not implemented
+			var self = this,
+				$template = _.has(args.data, 'ownershipConfirmation.latestBill')
+					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate(args)
+					: self.portWizardOwnershipConfirmationBillUploadGetTemplate(args);
 
 			callback({
-				template: $(''),
+				template: $template,
 				callback: self.portWizardScrollToTop
 			});
 		},
@@ -1021,16 +992,252 @@ define(function(require) {
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                           completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardOwnershipConfirmationUtil: function($template, args) {
-			var self = this;
+		portWizardOwnershipConfirmationUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				ownershipConfirmationData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					ownershipConfirmation: ownershipConfirmationData
+				}
 			};
+		},
+
+		/**
+		 * Get the template for Ownership Confirmation step (bill upload view)
+		 * @param  {Object} args  Wizard args
+		 */
+		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
+			var self = this,
+				$template = $(self.getTemplate({
+					name: 'step-ownershipConfirmation-billUpload',
+					data: {
+						losingCarrier: args.data.carrierSelection.losingCarrier
+					},
+					submodule: 'portWizard'
+				}));
+
+			self.portWizardOwnershipConfirmationBillUploadBindEvents({
+				template: $template
+			});
+
+			return $template;
+		},
+
+		/**
+		 * Bind Ownership Confirmation step events (bill upload view)
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 */
+		portWizardOwnershipConfirmationBillUploadBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				$billUploadInput = $template.find('#bill_upload_recent_bill'),
+				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
+				pdfFilesRestrictions = self.appFlags.portWizard.attachments,
+				latestBill;
+
+			self.portWizardInitFileUploadInput({
+				fileInput: $billUploadInput,
+				fileRestrictions: pdfFilesRestrictions,
+				success: function(results) {
+					latestBill = results[0];
+
+					$billAckCheckbox.prop('disabled', false);
+				}
+			});
+
+			$billAckCheckbox.on('change', function() {
+				if (!this.checked) {
+					return;
+				}
+
+				// Add a little delay so the user can see the checkbox being activated
+				_.delay(function() {
+					monster.pub('common.navigationWizard.goToStep', {
+						stepId: 2,
+						args: {
+							data: {
+								ownershipConfirmation: {
+									latestBill: latestBill
+								}
+							}
+						},
+						reload: true
+					});
+				}, 100);
+			});
+		},
+
+		/**
+		 * Get the template for Ownership Confirmation step (account information view)
+		 * @param  {Object} args  Wizard args
+		 */
+		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
+			var self = this,
+				data = args.data,
+				ownershipConfirmationData = data.ownershipConfirmation,
+				defaultCountry = monster.config.whitelabel.countryCode,
+				$template = $(self.getTemplate({
+					name: 'step-ownershipConfirmation-accountInfo',
+					data: {
+						data: ownershipConfirmationData,
+						directionals: self.appFlags.portWizard.cardinalDirections,
+						losingCarrier: data.carrierSelection.losingCarrier
+					},
+					submodule: 'portWizard'
+				})),
+				$billRenderContainer = $template.find('#latest_bill_document_container'),
+				$form = $template.find('form');
+
+			monster.ui.renderPDF(
+				ownershipConfirmationData.latestBill.file,
+				$billRenderContainer
+			);
+
+			$template
+				.find('input[data-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('mask');
+						$this.mask(mask);
+					});
+
+			$template
+				.find('input[data-monster-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('monster-mask');
+						monster.ui.mask($this, mask);
+					});
+
+			monster.ui.countrySelector(
+				$template.find('#service_address_country'),
+				{
+					selectedValues: _.get(ownershipConfirmationData, 'serviceAddress.country', defaultCountry)
+				}
+			);
+
+			monster.ui.tooltips($template);
+
+			self.portWizardOwnershipConfirmationAccountInfoBindEvents({
+				template: $template,
+				data: ownershipConfirmationData
+			});
+
+			monster.ui.validate($form, {
+				rules: {
+					'accountOwnership.carrier': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'accountOwnership.billName': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.streetNumber': {
+						required: true,
+						digits: true,
+						minlength: 1,
+						maxlength: 8
+					},
+					'serviceAddress.streetName': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.streetType': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.locality': {
+						required: true,
+						minlength: 1,
+						maxlength: 128
+					},
+					'serviceAddress.region': {
+						required: true,
+						minlength: 2,
+						maxlength: 2
+					},
+					'serviceAddress.postalCode': {
+						required: true,
+						digits: true,
+						minlength: 5,
+						maxlength: 5
+					},
+					'serviceAddress.country': {
+						required: true
+					},
+					'accountInfo.accountNumber': {
+						required: true,
+						maxlength: 128
+					},
+					'accountInfo.pin': {
+						maxlength: 15
+					},
+					'accountInfo.btn': {
+						required: true,
+						maxlength: 20
+					}
+				},
+				onfocusout: self.portWizardValidateFormField,
+				autoScrollOnInvalid: true
+			});
+
+			return $template;
+		},
+
+		/**
+		 * Bind Ownership Confirmation step events (account information view)
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 * @param  {Object} args.data  Step data
+		 */
+		portWizardOwnershipConfirmationAccountInfoBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				data = args.data,
+				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
+				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
+				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
+				$billRenderContainer = $template.find('#latest_bill_document_container'),
+				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+
+			self.portWizardInitFileUploadInput({
+				fileInput: $billUploadInput,
+				fileRestrictions: pdfFilesRestrictions,
+				hidden: true,
+				success: function(results) {
+					data.latestBill = results[0];
+
+					monster.ui.renderPDF(
+						data.latestBill.file,
+						$billRenderContainer
+					);
+				}
+			});
+
+			$changeBillLink.on('click', function(e) {
+				e.preventDefault();
+
+				$billUploadInput.trigger('click');
+			});
 		},
 
 		/* REQUIRED DOCUMENTS STEP */
@@ -1191,7 +1398,7 @@ define(function(require) {
 				success: function(data) {
 					args.success(data.data);
 				},
-				error: function(data, error, globalHandler) {
+				error: function(data, error) {
 					args.error({
 						isPhonebookUnavailable: _.includes([0, 500], error.status)
 					});
@@ -1202,6 +1409,67 @@ define(function(require) {
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
+
+		/**
+		  * Initialize a file input field
+		  * @param  {Object} args
+		  * @param  {jQuery} args.fileInput  File input element
+		  * @param  {Object} args.fileRestrictions  File restrictions
+		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
+		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
+		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will be loaded
+		  * @param  {Boolean} [args.hidden=false]  Hide file selector from view
+		  * @param  {Function} args.success  Success callback
+		  * @param  {Function} [args.error]  Error callback
+		  */
+		portWizardInitFileUploadInput: function(args) {
+			var self = this,
+				$fileInput = args.fileInput,
+				fileRestrictions = args.fileRestrictions,
+				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
+				hidden = _.get(args, 'hidden', false),
+				displayTextInput = !hidden,
+				i18n = self.i18n.active().commonApp.portWizard.steps.general;
+
+			$fileInput.fileUpload({
+				wrapperClass: 'file-selector',
+				inputOnly: displayTextInput,
+				inputPlaceholder: displayTextInput ? i18n.placeholders.file : null,
+				enableInputClick: displayTextInput,
+				btnClass: 'monster-button',
+				bigBtnClass: hidden ? 'hidden' : null,
+				btnText: i18n.labels.fileButton,
+				mimeTypes: fileRestrictions.mimeTypes,
+				maxSize: fileRestrictions.maxSize,
+				dataFormat: dataFormat,
+				success: args.success,
+				error: function(errorsList) {
+					var errorType = _
+							.chain(errorsList)
+							.pick('mimeTypes', 'size')
+							.omitBy(_.isEmpty)
+							.keys()
+							.concat([ 'unknown' ])
+							.sortBy()
+							.head()
+							.value(),
+						message = self.getTemplate({
+							name: '!' + monster.util.tryI18n(i18n.errors.file, errorType),
+							data: {
+								mimeTypes: _.join(fileRestrictions.mimeTypes, ', '),
+								maxSize: fileRestrictions.maxSize
+							}
+						});
+
+					monster.ui.toast({
+						type: 'error',
+						message: message
+					});
+
+					_.has(args, 'error') && args.error();
+				}
+			});
+		},
 
 		/**
 		 * Scroll window to top

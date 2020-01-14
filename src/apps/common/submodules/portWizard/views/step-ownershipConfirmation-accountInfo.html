@@ -1,0 +1,105 @@
+{{#*inline "formFieldPartial"}}
+	<div class="flex-item-1">
+	{{#with (lookup @root.i18n.commonApp.portWizard.steps.ownershipConfirmation section) as |sectionI18n|}}
+		<label class="form-field">
+			{{tryI18n sectionI18n.labels ../name}}
+		{{#if (lookup sectionI18n.help ../name)}}
+			<span class="help-tip" title="{{tryI18n sectionI18n.help ../name}}" data-toggle="tooltip">
+				{{telicon "question--circle" class="iconography-small iconography-help"}}
+			</span>
+		{{/if}}
+		{{#if ../hasContent}}	{{!-- Necessary to know if there is a @partial-block to render, and to avoid endless recursion --}}
+			{{> @partial-block section=../section name=../name value=(lookup (lookup @root.data ../section) ../name)}}
+		{{else}}
+			<input class="input-block-level" type="text" name="{{../section}}.{{../name}}" placeholder="{{coalesce (lookup sectionI18n.placeholders ../name) (tryI18n sectionI18n.labels ../name)}}"{{#if ../mask}} data-mask="{{../mask}}"{{else}}{{#if ../monsterMask}} data-monster-mask="{{../monsterMask}}"{{/if}}{{/if}} value="{{lookup (lookup @root.data ../section) ../name}}">
+		{{/if}}
+		</label>
+	{{/with}}
+	</div>
+{{/inline}}
+
+{{#*inline "directionalDropdown"}}
+	{{#with @root.i18n.commonApp.portWizard.steps.ownershipConfirmation as |ownershipConfirmationI18n|}}
+		<select name="{{../section}}.{{../name}}">
+		{{#select ../value}}
+			<option value="">
+				{{ownershipConfirmationI18n.serviceAddress.labels.unspecifiedDir}}
+			</option>
+			{{#each @root.directionals}}
+				<option value="{{this}}">
+					{{tryI18n ownershipConfirmationI18n.serviceAddress.labels.directionals this}}
+				</option>
+			{{/each}}
+		{{/select}}
+		</select>
+		<label class="field-foot-notice">
+			{{ownershipConfirmationI18n.serviceAddress.notices.directionalNotRequired}}
+		</label>
+	{{/with}}
+{{/inline}}
+
+<div id="step_ownership_confirmation" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.ownershipConfirmation as |ownershipConfirmationI18n|}}
+	<div class="step-title">
+		{{replaceVar ownershipConfirmationI18n.title @root.losingCarrier}}
+	</div>
+	<div class="step-body flex-row-container">
+		<div class="flex-item-2">
+			<form id="form_ownership_confirmation">
+				<div class="step-section">
+					<div class="section-body flex-row-container">
+						{{> formFieldPartial section="accountOwnership" name="carrier"}}
+						{{> formFieldPartial section="accountOwnership" name="billName"}}
+					</div>
+				</div>
+				<div class="step-section">
+					<div class="section-title">
+						{{ownershipConfirmationI18n.serviceAddress.title}}
+					</div>
+					<div class="section-body flex-row-container">
+						{{#> formFieldPartial section="serviceAddress" name="streetPreDir" hasContent=true}}
+							{{> directionalDropdown}}
+						{{/formFieldPartial}}
+						{{> formFieldPartial section="serviceAddress" name="streetNumber" mask="000000000"}}
+						{{> formFieldPartial section="serviceAddress" name="streetName"}}
+						{{> formFieldPartial section="serviceAddress" name="streetType"}}
+						{{#> formFieldPartial section="serviceAddress" name="streetPostDir" hasContent=true}}
+							{{> directionalDropdown}}
+						{{/formFieldPartial}}
+						{{> formFieldPartial section="serviceAddress" name="addressLine2"}}
+						{{> formFieldPartial section="serviceAddress" name="locality"}}
+						{{> formFieldPartial section="serviceAddress" name="region"}}
+						{{> formFieldPartial section="serviceAddress" name="postalCode" monsterMask="zipCode"}}
+						{{#> formFieldPartial section="serviceAddress" name="country" hasContent=true}}
+							<select id="service_address_country" name="serviceAddress.country"></select>
+						{{/formFieldPartial}}
+					</div>
+				</div>
+				<div class="step-section">
+					<div class="section-body flex-row-container">
+						<div class="flex-item-1">
+							{{ownershipConfirmationI18n.accountInfo.description}}
+						</div>
+						{{> formFieldPartial section="accountInfo" name="accountNumber"}}
+						{{> formFieldPartial section="accountInfo" name="pin"}}
+						{{> formFieldPartial section="accountInfo" name="btn"}}
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="flex-item-2">
+			<div class="step-section">
+				<div class="section-body">
+					<div id="latest_bill_change_file_wrapper">
+						<a class="monster-link blue" href="#">
+							{{ownershipConfirmationI18n.latestBill.labels.uploadDifferentFile}}
+						</a>
+						<input type="file" accept=".pdf" />
+					</div>
+					<div id="latest_bill_document_container"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+{{/with}}
+</div>
