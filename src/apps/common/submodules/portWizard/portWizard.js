@@ -648,11 +648,14 @@ define(function(require) {
 		portWizardCarrierSelectionUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
-				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				isSingleLosingCarrierView = $form.length > 0,
+				isValid = !eventArgs.completeStep
+					|| !isSingleLosingCarrierView
+					|| monster.ui.valid($form),
 				formData,
 				carrierSelectionData;
 
-			if (isValid) {
+			if (isValid && isSingleLosingCarrierView) {
 				formData = monster.ui.getFormData($form.get(0));
 				carrierSelectionData = _.get(formData, 'designateWinningCarrier');
 			}
