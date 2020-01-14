@@ -52,7 +52,7 @@ $media-size-medium: "(max-width : 980px)";
 			.fa {
 				float: left;
 				position: relative;
-				top: 4px;
+				top: 2px;
 			}
 
 			.fa-circle {
@@ -64,11 +64,19 @@ $media-size-medium: "(max-width : 980px)";
 				margin: 0 3px 3px 0;
 			}
 
+			.fa-check-circle,
+			.fa-exclamation-triangle {
+				height: 1rem;
+				font-size: 1rem;
+			}
+
 			.fa-check-circle {
 				color: #2ED022;
 				right: 22px;
-				height: 16px;
-				font-size: 16px;
+			}
+
+			.fa-exclamation-triangle {
+				right: 23px;
 			}
 
 			.description {
@@ -87,17 +95,32 @@ $media-size-medium: "(max-width : 980px)";
 
 				.fa,
 				.description {
-					display: none
+					display: none;
 				}
 
-				&.completed:not(.selected) .fa-check-circle,
-				&.visited:not(.completed) .fa-circle,
-				&.selected .fa-circle,
+				&.completed .fa-check-circle,
+				&.visited .fa-circle,
+				&.selected:not(.invalid) .fa-circle,
+				&.invalid .fa-exclamation-triangle,
 				&.selected .description {
 					display: block;
 				}
 
+				&.visited,
+				&.completed,
+				&.selected,
+				&.invalid {
+					padding-left: 6px;
+				}
+
+				&.visited,
+				&.completed {
+					cursor: pointer;
+				}
+
 				&.selected {
+					cursor: default;
+
 					li {
 						font-weight: bold !important;
 					}
@@ -108,17 +131,17 @@ $media-size-medium: "(max-width : 980px)";
 				}
 
 				&.visited {
-					cursor: pointer;
-
-					&:not(.completed):not(.selected) {
-						li {
-							font-style: italic;
-						}
-
-						.fa-circle {
-							color: $warning-color;
-						}
+					li {
+						font-style: italic;
 					}
+
+					.fa-circle {
+						color: $warning-color;
+					}
+				}
+
+				&.invalid .fa-exclamation-triangle {
+					color: $warning-color;
 				}
 			}
 		}
