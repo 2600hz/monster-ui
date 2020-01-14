@@ -610,15 +610,21 @@ define(function(require) {
 							numbersCarrierData: numbersCarrierData
 						});
 
-					waterfallCallback(null, $template);
+					waterfallCallback(null, {
+						errorType: numbersCarrierData.errorType,
+						template: $template
+					});
 				}
-			], function(err, $template) {
-				var errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
-					? 'phonebookUnavailable'
-					: 'lookupNumbersError';
+			], function(err, results) {
+				var errorType = results.errorType,
+					$template = results.template,
+					errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
+						? 'phonebookUnavailable'
+						: 'lookupNumbersError';
 
 				if (_.isNil(err)) {
 					return callback({
+						status: errorType === 'none' ? null : 'invalid',
 						template: $template,
 						callback: self.portWizardScrollToTop
 					});
