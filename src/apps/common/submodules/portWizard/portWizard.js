@@ -1064,17 +1064,20 @@ define(function(require) {
 					return;
 				}
 
-				monster.pub('common.navigationWizard.goToStep', {
-					stepId: 2,
-					args: {
-						data: {
-							ownershipConfirmation: {
-								latestBill: latestBill
+				// Add a little delay so the user can see the checkbox being activated
+				_.delay(function() {
+					monster.pub('common.navigationWizard.goToStep', {
+						stepId: 2,
+						args: {
+							data: {
+								ownershipConfirmation: {
+									latestBill: latestBill
+								}
 							}
-						}
-					},
-					reload: true
-				});
+						},
+						reload: true
+					});
+				}, 100);
 			});
 		},
 
@@ -1395,7 +1398,7 @@ define(function(require) {
 				success: function(data) {
 					args.success(data.data);
 				},
-				error: function(data, error, globalHandler) {
+				error: function(data, error) {
 					args.error({
 						isPhonebookUnavailable: _.includes([0, 500], error.status)
 					});
