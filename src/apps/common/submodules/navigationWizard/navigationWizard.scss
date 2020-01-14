@@ -397,6 +397,14 @@ $media-size-medium: "(max-width : 980px)";
 			padding: 0.5rem;
 		}
 
+		.step-section {
+			margin-top: 1rem;
+
+			.section-title {
+				margin-top: 0;
+			}
+		}
+
 		.section-title {
 			margin-top: 1rem;
 			margin-bottom: 1.5rem;
@@ -536,11 +544,8 @@ $media-size-medium: "(max-width : 980px)";
 
 		.step-body {
 			label {
-				&:not(.monster-checkbox-large)
-					:not(.monster-switch)
-					:not(.monster-button)
-					:not(.label-button)
-					:not(.field-foot-notice) {
+				// Keep all the pseudo-classes together, or they will be interpreted as descendants if any whitespace is between them
+				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field) {
 					margin-bottom: 0.5rem;
 					line-height: 14px;
 				}
@@ -558,8 +563,22 @@ $media-size-medium: "(max-width : 980px)";
 
 				&.field-foot-notice {
 					margin-top: 0.25rem;
+					margin-bottom: 0;
 					line-height: 1.25rem;
 					font-size: 0.75rem;
+				}
+				&.form-field {
+					margin-bottom: 0;
+					line-height: 14px;
+
+					input, select {
+						margin-top: 0.5rem;
+					}
+
+					select {
+						display: block;
+						width: 100%;
+					}
 				}
 			}
 
@@ -604,6 +623,33 @@ $media-size-medium: "(max-width : 980px)";
 					margin-right: 0.75rem;
 					width: 18px;
 					max-height: 20px;
+				}
+			}
+
+			.file-selector {
+				display: flex;
+
+				input {
+					&[type="text"] {
+						display: block;
+						flex: 1;
+						border-right: none;
+						border-top-right-radius: 0;
+						border-bottom-right-radius: 0;
+						cursor: pointer;
+					}
+					&[type="file"] {
+						// If display: none is used, Safari might disable this input
+						display: block;
+						width: 0;
+						height: 0;
+					}
+				}
+
+				button {
+					flex: initial;
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
 				}
 			}
 
