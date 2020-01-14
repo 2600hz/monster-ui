@@ -7,37 +7,6 @@
 		}
 	}
 
-	.file-selector {
-		display: flex;
-
-		input {
-			&[type="text"] {
-				display: block;
-				flex: 1;
-				border-right: none;
-				border-top-right-radius: 0;
-				border-bottom-right-radius: 0;
-
-				&[readonly] {
-					background-color: $panel-background-color;
-					cursor: pointer;
-				}
-			}
-			&[type="file"] {
-				// If display: none is used, Safari might disable this input
-				display: block;
-				width: 0;
-				height: 0;
-			}
-		}
-
-		button {
-			flex: initial;
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-		}
-	}
-
 	.numbers-file-upload .field-foot-notice {
 		line-height: 1rem;
 	}
