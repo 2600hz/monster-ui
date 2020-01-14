@@ -18,7 +18,8 @@ define(function(require) {
 				currentStep: 0,
 				buttons: {},
 				validateOnStepChange: false,
-				wizardArgs: {}
+				wizardArgs: {},
+				statuses: []
 			}
 		},
 
@@ -86,7 +87,13 @@ define(function(require) {
 						};
 					}),
 					currentStep: 0,
-					validateOnStepChange: false
+					validateOnStepChange: false,
+					statuses: [
+						'selected',
+						'visited',
+						'completed',
+						'invalid'
+					]
 				},
 				navigationWizardFlags = _.merge(
 					{},
@@ -107,9 +114,10 @@ define(function(require) {
 					return;
 				}
 
-				layout
-					.find('.step[data-id="' + step + '"]')
-						.addClass('completed visited');
+				self.navigationWizardSetStepStatuses({
+					stepId: step,
+					statuses: [ 'completed' ]
+				});
 			});
 
 			navigationWizardFlags.wizardArgs = args;
@@ -254,7 +262,7 @@ define(function(require) {
 
 			//Clicking on the menu item
 			template
-				.on('click', '.visited', function() {
+				.on('click', '.visited, .completed', function() {
 					var stepId = $(this).data('id');
 					self.navigationWizardGoToStep({
 						stepId: stepId
@@ -305,17 +313,21 @@ define(function(require) {
 			var self = this,
 				isCompleted = _.get(args, 'isCompleted', false),
 				navigationWizardFlags = self.appFlags.navigationWizard,
-				currentStep = navigationWizardFlags.currentStep,
-				$template = navigationWizardFlags.wizardArgs.template,
-				$currentStepItem = $template.find('div.step[data-id="' + currentStep + '"]');
-
-			$currentStepItem.removeClass('selected');
+				currentStep = navigationWizardFlags.currentStep;
 
 			if (!isCompleted) {
+				self.navigationWizardSetStepStatuses({
+					stepId: currentStep,
+					statuses: [ 'visited' ]
+				});
+
 				return;
 			}
 
-			$currentStepItem.addClass('completed');
+			self.navigationWizardSetStepStatuses({
+				stepId: currentStep,
+				statuses: [ 'completed' ]
+			});
 
 			if (currentStep > _.get(navigationWizardFlags, 'lastCompletedStep', -1)) {
 				navigationWizardFlags.lastCompletedStep = currentStep;
@@ -342,9 +354,10 @@ define(function(require) {
 					.empty()
 						.append(steps[stepId].template);
 
-			template
-				.find('.step[data-id="' + stepId + '"]')
-					.addClass('selected visited');
+			self.navigationWizardSetStepStatuses({
+				stepId: stepId,
+				statuses: [ 'selected' ]
+			});
 
 			//hide clear button if it's not a form
 			if (steps[stepId].default) {
@@ -372,6 +385,32 @@ define(function(require) {
 				template.find('#done').hide();
 				template.find('#next').show();
 			}
+		},
+
+		/**
+		 * Sets the statuses of a step in the left navigation bar
+		 * @param  {Object} args
+		 * @param  {Number} args.stepId  Step index
+		 * @param  {String[]} args.statuses Step statuses
+		 */
+		navigationWizardSetStepStatuses: function(args) {
+			var self = this,
+				stepId = args.stepId,
+				statuses = args.statuses,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				allStatuses = navigationWizardFlags.statuses,
+				cssClassesToRemove = _
+					.chain(allStatuses)
+					.without(statuses)
+					.join(' ')
+					.value(),
+				cssClassesToAdd = _.join(statuses, ' '),
+				$template = navigationWizardFlags.wizardArgs.template;
+
+			$template
+				.find('.step[data-id="' + stepId + '"]')
+					.removeClass(cssClassesToRemove)
+					.addClass(cssClassesToAdd);
 		},
 
 		/**
