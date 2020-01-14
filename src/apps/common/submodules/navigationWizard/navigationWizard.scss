@@ -47,7 +47,11 @@ $media-size-medium: "(max-width : 980px)";
 		width: 280px;
 
 		.nav {
-			margin: 33px 0 22px 20px;
+			margin: 33px 0 22px 1.5rem;
+
+			ol {
+				margin-left: 1rem;
+			}
 
 			.fa {
 				float: left;
@@ -152,7 +156,7 @@ $media-size-medium: "(max-width : 980px)";
 		margin-left: 281px;
 		border-bottom: 1px solid $input-border-color;
 		border-left: 1px solid $input-border-color;
-		min-height: calc(98vh - 200px);
+		min-height: calc(98vh - 190px);
 	}
 
 	.footer {
