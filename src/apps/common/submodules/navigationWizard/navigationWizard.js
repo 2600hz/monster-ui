@@ -418,16 +418,16 @@ define(function(require) {
 		 */
 		navigationWizardGenerateTemplate: function() {
 			var self = this,
-				appFlags = self.appFlags,
-				wizardArgs = appFlags.navigationWizard.wizardArgs,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				wizardArgs = navigationWizardFlags.wizardArgs,
 				thisArg = wizardArgs.thisArg,
 				steps = wizardArgs.steps,
-				currentStep = appFlags.navigationWizard.currentStep,
+				currentStep = navigationWizardFlags.currentStep,
 				currentStepData = steps[currentStep],
 				template = currentStepData.template,
 				render = currentStepData.render;
 
-			self.appFlags.navigationWizard.currentStep = currentStep;
+			navigationWizardFlags.currentStep = currentStep;
 
 			if (_.isUndefined(render)) {
 				thisArg[template](wizardArgs);
@@ -555,11 +555,13 @@ define(function(require) {
 		 */
 		navigationWizardRenderStepTemplate: function(args) {
 			var self = this,
-				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				wizardArgs = navigationWizardFlags.wizardArgs,
 				$wizardTemplate = wizardArgs.template,
 				$wizardFooterActions = $wizardTemplate.find('.footer .actions'),
 				thisArg = wizardArgs.thisArg,
 				$container = wizardArgs.container,
+				stepId = navigationWizardFlags.currentStep,
 				renderStepTemplate = args.callback,
 				loadTemplateOptions = _.get(args, 'options', {}),
 				enableFooterActions = function(enable) {
@@ -600,12 +602,22 @@ define(function(require) {
 				var appendTemplateCallback = results.appendTemplateCallback,
 					$template = results.template,
 					afterRenderCallback = results.callback,
+					status = _.get(results, 'status', null),
 					insertTemplateCallback = function() {
 						if (_.isFunction(afterRenderCallback)) {
 							afterRenderCallback();
 						}
 
 						enableFooterActions(true);
+
+						if (_.isNil(status)) {
+							return;
+						}
+
+						self.navigationWizardSetStepStatuses({
+							stepId: stepId,
+							statuses: [ 'selected', status ]
+						});
 					};
 
 				// Deferred, to ensure that the loading template does not replace the step template
