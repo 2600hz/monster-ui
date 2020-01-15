@@ -1090,7 +1090,8 @@ define(function(require) {
 				country: {
 					code: phoneNumber.country,
 					name: monster.timezone.getCountryName(phoneNumber.country)
-				}
+				},
+				numberType: phoneNumber.getType()
 			});
 
 			if (_.get(user, 'ui_flags.numbers_format', 'inherit') !== 'inherit') {
