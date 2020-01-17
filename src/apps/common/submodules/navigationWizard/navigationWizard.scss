@@ -330,6 +330,23 @@ $media-size-medium: "(max-width : 980px)";
 			}
 		}
 
+		.remove-item-button {
+			width: 38px;
+			height: 38px;
+			padding: 0;
+			margin-left: 0.5rem;
+			color: $midgray2;
+
+			.iconography-medium {
+				margin-left: -6px;
+				margin-top: -3px;
+			}
+
+			&:hover:not([disabled]) {
+				color: $danger-color;
+			}
+		}
+
 		.btn-group {
 			height: 38px;
 
