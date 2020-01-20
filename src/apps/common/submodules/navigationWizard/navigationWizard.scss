@@ -556,11 +556,13 @@ $media-size-medium: "(max-width : 980px)";
 					margin-bottom: 0;
 					line-height: 14px;
 
-					input, select {
+					> input,
+					> select,
+					> .file-selector {
 						margin-top: 0.5rem;
 					}
 
-					select {
+					> select {
 						display: block;
 						width: 100%;
 					}
@@ -613,6 +615,7 @@ $media-size-medium: "(max-width : 980px)";
 
 			.file-selector {
 				display: flex;
+				position: relative;	// To display error messages properly
 
 				input {
 					&[type="text"] {
@@ -635,6 +638,10 @@ $media-size-medium: "(max-width : 980px)";
 					flex: initial;
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
+				}
+
+				.monster-invalid {
+					top: 38px;
 				}
 			}
 

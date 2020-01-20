@@ -115,19 +115,27 @@ define(function(require) {
 		},
 
 		/**
+		 * Build the store path
+		 * @param  {Array|String} [path]
+		 */
+		portWizardBuildStorePath: function(path) {
+			var store = ['_store', 'portWizard'];
+			return _.isNil(path)
+				? store
+				: _.flatten([store, _.isString(path) ? path.split('.') : path]);
+		},
+
+		/**
 		 * Store getter
 		 * @param  {Array|String} [path]
 		 * @param  {*} [defaultValue]
 		 * @return {*}
 		 */
 		portWizardGet: function(path, defaultValue) {
-			var self = this,
-				store = ['_store', 'portWizard'];
+			var self = this;
 			return _.get(
 				self,
-				_.isUndefined(path)
-					? store
-					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+				self.portWizardBuildStorePath(path),
 				defaultValue
 			);
 		},
@@ -139,14 +147,23 @@ define(function(require) {
 		 */
 		portWizardSet: function(path, value) {
 			var self = this,
-				hasValue = _.toArray(arguments).length === 2,
-				store = ['_store', 'portWizard'];
+				hasValue = _.toArray(arguments).length === 2;
 			_.set(
 				self,
-				hasValue
-					? _.flatten([store, _.isString(path) ? path.split('.') : path])
-					: store,
+				self.portWizardBuildStorePath(hasValue ? path : null),
 				hasValue ? value : path
+			);
+		},
+
+		/**
+		 * Store un-setter
+		 * @param  {Array|String} [path]
+		 */
+		portWizardUnset: function(path) {
+			var self = this;
+			_.unset(
+				self,
+				self.portWizardBuildStorePath(path)
 			);
 		},
 
@@ -576,7 +593,7 @@ define(function(require) {
 							.map(getDocumentByIndex)
 							.value();
 
-					self.portWizardSet('requiredDocuments', requiredDocuments);
+					self.portWizardSet('requiredDocumentsList', requiredDocuments);
 
 					waterfallCallback(null, _.assign(numbersCarrierData, {
 						requiredDocuments: requiredDocuments
@@ -1248,12 +1265,61 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardRequiredDocumentsRender: function(args, callback) {
-			var self = this;
+			var self = this,
+				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsList = _.without(requiredDocumentsCompleteList, 'Invoice'),
+				requiredDocumentsData,
+				validationOptions,
+				$template,
+				$form;
 
-			// TODO: Not implemented
+			if (_.isEmpty(requiredDocumentsList)) {
+				_.unset(args.data, 'requiredDocuments');
+
+				monster.pub('common.navigationWizard.goToStep', {
+					stepId: 4
+				});
+
+				return;
+			}
+
+			requiredDocumentsData = _.get(args.data, 'requiredDocuments', {});
+
+			self.portWizardSet('requiredDocumentsData', requiredDocumentsData);
+
+			$template = $(self.getTemplate({
+				name: 'step-requiredDocuments',
+				data: {
+					data: requiredDocumentsData,
+					requiredDocumentsList: requiredDocumentsList
+				},
+				submodule: 'portWizard'
+			}));
+
+			self.portWizardRequiredDocumentsBindEvents({
+				template: $template,
+				data: requiredDocumentsData
+			});
+
+			$form = $template.find('form');
+			validationOptions = {
+				rules: _
+					.chain(requiredDocumentsList)
+					.keyBy(function(documentKey) {
+						return documentKey + '.name';
+					})
+					.mapValues(function() {
+						return {
+							required: true
+						};
+					})
+					.value()
+			};
+
+			monster.ui.validate($form, validationOptions);
 
 			callback({
-				template: $(''),
+				template: $template,
 				callback: self.portWizardScrollToTop
 			});
 		},
@@ -1263,16 +1329,67 @@ define(function(require) {
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                           completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardRequiredDocumentsUtil: function($template, args) {
-			var self = this;
+		portWizardRequiredDocumentsUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				requiredDocumentsData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				requiredDocumentsData = self.portWizardGet('requiredDocumentsData');
+				self.portWizardUnset('requiredDocumentsData');
+				delete args.data.requiredDocuments;
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					requiredDocuments: requiredDocumentsData
+				}
 			};
+		},
+
+		/**
+		 * Bind Required Documents step events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 * @param  {Object} args.data  Step data
+		 */
+		portWizardRequiredDocumentsBindEvents: function(args) {
+			var self = this,
+				$template = args.template,
+				data = args.data,
+				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+
+			$template
+				.find('input[type="file"]')
+				.each(function() {
+					var $this = $(this),
+						documentKey = $this.attr('name'),
+						documentNamePath = documentKey + '.name';
+
+					self.portWizardInitFileUploadInput({
+						fileInput: $this,
+						fileName: _.get(data, documentNamePath),
+						fileRestrictions: pdfFilesRestrictions,
+						success: function(results) {
+							var fileData = results[0];
+							self.portWizardSet([
+								'requiredDocumentsData',
+								documentKey
+							], fileData);
+						}
+					});
+
+					$this
+						.siblings('input[type="text"]')
+							.attr('name', documentNamePath);
+				});
 		},
 
 		/* DATE AND NOTIFICATIONS STEP */
@@ -1414,10 +1531,13 @@ define(function(require) {
 		  * Initialize a file input field
 		  * @param  {Object} args
 		  * @param  {jQuery} args.fileInput  File input element
+		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
+		  *                                   text field
 		  * @param  {Object} args.fileRestrictions  File restrictions
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
-		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will be loaded
+		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will
+		  *                                                           be loaded
 		  * @param  {Boolean} [args.hidden=false]  Hide file selector from view
 		  * @param  {Function} args.success  Success callback
 		  * @param  {Function} [args.error]  Error callback
@@ -1425,6 +1545,7 @@ define(function(require) {
 		portWizardInitFileUploadInput: function(args) {
 			var self = this,
 				$fileInput = args.fileInput,
+				filesList = _.chain(args).pick('fileName').values().value(),
 				fileRestrictions = args.fileRestrictions,
 				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
 				hidden = _.get(args, 'hidden', false),
@@ -1435,6 +1556,7 @@ define(function(require) {
 				wrapperClass: 'file-selector',
 				inputOnly: displayTextInput,
 				inputPlaceholder: displayTextInput ? i18n.placeholders.file : null,
+				filesList: filesList,
 				enableInputClick: displayTextInput,
 				btnClass: 'monster-button',
 				bigBtnClass: hidden ? 'hidden' : null,
