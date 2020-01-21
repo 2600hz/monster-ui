@@ -563,7 +563,7 @@ define(function(require) {
 						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
 						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
 						isCountrySupported = _.has(self.appFlags.portWizard.requiredDocuments.requirementsByCountries, numbersCountryCode),
-						errorType = !isSingleLosingCarrier
+						carrierWarningType = !isSingleLosingCarrier
 							? 'multipleLosingCarriers'
 							: isSingleLosingCarrierUnknown
 								? 'unknownLosingCarriers'
@@ -577,11 +577,11 @@ define(function(require) {
 
 					waterfallCallback(null, _.merge({
 						countryCode: numbersCountryCode,
-						errorType: errorType
+						carrierWarningType: carrierWarningType
 					}, numbersCarrierData));
 				},
 				function(numbersCarrierData, waterfallCallback) {
-					if (numbersCarrierData.errorType !== 'none') {
+					if (numbersCarrierData.carrierWarningType !== 'none') {
 						return waterfallCallback(null, numbersCarrierData);
 					}
 
@@ -600,7 +600,7 @@ define(function(require) {
 					}));
 				},
 				function(numbersCarrierData, waterfallCallback) {
-					var $template = (numbersCarrierData.errorType === 'none')
+					var $template = (numbersCarrierData.carrierWarningType === 'none')
 						? self.portWizardCarrierSelectionSingleGetTemplate({
 							numbersCarrierData: numbersCarrierData,
 							carrierSelectionData: carrierSelectionData
@@ -611,12 +611,12 @@ define(function(require) {
 						});
 
 					waterfallCallback(null, {
-						errorType: numbersCarrierData.errorType,
+						carrierWarningType: numbersCarrierData.carrierWarningType,
 						template: $template
 					});
 				}
 			], function(err, results) {
-				var errorType = results.errorType,
+				var carrierWarningType = results.carrierWarningType,
 					$template = results.template,
 					errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
 						? 'phonebookUnavailable'
@@ -624,7 +624,7 @@ define(function(require) {
 
 				if (_.isNil(err)) {
 					return callback({
-						status: errorType === 'none' ? null : 'invalid',
+						status: carrierWarningType === 'none' ? null : 'invalid',
 						template: $template,
 						callback: self.portWizardScrollToTop
 					});
@@ -679,16 +679,16 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String} args.portRequestName  Port request name
 		 * @param  {Object} args.numbersCarrierData  Carrier data for the phone numbers to be ported
-		 * @param  {String} args.numbersCarrierData.errorType  Error type for carrier selection
+		 * @param  {String} args.numbersCarrierData.carrierWarningType  Error type for carrier selection
 		 * @param  {Array} args.numbersCarrierData.numbersByLosingCarrier  Phone numbers grouped by losing carrier
 		 */
 		portWizardCarrierSelectionMultipleGetTemplate: function(args) {
 			var self = this,
 				portRequestName = args.portRequestName,
-				errorType = args.numbersCarrierData.errorType,
+				carrierWarningType = args.numbersCarrierData.carrierWarningType,
 				numbersByLosingCarrier = args.numbersCarrierData.numbersByLosingCarrier,
 				dataTemplate = {
-					errorType: errorType,
+					carrierWarningType: carrierWarningType,
 					numbersByLosingCarrier: _
 						.chain(numbersByLosingCarrier)
 						.map(function(carrierNumberGroup) {
