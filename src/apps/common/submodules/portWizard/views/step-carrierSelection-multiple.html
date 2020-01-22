@@ -7,7 +7,7 @@
 		<div class="step-section">
 			<div class="section-body flex-row-container">
 				<div class="flex-item-2">
-					{{#with (lookup carrierSelectionMultipleI18n.noticeAndDownload.notices @root.data.errorType) as |noticeI18n|}}
+					{{#with (lookup carrierSelectionMultipleI18n.noticeAndDownload.notices @root.data.carrierWarningType) as |noticeI18n|}}
 						{{#monsterPanelText noticeI18n.title 'warning'}}
 							{{noticeI18n.message}}
 						{{/monsterPanelText}}
@@ -19,7 +19,7 @@
 					</div>
 					<div class="flex-item-4-3">
 						<div class="text-block">
-						{{#compare @root.data.errorType "===" "multipleLosingCarriers"}}
+						{{#compare @root.data.carrierWarningType "===" "multipleLosingCarriers"}}
 							{{carrierSelectionMultipleI18n.noticeAndDownload.labels.multipleLosingCarriersDescription}}
 						{{else}}
 							{{carrierSelectionMultipleI18n.noticeAndDownload.labels.unsupportedCarrierDescription}}
