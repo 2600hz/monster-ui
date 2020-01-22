@@ -2,8 +2,16 @@
 	#numbers_to_port_numbers {
 		min-height: 16rem;
 
-		&.monster-invalid + label.monster-invalid {
-			position: static;
+		&.monster-invalid {
+			background: #ffece9;
+
+			+ label.monster-invalid {
+				position: static;
+
+				+ label.field-foot-notice {
+					color: #cc1700;
+				}
+			}
 		}
 	}
 
