@@ -566,6 +566,7 @@ $media-size-medium: "(max-width : 980px)";
 					margin-bottom: 0;
 					line-height: 1.25rem;
 					font-size: 0.75rem;
+					color: $midgray2;
 				}
 				&.form-field {
 					margin-bottom: 0;
@@ -636,6 +637,8 @@ $media-size-medium: "(max-width : 980px)";
 					&[type="text"] {
 						display: block;
 						flex: 1;
+						padding-left: 0.75rem;
+						padding-right: 0.75rem;
 						border-right: none;
 						border-top-right-radius: 0;
 						border-bottom-right-radius: 0;
@@ -651,6 +654,7 @@ $media-size-medium: "(max-width : 980px)";
 
 				button {
 					flex: initial;
+					min-width: 100px;
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
 				}
