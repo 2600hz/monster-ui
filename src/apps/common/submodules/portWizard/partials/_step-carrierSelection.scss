@@ -30,21 +30,21 @@
 
 	.field-middle-icon {
 		margin-bottom: 0.75rem;
+		color: $midgray2;
 	}
 
-	.document-list {
-		.document-item {
-			padding-bottom: 1.25rem;
+	.document-list .document-item {
+		padding-bottom: 1.25rem;
 
-			.flex-item {
-				vertical-align: middle;
-				padding-bottom: 0;
-			}
+		.flex-item {
+			vertical-align: middle;
+			padding-bottom: 0;
+		}
 
-			.document-icon {
-				padding-right: 0;
-				line-height: 1rem;
-			}
+		.document-icon {
+			padding-right: 0;
+			line-height: 1rem;
+			color: $midgray2;
 		}
 	}
 }
