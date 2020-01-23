@@ -335,6 +335,23 @@ $media-size-medium: "(max-width : 980px)";
 			}
 		}
 
+		.remove-item-button {
+			width: 38px;
+			height: 38px;
+			padding: 0;
+			margin-left: 0.5rem;
+			color: $midgray2;
+
+			.iconography-medium {
+				margin-left: -6px;
+				margin-top: -3px;
+			}
+
+			&:hover:not([disabled]) {
+				color: $danger-color;
+			}
+		}
+
 		.btn-group {
 			height: 38px;
 
@@ -450,6 +467,7 @@ $media-size-medium: "(max-width : 980px)";
 
 			.flex-fit {
 				display: block;
+				flex: 1;
 
 				&:not(.flex-container):not(.flex-row-container) {
 					display: block;
@@ -545,7 +563,7 @@ $media-size-medium: "(max-width : 980px)";
 		.step-body {
 			label {
 				// Keep all the pseudo-classes together, or they will be interpreted as descendants if any whitespace is between them
-				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field) {
+				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field):not(.monster-invalid) {
 					margin-bottom: 0.5rem;
 					line-height: 14px;
 				}
@@ -568,13 +586,15 @@ $media-size-medium: "(max-width : 980px)";
 					font-size: 0.75rem;
 					color: $midgray2;
 				}
+
 				&.form-field {
 					margin-bottom: 0;
 					line-height: 14px;
 
 					> input,
 					> select,
-					> .file-selector {
+					> .file-selector,
+					> .input-box {
 						margin-top: 0.5rem;
 					}
 

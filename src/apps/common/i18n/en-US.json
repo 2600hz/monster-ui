@@ -193,7 +193,23 @@
 				},
 				"dateAndNotifications": {
 					"label": "Desired Date + Notifications",
-					"description": "Select a desired target date for this port to complete, and designate who should receive updates."
+					"description": "Select a desired target date for this port to complete, and designate who should receive updates.",
+					"title": "Set a desired target date and designate email notifications.",
+					"desiredTargetDate": {
+						"title": "Desired Target Date",
+						"description": "Please note that we cannot guarantee this date, but will keep you notified of any changes or updates. Keep in mind that port requests can take anywhere from 3 to 30 days, depending on the carrier.",
+						"labels": {
+							"targetDate": "Target Date"
+						}
+					},
+					"notifications": {
+						"title": "Notifications",
+						"description": "Who should be notified when the status of this port request changes? (Changes can be status updates or notifications requiring additional actions)",
+						"labels": {
+							"addEmail": "Add Another Email",
+							"notifyByEmail": "Notify by Email"
+						}
+					}
 				},
 				"review": {
 					"label": "Review + Confirm",
