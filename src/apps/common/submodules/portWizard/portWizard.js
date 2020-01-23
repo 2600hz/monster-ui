@@ -61,6 +61,7 @@ define(function(require) {
 					}
 				},
 				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				minTargetDateBusinessDays: 4,
 				requiredDocuments: {
 					documents: [
 						'LOA',
@@ -1413,9 +1414,12 @@ define(function(require) {
 		 */
 		portWizardDateAndNotificationsRender: function(args, callback) {
 			var self = this,
-				dateAndNotificationsData = _.get(args.data, 'dateAndNotifications', {}),
 				initTemplate = function() {
-					var $template = $(self.getTemplate({
+					var dateAndNotificationsData = _.get(args.data, 'dateAndNotifications', {}),
+						minTargetDateBusinessDays = self.appFlags.portWizard.minTargetDateBusinessDays,
+						minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+						targetDate = _.get(dateAndNotificationsData, 'targetDate', minTargetDate),
+						$template = $(self.getTemplate({
 							name: 'step-dateAndNotifications',
 							data: {
 								data: dateAndNotificationsData
@@ -1424,18 +1428,16 @@ define(function(require) {
 						})),
 						$form = $template.find('form'),
 						$listContainer = $form.find('.notification-email-list'),
-						$targetDateDatepicker = monster.ui.datepicker($form.find('#target_date'), {
-							minDate: moment().toDate()
-						}),
 						notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails'),
 						emailCounters = {
 							count: 0,
 							index: 0
 						};
 
-					if (_.has(dateAndNotificationsData, 'targetDate')) {
-						$targetDateDatepicker.datepicker('setDate', dateAndNotificationsData.targetDate);
-					};
+					monster.ui.datepicker($form.find('#target_date'), {
+						minDate: minTargetDate,
+						beforeShowDay: $.datepicker.noWeekends
+					}).datepicker('setDate', targetDate);
 
 					monster.ui.validate($form, {
 						rules: {
