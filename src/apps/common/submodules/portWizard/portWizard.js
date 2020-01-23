@@ -29,17 +29,20 @@ define(function(require) {
 				animationTimes: {
 					emailItem: 200
 				},
-				attachments: {
-					mimeTypes: [
-						'application/pdf'
-					],
-					maxSize: 5
-				},
-				csvFiles: {
-					mimeTypes: [
-						'text/csv'
-					],
-					maxSize: 5
+				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				fileRestrictions: {
+					csv: {
+						maxSize: 5,
+						mimeTypes: [
+							'text/csv'
+						]
+					},
+					pdf: {
+						maxSize: 5,
+						mimeTypes: [
+							'application/pdf'
+						]
+					}
 				},
 				knownErrors: {
 					billUpload: {
@@ -60,7 +63,6 @@ define(function(require) {
 						}
 					}
 				},
-				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
 				minTargetDateBusinessDays: 4,
 				requiredDocuments: {
 					documents: [
@@ -373,7 +375,7 @@ define(function(require) {
 				$template = args.template,
 				$numbersArea = $template.find('#numbers_to_port_numbers'),
 				$fileInput = $template.find('#numbers_to_port_file'),
-				csvFilesRestrictions = self.appFlags.portWizard.csvFiles;
+				csvFilesRestrictions = self.appFlags.portWizard.fileRestrictions.csv;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $fileInput,
@@ -1076,7 +1078,7 @@ define(function(require) {
 				$template = args.template,
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
-				pdfFilesRestrictions = self.appFlags.portWizard.attachments,
+				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf,
 				latestBill;
 
 			self.portWizardInitFileUploadInput({
@@ -1247,7 +1249,7 @@ define(function(require) {
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
 				$billRenderContainer = $template.find('#latest_bill_document_container'),
-				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
@@ -1377,7 +1379,7 @@ define(function(require) {
 			var self = this,
 				$template = args.template,
 				data = args.data,
-				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
 				.find('input[type="file"]')
@@ -2404,8 +2406,8 @@ define(function(require) {
 						btnText: self.i18n.active().portWizard.fileUpload.button,
 						inputOnly: true,
 						inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-						mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
-						maxSize: self.appFlags.portWizard.attachments.maxSize,
+						mimeTypes: self.appFlags.portWizard.fileRestrictions.pdf.mimeTypes,
+						maxSize: self.appFlags.portWizard.fileRestrictions.pdf.maxSize,
 						filesList: _.has(args.data.request, ['uploads', 'bill.pdf'])
 							? ['bill.pdf']
 							: [],
@@ -2745,8 +2747,8 @@ define(function(require) {
 							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
 							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
-							maxSize: self.appFlags.portWizard.attachments.maxSize,
+							mimeTypes: self.appFlags.portWizard.fileRestrictions.pdf.mimeTypes,
+							maxSize: self.appFlags.portWizard.fileRestrictions.pdf.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
@@ -3070,7 +3072,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.portWizard.attachments.mimeTypes)
+										.chain(self.appFlags.portWizard.fileRestrictions.pdf.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -3087,7 +3089,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.portWizard.attachments.maxSize
+									variable: self.appFlags.portWizard.fileRestrictions.pdf.maxSize
 								}
 							})
 						});
