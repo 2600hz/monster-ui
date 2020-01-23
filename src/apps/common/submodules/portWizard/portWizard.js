@@ -26,17 +26,23 @@ define(function(require) {
 
 		appFlags: {
 			portWizard: {
-				attachments: {
-					mimeTypes: [
-						'application/pdf'
-					],
-					maxSize: 5
+				animationTimes: {
+					emailItem: 200
 				},
-				csvFiles: {
-					mimeTypes: [
-						'text/csv'
-					],
-					maxSize: 5
+				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				fileRestrictions: {
+					csv: {
+						maxSize: 5,
+						mimeTypes: [
+							'text/csv'
+						]
+					},
+					pdf: {
+						maxSize: 5,
+						mimeTypes: [
+							'application/pdf'
+						]
+					}
 				},
 				knownErrors: {
 					billUpload: {
@@ -57,7 +63,7 @@ define(function(require) {
 						}
 					}
 				},
-				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				minTargetDateBusinessDays: 4,
 				requiredDocuments: {
 					documents: [
 						'LOA',
@@ -369,7 +375,7 @@ define(function(require) {
 				$template = args.template,
 				$numbersArea = $template.find('#numbers_to_port_numbers'),
 				$fileInput = $template.find('#numbers_to_port_file'),
-				csvFilesRestrictions = self.appFlags.portWizard.csvFiles;
+				csvFilesRestrictions = self.appFlags.portWizard.fileRestrictions.csv;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $fileInput,
@@ -1072,7 +1078,7 @@ define(function(require) {
 				$template = args.template,
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
-				pdfFilesRestrictions = self.appFlags.portWizard.attachments,
+				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf,
 				latestBill;
 
 			self.portWizardInitFileUploadInput({
@@ -1243,7 +1249,7 @@ define(function(require) {
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
 				$billRenderContainer = $template.find('#latest_bill_document_container'),
-				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
@@ -1373,7 +1379,7 @@ define(function(require) {
 			var self = this,
 				$template = args.template,
 				data = args.data,
-				pdfFilesRestrictions = self.appFlags.portWizard.attachments;
+				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
 				.find('input[type="file"]')
@@ -1409,12 +1415,65 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardDateAndNotificationsRender: function(args, callback) {
-			var self = this;
+			var self = this,
+				initTemplate = function() {
+					var dateAndNotificationsData = _.get(args.data, 'dateAndNotifications', {}),
+						minTargetDateBusinessDays = self.appFlags.portWizard.minTargetDateBusinessDays,
+						minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+						targetDate = _.get(dateAndNotificationsData, 'targetDate', minTargetDate),
+						$template = $(self.getTemplate({
+							name: 'step-dateAndNotifications',
+							data: {
+								data: dateAndNotificationsData
+							},
+							submodule: 'portWizard'
+						})),
+						$form = $template.find('form'),
+						$listContainer = $form.find('.notification-email-list'),
+						notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails'),
+						emailCounters = {
+							count: 0,
+							index: 0
+						};
 
-			// TODO: Not implemented
+					monster.ui.datepicker($form.find('#target_date'), {
+						minDate: minTargetDate,
+						beforeShowDay: $.datepicker.noWeekends
+					}).datepicker('setDate', targetDate);
+
+					monster.ui.validate($form, {
+						rules: {
+							'targetDate': {
+								required: true
+							}
+						},
+						onfocusout: self.portWizardValidateFormField,
+						autoScrollOnInvalid: true
+					});
+
+					if (_.isEmpty(notificationEmails)) {
+						notificationEmails = [ '' ];	// To display a single empty e-mail entry
+					}
+
+					_.each(notificationEmails, function(email, index) {
+						self.portWizardDateAndNotificationsAddEmail({
+							listContainer: $listContainer,
+							counters: emailCounters,
+							email: email,
+							rendering: true
+						});
+					});
+
+					self.portWizardDateAndNotificationsBindEvents({
+						template: $template,
+						emailCounters: emailCounters
+					});
+
+					return $template;
+				};
 
 			callback({
-				template: $(''),
+				template: initTemplate(),
 				callback: self.portWizardScrollToTop
 			});
 		},
@@ -1424,16 +1483,160 @@ define(function(require) {
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                           completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardDateAndNotificationsUtil: function($template, args) {
-			var self = this;
+		portWizardDateAndNotificationsUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				dateAndNotificationsData;
 
-			// TODO: Not implemented
+			if (isValid) {
+				dateAndNotificationsData = monster.ui.getFormData($form.get(0));
+
+				// Remove empty e-mail values
+				_.pullAllBy(dateAndNotificationsData.notificationEmails, _.isEmpty);
+
+				delete args.dateAndNotifications;
+			}
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					dateAndNotifications: dateAndNotificationsData
+				}
 			};
+		},
+
+		/**
+		 * Bind Date and Notifications step events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 * @param  {Number} args.emailCounters  E-mail list counters
+		 */
+		portWizardDateAndNotificationsBindEvents: function(args) {
+			var self = this,
+				emailCounters = args.emailCounters,
+				$template = args.template,
+				$listContainer = $template.find('.notification-email-list');
+
+			$template
+				.find('.notification-email-add')
+					.on('click', function(e) {
+						e.preventDefault();
+
+						self.portWizardDateAndNotificationsAddEmail({
+							counters: emailCounters,
+							listContainer: $listContainer
+						});
+					});
+
+			$listContainer
+				.on('click', '.remove-item-button', function(e) {
+					e.preventDefault();
+
+					var $this = $(this),
+						$emailElement = $this.closest('.notification-email-item');
+
+					self.portWizardDateAndNotificationsRemoveEmail({
+						element: $emailElement,
+						removeButton: $this,
+						counters: emailCounters
+					});
+				});
+
+			$listContainer
+				.on('input', 'input', function() {
+					var $this = $(this),
+						$removeButton = $(this).nextAll('.remove-item-button');
+
+					if (_.isEmpty($this.val())) {
+						$removeButton.removeClass('active');
+					} else {
+						$removeButton.addClass('active');
+					}
+				});
+		},
+
+		/**
+		 * Add an e-mail input field to the list of notification recipients
+		 * @param  {Object} args
+		 * @param  {jQuery} args.listContainer  E-mail list container
+		 * @param  {Number} args.counters  E-mail list counters
+		 * @param  {Object} [args.email]  E-mail value
+		 * @param  {Boolean} [args.rendering=false]  The e-mail item is being added on render time
+		 */
+		portWizardDateAndNotificationsAddEmail: function(args) {
+			var self = this,
+				$listContainer = args.listContainer,
+				counters = args.counters,
+				rendering = _.get(args, 'rendering', false),
+				inputValue = _.get(args, 'email', ''),
+				inputName = 'notificationEmails[' + counters.index + ']',
+				$item = $(self.getTemplate({
+					name: 'step-dateAndNotifications-email',
+					data: {
+						name: inputName,
+						value: inputValue
+					},
+					submodule: 'portWizard'
+				})),
+				animationDuration;
+
+			counters.index += 1;
+			counters.count += 1;
+
+			$item
+				.find('input')
+					.rules('add', {
+						email: true
+					});
+
+			if (rendering) {
+				$item
+					.appendTo($listContainer);
+			} else {
+				animationDuration = self.appFlags.portWizard.animationTimes.emailItem;
+				$item
+					.css({ display: 'none' })
+					.appendTo($listContainer)
+					.slideDown(animationDuration);
+			}
+		},
+
+		/**
+		 *
+		 * @param  {Object} args
+		 * @param  {jQuery} args.element  E-mail element to remove
+		 * @param  {jQuery} args.removeButton  Remove button element
+		 * @param  {Number} args.counters  E-mail list counters
+		 */
+		portWizardDateAndNotificationsRemoveEmail: function(args) {
+			var self = this,
+				$element = args.element,
+				$removeButton = args.removeButton,
+				counters = args.counters,
+				animationDuration,
+				$input;
+
+			if (counters.count > 1) {
+				counters.count -= 1;
+				animationDuration = self.appFlags.portWizard.animationTimes.emailItem;
+				$element
+					.addClass('remove')
+					.slideUp(animationDuration, function() {
+						$element.remove();
+					});
+				return;
+			}
+
+			$removeButton.removeClass('active');
+			$input = $element.find('input');
+			$input.val('');
+			self.portWizardValidateFormField($input);
 		},
 
 		/* REVIEW */
@@ -2203,8 +2406,8 @@ define(function(require) {
 						btnText: self.i18n.active().portWizard.fileUpload.button,
 						inputOnly: true,
 						inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-						mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
-						maxSize: self.appFlags.portWizard.attachments.maxSize,
+						mimeTypes: self.appFlags.portWizard.fileRestrictions.pdf.mimeTypes,
+						maxSize: self.appFlags.portWizard.fileRestrictions.pdf.maxSize,
 						filesList: _.has(args.data.request, ['uploads', 'bill.pdf'])
 							? ['bill.pdf']
 							: [],
@@ -2544,8 +2747,8 @@ define(function(require) {
 							btnText: self.i18n.active().portWizard.fileUpload.button,
 							inputOnly: true,
 							inputPlaceholder: self.i18n.active().portWizard.fileUpload.placeholder,
-							mimeTypes: self.appFlags.portWizard.attachments.mimeTypes,
-							maxSize: self.appFlags.portWizard.attachments.maxSize,
+							mimeTypes: self.appFlags.portWizard.fileRestrictions.pdf.mimeTypes,
+							maxSize: self.appFlags.portWizard.fileRestrictions.pdf.maxSize,
 							success: function(results) {
 								if (request.hasOwnProperty('id')) {
 									if (request.hasOwnProperty('uploads') && request.uploads.hasOwnProperty('form.pdf')) {
@@ -2869,7 +3072,7 @@ define(function(require) {
 								name: '!' + self.i18n.active().portWizard.toastr.warning.mimeTypes,
 								data: {
 									variable: _
-										.chain(self.appFlags.portWizard.attachments.mimeTypes)
+										.chain(self.appFlags.portWizard.fileRestrictions.pdf.mimeTypes)
 										.map(function(value) {
 											return /[^/]*$/
 												.exec(value)[0]
@@ -2886,7 +3089,7 @@ define(function(require) {
 							message: self.getTemplate({
 								name: '!' + self.i18n.active().portWizard.toastr.warning.size,
 								data: {
-									variable: self.appFlags.portWizard.attachments.maxSize
+									variable: self.appFlags.portWizard.fileRestrictions.pdf.maxSize
 								}
 							})
 						});
