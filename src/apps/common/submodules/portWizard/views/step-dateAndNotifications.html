@@ -1,0 +1,60 @@
+<div id="step_date_and_notifications" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.dateAndNotifications as |dateAndNotificationsI18n|}}
+	<div class="step-title">
+		{{dateAndNotificationsI18n.title}}
+	</div>
+	<div class="step-body">
+		<form id="form_date_and_notifications">
+			<div class="step-section">
+				<div class="section-title">
+					{{dateAndNotificationsI18n.desiredTargetDate.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-2">
+							{{dateAndNotificationsI18n.desiredTargetDate.description}}
+						</div>
+					</div>
+					<div class="flex-row-container">
+						<div class="flex-item-3">
+							<label class="form-field">
+								{{dateAndNotificationsI18n.desiredTargetDate.labels.targetDate}}
+								<div class="input-box iconography-input-left">
+									<input class="input-block-level" type="text" id="target_date" name="targetDate" readonly="true" />
+									{{telicon "calendar" class="iconography"}}
+								</div>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="step-section">
+				<div class="section-title">
+					{{dateAndNotificationsI18n.notifications.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-2">
+							{{dateAndNotificationsI18n.notifications.description}}
+						</div>
+					</div>
+					<div class="flex-row-container">
+						<div class="flex-item-3">
+							<label class>
+								{{dateAndNotificationsI18n.notifications.labels.notifyByEmail}}
+							</label>
+							<div class="notification-email-list">
+							</div>
+							<div>
+								<a class="notification-email-add monster-link blue" href="javascript:void(0);">
+									{{telicon "plus" class="iconography-small"}} {{dateAndNotificationsI18n.notifications.labels.addEmail}}
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+{{/with}}
+</div>
