@@ -1681,7 +1681,12 @@ define(function(require) {
 							submodule: 'portWizard'
 						}));
 
-					// TODO
+					self.portWizardReviewTryEnableDoneButton(acknowledgementsCount);
+
+					self.portWizardReviewBindEvents({
+						template: $template,
+						acknowledgementsCount: acknowledgementsCount
+					});
 
 					return $template;
 				};
@@ -1762,6 +1767,45 @@ define(function(require) {
 					});
 
 			return formattedData;
+		},
+
+		/**
+		 * Bind Review step events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 * @param  {Object} args.acknowledgementsCount  Counts for acknowledgements
+		 * @param  {Number} args.acknowledgementsCount.checked  Count of checked acknowledgements
+		 * @param  {Number} args.acknowledgementsCount.required  Count of required acknowledgements
+		 */
+		portWizardReviewBindEvents: function(args) {
+			var self = this,
+				acknowledgementsCount = args.acknowledgementsCount,
+				$template = args.template;
+
+			$template
+				.find('#required_acknowledgements')
+					.on('change', 'input[type="checkbox"]', function() {
+						acknowledgementsCount.checked += this.checked ? 1 : -1;
+
+						self.portWizardReviewTryEnableDoneButton(acknowledgementsCount);
+					});
+		},
+
+		/**
+		 * Bind Review step events
+		 * @param  {Object} acknowledgementsCount  Counts for acknowledgements
+		 * @param  {Number} acknowledgementsCount.checked  Count of checked acknowledgements
+		 * @param  {Number} acknowledgementsCount.required  Count of required acknowledgements
+		 */
+		portWizardReviewTryEnableDoneButton: function(acknowledgementsCount) {
+			var self = this;
+
+			monster.pub('common.navigationWizard.setButtonProps', [
+				{
+					button: 'done',
+					enabled: acknowledgementsCount.checked === acknowledgementsCount.required
+				}
+			]);
 		},
 
 		/**************************************************
