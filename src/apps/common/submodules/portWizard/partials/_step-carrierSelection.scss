@@ -4,28 +4,8 @@
 		margin-right: 1rem;
 	}
 
-	.monster-panel-text {
-		width: auto;
-	}
-
 	.carrier-name {
 		font-weight: 600;
-	}
-
-	.number-list {
-		align-items: flex-start;
-		padding-bottom: 0;
-		margin-bottom: 2.5rem;
-		margin-left: 0;
-		margin-right: 0;
-		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='72'><rect y='37' width='1' height='36' fill='rgb(216, 216, 222, 0.48)' /></svg>");
-
-		.number-item {
-			padding: 0.5rem 1rem;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
 	}
 
 	.field-middle-icon {
@@ -39,12 +19,6 @@
 		.flex-item {
 			vertical-align: middle;
 			padding-bottom: 0;
-		}
-
-		.document-icon {
-			padding-right: 0;
-			line-height: 1rem;
-			color: $midgray2;
 		}
 	}
 }
