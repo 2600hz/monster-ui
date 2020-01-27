@@ -1661,12 +1661,33 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardReviewRender: function(args, callback) {
-			var self = this;
+			var self = this,
+				initTemplate = function() {
+					var formattedData = self.wizardReviewFormatData(args.data),
+						acknowledgements = formattedData.review.acknowledgements,
+						acknowledgementsCount = {
+							checked: _
+								.chain(acknowledgements)
+								.filter()
+								.size()
+								.value(),
+							required: _.size(acknowledgements)
+						},
+						$template = $(self.getTemplate({
+							name: 'step-review',
+							data: {
+								data: formattedData
+							},
+							submodule: 'portWizard'
+						}));
 
-			// TODO: Not implemented
+					// TODO
+
+					return $template;
+				};
 
 			callback({
-				template: $(''),
+				template: initTemplate(),
 				callback: self.portWizardScrollToTop
 			});
 		},
@@ -1684,6 +1705,54 @@ define(function(require) {
 			return {
 				valid: true
 			};
+		},
+
+		/**
+		 * Fomat the wizard data to be rendered for review
+		 * @param  {Object} data  Wizard data
+		 */
+		wizardReviewFormatData: function(data) {
+			var self = this,
+				numbers = _.map(data.nameAndNumbers.numbersToPort.formattedNumbers, 'e164Number'),
+				countryCode = data.ownershipConfirmation.serviceAddress.country,
+				getRequiredDocumentProps = _.partialRight(_.pick, ['key', 'name']),
+				defaultValues = {
+					review: {
+						acknowledgements: {
+							service: false,
+							canceled: false,
+							fee: false,
+							standard: false
+						}
+					}
+				},
+				cleanData = _.omit(data, [
+					'nameAndNumbers.numbersToPort.formattedNumbers',
+					'requiredDocuments'
+				]),
+				formattedData = _
+					.merge(defaultValues, cleanData, {
+						nameAndNumbers: {
+							numbersToPort: {
+								numbers: numbers
+							}
+						},
+						ownershipConfirmation: {
+							serviceAddress: {
+								country: {
+									code: countryCode,
+									name: monster.timezone.getCountryName(countryCode)
+								}
+							}
+						},
+						requiredDocuments: _
+							.chain(data)
+							.get('requiredDocuments', [])
+							.map(getRequiredDocumentProps)
+							.value()
+					});
+
+			return formattedData;
 		},
 
 		/**************************************************
