@@ -1608,7 +1608,7 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * Remove an e-mail input field from the list of notification recipients
 		 * @param  {Object} args
 		 * @param  {jQuery} args.element  E-mail element to remove
 		 * @param  {jQuery} args.removeButton  Remove button element
