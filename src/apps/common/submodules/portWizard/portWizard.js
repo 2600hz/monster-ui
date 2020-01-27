@@ -1283,7 +1283,7 @@ define(function(require) {
 			var self = this,
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
 				requiredDocumentsList = _.without(requiredDocumentsCompleteList, 'Invoice'),
-				requiredDocumentsData,
+				requiredDocumentsData = _.get(args.data, 'requiredDocuments', []),
 				validationOptions,
 				$template,
 				$form;
@@ -1298,22 +1298,32 @@ define(function(require) {
 				return;
 			}
 
-			requiredDocumentsData = _.get(args.data, 'requiredDocuments', {});
+			// Update required documents based on current requirements
+			requiredDocumentsData = _.map(requiredDocumentsList, function(documentKey) {
+				return _
+					.chain(requiredDocumentsData)
+					.find({ key: documentKey })
+					.merge({
+						key: documentKey
+					})	// Merge key to nil object, if the document was not found
+					.value();
+			});
 
 			self.portWizardSet('requiredDocumentsData', requiredDocumentsData);
 
 			$template = $(self.getTemplate({
 				name: 'step-requiredDocuments',
 				data: {
-					data: requiredDocumentsData,
-					requiredDocumentsList: requiredDocumentsList
+					data: {
+						requiredDocuments: requiredDocumentsData
+					}
 				},
 				submodule: 'portWizard'
 			}));
 
 			self.portWizardRequiredDocumentsBindEvents({
 				template: $template,
-				data: requiredDocumentsData
+				requiredDocuments: requiredDocumentsData
 			});
 
 			$form = $template.find('form');
@@ -1373,37 +1383,40 @@ define(function(require) {
 		 * Bind Required Documents step events
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.data  Step data
+		 * @param  {Object} args.requiredDocuments  Required documents
 		 */
 		portWizardRequiredDocumentsBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
-				data = args.data,
+				requiredDocuments = args.requiredDocuments,
 				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
 				.find('input[type="file"]')
 				.each(function() {
 					var $this = $(this),
-						documentKey = $this.attr('name'),
-						documentNamePath = documentKey + '.name';
+						documentIndex = $this.data('index'),
+						document = _.get(requiredDocuments, documentIndex);
 
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
-						fileName: _.get(data, documentNamePath),
+						fileName: document.name,
 						fileRestrictions: pdfFilesRestrictions,
 						success: function(results) {
-							var fileData = results[0];
+							var fileData = _.merge({
+								key: document.key
+							}, results[0]);
+
 							self.portWizardSet([
 								'requiredDocumentsData',
-								documentKey
+								documentIndex
 							], fileData);
 						}
 					});
 
 					$this
 						.siblings('input[type="text"]')
-							.attr('name', documentNamePath);
+							.attr('name', document.key + '.name');
 				});
 		},
 
