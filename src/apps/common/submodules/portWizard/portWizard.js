@@ -1693,17 +1693,26 @@ define(function(require) {
 		},
 
 		/**
-		 * Utility funcion to extract Review data. Not used, as this is only a review step, so it
-		 * does not provide any new data.
-		 * @returns  {Object}  Object that contains a `valid` flag value
+		 * Utility funcion to extract Review data.
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                           completed
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardReviewUtil: function() {
-			var self = this;
-
-			// TODO: Not implemented
+		portWizardReviewUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				reviewData = monster.ui.getFormData($form.get(0)),
+				isValid = !eventArgs.completeStep || _.every(reviewData.acknowledgements);
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					review: reviewData
+				}
 			};
 		},
 
