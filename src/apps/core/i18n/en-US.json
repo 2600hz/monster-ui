@@ -171,7 +171,8 @@
 			"time24h": "Please enter a valid time in 24-hour format.",
 			"__comment": "UI-2654: add protocol rule",
 			"__version": "v4.1",
-			"protocol": "Please include the \"://\" characters."
+			"protocol": "Please include the \"://\" characters.",
+			"notEqualTo": "The value should be unique."
 		},
 		"required": "Required."
 	},
