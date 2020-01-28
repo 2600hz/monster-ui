@@ -87,10 +87,18 @@ We added the following custom rules to the set of usable validation rules:
 
 * _checkList_: The value of this element should not appear in the provided list (array or map).
 * _greaterDate_: The element should contain a date greater than the one in the provided input.
+* _greaterThan_: The element should contain a number greater than or equal to the one in the provided input.
+* _hexadecimal_: The element should contain a valid hexadecimal value.
 * _ipv4_: The element should contain a valid IPv4 address.
+* _lowerThan_: The element should contain a number lower than or equal to the one in the provided input.
 * _mac_: The element should contain a valid MAC address.
+* _notEqualTo_: The element should not contain a value equal to any in the provided inputs.
+* _phoneNumber_: The element should contain a valid phoneNumber.
+* _protocol_: The element should contain a valid protocol prefix.
 * _realm_: The element should contain a valid realm.
+* _regex_: The element should contain a value that matches the provided regular expression.
 * _time12h_: The element should contain a time in 12-hour format (AM/PM).
+* _time24h_: The element should contain a time in 24-hour format.
 
 We didn't make a simplified function to add custom rules directly within your app, but you can do it using the [_jQuery.validator.addMethod_][add_method] method.
 
