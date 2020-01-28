@@ -85,12 +85,12 @@ For the full list of standard validation rules, see [here][validation_methods].
 
 We added the following custom rules to the set of usable validation rules:
 
-*	_checkList_: The value of this element should not appear in the provided list (array or map).
-*	_greaterDate_: The element should contain a date greater than the one in the provided input.
-*	_ipv4_: The element should contain a valid IPv4 address.
-*	_mac_: The element should contain a valid MAC address.
-*	_realm_: The element should contain a valid realm.
-*	_time12h_: The element should contain a time in 12-hour format (AM/PM).
+* _checkList_: The value of this element should not appear in the provided list (array or map).
+* _greaterDate_: The element should contain a date greater than the one in the provided input.
+* _ipv4_: The element should contain a valid IPv4 address.
+* _mac_: The element should contain a valid MAC address.
+* _realm_: The element should contain a valid realm.
+* _time12h_: The element should contain a time in 12-hour format (AM/PM).
 
 We didn't make a simplified function to add custom rules directly within your app, but you can do it using the [_jQuery.validator.addMethod_][add_method] method.
 
