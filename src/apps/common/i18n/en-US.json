@@ -213,7 +213,35 @@
 				},
 				"review": {
 					"label": "Review + Confirm",
-					"description": "Please review and confirm all your information before submitting your number port request."
+					"description": "Please review and confirm all your information before submitting your number port request.",
+					"title": "Please review the details of your port request before submitting.",
+					"nameAndNumbers": {
+						"labels": {
+							"totalNumbers": "Total Numbers ({{variable}})"
+						}
+					},
+					"ownershipConfirmation": {
+						"labels": {
+							"nameOnAccount": "Name on Account"
+						}
+					},
+					"requiredAcknowledgements": {
+						"title": "Required Acknowledgements",
+						"labels": {
+							"acknowledgements": {
+								"service": "I will not cancel my old service until after the numbers are completely transferred",
+								"canceled": "I understand any other numbers on the old account may be cancelled by the losing carrier",
+								"fee": "I understand my old carrier may charge an early termination fee",
+								"standard": "The numbers in question for this port are standard phone numbers, not featured (like star-ring)"
+							}
+						},
+						"notices": {
+							"acknowledgement": {
+								"title": "Important",
+								"message": "You must read, understand, and agree to all of the following statements before you're able to submit this port request."
+							}
+						}
+					}
 				},
 				"general": {
 					"documents": {
