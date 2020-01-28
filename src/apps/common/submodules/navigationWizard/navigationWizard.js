@@ -83,7 +83,8 @@ define(function(require) {
 					askForConfirmationBeforeExit: false,
 					buttons: _.mapValues(buttonSelectors, function(selector) {
 						return {
-							element: layout.find(selector)
+							element: layout.find(selector),
+							enabled: true
 						};
 					}),
 					currentStep: 0,
@@ -565,7 +566,18 @@ define(function(require) {
 				renderStepTemplate = args.callback,
 				loadTemplateOptions = _.get(args, 'options', {}),
 				enableFooterActions = function(enable) {
-					var $buttons = $wizardFooterActions.find('button'),
+					var $buttons = _
+							.chain(navigationWizardFlags.buttons)
+							.pick([ 'back', 'next', 'done' ])
+							.filter(function(buttonMetadata) {
+								return buttonMetadata.element.prop('disabled') === enable	// Button has a different enabled state than the one to be set
+									&& (!enable || buttonMetadata.enabled === enable);	// Disabling, or the button is expected to have the same state to be set
+							})
+							.map('element')
+							.reduce(function(accum, element) {
+								return accum.add(element);
+							}, $())
+							.value(),
 						$links = $wizardFooterActions.find('a');
 
 					$buttons.prop('disabled', !enable);
@@ -629,29 +641,38 @@ define(function(require) {
 		 * Set wizard button properties
 		 * @param  {Object|Array} args  Single button properties, or list of buttons properties
 		 * @param  {String} [args.button]  Button name
+		 * @param  {Boolean} [args.enabled]  Whether to enable or disable the button
 		 * @param  {Boolean} [args.display]  Whether to display or hide the button
 		 * @param  {jQuery|String|Element} [args.content]  Button new content
 		 * @param  {jQuery|String|Element} [args.resetContent]  Reset button content to its default
 		 */
 		navigationWizardSetButtonProperties: function(args) {
 			var self = this,
-				buttonProps = _.isArray(args) ? args : [args];
+				buttonProps = _.isArray(args) ? args : [args],
+				buttonsMetadata = self.appFlags.navigationWizard.buttons;
 
 			_.each(buttonProps, function(props) {
 				var buttonName = props.button,
-					button = _.get(self.appFlags.navigationWizard.buttons, buttonName),
+					button = _.get(buttonsMetadata, buttonName),
 					buttonElement = button.element;
 
 				if (_.has(props, 'display')) {
-					if (_.get(props, 'display')) {
+					if (props.display) {
 						buttonElement.show();
 					} else {
 						buttonElement.hide();
 					}
 				}
 
+				if (_.has(props, 'enabled')) {
+					button.enabled = props.enabled;
+					buttonElement.prop('disabled', !props.enabled);
+				}
+
 				if (_.has(props, 'content')) {
-					button.content = buttonElement.contents();
+					if (!_.has(button, 'content')) {
+						button.content = buttonElement.contents();
+					}
 
 					buttonElement
 						.empty()
