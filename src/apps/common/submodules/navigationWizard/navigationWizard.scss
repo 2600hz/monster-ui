@@ -420,6 +420,14 @@ $media-size-medium: "(max-width : 980px)";
 			font-weight: 600;
 			color: $woodsmoke;
 
+			&.section-title-numbered {
+				counter-increment: section_title_counter;
+
+				&:before {
+					content: counter(section_title_counter) ".\0000a0";
+				}
+			}
+
 			.help-tip {
 				color: $midgray2;
 				cursor: pointer;
@@ -436,6 +444,11 @@ $media-size-medium: "(max-width : 980px)";
 			.tooltip {
 				font-weight: normal;
 			}
+		}
+
+		.section-subtitle {
+			margin-top: 0.5rem;
+			font-weight: 600;
 		}
 
 		.flex-container {
@@ -549,9 +562,11 @@ $media-size-medium: "(max-width : 980px)";
 		}
 
 		.step-body {
+			counter-reset: section_title_counter;
+
 			label {
 				// Keep all the pseudo-classes together, or they will be interpreted as descendants if any whitespace is between them
-				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field):not(.monster-invalid) {
+				&:not(.monster-checkbox):not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field):not(.monster-invalid) {
 					margin-bottom: 0.5rem;
 					line-height: 14px;
 				}
@@ -706,6 +721,60 @@ $media-size-medium: "(max-width : 980px)";
 					height: 30px;
 					margin-top: 0.25rem;
 					margin-bottom: 0.25rem;
+				}
+			}
+		}
+
+		&.wizard-step-review {
+			[class^="field-value-"],
+			[class*=" field-value-"] {
+				color: $woodsmoke;
+				font-weight: 600;
+
+				.iconography-medium {
+					margin-right: 0.5rem;
+				}
+			}
+
+			.field-label-horizontal,
+			.field-value-horizontal,
+			.section-subtitle {
+				padding-bottom: 1rem;
+				line-height: 1.25rem;
+			}
+
+			.field-label-horizontal {
+				color: $woodsmoke;
+				letter-spacing: 0px;
+			}
+
+			.section-body {
+				padding-bottom: 0.75rem;
+			}
+
+			@include media-medium-or-print {
+				.field-value-horizontal:not(.field-value-multiple) {
+					width: 50%;
+				}
+			}
+
+			@media print {
+				padding: 0;
+
+				.edit-step,
+				.monster-button {
+					display: none;
+				}
+
+				.print-nobreak {
+					page-break-inside: avoid;
+				}
+
+				// Some elements that use display:flex might be truncated on page breaks in Firefox.
+				// This class sets them to display:block to avoid that behavior on print.
+				// See https://stackoverflow.com/a/45440750/806975
+				.print-block {
+					display: block;
 				}
 			}
 		}
