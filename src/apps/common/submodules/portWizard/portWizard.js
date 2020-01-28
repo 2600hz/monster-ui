@@ -1283,7 +1283,7 @@ define(function(require) {
 			var self = this,
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
 				requiredDocumentsList = _.without(requiredDocumentsCompleteList, 'Invoice'),
-				requiredDocumentsData,
+				requiredDocumentsData = _.get(args.data, 'requiredDocuments', []),
 				validationOptions,
 				$template,
 				$form;
@@ -1298,22 +1298,32 @@ define(function(require) {
 				return;
 			}
 
-			requiredDocumentsData = _.get(args.data, 'requiredDocuments', {});
+			// Update required documents based on current requirements
+			requiredDocumentsData = _.map(requiredDocumentsList, function(documentKey) {
+				return _
+					.chain(requiredDocumentsData)
+					.find({ key: documentKey })
+					.merge({
+						key: documentKey
+					})	// Merge key to nil object, if the document was not found
+					.value();
+			});
 
 			self.portWizardSet('requiredDocumentsData', requiredDocumentsData);
 
 			$template = $(self.getTemplate({
 				name: 'step-requiredDocuments',
 				data: {
-					data: requiredDocumentsData,
-					requiredDocumentsList: requiredDocumentsList
+					data: {
+						requiredDocuments: requiredDocumentsData
+					}
 				},
 				submodule: 'portWizard'
 			}));
 
 			self.portWizardRequiredDocumentsBindEvents({
 				template: $template,
-				data: requiredDocumentsData
+				requiredDocuments: requiredDocumentsData
 			});
 
 			$form = $template.find('form');
@@ -1373,37 +1383,40 @@ define(function(require) {
 		 * Bind Required Documents step events
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.data  Step data
+		 * @param  {Object} args.requiredDocuments  Required documents
 		 */
 		portWizardRequiredDocumentsBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
-				data = args.data,
+				requiredDocuments = args.requiredDocuments,
 				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
 				.find('input[type="file"]')
 				.each(function() {
 					var $this = $(this),
-						documentKey = $this.attr('name'),
-						documentNamePath = documentKey + '.name';
+						documentIndex = $this.data('index'),
+						document = _.get(requiredDocuments, documentIndex);
 
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
-						fileName: _.get(data, documentNamePath),
+						fileName: document.name,
 						fileRestrictions: pdfFilesRestrictions,
 						success: function(results) {
-							var fileData = results[0];
+							var fileData = _.merge({
+								key: document.key
+							}, results[0]);
+
 							self.portWizardSet([
 								'requiredDocumentsData',
-								documentKey
+								documentIndex
 							], fileData);
 						}
 					});
 
 					$this
 						.siblings('input[type="text"]')
-							.attr('name', documentNamePath);
+							.attr('name', document.key + '.name');
 				});
 		},
 
@@ -1608,7 +1621,7 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * Remove an e-mail input field from the list of notification recipients
 		 * @param  {Object} args
 		 * @param  {jQuery} args.element  E-mail element to remove
 		 * @param  {jQuery} args.removeButton  Remove button element
@@ -1648,29 +1661,151 @@ define(function(require) {
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardReviewRender: function(args, callback) {
-			var self = this;
+			var self = this,
+				initTemplate = function() {
+					var formattedData = self.wizardReviewFormatData(args.data),
+						acknowledgements = formattedData.review.acknowledgements,
+						acknowledgementsCount = {
+							checked: _
+								.chain(acknowledgements)
+								.filter()
+								.size()
+								.value(),
+							required: _.size(acknowledgements)
+						},
+						$template = $(self.getTemplate({
+							name: 'step-review',
+							data: {
+								data: formattedData
+							},
+							submodule: 'portWizard'
+						}));
 
-			// TODO: Not implemented
+					self.portWizardReviewTryEnableDoneButton(acknowledgementsCount);
+
+					self.portWizardReviewBindEvents({
+						template: $template,
+						acknowledgementsCount: acknowledgementsCount
+					});
+
+					return $template;
+				};
 
 			callback({
-				template: $(''),
+				template: initTemplate(),
 				callback: self.portWizardScrollToTop
 			});
 		},
 
 		/**
-		 * Utility funcion to extract Review data. Not used, as this is only a review step, so it
-		 * does not provide any new data.
-		 * @returns  {Object}  Object that contains a `valid` flag value
+		 * Utility funcion to extract Review data.
+		 * @param  {jQuery} $template  Step template
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {Object} eventArgs  Event arguments
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
+		 *                                           completed
+		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardReviewUtil: function() {
-			var self = this;
-
-			// TODO: Not implemented
+		portWizardReviewUtil: function($template, args, eventArgs) {
+			var self = this,
+				$form = $template.find('form'),
+				reviewData = monster.ui.getFormData($form.get(0)),
+				isValid = !eventArgs.completeStep || _.every(reviewData.acknowledgements);
 
 			return {
-				valid: true
+				valid: isValid,
+				data: {
+					review: reviewData
+				}
 			};
+		},
+
+		/**
+		 * Fomat the wizard data to be rendered for review
+		 * @param  {Object} data  Wizard data
+		 */
+		wizardReviewFormatData: function(data) {
+			var self = this,
+				numbers = _.map(data.nameAndNumbers.numbersToPort.formattedNumbers, 'e164Number'),
+				countryCode = data.ownershipConfirmation.serviceAddress.country,
+				getRequiredDocumentProps = _.partialRight(_.pick, ['key', 'name']),
+				defaultValues = {
+					review: {
+						acknowledgements: {
+							service: false,
+							canceled: false,
+							fee: false,
+							standard: false
+						}
+					}
+				},
+				cleanData = _.omit(data, [
+					'nameAndNumbers.numbersToPort.formattedNumbers',
+					'requiredDocuments'
+				]),
+				formattedData = _
+					.merge(defaultValues, cleanData, {
+						nameAndNumbers: {
+							numbersToPort: {
+								numbers: numbers
+							}
+						},
+						ownershipConfirmation: {
+							serviceAddress: {
+								country: {
+									code: countryCode,
+									name: monster.timezone.getCountryName(countryCode)
+								}
+							}
+						},
+						requiredDocuments: _
+							.chain(data)
+							.get('requiredDocuments', [])
+							.map(getRequiredDocumentProps)
+							.value()
+					});
+
+			return formattedData;
+		},
+
+		/**
+		 * Bind Review step events
+		 * @param  {Object} args
+		 * @param  {jQuery} args.template  Step template
+		 * @param  {Object} args.acknowledgementsCount  Counts for acknowledgements
+		 * @param  {Number} args.acknowledgementsCount.checked  Count of checked acknowledgements
+		 * @param  {Number} args.acknowledgementsCount.required  Count of required acknowledgements
+		 */
+		portWizardReviewBindEvents: function(args) {
+			var self = this,
+				acknowledgementsCount = args.acknowledgementsCount,
+				$template = args.template;
+
+			$template
+				.find('#required_acknowledgements')
+					.on('change', 'input[type="checkbox"]', function() {
+						acknowledgementsCount.checked += this.checked ? 1 : -1;
+
+						self.portWizardReviewTryEnableDoneButton(acknowledgementsCount);
+					});
+		},
+
+		/**
+		 * Bind Review step events
+		 * @param  {Object} acknowledgementsCount  Counts for acknowledgements
+		 * @param  {Number} acknowledgementsCount.checked  Count of checked acknowledgements
+		 * @param  {Number} acknowledgementsCount.required  Count of required acknowledgements
+		 */
+		portWizardReviewTryEnableDoneButton: function(acknowledgementsCount) {
+			var self = this;
+
+			monster.pub('common.navigationWizard.setButtonProps', [
+				{
+					button: 'done',
+					enabled: acknowledgementsCount.checked === acknowledgementsCount.required
+				}
+			]);
 		},
 
 		/**************************************************

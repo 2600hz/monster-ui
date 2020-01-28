@@ -1,18 +1,18 @@
 {{#*inline "uploadFieldPartial"}}
 	<div class="flex-item-1">
 		<label class="form-field">
-			{{tryI18n @root.i18n.commonApp.portWizard.steps.general.documents documentKey}}
-			<input class="input-block-level" type="file" name="{{documentKey}}" accept=".pdf" />
+			{{tryI18n @root.i18n.commonApp.portWizard.steps.general.documents document.key}}
+			<input class="input-block-level" type="file" data-index={{index}} accept=".pdf" />
 		</label>
 	</div>
 {{/inline}}
 
 <div id="step_required_documents" class="wizard-step container-fluid">
 	<div class="step-title">
-	{{#compare requiredDocumentsList.length "===" 1}}
-		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleSingleDocument (tryI18n i18n.commonApp.portWizard.steps.general.documents requiredDocumentsList.[0])}}
+	{{#compare data.requiredDocuments.length "===" 1}}
+		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleSingleDocument (tryI18n i18n.commonApp.portWizard.steps.general.documents data.requiredDocuments.[0].key)}}
 	{{else}}
-		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleMultipleDocuments requiredDocumentsList.length}}
+		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleMultipleDocuments data.requiredDocuments.length}}
 	{{/compare}}
 	</div>
 	<div class="step-body flex-row-container">
@@ -20,8 +20,8 @@
 			<form id="form_required_documents">
 				<div class="step-section">
 					<div class="section-body flex-row-container">
-					{{#each requiredDocumentsList}}
-						{{> uploadFieldPartial documentKey=this}}
+					{{#each data.requiredDocuments}}
+						{{> uploadFieldPartial document=this index=@index}}
 					{{/each}}
 					</div>
 				</div>
