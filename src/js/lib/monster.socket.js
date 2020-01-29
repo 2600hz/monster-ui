@@ -27,21 +27,11 @@ define(function(require) {
 
 			socket.onopen = function(data) {
 				if (self.connected === false) {
-					monster.pub('auth.retryLogin', {
-						additionalArgs: {
-							isRetryLoginRequest: true
-						},
-						success: function() {
-							self.log('Successful WebSocket connection');
-							self.connected = true;
-							self.object = socket;
-							self.initializeSocketEvents(socket);
-							monster.pub('socket.connected');
-						},
-						error: function() {
-							self.log('monster.socket: Connection failed', true);
-						}
-					});
+					self.log('Successful WebSocket connection');
+					self.connected = true;
+					self.object = socket;
+					self.initializeSocketEvents(socket);
+					monster.pub('socket.connected');
 				} else {
 					self.log('Socket already active');
 					socket.close();
@@ -83,7 +73,7 @@ define(function(require) {
 
 			_.each(oldBindings, function(binding, name) {
 				_.each(binding.listeners, function(listener) {
-					self.addListener(name, listener.accountId, monster.util.getAuthToken(), listener.callback, listener.source);
+					self.addListener(name, listener.accountId, listener.authToken, listener.callback, listener.source);
 				});
 			});
 
