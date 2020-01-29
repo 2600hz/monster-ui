@@ -106,6 +106,11 @@ define(function(require) {
 				throw new Error('A container must be provided.');
 			}
 
+			navigationWizardFlags.wizardArgs = args;
+			navigationWizardFlags.wizardArgs.template = layout;
+			self.appFlags.navigationWizard = navigationWizardFlags;
+
+			// Set-up completed steps after setting the wizard args
 			_.each(stepsCompleted, function(step) {
 				if (step > _.get(navigationWizardFlags, 'lastCompletedStep', -1)) {
 					navigationWizardFlags.lastCompletedStep = step;
@@ -120,10 +125,6 @@ define(function(require) {
 					statuses: [ 'completed' ]
 				});
 			});
-
-			navigationWizardFlags.wizardArgs = args;
-			navigationWizardFlags.wizardArgs.template = layout;
-			self.appFlags.navigationWizard = navigationWizardFlags;
 
 			self.navigationWizardBindEvents();
 
