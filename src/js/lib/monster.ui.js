@@ -1373,6 +1373,17 @@ define(function(require) {
 				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 			}, localization.customRules.greaterThan);
 
+			$.validator.addMethod('notEqualTo', function(value, element, param) {
+				var $compElements = param instanceof jQuery ? param : $(param),
+					$compElementsToCheck = $compElements.filter(':visible').not(element),
+					$equalElements = $compElementsToCheck.filter(function() {
+						return $(this).val() === value;
+					}),
+					isValid = $equalElements.length === 0;
+
+				return this.optional(element) || isValid;
+			}, localization.customRules.notEqualTo);
+
 			this.customValidationInitialized = true;
 		},
 
