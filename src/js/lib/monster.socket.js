@@ -123,6 +123,10 @@ define(function(require) {
 					}
 				};
 
+			if (!monster.util.isLoggedIn()) {
+				return self.log('Unable to connect to WebSocket while logged out');
+			}
+
 			setTimeout(connectAttempt, delayBeforeConnect);
 		},
 
