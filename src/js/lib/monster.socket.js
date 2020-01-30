@@ -15,6 +15,8 @@ define(function(require) {
 		bindings: {},
 		commands: {},
 
+		isConnecting: false,
+
 		/**
 		 * Returns whether a WebSocket connection is established or not
 		 * @return {Boolean}
@@ -40,18 +42,21 @@ define(function(require) {
 
 		initialize: function() {
 			var self = this,
-				socket = self.initializeSocket();
+				socket;
 
-			socket.onopen = function(data) {
-				if (self.isConnected()) {
-					self.log('Socket already active');
-					socket.close();
-				} else {
-					self.log('Successful WebSocket connection');
-					self.instance = socket;
-					self.initializeSocketEvents(socket);
-					monster.pub('socket.connected');
-				}
+			if (self.isConnected()) {
+				self.log('Socket already active');
+				return;
+			}
+
+			socket = self.initializeSocket();
+
+			socket.onopen = function() {
+				self.log('Successful WebSocket connection');
+				self.instance = socket;
+				self.isConnecting = false;
+				self.initializeSocketEvents(socket);
+				monster.pub('socket.connected');
 			};
 		},
 
@@ -143,6 +148,10 @@ define(function(require) {
 			if (!monster.util.isLoggedIn()) {
 				return self.log('Unable to connect to WebSocket while logged out');
 			}
+			if (self.isConnecting) {
+				return self.log('Already trying to connect to WebSocket');
+			}
+			self.isConnecting = true;
 
 			setTimeout(connectAttempt, delayBeforeConnect);
 		},
