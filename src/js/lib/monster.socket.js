@@ -40,11 +40,19 @@ define(function(require) {
 			}
 		},
 
-		initialize: function() {
+		/**
+		 * Attempts to open a WebSocket connection
+		 * @param  {Object} args
+		 * @param  {Function} [args.onError] Invoked when an error occurs
+		 */
+		initialize: function(args) {
 			var self = this,
 				socket;
 
+			self.isConnecting = true;
+
 			if (self.isConnected()) {
+				self.isConnecting = false;
 				self.log('Socket already active');
 				return;
 			}
@@ -52,11 +60,15 @@ define(function(require) {
 			socket = self.initializeSocket();
 
 			socket.onopen = function() {
+				self.isConnecting = false;
 				self.log('Successful WebSocket connection');
 				self.instance = socket;
-				self.isConnecting = false;
 				self.initializeSocketEvents(socket);
 				monster.pub('socket.connected');
+			};
+			socket.onerror = function() {
+				self.isConnecting = false;
+				args.onError && args.onError();
 			};
 		},
 
@@ -111,49 +123,52 @@ define(function(require) {
 			};
 		},
 
-		// Reconnect loop that retries to connect after {{startingTimeout}} ms
-		// In case it fails, we multiply the previous timeout by {{multiplier}}, and then try again once that time has gone by
-		// The max timer is set to {{maxtimeout}}
-		connect: function() {
+		/**
+		 * Reconnect loop that retries to connect after {{startingTimeout}} ms
+		 * In case it fails, we multiply the previous timeout by {{multiplier}}, and then try again once that time has gone by
+		 * The max timer is set to {{maxTimeout}}
+		 * @param  {Number} [pTimeoutDuration=0]
+		 */
+		connect: function(pTimeoutDuration) {
 			var self = this,
-				timeoutDuration,
-				delayBeforeConnect = 0,
+				timeoutDuration = _.isUndefined(pTimeoutDuration) ? 0 : pTimeoutDuration,
+				isFirstAttempt = timeoutDuration === 0,
 				startingTimeout = 250,
-				maxTimeout = 1000 * 60,
 				multiplier = 2,
-				connectAttempt = function() {
-					if (self.isConnected()) {
-						return;
-					}
-					self.initialize();
-
-					if (timeoutDuration) {
-						if ((timeoutDuration * multiplier) < maxTimeout) {
-							timeoutDuration *= multiplier;
-						} else {
-							timeoutDuration = maxTimeout;
-						}
-
-						self.log('Attempting to reconnect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
-						self.log('Next try in ' + timeoutDuration / 1000 + ' seconds');
-					} else {
-						timeoutDuration = startingTimeout;
-
-						self.log('Attempting to connect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
-					}
-
-					setTimeout(connectAttempt, timeoutDuration);
-				};
+				maxTimeout = 60 * 1000;
 
 			if (!monster.util.isLoggedIn()) {
 				return self.log('Unable to connect to WebSocket while logged out');
 			}
 			if (self.isConnecting) {
-				return self.log('Already trying to connect to WebSocket');
+				return self.log('Already attempting to connect to WebSocket');
 			}
-			self.isConnecting = true;
+			if (self.isConnected()) {
+				return self.log('Already connected to WebSocket');
+			}
 
-			setTimeout(connectAttempt, delayBeforeConnect);
+			self.log(
+				'Attempting to '
+				+ isFirstAttempt ? '' : 're'
+				+ 'connect to WebSocket at '
+				+ monster.util.toFriendlyDate(new Date())
+			);
+
+			if (isFirstAttempt) {
+				timeoutDuration = startingTimeout;
+			} else {
+				timeoutDuration = (timeoutDuration * multiplier) < maxTimeout
+					? timeoutDuration * multiplier
+					: maxTimeout;
+
+				self.log('Next try in ' + timeoutDuration / 1000 + ' seconds');
+			}
+
+			self.initialize({
+				onError: function() {
+					setTimeout(self.connect.bind(self, timeoutDuration), timeoutDuration);
+				}
+			});
 		},
 
 		subscribe: function(accountId, authToken, binding, onReply) {
@@ -164,7 +179,7 @@ define(function(require) {
 				onReply: onReply
 			};
 
-			return self.instance.send(JSON.stringify({'action': 'subscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'account_id': accountId, 'binding': binding }}));
+			return self.instance.send(JSON.stringify({ 'action': 'subscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'account_id': accountId, 'binding': binding } }));
 		},
 		unsubscribe: function(accountId, authToken, binding, onReply) {
 			var self = this,
@@ -174,7 +189,7 @@ define(function(require) {
 				onReply: onReply
 			};
 
-			self.instance.send(JSON.stringify({'action': 'unsubscribe', 'auth_token': authToken, 'request_id': requestId, 'data': {'binding': binding, 'account_id': accountId}}));
+			self.instance.send(JSON.stringify({ 'action': 'unsubscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'binding': binding, 'account_id': accountId } }));
 		},
 
 		onEvent: function(data) {
@@ -288,7 +303,6 @@ define(function(require) {
 	};
 
 	var socket = {
-		priv: privateSocket,
 		isConnected: function() {
 			return privateSocket.isConnected();
 		},
