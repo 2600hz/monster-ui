@@ -426,6 +426,8 @@ define(function(require) {
 						}
 
 						monster.pub('core.initializeShortcuts', dataLogin.apps);
+						monster.pub('socket.start');
+						monster.pub('webphone.start');
 
 						monster.pub('core.loadApps', {
 							defaultApp: defaultApp

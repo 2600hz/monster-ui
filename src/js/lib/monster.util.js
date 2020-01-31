@@ -227,14 +227,6 @@ define(function(require) {
 			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
 		},
 
-		// Function returning a Boolean indicating whether the end-user is logged in or not.
-		isLoggedIn: function() {
-			var self = this,
-				isLoggedIn = monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('appFlags') && monster.apps.auth.appFlags.isAuthentified;
-
-			return isLoggedIn;
-		},
-
 		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
 		isMasquerading: function() {
 			var self = this,
@@ -1362,6 +1354,15 @@ define(function(require) {
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
 	util.gregorianToDate = gregorianToDate;
+
+	/**
+	 * Returns whether or not a user is logged in
+	 * @return {Boolean} Whether a user is logged in or not
+	 */
+	function isLoggedIn() {
+		return _.get(monster, 'apps.auth.appFlags.isAuthentified', false);
+	}
+	util.isLoggedIn = isLoggedIn;
 
 	/**
 	 * Determine if a specific number feature is enabled on the current account
