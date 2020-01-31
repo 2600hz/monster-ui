@@ -33,8 +33,10 @@ define(function(require) {
 			'core.triggerMasquerading': 'triggerMasquerading',
 			'core.restoreMasquerading': 'restoreMasquerading',
 			'core.initializeShortcuts': 'initializeShortcuts',
+			'socket.start': 'startSocket',
 			'socket.connected': 'refreshIfWebSocketsApp',
 			'socket.disconnected': 'onSocketDisconnected',
+			'webphone.start': 'startWebphone',
 			'core.showWarningDisconnectedSockets': 'showWarningSockets',
 			'core.hideTopbarDropdowns': 'hideTopbarDropdowns'
 		},
@@ -100,8 +102,6 @@ define(function(require) {
 			container.append(mainTemplate);
 
 			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
-			self.startSocket();
-			self.startWebphone();
 		},
 
 		loadSVG: function() {
