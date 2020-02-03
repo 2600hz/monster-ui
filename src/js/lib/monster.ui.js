@@ -3855,19 +3855,21 @@ define(function(require) {
 			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend(allowedCharsLabel.text(allowedChars)),
 			checkLength = function(event) {
 				currentLenght = checkCurrentLength();
-				allowedChars = size - currentLenght;
+				allowedChars = currentLenght <= size ? size - currentLenght : 0;
 
 				allowedCharsLabel.text(allowedChars);
 
 				if (allowedChars <= 0 || allowedChars > size) {
 					label.addClass('chars-remaining-error');
 
-					event.preventDefault();
+					event && event.preventDefault();
 					return false;
 				} else {
 					label.removeClass('chars-remaining-error');
 				}
 			};
+
+		checkLength();
 
 		$target.after(label);
 
