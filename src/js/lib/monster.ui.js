@@ -3831,8 +3831,8 @@ define(function(require) {
 	/**
 	 * Helper to display characters remaining inline
 	 * @param {jQuery}  $target Field to be checked
-	 * @param {Object}  args
-	 * @param {Number} args.size The maxlength to be validated
+	 * @param {Object}  [args]
+	 * @param {Number} [args.size] The maxlength to be validated
 	 * @param {String}  [args.customClass] Custom class for the label if needed
 	 */
 	function charsRemaining($target, args) {
