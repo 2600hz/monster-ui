@@ -88,7 +88,7 @@ define(function() {
 			app.enforceWebSocketsConnection = function(args) {
 				app.requiresWebSockets = true;
 
-				if (monster.socket.isConnected()) {
+				if (monster.socket.isConnected(_.get(args, 'uri', monster.config.api.socket))) {
 					args.callback();
 				} else {
 					monster.pub('core.showWarningDisconnectedSockets', {
