@@ -19,7 +19,7 @@ class SocketsManager {
 	 */
 	isConnected(uri) {
 		const client = this.clients.get(uri);
-		return client && client.isOpen();
+		return !!client && client.isOpen();
 	}
 
 	/**
@@ -35,6 +35,18 @@ class SocketsManager {
 			client = this.clients.get(uri);
 		}
 		client.connect();
+	}
+
+	/**
+	 * Triggers a disconnection for uri
+	 * @param  {string} uri
+	 */
+	disconnect(uri) {
+		const client = this.clients.get(uri);
+		if (client === undefined) {
+			return;
+		}
+		client.disconnect();
 	}
 }
 
@@ -67,6 +79,17 @@ class WebSocketClient {
 		['open', 'close', 'error', 'message'].forEach(
 			type => this.ws.addEventListener(type, console.log.bind(undefined, 'on' + type))
 		);
+	}
+
+	/**
+	 * Closes the WebSocket connection.
+	 */
+	disconnect() {
+		if (!this.isInstantiated()) {
+			console.log('WebSocket is not connected');
+			return;
+		}
+		this.ws.close();
 	}
 
 	/**
