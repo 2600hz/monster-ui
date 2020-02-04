@@ -135,7 +135,7 @@ define(function(require) {
 		startSocket: function() {
 			var self = this;
 
-			monster.socket.connect();
+			monster.socket.connect(monster.config.api.socket);
 		},
 
 		startWebphone: function() {
@@ -842,9 +842,9 @@ define(function(require) {
 						version: monster.util.getVersion(),
 						hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
 						socket: {
-							hideInfo: !monster.socket.isEnabled(),
+							hideInfo: !_.has(monster.config.api, 'socket'),
 							URL: monster.config.api.socket,
-							isConnected: monster.socket.isConnected()
+							isConnected: monster.socket.isConnected(monster.config.api.socket)
 						},
 						kazooVersion: monster.config.developerFlags.kazooVersion
 					},
