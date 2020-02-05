@@ -1795,6 +1795,8 @@ define(function(require) {
 					'nameAndNumbers.numbersToPort.formattedNumbers',
 					'requiredDocuments'
 				]),
+				invoice = _.get(data, 'ownershipConfirmation.latestBill', []),
+				otherDocuments = _.get(data, 'requiredDocuments', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
 						nameAndNumbers: {
@@ -1811,8 +1813,8 @@ define(function(require) {
 							}
 						},
 						requiredDocuments: _
-							.chain(data)
-							.get('requiredDocuments', [])
+							.chain(invoice)
+							.concat(otherDocuments)
 							.map(getRequiredDocumentProps)
 							.value()
 					});
