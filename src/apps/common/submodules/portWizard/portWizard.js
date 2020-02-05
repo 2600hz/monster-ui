@@ -414,9 +414,9 @@ define(function(require) {
 				fileInput: $fileInput,
 				fileRestrictions: csvFilesRestrictions,
 				dataFormat: 'text',
-				success: function(results) {
+				success: function(fileData) {
 					self.portWizardNameAndNumbersProcessFile({
-						fileText: results[0].file,
+						fileText: fileData.file,
 						numbersArea: $numbersArea
 					});
 				}
@@ -1042,9 +1042,18 @@ define(function(require) {
 		 */
 		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this,
+				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+				invoiceDocumentMetadata = _.find(requiredDocumentsCompleteList, { key: 'Invoice' }),
+				buildTemplateArgs = _
+					.chain(args)
+					.pick('data')
+					.merge({
+						invoiceDocumentMetadata: invoiceDocumentMetadata
+					})
+					.value(),
 				$template = _.has(args.data, 'ownershipConfirmation.latestBill')
-					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate(args)
-					: self.portWizardOwnershipConfirmationBillUploadGetTemplate(args);
+					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate(buildTemplateArgs)
+					: self.portWizardOwnershipConfirmationBillUploadGetTemplate(buildTemplateArgs);
 
 			callback({
 				template: $template,
@@ -1082,10 +1091,13 @@ define(function(require) {
 
 		/**
 		 * Get the template for Ownership Confirmation step (bill upload view)
-		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
 		 */
 		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
 			var self = this,
+				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-billUpload',
 					data: {
@@ -1095,6 +1107,7 @@ define(function(require) {
 				}));
 
 			self.portWizardOwnershipConfirmationBillUploadBindEvents({
+				invoiceDocumentMetadata: invoiceDocumentMetadata,
 				template: $template
 			});
 
@@ -1104,10 +1117,12 @@ define(function(require) {
 		/**
 		 * Bind Ownership Confirmation step events (bill upload view)
 		 * @param  {Object} args
+		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
 		 * @param  {jQuery} args.template  Step template
 		 */
 		portWizardOwnershipConfirmationBillUploadBindEvents: function(args) {
 			var self = this,
+				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
 				$template = args.template,
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
@@ -1116,9 +1131,10 @@ define(function(require) {
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
+				documentMetadata: invoiceDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
-				success: function(results) {
-					latestBill = results[0];
+				success: function(fileData) {
+					latestBill = fileData;
 
 					$billAckCheckbox.prop('disabled', false);
 				}
@@ -1148,11 +1164,14 @@ define(function(require) {
 
 		/**
 		 * Get the template for Ownership Confirmation step (account information view)
-		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
 				data = args.data,
+				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
 				ownershipConfirmationData = data.ownershipConfirmation,
 				defaultCountry = monster.config.whitelabel.countryCode,
 				$template = $(self.getTemplate({
@@ -1199,7 +1218,8 @@ define(function(require) {
 
 			self.portWizardOwnershipConfirmationAccountInfoBindEvents({
 				template: $template,
-				data: ownershipConfirmationData
+				data: ownershipConfirmationData,
+				invoiceDocumentMetadata: invoiceDocumentMetadata
 			});
 
 			monster.ui.validate($form, {
@@ -1273,11 +1293,13 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
 		 * @param  {Object} args.data  Step data
+		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
 		 */
 		portWizardOwnershipConfirmationAccountInfoBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
 				data = args.data,
+				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
 				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
@@ -1286,10 +1308,11 @@ define(function(require) {
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
+				documentMetadata: invoiceDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
 				hidden: true,
-				success: function(results) {
-					data.latestBill = results[0];
+				success: function(fileData) {
+					data.latestBill = fileData;
 
 					monster.ui.renderPDF(
 						data.latestBill.file,
@@ -1336,9 +1359,7 @@ define(function(require) {
 				return _
 					.chain(requiredDocumentsData)
 					.find({ key: document.key })
-					.merge({
-						key: document.key
-					})	// Merge key to nil object, if the document was not found
+					.merge(document)	// Merge key to nil object, if the document was not found
 					.value();
 			});
 
@@ -1434,12 +1455,9 @@ define(function(require) {
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
 						fileName: document.name,
+						documentMetadata: document,
 						fileRestrictions: pdfFilesRestrictions,
-						success: function(results) {
-							var fileData = _.merge({
-								key: document.key
-							}, results[0]);
-
+						success: function(fileData) {
 							self.portWizardSet([
 								'requiredDocumentsData',
 								documentIndex
@@ -1974,6 +1992,7 @@ define(function(require) {
 		  * @param  {jQuery} args.fileInput  File input element
 		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
 		  *                                   text field
+		  * @param  {Object} [args.documentMetadata] Document metadata
 		  * @param  {Object} args.fileRestrictions  File restrictions
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
@@ -1987,6 +2006,7 @@ define(function(require) {
 			var self = this,
 				$fileInput = args.fileInput,
 				filesList = _.chain(args).pick('fileName').values().value(),
+				documentMetadata = args.documentMetadata,
 				fileRestrictions = args.fileRestrictions,
 				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
 				hidden = _.get(args, 'hidden', false),
@@ -2005,7 +2025,11 @@ define(function(require) {
 				mimeTypes: fileRestrictions.mimeTypes,
 				maxSize: fileRestrictions.maxSize,
 				dataFormat: dataFormat,
-				success: args.success,
+				success: function(results) {
+					var fileData = _.merge({ hasChanged: true }, results[0], documentMetadata);
+
+					args.success(fileData);
+				},
 				error: function(errorsList) {
 					var errorType = _
 							.chain(errorsList)
