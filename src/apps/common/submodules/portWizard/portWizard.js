@@ -1696,7 +1696,7 @@ define(function(require) {
 		portWizardReviewRender: function(args, callback) {
 			var self = this,
 				initTemplate = function() {
-					var formattedData = self.wizardReviewFormatData(args.data),
+					var formattedData = self.portWizardReviewFormatData(args.data),
 						acknowledgements = formattedData.review.acknowledgements,
 						acknowledgementsCount = {
 							checked: _
@@ -1758,7 +1758,7 @@ define(function(require) {
 		 * Fomat the wizard data to be rendered for review
 		 * @param  {Object} data  Wizard data
 		 */
-		wizardReviewFormatData: function(data) {
+		portWizardReviewFormatData: function(data) {
 			var self = this,
 				numbers = _.map(data.nameAndNumbers.numbersToPort.formattedNumbers, 'e164Number'),
 				countryCode = data.ownershipConfirmation.serviceAddress.country,
