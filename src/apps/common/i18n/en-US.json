@@ -244,19 +244,6 @@
 					}
 				},
 				"general": {
-					"documents": {
-						"LOA": "DIDWW LOA for a particular country",
-						"CountryInfo": "Specific information for a particular country",
-						"Invoice": "Latest Invoice",
-						"AccountNum": "Account number required",
-						"TaxID": "Local TAX / VAT ID or company registration number",
-						"CustomerID": "ID / Passport copy / Company Registration certificate",
-						"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
-						"LocalAddr": "End-user’s local address from the same city as the number to be ported",
-						"ServiceAddr": "End-user’s Service address in the same country",
-						"ReleaseLetter": "Letter of Release from the losing provider",
-						"PaymentProof": "Latest Proof of Payment"
-					},
 					"errors": {
 						"phonebookUnavailable": "It was not possible to lookup the number information. Check if the Phonebook feature is available for your installation.",
 						"lookupNumbersError": "An error occurred while trying to lookup for phone numbers information.",
@@ -272,6 +259,27 @@
 					"placeholders": {
 						"file": "No file selected..."
 					}
+				}
+			},
+			"documents": {
+				"LOA": "DIDWW LOA for a particular country",
+				"CountryInfo": "Specific information for a particular country",
+				"Invoice": "Losing Carrier Bill",
+				"AccountNum": "Account number required",
+				"TaxID": "Local TAX / VAT ID or company registration number",
+				"CustomerID": "ID / Passport copy / Company Registration certificate",
+				"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
+				"LocalAddr": "End-user’s local address from the same city as the number to be ported",
+				"ServiceAddr": "End-user’s Service address in the same country",
+				"ReleaseLetter": "Letter of Release from the losing provider",
+				"PaymentProof": "Latest Proof of Payment"
+			},
+			"save": {
+				"errors": {
+					"attachmentSave": "Upload failed for document \"{{variable}}\"",
+					"portCreate": "An unexpected error occured while creating the port request.",
+					"portUpdate": "An unexpected error occured while updating the port request.",
+					"portSubmit": "An unexpected error occured while submitting the port request."
 				}
 			},
 			"title": "Creating a New Port Request"
