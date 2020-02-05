@@ -1561,6 +1561,15 @@ define(function(require) {
 			if (isValid) {
 				dateAndNotificationsData = monster.ui.getFormData($form.get(0));
 
+				// Extract and store date(s)
+				$form.find('input.hasDatepicker').each(function() {
+					var $this = $(this),
+						propertyPath = $this.attr('name'),
+						selectedDate = $this.datepicker('getDate');
+
+					_.set(dateAndNotificationsData, propertyPath, selectedDate);
+				});
+
 				// Remove empty e-mail values
 				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
 

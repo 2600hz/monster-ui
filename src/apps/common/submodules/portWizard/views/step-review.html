@@ -96,7 +96,9 @@
 			<div class="section">
 				{{> sectionTitle stepName="dateAndNotifications"}}
 				<div class="section-body">
-					{{> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.desiredTargetDate.labels.targetDate value=@root.data.dateAndNotifications.targetDate}}
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.desiredTargetDate.labels.targetDate value=@root.data.dateAndNotifications.targetDate hasContent=true}}
+						{{toFriendlyDate value "date"}}
+					{{/horizontalFieldPartial}}
 				{{#if @root.data.dateAndNotifications.notificationEmails.length}}
 					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.notifications.labels.notifyByEmail value=@root.data.dateAndNotifications.notificationEmails hasContent=true}}
 						{{#each value}}
