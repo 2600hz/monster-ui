@@ -1,7 +1,7 @@
-class SocketsManager {
+class WebSocketManager {
 	/**
 	 * Creates a new manager of WebSocketClient per URI.
-	 * @return {SocketsManager}
+	 * @return {WebSocketManager}
 	 */
 	constructor() {
 		/**
@@ -19,7 +19,7 @@ class SocketsManager {
 	 */
 	isConnected(uri) {
 		const client = this.clients.get(uri);
-		return !!client && client.isOpen();
+		return client !== undefined && client.isOpen();
 	}
 
 	/**
@@ -50,6 +50,27 @@ class SocketsManager {
 	}
 }
 
+class Logger {
+	constructor(id) {
+		this.id = id;
+	}
+
+	print(content) {
+		return [
+			[new Date().toISOString(), this.id].join(' | '),
+			...(content.length ? ['|', ...content] : [])
+		];
+	}
+
+	log(...content) {
+		console.log(...this.print(content));
+	}
+
+	warn(...content) {
+		console.warn(...this.print(content));
+	}
+}
+
 class WebSocketClient {
 	/**
 	 * Creates a new WebSocketClient instance.
@@ -57,39 +78,164 @@ class WebSocketClient {
 	 * @return {WebSocketClient}
 	 */
 	constructor(uri) {
+		/**
+		 * The URL to which to connect.
+		 * @type {string}
+		 */
 		this.uri = uri;
+
+		/**
+		 * Holds the WebSocket object to manage connection to server.
+		 * @type {WebSocket}
+		 */
 		this.ws = null;
+
+		/**
+		 * Holds the timeout ID before next reconnection attempt.
+		 * @type {number}
+		 */
+		this.reconnectTimeout = null;
+
+		/**
+		 * Holds the amount of time before next reconnection attempt.
+		 * @type {number}
+		 */
+		this.reconnectTimer = null;
+
+		/**
+		 * Whether the connection should be closed without reconnect attempt.
+		 * @type {boolean}
+		 */
+		this.shouldClose = false;
+
+		/**
+		 * Utility used to log messages.
+		 * @type {Logger}
+		 */
+		this.logger = new Logger(`${WebSocketClient.name}(${this.uri})`);
 	}
 
 	/**
-	 * Creates a new WebSocket connection to uri when none is already connected.
+	 * Creates a new WebSocket connection to uri when none is already connecting/connected.
 	 */
 	connect() {
 		if (this.isConnecting() || this.isOpen()) {
-			console.log('WebSocket is already connected');
+			this.logger.log('already connected');
 			return;
 		}
+
+		this.logger.log(`attempting to ${this.reconnectTimeout ? 're' : ''}connect...`);
 
 		try {
 			this.ws = new WebSocket(this.uri);
-		} catch (e) {
-			console.warn('error connecting to WebSocket', e);
-		}
 
-		['open', 'close', 'error', 'message'].forEach(
-			type => this.ws.addEventListener(type, console.log.bind(undefined, 'on' + type))
-		);
+			this.ws.addEventListener('open', this.onOpen.bind(this));
+			this.ws.addEventListener('close', this.onClose.bind(this));
+
+			['error', 'message'].forEach(
+				type => this.ws.addEventListener(
+					type,
+					this.logger.log.bind(this.logger, 'on' + type)
+				)
+			);
+		} catch (e) {
+			this.logger.warn(
+				`error while attempting to ${this.reconnectTimeout ? 're' : ''}connect`,
+				e
+			);
+		}
 	}
 
 	/**
-	 * Closes the WebSocket connection.
+	 * Schedules a new connection attempt after a delay.
+	 */
+	reconnect() {
+		const MAX_TIMER = 60 * 1000;
+		const MULTIPLIER = 2;
+		const timer = this.reconnectTimer || 125;
+
+		this.reconnectTimer = Math.min(
+			timer * MULTIPLIER,
+			MAX_TIMER
+		);
+		this.reconnectTimeout = setTimeout(
+			this.connect.bind(this),
+			this.reconnectTimer
+		);
+
+		this.logger.log(`reconnection scheduled in ${this.reconnectTimer / 1000}s`);
+	}
+
+	/**
+	 * Resets reconnect related properties to their original values.
+	 */
+	resetReconnect() {
+		clearTimeout(this.reconnectTimeout);
+		this.reconnectTimeout = null;
+		this.reconnectTimer = null;
+	}
+
+	/**
+	 * Closes the connection without reconnection attempts.
 	 */
 	disconnect() {
-		if (!this.isInstantiated()) {
-			console.log('WebSocket is not connected');
+		if (this.shouldClose) {
+			this.logger.log('already disconnecting');
 			return;
 		}
-		this.ws.close();
+		if (
+			!this.reconnectTimeout
+			&& (this.isClosing() || this.isClosed())
+		) {
+			this.logger.log(`already disconnect${this.isClosing() ? 'ing' : 'ed'}`);
+			return;
+		}
+
+		this.shouldClose = true;
+		this.resetReconnect();
+
+		this.close();
+	}
+
+	/**
+	 * Closes the connection.
+	 */
+	close() {
+		if (this.isClosed()) {
+			this.logger.log(this.shouldClose ? 'disconnected successfully' : 'already closed');
+		} else {
+			this.logger.log(`attempting to ${this.shouldClose ? 'disconnect' : 'close'}...`);
+		}
+		try {
+			this.ws.close();
+		} catch (e) {
+			this.logger.warn('error while attempting to close', e);
+		}
+	}
+
+	/**
+	 * Called when the connection's state changes to open.
+	 */
+	onOpen() {
+		this.logger.log('connected successfully');
+		this.resetReconnect();
+	}
+
+	/**
+	 * Called when the connection's state changes to closed.
+	 */
+	onClose(event) {
+		if (this.shouldClose) {
+			this.logger.log('disconnected successfully');
+			this.shouldClose = false;
+			return;
+		}
+		if (event.wasClean) {
+			this.logger.log('closed cleanly');
+		} else {
+			this.logger.warn('closed abruptly', event);
+		}
+		this.reconnect();
 	}
 
 	/**
@@ -101,7 +247,7 @@ class WebSocketClient {
 	}
 
 	/**
-	 * Returns whether ws is in connecting state.
+	 * Returns whether the connection is not yet open.
 	 * @return {boolean}
 	 */
 	isConnecting() {
@@ -109,11 +255,27 @@ class WebSocketClient {
 	}
 
 	/**
-	 * Returns whether ws is in open state.
+	 * Returns whether the connection is open and ready to communicate.
 	 * @return {boolean}
 	 */
 	isOpen() {
 		return this.isInstantiated() && this.ws.readyState === WebSocket.OPEN;
+	}
+
+	/**
+	 * Returns whether the connection is in the process of closing.
+	 * @return {boolean}
+	 */
+	isClosing() {
+		return this.isInstantiated() && this.ws.readyState === WebSocket.CLOSING;
+	}
+
+	/**
+	 * Returns whether the connection is closed.
+	 * @return {boolean}
+	 */
+	isClosed() {
+		return this.isInstantiated() && this.ws.readyState === WebSocket.CLOSED;
 	}
 }
 
@@ -121,4 +283,4 @@ class WebSocketClient {
  * A module managing WebSocket connections.
  * @module monster/socket
  */
-define(new SocketsManager());
+define(new WebSocketManager());
