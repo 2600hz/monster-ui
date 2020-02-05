@@ -254,6 +254,7 @@ define(function(require) {
 				thisArg: self,
 				controlId: 'port_wizard_control',
 				data: {
+					portRequestId: portRequestId,
 					nameAndNumbers: {
 						numbersToPort: {
 							type: 'local'
@@ -1874,7 +1875,7 @@ define(function(require) {
 		 *                 Wizard actions                 *
 		 **************************************************/
 
-		/* SUBMIT */
+		/* SAVE/SUBMIT */
 
 		/**
 		 * Submits the current port request
@@ -1883,9 +1884,196 @@ define(function(require) {
 		 */
 		portWizardSubmit: function(args) {
 			var self = this,
+				wizardData = args.data,
+				portRequestId = _.get(wizardData, 'portRequestId'),
+				accountId = self.portWizardGet('accountId'),
 				globalCallback = self.portWizardGet('globalCallback');
 
-			globalCallback();
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardSavePortRequest({
+						accountId: accountId,
+						data: wizardData,
+						callback: waterfallCallback
+					});
+				},
+				function(portRequest, waterfallCallback) {
+					if (_.isNil(portRequestId)) {
+						wizardData.portRequestId = portRequest.id;
+						portRequestId = portRequest.id;
+					}
+
+					waterfallCallback(null);
+				},
+				function(waterfallCallback) {
+					self.portWizardSaveAttachments({
+						accountId: accountId,
+						data: wizardData,
+						callback: _.unary(waterfallCallback)
+					});
+				},
+				function(waterfallCallback) {
+					self.portWizardUpdatePortRequestState({
+						accountId: accountId,
+						portRequestId: portRequestId,
+						state: 'submitted',
+						callback: _.unary(waterfallCallback)
+					});
+				}
+			], function(errors) {
+				if (errors) {
+					return self.portWizardSaveNotifyErrors(errors);
+				}
+
+				globalCallback();
+			});
+		},
+
+		/**
+		 * Creates or updates a port request
+		 * @param  {Object} args
+		 * @param  {String} args.accountId  Account ID
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardSavePortRequest: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				wizardData = args.data,
+				callback = args.callback,
+				portRequestId = _.get(wizardData, 'portRequestId'),
+				isNewPortRequest = _.isNil(portRequestId),
+				resource = isNewPortRequest ? 'port.create' : 'port.update',
+				requestData = _.merge({
+					accountId: accountId,
+					data: self.portWizardSaveGetFormattedPortRequest(wizardData)
+				}, isNewPortRequest ? {
+					portRequestId: portRequestId
+				} : {});
+
+			self.portWizardRequestResourceSave({
+				resource: resource,
+				data: requestData,
+				success: function(portRequest) {
+					callback(null, portRequest);
+				},
+				error: function(parsedError) {
+					callback([
+						{
+							errorType: isNewPortRequest ? 'portCreate' : 'portUpdate',
+							error: parsedError
+						}
+					]);
+				}
+			});
+		},
+
+		/**
+		 * Creates or updates a port request
+		 * @param  {Object} args
+		 * @param  {String} args.accountId  Account ID
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardSaveAttachments: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				wizardData = args.data,
+				callback = args.callback,
+				portRequestId = _.get(wizardData, 'portRequestId'),
+				invoice = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
+				otherDocuments = _.get(wizardData, 'requiredDocuments', []),
+				allDocuments = _
+					.chain(otherDocuments)
+					.concat(invoice)
+					.filter('hasChanged')
+					.value(),
+				seriesFunctions = _.map(allDocuments, function(document) {
+					return function(seriesCallback) {
+						var resource = document.isNew ? 'port.createAttachment' : 'port.updateAttachment';
+
+						self.portWizardRequestResourceSave({
+							resource: resource,
+							data: {
+								accountId: accountId,
+								portRequestId: portRequestId,
+								documentName: document.attachmentName,
+								data: document.file,
+								generateError: false
+							},
+							success: function(data) {
+								seriesCallback(null, {
+									data: data
+								});
+							},
+							error: function(parsedError) {
+								// Pack the error as part of the result, and returns a null value
+								// as error, to allow the parallel tasks to continue regardless if
+								// one of them fail
+								seriesCallback(null, {
+									errorType: 'attachmentSave',
+									documentKey: document.key,
+									error: parsedError
+								});
+							}
+						});
+					};
+				});
+
+			// It is not possible to upload all the attachments in parallel, because it seems
+			// to cause conflicts in the API
+			monster.series(seriesFunctions, function(error, data) {
+				var errors = _.some(data, 'errorType')
+						? _.filter(data, 'errorType')
+						: null,
+					results = _
+						.chain(data)
+						.reject('errorType')
+						.map('data')
+						.value();
+
+				callback(errors, results);
+			});
+		},
+
+		/**
+		 * Update port request state
+		 * @param  {Object} args
+		 * @param  {String} args.accountId  Account ID
+		 * @param  {String} args.portRequestId  Port request ID
+		 * @param  {('submitted')} args.state  Port request state
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardUpdatePortRequestState: function(args) {
+			var self = this,
+				callback = args.callback,
+				requestData = _
+					.chain(args)
+					.pick([
+						'accountId',
+						'portRequestId',
+						'state'
+					])
+					.merge({
+						generateError: false
+					})
+					.value();
+
+			self.portWizardRequestResourceSave({
+				resource: 'port.changeState',
+				data: requestData,
+				success: function() {
+					callback(null);
+				},
+				error: function(parsedError) {
+					callback([
+						{
+							errorType: 'portSubmit',
+							error: parsedError
+						}
+					]);
+				}
+			});
 		},
 
 		/**
@@ -1946,6 +2134,35 @@ define(function(require) {
 			return portRequestDocument;
 		},
 
+		/**
+		 * Notify port request saving errors
+		 * @param  {Array} errors  List of errors
+		 */
+		portWizardSaveNotifyErrors: function(errors) {
+			var self = this;
+
+			_.each(errors, function(errorData) {
+				var rawMessage = monster.util.tryI18n(self.i18n.active().commonApp.portWizard.save.errors, errorData.errorType),
+					isAttachmentSaveError = errorData.errorType === 'attachmentSave',
+					documentName = isAttachmentSaveError
+						? monster.util.tryI18n(self.i18n.active().commonApp.portWizard.documents, errorData.documentKey)
+						: null,
+					message = isAttachmentSaveError
+						? self.getTemplate({
+							name: '!' + rawMessage,
+							data: {
+								documentName: documentName
+							}
+						})
+						: rawMessage;
+
+				monster.ui.toast({
+					type: 'error',
+					message: message
+				});
+			});
+		},
+
 		/* CLOSE WIZARD */
 
 		/**
@@ -1986,6 +2203,34 @@ define(function(require) {
 					args.error({
 						isPhonebookUnavailable: _.includes([0, 500], error.status)
 					});
+				}
+			});
+		},
+
+		/**
+		 * Request the creation of a new resource document
+		 * @param  {Object} args
+		 * @param  {String} args.resource  Resource name
+		 * @param  {Object} args.data  Request data
+		 * @param  {Object} args.data.data  Resource document data
+		 * @param  {String} args.data.accountId  Account ID
+		 * @param  {Boolean} [args.data.acceptCharges=true]  Whether or not to accept charges without
+		 *                                              asking the user
+		 * @param  {Boolean} [args.data.generateError=false]  Whether or not show error dialog
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} args.error  Error callback
+		 */
+		portWizardRequestResourceSave: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: args.resource,
+				data: args.data,
+				success: function(data) {
+					args.success(data.data);
+				},
+				error: function(parsedError) {
+					_.has(args, 'error') && args.error(parsedError);
 				}
 			});
 		},
@@ -2034,7 +2279,10 @@ define(function(require) {
 				maxSize: fileRestrictions.maxSize,
 				dataFormat: dataFormat,
 				success: function(results) {
-					var fileData = _.merge({ hasChanged: true }, results[0], documentMetadata);
+					var fileData = _.merge({
+						isNew: true,
+						hasChanged: true
+					}, results[0], documentMetadata);
 
 					args.success(fileData);
 				},
