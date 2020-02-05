@@ -66,17 +66,50 @@ define(function(require) {
 				minTargetDateBusinessDays: 4,
 				requiredDocuments: {
 					documents: [
-						'LOA',
-						'CountryInfo',
-						'Invoice',
-						'AccountNum',
-						'TaxID',
-						'CustomerID',
-						'LegalAuth',
-						'LocalAddr',
-						'ServiceAddr',
-						'ReleaseLetter',
-						'PaymentProof'
+						{
+							key: 'LOA',
+							attachmentName: 'form.pdf'
+						},
+						{
+							key: 'CountryInfo',
+							attachmentName: 'country_info.pdf'
+						},
+						{
+							key: 'Invoice',
+							attachmentName: 'bill.pdf'
+						},
+						{
+							key: 'AccountNum',
+							attachmentName: 'account_number.pdf'
+						},
+						{
+							key: 'TaxID',
+							attachmentName: 'tax_id.pdf'
+						},
+						{
+							key: 'CustomerID',
+							attachmentName: 'customer_id.pdf'
+						},
+						{
+							key: 'LegalAuth',
+							attachmentName: 'legal_auth.pdf'
+						},
+						{
+							key: 'LocalAddr',
+							attachmentName: 'local_address.pdf'
+						},
+						{
+							key: 'ServiceAddr',
+							attachmentName: 'service_address.pdf'
+						},
+						{
+							key: 'ReleaseLetter',
+							attachmentName: 'release_letter.pdf'
+						},
+						{
+							key: 'PaymentProof',
+							attachmentName: 'payment_proof.pdf'
+						}
 					],
 					requirementsByCountries: {
 						AT: { local: [0, 2, 3, 5], tollFree: [0, 1, 2] },
@@ -1282,7 +1315,7 @@ define(function(require) {
 		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this,
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				requiredDocumentsList = _.without(requiredDocumentsCompleteList, 'Invoice'),
+				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Invoice' }),
 				requiredDocumentsData = _.get(args.data, 'requiredDocuments', []),
 				validationOptions,
 				$template,
@@ -1299,12 +1332,12 @@ define(function(require) {
 			}
 
 			// Update required documents based on current requirements
-			requiredDocumentsData = _.map(requiredDocumentsList, function(documentKey) {
+			requiredDocumentsData = _.map(requiredDocumentsList, function(document) {
 				return _
 					.chain(requiredDocumentsData)
-					.find({ key: documentKey })
+					.find({ key: document.key })
 					.merge({
-						key: documentKey
+						key: document.key
 					})	// Merge key to nil object, if the document was not found
 					.value();
 			});
@@ -1330,8 +1363,8 @@ define(function(require) {
 			validationOptions = {
 				rules: _
 					.chain(requiredDocumentsList)
-					.keyBy(function(documentKey) {
-						return documentKey + '.name';
+					.keyBy(function(document) {
+						return document.key + '.name';
 					})
 					.mapValues(function() {
 						return {
