@@ -1826,6 +1826,67 @@ define(function(require) {
 			globalCallback();
 		},
 
+		/**
+		 * Build the account document to submit to the API, from the wizard data
+		 * @param  {Object} wizardData  Wizard's data
+		 * @returns  {Object}  Account document
+		 */
+		portWizardSubmitGetFormattePortRequest: function(wizardData) {
+			var self = this,
+				nameAndNumbersData = wizardData.nameAndNumbers,
+				ownershipConfirmationData = wizardData.ownershipConfirmation,
+				dateAndNotificationsData = wizardData.dateAndNotifications,
+				notificationEmails = dateAndNotificationsData.notificationEmails,
+				billInfo = {
+					carrier: ownershipConfirmationData.accountOwnership.carrier,
+					name: ownershipConfirmationData.accountOwnership.billName,
+					street_pre_dir: ownershipConfirmationData.serviceAddress.streetPreDir,
+					street_number: ownershipConfirmationData.serviceAddress.streetNumber,
+					street_address: ownershipConfirmationData.serviceAddress.streetName,
+					street_type: ownershipConfirmationData.serviceAddress.streetType,
+					street_post_dir: ownershipConfirmationData.serviceAddress.streetPostDir,
+					extended_address: ownershipConfirmationData.serviceAddress.addressLine2,
+					locality: ownershipConfirmationData.serviceAddress.locality,
+					region: ownershipConfirmationData.serviceAddress.region,
+					postal_code: ownershipConfirmationData.serviceAddress.postalCode,
+					account_number: ownershipConfirmationData.accountInfo.accountNumber,
+					pin: ownershipConfirmationData.accountInfo.pin,
+					btn: ownershipConfirmationData.accountInfo.btn
+				},
+				portRequestDocument = {
+					ui_flags: {
+						type: nameAndNumbersData.numbersToPort.type,
+						validation: true,
+						portion: null
+					},
+					numbers: _
+						.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
+						.map('e164Number')
+						.transform(function(numbers, number) {
+							numbers[number] = {};
+						}, {})
+						.value(),
+					name: nameAndNumbersData.portRequestName,
+					bill: _.omitBy(billInfo, _.isNil),
+					extra: {
+						numbers_count: _.size(nameAndNumbersData.numbersToPort.formattedNumbers)
+					},
+					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
+				};
+
+			if (!_.isEmpty(notificationEmails)) {
+				portRequestDocument.notifications = {
+					email: {
+						send_to: _.size(notificationEmails) === 1
+							? _.head(notificationEmails)
+							: notificationEmails
+					}
+				};
+			}
+
+			return portRequestDocument;
+		},
+
 		/* CLOSE WIZARD */
 
 		/**
