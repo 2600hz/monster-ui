@@ -1562,7 +1562,7 @@ define(function(require) {
 				dateAndNotificationsData = monster.ui.getFormData($form.get(0));
 
 				// Remove empty e-mail values
-				_.pullAllBy(dateAndNotificationsData.notificationEmails, _.isEmpty);
+				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
 
 				delete args.dateAndNotifications;
 			}

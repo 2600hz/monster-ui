@@ -97,11 +97,13 @@
 				{{> sectionTitle stepName="dateAndNotifications"}}
 				<div class="section-body">
 					{{> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.desiredTargetDate.labels.targetDate value=@root.data.dateAndNotifications.targetDate}}
+				{{#if @root.data.dateAndNotifications.notificationEmails.length}}
 					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.notifications.labels.notifyByEmail value=@root.data.dateAndNotifications.notificationEmails hasContent=true}}
 						{{#each value}}
 							{{this}}{{#unless @last}}<br />{{/unless}}
 						{{/each}}
 					{{/horizontalFieldPartial}}
+				{{/if}}
 				</div>
 			</div>
 			<div class="section">
@@ -111,7 +113,7 @@
 				<div class="section-body">
 					<div class="flex-row-container">
 						<div class="field-label-horizontal flex-item-2">
-							{{#monsterPanelText portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.title 'warning'}}
+							{{#monsterPanelText portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.title "warning"}}
 								{{portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.message}}
 							{{/monsterPanelText}}
 						</div>
