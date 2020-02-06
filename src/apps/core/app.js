@@ -135,7 +135,11 @@ define(function(require) {
 		startSocket: function() {
 			var self = this;
 
-			monster.socket.connect(monster.config.api.socket);
+			monster.socket.connect({
+				uri: monster.config.api.socket,
+				onOpen: monster.pub.bind(undefined, 'socket.connected'),
+				onClose: monster.pub.bind(undefined, 'socket.disconnected')
+			});
 		},
 
 		startWebphone: function() {

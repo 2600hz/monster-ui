@@ -28,12 +28,14 @@ class WebSocketManager {
 	 *
 	 * Creates a client corresponding to uri when none exists.
 	 */
-	connect(uri) {
+	connect({ uri, onOpen, onClose }) {
 		let client = this.clients.get(uri);
+
 		if (client === undefined) {
-			this.clients.set(uri, new WebSocketClient(uri));
+			this.clients.set(uri, new WebSocketClient({ uri, onOpen, onClose }));
 			client = this.clients.get(uri);
 		}
+
 		client.connect();
 	}
 
@@ -43,9 +45,11 @@ class WebSocketManager {
 	 */
 	disconnect(uri) {
 		const client = this.clients.get(uri);
+
 		if (client === undefined) {
 			return;
 		}
+
 		client.disconnect();
 	}
 }
@@ -77,12 +81,18 @@ class WebSocketClient {
 	 * @param  {string} uri
 	 * @return {WebSocketClient}
 	 */
-	constructor(uri) {
+	constructor({ uri, onOpen, onClose }) {
 		/**
 		 * The URL to which to connect.
 		 * @type {string}
 		 */
 		this.uri = uri;
+
+		/**
+		 * Holds callbacks for open and close events.
+		 * @type {Object}
+		 */
+		this.callbacks = { onOpen, onClose };
 
 		/**
 		 * Holds the WebSocket object to manage connection to server.
@@ -131,6 +141,9 @@ class WebSocketClient {
 
 			this.ws.addEventListener('open', this.onOpen.bind(this));
 			this.ws.addEventListener('close', this.onClose.bind(this));
+
+			this.ws.addEventListener('open', this.callbacks.onOpen);
+			this.ws.addEventListener('close', this.callbacks.onClose);
 
 			['error', 'message'].forEach(
 				type => this.ws.addEventListener(
