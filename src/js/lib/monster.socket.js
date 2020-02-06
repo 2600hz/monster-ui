@@ -183,29 +183,32 @@ class WebSocketClient {
 	 * Resets reconnect related properties to their original values.
 	 */
 	resetReconnect() {
+		if (!this.reconnectTimeout) {
+			return;
+		}
 		clearTimeout(this.reconnectTimeout);
 		this.reconnectTimeout = null;
 		this.reconnectTimer = null;
+
+		this.logger.log('reconnect cleared');
 	}
 
 	/**
 	 * Closes the connection without reconnection attempts.
 	 */
 	disconnect() {
+		this.resetReconnect();
+
+		if (this.isClosed()) {
+			this.logger.log('already disconnected');
+			return;
+		}
+
 		if (this.shouldClose) {
 			this.logger.log('already disconnecting');
 			return;
 		}
-		if (
-			!this.reconnectTimeout
-			&& (this.isClosing() || this.isClosed())
-		) {
-			this.logger.log(`already disconnect${this.isClosing() ? 'ing' : 'ed'}`);
-			return;
-		}
-
 		this.shouldClose = true;
-		this.resetReconnect();
 
 		this.close();
 	}
@@ -215,7 +218,7 @@ class WebSocketClient {
 	 */
 	close() {
 		if (this.isClosed()) {
-			this.logger.log(this.shouldClose ? 'disconnected successfully' : 'already closed');
+			this.logger.log('already closed');
 		} else {
 			this.logger.log(`attempting to ${this.shouldClose ? 'disconnect' : 'close'}...`);
 		}
@@ -243,11 +246,11 @@ class WebSocketClient {
 			this.shouldClose = false;
 			return;
 		}
-		if (event.wasClean) {
-			this.logger.log('closed cleanly');
-		} else {
-			this.logger.warn('closed abruptly', event);
-		}
+		this.logger.log(
+			`closed ${event.wasClean ? 'cleanly' : 'abruptly'}`,
+			event.wasClean ? '' : event
+		);
+
 		this.reconnect();
 	}
 
