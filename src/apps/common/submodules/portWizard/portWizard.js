@@ -30,6 +30,24 @@ define(function(require) {
 					emailItem: 200
 				},
 				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				errorTypesByStep: [
+					{
+						stepName: 'nameAndNumbers',
+						errorTypes: [
+							'mixed_number_type',
+							'number_is_being_ported_for_a_different_account',
+							'number_is_on_a_port_request_already',
+							'number_exists_on_the_system_already'
+						]
+					},
+					{
+						stepName: 'ownershipConfirmation',
+						errorTypes: [
+							'carrier_error_7115',
+							'carrier_error_7203'
+						]
+					}
+				],
 				fileRestrictions: {
 					csv: {
 						maxSize: 5,
@@ -149,7 +167,15 @@ define(function(require) {
 						US: { local: [0, 2, 8], tollFree: [0, 2, 8] },
 						ZA: { local: [0, 1, 2, 5, 7, 10], tollFree: [] }
 					}
-				}
+				},
+				stepNames: [
+					'nameAndNumbers',
+					'carrierSelection',
+					'ownershipConfirmation',
+					'requiredDocuments',
+					'dateAndNotifications',
+					'review'
+				]
 			}
 		},
 
@@ -219,14 +245,7 @@ define(function(require) {
 				portRequestId = _.get(args, 'data.portRequestId'),
 				i18n = self.i18n.active().commonApp.portWizard,
 				i18nSteps = i18n.steps,
-				stepNames = [
-					'nameAndNumbers',
-					'carrierSelection',
-					'ownershipConfirmation',
-					'requiredDocuments',
-					'dateAndNotifications',
-					'review'
-				],
+				stepNames = self.appFlags.portWizard.stepNames,
 				$container,
 				callback;
 
@@ -2154,9 +2173,24 @@ define(function(require) {
 		 */
 		portWizardSaveNotifyErrors: function(errorData) {
 			var self = this,
+				errorStage = errorData.errorStage,
+				groupedErrors = errorData.groupedErrors,
+				errorTypes = _.keys(groupedErrors),
+				errorStep = _
+					.chain(self.appFlags.portWizard.errorTypesByStep)
+					.find(function(stepErrorInfo) {
+						return _
+							.chain(stepErrorInfo.errorTypes)
+							.intersection(errorTypes)
+							.size()
+							.value() > 0;
+					})
+					.get('stepName')
+					.value(),
+				stepNames = self.appFlags.portWizard.stepNames,
 				i18nSaveErrors = self.i18n.active().commonApp.portWizard.save.errors,
 				unknownErrorMessage = monster.util.tryI18n(i18nSaveErrors, 'unknown_error'),
-				viewErrors = _.map(errorData.groupedErrors, function(errorGroup, errorKey) {
+				viewErrors = _.map(groupedErrors, function(errorGroup, errorKey) {
 					return {
 						message: _.get(
 							i18nSaveErrors,
@@ -2170,16 +2204,24 @@ define(function(require) {
 							return cause;
 						}).join(', ').value()
 					};
-				});
+				}),
+				dialogTemplate = self.getTemplate({
+					name: 'errorDialog',
+					data: {
+						errorStage: errorStage,
+						errors: viewErrors
+					},
+					submodule: 'portWizard'
+				}),
+				dialogCallback = errorStep
+					? function() {
+						monster.pub('common.navigationWizard.goToStep', {
+							stepId: _.indexOf(stepNames, errorStep)
+						});
+					}
+					: undefined;
 
-			monster.ui.alert('error', self.getTemplate({
-				name: 'errorDialog',
-				data: {
-					errorStage: errorData.errorStage,
-					errors: viewErrors
-				},
-				submodule: 'portWizard'
-			}), undefined, {
+			monster.ui.alert('error', dialogTemplate, dialogCallback, {
 				isPersistent: true
 			});
 		},
