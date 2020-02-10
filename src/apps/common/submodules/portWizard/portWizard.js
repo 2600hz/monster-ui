@@ -2147,30 +2147,40 @@ define(function(require) {
 
 		/**
 		 * Notify port request saving errors
-		 * @param  {Array} errors  List of errors
+		 * @param  {Object} errorData  Error data
+		 * @param  {('portSave'|'attachmentsSave'|'portUpdateState')} errorData.errorStage  Error stage
+		 * @param  {Array} [errorData.errors]  Collected errors
+		 * @param  {Object} [errorData.groupedErrors]  Errors grouped by type
 		 */
-		portWizardSaveNotifyErrors: function(errors) {
-			var self = this;
-
-			_.each(errors, function(errorData) {
-				var rawMessage = monster.util.tryI18n(self.i18n.active().commonApp.portWizard.save.errors, errorData.errorType),
-					isAttachmentSaveError = errorData.errorType === 'attachmentSave',
-					documentName = isAttachmentSaveError
-						? monster.util.tryI18n(self.i18n.active().commonApp.portWizard.documents, errorData.documentKey)
-						: null,
-					message = isAttachmentSaveError
-						? self.getTemplate({
-							name: '!' + rawMessage,
-							data: {
-								documentName: documentName
+		portWizardSaveNotifyErrors: function(errorData) {
+			var self = this,
+				i18nSaveErrors = self.i18n.active().commonApp.portWizard.save.errors,
+				unknownErrorMessage = monster.util.tryI18n(i18nSaveErrors, 'unknown_error'),
+				viewErrors = _.map(errorData.groupedErrors, function(errorGroup, errorKey) {
+					return {
+						message: _.get(
+							i18nSaveErrors,
+							errorKey,
+							_.get(errorGroup, 'apiMessage', unknownErrorMessage)
+						),
+						causes: _.chain(errorGroup.causes).map(function(cause) {
+							if (_.startsWith(cause, '+')) {
+								return monster.util.formatPhoneNumber(cause);
 							}
-						})
-						: rawMessage;
-
-				monster.ui.toast({
-					type: 'error',
-					message: message
+							return cause;
+						}).join(', ').value()
+					};
 				});
+
+			monster.ui.alert('error', self.getTemplate({
+				name: 'errorDialog',
+				data: {
+					errorStage: errorData.errorStage,
+					errors: viewErrors
+				},
+				submodule: 'portWizard'
+			}), undefined, {
+				isPersistent: true
 			});
 		},
 
