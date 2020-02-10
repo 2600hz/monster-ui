@@ -2021,7 +2021,7 @@ define(function(require) {
 
 			// It is not possible to upload all the attachments in parallel, because it seems
 			// to cause conflicts in the API
-			monster.parallel(seriesFunctions, function(error, data) {
+			monster.series(seriesFunctions, function(error, data) {
 				var results = _
 						.chain(data)
 						.reject('errorType')
