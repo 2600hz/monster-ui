@@ -1954,16 +1954,16 @@ define(function(require) {
 			self.portWizardRequestResourceSave({
 				resource: resource,
 				data: requestData,
+				tryGroupErrors: true,
 				success: function(portRequest) {
 					callback(null, portRequest);
 				},
-				error: function(parsedError) {
-					callback([
-						{
-							errorType: isNewPortRequest ? 'portCreate' : 'portUpdate',
-							error: parsedError
-						}
-					]);
+				error: function(parsedError, groupedErrors) {
+					callback({
+						errorStage: 'portSave',
+						errors: [ parsedError ],
+						groupedErrors: groupedErrors
+					});
 				}
 			});
 		},
@@ -2011,7 +2011,6 @@ define(function(require) {
 								// as error, to allow the parallel tasks to continue regardless if
 								// one of them fail
 								seriesCallback(null, {
-									errorType: 'attachmentSave',
 									documentKey: document.key,
 									error: parsedError
 								});
@@ -2022,17 +2021,29 @@ define(function(require) {
 
 			// It is not possible to upload all the attachments in parallel, because it seems
 			// to cause conflicts in the API
-			monster.series(seriesFunctions, function(error, data) {
-				var errors = _.some(data, 'errorType')
-						? _.filter(data, 'errorType')
-						: null,
-					results = _
+			monster.parallel(seriesFunctions, function(error, data) {
+				var results = _
 						.chain(data)
 						.reject('errorType')
 						.map('data')
-						.value();
+						.value(),
+					errors = _.filter(data, 'error'),
+					errorCauses = _.map(errors, function(error) {
+						return monster.util.tryI18n(self.i18n.active().commonApp.portWizard.documents, error.documentKey);
+					}),
+					errorData = _.isEmpty(errors)
+						? null
+						: {
+							errorStage: 'attachmentSave',
+							errors: errors,
+							groupedErrors: {
+								'attachment_save_failed': {
+									causes: errorCauses
+								}
+							}
+						};
 
-				callback(errors, results);
+				callback(errorData, results);
 			});
 		},
 
@@ -2062,16 +2073,16 @@ define(function(require) {
 			self.portWizardRequestResourceSave({
 				resource: 'port.changeState',
 				data: requestData,
+				tryGroupErrors: true,
 				success: function() {
 					callback(null);
 				},
-				error: function(parsedError) {
-					callback([
-						{
-							errorType: 'portSubmit',
-							error: parsedError
-						}
-					]);
+				error: function(parsedError, groupedErrors) {
+					callback({
+						errorStage: 'portUpdateState',
+						error: parsedError,
+						groupedErrors: groupedErrors
+					});
 				}
 			});
 		},
@@ -2214,25 +2225,131 @@ define(function(require) {
 		 * @param  {Object} args.data  Request data
 		 * @param  {Object} args.data.data  Resource document data
 		 * @param  {String} args.data.accountId  Account ID
-		 * @param  {Boolean} [args.data.acceptCharges=true]  Whether or not to accept charges without
-		 *                                              asking the user
-		 * @param  {Boolean} [args.data.generateError=false]  Whether or not show error dialog
+		 * @param  {Boolean} [args.tryGroupErrors=false]  Whether or not to try to group error types
 		 * @param  {Function} args.success  Success callback
-		 * @param  {Function} args.error  Error callback
+		 * @param  {Function} [args.error]  Error callback
 		 */
 		portWizardRequestResourceSave: function(args) {
-			var self = this;
+			var self = this,
+				tryGroupErrors = _.get(args, 'tryGroupErrors', false),
+				dataGenerateError = _.get(args, 'data.generateError', true),
+				generateError = !tryGroupErrors && dataGenerateError;
 
 			self.callApi({
 				resource: args.resource,
-				data: args.data,
+				data: _.merge({}, args.data, {
+					generateError: generateError
+				}),
 				success: function(data) {
 					args.success(data.data);
 				},
-				error: function(parsedError) {
-					_.has(args, 'error') && args.error(parsedError);
+				error: function(parsedError, errorData, globalHandler) {
+					var groupedErrors;
+
+					if (tryGroupErrors) {
+						groupedErrors = self.portWizardRequestGroupErrors({
+							parsedError: parsedError,
+							errorData: errorData
+						});
+					}
+
+					_.has(args, 'error') && args.error(parsedError, groupedErrors);
+
+					// Do not generate error if explicitly said or grouped errors were obtained
+					if (!dataGenerateError || groupedErrors) {
+						return;
+					}
+
+					globalHandler(errorData, {
+						generateError: true
+					});
 				}
 			});
+		},
+
+		/**
+		 * Try to group errors of the same type
+		 * @param  {Object} args
+		 * @param  {Object} args.parsedError  Parsed error data
+		 * @param  {Object} args.errorData  Original error data
+		 */
+		portWizardRequestGroupErrors: function(args) {
+			var self = this,
+				parsedError = args.parsedError,
+				errorData = args.errorData,
+				groupedErrors = {};
+
+			if (errorData.status !== 400) {
+				// Errors cannot be processed
+				return null;
+			}
+
+			if (_.get(parsedError, 'error_format', '') === 'phonebook') {
+				_.each(parsedError.data, function(errorData, errorDataKey) {
+					groupedErrors[errorDataKey] = {
+						apiMessage: _.get(errorData, 'type.message'),
+						causes: _.chain(errorData)
+							.get('type')
+							.filter(function(value, propertyName) {
+								// Filter is used here to get an array as result
+								return propertyName === 'cause';
+							})
+							.value()
+					};
+				});
+
+				return _.isEmpty(groupedErrors) ? null : groupedErrors;
+			}
+
+			_.each(parsedError.data, function(fieldErrors, fieldKey) {
+				var isPhoneNumber = _.startsWith(fieldKey, '+');
+
+				if (typeof fieldErrors === 'string') {
+					return;
+				}
+
+				_.each(fieldErrors, function(errorData, errorDataKey) {
+					var errorKey, apiMessage, errorCause;
+
+					try {
+						// Separate error data depending on the case
+						if (isPhoneNumber) {
+							errorCause = _.get(errorData, 'cause', fieldKey);
+							errorKey = _.has(errorData, 'message')
+								? self.portWizardGetErrorKey(errorData.message)
+								: errorDataKey;
+							apiMessage = errorData.message;
+						} else {
+							errorCause = fieldKey;
+							errorKey = errorDataKey;
+							apiMessage = _.get(
+								errorData,
+								'message',
+								(_.isString(errorData) || _.isNumber(errorData)) ? errorData : undefined
+							);
+						}
+					} catch (err) {
+						// In case of exception, skip error entry
+						return false;
+					}
+
+					// If error group already exists, add cause
+					if (_.has(groupedErrors, errorKey)) {
+						if (errorCause) {
+							groupedErrors[errorKey].causes.push(errorCause);
+						}
+						return;
+					}
+
+					// Else add new error group
+					groupedErrors[errorKey] = {
+						message: apiMessage,
+						causes: errorCause ? [ errorCause ] : []
+					};
+				});
+			});
+
+			return _.isEmpty(groupedErrors) ? null : groupedErrors;
 		},
 
 		/**************************************************
