@@ -2197,15 +2197,49 @@ define(function(require) {
 		portWizardSaveGetFormattedPortRequest: function(wizardData) {
 			var self = this,
 				nameAndNumbersData = wizardData.nameAndNumbers,
+				carrierSelectionData = wizardData.carrierSelection,
 				ownershipConfirmationData = wizardData.ownershipConfirmation,
 				dateAndNotificationsData = wizardData.dateAndNotifications,
-				notificationEmails = dateAndNotificationsData.notificationEmails,
+				notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails', []),
+				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
+					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
+				} : {},
+				notificationsSection = _.isEmpty(notificationEmails) ? {} : {
+					notifications: {
+						email: {
+							send_to: _.size(notificationEmails) === 1
+								? _.head(notificationEmails)
+								: notificationEmails
+						}
+					}
+				},
+				billSection = _.isNil(ownershipConfirmationData) ? {} : {
+					bill: _.omitBy({
+						carrier: _.get(ownershipConfirmationData, 'accountOwnership.carrier'),
+						name: _.get(ownershipConfirmationData, 'accountOwnership.billName'),
+						street_pre_dir: _.get(ownershipConfirmationData, 'serviceAddress.streetPreDir'),
+						street_number: _.get(ownershipConfirmationData, 'serviceAddress.streetNumber'),
+						street_address: _.get(ownershipConfirmationData, 'serviceAddress.streetName'),
+						street_type: _.get(ownershipConfirmationData, 'serviceAddress.streetType'),
+						street_post_dir: _.get(ownershipConfirmationData, 'serviceAddress.streetPostDir'),
+						extended_address: _.get(ownershipConfirmationData, 'serviceAddress.addressLine2'),
+						locality: _.get(ownershipConfirmationData, 'serviceAddress.locality'),
+						region: _.get(ownershipConfirmationData, 'serviceAddress.region'),
+						postal_code: _.get(ownershipConfirmationData, 'serviceAddress.postalCode'),
+						account_number: _.get(ownershipConfirmationData, 'accountInfo.accountNumber'),
+						pin: _.get(ownershipConfirmationData, 'accountInfo.pin'),
+						btn: _.get(ownershipConfirmationData, 'accountInfo.btn')
+					}, _.isEmpty)
+				},
+				uiFlagsSection = _.merge({
+					portion: null,
+					type: nameAndNumbersData.numbersToPort.type,
+					validation: true
+				}, _.has(carrierSelectionData, 'winningCarrier') ? {
+					winning_carrier: carrierSelectionData.winningCarrier
+				} : {}),
 				portRequestDocument = _.merge({
-					ui_flags: {
-						type: nameAndNumbersData.numbersToPort.type,
-						validation: true,
-						portion: null
-					},
+					ui_flags: uiFlagsSection,
 					numbers: _
 						.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
 						.map('e164Number')
@@ -2214,36 +2248,11 @@ define(function(require) {
 						}, {})
 						.value(),
 					name: nameAndNumbersData.portRequestName,
-					bill: _.omitBy({
-						carrier: ownershipConfirmationData.accountOwnership.carrier,
-						name: ownershipConfirmationData.accountOwnership.billName,
-						street_pre_dir: ownershipConfirmationData.serviceAddress.streetPreDir,
-						street_number: ownershipConfirmationData.serviceAddress.streetNumber,
-						street_address: ownershipConfirmationData.serviceAddress.streetName,
-						street_type: ownershipConfirmationData.serviceAddress.streetType,
-						street_post_dir: ownershipConfirmationData.serviceAddress.streetPostDir,
-						extended_address: ownershipConfirmationData.serviceAddress.addressLine2,
-						locality: ownershipConfirmationData.serviceAddress.locality,
-						region: ownershipConfirmationData.serviceAddress.region,
-						postal_code: ownershipConfirmationData.serviceAddress.postalCode,
-						account_number: ownershipConfirmationData.accountInfo.accountNumber,
-						pin: ownershipConfirmationData.accountInfo.pin,
-						btn: ownershipConfirmationData.accountInfo.btn
-					}, _.isEmpty),
 					extra: {
 						numbers_count: _.size(nameAndNumbersData.numbersToPort.formattedNumbers)
-					},
-					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
-				}, _.isEmpty(notificationEmails) ? {} : {
-					notifications: {
-						email: {
-							send_to: _.size(notificationEmails) === 1
-								? _.head(notificationEmails)
-								: notificationEmails
-						}
 					}
-				});
-
+				}, billSection, transferDateSection, notificationsSection);
+			debugger;
 			return portRequestDocument;
 		},
 
