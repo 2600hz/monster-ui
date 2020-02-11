@@ -368,8 +368,9 @@ define(function(require) {
 				}),
 				title: i18n.title,
 				cancel: 'portWizardClose',
-				done: 'portWizardSubmit',
+				done: self.portWizardComplete,
 				doneButton: i18n.doneButton,
+				saveEnabled: true,
 				validateOnStepChange: true,
 				askForConfirmationBeforeExit: true
 			});
@@ -784,8 +785,7 @@ define(function(require) {
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} eventArgs  Event arguments
-		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
-		 *                                                completed
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
 		portWizardCarrierSelectionUtil: function($template, args, eventArgs) {
@@ -1989,9 +1989,12 @@ define(function(require) {
 		 * Submits the current port request
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} args.data  Wizard's data that was stored across steps
+		 * @param  {Boolean} eventArgs  Event arguments
+		 * @param  {('save'|'submit')} eventArgs.eventType  Type of event that executed this function
 		 */
-		portWizardSubmit: function(args) {
+		portWizardComplete: function(args, eventArgs) {
 			var self = this,
+				submit = eventArgs.eventType === 'done',
 				wizardData = args.data,
 				portRequestId = _.get(wizardData, 'portRequestId'),
 				accountId = self.portWizardGet('accountId'),
@@ -2021,6 +2024,10 @@ define(function(require) {
 					});
 				},
 				function(waterfallCallback) {
+					if (!submit) {
+						return waterfallCallback(null);
+					}
+
 					self.portWizardUpdatePortRequestState({
 						accountId: accountId,
 						portRequestId: portRequestId,
