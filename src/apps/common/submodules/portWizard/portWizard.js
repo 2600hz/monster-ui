@@ -404,6 +404,10 @@ define(function(require) {
 						{
 							button: 'back',
 							resetContent: true
+						},
+						{
+							button: 'save',
+							display: _.get(nameAndNumbersData, 'numbersToPort.areValid', false)
 						}
 					]);
 
@@ -738,6 +742,36 @@ define(function(require) {
 					}));
 				},
 				function(numbersCarrierData, waterfallCallback) {
+					nameAndNumbersData.numbersToPort.areValid = numbersCarrierData.carrierWarningType === 'none';
+
+					monster.pub(
+						'common.navigationWizard.setButtonProps',
+						nameAndNumbersData.numbersToPort.areValid
+							? [
+								{
+									button: 'save',
+									display: true
+								}
+							]
+							: [
+								{
+									button: 'save',
+									display: false
+								},
+								{
+									button: 'next',
+									display: false
+								},
+								{
+									button: 'back',
+									content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
+								}
+							]
+					);
+
+					waterfallCallback(null, numbersCarrierData);
+				},
+				function(numbersCarrierData, waterfallCallback) {
 					var $template = (numbersCarrierData.carrierWarningType === 'none')
 						? self.portWizardCarrierSelectionSingleGetTemplate({
 							numbersCarrierData: numbersCarrierData,
@@ -844,17 +878,6 @@ define(function(require) {
 					},
 					submodule: 'portWizard'
 				}));
-
-			monster.pub('common.navigationWizard.setButtonProps', [
-				{
-					button: 'next',
-					display: false
-				},
-				{
-					button: 'back',
-					content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
-				}
-			]);
 
 			self.portWizardCarrierSelectionMultipleBindEvents({
 				portRequestName: portRequestName,
@@ -2259,7 +2282,7 @@ define(function(require) {
 						numbers_count: _.size(nameAndNumbersData.numbersToPort.formattedNumbers)
 					}
 				}, billSection, transferDateSection, notificationsSection);
-			debugger;
+
 			return portRequestDocument;
 		},
 
