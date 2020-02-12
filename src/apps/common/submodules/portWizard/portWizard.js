@@ -82,90 +82,185 @@ define(function(require) {
 					}
 				},
 				minTargetDateBusinessDays: 4,
-				requiredDocuments: {
-					documents: [
-						{
-							key: 'LOA',
-							attachmentName: 'form.pdf'
-						},
-						{
-							key: 'CountryInfo',
-							attachmentName: 'country_info.pdf'
-						},
-						{
-							key: 'Invoice',
-							attachmentName: 'bill.pdf'
-						},
-						{
-							key: 'AccountNum',
-							attachmentName: 'account_number.pdf'
-						},
-						{
-							key: 'TaxID',
-							attachmentName: 'tax_id.pdf'
-						},
-						{
-							key: 'CustomerID',
-							attachmentName: 'customer_id.pdf'
-						},
-						{
-							key: 'LegalAuth',
-							attachmentName: 'legal_auth.pdf'
-						},
-						{
-							key: 'LocalAddr',
-							attachmentName: 'local_address.pdf'
-						},
-						{
-							key: 'ServiceAddr',
-							attachmentName: 'service_address.pdf'
-						},
-						{
-							key: 'ReleaseLetter',
-							attachmentName: 'release_letter.pdf'
-						},
-						{
-							key: 'PaymentProof',
-							attachmentName: 'payment_proof.pdf'
-						}
-					],
-					requirementsByCountries: {
-						AT: { local: [0, 2, 3, 5], tollFree: [0, 1, 2] },
-						AU: { local: [0, 2], tollFree: [0, 2] },
-						BE: { local: [0, 2, 8], tollFree: [0, 2] },
-						BR: { local: [0, 2, 4, 5], tollFree: [0, 2, 5] },
-						CA: { local: [0, 2, 8], tollFree: [0, 2, 8] },
-						CH: { local: [0, 2], tollFree: [0, 1, 2] },
-						CL: { local: [0, 1, 2, 5], tollFree: [] },
-						CR: { local: [], tollFree: [0, 2, 5, 6] },
-						CZ: { local: [0, 2, 9], tollFree: [0, 2] },
-						DE: { local: [1, 2, 7, 9], tollFree: [1, 2] },
-						DK: { local: [0, 2], tollFree: [0, 2] },
-						ES: { local: [0, 2, 4], tollFree: [0, 2, 4] },
-						FI: { local: [0, 2, 4], tollFree: [0, 2, 4, 6] },
-						FR: { local: [0, 1, 2, 7], tollFree: [0, 1, 2, 8] },
-						GB: { local: [0, 2], tollFree: [0, 2] },
-						GR: { local: [0, 2, 4, 5], tollFree: [] },
-						HR: { local: [1, 2, 5], tollFree: [] },
-						IE: { local: [0, 2], tollFree: [0, 2] },
-						IL: { local: [0, 2, 5, 7], tollFree: [] },
-						IT: { local: [0, 2, 4, 8], tollFree: [0, 2, 4, 8] },
-						LT: { local: [0, 2, 5], tollFree: [0, 2] },
-						LU: { local: [0, 2, 8], tollFree: [0, 2] },
-						LV: { local: [0, 2], tollFree: [] },
-						MX: { local: [0, 1, 2, 5, 6], tollFree: [0, 1, 2, 5, 6] },
-						NL: { local: [0, 1, 2, 7], tollFree: [0, 1, 2] },
-						NO: { local: [0, 2, 5], tollFree: [0, 2, 5] },
-						NZ: { local: [0, 2], tollFree: [0, 2] },
-						PA: { local: [1, 2, 5, 10], tollFree: [] },
-						PE: { local: [1, 2, 5, 6], tollFree: [] },
-						PR: { local: [0, 2], tollFree: [] },
-						RO: { local: [0, 2, 5, 9], tollFree: [0, 2, 5] },
-						SE: { local: [0, 2], tollFree: [0, 2] },
-						SI: { local: [0, 2], tollFree: [] },
-						SK: { local: [0, 2, 9], tollFree: [0, 2] },
-						US: { local: [0, 2, 8], tollFree: [0, 2, 8] },
-						ZA: { local: [0, 1, 2, 5, 7, 10], tollFree: [] }
+				requirements: {
+					LOA: {
+						attachmentName: 'form.pdf'
+					},
+					CountryInfo: {
+						attachmentName: 'country_info.pdf'
+					},
+					Invoice: {
+						attachmentName: 'bill.pdf'
+					},
+					AccountNum: {
+						attachmentName: 'account_number.pdf'
+					},
+					TaxID: {
+						attachmentName: 'tax_id.pdf'
+					},
+					CustomerID: {
+						attachmentName: 'customer_id.pdf'
+					},
+					LegalAuth: {
+						attachmentName: 'legal_auth.pdf'
+					},
+					LocalAddr: {
+						attachmentName: 'local_address.pdf'
+					},
+					ServiceAddr: {
+						attachmentName: 'service_address.pdf'
+					},
+					ReleaseLetter: {
+						attachmentName: 'release_letter.pdf'
+					},
+					PaymentProof: {
+						attachmentName: 'payment_proof.pdf'
+					}
+				},
+				requirementsByCountries: {
+					AT: {
+						local: ['LOA', 'Invoice', 'AccountNum', 'CustomerID'],
+						tollFree: ['LOA', 'CountryInfo', 'Invoice']
+					},
+					AU: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					BE: {
+						local: ['LOA', 'Invoice', 'ServiceAddr'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					BR: {
+						local: ['LOA', 'Invoice', 'TaxID', 'CustomerID'],
+						tollFree: ['LOA', 'Invoice', 'CustomerID']
+					},
+					CA: {
+						local: ['LOA', 'Invoice', 'ServiceAddr'],
+						tollFree: ['LOA', 'Invoice', 'ServiceAddr']
+					},
+					CH: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'CountryInfo', 'Invoice']
+					},
+					CL: {
+						local: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID'],
+						tollFree: []
+					},
+					CR: {
+						local: [],
+						tollFree: ['LOA', 'Invoice', 'CustomerID', 'LegalAuth']
+					},
+					CZ: {
+						local: ['LOA', 'Invoice', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					DE: {
+						local: ['CountryInfo', 'Invoice', 'LocalAddr', 'ReleaseLetter'],
+						tollFree: ['CountryInfo', 'Invoice']
+					},
+					DK: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					ES: {
+						local: ['LOA', 'Invoice', 'TaxID'],
+						tollFree: ['LOA', 'Invoice', 'TaxID']
+					},
+					FI: {
+						local: ['LOA', 'Invoice', 'TaxID'],
+						tollFree: ['LOA', 'Invoice', 'TaxID', 'LegalAuth']
+					},
+					FR: {
+						local: ['LOA', 'CountryInfo', 'Invoice', 'LocalAddr'],
+						tollFree: ['LOA', 'CountryInfo', 'Invoice', 'ServiceAddr']
+					},
+					GB: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					GR: {
+						local: ['LOA', 'Invoice', 'TaxID', 'CustomerID'],
+						tollFree: []
+					},
+					HR: {
+						local: ['CountryInfo', 'Invoice', 'CustomerID'],
+						tollFree: []
+					},
+					IE: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					IL: {
+						local: ['LOA', 'Invoice', 'CustomerID', 'LocalAddr'],
+						tollFree: []
+					},
+					IT: {
+						local: ['LOA', 'Invoice', 'TaxID', 'ServiceAddr'],
+						tollFree: ['LOA', 'Invoice', 'TaxID', 'ServiceAddr']
+					},
+					LT: {
+						local: ['LOA', 'Invoice', 'CustomerID'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					LU: {
+						local: ['LOA', 'Invoice', 'ServiceAddr'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					LV: {
+						local: ['LOA', 'Invoice'],
+						tollFree: []
+					},
+					MX: {
+						local: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID', 'LegalAuth'],
+						tollFree: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID', 'LegalAuth']
+					},
+					NL: {
+						local: ['LOA', 'CountryInfo', 'Invoice', 'LocalAddr'],
+						tollFree: ['LOA', 'CountryInfo', 'Invoice']
+					},
+					NO: {
+						local: ['LOA', 'Invoice', 'CustomerID'],
+						tollFree: ['LOA', 'Invoice', 'CustomerID']
+					},
+					NZ: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					PA: {
+						local: ['CountryInfo', 'Invoice', 'CustomerID', 'PaymentProof'],
+						tollFree: []
+					},
+					PE: {
+						local: ['CountryInfo', 'Invoice', 'CustomerID', 'LegalAuth'],
+						tollFree: []
+					},
+					PR: {
+						local: ['LOA', 'Invoice'],
+						tollFree: []
+					},
+					RO: {
+						local: ['LOA', 'Invoice', 'CustomerID', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Invoice', 'CustomerID']
+					},
+					SE: {
+						local: ['LOA', 'Invoice'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					SI: {
+						local: ['LOA', 'Invoice'],
+						tollFree: []
+					},
+					SK: {
+						local: ['LOA', 'Invoice', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Invoice']
+					},
+					US: {
+						local: ['LOA', 'Invoice', 'ServiceAddr'],
+						tollFree: ['LOA', 'Invoice', 'ServiceAddr']
+					},
+					ZA: {
+						local: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID', 'LocalAddr', 'PaymentProof'],
+						tollFree: []
 					}
 				},
 				stepNames: [
@@ -621,7 +716,7 @@ define(function(require) {
 						noWinningCarriers = isSingleLosingCarrier && _.isEmpty(winningCarriers),
 						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
 						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
-						isCountrySupported = _.has(self.appFlags.portWizard.requiredDocuments.requirementsByCountries, numbersCountryCode),
+						isCountrySupported = _.has(self.appFlags.portWizard.requirementsByCountries, numbersCountryCode),
 						carrierWarningType = !isSingleLosingCarrier
 							? 'multipleLosingCarriers'
 							: isSingleLosingCarrierUnknown
@@ -644,12 +739,16 @@ define(function(require) {
 						return waterfallCallback(null, numbersCarrierData);
 					}
 
-					var requiredDocumentsData = self.appFlags.portWizard.requiredDocuments,
-						getDocumentByIndex = _.partial(_.get, requiredDocumentsData.documents),
+					var requirements = self.appFlags.portWizard.requirements,
+						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
 						requiredDocuments = _
-							.chain(requiredDocumentsData.requirementsByCountries)
+							.chain(requirementsByCountries)
 							.get([numbersCarrierData.countryCode, numbersType])
-							.map(getDocumentByIndex)
+							.map(function(requirementKey) {
+								return _.merge({
+									key: requirementKey
+								}, _.get(requirements, requirementKey));
+							})
 							.value();
 
 					self.portWizardSet('requiredDocumentsList', requiredDocuments);
