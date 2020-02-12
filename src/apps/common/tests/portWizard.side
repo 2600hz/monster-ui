@@ -99,7 +99,7 @@
       "command": "//type",
       "target": "id=numbers_to_port_numbers",
       "targets": [],
-      "value": "+14109255110,+14109255111,+14109255112,+14109255113,+14109255114,+14109255115,+14109255116,+14109255117,+14109255118,+14109255119,+14109255120,+14109255121,+14109255122,+14109255123,+14109255124,+14109255125,+14109255126,+14109255127,+14109255128,+14109255129,+14109255130,+14109255131,+14109255132,+14109255133,+14109255134,+14109255135,+14109255136,+14109255137"
+      "value": "202-555-0198, +1-202-555-0112"
     }, {
       "id": "65e69342-885a-4237-a878-2932f400ca2d",
       "comment": "",
@@ -377,17 +377,6 @@
         ["xpath=//div[9]/label/input", "xpath:position"]
       ],
       "value": "94108"
-    }, {
-      "id": "7ba080c2-9269-47fd-918d-ae2a134a6e3b",
-      "comment": "",
-      "command": "click",
-      "target": "css=.flex-item-2:nth-child(2)",
-      "targets": [
-        ["css=.flex-item-2:nth-child(2)", "css:finder"],
-        ["xpath=//div[@id='step_ownership_confirmation']/div[2]/div[2]", "xpath:idRelative"],
-        ["xpath=//div[3]/div/div[2]/div[2]", "xpath:position"]
-      ],
-      "value": ""
     }, {
       "id": "8e1df640-dc4f-4c42-85ce-1fccc44d3f31",
       "comment": "",
