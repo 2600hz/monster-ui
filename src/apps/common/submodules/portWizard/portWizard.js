@@ -1165,22 +1165,24 @@ define(function(require) {
 		/**
 		 * Render the Ownership Confirmation step
 		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args.data  Wizard data
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this,
+				losingCarrier = args.data.carrierSelection.losingCarrier,
+				ownershipConfirmationData = _.get(args.data, 'ownershipConfirmation'),
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				invoiceDocumentMetadata = _.find(requiredDocumentsCompleteList, { key: 'Invoice' }),
-				buildTemplateArgs = _
-					.chain(args)
-					.pick('data')
-					.merge({
-						invoiceDocumentMetadata: invoiceDocumentMetadata
+				requireInvoice = _.some(requiredDocumentsCompleteList, { key: 'Invoice' }),
+				$template = !requireInvoice || _.has(args.data, 'ownershipConfirmation.latestBill')
+					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
+						losingCarrier: losingCarrier,
+						requireInvoice: requireInvoice,
+						data: ownershipConfirmationData
 					})
-					.value(),
-				$template = _.has(args.data, 'ownershipConfirmation.latestBill')
-					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate(buildTemplateArgs)
-					: self.portWizardOwnershipConfirmationBillUploadGetTemplate(buildTemplateArgs);
+					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
+						losingCarrier: losingCarrier
+					});
 
 			callback({
 				template: $template,
@@ -1206,6 +1208,8 @@ define(function(require) {
 
 			if (isValid) {
 				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
+				ownershipConfirmationData.latestBill = self.portWizardGet('invoiceData');
+				self.portWizardUnset('invoiceData');
 			}
 
 			return {
@@ -1219,22 +1223,20 @@ define(function(require) {
 		/**
 		 * Get the template for Ownership Confirmation step (bill upload view)
 		 * @param  {Object} args
-		 * @param  {Object} args.data  Wizard data
-		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
+		 * @param  {String} args.losingCarrier  Losing carrier name
 		 */
 		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
 			var self = this,
-				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
+				losingCarrier = args.losingCarrier,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-billUpload',
 					data: {
-						losingCarrier: args.data.carrierSelection.losingCarrier
+						losingCarrier: losingCarrier
 					},
 					submodule: 'portWizard'
 				}));
 
 			self.portWizardOwnershipConfirmationBillUploadBindEvents({
-				invoiceDocumentMetadata: invoiceDocumentMetadata,
 				template: $template
 			});
 
@@ -1244,16 +1246,16 @@ define(function(require) {
 		/**
 		 * Bind Ownership Confirmation step events (bill upload view)
 		 * @param  {Object} args
-		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
 		 * @param  {jQuery} args.template  Step template
 		 */
 		portWizardOwnershipConfirmationBillUploadBindEvents: function(args) {
 			var self = this,
-				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
 				$template = args.template,
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
-				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf,
+				portWizardAppFlags = self.appFlags.portWizard,
+				invoiceDocumentMetadata = portWizardAppFlags.requirements.Invoice,
+				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
 				latestBill;
 
 			self.portWizardInitFileUploadInput({
@@ -1292,31 +1294,27 @@ define(function(require) {
 		/**
 		 * Get the template for Ownership Confirmation step (account information view)
 		 * @param  {Object} args
-		 * @param  {Object} args.data  Wizard data
-		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
+		 * @param  {Object} args.losingCarrier  Losing carrier name
+		 * @param  {Object} args.requireInvoice  Whether or not to require the latest invoice
+		 * @param  {Object} args.data  Step data
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
+				losingCarrier = args.losingCarrier,
 				data = args.data,
-				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
-				ownershipConfirmationData = data.ownershipConfirmation,
+				requireInvoice = args.requireInvoice,
 				defaultCountry = monster.config.whitelabel.countryCode,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
 					data: {
-						data: ownershipConfirmationData,
+						data: data,
 						directionals: self.appFlags.portWizard.cardinalDirections,
-						losingCarrier: data.carrierSelection.losingCarrier
+						losingCarrier: losingCarrier,
+						requireInvoice: requireInvoice
 					},
 					submodule: 'portWizard'
 				})),
-				$billRenderContainer = $template.find('#latest_bill_document_container'),
 				$form = $template.find('form');
-
-			monster.ui.renderPDF(
-				ownershipConfirmationData.latestBill.file,
-				$billRenderContainer
-			);
 
 			$template
 				.find('input[data-mask]')
@@ -1337,17 +1335,11 @@ define(function(require) {
 			monster.ui.countrySelector(
 				$template.find('#service_address_country'),
 				{
-					selectedValues: _.get(ownershipConfirmationData, 'serviceAddress.country', defaultCountry)
+					selectedValues: _.get(data, 'serviceAddress.country', defaultCountry)
 				}
 			);
 
 			monster.ui.tooltips($template);
-
-			self.portWizardOwnershipConfirmationAccountInfoBindEvents({
-				template: $template,
-				data: ownershipConfirmationData,
-				invoiceDocumentMetadata: invoiceDocumentMetadata
-			});
 
 			monster.ui.validate($form, {
 				rules: {
@@ -1412,37 +1404,53 @@ define(function(require) {
 				autoScrollOnInvalid: true
 			});
 
+			if (!requireInvoice) {
+				return $template;
+			}
+
+			self.portWizardOwnershipConfirmationAccountInfoRenderInvoice({
+				template: $template,
+				invoiceFile: data.latestBill.file
+			});
+
 			return $template;
 		},
 
 		/**
-		 * Bind Ownership Confirmation step events (account information view)
+		 * Render Ownership Confirmation invoice section (account information view)
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.data  Step data
-		 * @param  {Object} args.invoiceDocumentMetadata Invoice document metadata
+		 * @param  {String} args.invoiceFile  Invoice file as a Data URL string
 		 */
-		portWizardOwnershipConfirmationAccountInfoBindEvents: function(args) {
+		portWizardOwnershipConfirmationAccountInfoRenderInvoice: function(args) {
 			var self = this,
+				invoiceFile = args.invoiceFile,
 				$template = args.template,
-				data = args.data,
-				invoiceDocumentMetadata = args.invoiceDocumentMetadata,
 				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
 				$billRenderContainer = $template.find('#latest_bill_document_container'),
-				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
+				portWizardAppFlags = self.appFlags.portWizard,
+				invoiceDocumentMetadata = portWizardAppFlags.requirements.Invoice,
+				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf;
 
+			// Render invoice
+			monster.ui.renderPDF(
+				invoiceFile,
+				$billRenderContainer,
+			);
+
+			// Bind events
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
 				documentMetadata: invoiceDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
 				hidden: true,
 				success: function(fileData) {
-					data.latestBill = fileData;
+					self.portWizardSet('invoiceData', fileData);
 
 					monster.ui.renderPDF(
-						data.latestBill.file,
+						fileData.file,
 						$billRenderContainer
 					);
 				}
