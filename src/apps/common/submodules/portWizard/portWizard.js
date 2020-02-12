@@ -2054,9 +2054,9 @@ define(function(require) {
 						callback: _.unary(waterfallCallback)
 					});
 				}
-			], function(errors) {
-				if (errors) {
-					return self.portWizardSaveNotifyErrors(errors);
+			], function(errorData) {
+				if (errorData) {
+					return !_.isEmpty(errorData.groupedErrors) && self.portWizardSaveNotifyErrors(errorData);
 				}
 
 				globalCallback();
@@ -2192,17 +2192,11 @@ define(function(require) {
 		portWizardUpdatePortRequestState: function(args) {
 			var self = this,
 				callback = args.callback,
-				requestData = _
-					.chain(args)
-					.pick([
+				requestData = _.pick(args, [
 					'accountId',
 					'portRequestId',
 					'state'
-					])
-					.merge({
-						generateError: false
-					})
-					.value();
+				]);
 
 			self.portWizardRequestResourceSave({
 				resource: 'port.changeState',
@@ -2283,8 +2277,7 @@ define(function(require) {
 		 * Notify port request saving errors
 		 * @param  {Object} errorData  Error data
 		 * @param  {('portSave'|'attachmentsSave'|'portUpdateState')} errorData.errorStage  Error stage
-		 * @param  {Array} [errorData.errors]  Collected errors
-		 * @param  {Object} [errorData.groupedErrors]  Errors grouped by type
+		 * @param  {Object} errorData.groupedErrors  Errors grouped by type
 		 */
 		portWizardSaveNotifyErrors: function(errorData) {
 			var self = this,
