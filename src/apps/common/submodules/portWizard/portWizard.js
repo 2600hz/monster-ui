@@ -266,7 +266,7 @@ define(function(require) {
 						tollFree: ['LOA', 'Bill']
 					},
 					US: {
-						local: ['LOA', /*'Bill',*/ 'ServiceAddr'],
+						local: ['LOA', 'Bill', 'ServiceAddr'],
 						tollFree: ['LOA', 'Bill', 'ServiceAddr']
 					},
 					ZA: {
