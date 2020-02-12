@@ -84,36 +84,47 @@ define(function(require) {
 				minTargetDateBusinessDays: 4,
 				requirements: {
 					LOA: {
+						key: 'LOA',
 						attachmentName: 'form.pdf'
 					},
 					CountryInfo: {
+						key: 'CountryInfo',
 						attachmentName: 'country_info.pdf'
 					},
 					Invoice: {
+						key: 'Invoice',
 						attachmentName: 'bill.pdf'
 					},
 					AccountNum: {
+						key: 'AccountNum',
 						attachmentName: 'account_number.pdf'
 					},
 					TaxID: {
+						key: 'TaxID',
 						attachmentName: 'tax_id.pdf'
 					},
 					CustomerID: {
+						key: 'CustomerID',
 						attachmentName: 'customer_id.pdf'
 					},
 					LegalAuth: {
+						key: 'LegalAuth',
 						attachmentName: 'legal_auth.pdf'
 					},
 					LocalAddr: {
+						key: 'LocalAddr',
 						attachmentName: 'local_address.pdf'
 					},
 					ServiceAddr: {
+						key: 'ServiceAddr',
 						attachmentName: 'service_address.pdf'
 					},
 					ReleaseLetter: {
+						key: 'ReleaseLetter',
 						attachmentName: 'release_letter.pdf'
 					},
 					PaymentProof: {
+						key: 'PaymentProof',
 						attachmentName: 'payment_proof.pdf'
 					}
 				},
@@ -741,14 +752,11 @@ define(function(require) {
 
 					var requirements = self.appFlags.portWizard.requirements,
 						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
+						getRequirementByKey = _.partial(_.get, requirements),
 						requiredDocuments = _
 							.chain(requirementsByCountries)
 							.get([numbersCarrierData.countryCode, numbersType])
-							.map(function(requirementKey) {
-								return _.merge({
-									key: requirementKey
-								}, _.get(requirements, requirementKey));
-							})
+							.map(getRequirementByKey)
 							.value();
 
 					self.portWizardSet('requiredDocumentsList', requiredDocuments);
@@ -2179,9 +2187,9 @@ define(function(require) {
 				requestData = _
 					.chain(args)
 					.pick([
-						'accountId',
-						'portRequestId',
-						'state'
+					'accountId',
+					'portRequestId',
+					'state'
 					])
 					.merge({
 						generateError: false
