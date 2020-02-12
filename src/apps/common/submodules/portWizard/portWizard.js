@@ -91,8 +91,8 @@ define(function(require) {
 						key: 'CountryInfo',
 						attachmentName: 'country_info.pdf'
 					},
-					Invoice: {
-						key: 'Invoice',
+					Bill: {
+						key: 'Bill',
 						attachmentName: 'bill.pdf'
 					},
 					AccountNum: {
@@ -130,147 +130,147 @@ define(function(require) {
 				},
 				requirementsByCountries: {
 					AT: {
-						local: ['LOA', 'Invoice', 'AccountNum', 'CustomerID'],
-						tollFree: ['LOA', 'CountryInfo', 'Invoice']
+						local: ['LOA', 'Bill', 'AccountNum', 'CustomerID'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill']
 					},
 					AU: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
 					},
 					BE: {
-						local: ['LOA', 'Invoice', 'ServiceAddr'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill']
 					},
 					BR: {
-						local: ['LOA', 'Invoice', 'TaxID', 'CustomerID'],
-						tollFree: ['LOA', 'Invoice', 'CustomerID']
+						local: ['LOA', 'Bill', 'TaxID', 'CustomerID'],
+						tollFree: ['LOA', 'Bill', 'CustomerID']
 					},
 					CA: {
-						local: ['LOA', 'Invoice', 'ServiceAddr'],
-						tollFree: ['LOA', 'Invoice', 'ServiceAddr']
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill', 'ServiceAddr']
 					},
 					CH: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'CountryInfo', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill']
 					},
 					CL: {
-						local: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID'],
+						local: ['LOA', 'CountryInfo', 'Bill', 'CustomerID'],
 						tollFree: []
 					},
 					CR: {
 						local: [],
-						tollFree: ['LOA', 'Invoice', 'CustomerID', 'LegalAuth']
+						tollFree: ['LOA', 'Bill', 'CustomerID', 'LegalAuth']
 					},
 					CZ: {
-						local: ['LOA', 'Invoice', 'ReleaseLetter'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Bill']
 					},
 					DE: {
-						local: ['CountryInfo', 'Invoice', 'LocalAddr', 'ReleaseLetter'],
-						tollFree: ['CountryInfo', 'Invoice']
+						local: ['CountryInfo', 'Bill', 'LocalAddr', 'ReleaseLetter'],
+						tollFree: ['CountryInfo', 'Bill']
 					},
 					DK: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
 					},
 					ES: {
-						local: ['LOA', 'Invoice', 'TaxID'],
-						tollFree: ['LOA', 'Invoice', 'TaxID']
+						local: ['LOA', 'Bill', 'TaxID'],
+						tollFree: ['LOA', 'Bill', 'TaxID']
 					},
 					FI: {
-						local: ['LOA', 'Invoice', 'TaxID'],
-						tollFree: ['LOA', 'Invoice', 'TaxID', 'LegalAuth']
+						local: ['LOA', 'Bill', 'TaxID'],
+						tollFree: ['LOA', 'Bill', 'TaxID', 'LegalAuth']
 					},
 					FR: {
-						local: ['LOA', 'CountryInfo', 'Invoice', 'LocalAddr'],
-						tollFree: ['LOA', 'CountryInfo', 'Invoice', 'ServiceAddr']
+						local: ['LOA', 'CountryInfo', 'Bill', 'LocalAddr'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill', 'ServiceAddr']
 					},
 					GB: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
 					},
 					GR: {
-						local: ['LOA', 'Invoice', 'TaxID', 'CustomerID'],
+						local: ['LOA', 'Bill', 'TaxID', 'CustomerID'],
 						tollFree: []
 					},
 					HR: {
-						local: ['CountryInfo', 'Invoice', 'CustomerID'],
+						local: ['CountryInfo', 'Bill', 'CustomerID'],
 						tollFree: []
 					},
 					IE: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
 					},
 					IL: {
-						local: ['LOA', 'Invoice', 'CustomerID', 'LocalAddr'],
+						local: ['LOA', 'Bill', 'CustomerID', 'LocalAddr'],
 						tollFree: []
 					},
 					IT: {
-						local: ['LOA', 'Invoice', 'TaxID', 'ServiceAddr'],
-						tollFree: ['LOA', 'Invoice', 'TaxID', 'ServiceAddr']
+						local: ['LOA', 'Bill', 'TaxID', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill', 'TaxID', 'ServiceAddr']
 					},
 					LT: {
-						local: ['LOA', 'Invoice', 'CustomerID'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill', 'CustomerID'],
+						tollFree: ['LOA', 'Bill']
 					},
 					LU: {
-						local: ['LOA', 'Invoice', 'ServiceAddr'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill']
 					},
 					LV: {
-						local: ['LOA', 'Invoice'],
+						local: ['LOA', 'Bill'],
 						tollFree: []
 					},
 					MX: {
-						local: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID', 'LegalAuth'],
-						tollFree: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID', 'LegalAuth']
+						local: ['LOA', 'CountryInfo', 'Bill', 'CustomerID', 'LegalAuth'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill', 'CustomerID', 'LegalAuth']
 					},
 					NL: {
-						local: ['LOA', 'CountryInfo', 'Invoice', 'LocalAddr'],
-						tollFree: ['LOA', 'CountryInfo', 'Invoice']
+						local: ['LOA', 'CountryInfo', 'Bill', 'LocalAddr'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill']
 					},
 					NO: {
-						local: ['LOA', 'Invoice', 'CustomerID'],
-						tollFree: ['LOA', 'Invoice', 'CustomerID']
+						local: ['LOA', 'Bill', 'CustomerID'],
+						tollFree: ['LOA', 'Bill', 'CustomerID']
 					},
 					NZ: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
 					},
 					PA: {
-						local: ['CountryInfo', 'Invoice', 'CustomerID', 'PaymentProof'],
+						local: ['CountryInfo', 'Bill', 'CustomerID', 'PaymentProof'],
 						tollFree: []
 					},
 					PE: {
-						local: ['CountryInfo', 'Invoice', 'CustomerID', 'LegalAuth'],
+						local: ['CountryInfo', 'Bill', 'CustomerID', 'LegalAuth'],
 						tollFree: []
 					},
 					PR: {
-						local: ['LOA', 'Invoice'],
+						local: ['LOA', 'Bill'],
 						tollFree: []
 					},
 					RO: {
-						local: ['LOA', 'Invoice', 'CustomerID', 'ReleaseLetter'],
-						tollFree: ['LOA', 'Invoice', 'CustomerID']
+						local: ['LOA', 'Bill', 'CustomerID', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Bill', 'CustomerID']
 					},
 					SE: {
-						local: ['LOA', 'Invoice'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
 					},
 					SI: {
-						local: ['LOA', 'Invoice'],
+						local: ['LOA', 'Bill'],
 						tollFree: []
 					},
 					SK: {
-						local: ['LOA', 'Invoice', 'ReleaseLetter'],
-						tollFree: ['LOA', 'Invoice']
+						local: ['LOA', 'Bill', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Bill']
 					},
 					US: {
-						local: ['LOA', 'Invoice', 'ServiceAddr'],
-						tollFree: ['LOA', 'Invoice', 'ServiceAddr']
+						local: ['LOA', /*'Bill',*/ 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill', 'ServiceAddr']
 					},
 					ZA: {
-						local: ['LOA', 'CountryInfo', 'Invoice', 'CustomerID', 'LocalAddr', 'PaymentProof'],
+						local: ['LOA', 'CountryInfo', 'Bill', 'CustomerID', 'LocalAddr', 'PaymentProof'],
 						tollFree: []
 					}
 				},
@@ -1173,11 +1173,11 @@ define(function(require) {
 				losingCarrier = args.data.carrierSelection.losingCarrier,
 				ownershipConfirmationData = _.get(args.data, 'ownershipConfirmation'),
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				requireInvoice = _.some(requiredDocumentsCompleteList, { key: 'Invoice' }),
-				$template = !requireInvoice || _.has(args.data, 'ownershipConfirmation.latestBill')
+				requireBill = _.some(requiredDocumentsCompleteList, { key: 'Bill' }),
+				$template = !requireBill || _.has(args.data, 'ownershipConfirmation.latestBill')
 					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
 						losingCarrier: losingCarrier,
-						requireInvoice: requireInvoice,
+						requireBill: requireBill,
 						data: ownershipConfirmationData
 					})
 					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
@@ -1208,8 +1208,8 @@ define(function(require) {
 
 			if (isValid) {
 				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
-				ownershipConfirmationData.latestBill = self.portWizardGet('invoiceData');
-				self.portWizardUnset('invoiceData');
+				ownershipConfirmationData.latestBill = self.portWizardGet('billData');
+				self.portWizardUnset('billData');
 			}
 
 			return {
@@ -1254,13 +1254,13 @@ define(function(require) {
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
 				portWizardAppFlags = self.appFlags.portWizard,
-				invoiceDocumentMetadata = portWizardAppFlags.requirements.Invoice,
+				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
 				latestBill;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
-				documentMetadata: invoiceDocumentMetadata,
+				documentMetadata: billDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
 				success: function(fileData) {
 					latestBill = fileData;
@@ -1295,14 +1295,14 @@ define(function(require) {
 		 * Get the template for Ownership Confirmation step (account information view)
 		 * @param  {Object} args
 		 * @param  {Object} args.losingCarrier  Losing carrier name
-		 * @param  {Object} args.requireInvoice  Whether or not to require the latest invoice
+		 * @param  {Object} args.requireBill  Whether or not to require the latest bill
 		 * @param  {Object} args.data  Step data
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
 				losingCarrier = args.losingCarrier,
 				data = args.data,
-				requireInvoice = args.requireInvoice,
+				requireBill = args.requireBill,
 				defaultCountry = monster.config.whitelabel.countryCode,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
@@ -1310,7 +1310,7 @@ define(function(require) {
 						data: data,
 						directionals: self.appFlags.portWizard.cardinalDirections,
 						losingCarrier: losingCarrier,
-						requireInvoice: requireInvoice
+						requireBill: requireBill
 					},
 					submodule: 'portWizard'
 				})),
@@ -1404,50 +1404,50 @@ define(function(require) {
 				autoScrollOnInvalid: true
 			});
 
-			if (!requireInvoice) {
+			if (!requireBill) {
 				return $template;
 			}
 
-			self.portWizardOwnershipConfirmationAccountInfoRenderInvoice({
+			self.portWizardOwnershipConfirmationAccountInfoRenderBill({
 				template: $template,
-				invoiceFile: data.latestBill.file
+				billFile: data.latestBill.file
 			});
 
 			return $template;
 		},
 
 		/**
-		 * Render Ownership Confirmation invoice section (account information view)
+		 * Render Ownership Confirmation bill section (account information view)
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {String} args.invoiceFile  Invoice file as a Data URL string
+		 * @param  {String} args.billFile  Bill file as a Data URL string
 		 */
-		portWizardOwnershipConfirmationAccountInfoRenderInvoice: function(args) {
+		portWizardOwnershipConfirmationAccountInfoRenderBill: function(args) {
 			var self = this,
-				invoiceFile = args.invoiceFile,
+				billFile = args.billFile,
 				$template = args.template,
 				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
 				$billRenderContainer = $template.find('#latest_bill_document_container'),
 				portWizardAppFlags = self.appFlags.portWizard,
-				invoiceDocumentMetadata = portWizardAppFlags.requirements.Invoice,
+				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf;
 
-			// Render invoice
+			// Render bill
 			monster.ui.renderPDF(
-				invoiceFile,
+				billFile,
 				$billRenderContainer,
 			);
 
 			// Bind events
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
-				documentMetadata: invoiceDocumentMetadata,
+				documentMetadata: billDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
 				hidden: true,
 				success: function(fileData) {
-					self.portWizardSet('invoiceData', fileData);
+					self.portWizardSet('billData', fileData);
 
 					monster.ui.renderPDF(
 						fileData.file,
@@ -1473,7 +1473,7 @@ define(function(require) {
 		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this,
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Invoice' }),
+				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Bill' }),
 				requiredDocumentsData = _.get(args.data, 'requiredDocuments', []),
 				validationOptions,
 				$template,
@@ -1939,7 +1939,7 @@ define(function(require) {
 					'nameAndNumbers.numbersToPort.formattedNumbers',
 					'requiredDocuments'
 				]),
-				invoice = _.get(data, 'ownershipConfirmation.latestBill', []),
+				bill = _.get(data, 'ownershipConfirmation.latestBill', []),
 				otherDocuments = _.get(data, 'requiredDocuments', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
@@ -1957,7 +1957,7 @@ define(function(require) {
 							}
 						},
 						requiredDocuments: _
-							.chain(invoice)
+							.chain(bill)
 							.concat(otherDocuments)
 							.map(getRequiredDocumentProps)
 							.value()
@@ -2115,11 +2115,11 @@ define(function(require) {
 				wizardData = args.data,
 				callback = args.callback,
 				portRequestId = _.get(wizardData, 'portRequestId'),
-				invoice = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
+				bill = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
 				otherDocuments = _.get(wizardData, 'requiredDocuments', []),
 				allDocuments = _
 					.chain(otherDocuments)
-					.concat(invoice)
+					.concat(bill)
 					.filter('hasChanged')
 					.value(),
 				seriesFunctions = _.map(allDocuments, function(document) {

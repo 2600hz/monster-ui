@@ -264,7 +264,7 @@
 			"documents": {
 				"LOA": "DIDWW LOA for a particular country",
 				"CountryInfo": "Specific information for a particular country",
-				"Invoice": "Losing Carrier Bill",
+				"Bill": "Losing Carrier Bill",
 				"AccountNum": "Account number required",
 				"TaxID": "Local TAX / VAT ID or company registration number",
 				"CustomerID": "ID / Passport copy / Company Registration certificate",
