@@ -3,7 +3,7 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var numbersFeatuesMenu = {
+	var numberFeaturesMenu = {
 
 		requests: {},
 
@@ -11,11 +11,21 @@ define(function(require) {
 			'common.numberFeaturesMenu.render': 'numberFeaturesMenuRender'
 		},
 
+		getFeatures: function(numberData) {
+			var self = this,
+			    features = monster.util.getNumberFeatures(numberData);
+			features = features .filter(function(value) { return value !== 'im' });
+			if (features.indexOf("sms") > -1 || features.indexOf("mms") > -1) {
+				features.push("im");
+			}
+			return features;
+		},
+		
 		numberFeaturesMenuRender: function(args) {
 			var self = this,
 				numberData = args.numberData,
 				phoneNumber = numberData.hasOwnProperty('phoneNumber') ? numberData.phoneNumber : numberData.id,
-				features = monster.util.getNumberFeatures(numberData),
+				features = self.getFeatures(numberData),
 				template = $(self.getTemplate({
 					name: 'dropdown',
 					data: {
@@ -127,5 +137,5 @@ define(function(require) {
 		}
 	};
 
-	return numbersFeatuesMenu;
+	return numberFeaturesMenu;
 });
