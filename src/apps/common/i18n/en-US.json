@@ -1094,10 +1094,21 @@
 
 	"numberIm": {
 		"sms" : {
-			"title": "SMS Services"
+		    "label": "sms",
+			"title": "SMS Services",
+			"info": "Enable or Disable sms messaging feature for this number.",
+			"activation" : {
+			   "manual" : "This Number Provider requires a manual activation. An email will be sent to Operations to complete this action. This can take up to 72 hours"
+			}
 		},
 		"mms" : {
-			"title": "MMS Services"
+		    "label": "mms",
+			"title": "MMS Services",
+			"info": "Enable or Disable mms messaging feature for this number.",
+            "activation" : {
+               "manual" : "This Number Provider requires a manual activation. An email will be sent to Operations to complete this action. This can take up to 72 hours"
+            }
+			
 		},
 		"label": "Messaging",
 		"help": "Enable or Disable messaging feature for this number.",
