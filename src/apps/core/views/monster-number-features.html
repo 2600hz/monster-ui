@@ -21,5 +21,16 @@
 		{{#compare this "mobile"}}
 			<i class="features-mobile fa fa-mobile-phone monster-yellow" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.mobile.tooltip }}"></i>
 		{{/compare}}
+		<!-- if we want to aggregate -->
+        {{#compare this "im"}}
+            <i class="feature-outbound_cnam monster-blue fa fa-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.outbound_cnam.tooltip }}"></i>
+        {{/compare}}
+		<!-- if we don't want to aggregate -->        
+        {{#compare this "sms"}}
+            <i class="feature-outbound_cnam monster-blue fa fa-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.outbound_cnam.tooltip }}"></i>
+        {{/compare}}
+        {{#compare this "mms"}}
+            <i class="feature-inbound_cnam monster-green fa fa-user" data-toggle="tooltip" data-placement="top" data-original-title="{{ @root.i18n.iconNumberFeatures.inbound_cnam.tooltip }}"></i>
+        {{/compare}}
 	{{/each}}
 {{/if}}
