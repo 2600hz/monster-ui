@@ -2364,6 +2364,58 @@ define(function(require) {
 		 **************************************************/
 
 		/**
+		 * Gets a port request attachment
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Request data
+		 * @param  {String} args.data.portRequestId  Port request ID
+		 * @param  {String} args.data.documentName  Attachment name
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} [args.error]  Error callback
+		 */
+		portWizardRequestGetAttachment: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.getAttachment',
+				data: _.merge({
+					accountId: self.portWizardGet('accountId')
+				}, args.data),
+				success: function(data, status) {
+					// `data` is a string representation of the PDF in base 64
+					args.success(data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					_.has(args, 'error') && args.error(parsedError);
+				}
+			});
+		},
+
+		/**
+		 * Gets a saved port request document
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Request data
+		 * @param  {String} args.data.portRequestId  Port request ID
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} [args.error]  Error callback
+		 */
+		portWizardRequestGetPort: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'port.get',
+				data: _.merge({
+					accountId: self.portWizardGet('accountId')
+				}, args.data),
+				success: function(data) {
+					args.success(data.data);
+				},
+				error: function(parsedError) {
+					_.has(args, 'error') && args.error(parsedError);
+				}
+			});
+		},
+
+		/**
 		 * Looks up carrier details for a list of numbers
 		 * @param  {Object} args
 		 * @param  {String[]} args.numbers Phone numbers to look up
@@ -2702,7 +2754,7 @@ define(function(require) {
 							callback(null);
 							return;
 						}
-						self.portWizardRequestGetAttahcment({
+						self.portWizardRequestGetAttachment({
 							data: {
 								portRequestId: request.id,
 								documentName: fileName
@@ -4158,26 +4210,6 @@ define(function(require) {
 			self.portWizardRequestSavePort('port.create', args);
 		},
 		/**
-		 * @param  {Function} args.success
-		 * @param  {Function} [args.error]
-		 */
-		portWizardRequestGetPort: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.get',
-				data: _.merge({
-					accountId: self.portWizardGet('accountId')
-				}, args.data),
-				success: function(data) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-		/**
 		 * @param {Function} args.success
 		 * @param {Function} [args.error]
 		 * @param {Object} args.data.data
@@ -4287,29 +4319,6 @@ define(function(require) {
 				}, args.data),
 				success: function(data, status) {
 					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError, error, globalHandler) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-		/**
-		 * @param {Function} args.success
-		 * @param {Function} [args.error]
-		 * @param {String} args.data.portRequestId
-		 * @param {String} args.data.documentName
-		 */
-		portWizardRequestGetAttahcment: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.getAttachment',
-				data: _.merge({
-					accountId: self.portWizardGet('accountId')
-				}, args.data),
-				success: function(data, status) {
-					// `data` is a string representation of the PDF in base 64
-					args.hasOwnProperty('success') && args.success(data);
 				},
 				error: function(parsedError, error, globalHandler) {
 					args.hasOwnProperty('error') && args.error(parsedError);
