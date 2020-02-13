@@ -48,9 +48,19 @@ define(function(require) {
 				accountId = _.get(args, 'accountId', self.accountId),
 				success = _.get(args, 'success', function() {}),
 				error = _.get(args, 'error', function() {}),
+				config = _.get(numberData, '_read_only.features.settings.im', {}),
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: numberData.im || {},
+					data: {
+						configuration: {
+							sms: _.get(numberData, '_read_only.features.settings.sms', {}),
+							mms: _.get(numberData, '_read_only.features.settings.mms', {})
+						},
+						data: {
+							sms: numberData.sms || {},
+							mms: numberData.mms || {}
+						}
+					},
 					submodule: 'numberIm'
 				})),
 				popup;
@@ -67,9 +77,7 @@ define(function(require) {
 					data: {
 						accountId: accountId,
 						phoneNumber: encodeURIComponent(numberData.id),
-						data: {
-							im: formData
-						}
+						data: formData						
 					},
 					success: function(number) {
 						var phoneNumber = monster.util.formatPhoneNumber(number.id),
