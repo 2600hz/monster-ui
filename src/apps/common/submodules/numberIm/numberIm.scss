@@ -1,12 +1,33 @@
 /* number_im POPUP */
 .trunkstore_popup.numberIm {
 	width: 510px;
-	margin: 0;
 
-	.popup-content {
-		padding: 15px 25px;
-	}
+    form#form_number_im {
+       margin: 0;
+    }
+    
+    .popup-content { 
+       padding: 15px 25px;
+    }
 
+    .popup-content:not(:first-child) {
+       border-top: 1px solid #ccc;
+    }
+
+    .popup-content .popup-label {
+       margin: 0 10px 0 0;
+      display: inline-block;
+     }
+
+     .help-box {
+        margin-top: 20px;
+     }
+
+
+     .popup-actions .cancel-link {
+         margin-right: 10px;
+     }
+     
 	.form-actions {
 		display: flex;
 		justify-content: flex-end;
