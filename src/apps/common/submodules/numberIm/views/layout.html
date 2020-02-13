@@ -1,30 +1,55 @@
-<form class="trunkstore_popup numberIm form-horizontal" id="form_number_im">
+<div class="trunkstore_popup numberIm clearfix">
+<form id="form_number_im" class="form-horizontal">
 	<div class="popup-content">
+	    {{#if configuration.sms.enabled}}
 		<div class="control-group">
 			<label for="number_sms_enabled" class="control-label">
 				{{i18n.numberIm.sms.title}}
 			</label>
 			<div class="controls">
 			{{#monsterSwitch}}
-				<input type="checkbox" id="number_sms_enabled" name="sms.enabled"{{#if sms.enabled}} checked="checked"{{/if}}/>
+				<input type="checkbox" id="number_sms_enabled" name="sms.enabled"{{#if data.sms.enabled}} checked="checked"{{/if}}/>
 			{{/monsterSwitch}}
 			</div>
+			
+            {{#monsterText}}
+                {{i18n.numberIm.sms.info}}
+            {{/monsterText}}
+
+            {{#compare configuration.sms.activation "===" "manual"}}
+	        {{#monsterPanelText "Action Warning" "warning" "fill-width"}}
+	            {{i18n.numberIm.sms.activation.manual}}
+	        {{/monsterPanelText}}
+	        {{/compare}}
+			
 		</div>
+		{{/if}}
+        {{#if configuration.mms.enabled}}
 		<div class="control-group">
 			<label for="number_mms_enabled" class="control-label">
 				{{i18n.numberIm.mms.title}}
 			</label>
 			<div class="controls">
 			{{#monsterSwitch}}
-				<input type="checkbox" id="number_mms_enabled" name="mms.enabled"{{#if mms.enabled}} checked="checked"{{/if}}/>
+				<input type="checkbox" id="number_mms_enabled" name="mms.enabled"{{#if data.mms.enabled}} checked="checked"{{/if}}/>
 			{{/monsterSwitch}}
 			</div>
+			
+            {{#monsterText}}
+                {{i18n.numberIm.mms.info}}
+            {{/monsterText}}
+
+            {{#compare configuration.mms.activation "===" "manual"}}
+            {{#monsterPanelText "Action Warning" "warning" "fill-width"}}
+                {{i18n.numberIm.mms.activation.manual}}
+            {{/monsterPanelText}}
+            {{/compare}}
+			
 		</div>
-		{{#monsterPanelText "" "info" "fill-width"}}
-			{{i18n.numberIm.help}}
-		{{/monsterPanelText}}
+        {{/if}}
 	</div>
-	<div class="form-actions">
+	<!--
+	<div class="popup-content">
 		<button class="monster-button monster-button-ghost cancel-link">
 			{{i18n.cancel}}
 		</button>
@@ -32,4 +57,13 @@
 			{{ i18n.saveChanges }}
 		</button>
 	</div>
+    -->
+        <div class="popup-content popup-actions clearfix">
+            <div class="pull-right">
+                <a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+                <button type="button" class="monster-button monster-button-success save">{{ i18n.saveChanges }}</button>
+            </div>
+        </div>
+	
 </form>
+</div>
