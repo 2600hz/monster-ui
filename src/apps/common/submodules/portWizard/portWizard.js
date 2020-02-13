@@ -318,62 +318,216 @@ define(function(require) {
 				portRequestId = _.get(args, 'data.portRequestId'),
 				i18n = self.i18n.active().commonApp.portWizard,
 				i18nSteps = i18n.steps,
-				stepNames = self.appFlags.portWizard.stepNames,
-				$container,
-				callback;
+				stepNames = self.appFlags.portWizard.stepNames;
 
-			if (args.container instanceof jQuery) {
-				$container = args.container;
-				callback = globalCallback;
-			} else {
-				var modal = monster.ui.fullScreenModal(null, {
-					inverseBg: true
-				});
-				$container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content');
-				callback = function() {
-					modal.close();
-
-					globalCallback();
-				};
-			}
-
-			self.portWizardSet({
-				accountId: accountId,
-				globalCallback: callback
-			});
-
-			monster.pub('common.navigationWizard.render', {
-				thisArg: self,
-				controlId: 'port_wizard_control',
-				data: {
-					portRequestId: portRequestId,
-					nameAndNumbers: {
-						numbersToPort: {
-							type: 'local'
-						}
+			monster.waterfall([
+				function(waterfallCallback) {
+					// Get container and main callback function
+					if (args.container instanceof jQuery) {
+						return waterfallCallback(null, args.container, globalCallback);
 					}
-				},
-				container: $container,
-				steps: _.map(stepNames, function(stepName) {
-					var pascalCasedStepName = _.upperFirst(stepName);
 
-					return {
-						label: _.get(i18nSteps, [ stepName, 'label' ]),
-						description: _.get(i18nSteps, [ stepName, 'description' ]),
-						render: {
-							callback: _.get(self, 'portWizard' + pascalCasedStepName + 'Render')
+					var modal = monster.ui.fullScreenModal(null, {
+							inverseBg: true
+						}),
+						$container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content'),
+						callback = function() {
+							modal.close();
+
+							globalCallback();
+						};
+
+					waterfallCallback(null, $container, callback);
+				},
+				function($container, mainCallback, waterfallCallback) {
+					// Store account ID and main callback
+					self.portWizardSet({
+						accountId: accountId,
+						globalCallback: mainCallback
+					});
+
+					waterfallCallback(null, $container);
+				},
+				function($container, waterfallCallback) {
+					// Get port request data, if ID was provided
+					if (!portRequestId) {
+						return waterfallCallback(null, $container, null);
+					}
+
+					self.portWizardGetPortRequestData({
+						portRequestId: portRequestId,
+						success: function(portRequestData) {
+							waterfallCallback(null, $container, portRequestData);
 						},
-						util: 'portWizard' + pascalCasedStepName + 'Util'
-					};
-				}),
-				title: i18n.title,
-				cancel: self.portWizardClose,
-				done: self.portWizardComplete,
-				doneButton: i18n.doneButton,
-				saveEnabled: true,
-				validateOnStepChange: true,
-				askForConfirmationBeforeExit: true
+						error: function(parsedError) {
+							waterfallCallback(parsedError);
+						}
+					});
+				},
+				function($container, portRequestData, waterfallCallback) {
+					// Notify attachment errors, if any
+					var portWizardI18n = self.i18n.active().commonApp.portWizard;
+
+					_
+						.chain(portRequestData)
+						.get('uploads')
+						.filter('error')
+						.each(function(attachmentData) {
+							monster.ui.toast({
+								type: 'error',
+								message: self.getTemplate({
+									name: '!' + monster.util.tryI18n(portWizardI18n.load.errors, attachmentData.errorType),
+									data: {
+										documentName: monster.util.tryI18n(portWizardI18n.documents, attachmentData.key)
+									}
+								})
+							});
+						})
+						.value();
+
+					waterfallCallback(null, $container, portRequestData);
+				},
+				function($container, portRequestData, waterfallCallback) {
+					// Format port request data, to be loaded in the wizard
+					if (!portRequestData) {
+						return waterfallCallback(null, $container, {
+							nameAndNumbers: {
+								numbersToPort: {
+									type: 'local'
+								}
+							}
+						});
+					}
+
+					var wizardPortRequestData = self.portWizardFormatPortRequestData({
+						data: portRequestData
+					});
+
+					waterfallCallback(null, $container, wizardPortRequestData);
+				}
+			], function(error, $container, wizardPortRequestData) {
+				if (error) {
+					return globalCallback();
+				}
+
+				monster.pub('common.navigationWizard.render', {
+					thisArg: self,
+					controlId: 'port_wizard_control',
+					data: wizardPortRequestData,
+					container: $container,
+					steps: _.map(stepNames, function(stepName) {
+						var pascalCasedStepName = _.upperFirst(stepName);
+
+						return {
+							label: _.get(i18nSteps, [ stepName, 'label' ]),
+							description: _.get(i18nSteps, [ stepName, 'description' ]),
+							render: {
+								callback: _.get(self, 'portWizard' + pascalCasedStepName + 'Render')
+							},
+							util: 'portWizard' + pascalCasedStepName + 'Util'
+						};
+					}),
+					title: i18n.title,
+					cancel: self.portWizardClose,
+					done: self.portWizardComplete,
+					doneButton: i18n.doneButton,
+					saveEnabled: true,
+					validateOnStepChange: true,
+					askForConfirmationBeforeExit: true
+				});
 			});
+		},
+
+		/**
+		 * Get all the port request data (port request document and related attachments)
+		 * @param  {Object} args
+		 * @param  {String} args.portRequestId  Port request ID
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} args.error  Error callback
+		 */
+		portWizardGetPortRequestData: function(args) {
+			var self = this,
+				portRequestId = args.portRequestId,
+				requiredDocuments = self.appFlags.portWizard.requirements;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardRequestGetPort({
+						data: {
+							portRequestId: portRequestId
+						},
+						success: function(portRequest) {
+							waterfallCallback(null, portRequest);
+						},
+						error: function(parsedError) {
+							waterfallCallback(parsedError);
+						}
+					});
+				},
+				function(portRequest, waterfallCallback) {
+					monster.parallel(_.mapValues(portRequest.uploads, function(attachmentData, attachmentName) {
+						var documentMetadata = _.find(requiredDocuments, { attachmentName: attachmentName });
+
+						return function(parallelCallback) {
+							self.portWizardRequestGetAttachment({
+								data: {
+									portRequestId: portRequestId,
+									documentName: attachmentName,
+									generateError: false
+								},
+								success: function(fileData) {
+									var data = _.merge({
+										file: fileData
+									}, documentMetadata, attachmentData);
+
+									parallelCallback(null, data);
+								},
+								error: function(parsedError) {
+									var data = _.merge({
+										errorType: parsedError.error === '404'
+											? 'attachmentNotFound'
+											: 'attachmentDownloadFailed',
+										error: parsedError
+									}, documentMetadata, attachmentData);
+
+									parallelCallback(null, data);
+								}
+							});
+						};
+					}), function(err, attachments) {
+						var portRequestData = _.merge({
+							uploads: attachments
+						}, portRequest);
+
+						waterfallCallback(null, portRequestData);
+					});
+				}
+			], function(err, portRequestData) {
+				if (err) {
+					return args.error(err);
+				}
+
+				args.success(portRequestData);
+			});
+		},
+
+		/**
+		 * Format the port request data to be loaded in the wizard
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Port request data
+		 */
+		portWizardFormatPortRequestData: function(args) {
+			var self = this,
+				portRequestData = args.data;
+
+			return {
+				portRequestId: portRequestData.id,
+				nameAndNumbers: {
+					numbersToPort: {
+						type: portRequestData.ui_flags.type
+					}
+				}
+			};
 		},
 
 		/**************************************************
