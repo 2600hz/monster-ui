@@ -66,29 +66,36 @@ define(function() {
 
 			app.subscribeWebSocket = function(params) {
 				var accountId = app.accountId || params.accountId,
-					authToken = app.getAuthToken() || params.authToken,
 					requiredElement = params.hasOwnProperty('requiredElement') ? params.requiredElement : false;
 
-				if (requiredElement) {
-					requiredElement.on('remove', function() {
-						monster.socket.unbind(params.binding, accountId, authToken, app.name);
-					});
-				}
+				var unsubscribe = monster.socket.bind({
+					uri: monster.config.api.socket,
+					binding: params.binding,
+					accountId: accountId,
+					listener: params.callback,
+					source: app.name
+				});
 
-				monster.socket.bind(params.binding, accountId, authToken, params.callback, app.name);
+				if (requiredElement) {
+					requiredElement.on('remove', unsubscribe);
+				}
 			};
 
 			app.unsubscribeWebSocket = function(params) {
-				var accountId = app.accountId || params.accountId,
-					authToken = app.getAuthToken() || params.authToken;
+				var accountId = app.accountId || params.accountId;
 
-				monster.socket.unbind(params.binding, accountId, authToken, app.name);
+				monster.socket.unbind({
+					uri: monster.config.api.socket,
+					binding: params.binding,
+					accountId: accountId,
+					source: app.name
+				});
 			};
 
 			app.enforceWebSocketsConnection = function(args) {
 				app.requiresWebSockets = true;
 
-				if (monster.socket.isConnected(_.get(args, 'uri', monster.config.api.socket))) {
+				if (monster.socket.isConnected(monster.config.api.socket)) {
 					args.callback();
 				} else {
 					monster.pub('core.showWarningDisconnectedSockets', {
