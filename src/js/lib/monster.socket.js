@@ -4,6 +4,131 @@
  */
 define(function(require) {
 	var _ = require('lodash');
+	var monster = require('monster');
+
+	function Handshakes() {
+		this.entries = {};
+	}
+	Handshakes.prototype = {
+		add: function add(callback) {
+			var id = monster.util.guid();
+
+			this.entries[id] = callback;
+
+			return id;
+		},
+
+		remove: function remove(id) {
+			delete this.entries[id];
+		},
+
+		dispatch: function dispatch(id, data) {
+			var callback = this.entries[id];
+
+			if (_.isUndefined(callback)) {
+				return;
+			}
+			callback(data);
+
+			this.remove(id);
+		}
+	};
+
+	function Listener(metadata) {
+		this.source = metadata.source;
+		this.callback = metadata.listener;
+	}
+	Listener.prototype = {
+		dispatch: function dispatch(params) {
+			this.callback(params);
+		},
+
+		isEqual: function isEqual(metadata) {
+			var source = metadata.source;
+			var callback = metadata.listener;
+
+			return this.source === source
+				&& (!callback || this.callback === callback);
+		}
+	};
+
+	function Listeners() {
+		this.entries = [];
+	}
+	Listeners.prototype = {
+		register: function register(metadata) {
+			if (this.isRegistered(metadata)) {
+				return;
+			}
+			this.entries.push(new Listener(metadata));
+		},
+
+		unregister: function unregister(metadata) {
+			this.entries = this.entries.filter(function(listener) {
+				return !listener.isEqual(metadata);
+			});
+		},
+
+		dispatch: function dispatch(data) {
+			this.entries.forEach(function(listener) {
+				listener.dispatch(data);
+			});
+		},
+
+		isEmpty: function isEmpty() {
+			return _.isEmpty(this.entries);
+		},
+
+		isRegistered: function isRegistered(metadata) {
+			return !!_.find(this.entries, function(listener) {
+				return listener.isEqual({
+					listener: metadata.listener,
+					source: metadata.source
+				});
+			});
+		}
+	};
+
+	function Bindings() {
+		this.entries = {};
+	}
+	Bindings.prototype = {
+		subscribe: function subscribe(binding, metadata) {
+			if (!this.isSubscribed(binding)) {
+				this.entries[binding] = new Listeners();
+			}
+			this.entries[binding].register(metadata);
+		},
+
+		unsubscribe: function unsubscribe(binding, metadata) {
+			if (!this.isSubscribed(binding)) {
+				return;
+			}
+			var listeners = this.entries[binding];
+
+			listeners.unregister(metadata);
+
+			if (listeners.isEmpty()) {
+				delete this.entries[binding];
+			}
+		},
+
+		isSubscribed: function isSubscribed(binding) {
+			return this.entries[binding] instanceof Listeners;
+		},
+
+		hasListeners: function hasListeners(binding) {
+			return this.isSubscribed(binding)
+				&& !this.entries[binding].isEmpty();
+		},
+
+		dispatch: function dispatch(binding, data) {
+			if (!this.isSubscribed(binding)) {
+				return;
+			}
+			this.entries[binding].dispatch(data);
+		}
+	};
 
 	/**
 	 * Creates a new manager of WebSocketClient per URI.
@@ -61,6 +186,43 @@ define(function(require) {
 			}
 
 			client.disconnect();
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {string} params.uri
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {string} params.source
+		 * @param  {Function} params.listener
+		 * @return {Function} Callback to unsubscribe this listener specifically.
+		 */
+		bind: function bind(params) {
+			var client = _.get(this.clients, params.uri);
+
+			if (_.isUndefined(client)) {
+				return;
+			}
+
+			return client.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {string} params.uri
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {string} params.source
+		 * @param  {Function} [params.listener]
+		 */
+		unbind: function unbind(params) {
+			var client = _.get(this.clients, params.uri);
+
+			if (_.isUndefined(client)) {
+				return;
+			}
+
+			client.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
 		}
 	};
 
@@ -93,15 +255,11 @@ define(function(require) {
 
 	/**
 	 * Creates a new WebSocketClient instance.
-	 * @param  {string} uri
-	 * @return {WebSocketClient}
-	 */
-	/**
-	 * Creates a new WebSocketClient instance.
 	 * @param {Object} params
 	 * @param {string} params.uri
 	 * @param {Function} [params.onOpen]
 	 * @param {Function} [params.onClose]
+	 * @return {WebSocketClient}
 	 */
 	function WebSocketClient(params) {
 		/**
@@ -145,6 +303,18 @@ define(function(require) {
 		 * @type {Logger}
 		 */
 		this.logger = new Logger(WebSocketClient.name + '(' + this.uri + ')');
+
+		/**
+		 * Maps bindings to listeners
+		 * @type {Bindings}
+		 */
+		this.bindings = new Bindings();
+
+		/**
+		 * Maps request IDs to callback
+		 * @type {Handshakes}
+		 */
+		this.handshakes = new Handshakes();
 	}
 	WebSocketClient.prototype = {
 		/**
@@ -163,12 +333,12 @@ define(function(require) {
 
 				this.ws.addEventListener('open', this.onOpen.bind(this));
 				this.ws.addEventListener('close', this.onClose.bind(this));
+				this.ws.addEventListener('message', this.onMessage.bind(this));
 
 				this.ws.addEventListener('open', this.callbacks.onOpen);
 				this.ws.addEventListener('close', this.callbacks.onClose);
 
 				this.ws.addEventListener('error', this.logger.log.bind(this.logger, 'onerror'));
-				this.ws.addEventListener('message', this.logger.log.bind(this.logger, 'onmessage'));
 			} catch (e) {
 				this.logger.warn(
 					'error while attempting to ' + (this.reconnectTimeout ? 're' : '') + 'connect',
@@ -248,6 +418,134 @@ define(function(require) {
 		},
 
 		/**
+		 * @param  {Object} params
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {string} params.source
+		 * @param  {Function} params.listener
+		 * @return {Function} Callback to unsubscribe this listener specifically.
+		 */
+		bind: function bind(params) {
+			var wsc = this;
+			var binding = params.binding;
+
+			monster.waterfall([
+				function(callback) {
+					if (wsc.bindings.isSubscribed(binding)) {
+						return callback(null, {});
+					}
+					wsc.subscribe(_.merge({
+						handleReply: function handleReply(data) {
+							callback(data.status === 'success' ? null : true, data);
+						}
+					}, _.pick(params, 'accountId', 'binding')));
+				}
+			], function(err, data) {
+				if (err) {
+					wsc.logger.warn('failed to subscribe to ' + binding, data);
+					return;
+				}
+				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'source', 'listener')));
+			});
+
+			return this.unbind.bind(this, _.merge({}, params));
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {string} param.accountId
+		 * @param  {string} param.binding
+		 * @param  {string} param.source
+		 * @param  {Function} [param.listener]
+		 */
+		unbind: function unbind(params) {
+			var wsc = this;
+			var binding = params.binding;
+
+			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, 'source', 'listener')));
+
+			monster.waterfall([
+				function(callback) {
+					if (wsc.bindings.hasListeners(binding)) {
+						return callback(null);
+					}
+					wsc.unsubscribe(_.merge({
+						handleReply: function handleReply(data) {
+							callback(data.status === 'success' ? null : true, data);
+						}
+					}, _.pick(params, 'accountId', 'binding')));
+				}
+			], function(err, data) {
+				if (!err) {
+					return;
+				}
+				wsc.logger.warn('failed to unsubscribe from ' + binding, data);
+			});
+		},
+
+		/**
+		 * @param  {Object} parms
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {Function} params.handleReply
+		 */
+		subscribe: function subscribe(params) {
+			this.logger.log('subscribing to binding...');
+
+			var requestId = this.handshakes.add(params.handleReply);
+
+			this.ws.send(
+				JSON.stringify({
+					action: 'subscribe',
+					auth_token: monster.util.getAuthToken(),
+					request_id: requestId,
+					data: _.merge({
+						account_id: params.accountId
+					}, _.pick(params, 'binding'))
+				})
+			);
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {Function} params.handleReply
+		 */
+		unsubscribe: function unsubscribe(params) {
+			this.logger.log('unsubscribing from binding...');
+
+			var requestId = this.handshakes.add(params.handleReply);
+
+			this.ws.send(
+				JSON.stringify({
+					action: 'unsubscribe',
+					auth_token: monster.util.getAuthToken(),
+					request_id: requestId,
+					data: _.merge({
+						account_id: params.accountId
+					}, _.pick(params, 'binding'))
+				})
+			);
+		},
+
+		/**
+		 * @param {Object} data Parsed MessageEvent payload.
+		 */
+		handleReply: function handleReply(data) {
+			this.logger.log('binding ' + (_.has(data.data, 'subscribed') ? '' : 'un') + 'subscribed successfully');
+
+			this.handshakes.dispatch(data.request_id, data);
+		},
+
+		/**
+		 * @param  {Object} data Parsed MessageEvent payload.
+		 */
+		handleEvent: function handleEvent(data) {
+			this.bindings.dispatch(data.subscribed_key, _.merge({}, data.data));
+		},
+
+		/**
 		 * Called when the connection's state changes to open.
 		 */
 		onOpen: function onOpen() {
@@ -257,6 +555,7 @@ define(function(require) {
 
 		/**
 		 * Called when the connection's state changes to closed.
+		 * @param {CloseEvent} event
 		 */
 		onClose: function onClose(event) {
 			if (this.shouldClose) {
@@ -270,6 +569,25 @@ define(function(require) {
 			);
 
 			this.reconnect();
+		},
+
+		/**
+		 * @param  {MessageEvent} event
+		 */
+		onMessage: function onMessage(event) {
+			var parsedData = JSON.parse(event.data);
+			var action = parsedData.action;
+
+			switch (action) {
+				case 'reply':
+					this.handleReply(parsedData);
+					break;
+				case 'event':
+					this.handleEvent(parsedData);
+					break;
+				default:
+					this.logger.log('unknown action received: ', action, event);
+			}
 		},
 
 		/**
