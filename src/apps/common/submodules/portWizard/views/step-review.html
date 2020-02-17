@@ -86,7 +86,7 @@
 				{{> sectionTitle stepName="requiredDocuments"}}
 				<div class="section-body">
 				{{#each @root.data.requiredDocuments}}
-					{{#> horizontalFieldPartial label=(tryI18n portWizardStepsI18n.general.documents this.key) value=this.name hasContent=true}}
+					{{#> horizontalFieldPartial label=(tryI18n @root.i18n.commonApp.portWizard.documents this.key) value=this.name hasContent=true}}
 						{{telicon "file" class="document-icon"}}
 						{{value}}
 					{{/horizontalFieldPartial}}
@@ -96,12 +96,16 @@
 			<div class="section">
 				{{> sectionTitle stepName="dateAndNotifications"}}
 				<div class="section-body">
-					{{> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.desiredTargetDate.labels.targetDate value=@root.data.dateAndNotifications.targetDate}}
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.desiredTargetDate.labels.targetDate value=@root.data.dateAndNotifications.targetDate hasContent=true}}
+						{{toFriendlyDate value "date"}}
+					{{/horizontalFieldPartial}}
+				{{#if @root.data.dateAndNotifications.notificationEmails.length}}
 					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.notifications.labels.notifyByEmail value=@root.data.dateAndNotifications.notificationEmails hasContent=true}}
 						{{#each value}}
 							{{this}}{{#unless @last}}<br />{{/unless}}
 						{{/each}}
 					{{/horizontalFieldPartial}}
+				{{/if}}
 				</div>
 			</div>
 			<div class="section">
@@ -111,7 +115,7 @@
 				<div class="section-body">
 					<div class="flex-row-container">
 						<div class="field-label-horizontal flex-item-2">
-							{{#monsterPanelText portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.title 'warning'}}
+							{{#monsterPanelText portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.title "warning"}}
 								{{portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.message}}
 							{{/monsterPanelText}}
 						</div>
