@@ -244,19 +244,6 @@
 					}
 				},
 				"general": {
-					"documents": {
-						"LOA": "DIDWW LOA for a particular country",
-						"CountryInfo": "Specific information for a particular country",
-						"Invoice": "Latest Invoice",
-						"AccountNum": "Account number required",
-						"TaxID": "Local TAX / VAT ID or company registration number",
-						"CustomerID": "ID / Passport copy / Company Registration certificate",
-						"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
-						"LocalAddr": "End-user’s local address from the same city as the number to be ported",
-						"ServiceAddr": "End-user’s Service address in the same country",
-						"ReleaseLetter": "Letter of Release from the losing provider",
-						"PaymentProof": "Latest Proof of Payment"
-					},
 					"errors": {
 						"phonebookUnavailable": "It was not possible to lookup the number information. Check if the Phonebook feature is available for your installation.",
 						"lookupNumbersError": "An error occurred while trying to lookup for phone numbers information.",
@@ -272,6 +259,36 @@
 					"placeholders": {
 						"file": "No file selected..."
 					}
+				}
+			},
+			"documents": {
+				"LOA": "DIDWW LOA for a particular country",
+				"CountryInfo": "Specific information for a particular country",
+				"Bill": "Losing Carrier Bill",
+				"AccountNum": "Account number required",
+				"TaxID": "Local TAX / VAT ID or company registration number",
+				"CustomerID": "ID / Passport copy / Company Registration certificate",
+				"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
+				"LocalAddr": "End-user’s local address from the same city as the number to be ported",
+				"ServiceAddr": "End-user’s Service address in the same country",
+				"ReleaseLetter": "Letter of Release from the losing provider",
+				"PaymentProof": "Latest Proof of Payment"
+			},
+			"save": {
+				"errorDialog": {
+					"stageLabels": {
+						"attachmentSave": "The port request was saved. However, not all attachments were saved:",
+						"portSave": "The port request was not saved. There are one or more problems that need to be addressed:",
+						"portUpdateState": "The port request could not be submitted due to the following errors:"
+					}
+				},
+				"errors": {
+					"attachment_save_failed": "Upload failed for document \"{{variable}}\"",
+					"number_exists_on_the_system_already": "One or more phone numbers already exist in the system: {{variable}}",
+					"number_is_on_a_port_request_already": "One or more phone numbers are already included in port requests: {{variable}}",
+					"too_few_properties": "Insufficient data at: {{variable}}",
+					"unknown_error": "Unknown error at: {{variable}}",
+					"wrong_format": "Invalid data at: {{variable}}"
 				}
 			},
 			"title": "Creating a New Port Request"
@@ -1411,16 +1428,6 @@
 				}
 			},
 			"button": "Submit This Port Request"
-		},
-		"errorDialog": {
-			"label": "The port request has some problems that need to be addressed before submit:"
-		},
-		"errors": {
-			"number_is_on_a_port_request_already": "One or more phone numbers are already included in port requests: {{variable}}",
-			"number_exists_on_the_system_already": "One or more phone numbers already exist in the system: {{variable}}",
-			"too_few_properties": "Insufficient data at: {{variable}}",
-			"unknown_error": "Unknown error at: {{variable}}",
-			"wrong_format": "Invalid data at: {{variable}}"
 		}
 	},
 
