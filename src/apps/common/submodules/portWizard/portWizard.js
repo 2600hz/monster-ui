@@ -83,50 +83,17 @@ define(function(require) {
 				},
 				minTargetDateBusinessDays: 4,
 				requirements: {
-					LOA: {
-						key: 'LOA',
-						attachmentName: 'form.pdf'
-					},
-					CountryInfo: {
-						key: 'CountryInfo',
-						attachmentName: 'country_info.pdf'
-					},
-					Bill: {
-						key: 'Bill',
-						attachmentName: 'bill.pdf'
-					},
-					AccountNum: {
-						key: 'AccountNum',
-						attachmentName: 'account_number.pdf'
-					},
-					TaxID: {
-						key: 'TaxID',
-						attachmentName: 'tax_id.pdf'
-					},
-					CustomerID: {
-						key: 'CustomerID',
-						attachmentName: 'customer_id.pdf'
-					},
-					LegalAuth: {
-						key: 'LegalAuth',
-						attachmentName: 'legal_auth.pdf'
-					},
-					LocalAddr: {
-						key: 'LocalAddr',
-						attachmentName: 'local_address.pdf'
-					},
-					ServiceAddr: {
-						key: 'ServiceAddr',
-						attachmentName: 'service_address.pdf'
-					},
-					ReleaseLetter: {
-						key: 'ReleaseLetter',
-						attachmentName: 'release_letter.pdf'
-					},
-					PaymentProof: {
-						key: 'PaymentProof',
-						attachmentName: 'payment_proof.pdf'
-					}
+					LOA: 'form.pdf',
+					CountryInfo: 'country_info.pdf',
+					Bill: 'bill.pdf',
+					AccountNum: 'account_number.pdf',
+					TaxID: 'tax_id.pdf',
+					CustomerID: 'customer_id.pdf',
+					LegalAuth: 'legal_auth.pdf',
+					LocalAddr: 'local_address.pdf',
+					ServiceAddr: 'service_address.pdf',
+					ReleaseLetter: 'release_letter.pdf',
+					PaymentProof: 'payment_proof.pdf'
 				},
 				requirementsByCountries: {
 					AT: {
@@ -752,11 +719,15 @@ define(function(require) {
 
 					var requirements = self.appFlags.portWizard.requirements,
 						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
-						getRequirementByKey = _.partial(_.get, requirements),
 						requiredDocuments = _
 							.chain(requirementsByCountries)
 							.get([numbersCarrierData.countryCode, numbersType])
-							.map(getRequirementByKey)
+							.map(function(requirementKey) {
+								return {
+									key: requirementKey,
+									attachmentName: _.get(requirements, requirementKey)
+								};
+							})
 							.value();
 
 					self.portWizardSet('requiredDocumentsList', requiredDocuments);
@@ -1254,7 +1225,10 @@ define(function(require) {
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
 				portWizardAppFlags = self.appFlags.portWizard,
-				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
+				billDocumentMetadata = {
+					key: 'Bill',
+					attachmentName: portWizardAppFlags.requirements.Bill
+				},
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
 				latestBill;
 
@@ -2522,7 +2496,9 @@ define(function(require) {
 		  * @param  {jQuery} args.fileInput  File input element
 		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
 		  *                                   text field
-		  * @param  {Object} [args.documentMetadata] Document metadata
+		  * @param  {Object} [args.documentMetadata]  Document metadata
+		  * @param  {Object} [args.documentMetadata.key]  Document key
+		  * @param  {Object} [args.documentMetadata.attachmentName]  Document name for attachment
 		  * @param  {Object} args.fileRestrictions  File restrictions
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
