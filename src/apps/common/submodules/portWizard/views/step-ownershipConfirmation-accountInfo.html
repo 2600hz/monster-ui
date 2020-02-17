@@ -1,5 +1,5 @@
 {{#*inline "formFieldPartial"}}
-	<div class="flex-item-1">
+	<div class="{{#if @root.requireBill}}flex-item-1{{else}}flex-item-2{{/if}}">
 	{{#with (lookup @root.i18n.commonApp.portWizard.steps.ownershipConfirmation section) as |sectionI18n|}}
 		<label class="form-field">
 			{{tryI18n sectionI18n.labels ../name}}
@@ -44,7 +44,7 @@
 		{{replaceVar ownershipConfirmationI18n.title @root.losingCarrier}}
 	</div>
 	<div class="step-body flex-row-container">
-		<div class="flex-item-2">
+		<div class="{{#if @root.requireBill}}flex-item-2{{else}}flex-item-1{{/if}}">
 			<form id="form_ownership_confirmation">
 				<div class="step-section">
 					<div class="section-body flex-row-container">
@@ -87,6 +87,7 @@
 				</div>
 			</form>
 		</div>
+	{{#if @root.requireBill}}
 		<div class="flex-item-2">
 			<div class="step-section">
 				<div class="section-body">
@@ -100,6 +101,7 @@
 				</div>
 			</div>
 		</div>
+	{{/if}}
 	</div>
 {{/with}}
 </div>

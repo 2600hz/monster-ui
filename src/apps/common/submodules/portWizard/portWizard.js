@@ -30,6 +30,24 @@ define(function(require) {
 					emailItem: 200
 				},
 				cardinalDirections: ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'],
+				errorTypesByStep: [
+					{
+						stepName: 'nameAndNumbers',
+						errorTypes: [
+							'mixed_number_type',
+							'number_is_being_ported_for_a_different_account',
+							'number_is_on_a_port_request_already',
+							'number_exists_on_the_system_already'
+						]
+					},
+					{
+						stepName: 'ownershipConfirmation',
+						errorTypes: [
+							'carrier_error_7115',
+							'carrier_error_7203'
+						]
+					}
+				],
 				fileRestrictions: {
 					csv: {
 						maxSize: 5,
@@ -64,59 +82,173 @@ define(function(require) {
 					}
 				},
 				minTargetDateBusinessDays: 4,
-				requiredDocuments: {
-					documents: [
-						'LOA',
-						'CountryInfo',
-						'Invoice',
-						'AccountNum',
-						'TaxID',
-						'CustomerID',
-						'LegalAuth',
-						'LocalAddr',
-						'ServiceAddr',
-						'ReleaseLetter',
-						'PaymentProof'
-					],
-					requirementsByCountries: {
-						AT: { local: [0, 2, 3, 5], tollFree: [0, 1, 2] },
-						AU: { local: [0, 2], tollFree: [0, 2] },
-						BE: { local: [0, 2, 8], tollFree: [0, 2] },
-						BR: { local: [0, 2, 4, 5], tollFree: [0, 2, 5] },
-						CA: { local: [0, 2, 8], tollFree: [0, 2, 8] },
-						CH: { local: [0, 2], tollFree: [0, 1, 2] },
-						CL: { local: [0, 1, 2, 5], tollFree: [] },
-						CR: { local: [], tollFree: [0, 2, 5, 6] },
-						CZ: { local: [0, 2, 9], tollFree: [0, 2] },
-						DE: { local: [1, 2, 7, 9], tollFree: [1, 2] },
-						DK: { local: [0, 2], tollFree: [0, 2] },
-						ES: { local: [0, 2, 4], tollFree: [0, 2, 4] },
-						FI: { local: [0, 2, 4], tollFree: [0, 2, 4, 6] },
-						FR: { local: [0, 1, 2, 7], tollFree: [0, 1, 2, 8] },
-						GB: { local: [0, 2], tollFree: [0, 2] },
-						GR: { local: [0, 2, 4, 5], tollFree: [] },
-						HR: { local: [1, 2, 5], tollFree: [] },
-						IE: { local: [0, 2], tollFree: [0, 2] },
-						IL: { local: [0, 2, 5, 7], tollFree: [] },
-						IT: { local: [0, 2, 4, 8], tollFree: [0, 2, 4, 8] },
-						LT: { local: [0, 2, 5], tollFree: [0, 2] },
-						LU: { local: [0, 2, 8], tollFree: [0, 2] },
-						LV: { local: [0, 2], tollFree: [] },
-						MX: { local: [0, 1, 2, 5, 6], tollFree: [0, 1, 2, 5, 6] },
-						NL: { local: [0, 1, 2, 7], tollFree: [0, 1, 2] },
-						NO: { local: [0, 2, 5], tollFree: [0, 2, 5] },
-						NZ: { local: [0, 2], tollFree: [0, 2] },
-						PA: { local: [1, 2, 5, 10], tollFree: [] },
-						PE: { local: [1, 2, 5, 6], tollFree: [] },
-						PR: { local: [0, 2], tollFree: [] },
-						RO: { local: [0, 2, 5, 9], tollFree: [0, 2, 5] },
-						SE: { local: [0, 2], tollFree: [0, 2] },
-						SI: { local: [0, 2], tollFree: [] },
-						SK: { local: [0, 2, 9], tollFree: [0, 2] },
-						US: { local: [0, 2, 8], tollFree: [0, 2, 8] },
-						ZA: { local: [0, 1, 2, 5, 7, 10], tollFree: [] }
+				requirements: {
+					LOA: 'form.pdf',
+					CountryInfo: 'country_info.pdf',
+					Bill: 'bill.pdf',
+					AccountNum: 'account_number.pdf',
+					TaxID: 'tax_id.pdf',
+					CustomerID: 'customer_id.pdf',
+					LegalAuth: 'legal_auth.pdf',
+					LocalAddr: 'local_address.pdf',
+					ServiceAddr: 'service_address.pdf',
+					ReleaseLetter: 'release_letter.pdf',
+					PaymentProof: 'payment_proof.pdf'
+				},
+				requirementsByCountries: {
+					AT: {
+						local: ['LOA', 'Bill', 'AccountNum', 'CustomerID'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill']
+					},
+					AU: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
+					},
+					BE: {
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill']
+					},
+					BR: {
+						local: ['LOA', 'Bill', 'TaxID', 'CustomerID'],
+						tollFree: ['LOA', 'Bill', 'CustomerID']
+					},
+					CA: {
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill', 'ServiceAddr']
+					},
+					CH: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill']
+					},
+					CL: {
+						local: ['LOA', 'CountryInfo', 'Bill', 'CustomerID'],
+						tollFree: []
+					},
+					CR: {
+						local: [],
+						tollFree: ['LOA', 'Bill', 'CustomerID', 'LegalAuth']
+					},
+					CZ: {
+						local: ['LOA', 'Bill', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Bill']
+					},
+					DE: {
+						local: ['CountryInfo', 'Bill', 'LocalAddr', 'ReleaseLetter'],
+						tollFree: ['CountryInfo', 'Bill']
+					},
+					DK: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
+					},
+					ES: {
+						local: ['LOA', 'Bill', 'TaxID'],
+						tollFree: ['LOA', 'Bill', 'TaxID']
+					},
+					FI: {
+						local: ['LOA', 'Bill', 'TaxID'],
+						tollFree: ['LOA', 'Bill', 'TaxID', 'LegalAuth']
+					},
+					FR: {
+						local: ['LOA', 'CountryInfo', 'Bill', 'LocalAddr'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill', 'ServiceAddr']
+					},
+					GB: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
+					},
+					GR: {
+						local: ['LOA', 'Bill', 'TaxID', 'CustomerID'],
+						tollFree: []
+					},
+					HR: {
+						local: ['CountryInfo', 'Bill', 'CustomerID'],
+						tollFree: []
+					},
+					IE: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
+					},
+					IL: {
+						local: ['LOA', 'Bill', 'CustomerID', 'LocalAddr'],
+						tollFree: []
+					},
+					IT: {
+						local: ['LOA', 'Bill', 'TaxID', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill', 'TaxID', 'ServiceAddr']
+					},
+					LT: {
+						local: ['LOA', 'Bill', 'CustomerID'],
+						tollFree: ['LOA', 'Bill']
+					},
+					LU: {
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill']
+					},
+					LV: {
+						local: ['LOA', 'Bill'],
+						tollFree: []
+					},
+					MX: {
+						local: ['LOA', 'CountryInfo', 'Bill', 'CustomerID', 'LegalAuth'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill', 'CustomerID', 'LegalAuth']
+					},
+					NL: {
+						local: ['LOA', 'CountryInfo', 'Bill', 'LocalAddr'],
+						tollFree: ['LOA', 'CountryInfo', 'Bill']
+					},
+					NO: {
+						local: ['LOA', 'Bill', 'CustomerID'],
+						tollFree: ['LOA', 'Bill', 'CustomerID']
+					},
+					NZ: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
+					},
+					PA: {
+						local: ['CountryInfo', 'Bill', 'CustomerID', 'PaymentProof'],
+						tollFree: []
+					},
+					PE: {
+						local: ['CountryInfo', 'Bill', 'CustomerID', 'LegalAuth'],
+						tollFree: []
+					},
+					PR: {
+						local: ['LOA', 'Bill'],
+						tollFree: []
+					},
+					RO: {
+						local: ['LOA', 'Bill', 'CustomerID', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Bill', 'CustomerID']
+					},
+					SE: {
+						local: ['LOA', 'Bill'],
+						tollFree: ['LOA', 'Bill']
+					},
+					SI: {
+						local: ['LOA', 'Bill'],
+						tollFree: []
+					},
+					SK: {
+						local: ['LOA', 'Bill', 'ReleaseLetter'],
+						tollFree: ['LOA', 'Bill']
+					},
+					US: {
+						local: ['LOA', 'Bill', 'ServiceAddr'],
+						tollFree: ['LOA', 'Bill', 'ServiceAddr']
+					},
+					ZA: {
+						local: ['LOA', 'CountryInfo', 'Bill', 'CustomerID', 'LocalAddr', 'PaymentProof'],
+						tollFree: []
 					}
-				}
+				},
+				stepNames: [
+					'nameAndNumbers',
+					'carrierSelection',
+					'ownershipConfirmation',
+					'requiredDocuments',
+					'dateAndNotifications',
+					'review'
+				]
 			}
 		},
 
@@ -186,14 +318,7 @@ define(function(require) {
 				portRequestId = _.get(args, 'data.portRequestId'),
 				i18n = self.i18n.active().commonApp.portWizard,
 				i18nSteps = i18n.steps,
-				stepNames = [
-					'nameAndNumbers',
-					'carrierSelection',
-					'ownershipConfirmation',
-					'requiredDocuments',
-					'dateAndNotifications',
-					'review'
-				],
+				stepNames = self.appFlags.portWizard.stepNames,
 				$container,
 				callback;
 
@@ -221,6 +346,7 @@ define(function(require) {
 				thisArg: self,
 				controlId: 'port_wizard_control',
 				data: {
+					portRequestId: portRequestId,
 					nameAndNumbers: {
 						numbersToPort: {
 							type: 'local'
@@ -381,9 +507,9 @@ define(function(require) {
 				fileInput: $fileInput,
 				fileRestrictions: csvFilesRestrictions,
 				dataFormat: 'text',
-				success: function(results) {
+				success: function(fileData) {
 					self.portWizardNameAndNumbersProcessFile({
-						fileText: results[0].file,
+						fileText: fileData.file,
 						numbersArea: $numbersArea
 					});
 				}
@@ -568,7 +694,7 @@ define(function(require) {
 						noWinningCarriers = isSingleLosingCarrier && _.isEmpty(winningCarriers),
 						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
 						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
-						isCountrySupported = _.has(self.appFlags.portWizard.requiredDocuments.requirementsByCountries, numbersCountryCode),
+						isCountrySupported = _.has(self.appFlags.portWizard.requirementsByCountries, numbersCountryCode),
 						carrierWarningType = !isSingleLosingCarrier
 							? 'multipleLosingCarriers'
 							: isSingleLosingCarrierUnknown
@@ -591,12 +717,17 @@ define(function(require) {
 						return waterfallCallback(null, numbersCarrierData);
 					}
 
-					var requiredDocumentsData = self.appFlags.portWizard.requiredDocuments,
-						getDocumentByIndex = _.partial(_.get, requiredDocumentsData.documents),
+					var requirements = self.appFlags.portWizard.requirements,
+						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
 						requiredDocuments = _
-							.chain(requiredDocumentsData.requirementsByCountries)
+							.chain(requirementsByCountries)
 							.get([numbersCarrierData.countryCode, numbersType])
-							.map(getDocumentByIndex)
+							.map(function(requirementKey) {
+								return {
+									key: requirementKey,
+									attachmentName: _.get(requirements, requirementKey)
+								};
+							})
 							.value();
 
 					self.portWizardSet('requiredDocumentsList', requiredDocuments);
@@ -1005,13 +1136,24 @@ define(function(require) {
 		/**
 		 * Render the Ownership Confirmation step
 		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args.data  Wizard data
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this,
-				$template = _.has(args.data, 'ownershipConfirmation.latestBill')
-					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate(args)
-					: self.portWizardOwnershipConfirmationBillUploadGetTemplate(args);
+				losingCarrier = args.data.carrierSelection.losingCarrier,
+				ownershipConfirmationData = _.get(args.data, 'ownershipConfirmation'),
+				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+				requireBill = _.some(requiredDocumentsCompleteList, { key: 'Bill' }),
+				$template = !requireBill || _.has(args.data, 'ownershipConfirmation.latestBill')
+					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
+						losingCarrier: losingCarrier,
+						requireBill: requireBill,
+						data: ownershipConfirmationData
+					})
+					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
+						losingCarrier: losingCarrier
+					});
 
 			callback({
 				template: $template,
@@ -1037,6 +1179,8 @@ define(function(require) {
 
 			if (isValid) {
 				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
+				ownershipConfirmationData.latestBill = self.portWizardGet('billData');
+				self.portWizardUnset('billData');
 			}
 
 			return {
@@ -1049,14 +1193,16 @@ define(function(require) {
 
 		/**
 		 * Get the template for Ownership Confirmation step (bill upload view)
-		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args
+		 * @param  {String} args.losingCarrier  Losing carrier name
 		 */
 		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
 			var self = this,
+				losingCarrier = args.losingCarrier,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-billUpload',
 					data: {
-						losingCarrier: args.data.carrierSelection.losingCarrier
+						losingCarrier: losingCarrier
 					},
 					submodule: 'portWizard'
 				}));
@@ -1078,14 +1224,20 @@ define(function(require) {
 				$template = args.template,
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
-				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf,
+				portWizardAppFlags = self.appFlags.portWizard,
+				billDocumentMetadata = {
+					key: 'Bill',
+					attachmentName: portWizardAppFlags.requirements.Bill
+				},
+				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
 				latestBill;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
+				documentMetadata: billDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
-				success: function(results) {
-					latestBill = results[0];
+				success: function(fileData) {
+					latestBill = fileData;
 
 					$billAckCheckbox.prop('disabled', false);
 				}
@@ -1115,29 +1267,28 @@ define(function(require) {
 
 		/**
 		 * Get the template for Ownership Confirmation step (account information view)
-		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args
+		 * @param  {Object} args.losingCarrier  Losing carrier name
+		 * @param  {Object} args.requireBill  Whether or not to require the latest bill
+		 * @param  {Object} args.data  Step data
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
+				losingCarrier = args.losingCarrier,
 				data = args.data,
-				ownershipConfirmationData = data.ownershipConfirmation,
+				requireBill = args.requireBill,
 				defaultCountry = monster.config.whitelabel.countryCode,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
 					data: {
-						data: ownershipConfirmationData,
+						data: data,
 						directionals: self.appFlags.portWizard.cardinalDirections,
-						losingCarrier: data.carrierSelection.losingCarrier
+						losingCarrier: losingCarrier,
+						requireBill: requireBill
 					},
 					submodule: 'portWizard'
 				})),
-				$billRenderContainer = $template.find('#latest_bill_document_container'),
 				$form = $template.find('form');
-
-			monster.ui.renderPDF(
-				ownershipConfirmationData.latestBill.file,
-				$billRenderContainer
-			);
 
 			$template
 				.find('input[data-mask]')
@@ -1158,16 +1309,11 @@ define(function(require) {
 			monster.ui.countrySelector(
 				$template.find('#service_address_country'),
 				{
-					selectedValues: _.get(ownershipConfirmationData, 'serviceAddress.country', defaultCountry)
+					selectedValues: _.get(data, 'serviceAddress.country', defaultCountry)
 				}
 			);
 
 			monster.ui.tooltips($template);
-
-			self.portWizardOwnershipConfirmationAccountInfoBindEvents({
-				template: $template,
-				data: ownershipConfirmationData
-			});
 
 			monster.ui.validate($form, {
 				rules: {
@@ -1232,34 +1378,53 @@ define(function(require) {
 				autoScrollOnInvalid: true
 			});
 
+			if (!requireBill) {
+				return $template;
+			}
+
+			self.portWizardOwnershipConfirmationAccountInfoRenderBill({
+				template: $template,
+				billFile: data.latestBill.file
+			});
+
 			return $template;
 		},
 
 		/**
-		 * Bind Ownership Confirmation step events (account information view)
+		 * Render Ownership Confirmation bill section (account information view)
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.data  Step data
+		 * @param  {String} args.billFile  Bill file as a Data URL string
 		 */
-		portWizardOwnershipConfirmationAccountInfoBindEvents: function(args) {
+		portWizardOwnershipConfirmationAccountInfoRenderBill: function(args) {
 			var self = this,
+				billFile = args.billFile,
 				$template = args.template,
-				data = args.data,
 				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
 				$billRenderContainer = $template.find('#latest_bill_document_container'),
-				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
+				portWizardAppFlags = self.appFlags.portWizard,
+				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
+				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf;
 
+			// Render bill
+			monster.ui.renderPDF(
+				billFile,
+				$billRenderContainer,
+			);
+
+			// Bind events
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
+				documentMetadata: billDocumentMetadata,
 				fileRestrictions: pdfFilesRestrictions,
 				hidden: true,
-				success: function(results) {
-					data.latestBill = results[0];
+				success: function(fileData) {
+					self.portWizardSet('billData', fileData);
 
 					monster.ui.renderPDF(
-						data.latestBill.file,
+						fileData.file,
 						$billRenderContainer
 					);
 				}
@@ -1282,7 +1447,7 @@ define(function(require) {
 		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this,
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				requiredDocumentsList = _.without(requiredDocumentsCompleteList, 'Invoice'),
+				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Bill' }),
 				requiredDocumentsData = _.get(args.data, 'requiredDocuments', []),
 				validationOptions,
 				$template,
@@ -1299,13 +1464,11 @@ define(function(require) {
 			}
 
 			// Update required documents based on current requirements
-			requiredDocumentsData = _.map(requiredDocumentsList, function(documentKey) {
+			requiredDocumentsData = _.map(requiredDocumentsList, function(document) {
 				return _
 					.chain(requiredDocumentsData)
-					.find({ key: documentKey })
-					.merge({
-						key: documentKey
-					})	// Merge key to nil object, if the document was not found
+					.find({ key: document.key })
+					.merge(document)	// Merge key to nil object, if the document was not found
 					.value();
 			});
 
@@ -1330,8 +1493,8 @@ define(function(require) {
 			validationOptions = {
 				rules: _
 					.chain(requiredDocumentsList)
-					.keyBy(function(documentKey) {
-						return documentKey + '.name';
+					.keyBy(function(document) {
+						return document.key + '.name';
 					})
 					.mapValues(function() {
 						return {
@@ -1401,12 +1564,9 @@ define(function(require) {
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
 						fileName: document.name,
+						documentMetadata: document,
 						fileRestrictions: pdfFilesRestrictions,
-						success: function(results) {
-							var fileData = _.merge({
-								key: document.key
-							}, results[0]);
-
+						success: function(fileData) {
 							self.portWizardSet([
 								'requiredDocumentsData',
 								documentIndex
@@ -1510,8 +1670,17 @@ define(function(require) {
 			if (isValid) {
 				dateAndNotificationsData = monster.ui.getFormData($form.get(0));
 
+				// Extract and store date(s)
+				$form.find('input.hasDatepicker').each(function() {
+					var $this = $(this),
+						propertyPath = $this.attr('name'),
+						selectedDate = $this.datepicker('getDate');
+
+					_.set(dateAndNotificationsData, propertyPath, selectedDate);
+				});
+
 				// Remove empty e-mail values
-				_.pullAllBy(dateAndNotificationsData.notificationEmails, _.isEmpty);
+				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
 
 				delete args.dateAndNotifications;
 			}
@@ -1663,7 +1832,7 @@ define(function(require) {
 		portWizardReviewRender: function(args, callback) {
 			var self = this,
 				initTemplate = function() {
-					var formattedData = self.wizardReviewFormatData(args.data),
+					var formattedData = self.portWizardReviewFormatData(args.data),
 						acknowledgements = formattedData.review.acknowledgements,
 						acknowledgementsCount = {
 							checked: _
@@ -1725,7 +1894,7 @@ define(function(require) {
 		 * Fomat the wizard data to be rendered for review
 		 * @param  {Object} data  Wizard data
 		 */
-		wizardReviewFormatData: function(data) {
+		portWizardReviewFormatData: function(data) {
 			var self = this,
 				numbers = _.map(data.nameAndNumbers.numbersToPort.formattedNumbers, 'e164Number'),
 				countryCode = data.ownershipConfirmation.serviceAddress.country,
@@ -1744,6 +1913,8 @@ define(function(require) {
 					'nameAndNumbers.numbersToPort.formattedNumbers',
 					'requiredDocuments'
 				]),
+				bill = _.get(data, 'ownershipConfirmation.latestBill', []),
+				otherDocuments = _.get(data, 'requiredDocuments', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
 						nameAndNumbers: {
@@ -1760,8 +1931,8 @@ define(function(require) {
 							}
 						},
 						requiredDocuments: _
-							.chain(data)
-							.get('requiredDocuments', [])
+							.chain(bill)
+							.concat(otherDocuments)
 							.map(getRequiredDocumentProps)
 							.value()
 					});
@@ -1812,7 +1983,7 @@ define(function(require) {
 		 *                 Wizard actions                 *
 		 **************************************************/
 
-		/* SUBMIT */
+		/* SAVE/SUBMIT */
 
 		/**
 		 * Submits the current port request
@@ -1821,9 +1992,320 @@ define(function(require) {
 		 */
 		portWizardSubmit: function(args) {
 			var self = this,
+				wizardData = args.data,
+				portRequestId = _.get(wizardData, 'portRequestId'),
+				accountId = self.portWizardGet('accountId'),
 				globalCallback = self.portWizardGet('globalCallback');
 
-			globalCallback();
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardSavePortRequest({
+						accountId: accountId,
+						data: wizardData,
+						callback: waterfallCallback
+					});
+				},
+				function(portRequest, waterfallCallback) {
+					if (_.isNil(portRequestId)) {
+						wizardData.portRequestId = portRequest.id;
+						portRequestId = portRequest.id;
+					}
+
+					waterfallCallback(null);
+				},
+				function(waterfallCallback) {
+					self.portWizardSaveAttachments({
+						accountId: accountId,
+						data: wizardData,
+						callback: _.unary(waterfallCallback)
+					});
+				},
+				function(waterfallCallback) {
+					self.portWizardUpdatePortRequestState({
+						accountId: accountId,
+						portRequestId: portRequestId,
+						state: 'submitted',
+						callback: _.unary(waterfallCallback)
+					});
+				}
+			], function(errorData) {
+				if (errorData) {
+					return !_.isEmpty(errorData.groupedErrors) && self.portWizardSaveNotifyErrors(errorData);
+				}
+
+				globalCallback();
+			});
+		},
+
+		/**
+		 * Creates or updates a port request
+		 * @param  {Object} args
+		 * @param  {String} args.accountId  Account ID
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardSavePortRequest: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				wizardData = args.data,
+				callback = args.callback,
+				portRequestId = _.get(wizardData, 'portRequestId'),
+				isNewPortRequest = _.isNil(portRequestId),
+				resource = isNewPortRequest ? 'port.create' : 'port.update',
+				requestData = _.merge({
+					accountId: accountId,
+					data: self.portWizardSaveGetFormattedPortRequest(wizardData)
+				}, isNewPortRequest ? {
+					portRequestId: portRequestId
+				} : {});
+
+			self.portWizardRequestResourceSave({
+				resource: resource,
+				data: requestData,
+				tryGroupErrors: true,
+				success: function(portRequest) {
+					callback(null, portRequest);
+				},
+				error: function(parsedError, groupedErrors) {
+					callback({
+						errorStage: 'portSave',
+						errors: [ parsedError ],
+						groupedErrors: groupedErrors
+					});
+				}
+			});
+		},
+
+		/**
+		 * Creates or updates a port request
+		 * @param  {Object} args
+		 * @param  {String} args.accountId  Account ID
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardSaveAttachments: function(args) {
+			var self = this,
+				accountId = args.accountId,
+				wizardData = args.data,
+				callback = args.callback,
+				portRequestId = _.get(wizardData, 'portRequestId'),
+				bill = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
+				otherDocuments = _.get(wizardData, 'requiredDocuments', []),
+				allDocuments = _
+					.chain(otherDocuments)
+					.concat(bill)
+					.filter('hasChanged')
+					.value(),
+				seriesFunctions = _.map(allDocuments, function(document) {
+					return function(seriesCallback) {
+						var resource = document.isNew ? 'port.createAttachment' : 'port.updateAttachment';
+
+						self.portWizardRequestResourceSave({
+							resource: resource,
+							data: {
+								accountId: accountId,
+								portRequestId: portRequestId,
+								documentName: document.attachmentName,
+								data: document.file,
+								generateError: false
+							},
+							success: function(data) {
+								seriesCallback(null, {
+									data: data
+								});
+							},
+							error: function(parsedError) {
+								// Pack the error as part of the result, and returns a null value
+								// as error, to allow the parallel tasks to continue regardless if
+								// one of them fail
+								seriesCallback(null, {
+									documentKey: document.key,
+									error: parsedError
+								});
+							}
+						});
+					};
+				});
+
+			// It is not possible to upload all the attachments in parallel, because it seems
+			// to cause conflicts in the API
+			monster.series(seriesFunctions, function(error, data) {
+				var results = _
+						.chain(data)
+						.reject('errorType')
+						.map('data')
+						.value(),
+					errors = _.filter(data, 'error'),
+					errorCauses = _.map(errors, function(error) {
+						return monster.util.tryI18n(self.i18n.active().commonApp.portWizard.documents, error.documentKey);
+					}),
+					errorData = _.isEmpty(errors)
+						? null
+						: {
+							errorStage: 'attachmentSave',
+							errors: errors,
+							groupedErrors: {
+								'attachment_save_failed': {
+									causes: errorCauses
+								}
+							}
+						};
+
+				callback(errorData, results);
+			});
+		},
+
+		/**
+		 * Update port request state
+		 * @param  {Object} args
+		 * @param  {String} args.accountId  Account ID
+		 * @param  {String} args.portRequestId  Port request ID
+		 * @param  {('submitted')} args.state  Port request state
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardUpdatePortRequestState: function(args) {
+			var self = this,
+				callback = args.callback,
+				requestData = _.pick(args, [
+					'accountId',
+					'portRequestId',
+					'state'
+				]);
+
+			self.portWizardRequestResourceSave({
+				resource: 'port.changeState',
+				data: requestData,
+				tryGroupErrors: true,
+				success: function() {
+					callback(null);
+				},
+				error: function(parsedError, groupedErrors) {
+					callback({
+						errorStage: 'portUpdateState',
+						error: parsedError,
+						groupedErrors: groupedErrors
+					});
+				}
+			});
+		},
+
+		/**
+		 * Build the account document to submit to the API, from the wizard data
+		 * @param  {Object} wizardData  Wizard's data
+		 * @returns  {Object}  Account document
+		 */
+		portWizardSaveGetFormattedPortRequest: function(wizardData) {
+			var self = this,
+				nameAndNumbersData = wizardData.nameAndNumbers,
+				ownershipConfirmationData = wizardData.ownershipConfirmation,
+				dateAndNotificationsData = wizardData.dateAndNotifications,
+				notificationEmails = dateAndNotificationsData.notificationEmails,
+				portRequestDocument = _.merge({
+					ui_flags: {
+						type: nameAndNumbersData.numbersToPort.type,
+						validation: true,
+						portion: null
+					},
+					numbers: _
+						.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
+						.map('e164Number')
+						.transform(function(numbers, number) {
+							numbers[number] = {};
+						}, {})
+						.value(),
+					name: nameAndNumbersData.portRequestName,
+					bill: _.omitBy({
+						carrier: ownershipConfirmationData.accountOwnership.carrier,
+						name: ownershipConfirmationData.accountOwnership.billName,
+						street_pre_dir: ownershipConfirmationData.serviceAddress.streetPreDir,
+						street_number: ownershipConfirmationData.serviceAddress.streetNumber,
+						street_address: ownershipConfirmationData.serviceAddress.streetName,
+						street_type: ownershipConfirmationData.serviceAddress.streetType,
+						street_post_dir: ownershipConfirmationData.serviceAddress.streetPostDir,
+						extended_address: ownershipConfirmationData.serviceAddress.addressLine2,
+						locality: ownershipConfirmationData.serviceAddress.locality,
+						region: ownershipConfirmationData.serviceAddress.region,
+						postal_code: ownershipConfirmationData.serviceAddress.postalCode,
+						account_number: ownershipConfirmationData.accountInfo.accountNumber,
+						pin: ownershipConfirmationData.accountInfo.pin,
+						btn: ownershipConfirmationData.accountInfo.btn
+					}, _.isEmpty),
+					extra: {
+						numbers_count: _.size(nameAndNumbersData.numbersToPort.formattedNumbers)
+					},
+					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
+				}, _.isEmpty(notificationEmails) ? {} : {
+					notifications: {
+						email: {
+							send_to: _.size(notificationEmails) === 1
+								? _.head(notificationEmails)
+								: notificationEmails
+						}
+					}
+				});
+
+			return portRequestDocument;
+		},
+
+		/**
+		 * Notify port request saving errors
+		 * @param  {Object} errorData  Error data
+		 * @param  {('portSave'|'attachmentsSave'|'portUpdateState')} errorData.errorStage  Error stage
+		 * @param  {Object} errorData.groupedErrors  Errors grouped by type
+		 */
+		portWizardSaveNotifyErrors: function(errorData) {
+			var self = this,
+				errorStage = errorData.errorStage,
+				groupedErrors = errorData.groupedErrors,
+				errorTypes = _.keys(groupedErrors),
+				errorStep = _
+					.chain(self.appFlags.portWizard.errorTypesByStep)
+					.find(function(stepErrorInfo) {
+						return _
+							.chain(stepErrorInfo.errorTypes)
+							.intersection(errorTypes)
+							.size()
+							.value() > 0;
+					})
+					.get('stepName')
+					.value(),
+				stepNames = self.appFlags.portWizard.stepNames,
+				i18nSaveErrors = self.i18n.active().commonApp.portWizard.save.errors,
+				unknownErrorMessage = monster.util.tryI18n(i18nSaveErrors, 'unknown_error'),
+				viewErrors = _.map(groupedErrors, function(errorGroup, errorKey) {
+					return {
+						message: _.get(
+							i18nSaveErrors,
+							errorKey,
+							_.get(errorGroup, 'apiMessage', unknownErrorMessage)
+						),
+						causes: _.chain(errorGroup.causes).map(function(cause) {
+							if (_.startsWith(cause, '+')) {
+								return monster.util.formatPhoneNumber(cause);
+							}
+							return cause;
+						}).join(', ').value()
+					};
+				}),
+				dialogTemplate = self.getTemplate({
+					name: 'errorDialog',
+					data: {
+						errorStage: errorStage,
+						errors: viewErrors
+					},
+					submodule: 'portWizard'
+				}),
+				dialogCallback = errorStep
+					? function() {
+						monster.pub('common.navigationWizard.goToStep', {
+							stepId: _.indexOf(stepNames, errorStep)
+						});
+					}
+					: undefined;
+
+			monster.ui.alert('error', dialogTemplate, dialogCallback, {
+				isPersistent: true
+			});
 		},
 
 		/* CLOSE WIZARD */
@@ -1870,6 +2352,140 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * Request the creation of a new resource document
+		 * @param  {Object} args
+		 * @param  {String} args.resource  Resource name
+		 * @param  {Object} args.data  Request data
+		 * @param  {Object} args.data.data  Resource document data
+		 * @param  {String} args.data.accountId  Account ID
+		 * @param  {Boolean} [args.tryGroupErrors=false]  Whether or not to try to group error types
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} [args.error]  Error callback
+		 */
+		portWizardRequestResourceSave: function(args) {
+			var self = this,
+				tryGroupErrors = _.get(args, 'tryGroupErrors', false),
+				dataGenerateError = _.get(args, 'data.generateError', true),
+				generateError = !tryGroupErrors && dataGenerateError;
+
+			self.callApi({
+				resource: args.resource,
+				data: _.merge({}, args.data, {
+					generateError: generateError
+				}),
+				success: function(data) {
+					args.success(data.data);
+				},
+				error: function(parsedError, errorData, globalHandler) {
+					var groupedErrors;
+
+					if (tryGroupErrors) {
+						groupedErrors = self.portWizardRequestGroupErrors({
+							parsedError: parsedError,
+							errorData: errorData
+						});
+					}
+
+					_.has(args, 'error') && args.error(parsedError, groupedErrors);
+
+					// Do not generate error if explicitly said or grouped errors were obtained
+					if (!dataGenerateError || groupedErrors) {
+						return;
+					}
+
+					globalHandler(errorData, {
+						generateError: true
+					});
+				}
+			});
+		},
+
+		/**
+		 * Try to group errors of the same type
+		 * @param  {Object} args
+		 * @param  {Object} args.parsedError  Parsed error data
+		 * @param  {Object} args.errorData  Original error data
+		 */
+		portWizardRequestGroupErrors: function(args) {
+			var self = this,
+				parsedError = args.parsedError,
+				errorData = args.errorData,
+				groupedErrors = {};
+
+			if (errorData.status !== 400) {
+				// Errors cannot be processed
+				return null;
+			}
+
+			if (_.get(parsedError, 'error_format', '') === 'phonebook') {
+				_.each(parsedError.data, function(errorData, errorDataKey) {
+					groupedErrors[errorDataKey] = {
+						apiMessage: _.get(errorData, 'type.message'),
+						causes: _.chain(errorData)
+							.get('type')
+							.filter(function(value, propertyName) {
+								// Filter is used here to get an array as result
+								return propertyName === 'cause';
+							})
+							.value()
+					};
+				});
+
+				return _.isEmpty(groupedErrors) ? null : groupedErrors;
+			}
+
+			_.each(parsedError.data, function(fieldErrors, fieldKey) {
+				var isPhoneNumber = _.startsWith(fieldKey, '+');
+
+				if (typeof fieldErrors === 'string') {
+					return;
+				}
+
+				_.each(fieldErrors, function(errorData, errorDataKey) {
+					var errorKey, apiMessage, errorCause;
+
+					try {
+						// Separate error data depending on the case
+						if (isPhoneNumber) {
+							errorCause = _.get(errorData, 'cause', fieldKey);
+							errorKey = _.has(errorData, 'message')
+								? self.portWizardGetErrorKey(errorData.message)
+								: errorDataKey;
+							apiMessage = errorData.message;
+						} else {
+							errorCause = fieldKey;
+							errorKey = errorDataKey;
+							apiMessage = _.get(
+								errorData,
+								'message',
+								(_.isString(errorData) || _.isNumber(errorData)) ? errorData : undefined
+							);
+						}
+					} catch (err) {
+						// In case of exception, skip error entry
+						return false;
+					}
+
+					// If error group already exists, add cause
+					if (_.has(groupedErrors, errorKey)) {
+						if (errorCause) {
+							groupedErrors[errorKey].causes.push(errorCause);
+						}
+						return;
+					}
+
+					// Else add new error group
+					groupedErrors[errorKey] = {
+						message: apiMessage,
+						causes: errorCause ? [ errorCause ] : []
+					};
+				});
+			});
+
+			return _.isEmpty(groupedErrors) ? null : groupedErrors;
+		},
+
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
@@ -1880,6 +2496,9 @@ define(function(require) {
 		  * @param  {jQuery} args.fileInput  File input element
 		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
 		  *                                   text field
+		  * @param  {Object} [args.documentMetadata]  Document metadata
+		  * @param  {Object} [args.documentMetadata.key]  Document key
+		  * @param  {Object} [args.documentMetadata.attachmentName]  Document name for attachment
 		  * @param  {Object} args.fileRestrictions  File restrictions
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
@@ -1893,6 +2512,7 @@ define(function(require) {
 			var self = this,
 				$fileInput = args.fileInput,
 				filesList = _.chain(args).pick('fileName').values().value(),
+				documentMetadata = args.documentMetadata,
 				fileRestrictions = args.fileRestrictions,
 				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
 				hidden = _.get(args, 'hidden', false),
@@ -1911,7 +2531,14 @@ define(function(require) {
 				mimeTypes: fileRestrictions.mimeTypes,
 				maxSize: fileRestrictions.maxSize,
 				dataFormat: dataFormat,
-				success: args.success,
+				success: function(results) {
+					var fileData = _.merge({
+						isNew: true,
+						hasChanged: true
+					}, results[0], documentMetadata);
+
+					args.success(fileData);
+				},
 				error: function(errorsList) {
 					var errorType = _
 							.chain(errorsList)
