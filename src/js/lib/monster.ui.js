@@ -1373,6 +1373,17 @@ define(function(require) {
 				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 			}, localization.customRules.greaterThan);
 
+			$.validator.addMethod('notEqualTo', function(value, element, param) {
+				var $compElements = param instanceof jQuery ? param : $(param),
+					$compElementsToCheck = $compElements.filter(':visible').not(element),
+					$equalElements = $compElementsToCheck.filter(function() {
+						return $(this).val() === value;
+					}),
+					isValid = $equalElements.length === 0;
+
+				return this.optional(element) || isValid;
+			}, localization.customRules.notEqualTo);
+
 			this.customValidationInitialized = true;
 		},
 
@@ -3820,8 +3831,8 @@ define(function(require) {
 	/**
 	 * Helper to display characters remaining inline
 	 * @param {jQuery}  $target Field to be checked
-	 * @param {Object}  args
-	 * @param {Integer} args.size The maxlength to be validated
+	 * @param {Object}  [args]
+	 * @param {Number} [args.size] The maxlength to be validated
 	 * @param {String}  [args.customClass] Custom class for the label if needed
 	 */
 	function charsRemaining($target, args) {
@@ -3833,30 +3844,30 @@ define(function(require) {
 			throw TypeError('"options" is not a plain object');
 		}
 
-		var size = args.size,
+		var size = _.get(args, 'size', 0),
 			customClass = args.customClass || '',
+			allowedCharsLabel = $('<span>'),
+			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend(allowedCharsLabel),
 			checkCurrentLength = function() {
 				return $target.prop('tagName') === 'DIV' ? $target[0].textContent.length : $target.val().length;
 			},
-			currentLenght = checkCurrentLength(),
-			allowedChars = size - currentLenght,
-			allowedCharsLabel = $('<span>'),
-			label = $('<span class="' + customClass + '">').text(monster.apps.core.i18n.active().charsRemaining.label).prepend(allowedCharsLabel.text(allowedChars)),
 			checkLength = function(event) {
-				currentLenght = checkCurrentLength();
-				allowedChars = size - currentLenght;
+				var currentLenght = checkCurrentLength(),
+					allowedChars = currentLenght <= size ? size - currentLenght : 0;
 
 				allowedCharsLabel.text(allowedChars);
 
 				if (allowedChars <= 0 || allowedChars > size) {
 					label.addClass('chars-remaining-error');
 
-					event.preventDefault();
+					event && event.preventDefault();
 					return false;
 				} else {
 					label.removeClass('chars-remaining-error');
 				}
 			};
+
+		checkLength();
 
 		$target.after(label);
 
