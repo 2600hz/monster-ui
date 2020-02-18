@@ -6,42 +6,94 @@ define(function(require) {
 		hasher = require('hasher');
 
 	var loadApp = function(appName, query) {
-		var renderApp = function() {
-				if (appName === 'appstore' || !monster.util.isMasquerading() || monster.appsStore[appName].masqueradable === true) {
-					monster.pub('apploader.hide');
-					monster.pub('myaccount.hide');
+		var isAccountIDMasqueradable = function(id) {
+			return /^[0-9a-f]{32}$/i.test(id) && (monster.apps.auth.currentAccount.id !== id);
+		};
 
-					monster.apps.load(appName, function(loadedApp) {
-						monster.pub('core.alerts.refresh');
-						monster.pub('core.showAppName', appName);
-						$('#monster_content').empty();
-
-						loadedApp.render();
-					});
-				} else {
-					monster.ui.toast({
-						type: 'error',
-						message: monster.apps.core.i18n.active().appMasqueradingError
-					});
+		monster.series([
+			// See if we have a 'm' query string (masquerading), and see if it's an ID, if yes, then trigger an attempt to masquerade
+			function(cb) {
+				if (
+					!_.has(query, 'm')
+					|| !isAccountIDMasqueradable(query.m)
+				) {
+					return cb(null);
 				}
-			},
-			isAccountIDMasqueradable = function(id) {
-				return /^[0-9a-f]{32}$/i.test(id) && (monster.apps.auth.currentAccount.id !== id);
-			};
+				monster.pub('core.triggerMasquerading', {
+					account: { id: query.m },
+					callback: function() {
+						cb(null);
+					}
+				});
+			}
+		], function(err, results) {
+			if (
+				appName !== 'appstore'
+				&& monster.util.isMasquerading()
+				&& monster.appsStore[appName].masqueradable !== true
+			) {
+				monster.ui.toast({
+					type: 'error',
+					message: monster.apps.core.i18n.active().appMasqueradingError
+				});
+				return;
+			}
+			monster.pub('apploader.hide');
+			monster.pub('myaccount.hide');
 
-		// See if we have a 'm' query string (masquerading), and see if it's an ID, if yes, then trigger an attempt to masquerade
-		if (query && query.hasOwnProperty('m') && isAccountIDMasqueradable(query.m)) {
-			var accountData = { id: query.m };
+			monster.apps.load(appName, function(loadedApp) {
+				monster.pub('core.alerts.refresh');
+				monster.pub('core.showAppName', appName);
+				$('#monster_content').empty();
 
-			monster.pub('core.triggerMasquerading', {
-				account: accountData,
-				callback: function() {
-					renderApp();
-				}
+				loadedApp.render();
 			});
-		} else {
-			renderApp();
+		});
+	};
+
+	var isAppLoadable = function(appName) {
+		var installed = _
+			.chain(monster)
+			.get('apps.auth.installedApps', [])
+			.map('name')
+			.concat('appstore')
+			.value();
+		var available = _.transform(monster.appsStore || {}, function(acc, app) {
+			_.set(acc, app.name, _.pick(app, ['allowed_users', 'users']));
+		}, {
+			appstore: {
+				allowed_users: 'admins'
+			}
+		});
+		var app = _.get(available, appName);
+		var user = monster.apps.auth.currentUser;
+		var appUsers = _
+			.chain(app)
+			.get('users', [])
+			.map('id')
+			.value();
+
+		if (
+			app && app.allowed_users
+			&& _.includes(installed, appName)
+			&& (
+				app.allowed_users === 'all'
+				|| (app.allowed_users === 'admins' && user.priv_level === 'admin')
+				|| (app.allowed_users === 'specific' && _.includes(appUsers, user.id))
+			)
+		) {
+			return true;
 		}
+		return false;
+	};
+
+	var getAppNameById = function(appId) {
+		return _
+			.chain(monster)
+			.get('apps.auth.installedApps', [])
+			.find({ id: appId })
+			.get('name')
+			.value();
 	};
 
 	var routing = {
@@ -68,27 +120,26 @@ define(function(require) {
 		},
 
 		addDefaultRoutes: function() {
-			var appWhitelist = {
-				'appstore': { onlyAdmins: true }
-			};
-
 			this.add('apps/{appName}:?query:', function(appName, query) {
-				if (monster && monster.apps && monster.apps.auth) {
-					if (appWhitelist.hasOwnProperty(appName)) {
-						if (!appWhitelist[appName].onlyAdmins || monster.util.isAdmin()) {
-							loadApp(appName, query);
-						}
-					} else {
-						var found = false;
-
-						_.each(monster.apps.auth.installedApps, function(app) {
-							if (appName === app.name && !found) {
-								loadApp(appName, query);
-
-								found = true;
-							}
-						});
-					}
+				// not logged in, do nothing to preserve potentially valid route to load after successful login
+				if (!_.has(monster, 'apps.auth.installedApps')) {
+					return;
+				}
+				// try loading the requested app
+				if (isAppLoadable(appName)) {
+					loadApp(appName, query);
+				// load last loaded app
+				} else if (
+					appName !== monster.apps.lastLoadedApp
+					&& _.find(monster.apps.auth.installedApps, { name: monster.apps.lastLoadedApp })
+				) {
+					routing.goTo('apps/' + monster.apps.lastLoadedApp);
+				// load default app
+				} else if (
+					!_.isEmpty(monster.apps.auth.currentUser.appList)
+					&& appName !== getAppNameById(monster.apps.auth.currentUser.appList[0])
+				) {
+					routing.goTo('apps/' + getAppNameById(monster.apps.auth.currentUser.appList[0]));
 				}
 			});
 		},
