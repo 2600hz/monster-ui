@@ -30,15 +30,18 @@ define(function(require) {
 		 *                                                              user for confirmation when
 		 *                                                              leaving the wizard, due to
 		 *                                                              cancellation or page unload
-		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
-		 *                               button is clicked. It must be defined as a property of
-		 *                               thisArg.
+		 * @param  {(Function|String)} args.cancel  Reference or name of the function to be invoked
+		 *                                          when the cancel wizard button is clicked. If
+		 *                                          the name is provided, the function must be
+		 *                                          defined as a property of thisArg.
 		 * @param  {jQuery} args.container  Element that will contain the wizard
 		 * @param  {String} [args.controlId]  ID to be set to the wizard control
 		 * @param  {String} [args.cssClass]  CSS class to be assigned to the wizard control
 		 * @param  {Object} [args.data]  Initial data
-		 * @param  {String} args.done  Name of the function to be invoked when completing the
-		 *                             wizard. It must be defined as a property of thisArg.
+		 * @param  {(Function|String)} args.done  Reference or name of the function to be invoked
+		 *                                        when completing the wizard. If the name is
+		 *                                        provided, the function must be defined as a
+		 *                                        property of thisArg.
 		 * @param  {String} [args.doneButton]  Text to be displayed in the wizard done button
 		 * @param  {Function} [args.save]  Function to save a draft of the current document
 		 * @param  {Function} [args.saveEnabled=false]  Whether or not to allow to save a draft of

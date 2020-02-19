@@ -254,7 +254,7 @@ define(function(require) {
 
 		/**
 		 * Build the store path
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 */
 		portWizardBuildStorePath: function(path) {
 			var store = ['_store', 'portWizard'];
@@ -265,7 +265,7 @@ define(function(require) {
 
 		/**
 		 * Store getter
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 * @param  {*} [defaultValue]
 		 * @return {*}
 		 */
@@ -280,7 +280,7 @@ define(function(require) {
 
 		/**
 		 * Store setter
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 * @param  {*} [value]
 		 */
 		portWizardSet: function(path, value) {
@@ -295,7 +295,7 @@ define(function(require) {
 
 		/**
 		 * Store un-setter
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 */
 		portWizardUnset: function(path) {
 			var self = this;
