@@ -248,7 +248,12 @@ define(function(require) {
 								return;
 							}
 
-							thisArg[wizardArgs.cancel](wizardArgs);
+							var cancelFunctionRef = wizardArgs.cancel,
+								cancelFunction = _.isFunction(cancelFunctionRef)
+									? cancelFunctionRef
+									: thisArg[cancelFunctionRef];	// Support function name, for backward compatibility
+
+							_.bind(cancelFunction, thisArg)(wizardArgs);
 
 							self.navigationWizardUnbindEvents();
 						});

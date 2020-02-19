@@ -367,7 +367,7 @@ define(function(require) {
 					};
 				}),
 				title: i18n.title,
-				cancel: 'portWizardClose',
+				cancel: self.portWizardClose,
 				done: self.portWizardComplete,
 				doneButton: i18n.doneButton,
 				saveEnabled: true,
