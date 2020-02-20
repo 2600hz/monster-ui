@@ -1475,6 +1475,7 @@ define(function(require) {
 						data: ownershipConfirmationData
 					})
 					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
+						bill: _.get(ownershipConfirmationData, 'latestBill'),
 						losingCarrier: losingCarrier
 					});
 
@@ -1517,10 +1518,12 @@ define(function(require) {
 		/**
 		 * Get the template for Ownership Confirmation step (bill upload view)
 		 * @param  {Object} args
+		 * @param  {Object} [args.bill]  Bill document data
 		 * @param  {String} args.losingCarrier  Losing carrier name
 		 */
 		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
 			var self = this,
+				bill = args.bill,
 				losingCarrier = args.losingCarrier,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-billUpload',
@@ -1531,7 +1534,8 @@ define(function(require) {
 				}));
 
 			self.portWizardOwnershipConfirmationBillUploadBindEvents({
-				template: $template
+				template: $template,
+				bill: bill
 			});
 
 			return $template;
@@ -1540,24 +1544,26 @@ define(function(require) {
 		/**
 		 * Bind Ownership Confirmation step events (bill upload view)
 		 * @param  {Object} args
+		 * @param  {Object} [args.bill]  Bill data
 		 * @param  {jQuery} args.template  Step template
 		 */
 		portWizardOwnershipConfirmationBillUploadBindEvents: function(args) {
 			var self = this,
+				bill = args.bill,
 				$template = args.template,
-				$billUploadInput = $template.find('#bill_upload_recent_bill'),
-				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
 				portWizardAppFlags = self.appFlags.portWizard,
-				billDocumentMetadata = {
+				billDocumentData = _.merge({
 					key: 'Bill',
 					attachmentName: portWizardAppFlags.requirements.Bill
-				},
+				}, bill),
+				$billUploadInput = $template.find('#bill_upload_recent_bill'),
+				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
 				latestBill;
 
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
-				documentMetadata: billDocumentMetadata,
+				document: billDocumentData,
 				fileRestrictions: pdfFilesRestrictions,
 				success: function(fileData) {
 					latestBill = fileData;
@@ -1591,8 +1597,8 @@ define(function(require) {
 		/**
 		 * Get the template for Ownership Confirmation step (account information view)
 		 * @param  {Object} args
-		 * @param  {Object} args.losingCarrier  Losing carrier name
-		 * @param  {Object} args.requireBill  Whether or not to require the latest bill
+		 * @param  {String} args.losingCarrier  Losing carrier name
+		 * @param  {Boolean} args.requireBill  Whether or not to require the latest bill
 		 * @param  {Object} args.data  Step data
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
@@ -1707,7 +1713,7 @@ define(function(require) {
 
 			self.portWizardOwnershipConfirmationAccountInfoRenderBill({
 				template: $template,
-				billFile: data.latestBill.file
+				bill: data.latestBill
 			});
 
 			return $template;
@@ -1717,11 +1723,11 @@ define(function(require) {
 		 * Render Ownership Confirmation bill section (account information view)
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {String} args.billFile  Bill file as a Data URL string
+		 * @param  {Object} args.bill  Bill document data
 		 */
 		portWizardOwnershipConfirmationAccountInfoRenderBill: function(args) {
 			var self = this,
-				billFile = args.billFile,
+				bill = args.bill,
 				$template = args.template,
 				$changeFileWrapper = $template.find('#latest_bill_change_file_wrapper'),
 				$changeBillLink = $changeFileWrapper.find('a.monster-link'),
@@ -1733,14 +1739,14 @@ define(function(require) {
 
 			// Render bill
 			monster.ui.renderPDF(
-				billFile,
+				bill.file,
 				$billRenderContainer,
 			);
 
 			// Bind events
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
-				documentMetadata: billDocumentMetadata,
+				document: _.merge({}, billDocumentMetadata, bill),
 				fileRestrictions: pdfFilesRestrictions,
 				hidden: true,
 				success: function(fileData) {
@@ -1887,7 +1893,7 @@ define(function(require) {
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
 						fileName: document.name,
-						documentMetadata: document,
+						document: document,
 						fileRestrictions: pdfFilesRestrictions,
 						success: function(fileData) {
 							self.portWizardSet([
@@ -3008,9 +3014,13 @@ define(function(require) {
 		  * @param  {jQuery} args.fileInput  File input element
 		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
 		  *                                   text field
-		  * @param  {Object} [args.documentMetadata]  Document metadata
-		  * @param  {Object} [args.documentMetadata.key]  Document key
-		  * @param  {Object} [args.documentMetadata.attachmentName]  Document name for attachment
+		  * @param  {Object} [args.document]  Document metadata
+		  * @param  {String} [args.document.key]  Document key
+		  * @param  {String} [args.document.attachmentName]  Document name for attachment
+		  * @param  {Boolean} [args.document.isNew]  Whether or not the document is new
+		  * @param  {Boolean} [args.document.hasChanged]  Whether or not the document has changed
+		  *                                              within the current wizard instance
+		  * @param  {String} [args.document.file]  Document contents as a string
 		  * @param  {Object} args.fileRestrictions  File restrictions
 		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
 		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
@@ -3024,7 +3034,7 @@ define(function(require) {
 			var self = this,
 				$fileInput = args.fileInput,
 				filesList = _.chain(args).pick('fileName').values().value(),
-				documentMetadata = args.documentMetadata,
+				document = _.get(args, 'document', {}),
 				fileRestrictions = args.fileRestrictions,
 				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
 				hidden = _.get(args, 'hidden', false),
@@ -3044,10 +3054,19 @@ define(function(require) {
 				maxSize: fileRestrictions.maxSize,
 				dataFormat: dataFormat,
 				success: function(results) {
-					var fileData = _.merge({
-						isNew: true,
-						hasChanged: true
-					}, results[0], documentMetadata);
+					var fileData = _.merge(
+						{
+							isNew: true
+						},
+						results[0],
+						document,
+						{
+							hasChanged: !_
+								.chain(document)
+								.get('file')
+								.isEqual(results.file)
+								.value()
+						});
 
 					args.success(fileData);
 				},
