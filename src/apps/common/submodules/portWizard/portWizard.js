@@ -404,8 +404,15 @@ define(function(require) {
 					});
 
 					waterfallCallback(null, $container, wizardPortRequestData);
+				},
+				function($container, wizardPortRequestData, waterfallCallback) {
+					// Get wizard step to display
+					var hasStepData = _.partial(_.has, wizardPortRequestData),
+						wizardStepId = _.findLastIndex(stepNames, hasStepData);
+
+					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 				}
-			], function(error, $container, wizardPortRequestData) {
+			], function(error, $container, wizardPortRequestData, wizardStepId) {
 				if (error) {
 					return globalCallback();
 				}
@@ -415,6 +422,7 @@ define(function(require) {
 					controlId: 'port_wizard_control',
 					data: wizardPortRequestData,
 					container: $container,
+					currentStep: wizardStepId,
 					steps: _.map(stepNames, function(stepName) {
 						var pascalCasedStepName = _.upperFirst(stepName);
 
@@ -427,6 +435,7 @@ define(function(require) {
 							util: 'portWizard' + pascalCasedStepName + 'Util'
 						};
 					}),
+					stepsCompleted: _.range(wizardStepId),
 					title: i18n.title,
 					cancel: self.portWizardClose,
 					done: self.portWizardComplete,
