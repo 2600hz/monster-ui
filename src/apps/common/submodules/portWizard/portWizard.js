@@ -468,6 +468,54 @@ define(function(require) {
 					}
 
 					waterfallCallback(null, $container, wizardPortRequestData, newWizardStepId);
+				},
+				function($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+					var requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+						requiredDocumentsByAttachmentName = _.mapKeys(requiredDocumentsCompleteList, 'attachmentName'),
+						billAttachmentName = self.appFlags.portWizard.requirements.Bill,
+						ownershipConfirmationStepId = _.indexOf(stepNames, 'ownershipConfirmation'),
+						requiredDocumentsStepId = _.indexOf(stepNames, 'requiredDocuments'),
+						isBillRequired = _.has(requiredDocumentsByAttachmentName, billAttachmentName),
+						isBillAttached = _.has(wizardPortRequestData, 'ownershipConfirmation.latestBill');
+
+					if (_.isUndefined(requiredDocumentsCompleteList)) {
+						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+					}
+
+					// Check documents, set metadata, and set wizard step accordingly
+					if (isBillAttached) {
+						if (isBillRequired) {
+							_.merge(
+								wizardPortRequestData.ownershipConfirmation.latestBill,
+								_.get(requiredDocumentsByAttachmentName, billAttachmentName)
+							);
+							_.unset(requiredDocumentsByAttachmentName, billAttachmentName);
+						} else {
+							_.unset(wizardPortRequestData, 'ownershipConfirmation.latestBill');
+						}
+					} else if (isBillRequired && wizardStepId > ownershipConfirmationStepId) {
+						wizardStepId = ownershipConfirmationStepId;
+					}
+
+					if (_.has(wizardPortRequestData, 'requiredDocuments')) {
+						wizardPortRequestData.requiredDocuments = _
+							.chain(wizardPortRequestData.requiredDocuments)
+							.map(function(document) {
+								return _.merge(document, _.get(requiredDocumentsByAttachmentName, document.name));
+							})
+							.filter('key')
+							.value();
+
+						if (_.isEmpty(wizardPortRequestData.requiredDocuments)) {
+							_.unset(wizardPortRequestData, 'requiredDocuments');
+						}
+
+						if (wizardStepId > requiredDocumentsStepId && !_.isEmpty(requiredDocumentsByAttachmentName)) {
+							wizardStepId = requiredDocumentsStepId;
+						}
+					}
+
+					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 				}
 			], function(error, $container, wizardPortRequestData, wizardStepId) {
 				if (error) {
