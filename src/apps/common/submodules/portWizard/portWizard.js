@@ -1134,7 +1134,11 @@ define(function(require) {
 
 			if (isValid && isSingleLosingCarrierView) {
 				formData = monster.ui.getFormData($form.get(0));
-				carrierSelectionData = _.get(formData, 'designateWinningCarrier');
+				carrierSelectionData = _
+					.chain(formData)
+					.get('designateWinningCarrier')
+					.omitBy(_.isEmpty)
+					.value();
 			}
 
 			return {
