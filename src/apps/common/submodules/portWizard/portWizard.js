@@ -254,7 +254,7 @@ define(function(require) {
 
 		/**
 		 * Build the store path
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 */
 		portWizardBuildStorePath: function(path) {
 			var store = ['_store', 'portWizard'];
@@ -265,7 +265,7 @@ define(function(require) {
 
 		/**
 		 * Store getter
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 * @param  {*} [defaultValue]
 		 * @return {*}
 		 */
@@ -280,7 +280,7 @@ define(function(require) {
 
 		/**
 		 * Store setter
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 * @param  {*} [value]
 		 */
 		portWizardSet: function(path, value) {
@@ -295,7 +295,7 @@ define(function(require) {
 
 		/**
 		 * Store un-setter
-		 * @param  {Array|String} [path]
+		 * @param  {(Array|String)} [path]
 		 */
 		portWizardUnset: function(path) {
 			var self = this;
@@ -367,9 +367,10 @@ define(function(require) {
 					};
 				}),
 				title: i18n.title,
-				cancel: 'portWizardClose',
-				done: 'portWizardSubmit',
+				cancel: self.portWizardClose,
+				done: self.portWizardComplete,
 				doneButton: i18n.doneButton,
+				saveEnabled: true,
 				validateOnStepChange: true,
 				askForConfirmationBeforeExit: true
 			});
@@ -403,6 +404,10 @@ define(function(require) {
 						{
 							button: 'back',
 							resetContent: true
+						},
+						{
+							button: 'save',
+							display: _.get(nameAndNumbersData, 'numbersToPort.areValid', false)
 						}
 					]);
 
@@ -737,6 +742,36 @@ define(function(require) {
 					}));
 				},
 				function(numbersCarrierData, waterfallCallback) {
+					nameAndNumbersData.numbersToPort.areValid = numbersCarrierData.carrierWarningType === 'none';
+
+					monster.pub(
+						'common.navigationWizard.setButtonProps',
+						nameAndNumbersData.numbersToPort.areValid
+							? [
+								{
+									button: 'save',
+									display: true
+								}
+							]
+							: [
+								{
+									button: 'save',
+									display: false
+								},
+								{
+									button: 'next',
+									display: false
+								},
+								{
+									button: 'back',
+									content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
+								}
+							]
+					);
+
+					waterfallCallback(null, numbersCarrierData);
+				},
+				function(numbersCarrierData, waterfallCallback) {
 					var $template = (numbersCarrierData.carrierWarningType === 'none')
 						? self.portWizardCarrierSelectionSingleGetTemplate({
 							numbersCarrierData: numbersCarrierData,
@@ -784,8 +819,7 @@ define(function(require) {
 		 * @param  {jQuery} $template  Step template
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} eventArgs  Event arguments
-		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be
-		 *                                                completed
+		 * @param  {Boolean} eventArgs.completeStep  Whether or not the current step will be completed
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
 		portWizardCarrierSelectionUtil: function($template, args, eventArgs) {
@@ -844,17 +878,6 @@ define(function(require) {
 					},
 					submodule: 'portWizard'
 				}));
-
-			monster.pub('common.navigationWizard.setButtonProps', [
-				{
-					button: 'next',
-					display: false
-				},
-				{
-					button: 'back',
-					content: self.i18n.active().commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers.backButton
-				}
-			]);
 
 			self.portWizardCarrierSelectionMultipleBindEvents({
 				portRequestName: portRequestName,
@@ -1989,9 +2012,12 @@ define(function(require) {
 		 * Submits the current port request
 		 * @param  {Object} args  Wizard's arguments
 		 * @param  {Object} args.data  Wizard's data that was stored across steps
+		 * @param  {Boolean} eventArgs  Event arguments
+		 * @param  {('save'|'submit')} eventArgs.eventType  Type of event that executed this function
 		 */
-		portWizardSubmit: function(args) {
+		portWizardComplete: function(args, eventArgs) {
 			var self = this,
+				submit = eventArgs.eventType === 'done',
 				wizardData = args.data,
 				portRequestId = _.get(wizardData, 'portRequestId'),
 				accountId = self.portWizardGet('accountId'),
@@ -2021,6 +2047,10 @@ define(function(require) {
 					});
 				},
 				function(waterfallCallback) {
+					if (!submit) {
+						return waterfallCallback(null);
+					}
+
 					self.portWizardUpdatePortRequestState({
 						accountId: accountId,
 						portRequestId: portRequestId,
@@ -2197,15 +2227,49 @@ define(function(require) {
 		portWizardSaveGetFormattedPortRequest: function(wizardData) {
 			var self = this,
 				nameAndNumbersData = wizardData.nameAndNumbers,
+				carrierSelectionData = wizardData.carrierSelection,
 				ownershipConfirmationData = wizardData.ownershipConfirmation,
 				dateAndNotificationsData = wizardData.dateAndNotifications,
-				notificationEmails = dateAndNotificationsData.notificationEmails,
+				notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails', []),
+				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
+					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
+				} : {},
+				notificationsSection = _.isEmpty(notificationEmails) ? {} : {
+					notifications: {
+						email: {
+							send_to: _.size(notificationEmails) === 1
+								? _.head(notificationEmails)
+								: notificationEmails
+						}
+					}
+				},
+				billSection = _.isNil(ownershipConfirmationData) ? {} : {
+					bill: _.omitBy({
+						carrier: _.get(ownershipConfirmationData, 'accountOwnership.carrier'),
+						name: _.get(ownershipConfirmationData, 'accountOwnership.billName'),
+						street_pre_dir: _.get(ownershipConfirmationData, 'serviceAddress.streetPreDir'),
+						street_number: _.get(ownershipConfirmationData, 'serviceAddress.streetNumber'),
+						street_address: _.get(ownershipConfirmationData, 'serviceAddress.streetName'),
+						street_type: _.get(ownershipConfirmationData, 'serviceAddress.streetType'),
+						street_post_dir: _.get(ownershipConfirmationData, 'serviceAddress.streetPostDir'),
+						extended_address: _.get(ownershipConfirmationData, 'serviceAddress.addressLine2'),
+						locality: _.get(ownershipConfirmationData, 'serviceAddress.locality'),
+						region: _.get(ownershipConfirmationData, 'serviceAddress.region'),
+						postal_code: _.get(ownershipConfirmationData, 'serviceAddress.postalCode'),
+						account_number: _.get(ownershipConfirmationData, 'accountInfo.accountNumber'),
+						pin: _.get(ownershipConfirmationData, 'accountInfo.pin'),
+						btn: _.get(ownershipConfirmationData, 'accountInfo.btn')
+					}, _.isEmpty)
+				},
+				uiFlagsSection = _.merge({
+					portion: null,
+					type: nameAndNumbersData.numbersToPort.type,
+					validation: true
+				}, _.has(carrierSelectionData, 'winningCarrier') ? {
+					winning_carrier: carrierSelectionData.winningCarrier
+				} : {}),
 				portRequestDocument = _.merge({
-					ui_flags: {
-						type: nameAndNumbersData.numbersToPort.type,
-						validation: true,
-						portion: null
-					},
+					ui_flags: uiFlagsSection,
 					numbers: _
 						.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
 						.map('e164Number')
@@ -2214,35 +2278,10 @@ define(function(require) {
 						}, {})
 						.value(),
 					name: nameAndNumbersData.portRequestName,
-					bill: _.omitBy({
-						carrier: ownershipConfirmationData.accountOwnership.carrier,
-						name: ownershipConfirmationData.accountOwnership.billName,
-						street_pre_dir: ownershipConfirmationData.serviceAddress.streetPreDir,
-						street_number: ownershipConfirmationData.serviceAddress.streetNumber,
-						street_address: ownershipConfirmationData.serviceAddress.streetName,
-						street_type: ownershipConfirmationData.serviceAddress.streetType,
-						street_post_dir: ownershipConfirmationData.serviceAddress.streetPostDir,
-						extended_address: ownershipConfirmationData.serviceAddress.addressLine2,
-						locality: ownershipConfirmationData.serviceAddress.locality,
-						region: ownershipConfirmationData.serviceAddress.region,
-						postal_code: ownershipConfirmationData.serviceAddress.postalCode,
-						account_number: ownershipConfirmationData.accountInfo.accountNumber,
-						pin: ownershipConfirmationData.accountInfo.pin,
-						btn: ownershipConfirmationData.accountInfo.btn
-					}, _.isEmpty),
 					extra: {
 						numbers_count: _.size(nameAndNumbersData.numbersToPort.formattedNumbers)
-					},
-					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
-				}, _.isEmpty(notificationEmails) ? {} : {
-					notifications: {
-						email: {
-							send_to: _.size(notificationEmails) === 1
-								? _.head(notificationEmails)
-								: notificationEmails
-						}
 					}
-				});
+				}, billSection, transferDateSection, notificationsSection);
 
 			return portRequestDocument;
 		},
