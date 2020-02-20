@@ -1,5 +1,7 @@
 @import "../../../../css/partials/base";
 
+$color-lima: #2ED022;
+
 $media-size-small: "(max-width : 736px)";
 $media-size-medium: "(max-width : 980px)";
 
@@ -23,6 +25,45 @@ $media-size-medium: "(max-width : 980px)";
 
 	background-color: $white;
 
+	.iconography {
+		&-small {
+			margin-top: -3px;	// To not to alter container's height
+			font-size: 14px;
+			width: 14px;
+			height: 14px;
+		}
+
+		&-medium {
+			font-size: 1rem;
+			width: 1rem;
+			height: 1rem;
+		}
+
+		&-large {
+			font-size: 1.25rem;
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+
+		&-xlarge {
+			font-size: 2.5rem;
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+
+		&-help {
+			color: $manatee;
+
+			&:hover {
+				color: $shark2;
+			}
+		}
+
+		&-button-left {
+			margin-right: 0.5rem;
+		}
+	}
+
 	.header {
 		display: flex;
 		position: relative;
@@ -35,10 +76,6 @@ $media-size-medium: "(max-width : 980px)";
 			font-size: 18px;
 			font-weight: normal;
 			color: $woodsmoke;
-		}
-
-		.actions .monster-button:not(:last-child) {
-			margin-right: 14px;
 		}
 	}
 
@@ -75,7 +112,7 @@ $media-size-medium: "(max-width : 980px)";
 			}
 
 			.fa-check-circle {
-				color: #2ED022;
+				color: $color-lima;
 				right: 22px;
 			}
 
@@ -175,24 +212,24 @@ $media-size-medium: "(max-width : 980px)";
 		}
 	}
 
-	.actions .back {
-		margin-right: 15px;
-	}
+	.actions {
+		.back {
+			margin-right: 15px;
+		}
 
-	.monster-button {
-		border-radius: 2px 2px 2px 2px;
-		font-size: 14px;
+		.monster-button {
+			background: linear-gradient(-180deg, $white 0%, $athens-gray 100%);
+			border: 1px solid $french-gray2;
+			color: $midgray2;
+
+			&:not(:last-child) {
+				margin-right: 0.75rem;
+			}
+		}
 	}
 
 	#cancel {
 		min-width: 74px;
-	}
-
-	#cancel,
-	.back {
-		background: linear-gradient(-180deg, $white 0%, $athens-gray 100%);
-		border: 1px solid $french-gray2;
-		color: $midgray2;
 	}
 
 	#next {
@@ -213,8 +250,17 @@ $media-size-medium: "(max-width : 980px)";
 	}
 
 	#done {
-		background: #2ED022;
+		background: $color-lima;
 		color: #071F05;
+	}
+
+	#navigation_wizard_save .iconography-button-left {
+		color: $color-lima;
+	}
+
+	.monster-button {
+		border-radius: 2px;
+		font-size: 14px;
 	}
 
 	@media print {
@@ -242,43 +288,6 @@ $media-size-medium: "(max-width : 980px)";
 	.wizard-step {
 		color: $woodsmoke;
 		padding: 2rem 1.5rem;
-
-		.iconography-small {
-			margin-top: -3px;	// To not to alter container's height
-			font-size: 14px;
-			width: 14px;
-			height: 14px;
-		}
-
-		.iconography-medium {
-			font-size: 1rem;
-			width: 1rem;
-			height: 1rem;
-		}
-
-		.iconography-large {
-			font-size: 1.25rem;
-			width: 1.25rem;
-			height: 1.25rem;
-		}
-
-		.iconography-xlarge {
-			font-size: 2.5rem;
-			width: 2.5rem;
-			height: 2.5rem;
-		}
-
-		.iconography-help {
-			color: $manatee;
-
-			&:hover {
-				color: $shark2;
-			}
-		}
-
-		.iconography-button-left {
-			margin-right: 0.5rem;
-		}
 
 		.input-hidden {
 			display: none;
