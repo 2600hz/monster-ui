@@ -413,6 +413,61 @@ define(function(require) {
 						wizardStepId = _.findLastIndex(stepNames, hasStepData);
 
 					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+				},
+				function($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+					var carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection'),
+						numbersToPortData = wizardPortRequestData.nameAndNumbers.numbersToPort;
+
+					if (wizardStepId <= carrierSelectionStepId) {
+						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId, null, null);
+					}
+
+					// If there is data that goes beyond the Carrier Selection step,
+					// then get carrier data from Phonebook API
+					self.portWizardLoadNumbersCarrierDataAndRequirements({
+						formattedNumbers: numbersToPortData.formattedNumbers,
+						numbersType: numbersToPortData.type,
+						callback: function(err, numbersCarrierData) {
+							if (err) {
+								return waterfallCallback(err);
+							}
+
+							waterfallCallback(null, $container, wizardPortRequestData, wizardStepId, carrierSelectionStepId, numbersCarrierData);
+						}
+					});
+				},
+				function($container, wizardPortRequestData, wizardStepId, carrierSelectionStepId, numbersCarrierData, waterfallCallback) {
+					if (_.isNull(numbersCarrierData)) {
+						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+					}
+
+					// Check carrier data
+					var areNumbersValid = numbersCarrierData.carrierWarningType === 'none',
+						portRequestHasWinningCarrier = _.has(wizardPortRequestData, 'carrierSelection.winningCarrier'),
+						isWinningCarrierValid = areNumbersValid
+							&& portRequestHasWinningCarrier
+							&& _.includes(numbersCarrierData.winningCarriers, wizardPortRequestData.carrierSelection.winningCarrier),
+						newWizardStepId = isWinningCarrierValid ? wizardStepId : carrierSelectionStepId;
+
+					wizardPortRequestData.nameAndNumbers.numbersToPort.areValid = areNumbersValid;
+
+					if (areNumbersValid) {
+						_.set(
+							wizardPortRequestData,
+							'carrierSelection.losingCarrier',
+							_
+								.chain(numbersCarrierData.numbersByLosingCarrier)
+								.head()
+								.get('carrier')
+								.value()
+						);
+					}
+
+					if (!isWinningCarrierValid) {
+						_.unset(wizardPortRequestData, 'carrierSelection.winningCarrier');
+					}
+
+					waterfallCallback(null, $container, wizardPortRequestData, newWizardStepId);
 				}
 			], function(error, $container, wizardPortRequestData, wizardStepId) {
 				if (error) {
