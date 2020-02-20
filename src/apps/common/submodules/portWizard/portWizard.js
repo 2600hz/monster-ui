@@ -357,6 +357,8 @@ define(function(require) {
 					self.portWizardGetPortRequestData({
 						portRequestId: portRequestId,
 						success: function(portRequestData) {
+							self.portWizardSet('originalPortRequest', portRequestData);
+
 							waterfallCallback(null, $container, portRequestData);
 						},
 						error: function(parsedError) {
@@ -2421,64 +2423,106 @@ define(function(require) {
 		 */
 		portWizardSaveGetFormattedPortRequest: function(wizardData) {
 			var self = this,
+				originalPortRequestDocument = self.portWizardGet('originalPortRequest', {}),
 				nameAndNumbersData = wizardData.nameAndNumbers,
 				carrierSelectionData = wizardData.carrierSelection,
 				ownershipConfirmationData = wizardData.ownershipConfirmation,
 				dateAndNotificationsData = wizardData.dateAndNotifications,
+				getOrEmptyString = _.partialRight(_.get, ''),
+				numbers = _.map(nameAndNumbersData.numbersToPort.formattedNumbers, 'e164Number'),
+				formattedPortRequestNumbers = _.transform(numbers, function(numbers, number) {
+					numbers[number] = {};
+				}, {}),
 				notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails', []),
 				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
 					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
 				} : {},
-				notificationsSection = _.isEmpty(notificationEmails) ? {} : {
-					notifications: {
-						email: {
-							send_to: _.size(notificationEmails) === 1
-								? _.head(notificationEmails)
-								: notificationEmails
-						}
-					}
-				},
 				billSection = _.isNil(ownershipConfirmationData) ? {} : {
-					bill: _.omitBy({
-						carrier: _.get(ownershipConfirmationData, 'accountOwnership.carrier'),
-						name: _.get(ownershipConfirmationData, 'accountOwnership.billName'),
-						street_pre_dir: _.get(ownershipConfirmationData, 'serviceAddress.streetPreDir'),
-						street_number: _.get(ownershipConfirmationData, 'serviceAddress.streetNumber'),
-						street_address: _.get(ownershipConfirmationData, 'serviceAddress.streetName'),
-						street_type: _.get(ownershipConfirmationData, 'serviceAddress.streetType'),
-						street_post_dir: _.get(ownershipConfirmationData, 'serviceAddress.streetPostDir'),
-						extended_address: _.get(ownershipConfirmationData, 'serviceAddress.addressLine2'),
-						locality: _.get(ownershipConfirmationData, 'serviceAddress.locality'),
-						region: _.get(ownershipConfirmationData, 'serviceAddress.region'),
-						postal_code: _.get(ownershipConfirmationData, 'serviceAddress.postalCode'),
-						account_number: _.get(ownershipConfirmationData, 'accountInfo.accountNumber'),
-						pin: _.get(ownershipConfirmationData, 'accountInfo.pin'),
-						btn: _.get(ownershipConfirmationData, 'accountInfo.btn')
-					}, _.isEmpty)
+					bill: _
+						.chain(originalPortRequestDocument)
+						.get('bill', {})
+						.cloneDeep()
+						.merge({
+							carrier: getOrEmptyString(ownershipConfirmationData, 'accountOwnership.carrier'),
+							name: getOrEmptyString(ownershipConfirmationData, 'accountOwnership.billName'),
+							street_pre_dir: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.streetPreDir'),
+							street_number: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.streetNumber'),
+							street_address: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.streetName'),
+							street_type: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.streetType'),
+							street_post_dir: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.streetPostDir'),
+							extended_address: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.addressLine2'),
+							locality: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.locality'),
+							region: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.region'),
+							postal_code: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.postalCode'),
+							country: getOrEmptyString(ownershipConfirmationData, 'serviceAddress.country'),
+							account_number: getOrEmptyString(ownershipConfirmationData, 'accountInfo.accountNumber'),
+							pin: getOrEmptyString(ownershipConfirmationData, 'accountInfo.pin'),
+							btn: getOrEmptyString(ownershipConfirmationData, 'accountInfo.btn')
+						})
+						.omitBy(_.isEmpty)
+						.value()
 				},
-				uiFlagsSection = _.merge({
-					portion: null,
-					type: nameAndNumbersData.numbersToPort.type,
-					validation: true
-				}, _.has(carrierSelectionData, 'winningCarrier') ? {
+				winningCarrierSection = _.has(carrierSelectionData, 'winningCarrier') ? {
 					winning_carrier: carrierSelectionData.winningCarrier
-				} : {}),
-				portRequestDocument = _.merge({
-					ui_flags: uiFlagsSection,
-					numbers: _
-						.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
-						.map('e164Number')
-						.transform(function(numbers, number) {
-							numbers[number] = {};
-						}, {})
-						.value(),
+				} : {},
+				cleanEmptyRecursively = function(object, path) {
+					var value = _.get(object, path);
+
+					if (_.isEmpty(value)) {
+						_.unset(object, path);
+					} else {
+						return;
+					}
+
+					if (_.size(path) <= 1) {
+						return;
+					}
+
+					cleanEmptyRecursively(object, path.slice(0, -1));
+				},
+				// Merge port request properties that can be deeply merged with an existing port
+				// request document
+				newPortRequestDocument = _.merge({}, originalPortRequestDocument, {
 					name: nameAndNumbersData.portRequestName,
 					extra: {
-						numbers_count: _.size(nameAndNumbersData.numbersToPort.formattedNumbers)
+						numbers_count: _.size(numbers)
+					},
+					ui_flags: {
+						portion: null,
+						type: nameAndNumbersData.numbersToPort.type,
+						validation: true
 					}
-				}, billSection, transferDateSection, notificationsSection);
+				}, transferDateSection, winningCarrierSection);
 
-			return portRequestDocument;
+			// Assign top level properties that need to be fully overwritten,
+			// because some internal properties may have been removed
+			_.assign(newPortRequestDocument, {
+				numbers: _
+					.chain(newPortRequestDocument)
+					.get('numbers', {})
+					.pickBy(function(value, number) {
+						return _.includes(numbers, number);
+					})
+					.merge(formattedPortRequestNumbers)
+					.value()
+			}, billSection);
+
+			// Set or overwrite notification e-mails. A merge cannot be done here because the
+			// value may be an array, and lodash#merge merges the array by position, instead of
+			// the item value. lodash#assign cannot be used here either, because it only works
+			// with top level properties.
+			_.set(
+				newPortRequestDocument,
+				'notifications.email.send_to',
+				_.size(notificationEmails) === 1
+					? _.head(notificationEmails)
+					: notificationEmails
+			);
+
+			// Clean notifications sub-object, if there were no notification e-mails
+			cleanEmptyRecursively(newPortRequestDocument, [ 'notifications', 'email', 'send_to' ]);
+
+			return newPortRequestDocument;
 		},
 
 		/**
