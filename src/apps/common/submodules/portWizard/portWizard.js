@@ -518,16 +518,103 @@ define(function(require) {
 		 */
 		portWizardFormatPortRequestData: function(args) {
 			var self = this,
-				portRequestData = args.data;
+				portWizardAppFlags = self.appFlags.portWizard,
+				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
+				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
+				billAttachmentName = billDocumentMetadata,
+				portRequestData = args.data,
+				billData = portRequestData.bill,
+				billAttachment = _.get(portRequestData.uploads, billAttachmentName),
+				numbers = _.keys(portRequestData.numbers),
+				formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber),
+				documentDefaultMetadata = {
+					isNew: false,
+					hasChanged: false
+				},
+				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+				targetDate = _.has(portRequestData, 'transfer_date')
+					? monster.util.gregorianToDate(portRequestData.transfer_date)
+					: undefined,
+				adjustedTargetDate = (targetDate && minTargetDate < targetDate)
+					? minTargetDate
+					: targetDate,
+				omitEmpty = _.partialRight(_.omitBy, _.isEmpty),
+				wizardData = omitEmpty({
+					portRequestId: portRequestData.id,
+					// Name and numbers are the minimum properties required for all port request
+					nameAndNumbers: {
+						portRequestName: portRequestData.name,
+						numbersToPort: {
+							type: portRequestData.ui_flags.type,
+							numbers: _.join(numbers, ', '),
+							formattedNumbers: formattedPhoneNumbers,
+							areValid: true	// If the port request was saved, then the numbers are supposed to be valid
+						}
+					},
+					carrierSelection: _.has(portRequestData, 'winning_carrier')
+						? omitEmpty({
+							winningCarrier: portRequestData.winning_carrier
+						})
+						: null,
+					ownershipConfirmation: (billData || billAttachment)
+						? omitEmpty({
+							latestBill: billAttachment
+								? _.merge({
+									name: billAttachmentName
+								}, documentDefaultMetadata, billAttachment)
+								: null,
+							accountOwnership: omitEmpty({
+								carrier: billData.carrier,
+								billName: billData.name
+							}),
+							serviceAddress: omitEmpty({
+								streetPreDir: billData.street_pre_dir,
+								streetNumber: billData.street_number,
+								streetName: billData.street_address,
+								streetType: billData.street_type,
+								streetPostDir: billData.street_post_dir,
+								addressLine2: billData.extended_address,
+								locality: billData.locality,
+								region: billData.region,
+								postalCode: billData.postal_code,
+								country: billData.country
+							}),
+							accountInfo: omitEmpty({
+								accountNumber: billData.account_number,
+								pin: billData.pin,
+								btn: billData.btn
+							})
+						})
+						: null,
+					requiredDocuments: _
+						.chain(portRequestData)
+						.get('uploads')
+						.omit(billAttachmentName)
+						.map(function(attachmentData, attachmentName) {
+							return _.merge({
+								name: attachmentName
+							}, documentDefaultMetadata, attachmentData);
+						})
+						.value(),
+					dateAndNotifications: _.has(portRequestData, 'transfer_date')
+						? {
+							targetDate: adjustedTargetDate,
+							notificationEmails: _
+								.chain(portRequestData)
+								.get('notifications.email.send_to')
+								.thru(
+									_.cond([
+										[ _.isArray, _.identity ],
+										[ _.isString, _.partial(_.concat, []) ],
+										[ _.stubTrue, _.constant([]) ]
+									])
+								)
+								.value()
+						}
+						: null
+				});
 
-			return {
-				portRequestId: portRequestData.id,
-				nameAndNumbers: {
-					numbersToPort: {
-						type: portRequestData.ui_flags.type
-					}
-				}
-			};
+			return wizardData;
 		},
 
 		/**************************************************
