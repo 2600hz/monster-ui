@@ -834,66 +834,11 @@ define(function(require) {
 
 			monster.waterfall([
 				function(waterfallCallback) {
-					self.portWizardCarrierSelectionGetNumberCarriers({
+					self.portWizardLoadNumbersCarrierDataAndRequirements({
 						formattedNumbers: formattedNumbers,
-						success: function(carrierData) {
-							waterfallCallback(null, carrierData);
-						},
-						error: function(errorData) {
-							waterfallCallback(errorData);
-						}
+						numbersType: numbersType,
+						callback: waterfallCallback
 					});
-				},
-				function(numbersCarrierData, waterfallCallback) {
-					var numbersByLosingCarrier = numbersCarrierData.numbersByLosingCarrier,
-						winningCarriers = numbersCarrierData.winningCarriers,
-						losingCarriersCount = _.size(numbersByLosingCarrier),
-						isSingleLosingCarrier = losingCarriersCount === 1,
-						isSingleLosingCarrierUnknown = isSingleLosingCarrier && numbersByLosingCarrier[0].carrier === 'Unknown',
-						noWinningCarriers = isSingleLosingCarrier && _.isEmpty(winningCarriers),
-						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
-						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
-						isCountrySupported = _.has(self.appFlags.portWizard.requirementsByCountries, numbersCountryCode),
-						carrierWarningType = !isSingleLosingCarrier
-							? 'multipleLosingCarriers'
-							: isSingleLosingCarrierUnknown
-								? 'unknownLosingCarriers'
-								: noWinningCarriers
-									? 'noWinningCarriers'
-									: !isSameCountry
-										? 'multipleCountries'
-										: isCountrySupported
-											? 'none'
-											: 'countryNotSupported';
-
-					waterfallCallback(null, _.merge({
-						countryCode: numbersCountryCode,
-						carrierWarningType: carrierWarningType
-					}, numbersCarrierData));
-				},
-				function(numbersCarrierData, waterfallCallback) {
-					if (numbersCarrierData.carrierWarningType !== 'none') {
-						return waterfallCallback(null, numbersCarrierData);
-					}
-
-					var requirements = self.appFlags.portWizard.requirements,
-						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
-						requiredDocuments = _
-							.chain(requirementsByCountries)
-							.get([numbersCarrierData.countryCode, numbersType])
-							.map(function(requirementKey) {
-								return {
-									key: requirementKey,
-									attachmentName: _.get(requirements, requirementKey)
-								};
-							})
-							.value();
-
-					self.portWizardSet('requiredDocumentsList', requiredDocuments);
-
-					waterfallCallback(null, _.assign(numbersCarrierData, {
-						requiredDocuments: requiredDocuments
-					}));
 				},
 				function(numbersCarrierData, waterfallCallback) {
 					nameAndNumbersData.numbersToPort.areValid = numbersCarrierData.carrierWarningType === 'none';
@@ -2734,6 +2679,85 @@ define(function(require) {
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
+
+		/**
+		 * Gets the carrier data for a list of phone numbers
+		 * @param  {Object} args
+		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to query
+		 * @param  {('local'|'tollFree')} args.numbersType  Type of numbers
+		 * @param  {Function} args.callback  Async.js callback
+		 */
+		portWizardLoadNumbersCarrierDataAndRequirements: function(args) {
+			var self = this,
+				formattedNumbers = args.formattedNumbers,
+				numbersType = args.numbersType,
+				callback = args.callback;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					self.portWizardCarrierSelectionGetNumberCarriers({
+						formattedNumbers: formattedNumbers,
+						success: function(carrierData) {
+							waterfallCallback(null, carrierData);
+						},
+						error: function(errorData) {
+							waterfallCallback(errorData);
+						}
+					});
+				},
+				function(numbersCarrierData, waterfallCallback) {
+					var numbersByLosingCarrier = numbersCarrierData.numbersByLosingCarrier,
+						winningCarriers = numbersCarrierData.winningCarriers,
+						losingCarriersCount = _.size(numbersByLosingCarrier),
+						isSingleLosingCarrier = losingCarriersCount === 1,
+						isSingleLosingCarrierUnknown = isSingleLosingCarrier && numbersByLosingCarrier[0].carrier === 'Unknown',
+						noWinningCarriers = isSingleLosingCarrier && _.isEmpty(winningCarriers),
+						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
+						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
+						isCountrySupported = _.has(self.appFlags.portWizard.requirementsByCountries, numbersCountryCode),
+						carrierWarningType = !isSingleLosingCarrier
+							? 'multipleLosingCarriers'
+							: isSingleLosingCarrierUnknown
+								? 'unknownLosingCarriers'
+								: noWinningCarriers
+									? 'noWinningCarriers'
+									: !isSameCountry
+										? 'multipleCountries'
+										: isCountrySupported
+											? 'none'
+											: 'countryNotSupported';
+
+					waterfallCallback(null, _.merge({
+						countryCode: numbersCountryCode,
+						carrierWarningType: carrierWarningType
+					}, numbersCarrierData));
+				},
+				function(numbersCarrierData, waterfallCallback) {
+					if (numbersCarrierData.carrierWarningType !== 'none') {
+						return waterfallCallback(null, numbersCarrierData);
+					}
+
+					var requirements = self.appFlags.portWizard.requirements,
+						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
+						requiredDocuments = _
+							.chain(requirementsByCountries)
+							.get([numbersCarrierData.countryCode, numbersType])
+							.map(function(requirementKey) {
+								return {
+									key: requirementKey,
+									attachmentName: _.get(requirements, requirementKey)
+								};
+							})
+							.value();
+
+					self.portWizardSet('requiredDocumentsList', requiredDocuments);
+
+					waterfallCallback(null, _.assign(numbersCarrierData, {
+						requiredDocuments: requiredDocuments
+					}));
+				}
+			], callback);
+		},
 
 		/**
 		  * Initialize a file input field
