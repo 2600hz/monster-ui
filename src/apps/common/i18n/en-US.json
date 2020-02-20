@@ -1468,11 +1468,12 @@
 	},
 	"navigationWizard": {
 		"buttons": {
-			"next": "Next",
+			"back": "Back",
 			"cancel": "Cancel",
 			"clear": "Clear",
-			"back": "Back",
-			"done": "Done"
+			"done": "Done",
+			"next": "Next",
+			"saveDraft": "Save as Draft"
 		},
 		"cancelDialogMessage": "Any modified data will be lost. Are you sure that you want to leave the wizard?"
 	},

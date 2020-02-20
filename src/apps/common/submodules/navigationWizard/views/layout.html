@@ -5,7 +5,15 @@
 				<h4>{{title}}</h4>
 			</div>
 			<div class="actions">
-				<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
+			{{#if saveEnabled}}
+				<button id="navigation_wizard_save" class="monster-button">
+					{{telicon "download-cloud" class="iconography-medium iconography-button-left"}}
+					{{i18n.navigationWizard.buttons.saveDraft}}
+				</button>
+			{{/if}}
+				<button id="cancel" class="monster-button">
+					{{ i18n.navigationWizard.buttons.cancel }}
+				</button>
 			</div>
 		</div>
 
