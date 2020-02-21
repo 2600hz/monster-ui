@@ -25,30 +25,35 @@ define(function(require) {
 		dispatch: function dispatch(id, data) {
 			var callback = this.entries[id];
 
-			if (_.isUndefined(callback)) {
-				return;
+			if (_.isFunction(callback)) {
+				callback(data);
 			}
-			callback(data);
 
 			this.remove(id);
 		}
 	};
 
 	function Listener(metadata) {
+		this.accountId = metadata.accountId;
 		this.source = metadata.source;
-		this.callback = metadata.listener;
+		this.listener = metadata.listener;
 	}
 	Listener.prototype = {
-		dispatch: function dispatch(params) {
-			this.callback(params);
+		dispatch: function dispatch(data) {
+			if (!_.isFunction(this.listener)) {
+				return;
+			}
+			this.listener(data);
 		},
 
 		isEqual: function isEqual(metadata) {
+			var accountId = metadata.accountId;
 			var source = metadata.source;
-			var callback = metadata.listener;
+			var listener = metadata.listener;
 
 			return this.source === source
-				&& (!callback || this.callback === callback);
+				&& (!accountId || this.accountId === accountId)
+				&& (!listener || this.listener === listener);
 		}
 	};
 
@@ -71,7 +76,7 @@ define(function(require) {
 
 		dispatch: function dispatch(data) {
 			this.entries.forEach(function(listener) {
-				listener.dispatch(data);
+				listener.dispatch(_.merge({}, data));
 			});
 		},
 
@@ -80,12 +85,13 @@ define(function(require) {
 		},
 
 		isRegistered: function isRegistered(metadata) {
-			return !!_.find(this.entries, function(listener) {
-				return listener.isEqual({
-					listener: metadata.listener,
-					source: metadata.source
-				});
-			});
+			return _
+				.chain(this.entries)
+				.find(function(listener) {
+					return listener.isEqual(metadata);
+				})
+				.thru(Boolean)
+				.value();
 		}
 	};
 
@@ -115,6 +121,18 @@ define(function(require) {
 
 		isSubscribed: function isSubscribed(binding) {
 			return this.entries[binding] instanceof Listeners;
+		},
+
+		eject: function eject() {
+			var listeners = _.flatMap(this.entries, function(listeners, binding) {
+				return _.map(listeners.entries, function(metadata) {
+					return _.merge({
+						binding: binding
+					}, _.clone(metadata));
+				});
+			});
+			this.entries = {};
+			return listeners;
 		},
 
 		hasListeners: function hasListeners(binding) {
@@ -247,7 +265,7 @@ define(function(require) {
 
 		warn: function warn() {
 			_.flowRight(
-				_.spread(console.log),
+				_.spread(console.warn),
 				_.spread(this.print.bind(this))
 			)(_.toArray(arguments));
 		}
@@ -341,7 +359,7 @@ define(function(require) {
 				this.ws.addEventListener('error', this.logger.log.bind(this.logger, 'onerror'));
 			} catch (e) {
 				this.logger.warn(
-					'error while attempting to ' + (this.reconnectTimeout ? 're' : '') + 'connect',
+					'failed while attempting to ' + (this.reconnectTimeout ? 're' : '') + 'connect',
 					e
 				);
 			}
@@ -413,7 +431,7 @@ define(function(require) {
 			try {
 				this.ws.close();
 			} catch (e) {
-				this.logger.warn('error while attempting to close', e);
+				this.logger.warn('failed while attempting to close', e);
 			}
 		},
 
@@ -428,27 +446,64 @@ define(function(require) {
 		bind: function bind(params) {
 			var wsc = this;
 			var binding = params.binding;
+			var isAuthError = function(payload) {
+				return _
+					.chain(payload)
+					.get('data.errors', [])
+					.find(function(message) {
+						return _.startsWith(message, 'failed to authenticate token');
+					})
+					.thru(Boolean)
+					.value();
+			};
 
 			monster.waterfall([
-				function(callback) {
-					if (wsc.bindings.isSubscribed(binding)) {
-						return callback(null, {});
+				function maybeSubscribe(callback) {
+					if (
+						wsc.bindings.isSubscribed(binding)
+						|| !wsc.isOpen()
+					) {
+						return callback(null);
 					}
 					wsc.subscribe(_.merge({
-						handleReply: function handleReply(data) {
-							callback(data.status === 'success' ? null : true, data);
+						handleReply: function(reply) {
+							callback(reply.status === 'success' ? null : true, reply);
 						}
 					}, _.pick(params, 'accountId', 'binding')));
 				}
-			], function(err, data) {
-				if (err) {
-					wsc.logger.warn('failed to subscribe to ' + binding, data);
+			], function(err, reply) {
+				if (!err) {
+					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
 					return;
 				}
-				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'source', 'listener')));
+				if (!isAuthError(reply)) {
+					wsc.logger.warn('failed to subscribe to ' + params.binding);
+					return;
+				}
+				wsc.logger.log('attempting to reauthenticate...');
+
+				monster.pub('auth.retryLogin', {
+					success: function() {
+						wsc.logger.log('reauthentication successful');
+						wsc.bind(params);
+					},
+					error: function() {
+						wsc.loggin.warn('failed to reauthenticate, logging out');
+						monster.util.logoutAndReload();
+					}
+				});
 			});
 
 			return this.unbind.bind(this, _.merge({}, params));
+		},
+
+		rebind: function rebind() {
+			if (!this.reconnectTimeout) {
+				return;
+			}
+			this.logger.log('rebinding listeners');
+
+			this.bindings.eject().forEach(this.bind.bind(this));
 		},
 
 		/**
@@ -462,11 +517,14 @@ define(function(require) {
 			var wsc = this;
 			var binding = params.binding;
 
-			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, 'source', 'listener')));
+			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
 
 			monster.waterfall([
-				function(callback) {
-					if (wsc.bindings.hasListeners(binding)) {
+				function maybeUnsubscribe(callback) {
+					if (
+						wsc.bindings.hasListeners(binding)
+						|| !wsc.isOpen()
+					) {
 						return callback(null);
 					}
 					wsc.unsubscribe(_.merge({
@@ -479,7 +537,9 @@ define(function(require) {
 				if (!err) {
 					return;
 				}
-				wsc.logger.warn('failed to unsubscribe from ' + binding, data);
+				wsc.logger.warn('failed to unsubscribe from ' + params.binding, data);
+				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+				wsc.unbind(params);
 			});
 		},
 
@@ -490,20 +550,26 @@ define(function(require) {
 		 * @param  {Function} params.handleReply
 		 */
 		subscribe: function subscribe(params) {
-			this.logger.log('subscribing to binding...');
+			this.logger.log('subscribing to ' + params.binding + '...');
 
 			var requestId = this.handshakes.add(params.handleReply);
 
-			this.ws.send(
-				JSON.stringify({
-					action: 'subscribe',
-					auth_token: monster.util.getAuthToken(),
-					request_id: requestId,
-					data: _.merge({
-						account_id: params.accountId
-					}, _.pick(params, 'binding'))
-				})
-			);
+			try {
+				this.ws.send(
+					JSON.stringify({
+						action: 'subscribe',
+						auth_token: monster.util.getAuthToken(),
+						request_id: requestId,
+						data: _.merge({
+							account_id: params.accountId
+						}, _.pick(params, 'binding'))
+					})
+				);
+			} catch (e) {
+				this.logger.warn(e);
+
+				this.handshakes.remove(requestId);
+			}
 		},
 
 		/**
@@ -513,27 +579,42 @@ define(function(require) {
 		 * @param  {Function} params.handleReply
 		 */
 		unsubscribe: function unsubscribe(params) {
-			this.logger.log('unsubscribing from binding...');
+			this.logger.log('unsubscribing from ' + params.binding + '...');
 
 			var requestId = this.handshakes.add(params.handleReply);
 
-			this.ws.send(
-				JSON.stringify({
-					action: 'unsubscribe',
-					auth_token: monster.util.getAuthToken(),
-					request_id: requestId,
-					data: _.merge({
-						account_id: params.accountId
-					}, _.pick(params, 'binding'))
-				})
-			);
+			try {
+				this.ws.send(
+					JSON.stringify({
+						action: 'unsubscribe',
+						auth_token: monster.util.getAuthToken(),
+						request_id: requestId,
+						data: _.merge({
+							account_id: params.accountId
+						}, _.pick(params, 'binding'))
+					})
+				);
+			} catch (e) {
+				this.logger.warn(e);
+
+				this.handshakes.remove(requestId);
+			}
 		},
 
 		/**
 		 * @param {Object} data Parsed MessageEvent payload.
 		 */
 		handleReply: function handleReply(data) {
-			this.logger.log('binding ' + (_.has(data.data, 'subscribed') ? '' : 'un') + 'subscribed successfully');
+			var logger = this.logger;
+			[
+				{ key: 'errors', method: 'warn' },
+				{ key: 'subscribed', method: 'log', partial: 'subscribed successfully to' },
+				{ key: 'unsubscribed', method: 'log', partial: 'unsubscribed successfully from' }
+			].forEach(function(type) {
+				_(data).get(['data', type.key], []).forEach(
+					_.chain(logger[type.method]).bind(logger, type.partial || _).unary().value()
+				);
+			});
 
 			this.handshakes.dispatch(data.request_id, data);
 		},
@@ -542,7 +623,7 @@ define(function(require) {
 		 * @param  {Object} data Parsed MessageEvent payload.
 		 */
 		handleEvent: function handleEvent(data) {
-			this.bindings.dispatch(data.subscribed_key, _.merge({}, data.data));
+			this.bindings.dispatch(data.subscribed_key, data.data);
 		},
 
 		/**
@@ -550,6 +631,7 @@ define(function(require) {
 		 */
 		onOpen: function onOpen() {
 			this.logger.log('connected successfully');
+			this.rebind();
 			this.resetReconnect();
 		},
 
