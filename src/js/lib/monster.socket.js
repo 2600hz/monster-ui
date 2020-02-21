@@ -135,6 +135,10 @@ define(function(require) {
 			return listeners;
 		},
 
+		hasSubscriptions: function hasSubscriptions() {
+			return !_.isEmpty(this.entries);
+		},
+
 		hasListeners: function hasListeners(binding) {
 			return this.isSubscribed(binding)
 				&& !this.entries[binding].isEmpty();
@@ -402,7 +406,10 @@ define(function(require) {
 		},
 
 		rebind: function rebind() {
-			if (!this.reconnectTimeout) {
+			if (
+				!this.reconnectTimeout
+				|| !this.bindings.hasSubscriptions()
+			) {
 				return;
 			}
 			this.logger.log('rebinding listeners');
@@ -617,41 +624,76 @@ define(function(require) {
 		}
 	};
 
-	var instance;
+	var client;
 
 	return {
-		isConnected: function isConnected() {
-			return !_.isUndefined(instance) && instance.isOpen();
+		getInstance: function() {
+			return client;
 		},
+
+		getInfo: function getInfo() {
+			var uri = _.get(monster, 'config.api.socket');
+
+			return {
+				isConfigured: _.isString(uri) && /^ws{1,2}:\/\//i.test(uri),
+				isConnected: !_.isUndefined(client) && client.isOpen(),
+				uri: uri
+			};
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {Function} [params.onConnect]
+		 * @param  {Function} [params.onDisconnect]
+		 */
 		connect: function connect(params) {
-			if (_.isUndefined(instance)) {
-				instance = new WebSocketClient(_.merge({
+			if (_.isUndefined(client)) {
+				client = new WebSocketClient(_.merge({
 					uri: monster.config.api.socket
 				}, params));
 			}
 
-			instance.connect();
+			client.connect();
 		},
+
 		disconnect: function disconnect() {
-			if (_.isUndefined(instance)) {
+			if (_.isUndefined(client)) {
 				return;
 			}
 
-			instance.disconnect();
+			client.disconnect();
 		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {String} params.accountId
+		 * @param  {String} params.binding
+		 * @param  {String} params.source
+		 * @param  {String} params.listener
+		 * @return {Function}
+		 * @return {Function} Callback to unbind listener
+		 */
 		bind: function bind(params) {
-			if (_.isUndefined(instance)) {
+			if (_.isUndefined(client)) {
 				return;
 			}
 
-			return instance.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+			return client.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
 		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {String} [params.accountId]
+		 * @param  {String} params.binding
+		 * @param  {String} params.source
+		 * @param  {String} [params.listener]
+		 */
 		unbind: function unbind(params) {
-			if (_.isUndefined(instance)) {
+			if (_.isUndefined(client)) {
 				return;
 			}
 
-			instance.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+			client.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
 		}
 	};
 });
