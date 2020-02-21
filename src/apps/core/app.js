@@ -4,7 +4,8 @@ define(function(require) {
 		monster = require('monster');
 
 	var appSubmodules = [
-		'alerts'
+		'alerts',
+		'socket'
 	];
 
 	require(_.map(appSubmodules, function(name) {
@@ -33,11 +34,7 @@ define(function(require) {
 			'core.triggerMasquerading': 'triggerMasquerading',
 			'core.restoreMasquerading': 'restoreMasquerading',
 			'core.initializeShortcuts': 'initializeShortcuts',
-			'socket.start': 'startSocket',
-			'socket.connected': 'refreshIfWebSocketsApp',
-			'socket.disconnected': 'onSocketDisconnected',
 			'webphone.start': 'startWebphone',
-			'core.showWarningDisconnectedSockets': 'showWarningSockets',
 			'core.hideTopbarDropdowns': 'hideTopbarDropdowns'
 		},
 
@@ -130,12 +127,6 @@ define(function(require) {
 				$('.core-wrapper').addClass('dashboard');
 				monster.config.whitelabel.logoutTimer = 0;
 			}
-		},
-
-		startSocket: function() {
-			var self = this;
-
-			monster.socket.connect();
 		},
 
 		startWebphone: function() {
@@ -832,7 +823,8 @@ define(function(require) {
 
 		showDebugPopup: function() {
 			var self = this,
-				acc = monster.apps.auth.currentAccount;
+				acc = monster.apps.auth.currentAccount,
+				socketInfo = monster.socket.getInfo();
 
 			if (!$('.debug-dialog').length) {
 				var dataTemplate = {
@@ -841,11 +833,11 @@ define(function(require) {
 						apiUrl: self.apiUrl,
 						version: monster.util.getVersion(),
 						hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
-						socket: {
-							hideInfo: !monster.socket.isEnabled(),
-							URL: monster.config.api.socket,
-							isConnected: monster.socket.isConnected()
-						},
+						socket: _.pick(socketInfo, [
+							'isConfigured',
+							'isConnected',
+							'uri'
+						]),
 						kazooVersion: monster.config.developerFlags.kazooVersion
 					},
 					template = $(self.getTemplate({
@@ -913,46 +905,6 @@ define(function(require) {
 					monster.ui.addShortcut(shortcut);
 				}
 			});
-		},
-
-		// If current app needs websockets, and the socket just reconnected, we refresh the app to display the correct data
-		refreshIfWebSocketsApp: function() {
-			var self = this,
-				currentApp = monster.apps[monster.apps.getActiveApp()];
-
-			if (currentApp && currentApp.hasOwnProperty('requiresWebSockets') && currentApp.requiresWebSockets === true) {
-				$('.warning-socket-wrapper').remove();
-				currentApp.render();
-
-				monster.ui.toast({
-					type: 'success',
-					message: self.i18n.active().brokenWebSocketsWarning.successReconnect
-				});
-			}
-		},
-
-		onSocketDisconnected: function() {
-			var self = this,
-				currentApp = monster.apps[monster.apps.getActiveApp()];
-
-			if (currentApp && currentApp.hasOwnProperty('requiresWebSockets') && currentApp.requiresWebSockets === true) {
-				self.showWarningSockets();
-			}
-		},
-
-		// Show a warning displaying that WebSockets are not connected properly
-		showWarningSockets: function(pArgs) {
-			var self = this,
-				args = pArgs || {},
-				templateWarning = $(self.getTemplate({
-					name: 'warning-disconnectedSocket'
-				}));
-
-			$('#monster_content').empty().append(templateWarning);
-
-			if (args.hasOwnProperty('callback')) {
-				args.callback && args.callback();
-			}
 		},
 
 		/**

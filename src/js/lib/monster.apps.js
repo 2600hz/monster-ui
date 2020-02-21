@@ -64,36 +64,59 @@ define(function() {
 				return app.name === monster.apps.getActiveApp();
 			};
 
+			/**
+			 * @param  {Object} params
+			 * @param  {String} [params.accountId]
+			 * @param  {String} params.binding
+			 * @param  {Function} params.callback
+			 * @param  {jQuery} [params.requiredElement]
+			 */
 			app.subscribeWebSocket = function(params) {
 				var accountId = app.accountId || params.accountId,
-					authToken = app.getAuthToken() || params.authToken,
 					requiredElement = params.hasOwnProperty('requiredElement') ? params.requiredElement : false;
 
+				var unsubscribe = monster.socket.bind({
+					binding: params.binding,
+					accountId: accountId,
+					listener: params.callback,
+					source: app.name
+				});
+
 				if (requiredElement) {
-					requiredElement.on('remove', function() {
-						monster.socket.unbind(params.binding, accountId, authToken, app.name);
-					});
+					requiredElement.on('remove', unsubscribe);
 				}
-
-				monster.socket.bind(params.binding, accountId, authToken, params.callback, app.name);
 			};
 
+			/**
+			 * @param  {Object} params
+			 * @param  {String} [params.accountId]
+			 * @param  {String} params.binding
+			 */
 			app.unsubscribeWebSocket = function(params) {
-				var accountId = app.accountId || params.accountId,
-					authToken = app.getAuthToken() || params.authToken;
+				var accountId = app.accountId || params.accountId;
 
-				monster.socket.unbind(params.binding, accountId, authToken, app.name);
+				monster.socket.unbind({
+					binding: params.binding,
+					accountId: accountId,
+					source: app.name
+				});
 			};
 
+			/**
+			 * @param  {Object} args
+			 * @param  {Function} args.callback
+			 * @param  {Function} [args.error]
+			 */
 			app.enforceWebSocketsConnection = function(args) {
 				app.requiresWebSockets = true;
 
-				if (monster.socket.isConnected()) {
-					args.callback();
+				if (
+					!monster.socket.getInfo().isConnected
+					&& _.isFunction(args.error)
+				) {
+					args.error && args.error();
 				} else {
-					monster.pub('core.showWarningDisconnectedSockets', {
-						callback: args.error
-					});
+					args.callback();
 				}
 			};
 

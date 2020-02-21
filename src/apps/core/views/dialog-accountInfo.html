@@ -36,7 +36,7 @@
 			</tr>
 		{{/unless}}
 
-		{{#unless socket.hideInfo}}
+		{{#if socket.isConfigured}}
 			<tr>
 				<td>{{ i18n.debugAccountDialog.webSocket.title }}</td>
 				<td>
@@ -51,13 +51,13 @@
 					</div>
 					<div class="multi-line-div">
 						{{#unless hideURLs}}
-							<span class="to-copy">{{ socket.URL }}</span>
+							<span class="to-copy">{{ socket.uri }}</span>
 							<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
 						{{/unless}}
 					</div>
 				</td>
 			</tr>
-		{{/unless}}
+		{{/if}}
 
 		<tr>
 			<td>{{ i18n.debugAccountDialog.monsterVersion }}</td>
