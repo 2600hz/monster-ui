@@ -148,102 +148,6 @@ define(function(require) {
 		}
 	};
 
-	/**
-	 * Creates a new manager of WebSocketClient per URI.
-	 * @return {WebSocketManager}
-	 */
-	function WebSocketManager() {
-		/**
-		 * Maps URI to client instance.
-		 * @private
-		 * @type {Object.<string, WebSocketClient>}
-		 */
-		this.clients = {};
-	}
-	WebSocketManager.prototype = {
-		/**
-		 * Returns whether a client corresponding to a uri is opened.
-		 * @param  {string}  uri
-		 * @return {boolean}
-		 */
-		isConnected: function isConnected(uri) {
-			var client = _.get(this.clients, uri);
-			return !_.isUndefined(client) && client.isOpen();
-		},
-
-		/**
-		 * Triggers a connection to uri.
-		 * @param {Object} params
-		 * @param {string} params.uri
-		 * @param {Function} [params.onOpen]
-		 * @param {Function} [params.onClose]
-		 *
-		 * Creates a client corresponding to uri when none exists.
-		 */
-		connect: function connect(params) {
-			var uri = _.get(params, 'uri');
-			var client = _.get(this.clients, uri);
-
-			if (_.isUndefined(client)) {
-				this.clients[uri] = new WebSocketClient(_.merge({}, params));
-				client = _.get(this.clients, uri);
-			}
-
-			client.connect();
-		},
-
-		/**
-		 * Triggers a disconnection for uri
-		 * @param  {string} uri
-		 */
-		disconnect: function disconnect(uri) {
-			var client = _.get(this.clients, uri);
-
-			if (_.isUndefined(client)) {
-				return;
-			}
-
-			client.disconnect();
-		},
-
-		/**
-		 * @param  {Object} params
-		 * @param  {string} params.uri
-		 * @param  {string} params.accountId
-		 * @param  {string} params.binding
-		 * @param  {string} params.source
-		 * @param  {Function} params.listener
-		 * @return {Function} Callback to unsubscribe this listener specifically.
-		 */
-		bind: function bind(params) {
-			var client = _.get(this.clients, params.uri);
-
-			if (_.isUndefined(client)) {
-				return;
-			}
-
-			return client.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
-		},
-
-		/**
-		 * @param  {Object} params
-		 * @param  {string} params.uri
-		 * @param  {string} params.accountId
-		 * @param  {string} params.binding
-		 * @param  {string} params.source
-		 * @param  {Function} [params.listener]
-		 */
-		unbind: function unbind(params) {
-			var client = _.get(this.clients, params.uri);
-
-			if (_.isUndefined(client)) {
-				return;
-			}
-
-			client.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
-		}
-	};
-
 	function Logger(id) {
 		this.id = id;
 	}
@@ -290,7 +194,7 @@ define(function(require) {
 		 * Holds callbacks for open and close events.
 		 * @type {Object}
 		 */
-		this.callbacks = _.merge({}, _.pick(params, 'onOpen', 'onClose'));
+		this.callbacks = _.merge({}, _.pick(params, 'onConnect', 'onDisconnect'));
 
 		/**
 		 * Holds the WebSocket object to manage connection to server.
@@ -353,8 +257,8 @@ define(function(require) {
 				this.ws.addEventListener('close', this.onClose.bind(this));
 				this.ws.addEventListener('message', this.onMessage.bind(this));
 
-				this.ws.addEventListener('open', this.callbacks.onOpen);
-				this.ws.addEventListener('close', this.callbacks.onClose);
+				this.ws.addEventListener('open', this.callbacks.onConnect);
+				this.ws.addEventListener('close', this.callbacks.onDisconnect);
 
 				this.ws.addEventListener('error', this.logger.log.bind(this.logger, 'onerror'));
 			} catch (e) {
@@ -713,5 +617,41 @@ define(function(require) {
 		}
 	};
 
-	return new WebSocketManager();
+	var instance;
+
+	return {
+		isConnected: function isConnected() {
+			return !_.isUndefined(instance) && instance.isOpen();
+		},
+		connect: function connect(params) {
+			if (_.isUndefined(instance)) {
+				instance = new WebSocketClient(_.merge({
+					uri: monster.config.api.socket
+				}, params));
+			}
+
+			instance.connect();
+		},
+		disconnect: function disconnect() {
+			if (_.isUndefined(instance)) {
+				return;
+			}
+
+			instance.disconnect();
+		},
+		bind: function bind(params) {
+			if (_.isUndefined(instance)) {
+				return;
+			}
+
+			return instance.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+		},
+		unbind: function unbind(params) {
+			if (_.isUndefined(instance)) {
+				return;
+			}
+
+			instance.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+		}
+	};
 });
