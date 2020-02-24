@@ -322,6 +322,9 @@ define(function(require) {
 
 			monster.waterfall([
 				function(waterfallCallback) {
+					// Clean store, in case it was not empty, to avoid using old data
+					self.portWizardSet({});
+
 					// Get container and main callback function
 					if (args.container instanceof jQuery) {
 						return waterfallCallback(null, args.container, globalCallback);
@@ -339,11 +342,11 @@ define(function(require) {
 
 					waterfallCallback(null, $container, callback);
 				},
-				function($container, mainCallback, waterfallCallback) {
-					// Store account ID and main callback
+				function($container, globalCallback, waterfallCallback) {
+					// Store account ID and global callback
 					self.portWizardSet({
 						accountId: accountId,
-						globalCallback: mainCallback
+						globalCallback: globalCallback
 					});
 
 					waterfallCallback(null, $container);
