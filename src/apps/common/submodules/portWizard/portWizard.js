@@ -634,8 +634,7 @@ define(function(require) {
 			var self = this,
 				portWizardAppFlags = self.appFlags.portWizard,
 				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
-				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
-				billAttachmentName = billDocumentMetadata,
+				billAttachmentName = portWizardAppFlags.requirements.Bill,
 				portRequestData = args.data,
 				billData = portRequestData.bill,
 				billAttachment = _.get(portRequestData.uploads, billAttachmentName),
@@ -643,8 +642,13 @@ define(function(require) {
 				formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber),
 				documentDefaultMetadata = {
 					isNew: false,
-					hasChanged: false
+					hasChanged: false,
+					required: false
 				},
+				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsCompleteList, 'attachmentName'),
+				requiredDocumentsByKey = _.keyBy(requiredDocumentsCompleteList, 'key'),
+				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
 				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
 				targetDate = _.has(portRequestData, 'transfer_date')
 					? monster.util.gregorianToDate(portRequestData.transfer_date)
@@ -673,9 +677,11 @@ define(function(require) {
 					ownershipConfirmation: (billData || billAttachment)
 						? omitEmpty({
 							latestBill: billAttachment
-								? _.merge({
-									name: billAttachmentName
-								}, documentDefaultMetadata, billAttachment)
+								? _.merge(
+									{
+										name: billAttachmentName,
+										attachmentName: billAttachmentName
+									}, documentDefaultMetadata, billAttachment, billDocumentMetadata)
 								: null,
 							accountOwnership: omitEmpty({
 								carrier: billData.carrier,
@@ -700,16 +706,25 @@ define(function(require) {
 							})
 						})
 						: null,
-					requiredDocuments: _
-						.chain(portRequestData)
-						.get('uploads')
-						.omit(billAttachmentName)
-						.map(function(attachmentData, attachmentName) {
-							return _.merge({
-								name: attachmentName
-							}, documentDefaultMetadata, attachmentData);
-						})
-						.value(),
+					requiredDocuments: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
+						? _
+							.chain(portRequestData)
+							.get('uploads')
+							.omit(billAttachmentName)
+							.mapValues(function(attachmentData, attachmentName) {
+								var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
+
+								return _.merge({
+									name: attachmentName,
+									attachmentName: attachmentName
+								}, documentDefaultMetadata, attachmentData, documentMetadata);
+							})
+							.mapKeys(function(document, attachmentName) {
+								return _.get(document, 'key', attachmentName);
+							})
+							.merge(_.omit(requiredDocumentsByKey, 'Bill'))
+							.value()
+						: null,
 					dateAndNotifications: _.has(portRequestData, 'transfer_date')
 						? {
 							targetDate: adjustedTargetDate,
@@ -1556,10 +1571,8 @@ define(function(require) {
 				bill = args.bill,
 				$template = args.template,
 				portWizardAppFlags = self.appFlags.portWizard,
-				billDocumentData = _.merge({
-					key: 'Bill',
-					attachmentName: portWizardAppFlags.requirements.Bill
-				}, bill),
+				billDocumentMetadata = self.portWizardGetRequiredDocumentMetadata('Bill'),
+				billDocumentData = _.merge({}, billDocumentMetadata, bill),
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
@@ -1738,7 +1751,6 @@ define(function(require) {
 				$billUploadInput = $changeFileWrapper.find('input[type="file"]'),
 				$billRenderContainer = $template.find('#latest_bill_document_container'),
 				portWizardAppFlags = self.appFlags.portWizard,
-				billDocumentMetadata = portWizardAppFlags.requirements.Bill,
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf;
 
 			// Render bill
@@ -1750,7 +1762,7 @@ define(function(require) {
 			// Bind events
 			self.portWizardInitFileUploadInput({
 				fileInput: $billUploadInput,
-				document: _.merge({}, billDocumentMetadata, bill),
+				document: bill,
 				fileRestrictions: pdfFilesRestrictions,
 				hidden: true,
 				success: function(fileData) {
@@ -1781,7 +1793,9 @@ define(function(require) {
 			var self = this,
 				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
 				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Bill' }),
-				requiredDocumentsData = _.get(args.data, 'requiredDocuments', []),
+				requiredDocumentsMap = _.keyBy(requiredDocumentsList, 'key'),
+				requiredDocumentsKeys = _.keys(requiredDocumentsMap),
+				requiredDocumentsData = _.get(args.data, 'requiredDocuments', {}),
 				validationOptions,
 				$template,
 				$form;
@@ -1797,13 +1811,13 @@ define(function(require) {
 			}
 
 			// Update required documents based on current requirements
-			requiredDocumentsData = _.map(requiredDocumentsList, function(document) {
-				return _
-					.chain(requiredDocumentsData)
-					.find({ key: document.key })
-					.merge(document)	// Merge key to nil object, if the document was not found
-					.value();
-			});
+			requiredDocumentsData = _
+				.chain(requiredDocumentsData)
+				.mapValues(function(documentData) {
+					return _.merge({}, documentData, { required: false });
+				})
+				.merge(requiredDocumentsMap)
+				.value();
 
 			self.portWizardSet('requiredDocumentsData', requiredDocumentsData);
 
@@ -1811,7 +1825,10 @@ define(function(require) {
 				name: 'step-requiredDocuments',
 				data: {
 					data: {
-						requiredDocuments: requiredDocumentsData
+						requiredDocuments: {
+							orderedKeys: requiredDocumentsKeys,
+							data: requiredDocumentsData
+						}
 					}
 				},
 				submodule: 'portWizard'
@@ -1819,14 +1836,14 @@ define(function(require) {
 
 			self.portWizardRequiredDocumentsBindEvents({
 				template: $template,
-				requiredDocuments: requiredDocumentsData
+				requiredDocumentsData: requiredDocumentsData
 			});
 
 			$form = $template.find('form');
 			validationOptions = {
 				rules: _
-					.chain(requiredDocumentsList)
-					.keyBy(function(document) {
+					.chain(requiredDocumentsMap)
+					.mapKeys(function(document) {
 						return document.key + '.name';
 					})
 					.mapValues(function() {
@@ -1879,20 +1896,20 @@ define(function(require) {
 		 * Bind Required Documents step events
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.requiredDocuments  Required documents
+		 * @param  {Object} args.requiredDocumentsData  Required documents
 		 */
 		portWizardRequiredDocumentsBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
-				requiredDocuments = args.requiredDocuments,
+				requiredDocumentsData = args.requiredDocumentsData,
 				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
 				.find('input[type="file"]')
 				.each(function() {
 					var $this = $(this),
-						documentIndex = $this.data('index'),
-						document = _.get(requiredDocuments, documentIndex);
+						documentKey = $this.data('key'),
+						document = _.get(requiredDocumentsData, documentKey);
 
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
@@ -1902,7 +1919,7 @@ define(function(require) {
 						success: function(fileData) {
 							self.portWizardSet([
 								'requiredDocumentsData',
-								documentIndex
+								documentKey
 							], fileData);
 						}
 					});
@@ -2231,7 +2248,6 @@ define(function(require) {
 			var self = this,
 				numbers = _.map(data.nameAndNumbers.numbersToPort.formattedNumbers, 'e164Number'),
 				countryCode = data.ownershipConfirmation.serviceAddress.country,
-				getRequiredDocumentProps = _.partialRight(_.pick, ['key', 'name']),
 				defaultValues = {
 					review: {
 						acknowledgements: {
@@ -2246,8 +2262,13 @@ define(function(require) {
 					'nameAndNumbers.numbersToPort.formattedNumbers',
 					'requiredDocuments'
 				]),
-				bill = _.get(data, 'ownershipConfirmation.latestBill', []),
-				otherDocuments = _.get(data, 'requiredDocuments', []),
+				bill = _.get(data, 'ownershipConfirmation.latestBill'),
+				otherDocuments = _.get(data, 'requiredDocuments', {}),
+				allDocuments = _
+					.merge({
+						Bill: bill
+					}, otherDocuments),
+				requiredDocumentsList = self.portWizardGet('requiredDocumentsList', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
 						nameAndNumbers: {
@@ -2263,11 +2284,12 @@ define(function(require) {
 								}
 							}
 						},
-						requiredDocuments: _
-							.chain(bill)
-							.concat(otherDocuments)
-							.map(getRequiredDocumentProps)
-							.value()
+						requiredDocuments: _.map(requiredDocumentsList, function(documentMetadata) {
+							return {
+								key: documentMetadata.key,
+								name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
+							};
+						})
 					});
 
 			return formattedData;
@@ -2430,9 +2452,10 @@ define(function(require) {
 				callback = args.callback,
 				portRequestId = _.get(wizardData, 'portRequestId'),
 				bill = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
-				otherDocuments = _.get(wizardData, 'requiredDocuments', []),
+				otherDocuments = _.get(wizardData, 'requiredDocuments', {}),
 				allDocuments = _
 					.chain(otherDocuments)
+					.values()
 					.concat(bill)
 					.filter('hasChanged')
 					.value(),
@@ -2934,6 +2957,112 @@ define(function(require) {
 		 **************************************************/
 
 		/**
+		 * Gets metadata for a required document
+		 * @param  {String} documentKey  Document key
+		 */
+		portWizardGetRequiredDocumentMetadata: function(documentKey) {
+			var self = this;
+
+			return {
+				key: documentKey,
+				attachmentName: _.get(self.appFlags.portWizard.requirements, documentKey),
+				required: true
+			};
+		},
+
+		/**
+		  * Initialize a file input field
+		  * @param  {Object} args
+		  * @param  {jQuery} args.fileInput  File input element
+		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
+		  *                                   text field
+		  * @param  {Object} [args.document]  Document metadata
+		  * @param  {String} [args.document.key]  Document key
+		  * @param  {String} [args.document.attachmentName]  Document name for attachment
+		  * @param  {Boolean} [args.document.isNew]  Whether or not the document is new
+		  * @param  {Boolean} [args.document.hasChanged]  Whether or not the document has changed
+		  *                                              within the current wizard instance
+		  * @param  {String} [args.document.file]  Document contents as a string
+		  * @param  {Object} args.fileRestrictions  File restrictions
+		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
+		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
+		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will
+		  *                                                           be loaded
+		  * @param  {Boolean} [args.hidden=false]  Hide file selector from view
+		  * @param  {Function} args.success  Success callback
+		  * @param  {Function} [args.error]  Error callback
+		  */
+		portWizardInitFileUploadInput: function(args) {
+			var self = this,
+				$fileInput = args.fileInput,
+				filesList = _.chain(args).pick('fileName').values().value(),
+				document = _.get(args, 'document', {}),
+				fileRestrictions = args.fileRestrictions,
+				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
+				hidden = _.get(args, 'hidden', false),
+				displayTextInput = !hidden,
+				i18n = self.i18n.active().commonApp.portWizard.steps.general;
+
+			$fileInput.fileUpload({
+				wrapperClass: 'file-selector',
+				inputOnly: displayTextInput,
+				inputPlaceholder: displayTextInput ? i18n.placeholders.file : null,
+				filesList: filesList,
+				enableInputClick: displayTextInput,
+				btnClass: 'monster-button',
+				bigBtnClass: hidden ? 'hidden' : null,
+				btnText: i18n.labels.fileButton,
+				mimeTypes: fileRestrictions.mimeTypes,
+				maxSize: fileRestrictions.maxSize,
+				dataFormat: dataFormat,
+				success: function(results) {
+					var fileResult = results[0],
+						fileData = _.merge(
+							{
+								isNew: true
+							},
+							document,
+							fileResult,
+							{
+								hasChanged: document.hasChanged
+									|| !_
+										.chain(document)
+										.get('file')
+										.isEqual(fileResult.file)
+										.value()
+							});
+
+					args.success(fileData);
+				},
+				error: function(errorsList) {
+					var errorType = _
+							.chain(errorsList)
+							.pick('mimeTypes', 'size')
+							.omitBy(_.isEmpty)
+							.keys()
+							.concat([ 'unknown' ])
+							.sortBy()
+							.head()
+							.value(),
+						message = self.getTemplate({
+							name: '!' + monster.util.tryI18n(i18n.errors.file, errorType),
+							data: {
+								mimeTypes: _.join(fileRestrictions.mimeTypes, ', '),
+								maxSize: fileRestrictions.maxSize
+							}
+						});
+
+					monster.ui.toast({
+						type: 'error',
+						message: message
+					});
+
+					_.has(args, 'error') && args.error();
+				}
+			});
+		},
+
+		/**
 		 * Gets the carrier data for a list of phone numbers
 		 * @param  {Object} args
 		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to query
@@ -2990,17 +3119,11 @@ define(function(require) {
 						return waterfallCallback(null, numbersCarrierData);
 					}
 
-					var requirements = self.appFlags.portWizard.requirements,
-						requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
+					var requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
 						requiredDocuments = _
 							.chain(requirementsByCountries)
 							.get([numbersCarrierData.countryCode, numbersType])
-							.map(function(requirementKey) {
-								return {
-									key: requirementKey,
-									attachmentName: _.get(requirements, requirementKey)
-								};
-							})
+							.map(_.bind(self.portWizardGetRequiredDocumentMetadata, self))
 							.value();
 
 					self.portWizardSet('requiredDocumentsList', requiredDocuments);
@@ -3010,96 +3133,6 @@ define(function(require) {
 					}));
 				}
 			], callback);
-		},
-
-		/**
-		  * Initialize a file input field
-		  * @param  {Object} args
-		  * @param  {jQuery} args.fileInput  File input element
-		  * @param  {String} [args.fileName]  Name of the file to be displayed in the companion
-		  *                                   text field
-		  * @param  {Object} [args.document]  Document metadata
-		  * @param  {String} [args.document.key]  Document key
-		  * @param  {String} [args.document.attachmentName]  Document name for attachment
-		  * @param  {Boolean} [args.document.isNew]  Whether or not the document is new
-		  * @param  {Boolean} [args.document.hasChanged]  Whether or not the document has changed
-		  *                                              within the current wizard instance
-		  * @param  {String} [args.document.file]  Document contents as a string
-		  * @param  {Object} args.fileRestrictions  File restrictions
-		  * @param  {String[]} args.fileRestrictions.mimeTypes  Allowed file mime types
-		  * @param  {Number} args.fileRestrictions.maxSize  Maximum file size
-		  * @param  {('dataURL'|'text')} [args.dataFormat='dataURL']  Format in which the file will
-		  *                                                           be loaded
-		  * @param  {Boolean} [args.hidden=false]  Hide file selector from view
-		  * @param  {Function} args.success  Success callback
-		  * @param  {Function} [args.error]  Error callback
-		  */
-		portWizardInitFileUploadInput: function(args) {
-			var self = this,
-				$fileInput = args.fileInput,
-				filesList = _.chain(args).pick('fileName').values().value(),
-				document = _.get(args, 'document', {}),
-				fileRestrictions = args.fileRestrictions,
-				dataFormat = _.get(args, 'dataFormat', 'dataURL'),
-				hidden = _.get(args, 'hidden', false),
-				displayTextInput = !hidden,
-				i18n = self.i18n.active().commonApp.portWizard.steps.general;
-
-			$fileInput.fileUpload({
-				wrapperClass: 'file-selector',
-				inputOnly: displayTextInput,
-				inputPlaceholder: displayTextInput ? i18n.placeholders.file : null,
-				filesList: filesList,
-				enableInputClick: displayTextInput,
-				btnClass: 'monster-button',
-				bigBtnClass: hidden ? 'hidden' : null,
-				btnText: i18n.labels.fileButton,
-				mimeTypes: fileRestrictions.mimeTypes,
-				maxSize: fileRestrictions.maxSize,
-				dataFormat: dataFormat,
-				success: function(results) {
-					var fileData = _.merge(
-						{
-							isNew: true
-						},
-						results[0],
-						document,
-						{
-							hasChanged: !_
-								.chain(document)
-								.get('file')
-								.isEqual(results.file)
-								.value()
-						});
-
-					args.success(fileData);
-				},
-				error: function(errorsList) {
-					var errorType = _
-							.chain(errorsList)
-							.pick('mimeTypes', 'size')
-							.omitBy(_.isEmpty)
-							.keys()
-							.concat([ 'unknown' ])
-							.sortBy()
-							.head()
-							.value(),
-						message = self.getTemplate({
-							name: '!' + monster.util.tryI18n(i18n.errors.file, errorType),
-							data: {
-								mimeTypes: _.join(fileRestrictions.mimeTypes, ', '),
-								maxSize: fileRestrictions.maxSize
-							}
-						});
-
-					monster.ui.toast({
-						type: 'error',
-						message: message
-					});
-
-					_.has(args, 'error') && args.error();
-				}
-			});
 		},
 
 		/**
