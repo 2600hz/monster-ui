@@ -1859,10 +1859,12 @@ define(function(require) {
 		portWizardRequiredDocumentsUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
-				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				isFormLoaded = $form.length > 0,
+				isValid = !eventArgs.completeStep || !isFormLoaded || monster.ui.valid($form),
 				requiredDocumentsData;
 
-			if (isValid) {
+			// If form is not loaded, it means that the step was skipped because there are no required documents
+			if (isValid && isFormLoaded) {
 				requiredDocumentsData = self.portWizardGet('requiredDocumentsData');
 				self.portWizardUnset('requiredDocumentsData');
 				delete args.data.requiredDocuments;
