@@ -390,6 +390,32 @@ define(function(require) {
 					waterfallCallback(null, $container, portRequestData);
 				},
 				function($container, portRequestData, waterfallCallback) {
+					// Format numbers and load carrier and requirements data, if the port request
+					// has data that goes beyond the Carrier Selection step
+					var numbers = _
+							.chain(portRequestData)
+							.get('numbers', {})
+							.keys()
+							.value(),
+						formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber);
+
+					if (!(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
+						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, null);
+					}
+
+					self.portWizardLoadNumbersCarrierDataAndRequirements({
+						formattedNumbers: formattedPhoneNumbers,
+						numbersType: portRequestData.ui_flags.type,
+						callback: function(err, numbersCarrierData) {
+							if (err) {
+								return waterfallCallback(err);
+							}
+
+							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersCarrierData);
+						}
+					});
+				},
+				function($container, portRequestData, formattedPhoneNumbers, numbersCarrierData, waterfallCallback) {
 					// Format port request data, to be loaded in the wizard
 					if (!portRequestData) {
 						return waterfallCallback(null, $container, {
@@ -398,46 +424,25 @@ define(function(require) {
 									type: 'local'
 								}
 							}
-						});
+						}, numbersCarrierData);
 					}
 
 					var wizardPortRequestData = self.portWizardFormatPortRequestData({
+						formattedNumbers: formattedPhoneNumbers,
 						data: portRequestData
 					});
 
-					waterfallCallback(null, $container, wizardPortRequestData);
+					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData);
 				},
-				function($container, wizardPortRequestData, waterfallCallback) {
+				function($container, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
 					// Get wizard step to display
 					var hasStepData = _.partial(_.has, wizardPortRequestData),
 						wizardStepId = _.findLastIndex(stepNames, hasStepData);
 
-					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, wizardStepId);
 				},
-				function($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
-					var carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection'),
-						numbersToPortData = wizardPortRequestData.nameAndNumbers.numbersToPort;
-
-					if (wizardStepId <= carrierSelectionStepId) {
-						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId, null, null);
-					}
-
-					// If there is data that goes beyond the Carrier Selection step,
-					// then get carrier data from Phonebook API
-					self.portWizardLoadNumbersCarrierDataAndRequirements({
-						formattedNumbers: numbersToPortData.formattedNumbers,
-						numbersType: numbersToPortData.type,
-						callback: function(err, numbersCarrierData) {
-							if (err) {
-								return waterfallCallback(err);
-							}
-
-							waterfallCallback(null, $container, wizardPortRequestData, wizardStepId, carrierSelectionStepId, numbersCarrierData);
-						}
-					});
-				},
-				function($container, wizardPortRequestData, wizardStepId, carrierSelectionStepId, numbersCarrierData, waterfallCallback) {
-					if (_.isNull(numbersCarrierData)) {
+				function($container, wizardPortRequestData, numbersCarrierData, wizardStepId, waterfallCallback) {
+					if (_.isNil(numbersCarrierData)) {
 						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 					}
 
@@ -447,6 +452,7 @@ define(function(require) {
 						isWinningCarrierValid = areNumbersValid
 							&& portRequestHasWinningCarrier
 							&& _.includes(numbersCarrierData.winningCarriers, wizardPortRequestData.carrierSelection.winningCarrier),
+						carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection'),
 						newWizardStepId = isWinningCarrierValid ? wizardStepId : carrierSelectionStepId;
 
 					wizardPortRequestData.nameAndNumbers.numbersToPort.areValid = areNumbersValid;
@@ -470,49 +476,25 @@ define(function(require) {
 					waterfallCallback(null, $container, wizardPortRequestData, newWizardStepId);
 				},
 				function($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+					// Check required documents, and modify wizard step if needed
 					var requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-						requiredDocumentsByAttachmentName = _.mapKeys(requiredDocumentsCompleteList, 'attachmentName'),
-						billAttachmentName = self.appFlags.portWizard.requirements.Bill,
-						ownershipConfirmationStepId = _.indexOf(stepNames, 'ownershipConfirmation'),
-						requiredDocumentsStepId = _.indexOf(stepNames, 'requiredDocuments'),
-						isBillRequired = _.has(requiredDocumentsByAttachmentName, billAttachmentName),
-						isBillAttached = _.has(wizardPortRequestData, 'ownershipConfirmation.latestBill');
-
-					if (_.isUndefined(requiredDocumentsCompleteList)) {
-						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
-					}
-
-					// Check documents, set metadata, and set wizard step accordingly
-					if (isBillAttached) {
-						if (isBillRequired) {
-							_.merge(
-								wizardPortRequestData.ownershipConfirmation.latestBill,
-								_.get(requiredDocumentsByAttachmentName, billAttachmentName)
-							);
-							_.unset(requiredDocumentsByAttachmentName, billAttachmentName);
-						} else {
-							_.unset(wizardPortRequestData, 'ownershipConfirmation.latestBill');
-						}
-					} else if (isBillRequired && wizardStepId > ownershipConfirmationStepId) {
-						wizardStepId = ownershipConfirmationStepId;
-					}
-
-					if (_.has(wizardPortRequestData, 'requiredDocuments')) {
-						wizardPortRequestData.requiredDocuments = _
-							.chain(wizardPortRequestData.requiredDocuments)
-							.map(function(document) {
-								return _.merge(document, _.get(requiredDocumentsByAttachmentName, document.name));
+						requiredDocumentsMap = _.keyBy(requiredDocumentsCompleteList, 'key'),
+						isBillRequired = _.has(requiredDocumentsMap, 'Bill'),
+						isBillAttached = _.has(wizardPortRequestData, 'ownershipConfirmation.latestBill.file'),
+						isAnyRequiredDocumentMissing = _
+							.chain(wizardPortRequestData)
+							.get('requiredDocuments')
+							.some(function(document) {
+								return document.required && !document.file;
 							})
-							.filter('key')
-							.value();
+							.value(),
+						ownershipConfirmationStepId = _.indexOf(stepNames, 'ownershipConfirmation'),
+						requiredDocumentsStepId = _.indexOf(stepNames, 'requiredDocuments');
 
-						if (_.isEmpty(wizardPortRequestData.requiredDocuments)) {
-							_.unset(wizardPortRequestData, 'requiredDocuments');
-						}
-
-						if (wizardStepId > requiredDocumentsStepId && !_.isEmpty(requiredDocumentsByAttachmentName)) {
-							wizardStepId = requiredDocumentsStepId;
-						}
+					if (wizardStepId > ownershipConfirmationStepId && isBillRequired && !isBillAttached) {
+						wizardStepId = ownershipConfirmationStepId;
+					} else if (wizardStepId > requiredDocumentsStepId && isAnyRequiredDocumentMissing) {
+						wizardStepId = requiredDocumentsStepId;
 					}
 
 					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
@@ -628,6 +610,7 @@ define(function(require) {
 		/**
 		 * Format the port request data to be loaded in the wizard
 		 * @param  {Object} args
+		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to be ported
 		 * @param  {Object} args.data  Port request data
 		 */
 		portWizardFormatPortRequestData: function(args) {
@@ -635,11 +618,11 @@ define(function(require) {
 				portWizardAppFlags = self.appFlags.portWizard,
 				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
 				billAttachmentName = portWizardAppFlags.requirements.Bill,
+				formattedPhoneNumbers = args.formattedNumbers,
 				portRequestData = args.data,
 				billData = portRequestData.bill,
 				billAttachment = _.get(portRequestData.uploads, billAttachmentName),
-				numbers = _.keys(portRequestData.numbers),
-				formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber),
+				numbers = _.map(formattedPhoneNumbers, 'e164Number'),
 				documentDefaultMetadata = {
 					isNew: false,
 					hasChanged: false,
