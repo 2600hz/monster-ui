@@ -1784,8 +1784,6 @@ define(function(require) {
 				$form;
 
 			if (_.isEmpty(requiredDocumentsList)) {
-				_.unset(args.data, 'requiredDocuments');
-
 				monster.pub('common.navigationWizard.goToStep', {
 					stepId: 4
 				});
@@ -2404,7 +2402,7 @@ define(function(require) {
 					portRequestId: portRequestId
 				} : {});
 
-			self.portWizardRequestResourceSave({
+			self.portWizardRequestResourceAction({
 				resource: resource,
 				data: requestData,
 				tryGroupErrors: true,
@@ -2440,27 +2438,43 @@ define(function(require) {
 					.chain(otherDocuments)
 					.values()
 					.concat(bill)
-					.filter('hasChanged')
+					.reject(function(document) {
+						return document.required && !document.hasChanged;
+					})
 					.value(),
 				seriesFunctions = _.map(allDocuments, function(document) {
 					return function(seriesCallback) {
-						var resource = document.isNew ? 'port.createAttachment' : 'port.updateAttachment';
+						var deleteDocument = !(document.required || document.isNew),
+							resource = deleteDocument
+								? 'port.deleteAttachment'
+								: document.isNew
+									? 'port.createAttachment'
+									: 'port.updateAttachment',
+							documentData = deleteDocument
+								? {}
+								: { data: document.file };
 
-						self.portWizardRequestResourceSave({
+						self.portWizardRequestResourceAction({
 							resource: resource,
-							data: {
+							data: _.merge({
 								accountId: accountId,
 								portRequestId: portRequestId,
 								documentName: document.attachmentName,
-								data: document.file,
 								generateError: false
-							},
+							}, documentData),
 							success: function(data) {
+								document.isNew = false;
+								document.hasChanged = false;
 								seriesCallback(null, {
 									data: data
 								});
 							},
 							error: function(parsedError) {
+								if (deleteDocument) {
+									// Ignore errors while deleting documents, as it is not critical to do so
+									return seriesCallback(null);
+								}
+
 								// Pack the error as part of the result, and returns a null value
 								// as error, to allow the parallel tasks to continue regardless if
 								// one of them fail
@@ -2518,7 +2532,7 @@ define(function(require) {
 					'state'
 				]);
 
-			self.portWizardRequestResourceSave({
+			self.portWizardRequestResourceAction({
 				resource: 'port.changeState',
 				data: requestData,
 				tryGroupErrors: true,
@@ -2802,7 +2816,7 @@ define(function(require) {
 		},
 
 		/**
-		 * Request the creation of a new resource document
+		 * Request an action over a resource document (create, update, delete)
 		 * @param  {Object} args
 		 * @param  {String} args.resource  Resource name
 		 * @param  {Object} args.data  Request data
@@ -2812,7 +2826,7 @@ define(function(require) {
 		 * @param  {Function} args.success  Success callback
 		 * @param  {Function} [args.error]  Error callback
 		 */
-		portWizardRequestResourceSave: function(args) {
+		portWizardRequestResourceAction: function(args) {
 			var self = this,
 				tryGroupErrors = _.get(args, 'tryGroupErrors', false),
 				dataGenerateError = _.get(args, 'data.generateError', true),
