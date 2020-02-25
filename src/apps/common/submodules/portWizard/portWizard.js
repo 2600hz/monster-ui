@@ -530,11 +530,23 @@ define(function(require) {
 					stepsCompleted: _.range(wizardStepId),
 					title: i18n.title,
 					cancel: self.portWizardClose,
+					'delete': self.portWizardDelete,
+					deleteButton: i18n.deleteButton,
 					done: self.portWizardComplete,
 					doneButton: i18n.doneButton,
 					saveEnabled: true,
 					validateOnStepChange: true,
-					askForConfirmationBeforeExit: true
+					askForConfirmationBeforeExit: true,
+					buttonProps: [
+						{
+							button: 'cancel',
+							display: !portRequestId
+						},
+						{
+							button: 'delete',
+							display: !!portRequestId
+						}
+					]
 				});
 			});
 		},
@@ -656,7 +668,7 @@ define(function(require) {
 							type: portRequestData.ui_flags.type,
 							numbers: _.join(numbers, ', '),
 							formattedNumbers: formattedPhoneNumbers,
-							areValid: true	// If the port request was saved, then the numbers are supposed to be valid
+							areValid: false	// Carrier data has not been validated yet
 						}
 					},
 					carrierSelection: _.has(portRequestData, 'winning_carrier')
@@ -2733,7 +2745,59 @@ define(function(require) {
 			});
 		},
 
-		/* CLOSE WIZARD */
+		/* DELETE */
+
+		/**
+		 * Deletes the current port request upon user's confirmation
+		 * @param  {Object} args  Wizard's arguments
+		 * @param  {Object} args.data  Wizard's data that is shared across steps
+		 * @param  {String} args.data.portRequestId  Current port request ID
+		 * @param  {Function} callback  Callback to notify the navigation wizard control that the
+		 *                              delete operation has ended, and whether or not to close
+		 *                              the wizard
+		 */
+		portWizardDelete: function(args, callback) {
+			var self = this;
+
+			monster.waterfall([
+				function(waterfallCallback) {
+					monster.ui.confirm(
+						self.i18n.active().commonApp.portWizard.confirmDelete,
+						function() {
+							waterfallCallback(null, true);
+						},
+						function() {
+							waterfallCallback(null, false);
+						}
+					);
+				},
+				function(doDelete, waterfallCallback) {
+					if (!doDelete) {
+						return waterfallCallback(null, false);
+					}
+
+					self.portWizardRequestDeletePort({
+						data: {
+							portRequestId: args.data.portRequestId
+						},
+						success: function() {
+							waterfallCallback(null, true);
+						},
+						error: function() {
+							waterfallCallback(null, true);
+						}
+					});
+				}
+			], function(err, exit) {
+				callback({
+					exit: exit
+				});
+
+				return exit && self.portWizardClose();
+			});
+		},
+
+		/* CANCEL */
 
 		/**
 		 * Closes the wizard, by invoking the global callback
@@ -2748,6 +2812,27 @@ define(function(require) {
 		/**************************************************
 		 *                  API requests                  *
 		 **************************************************/
+
+		/**
+		 * Deletes a port request
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Request data
+		 * @param  {String} args.data.portRequestId  Port request ID
+		 * @param  {Function} args.success  Success callback
+		 * @param  {Function} [args.error]  Error callback
+		 */
+		portWizardRequestDeletePort: function(args) {
+			var self = this;
+
+			self.portWizardRequestResourceAction(
+				_.merge({
+					resource: 'port.delete',
+					data: {
+						accountId: self.portWizardGet('accountId')
+					}
+				}, args)
+			);
+		},
 
 		/**
 		 * Gets a port request attachment
@@ -4718,27 +4803,6 @@ define(function(require) {
 						generateError: true
 					});
 
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-		/**
-		 * @param {Function} args.success
-		 * @param {Function} [args.error]
-		 * @param {String} args.data.portRequestId
-		 */
-		portWizardRequestDeletePort: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'port.delete',
-				data: _.merge({
-					accountId: self.portWizardGet('accountId')
-				}, args.data),
-				success: function(data, status) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError, error, globalHandler) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
