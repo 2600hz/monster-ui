@@ -340,7 +340,11 @@ define(function() {
 							requestEventParams: _.pick(params, 'bypassProgressIndicator')
 						},
 						params.data,
-						_.pick(params, 'onChargesCancelled'));
+						monster.config.whitelabel.acceptCharges.autoAccept ? {
+							acceptCharges: monster.config.whitelabel.acceptCharges.autoAccept
+						} : {},
+						_.pick(params, 'onChargesCancelled')
+						);
 
 						if (_.has(monster.config, 'kazooClusterId')) {
 							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;

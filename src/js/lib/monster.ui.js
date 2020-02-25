@@ -951,13 +951,23 @@ define(function(require) {
 				template = $(coreApp.getTemplate({
 					name: 'dialog-charges',
 					data: formatData(data)
-				}));
+				})),
+				showInvoiceSummary = monster.config.whitelabel.acceptCharges.showInvoiceSummary,
+				content = showInvoiceSummary
+					? template
+					: _.get(
+						monster.config.whitelabel.acceptCharges.message,
+						monster.config.whitelabel.language,
+						coreApp.i18n.active().acceptCharges.message
+					),
+				options = _.merge({
+					title: i18n.confirmCharges.title
+				}, showInvoiceSummary ? {
+					htmlContent: true,
+					dialogClass: 'monster-charges'
+				} : {});
 
-			return self.confirm(template, callbackOk, callbackCancel, {
-				htmlContent: true,
-				title: i18n.confirmCharges.title,
-				dialogClass: 'monster-charges'
-			});
+			return self.confirm(content, callbackOk, callbackCancel, options);
 		},
 
 		// New Popup to show advanced API errors via a "More" Link.
