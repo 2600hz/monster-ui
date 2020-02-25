@@ -2339,6 +2339,14 @@ define(function(require) {
 							stepId: stepId
 						});
 					});
+
+			$template
+				.find('#port_wizard_step_print')
+					.on('click', function(e) {
+						e.preventDefault();
+
+						window.print();
+					});
 		},
 
 		/**
