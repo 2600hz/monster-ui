@@ -519,6 +519,7 @@ define(function(require) {
 						var pascalCasedStepName = _.upperFirst(stepName);
 
 						return {
+							name: stepName,
 							label: _.get(i18nSteps, [ stepName, 'label' ]),
 							description: _.get(i18nSteps, [ stepName, 'description' ]),
 							render: {
@@ -2210,8 +2211,9 @@ define(function(require) {
 					self.portWizardReviewTryEnableDoneButton(acknowledgementsCount);
 
 					self.portWizardReviewBindEvents({
-						template: $template,
-						acknowledgementsCount: acknowledgementsCount
+						acknowledgementsCount: acknowledgementsCount,
+						steps: _.map(args.steps, 'name'),
+						template: $template
 					});
 
 					return $template;
@@ -2305,14 +2307,16 @@ define(function(require) {
 		/**
 		 * Bind Review step events
 		 * @param  {Object} args
-		 * @param  {jQuery} args.template  Step template
 		 * @param  {Object} args.acknowledgementsCount  Counts for acknowledgements
 		 * @param  {Number} args.acknowledgementsCount.checked  Count of checked acknowledgements
 		 * @param  {Number} args.acknowledgementsCount.required  Count of required acknowledgements
+		 * @param  {String[]} args.steps  Step names
+		 * @param  {jQuery} args.template  Step template
 		 */
 		portWizardReviewBindEvents: function(args) {
 			var self = this,
 				acknowledgementsCount = args.acknowledgementsCount,
+				steps = args.steps,
 				$template = args.template;
 
 			$template
@@ -2321,6 +2325,19 @@ define(function(require) {
 						acknowledgementsCount.checked += this.checked ? 1 : -1;
 
 						self.portWizardReviewTryEnableDoneButton(acknowledgementsCount);
+					});
+
+			$template
+				.find('.edit-step')
+					.on('click', function(e) {
+						e.preventDefault();
+
+						var stepName = $(this).data('step_name'),
+							stepId = _.indexOf(steps, stepName);
+
+						monster.pub('common.navigationWizard.goToStep', {
+							stepId: stepId
+						});
 					});
 		},
 
