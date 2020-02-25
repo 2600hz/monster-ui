@@ -1,4 +1,7 @@
 {
+	"acceptCharges": {
+		"message": "By continuing this action, your monthly billing may change. Please contact your administrator for more details."
+	},
 	"bookkeepers": {
 		"braintree": "Braintree",
 		"default": "Default",
