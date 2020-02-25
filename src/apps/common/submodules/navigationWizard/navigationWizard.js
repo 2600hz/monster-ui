@@ -30,6 +30,11 @@ define(function(require) {
 		 *                                                              user for confirmation when
 		 *                                                              leaving the wizard, due to
 		 *                                                              cancellation or page unload
+		 * @param  {Object[]} [args.buttonProps]  Initial button properties
+		 * @param  {String} [args.buttonProps[].button]  Button name
+		 * @param  {Boolean} [args.buttonProps[].enabled]  Whether to enable or disable the button
+		 * @param  {Boolean} [args.buttonProps[].display]  Whether to display or hide the button
+		 * @param  {jQuery|String|Element} [args.buttonProps[].content]  Button new content
 		 * @param  {(Function|String)} args.cancel  Reference or name of the function to be invoked
 		 *                                          when the cancel wizard button is clicked. If
 		 *                                          the name is provided, the function must be
@@ -124,7 +129,8 @@ define(function(require) {
 					{},
 					navigationWizardFlagsDefaults,
 					_.pick(args, 'askForConfirmationBeforeExit', 'currentStep', 'validateOnStepChange')
-				);
+				),
+				buttonProps = _.get(args, 'buttonProps', []);
 
 			if (!container) {
 				throw new Error('A container must be provided.');
@@ -155,6 +161,8 @@ define(function(require) {
 			container
 				.empty()
 				.append(layout);
+
+			self.navigationWizardSetButtonProperties(buttonProps);
 
 			self.navigationWizardGenerateTemplate();
 		},
