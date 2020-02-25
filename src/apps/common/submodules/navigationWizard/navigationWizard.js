@@ -39,6 +39,8 @@ define(function(require) {
 		 * @param  {String} [args.cssClass]  CSS class to be assigned to the wizard control
 		 * @param  {Number} [args.currentStep]  Current wizard step to be displayed after render
 		 * @param  {Object} [args.data]  Initial data
+		 * @param  {(Function|String)} [args.delete]  Reference or name of the function to delete the
+		 *                                            document that is being edited in the wizard.
 		 * @param  {(Function|String)} args.done  Reference or name of the function to be invoked
 		 *                                        when completing the wizard. If the name is
 		 *                                        provided, the function must be defined as a
@@ -74,12 +76,13 @@ define(function(require) {
 				container = args.container,
 				stepsCompleted = _.get(args, 'stepsCompleted', []),
 				templateDataDefaults = {
-					doneButton: '',
-					saveEnabled: _.get(args, 'saveEnabled', false)
+					saveEnabled: _.get(args, 'saveEnabled', false),
+					deleteEnabled: _.has(args, 'delete')
 				},
 				templateDataArgs = _.pick(args, [
 					'controlId',
 					'cssClass',
+					'deleteButton',
 					'doneButton',
 					'title',
 					'steps'
@@ -95,6 +98,7 @@ define(function(require) {
 					back: '.back',
 					cancel: '#cancel',
 					clear: '#clear',
+					'delete': '#navigation_wizard_delete',
 					done: '#done',
 					next: '#next',
 					save: '#navigation_wizard_save'
@@ -169,6 +173,7 @@ define(function(require) {
 				stepId: navigationWizardFlags.currentStep
 			});
 
+			// Ask for confirmation before window exit
 			if (navigationWizardFlags.askForConfirmationBeforeExit) {
 				$(window).on('beforeunload.navigationWizard.unbindBeforeLogout', function(e) {
 					if (!_.isEmpty($('#navigation_wizard_wrapper'))) {
@@ -180,7 +185,7 @@ define(function(require) {
 				});
 			}
 
-			//Clicking the next button
+			//Clicking on the action buttons
 			$template
 				.find('#next')
 					.on('click', function(event) {
@@ -192,7 +197,6 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the done/complete button
 			$template
 				.find('#done')
 					.on('click', function(event) {
@@ -213,7 +217,6 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the back button
 			$template
 				.find('.back')
 					.on('click', function(event) {
@@ -225,7 +228,6 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the cancel button
 			$template
 				.find('#cancel')
 					.on('click', function(event) {
@@ -263,7 +265,6 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the clear link
 			$template
 				.find('#clear')
 					.on('click', function(event) {
@@ -286,6 +287,22 @@ define(function(require) {
 						});
 						self.navigationWizardGenerateTemplate();
 					});
+
+			$template
+					.find('#navigation_wizard_delete')
+						.on('click', function(event) {
+							event.preventDefault();
+
+							var deleteFunctionRef = wizardArgs.delete,
+								deleteFunction = _.isFunction(deleteFunctionRef)
+									? deleteFunctionRef
+									: thisArg[deleteFunctionRef],
+								deleteCallback = function(callbackArgs) {
+									return callbackArgs.exit && self.navigationWizardUnbindEvents();
+								};
+
+							_.bind(deleteFunction, thisArg)(wizardArgs, deleteCallback);
+						});
 
 			//Clicking on the menu item
 			$template
