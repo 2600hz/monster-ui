@@ -26,6 +26,7 @@ Here is a list of some common data properties. However, this object may contain 
 
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
+`acceptCharges` | Whether the UI bypasses the charges confirmation dialog for Kazoo requests triggering a service plan charge (this prop is overridden by `monster.config.whitelabel.acceptCharges.autoAccept` when set to `true`). | `Boolean` | `false` | `false`
 `accountId` | Kazoo account ID. | `String` | | `false`
 `data` | Payload to be sent in as request body. | `Object` | | `false`
 `filters` | A map of filters to append to the API URL, where the key is the URL parameter name and the value is the parameter's value. | `Object` | | `false`
