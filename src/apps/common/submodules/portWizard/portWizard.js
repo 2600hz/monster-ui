@@ -392,21 +392,28 @@ define(function(require) {
 
 					waterfallCallback(null, $container, portRequestData);
 				},
-				function formatPhoneNumbers($container, portRequestData, waterfallCallback) {
-					// Format numbers and load carrier and requirements data, if the port request
-					// has data that goes beyond the Carrier Selection step
+				function formatPhoneNumbersAndValidateType($container, portRequestData, waterfallCallback) {
+					// Format numbers, and validate numbers type
 					var numbers = _
 							.chain(portRequestData)
 							.get('numbers', {})
 							.keys()
 							.value(),
-						formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber);
+						formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber),
+						numbersTypeValidationResult = _.isEmpty(numbers)
+							? null
+							: self.portWizardValidateNumbersType({
+								formattedNumbers: formattedPhoneNumbers,
+								expectedNumbersType: portRequestData.ui_flags.type
+							});
 
-					waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers);
+					waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult);
 				},
-				function getCarrierDataAndRequirements($container, portRequestData, formattedPhoneNumbers, waterfallCallback) {
-					if (!(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
-						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, null);
+				function getCarrierDataAndRequirements($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, waterfallCallback) {
+					// Load carrier and requirements data, if the port request has data that
+					// goes beyond the Carrier Selection step, and the numbers type is valid
+					if (numbersTypeValidationResult !== 'none' || !(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
+						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, null);
 					}
 
 					self.portWizardLoadNumbersCarrierDataAndRequirements({
@@ -417,11 +424,11 @@ define(function(require) {
 								return waterfallCallback(err);
 							}
 
-							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersCarrierData);
+							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData);
 						}
 					});
 				},
-				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersCarrierData, waterfallCallback) {
+				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, waterfallCallback) {
 					// Format port request data, to be loaded in the wizard
 					if (!portRequestData) {
 						return waterfallCallback(null, $container, {
@@ -435,15 +442,20 @@ define(function(require) {
 
 					var wizardPortRequestData = self.portWizardFormatPortRequestData({
 						formattedNumbers: formattedPhoneNumbers,
+						numbersTypeValidationResult: numbersTypeValidationResult,
+						carrierWarningType: _.get(numbersCarrierData, 'carrierWarningType'),
 						data: portRequestData
 					});
 
 					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData);
 				},
 				function getPreliminarWizardInitialStep($container, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
-					// Get wizard step to display
+					// Get preliminar wizard step to display
 					var hasStepData = _.partial(_.has, wizardPortRequestData),
-						wizardStepId = _.findLastIndex(stepNames, hasStepData);
+						nameAndNumbersStepId = _.indexOf(stepNames, 'nameAndNumbers'),
+						wizardStepId = wizardPortRequestData.nameAndNumbers.numbersToPort.typeValidationResult === 'none'
+							? _.findLastIndex(stepNames, hasStepData)
+							: nameAndNumbersStepId;
 
 					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, wizardStepId);
 				},
@@ -452,15 +464,14 @@ define(function(require) {
 						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 					}
 
-					var areNumbersValid = numbersCarrierData.carrierWarningType === 'none',
+					// Check carrier data, and modify wizard step if needed
+					var areNumbersValid = wizardPortRequestData.nameAndNumbers.numbersToPort.areValid,
 						portRequestHasWinningCarrier = _.has(wizardPortRequestData, 'carrierSelection.winningCarrier'),
 						isWinningCarrierValid = areNumbersValid
 							&& portRequestHasWinningCarrier
 							&& _.includes(numbersCarrierData.winningCarriers, wizardPortRequestData.carrierSelection.winningCarrier),
 						carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection'),
 						newWizardStepId = isWinningCarrierValid ? wizardStepId : carrierSelectionStepId;
-
-					wizardPortRequestData.nameAndNumbers.numbersToPort.areValid = areNumbersValid;
 
 					if (areNumbersValid) {
 						_.set(
@@ -629,6 +640,8 @@ define(function(require) {
 		 * Format the port request data to be loaded in the wizard
 		 * @param  {Object} args
 		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to be ported
+		 * @param  {('none'|'multipleTypes'|'typeMismatch')} args.numbersTypeValidationResult  Numbers type validation result
+		 * @param  {String} args.carrierWarningType  Warning type for number carriers
 		 * @param  {Object} args.data  Port request data
 		 */
 		portWizardFormatPortRequestData: function(args) {
@@ -638,6 +651,8 @@ define(function(require) {
 				allRequiredDocuments = portWizardAppFlags.requirements,
 				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
+				numbersTypeValidationResult = args.numbersTypeValidationResult,
+				carrierWarningType = args.carrierWarningType,
 				portRequestData = args.data,
 				billData = portRequestData.bill,
 				billAttachmentData = _.get(portRequestData.uploads, billAttachmentName),
@@ -669,7 +684,8 @@ define(function(require) {
 							type: portRequestData.ui_flags.type,
 							numbers: _.join(numbers, ', '),
 							formattedNumbers: formattedPhoneNumbers,
-							areValid: false	// Carrier data has not been validated yet
+							typeValidationResult: numbersTypeValidationResult,
+							areValid: numbersTypeValidationResult === 'none' && carrierWarningType === 'none'
 						}
 					},
 					carrierSelection: _.has(portRequestData, 'winning_carrier')
@@ -765,7 +781,34 @@ define(function(require) {
 							},
 							submodule: 'portWizard'
 						})),
-						$form = $template.find('form');
+						$form = $template.find('form'),
+						validateForm = monster.ui.validate($form, {
+							rules: {
+								portRequestName: {
+									required: true
+								},
+								'numbersToPort.numbers': {
+									required: true,
+									phoneNumber: true,
+									normalizer: function(value) {
+										return _
+											.chain(value)
+											.split(',')
+											.map(_.trim)
+											.reject(_.isEmpty)
+											.value();
+									}
+								}
+							},
+							messages: {
+								'numbersToPort.numbers': {
+									phoneNumber: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers.invalid
+								}
+							},
+							onfocusout: self.portWizardValidateFormField,
+							autoScrollOnInvalid: true
+						}),
+						numbersTypeValidationResult = _.get(nameAndNumbersData, 'numbersToPort.typeValidationResult', 'none');
 
 					monster.pub('common.navigationWizard.setButtonProps', [
 						{
@@ -778,35 +821,13 @@ define(function(require) {
 						}
 					]);
 
-					monster.ui.validate($form, {
-						rules: {
-							portRequestName: {
-								required: true
-							},
-							'numbersToPort.numbers': {
-								required: true,
-								phoneNumber: true,
-								normalizer: function(value) {
-									return _
-										.chain(value)
-										.split(',')
-										.map(_.trim)
-										.reject(_.isEmpty)
-										.value();
-								}
-							}
-						},
-						messages: {
-							'numbersToPort.numbers': {
-								phoneNumber: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers
-							}
-						},
-						onfocusout: self.portWizardValidateFormField,
-						autoScrollOnInvalid: true
-					});
-
 					self.portWizardNameAndNumbersBindEvents({
 						template: $template
+					});
+
+					self.portWizardNameAndNumbersShowNumberTypeValidationError({
+						validator: validateForm,
+						validationResult: numbersTypeValidationResult
 					});
 
 					return $template;
