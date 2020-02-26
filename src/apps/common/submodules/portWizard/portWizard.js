@@ -1166,16 +1166,14 @@ define(function(require) {
 					});
 				}
 			], function(err, results) {
-				var carrierWarningType = results.carrierWarningType,
-					$template = results.template,
-					errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
-						? 'phonebookUnavailable'
-						: 'lookupNumbersError';
+				var errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
+					? 'phonebookUnavailable'
+					: 'lookupNumbersError';
 
 				if (_.isNil(err)) {
 					return callback({
-						status: carrierWarningType === 'none' ? null : 'invalid',
-						template: $template,
+						status: results.carrierWarningType === 'none' ? null : 'invalid',
+						template: results.template,
 						callback: self.portWizardScrollToTop
 					});
 				}
