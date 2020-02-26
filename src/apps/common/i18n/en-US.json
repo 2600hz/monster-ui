@@ -31,7 +31,11 @@
 							"numbers": "<strong>All numbers</strong> must match the selected number type, and be formatted in the same manner."
 						},
 						"errors": {
-							"numbers": "One or more numbers are invalid"
+							"numbers": {
+								"invalid": "One or more numbers are invalid",
+								"multipleTypes": "The listed numbers should include only Standard DID or Toll-free types exclusively",
+								"typeMismatch": "The listed numbers do not belong to the selected number type. Please select the right number type above."
+							}
 						},
 						"messages": {
 							"file": {

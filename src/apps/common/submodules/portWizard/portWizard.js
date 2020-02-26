@@ -828,22 +828,39 @@ define(function(require) {
 		portWizardNameAndNumbersUtil: function($template, args) {
 			var self = this,
 				$form = $template.find('form'),
+				validateForm = monster.ui.validate($form),
 				isValid = monster.ui.valid($form),
-				nameAndNumbersData;
+				nameAndNumbersData,
+				numbersTypeValidationResult;
+
+			if (!isValid) {
+				return {
+					valid: false
+				};
+			}
+
+			nameAndNumbersData = monster.ui.getFormData($form.get(0));
+
+			// Extract and format numbers
+			nameAndNumbersData.numbersToPort.formattedNumbers = _
+				.chain(nameAndNumbersData.numbersToPort.numbers)
+				.split(',')
+				.map(_.trim)
+				.reject(_.isEmpty)
+				.map(monster.util.getFormatPhoneNumber)
+				.uniqBy('e164Number')
+				.value();
+
+			// Validate numbers type
+			numbersTypeValidationResult = self.portWizardValidateNumbersType({
+				formattedNumbers: nameAndNumbersData.numbersToPort.formattedNumbers,
+				expectedNumbersType: nameAndNumbersData.numbersToPort.type
+			});
+
+			isValid = numbersTypeValidationResult === 'none';
 
 			if (isValid) {
-				nameAndNumbersData = monster.ui.getFormData($form.get(0));
-
-				// Extract and format numbers
-				nameAndNumbersData.numbersToPort.formattedNumbers = _
-					.chain(nameAndNumbersData.numbersToPort.numbers)
-					.split(',')
-					.map(_.trim)
-					.reject(_.isEmpty)
-					.map(monster.util.getFormatPhoneNumber)
-					.uniqBy('e164Number')
-					.value();
-
+				// Extract numbers in standard format
 				nameAndNumbersData.numbersToPort.numbers = _
 					.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
 					.map('e164Number')
@@ -853,6 +870,11 @@ define(function(require) {
 				// Clean nameAndNumbers data, to avoid keeping old data inadvertently when merging
 				// the new data
 				delete args.data.nameAndNumbers;
+			} else {
+				self.portWizardNameAndNumbersShowNumberTypeValidationError({
+					validator: validateForm,
+					validationResult: numbersTypeValidationResult
+				});
 			}
 
 			return {
@@ -1021,6 +1043,29 @@ define(function(require) {
 					name: '!' + messageTemplate,
 					data: args
 				})
+			});
+		},
+
+		/**
+		 * Show numbers type validation errors, if any
+		 * @param  {Object} args
+		 * @param  {Object} args.validator  Form validator object
+		 * @param  {('none'|'multipleTypes'|'typeMismatch')} args.validationResult  Validation result
+		 */
+		portWizardNameAndNumbersShowNumberTypeValidationError: function(args) {
+			var self = this,
+				validator = args.validator,
+				validationResult = args.validationResult;
+
+			if (_.isNil(validationResult) || validationResult === 'none') {
+				return;
+			}
+
+			validator.showErrors({
+				'numbersToPort.numbers': monster.util.tryI18n(
+					self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers,
+					validationResult
+				)
 			});
 		},
 
@@ -3256,6 +3301,31 @@ define(function(require) {
 		 */
 		portWizardValidateFormField: function(element) {
 			$(element).valid();
+		},
+
+		/**
+		 * Validates the number type for a collection of formatted numbers
+		 * @param  {Object} args
+		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to query
+		 * @param  {('local'|'tollFree')} args.expectedNumbersType  Expected type of numbers
+		 * @returns  {('none'|'multipleTypes'|'typeMismatch')}  Validation result
+		 */
+		portWizardValidateNumbersType: function(args) {
+			var self = this,
+				formattedNumberTypes = _
+					.chain(args.formattedNumbers)
+					.map(function(formattedNumber) {
+						return formattedNumber.numberType === 'TOLL_FREE' ? 'tollFree' : 'local';
+					})
+					.uniq()
+					.value(),
+				validationResult = _.size(formattedNumberTypes) > 1
+					? 'multipleTypes'
+					: (_.isEmpty(formattedNumberTypes) || _.head(formattedNumberTypes) === args.expectedNumbersType)
+						? 'none'
+						: 'typeMismatch';
+
+			return validationResult;
 		},
 
 		/*****************************************************************************************
