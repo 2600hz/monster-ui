@@ -75,8 +75,12 @@ define(function(require) {
 			}
 		},
 
-		render: function() {
+		/**
+		 * @param  {Function} [pArgs.callback]
+		 */
+		render: function(pArgs) {
 			var self = this,
+				args = pArgs || {},
 				template;
 
 			if (!self.isRendered()) {
@@ -111,9 +115,12 @@ define(function(require) {
 							destroyOnClose: false
 						});
 					}
+					args.callback && args.callback();
 				});
 			} else {
-				self.show();
+				self.show({
+					callback: args.callback
+				});
 			}
 		},
 
@@ -296,11 +303,17 @@ define(function(require) {
 			});
 		},
 
-		show: function() {
-			var self = this;
+		/**
+		 * @param  {Function} [pArgs.callback]
+		 */
+		show: function(pArgs) {
+			var self = this,
+				args = pArgs || {};
 
 			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
-				self.appFlags.modal.open();
+				self.appFlags.modal.open({
+					callback: args.callback
+				});
 			}
 		},
 
@@ -416,6 +429,7 @@ define(function(require) {
 		/**
 		 * Get app list
 		 * @param  {Object} args
+		 * @param  {String} [args.accountId]
 		 * @param  {('all'|'account'|'user')} [args.scope='all']  App list scope
 		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of using the cached one
 		 * @param  {Function} [args.success]  Callback function to send the retrieved app list
@@ -437,6 +451,9 @@ define(function(require) {
 					}
 
 					self.requestAppList({
+						data: {
+							accountId: _.get(args, 'accountId')
+						},
 						success: function(appList) {
 							waterfallCallback(null, appList);
 						},
@@ -559,6 +576,7 @@ define(function(require) {
 		/**
 		 * Get app list from API
 		 * @param  {Object}   args
+		 * @param  {String}   [args.data.accountId]
 		 * @param  {Function} [args.success]  Success callback
 		 * @param  {Function} [args.error]    Error callback
 		 */
@@ -567,9 +585,9 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'appsStore.list',
-				data: {
+				data: _.merge({
 					accountId: self.accountId
-				},
+				}, args.data),
 				success: function(data) {
 					_.has(args, 'success') && args.success(data.data);
 				},
