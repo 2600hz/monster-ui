@@ -624,10 +624,6 @@ define(function(require) {
 	var client;
 
 	return {
-		getInstance: function() {
-			return client;
-		},
-
 		getInfo: function getInfo() {
 			var uri = _.get(monster, 'config.api.socket');
 
