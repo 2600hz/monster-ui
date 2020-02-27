@@ -790,6 +790,19 @@ define(function(require) {
 	}
 
 	/**
+	 * Returns whether the build was optimized for a production environment.
+	 * @return {Boolean} Whether the build was optimized for a production environment.
+	 */
+	function isEnvironmentProd() {
+		return _
+			.chain(monster)
+			.get('config.developerFlags.build.type')
+			.isEqual('production')
+			.value();
+	}
+	monster.isEnvironmentProd = isEnvironmentProd;
+
+	/**
 	 * Set the language on application startup.
 	 *
 	 * If the `monster-auth` cookie exists, the language defined in it will take precedence.
