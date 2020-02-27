@@ -5,6 +5,7 @@ define(function(require) {
 	return {
 		subscribe: {
 			'core.socket.start': 'socketStart',
+			'core.socket.showDisconnectToast': 'socketShowDisconnectToast',
 			'socket.connected': 'socketShowConnectToast',
 			'socket.disconnected': 'socketShowDisconnectToast'
 		},
@@ -33,7 +34,10 @@ define(function(require) {
 		socketShowDisconnectToast: function socketShowDisconnectToast() {
 			var self = this;
 
-			if (!_.get(monster.apps, [monster.apps.getActiveApp(), 'requiresWebSockets'], false)) {
+			if (
+				!_.get(monster.apps, [monster.apps.getActiveApp(), 'requiresWebSockets'], false)
+				|| monster.socket.getInfo().isConnected
+			) {
 				return;
 			}
 
