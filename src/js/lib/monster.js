@@ -34,6 +34,8 @@ define(function(require) {
 		'developerFlags.showJsErrors': [_.isBoolean, false],
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
 		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
+		'whitelabel.acceptCharges.autoAccept': [_.isBoolean, false],
+		'whitelabel.acceptCharges.showInvoiceSummary': [_.isBoolean, true],
 		'whitelabel.allowAccessList': [_.isBoolean, false],
 		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
 		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
