@@ -5,15 +5,12 @@ define(function(require) {
 	return {
 		subscribe: {
 			'core.socket.start': 'socketStart',
-			'core.socket.connected': 'socketShowConnectToast',
-			'core.socket.disconnected': 'socketShowDisconnectToast'
+			'socket.connected': 'socketShowConnectToast',
+			'socket.disconnected': 'socketShowDisconnectToast'
 		},
 
 		socketStart: function socketStart() {
-			monster.socket.connect({
-				onConnect: monster.pub.bind(undefined, 'core.socket.connected'),
-				onDisconnect: monster.pub.bind(undefined, 'core.socket.disconnected')
-			});
+			monster.socket.connect();
 		},
 
 		socketShowConnectToast: function socketShowConnectToast() {
