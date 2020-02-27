@@ -3277,14 +3277,21 @@ define(function(require) {
 									});
 								}
 							},
-							open: function() {
-								if (!privateIsVisible) {
-									privateIsVisible = true;
-
-									$(modalSelector).fadeIn(250, function() {
-										$('#monster_content').hide();
-									});
+							/**
+							 * @param  {Function} [pArgs.callback]
+							 */
+							open: function(pArgs) {
+								if (privateIsVisible) {
+									return;
 								}
+								var args = pArgs || {};
+
+								privateIsVisible = true;
+
+								$(modalSelector).fadeIn(250, function() {
+									$('#monster_content').hide();
+									args.callback && args.callback();
+								});
 							}
 						};
 
