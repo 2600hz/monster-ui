@@ -154,28 +154,25 @@ define(function(require) {
 
 	function Logger(id) {
 		this.id = id;
+		this.shouldPrint = !monster.isEnvironmentProd();
 	}
 	Logger.prototype = {
-		print: function print(content) {
-			var content = _.toArray(arguments);
-			return [
+		print: function print(content, method) {
+			if (!this.shouldPrint) {
+				return;
+			}
+			console[method].apply(console, [
 				[new Date().toISOString(), this.id].join(' | '),
 				content.length ? '|' : []
-			].concat(content);
+			].concat(content));
 		},
 
 		log: function log() {
-			_.flowRight(
-				_.spread(console.log),
-				_.spread(this.print.bind(this))
-			)(_.toArray(arguments));
+			this.print(_.toArray(arguments), 'log');
 		},
 
 		warn: function warn() {
-			_.flowRight(
-				_.spread(console.warn),
-				_.spread(this.print.bind(this))
-			)(_.toArray(arguments));
+			this.print(_.toArray(arguments), 'warn');
 		}
 	};
 
