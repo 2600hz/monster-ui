@@ -259,11 +259,7 @@ define(function(require) {
 				// If there wasn't any match, trigger the default app
 				if (!monster.routing.hasMatch()) {
 					if (typeof defaultApp !== 'undefined') {
-						monster.apps.load(defaultApp, function(app) {
-							monster.pub('core.alerts.refresh');
-							self.showAppName(defaultApp);
-							app.render($('#monster_content'));
-						}, {}, true);
+						monster.routing.goTo('apps/' + defaultApp);
 					} else {
 						console.warn('Current user doesn\'t have a default app');
 					}
@@ -383,9 +379,7 @@ define(function(require) {
 						app.renderDropdown(false);
 					});
 				} else {
-					monster.apps.load(appName, function(app) {
-						app.render();
-					});
+					monster.routing.goTo('apps/' + appName);
 				}
 			});
 
@@ -393,11 +387,7 @@ define(function(require) {
 				var appName = monster.apps.auth.defaultApp;
 
 				if (appName) {
-					monster.pub('myaccount.hide');
-					monster.apps.load(appName, function(app) {
-						self.showAppName(appName);
-						app.render();
-					});
+					monster.routing.goTo('apps/' + appName);
 				}
 			});
 
