@@ -620,20 +620,22 @@ define(function(require) {
 			var self = this,
 				portWizardAppFlags = self.appFlags.portWizard,
 				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
-				billAttachmentName = portWizardAppFlags.requirements.Bill,
+				allRequiredDocuments = portWizardAppFlags.requirements,
+				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
 				portRequestData = args.data,
 				billData = portRequestData.bill,
-				billAttachment = _.get(portRequestData.uploads, billAttachmentName),
+				billAttachmentData = _.get(portRequestData.uploads, billAttachmentName),
 				numbers = _.map(formattedPhoneNumbers, 'e164Number'),
 				documentDefaultMetadata = {
 					isNew: false,
 					hasChanged: false,
 					required: false
 				},
-				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsCompleteList, 'attachmentName'),
-				requiredDocumentsByKey = _.keyBy(requiredDocumentsCompleteList, 'key'),
+				allRequiredDocumentsByAttachmentName = _.invert(allRequiredDocuments),
+				requiredDocumentsList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsList, 'attachmentName'),
+				requiredDocumentsByKey = _.keyBy(requiredDocumentsList, 'key'),
 				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
 				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
 				targetDate = _.has(portRequestData, 'transfer_date')
@@ -660,14 +662,14 @@ define(function(require) {
 							winningCarrier: portRequestData.winning_carrier
 						})
 						: null,
-					ownershipConfirmation: (billData || billAttachment)
+					ownershipConfirmation: (billData || billAttachmentData)
 						? omitEmpty({
-							latestBill: billAttachment
+							latestBill: billAttachmentData
 								? _.merge(
 									{
 										name: billAttachmentName,
 										attachmentName: billAttachmentName
-									}, documentDefaultMetadata, billAttachment, billDocumentMetadata)
+									}, documentDefaultMetadata, billAttachmentData, billDocumentMetadata)
 								: null,
 							accountOwnership: omitEmpty({
 								carrier: billData.carrier,
@@ -706,7 +708,7 @@ define(function(require) {
 								}, documentDefaultMetadata, attachmentData, documentMetadata);
 							})
 							.mapKeys(function(document, attachmentName) {
-								return _.get(document, 'key', attachmentName);
+								return _.get(allRequiredDocumentsByAttachmentName, attachmentName, attachmentName);
 							})
 							.merge(_.omit(requiredDocumentsByKey, 'Bill'))
 							.value()
@@ -1471,16 +1473,17 @@ define(function(require) {
 			var self = this,
 				losingCarrier = args.data.carrierSelection.losingCarrier,
 				ownershipConfirmationData = _.get(args.data, 'ownershipConfirmation'),
-				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
-				requireBill = _.some(requiredDocumentsCompleteList, { key: 'Bill' }),
-				$template = !requireBill || _.has(args.data, 'ownershipConfirmation.latestBill')
+				requiredDocumentsList = self.portWizardGet('requiredDocumentsList'),
+				billMetadata = _.find(requiredDocumentsList, { key: 'Bill' }),
+				$template = _.isUndefined(billMetadata) || _.has(args.data, 'ownershipConfirmation.latestBill')
 					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
+						billMetadata: billMetadata,
 						losingCarrier: losingCarrier,
-						requireBill: requireBill,
 						data: ownershipConfirmationData
 					})
 					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
 						bill: _.get(ownershipConfirmationData, 'latestBill'),
+						billMetadata: billMetadata,
 						losingCarrier: losingCarrier
 					});
 
@@ -1524,11 +1527,13 @@ define(function(require) {
 		 * Get the template for Ownership Confirmation step (bill upload view)
 		 * @param  {Object} args
 		 * @param  {Object} [args.bill]  Bill document data
+		 * @param  {Object} args.billMetadata  Bill metadata
 		 * @param  {String} args.losingCarrier  Losing carrier name
 		 */
 		portWizardOwnershipConfirmationBillUploadGetTemplate: function(args) {
 			var self = this,
 				bill = args.bill,
+				billMetadata = args.billMetadata,
 				losingCarrier = args.losingCarrier,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-billUpload',
@@ -1539,8 +1544,9 @@ define(function(require) {
 				}));
 
 			self.portWizardOwnershipConfirmationBillUploadBindEvents({
-				template: $template,
-				bill: bill
+				bill: bill,
+				billMetadata: billMetadata,
+				template: $template
 			});
 
 			return $template;
@@ -1550,15 +1556,16 @@ define(function(require) {
 		 * Bind Ownership Confirmation step events (bill upload view)
 		 * @param  {Object} args
 		 * @param  {Object} [args.bill]  Bill data
+		 * @param  {Object} args.billMetadata  Bill metadata
 		 * @param  {jQuery} args.template  Step template
 		 */
 		portWizardOwnershipConfirmationBillUploadBindEvents: function(args) {
 			var self = this,
 				bill = args.bill,
 				$template = args.template,
+				billDocumentMetadata = args.billMetadata,
 				portWizardAppFlags = self.appFlags.portWizard,
-				billDocumentMetadata = self.portWizardGetRequiredDocumentMetadata('Bill'),
-				billDocumentData = _.merge({}, billDocumentMetadata, bill),
+				billDocumentData = _.merge({}, bill, billDocumentMetadata),
 				$billUploadInput = $template.find('#bill_upload_recent_bill'),
 				$billAckCheckbox = $template.find('#bill_upload_acknowledge_bill_date'),
 				pdfFilesRestrictions = portWizardAppFlags.fileRestrictions.pdf,
@@ -1600,15 +1607,19 @@ define(function(require) {
 		/**
 		 * Get the template for Ownership Confirmation step (account information view)
 		 * @param  {Object} args
-		 * @param  {String} args.losingCarrier  Losing carrier name
-		 * @param  {Boolean} args.requireBill  Whether or not to require the latest bill
+		 * @param  {String} [args.losingCarrier]  Losing carrier name
+		 * @param  {Boolean} [args.billMetadata]  Bill metadata, if bill is required
 		 * @param  {Object} args.data  Step data
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
 				losingCarrier = args.losingCarrier,
 				data = args.data,
-				requireBill = args.requireBill,
+				billMetadata = args.billMetadata,
+				requireBill = !_.isUndefined(billMetadata),
+				// Update required flag and bill metadata, in case the requirements changed
+				// since the last time we were in the Ownership Confirmation step
+				billData = _.merge({}, data.latestBill, { required: requireBill }, billMetadata),
 				defaultCountry = monster.config.whitelabel.countryCode,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
@@ -1713,6 +1724,8 @@ define(function(require) {
 			if (!requireBill) {
 				return $template;
 			}
+
+			self.portWizardSet('billData', billData);
 
 			self.portWizardOwnershipConfirmationAccountInfoRenderBill({
 				template: $template,
@@ -2959,20 +2972,6 @@ define(function(require) {
 		 **************************************************/
 
 		/**
-		 * Gets metadata for a required document
-		 * @param  {String} documentKey  Document key
-		 */
-		portWizardGetRequiredDocumentMetadata: function(documentKey) {
-			var self = this;
-
-			return {
-				key: documentKey,
-				attachmentName: _.get(self.appFlags.portWizard.requirements, documentKey),
-				required: true
-			};
-		},
-
-		/**
 		  * Initialize a file input field
 		  * @param  {Object} args
 		  * @param  {jQuery} args.fileInput  File input element
@@ -3125,7 +3124,13 @@ define(function(require) {
 						requiredDocuments = _
 							.chain(requirementsByCountries)
 							.get([numbersCarrierData.countryCode, numbersType])
-							.map(_.bind(self.portWizardGetRequiredDocumentMetadata, self))
+							.map(function(documentKey) {
+								return {
+									key: documentKey,
+									attachmentName: _.get(self.appFlags.portWizard.requirements, documentKey),
+									required: true
+								};
+							})
 							.value();
 
 					self.portWizardSet('requiredDocumentsList', requiredDocuments);
