@@ -1244,7 +1244,7 @@ define(function(require) {
 						.chain(numbersByLosingCarrier)
 						.map(function(carrierNumberGroup) {
 							return {
-								carrier: carrierNumberGroup.carrier,
+								carrier: self.portWizardCleanCarrierName(carrierNumberGroup.carrier),
 								numbers: _.map(carrierNumberGroup.numbers, 'e164Number')
 							};
 						})
@@ -1349,7 +1349,7 @@ define(function(require) {
 					requiredDocuments: numbersCarrierData.requiredDocuments,
 					data: {
 						designateWinningCarrier: {
-							losingCarrier: carrierNumberGroup.carrier,
+							losingCarrier: self.portWizardCleanCarrierName(carrierNumberGroup.carrier),
 							winningCarrier: _.get(
 								carrierSelectionData,
 								'winningCarrier',
@@ -3150,6 +3150,20 @@ define(function(require) {
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
+
+		/**
+		 * Cleans the carrier name by removing unfriendly suffix data
+		 * @param  {String} carrierName  Carrier name to clean
+		 * @returns  {String}  Clean carrier name
+		 */
+		portWizardCleanCarrierName: function(carrierName) {
+			var lastColonIndex = _.lastIndexOf(carrierName, ':'),
+				cleanCarrierName = lastColonIndex > 0
+					? carrierName.substring(0, lastColonIndex)
+					: carrierName;
+
+			return cleanCarrierName;
+		},
 
 		/**
 		  * Initialize a file input field
