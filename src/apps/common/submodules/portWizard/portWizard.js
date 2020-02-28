@@ -1333,23 +1333,30 @@ define(function(require) {
 				carrierNumberGroup = _.head(numbersCarrierData.numbersByLosingCarrier),
 				formattedNumbers = carrierNumberGroup.numbers,
 				numbers = _.map(formattedNumbers, 'e164Number'),
+				winningCarrierList = _
+					.map(numbersCarrierData.winningCarriers, function(carrierName) {
+						return {
+							value: carrierName,
+							label: _.startCase(carrierName)
+						};
+					}),
 				dataTemplate = {
 					numbersToPort: {
 						numbers: numbers,
 						count: _.size(numbers)
 					},
-					winningCarrierList: _
-						.map(numbersCarrierData.winningCarriers, function(carrierName) {
-							return {
-								value: carrierName,
-								label: _.startCase(carrierName)
-							};
-						}),
+					winningCarrierList: winningCarrierList,
 					requiredDocuments: numbersCarrierData.requiredDocuments,
 					data: {
 						designateWinningCarrier: {
 							losingCarrier: carrierNumberGroup.carrier,
-							winningCarrier: _.get(carrierSelectionData, 'winningCarrier', '')
+							winningCarrier: _.get(
+								carrierSelectionData,
+								'winningCarrier',
+								_.size(winningCarrierList) === 1
+									? _.get(winningCarrierList, [ 0, 'value' ])
+									: ''
+							)
 						}
 					}
 				},
