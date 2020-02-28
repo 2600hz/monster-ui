@@ -161,7 +161,5 @@ define(function(require) {
 		}
 	};
 
-	routing.init();
-
 	return routing;
 });
