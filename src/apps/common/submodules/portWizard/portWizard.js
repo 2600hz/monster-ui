@@ -1400,10 +1400,15 @@ define(function(require) {
 				numbersShown = _.map(formattedNumbers, 'e164Number'),
 				$elements = $template.find('.number-list .number-item'),
 				$elementsShown = $elements,
-				removeSpaces = _.partialRight(_.replace, /\s/g, ''),
-				filterNumberElements = function(filterText) {
+				removeSpacesAndHyphens = _
+					.chain(_.replace)
+					.partialRight(/[\s-]/g, '')
+					.unary()
+					.value(),
+				filterNumberElements = function(textValue) {
 					var $elementsToShow = $(),
 						$elementsToHide = $elementsShown,
+						filterText = removeSpacesAndHyphens(textValue),
 						numbersToShow = _
 							.chain(formattedNumbers)
 							.filter(function(formattedNumberData) {
@@ -1415,7 +1420,7 @@ define(function(require) {
 										'internationalFormat',
 										'userFormat'
 									])
-									.map(removeSpaces)
+									.map(removeSpacesAndHyphens)
 									.some(function(formattedNumber) {
 										return _.includes(formattedNumber, filterText);
 									})
@@ -1464,9 +1469,7 @@ define(function(require) {
 			$template
 				.find('#numbers_to_port_search_numbers')
 					.on('keyup', _.debounce(function() {
-						var value = removeSpaces($(this).val());
-
-						filterNumberElements(value);
+						filterNumberElements($(this).val());
 					}, 350));
 		},
 
