@@ -369,6 +369,7 @@
 			qubicleRecipients: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
+				'updateEnable': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/enable' },
 				'updateDisable': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/disable' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
