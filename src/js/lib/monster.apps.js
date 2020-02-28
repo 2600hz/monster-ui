@@ -600,10 +600,13 @@ define(function() {
 			});
 		},
 
-		// pChangeHash will change the URL of the browser if set to true. For some apps (like auth, apploader, core, we don't want that to happen, so that's why we need this)
-		load: function(name, callback, options, pChangeHash) {
+		/**
+		 * @param  {String}   name
+		 * @param  {Function} [callback]
+		 * @param  {Object}   [options]
+		 */
+		load: function(name, callback, options) {
 			var self = this,
-				changeHash = pChangeHash === true ? true : false,
 				afterLoad = function(app) {
 					monster.apps.lastLoadedApp = app.name;
 
@@ -611,10 +614,6 @@ define(function() {
 
 					callback && callback(app);
 				};
-
-			if (changeHash) {
-				monster.routing.updateHash('apps/' + name);
-			}
 
 			if (!(name in monster.apps)) {
 				self._loadApp(name, function(app) {

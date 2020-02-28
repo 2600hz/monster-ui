@@ -46,7 +46,7 @@ define(function(require) {
 				monster.pub('core.showAppName', appName);
 				$('#monster_content').empty();
 
-				loadedApp.render();
+				loadedApp.render($('#monster_content'));
 			});
 		});
 	};
