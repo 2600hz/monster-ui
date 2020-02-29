@@ -110,11 +110,13 @@ define(function() {
 			app.enforceWebSocketsConnection = function(args) {
 				app.requiresWebSockets = true;
 
+				monster.pub('core.socket.showDisconnectToast');
+
 				if (
 					!monster.socket.getInfo().isConnected
 					&& _.isFunction(args.error)
 				) {
-					args.error && args.error();
+					args.error();
 				} else {
 					args.callback();
 				}

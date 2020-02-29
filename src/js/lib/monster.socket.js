@@ -154,28 +154,25 @@ define(function(require) {
 
 	function Logger(id) {
 		this.id = id;
+		this.shouldPrint = !monster.isEnvironmentProd();
 	}
 	Logger.prototype = {
-		print: function print(content) {
-			var content = _.toArray(arguments);
-			return [
+		print: function print(content, method) {
+			if (!this.shouldPrint) {
+				return;
+			}
+			console[method].apply(console, [
 				[new Date().toISOString(), this.id].join(' | '),
 				content.length ? '|' : []
-			].concat(content);
+			].concat(content));
 		},
 
 		log: function log() {
-			_.flowRight(
-				_.spread(console.log),
-				_.spread(this.print.bind(this))
-			)(_.toArray(arguments));
+			this.print(_.toArray(arguments), 'log');
 		},
 
 		warn: function warn() {
-			_.flowRight(
-				_.spread(console.warn),
-				_.spread(this.print.bind(this))
-			)(_.toArray(arguments));
+			this.print(_.toArray(arguments), 'warn');
 		}
 	};
 
@@ -183,8 +180,6 @@ define(function(require) {
 	 * Creates a new WebSocketClient instance.
 	 * @param {Object} params
 	 * @param {string} params.uri
-	 * @param {Function} [params.onOpen]
-	 * @param {Function} [params.onClose]
 	 * @return {WebSocketClient}
 	 */
 	function WebSocketClient(params) {
@@ -193,12 +188,6 @@ define(function(require) {
 		 * @type {string}
 		 */
 		this.uri = params.uri;
-
-		/**
-		 * Holds callbacks for open and close events.
-		 * @type {Object}
-		 */
-		this.callbacks = _.merge({}, _.pick(params, 'onConnect', 'onDisconnect'));
 
 		/**
 		 * Holds the WebSocket object to manage connection to server.
@@ -261,10 +250,8 @@ define(function(require) {
 				this.ws.addEventListener('close', this.onClose.bind(this));
 				this.ws.addEventListener('message', this.onMessage.bind(this));
 
-				this.ws.addEventListener('open', this.callbacks.onConnect);
-				this.ws.addEventListener('close', this.callbacks.onDisconnect);
-
-				this.ws.addEventListener('error', this.logger.log.bind(this.logger, 'onerror'));
+				this.ws.addEventListener('open', monster.pub.bind(null, 'socket.connected'));
+				this.ws.addEventListener('close', monster.pub.bind(null, 'socket.disconnected'));
 			} catch (e) {
 				this.logger.warn(
 					'failed while attempting to ' + (this.reconnectTimeout ? 're' : '') + 'connect',
@@ -627,10 +614,6 @@ define(function(require) {
 	var client;
 
 	return {
-		getInstance: function() {
-			return client;
-		},
-
 		getInfo: function getInfo() {
 			var uri = _.get(monster, 'config.api.socket');
 
@@ -641,16 +624,11 @@ define(function(require) {
 			};
 		},
 
-		/**
-		 * @param  {Object} params
-		 * @param  {Function} [params.onConnect]
-		 * @param  {Function} [params.onDisconnect]
-		 */
-		connect: function connect(params) {
+		connect: function connect() {
 			if (_.isUndefined(client)) {
-				client = new WebSocketClient(_.merge({
+				client = new WebSocketClient({
 					uri: monster.config.api.socket
-				}, params));
+				});
 			}
 
 			client.connect();
