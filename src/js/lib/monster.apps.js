@@ -480,6 +480,13 @@ define(function() {
 			});
 		},
 
+		/**
+		 * @param  {String}   name
+		 * @param  {Function} [callback]
+		 * @param  {Object}   [options={}]
+		 * @param  {String}   [options.sourceUrl]
+		 * @param  {String}   [options.apiUrl]
+		 */
 		_loadApp: function(name, callback, options) {
 			var self = this,
 				appPath = 'apps/' + name,
@@ -608,22 +615,22 @@ define(function() {
 		 * @param  {Object}   [options]
 		 */
 		load: function(name, callback, options) {
-			var self = this,
-				afterLoad = function(app) {
-					monster.apps.lastLoadedApp = app.name;
+			var self = this;
 
-					self.changeAppShortcuts(app);
+			monster.waterfall([
+				function maybeLoadApp(waterfallCb) {
+					if (_.has(monster.apps, name)) {
+						return waterfallCb(null, monster.apps[name]);
+					}
+					self._loadApp(name, waterfallCb.bind(null, null), options);
+				}
+			], function afterAppLoad(err, app) {
+				monster.apps.lastLoadedApp = app.name;
 
-					callback && callback(app);
-				};
+				self.changeAppShortcuts(app);
 
-			if (!(name in monster.apps)) {
-				self._loadApp(name, function(app) {
-					afterLoad(app);
-				}, options);
-			} else {
-				afterLoad(monster.apps[name]);
-			}
+				callback && callback(app);
+			});
 		},
 
 		changeAppShortcuts: function(app) {
