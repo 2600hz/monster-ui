@@ -471,9 +471,11 @@ define(function(require) {
 								self.displayUserSection();
 
 								myaccount.addClass('myaccount-open');
-								setTimeout(function() { $('#monster_content').hide(); }, 300);
 
-								callback && callback();
+								myaccount.one('transitionend', function() {
+									$('#monster_content').hide();
+									callback && callback();
+								});
 							}
 						};
 
