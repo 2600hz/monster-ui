@@ -1,4 +1,5 @@
 {
+	"unableToAccessApp": "It looks like the app you tried to access is not available.",
 	"acceptCharges": {
 		"message": "By continuing this action, your monthly billing may change. Please contact your administrator for more details."
 	},

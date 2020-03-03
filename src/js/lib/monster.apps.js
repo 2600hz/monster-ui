@@ -480,6 +480,13 @@ define(function() {
 			});
 		},
 
+		/**
+		 * @param  {String}   name
+		 * @param  {Function} [callback]
+		 * @param  {Object}   [options={}]
+		 * @param  {String}   [options.sourceUrl]
+		 * @param  {String}   [options.apiUrl]
+		 */
 		_loadApp: function(name, callback, options) {
 			var self = this,
 				appPath = 'apps/' + name,
@@ -602,29 +609,28 @@ define(function() {
 			});
 		},
 
-		// pChangeHash will change the URL of the browser if set to true. For some apps (like auth, apploader, core, we don't want that to happen, so that's why we need this)
-		load: function(name, callback, options, pChangeHash) {
-			var self = this,
-				changeHash = pChangeHash === true ? true : false,
-				afterLoad = function(app) {
-					monster.apps.lastLoadedApp = app.name;
+		/**
+		 * @param  {String}   name
+		 * @param  {Function} [callback]
+		 * @param  {Object}   [options]
+		 */
+		load: function(name, callback, options) {
+			var self = this;
 
-					self.changeAppShortcuts(app);
+			monster.waterfall([
+				function maybeLoadApp(waterfallCb) {
+					if (_.has(monster.apps, name)) {
+						return waterfallCb(null, monster.apps[name]);
+					}
+					self._loadApp(name, waterfallCb.bind(null, null), options);
+				}
+			], function afterAppLoad(err, app) {
+				monster.apps.lastLoadedApp = app.name;
 
-					callback && callback(app);
-				};
+				self.changeAppShortcuts(app);
 
-			if (changeHash) {
-				monster.routing.updateHash('apps/' + name);
-			}
-
-			if (!(name in monster.apps)) {
-				self._loadApp(name, function(app) {
-					afterLoad(app);
-				}, options);
-			} else {
-				afterLoad(monster.apps[name]);
-			}
+				callback && callback(app);
+			});
 		},
 
 		changeAppShortcuts: function(app) {

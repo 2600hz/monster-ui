@@ -232,49 +232,62 @@ define(function(require) {
 		},
 
 		initializeBaseApps: function() {
-			var self = this,
-				baseApps = ['apploader', 'appstore', 'myaccount', 'common'];
+			var self = this;
 
-			if (monster.config.whitelabel.hasOwnProperty('additionalLoggedInApps')) {
-				baseApps = baseApps.concat(monster.config.whitelabel.additionalLoggedInApps);
+			if (_.has(self.appFlags, 'baseApps')) {
+				return;
 			}
 
-			self.appFlags.baseApps = baseApps;
+			self.appFlags.baseApps = _
+				.chain(monster.config.whitelabel)
+				.get('additionalLoggedInApps', [])
+				.concat([
+					'apploader',
+					'appstore',
+					'common',
+					'myaccount'
+				])
+				.value();
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {String} [args.defaultApp]
+		 */
 		_loadApps: function(args) {
 			var self = this;
 
-			if (!self.appFlags.hasOwnProperty('baseApps')) {
-				self.initializeBaseApps();
-			}
+			self.initializeBaseApps();
 
-			if (!self.appFlags.baseApps.length) {
-				/* If admin with no app, go to app store, otherwise, oh well... */
-				var defaultApp = monster.apps.auth.currentUser.priv_level === 'admin' ? args.defaultApp || self._defaultApp : args.defaultApp;
+			monster.parallel(self.appFlags.baseApps.map(function(name) {
+				return function(callback) {
+					monster.apps.load(name, function() {
+						_.remove(self.appFlags.baseApps, function(appName) {
+							return appName === name;
+						});
+
+						callback(null);
+					});
+				};
+			}), function afterBaseAppsLoad(err, result) {
+				// If admin with no app, go to app store, otherwite, oh well...
+				var defaultApp = monster.util.isAdmin()
+					? args.defaultApp || self._defaultApp
+					: args.defaultApp;
 
 				// Now that the user information is loaded properly, check if we tried to force the load of an app via URL.
 				monster.routing.parseHash();
 
 				// If there wasn't any match, trigger the default app
 				if (!monster.routing.hasMatch()) {
-					if (typeof defaultApp !== 'undefined') {
-						monster.apps.load(defaultApp, function(app) {
-							monster.pub('core.alerts.refresh');
-							self.showAppName(defaultApp);
-							app.render($('#monster_content'));
-						}, {}, true);
-					} else {
+					if (_.isUndefined(defaultApp)) {
+						monster.pub('apploader.show');
 						console.warn('Current user doesn\'t have a default app');
+					} else {
+						monster.routing.goTo('apps/' + defaultApp);
 					}
 				}
-			} else {
-				var appName = self.appFlags.baseApps.pop();
-
-				monster.apps.load(appName, function() {
-					self._loadApps(args);
-				});
-			}
+			});
 		},
 
 		bindEvents: function(container) {
@@ -383,9 +396,7 @@ define(function(require) {
 						app.renderDropdown(false);
 					});
 				} else {
-					monster.apps.load(appName, function(app) {
-						app.render();
-					});
+					monster.routing.goTo('apps/' + appName);
 				}
 			});
 
@@ -393,11 +404,7 @@ define(function(require) {
 				var appName = monster.apps.auth.defaultApp;
 
 				if (appName) {
-					monster.pub('myaccount.hide');
-					monster.apps.load(appName, function(app) {
-						self.showAppName(appName);
-						app.render();
-					});
+					monster.routing.goTo('apps/' + appName);
 				}
 			});
 
