@@ -46,54 +46,21 @@ define(function(require) {
 				monster.pub('core.showAppName', appName);
 				$('#monster_content').empty();
 
-				loadedApp.render();
+				loadedApp.render($('#monster_content'));
 			});
 		});
 	};
 
-	var isAppLoadable = function(appName) {
-		var installed = _
-			.chain(monster)
-			.get('apps.auth.installedApps', [])
-			.map('name')
-			.concat('appstore')
-			.value();
-		var available = _.transform(monster.appsStore || {}, function(acc, app) {
-			_.set(acc, app.name, _.pick(app, ['allowed_users', 'users']));
-		}, {
-			appstore: {
-				allowed_users: 'admins'
-			}
-		});
-		var app = _.get(available, appName);
-		var user = monster.apps.auth.currentUser;
-		var appUsers = _
-			.chain(app)
-			.get('users', [])
-			.map('id')
-			.value();
-
+	var isAppLoadable = function(appName, availableApps) {
 		if (
-			app && app.allowed_users
-			&& _.includes(installed, appName)
-			&& (
-				app.allowed_users === 'all'
-				|| (app.allowed_users === 'admins' && user.priv_level === 'admin')
-				|| (app.allowed_users === 'specific' && _.includes(appUsers, user.id))
-			)
+			appName === 'appstore'
+			&& monster.apps.auth.currentUser.priv_level === 'admin'
 		) {
+			return true;
+		} else if (_.find(availableApps, { name: appName })) {
 			return true;
 		}
 		return false;
-	};
-
-	var getAppNameById = function(appId) {
-		return _
-			.chain(monster)
-			.get('apps.auth.installedApps', [])
-			.find({ id: appId })
-			.get('name')
-			.value();
 	};
 
 	var routing = {
@@ -122,25 +89,38 @@ define(function(require) {
 		addDefaultRoutes: function() {
 			this.add('apps/{appName}:?query:', function(appName, query) {
 				// not logged in, do nothing to preserve potentially valid route to load after successful login
-				if (!_.has(monster, 'apps.auth.installedApps')) {
+				if (!monster.util.isLoggedIn()) {
 					return;
 				}
-				// try loading the requested app
-				if (isAppLoadable(appName)) {
-					loadApp(appName, query);
-				// load last loaded app
-				} else if (
-					appName !== monster.apps.lastLoadedApp
-					&& _.find(monster.apps.auth.installedApps, { name: monster.apps.lastLoadedApp })
-				) {
-					routing.goTo('apps/' + monster.apps.lastLoadedApp);
-				// load default app
-				} else if (
-					!_.isEmpty(monster.apps.auth.currentUser.appList)
-					&& appName !== getAppNameById(monster.apps.auth.currentUser.appList[0])
-				) {
-					routing.goTo('apps/' + getAppNameById(monster.apps.auth.currentUser.appList[0]));
-				}
+				monster.pub('apploader.getAppList', {
+					scope: 'user',
+					forceFetch: true,
+					accountId: _.get(monster.apps.auth, [
+						monster.util.isMasquerading() ? 'originalAccount' : 'currentAccount',
+						'id'
+					]),
+					success: function(availableApps) {
+						// try loading the requested app
+						if (isAppLoadable(appName, availableApps)) {
+							loadApp(appName, query);
+						} else {
+							var activeApp = monster.apps.getActiveApp();
+
+							routing.updateHash(
+								isAppLoadable(activeApp, availableApps)
+									? 'apps/' + activeApp
+									: ''
+							);
+
+							monster.pub('apploader.show', {
+								callback: monster.ui.toast.bind(monster.ui, {
+									message: monster.apps.core.i18n.active().unableToAccessApp
+								})
+							});
+						}
+					},
+					error: monster.util.logoutAndReload.bind(monster.util)
+				});
 			});
 		},
 
@@ -180,8 +160,6 @@ define(function(require) {
 			hasher.changed.active = true; //re-enable signal
 		}
 	};
-
-	routing.init();
 
 	return routing;
 });
