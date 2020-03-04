@@ -3870,11 +3870,12 @@ define(function(require) {
 			},
 			checkLength = function(event) {
 				var currentLenght = checkCurrentLength(),
-					allowedChars = currentLenght <= size ? size - currentLenght : 0;
+					allowedChars = currentLenght <= size ? size - currentLenght : -1,
+					allowedCharsText = allowedChars < 0 ? 0 : allowedChars;
 
-				allowedCharsLabel.text(allowedChars);
+				allowedCharsLabel.text(allowedCharsText);
 
-				if (allowedChars <= 0 || allowedChars > size) {
+				if (allowedChars < 0 || allowedChars > size) {
 					label.addClass('chars-remaining-error');
 
 					event && event.preventDefault();
