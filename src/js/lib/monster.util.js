@@ -1013,6 +1013,29 @@ define(function(require) {
 	util.getBookkeepers = getBookkeepers;
 
 	/**
+	 * Returns capability information about a resource/feature.
+	 * @param  {String|String[]} path Path to resource/feature.
+	 * @return {undefined|String[]|Object} Capability information.
+	 */
+	function getCapability(path) {
+		var node = _.get(monster.apps.auth.appFlags.capabilities, path);
+		var isFeatureNode = _.has(node, 'available');
+
+		if (!_.isPlainObject(node)) {
+			return undefined;
+		}
+		if (!isFeatureNode) {
+			return _.keys(node);
+		}
+		return _.merge({
+			isEnabled: _.get(node, 'available')
+		}, _.has(node, 'default') ? {
+			defaultValue: _.get(node, 'default')
+		} : {});
+	}
+	util.getCapability = getCapability;
+
+	/**
 	 * Return the symbol of the currency used through the UI
 	 * @return {String} Symbol of currency
 	 */
