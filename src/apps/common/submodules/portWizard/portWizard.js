@@ -1612,10 +1612,10 @@ define(function(require) {
 				losingCarrier = args.losingCarrier,
 				data = args.data,
 				billMetadata = args.billMetadata,
-				requireBill = !_.isUndefined(billMetadata),
+				isBillRequired = !_.isUndefined(billMetadata),
 				// Update required flag and bill metadata, in case the requirements changed
 				// since the last time we were in the Ownership Confirmation step
-				billData = _.merge({}, data.latestBill, { required: requireBill }, billMetadata),
+				billData = _.merge({}, data.latestBill, { required: isBillRequired }, billMetadata),
 				defaultCountry = monster.config.whitelabel.countryCode,
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
@@ -1623,7 +1623,7 @@ define(function(require) {
 						data: data,
 						directionals: self.appFlags.portWizard.cardinalDirections,
 						losingCarrier: losingCarrier,
-						requireBill: requireBill
+						isBillRequired: isBillRequired
 					},
 					submodule: 'portWizard'
 				})),
@@ -1717,7 +1717,7 @@ define(function(require) {
 				autoScrollOnInvalid: true
 			});
 
-			if (!requireBill) {
+			if (!isBillRequired) {
 				return $template;
 			}
 
