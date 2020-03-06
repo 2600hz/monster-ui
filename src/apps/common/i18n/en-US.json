@@ -274,6 +274,12 @@
 				"ReleaseLetter": "Letter of Release from the losing provider",
 				"PaymentProof": "Latest Proof of Payment"
 			},
+			"load": {
+				"errors": {
+					"attachmentNotFound": "The document \"{{documentName}}\" was not found. Please upload it again, if required.",
+					"attachmentDownloadFailed": "The download of the document \"{{documentName}}\" failed, so it will not be displayed while editing the current port request."
+				}
+			},
 			"save": {
 				"errorDialog": {
 					"stageLabels": {
