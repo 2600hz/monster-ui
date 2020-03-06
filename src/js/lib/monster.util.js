@@ -1177,7 +1177,7 @@ define(function(require) {
 	}
 
 	/**
-	 * Returns the available features for a Kazoo phone number
+	 * Returns a list of features available for a Kazoo phone number.
 	 * @param  {Object} number  Phone number object, which contains the features details
 	 * @return {String[]}       Number's available features
 	 */
@@ -1185,10 +1185,13 @@ define(function(require) {
 		if (!_.isPlainObject(number)) {
 			throw new TypeError('"number" is not an object');
 		}
-		var numberFeatures = _.get(number, 'features_available', []);
-		return _.isEmpty(numberFeatures)
-			? _.get(number, '_read_only.features_available', [])
-			: numberFeatures;
+		var pathToFeatures = _.find([
+			'_read_only.features.available',
+			'features_available'
+		], function(path) {
+			return _.has(number, path);
+		});
+		return _.get(number, pathToFeatures, []);
 	}
 	util.getNumberFeatures = getNumberFeatures;
 
