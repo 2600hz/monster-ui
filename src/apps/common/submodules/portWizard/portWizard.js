@@ -320,38 +320,37 @@ define(function(require) {
 				i18nSteps = i18n.steps,
 				stepNames = self.appFlags.portWizard.stepNames;
 
-			monster.waterfall([
-				function(waterfallCallback) {
-					// Clean store, in case it was not empty, to avoid using old data
-					self.portWizardSet({});
+			// Clean store, in case it was not empty, to avoid using old data
+			self.portWizardSet({});
 
-					// Get container and main callback function
+			monster.waterfall([
+				function getWizardContainer(waterfallCallback) {
 					if (args.container instanceof jQuery) {
-						return waterfallCallback(null, args.container, globalCallback);
+						return waterfallCallback(null, args.container, null);
 					}
 
+					// Create modal, if container was not provided
 					var modal = monster.ui.fullScreenModal(null, {
 							inverseBg: true
 						}),
-						$container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content'),
-						callback = function() {
-							modal.close();
+						$container = $('.core-absolute').find('#' + modal.getId() + ' .modal-content');
 
-							globalCallback();
-						};
-
-					waterfallCallback(null, $container, callback);
+					waterfallCallback(null, $container, modal.close);
 				},
-				function($container, globalCallback, waterfallCallback) {
+				function storeGlobalParameters($container, modalCloseCallback, waterfallCallback) {
 					// Store account ID and global callback
 					self.portWizardSet({
 						accountId: accountId,
-						globalCallback: globalCallback
+						globalCallback: function() {
+							modalCloseCallback && modalCloseCallback();
+
+							globalCallback();
+						}
 					});
 
 					waterfallCallback(null, $container);
 				},
-				function($container, waterfallCallback) {
+				function getPortRequestData($container, waterfallCallback) {
 					// Get port request data, if ID was provided
 					if (!portRequestId) {
 						return waterfallCallback(null, $container, null);
@@ -369,7 +368,7 @@ define(function(require) {
 						}
 					});
 				},
-				function($container, portRequestData, waterfallCallback) {
+				function notifyAttachmentLoadErrors($container, portRequestData, waterfallCallback) {
 					// Notify attachment errors, if any
 					var portWizardI18n = self.i18n.active().commonApp.portWizard;
 
@@ -392,7 +391,7 @@ define(function(require) {
 
 					waterfallCallback(null, $container, portRequestData);
 				},
-				function($container, portRequestData, waterfallCallback) {
+				function formatPhoneNumbers($container, portRequestData, waterfallCallback) {
 					// Format numbers and load carrier and requirements data, if the port request
 					// has data that goes beyond the Carrier Selection step
 					var numbers = _
@@ -402,6 +401,9 @@ define(function(require) {
 							.value(),
 						formattedPhoneNumbers = _.map(numbers, monster.util.getFormatPhoneNumber);
 
+					waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers);
+				},
+				function getCarrierDataAndRequirements($container, portRequestData, formattedPhoneNumbers, waterfallCallback) {
 					if (!(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
 						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, null);
 					}
@@ -418,7 +420,7 @@ define(function(require) {
 						}
 					});
 				},
-				function($container, portRequestData, formattedPhoneNumbers, numbersCarrierData, waterfallCallback) {
+				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersCarrierData, waterfallCallback) {
 					// Format port request data, to be loaded in the wizard
 					if (!portRequestData) {
 						return waterfallCallback(null, $container, {
@@ -437,19 +439,18 @@ define(function(require) {
 
 					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData);
 				},
-				function($container, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
+				function getPreliminarWizardInitialStep($container, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
 					// Get wizard step to display
 					var hasStepData = _.partial(_.has, wizardPortRequestData),
 						wizardStepId = _.findLastIndex(stepNames, hasStepData);
 
 					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, wizardStepId);
 				},
-				function($container, wizardPortRequestData, numbersCarrierData, wizardStepId, waterfallCallback) {
+				function checkCarrierData($container, wizardPortRequestData, numbersCarrierData, wizardStepId, waterfallCallback) {
 					if (_.isNil(numbersCarrierData)) {
 						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 					}
 
-					// Check carrier data
 					var areNumbersValid = numbersCarrierData.carrierWarningType === 'none',
 						portRequestHasWinningCarrier = _.has(wizardPortRequestData, 'carrierSelection.winningCarrier'),
 						isWinningCarrierValid = areNumbersValid
@@ -478,7 +479,7 @@ define(function(require) {
 
 					waterfallCallback(null, $container, wizardPortRequestData, newWizardStepId);
 				},
-				function($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+				function checkRequiredDocuments($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
 					// Check required documents, and modify wizard step if needed
 					var requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
 						requiredDocumentsMap = _.keyBy(requiredDocumentsCompleteList, 'key'),
@@ -502,7 +503,7 @@ define(function(require) {
 
 					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 				}
-			], function(error, $container, wizardPortRequestData, wizardStepId) {
+			], function renderWizard(error, $container, wizardPortRequestData, wizardStepId) {
 				if (error) {
 					return globalCallback();
 				}
