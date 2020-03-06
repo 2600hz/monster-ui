@@ -3094,17 +3094,12 @@ define(function(require) {
 						numbersCountryCode = isSingleLosingCarrier && _.get(formattedNumbers, [0, 'country', 'code']),
 						isSameCountry = isSingleLosingCarrier && _.every(formattedNumbers, [ 'country.code', numbersCountryCode ]),
 						isCountrySupported = _.has(self.appFlags.portWizard.requirementsByCountries, numbersCountryCode),
-						carrierWarningType = !isSingleLosingCarrier
-							? 'multipleLosingCarriers'
-							: isSingleLosingCarrierUnknown
-								? 'unknownLosingCarriers'
-								: noWinningCarriers
-									? 'noWinningCarriers'
-									: !isSameCountry
-										? 'multipleCountries'
-										: isCountrySupported
-											? 'none'
-											: 'countryNotSupported';
+						carrierWarningType = !isSingleLosingCarrier ? 'multipleLosingCarriers'
+						: isSingleLosingCarrierUnknown ? 'unknownLosingCarriers'
+						: noWinningCarriers ? 'noWinningCarriers'
+						: !isSameCountry ? 'multipleCountries'
+						: isCountrySupported ? 'none'
+						: 'countryNotSupported';
 
 					waterfallCallback(null, _.merge({
 						countryCode: numbersCountryCode,
