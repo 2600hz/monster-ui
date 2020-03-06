@@ -1,8 +1,8 @@
 {{#*inline "uploadFieldPartial"}}
 	<div class="flex-item-1">
 		<label class="form-field">
-			{{tryI18n @root.i18n.commonApp.portWizard.documents document.key}}
-			<input class="input-block-level" type="file" data-index={{index}} accept=".pdf" />
+			{{tryI18n @root.i18n.commonApp.portWizard.documents key}}
+			<input class="input-block-level" type="file" data-key="{{key}}" accept=".pdf" />
 		</label>
 	</div>
 {{/inline}}
@@ -20,8 +20,8 @@
 			<form id="form_required_documents">
 				<div class="step-section">
 					<div class="section-body flex-row-container">
-					{{#each data.requiredDocuments}}
-						{{> uploadFieldPartial document=this index=@index}}
+					{{#each data.requiredDocuments.orderedKeys}}
+						{{> uploadFieldPartial key=this}}
 					{{/each}}
 					</div>
 				</div>
