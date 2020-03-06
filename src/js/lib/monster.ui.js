@@ -3869,12 +3869,13 @@ define(function(require) {
 				return $target.prop('tagName') === 'DIV' ? $target[0].textContent.length : $target.val().length;
 			},
 			checkLength = function(event) {
-				var currentLenght = checkCurrentLength(),
-					allowedChars = currentLenght <= size ? size - currentLenght : 0;
+				var currentLength = checkCurrentLength(),
+					isGreaterThanMaxSize = currentLength > size,
+					allowedChars = Math.max(0, size - currentLength);
 
 				allowedCharsLabel.text(allowedChars);
 
-				if (allowedChars <= 0 || allowedChars > size) {
+				if (isGreaterThanMaxSize) {
 					label.addClass('chars-remaining-error');
 
 					event && event.preventDefault();
