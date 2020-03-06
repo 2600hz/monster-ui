@@ -718,14 +718,8 @@ define(function(require) {
 							targetDate: adjustedTargetDate,
 							notificationEmails: _
 								.chain(portRequestData)
-								.get('notifications.email.send_to')
-								.thru(
-									_.cond([
-										[ _.isArray, _.identity ],
-										[ _.isString, _.partial(_.concat, []) ],
-										[ _.stubTrue, _.constant([]) ]
-									])
-								)
+								.get('notifications.email.send_to', [])
+								.concat()
 								.value()
 						}
 						: null
