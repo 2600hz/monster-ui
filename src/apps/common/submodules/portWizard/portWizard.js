@@ -370,24 +370,25 @@ define(function(require) {
 				},
 				function notifyAttachmentLoadErrors($container, portRequestData, waterfallCallback) {
 					// Notify attachment errors, if any
-					var portWizardI18n = self.i18n.active().commonApp.portWizard;
+					var portWizardI18n = self.i18n.active().commonApp.portWizard,
+						errorMessages = _
+							.chain(portRequestData)
+							.get('uploads')
+							.filter('error')
+							.map(function(attachmentData) {
+								return {
+									type: 'error',
+									message: self.getTemplate({
+										name: '!' + monster.util.tryI18n(portWizardI18n.load.errors, attachmentData.errorType),
+										data: {
+											documentName: monster.util.tryI18n(portWizardI18n.documents, attachmentData.key)
+										}
+									})
+								};
+							})
+							.value();
 
-					_
-						.chain(portRequestData)
-						.get('uploads')
-						.filter('error')
-						.each(function(attachmentData) {
-							monster.ui.toast({
-								type: 'error',
-								message: self.getTemplate({
-									name: '!' + monster.util.tryI18n(portWizardI18n.load.errors, attachmentData.errorType),
-									data: {
-										documentName: monster.util.tryI18n(portWizardI18n.documents, attachmentData.key)
-									}
-								})
-							});
-						})
-						.value();
+					_.each(errorMessages, _.unary(monster.ui.toast));
 
 					waterfallCallback(null, $container, portRequestData);
 				},
