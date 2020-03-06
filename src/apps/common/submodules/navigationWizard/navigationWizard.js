@@ -37,6 +37,7 @@ define(function(require) {
 		 * @param  {jQuery} args.container  Element that will contain the wizard
 		 * @param  {String} [args.controlId]  ID to be set to the wizard control
 		 * @param  {String} [args.cssClass]  CSS class to be assigned to the wizard control
+		 * @param  {Number} [args.currentStep]  Current wizard step to be displayed after render
 		 * @param  {Object} [args.data]  Initial data
 		 * @param  {(Function|String)} args.done  Reference or name of the function to be invoked
 		 *                                        when completing the wizard. If the name is
@@ -106,7 +107,7 @@ define(function(require) {
 							enabled: true
 						};
 					}),
-					currentStep: 0,
+					currentStep: _.get(args, 'currentStep', 0),
 					validateOnStepChange: false,
 					statuses: [
 						'selected',
