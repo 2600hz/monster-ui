@@ -77,6 +77,10 @@ $media-size-medium: "(max-width : 980px)";
 			font-weight: normal;
 			color: $woodsmoke;
 		}
+
+		.actions .monster-button {
+			min-width: 74px;
+		}
 	}
 
 	.left-content {
@@ -226,10 +230,6 @@ $media-size-medium: "(max-width : 980px)";
 				margin-right: 0.75rem;
 			}
 		}
-	}
-
-	#cancel {
-		min-width: 74px;
 	}
 
 	#next {
