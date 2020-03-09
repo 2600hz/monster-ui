@@ -11,6 +11,15 @@
 					{{i18n.navigationWizard.buttons.saveDraft}}
 				</button>
 			{{/if}}
+			{{#if deleteEnabled}}
+				<button id="navigation_wizard_delete" class="monster-button">
+					{{#if deleteButton}}
+						{{deleteButton}}
+					{{else}}
+						{{i18n.navigationWizard.buttons.delete}}
+					{{/if}}
+				</button>
+			{{/if}}
 				<button id="cancel" class="monster-button">
 					{{ i18n.navigationWizard.buttons.cancel }}
 				</button>
