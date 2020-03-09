@@ -83,6 +83,10 @@ $media-size-medium: "(max-width : 980px)";
 			color: $woodsmoke;
 			margin: 23px 0 0 24px;;
 		}
+
+		.actions .monster-button {
+			min-width: 74px;
+		}
 	}
 
 	.left-content {

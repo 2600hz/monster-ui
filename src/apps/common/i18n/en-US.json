@@ -1,6 +1,7 @@
 {
 	"commonApp": {
 		"portWizard": {
+			"deleteButton": "Cancel",
 			"doneButton": "Submit Port Request",
 			"steps": {
 				"nameAndNumbers": {
@@ -297,6 +298,7 @@
 					"wrong_format": "Invalid data at: {{variable}}"
 				}
 			},
+			"confirmDelete": "Are you sure you want to delete the current port request?",
 			"title": "Creating a New Port Request"
 		}
 	},
