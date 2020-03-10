@@ -918,7 +918,7 @@ define(function(require) {
 				};
 			}
 
-			nameAndNumbersData = monster.ui.getFormData($form.get(0));
+			nameAndNumbersData = self.portWizardGetFormData($form);
 
 			// Extract and format numbers
 			nameAndNumbersData.numbersToPort.formattedNumbers = _
@@ -1272,7 +1272,7 @@ define(function(require) {
 				carrierSelectionData;
 
 			if (isValid && isSingleLosingCarrierView) {
-				formData = monster.ui.getFormData($form.get(0));
+				formData = self.portWizardGetFormData($form);
 				carrierSelectionData = _
 					.chain(formData)
 					.get('designateWinningCarrier')
@@ -1653,11 +1653,22 @@ define(function(require) {
 			var self = this,
 				$form = $template.find('form'),
 				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				formData,
 				ownershipConfirmationData;
 
 			if (isValid) {
-				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
-				ownershipConfirmationData.latestBill = self.portWizardGet('billData');
+				formData = self.portWizardGetFormData($form);
+				ownershipConfirmationData = _.merge({}, formData, {
+					latestBill: self.portWizardGet('billData'),
+					accountInfo: {
+						btn: _
+							.chain(formData)
+							.get('accountInfo.btn')
+							.thru(monster.util.getFormatPhoneNumber)
+							.get('e164Number', '')
+							.value()
+					}
+				});
 				self.portWizardUnset('billData');
 			}
 
@@ -2058,8 +2069,7 @@ define(function(require) {
 
 			// If form is not loaded, it means that the step was skipped because there are no required documents
 			if (isValid && isFormLoaded) {
-				requiredDocumentsData = self.portWizardGet('requiredDocumentsData');
-				self.portWizardUnset('requiredDocumentsData');
+				requiredDocumentsData = self.portWizardGetFormData($form);
 				delete args.data.requiredDocuments;
 			}
 
@@ -2197,16 +2207,7 @@ define(function(require) {
 				dateAndNotificationsData;
 
 			if (isValid) {
-				dateAndNotificationsData = monster.ui.getFormData($form.get(0));
-
-				// Extract and store date(s)
-				$form.find('input.hasDatepicker').each(function() {
-					var $this = $(this),
-						propertyPath = $this.attr('name'),
-						selectedDate = $this.datepicker('getDate');
-
-					_.set(dateAndNotificationsData, propertyPath, selectedDate);
-				});
+				dateAndNotificationsData = self.portWizardGetFormData($form);
 
 				// Remove empty e-mail values
 				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
@@ -2409,7 +2410,7 @@ define(function(require) {
 		portWizardReviewUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
-				reviewData = monster.ui.getFormData($form.get(0)),
+				reviewData = self.portWizardGetFormData($form),
 				isValid = !eventArgs.completeStep || _.every(reviewData.acknowledgements);
 
 			return {
@@ -3520,6 +3521,26 @@ define(function(require) {
 					}));
 				}
 			], callback);
+		},
+
+		/**
+		 * Gets the data from a form template
+		 * @param  {jQuery} $form  Form template
+		 */
+		portWizardGetFormData: function($form) {
+			var self = this,
+				data = monster.ui.getFormData($form.get(0));
+
+			// Extract and store date(s)
+			$form.find('input.hasDatepicker').each(function() {
+				var $this = $(this),
+					propertyPath = $this.attr('name'),
+					selectedDate = $this.datepicker('getDate');
+
+				_.set(data, propertyPath, selectedDate);
+			});
+
+			return data;
 		},
 
 		/**
