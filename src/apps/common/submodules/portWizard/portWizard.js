@@ -839,29 +839,30 @@ define(function(require) {
 							submodule: 'portWizard'
 						})),
 						$form = $template.find('form'),
+						validationRules = {
+							portRequestName: {
+								required: true
+							},
+							'numbersToPort.numbers': {
+								required: true,
+								phoneNumber: true,
+								normalizer: function(value) {
+									return _
+										.chain(value)
+										.split(',')
+										.map(_.trim)
+										.reject(_.isEmpty)
+										.value();
+								}
+							}
+						},
+						validationMessages = self.portWizardGetValidationMessages({
+							step: 'nameAndNumbers',
+							rules: validationRules
+						}),
 						validateForm = monster.ui.validate($form, {
-							rules: {
-								portRequestName: {
-									required: true
-								},
-								'numbersToPort.numbers': {
-									required: true,
-									phoneNumber: true,
-									normalizer: function(value) {
-										return _
-											.chain(value)
-											.split(',')
-											.map(_.trim)
-											.reject(_.isEmpty)
-											.value();
-									}
-								}
-							},
-							messages: {
-								'numbersToPort.numbers': {
-									phoneNumber: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers.invalid
-								}
-							},
+							rules: validationRules,
+							messages: validationMessages,
 							onfocusout: self.portWizardValidateFormField,
 							autoScrollOnInvalid: true
 						}),
@@ -1177,11 +1178,11 @@ define(function(require) {
 					});
 				},
 				function(numbersCarrierData, waterfallCallback) {
-					nameAndNumbersData.numbersToPort.areValid = numbersCarrierData.carrierWarningType === 'none';
+					var areNumbersValid = numbersCarrierData.carrierWarningType === 'none';
 
 					monster.pub(
 						'common.navigationWizard.setButtonProps',
-						nameAndNumbersData.numbersToPort.areValid
+						areNumbersValid
 							? [
 								{
 									button: 'save',
@@ -1203,6 +1204,11 @@ define(function(require) {
 								}
 							]
 					);
+
+					_.assign(nameAndNumbersData.numbersToPort, {
+						areValid: areNumbersValid,
+						country: numbersCarrierData.countryCode
+					});
 
 					waterfallCallback(null, numbersCarrierData);
 				},
@@ -1612,16 +1618,17 @@ define(function(require) {
 		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this,
 				losingCarrier = args.data.carrierSelection.losingCarrier,
+				data = args.data,
 				requiredDocumentsList = self.portWizardGet('requirements.documentsList'),
 				billMetadata = _.find(requiredDocumentsList, { key: 'Bill' }),
 				$template = _.isUndefined(billMetadata) || _.has(args.data, 'ownershipConfirmation.latestBill')
 					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
 						billMetadata: billMetadata,
 						losingCarrier: losingCarrier,
-						data: ownershipConfirmationData
+						data: data
 					})
 					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
-						bill: _.get(ownershipConfirmationData, 'latestBill'),
+						bill: _.get(data, 'ownershipConfirmation.latestBill'),
 						billMetadata: billMetadata,
 						losingCarrier: losingCarrier
 					});
@@ -1748,57 +1755,36 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String} [args.losingCarrier]  Losing carrier name
 		 * @param  {Boolean} [args.billMetadata]  Bill metadata, if bill is required
-		 * @param  {Object} args.data  Step data
+		 * @param  {Object} args.data  WizardData
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
 				losingCarrier = args.losingCarrier,
-				data = args.data,
+				wizardData = args.data,
+				ownershipConfirmationData = _.get(wizardData, 'ownershipConfirmation'),
 				billMetadata = args.billMetadata,
 				isBillRequired = !_.isUndefined(billMetadata),
 				// Update required flag and bill metadata, in case the requirements changed
 				// since the last time we were in the Ownership Confirmation step
-				billData = _.merge({}, data.latestBill, { required: isBillRequired }, billMetadata),
-				defaultCountry = monster.config.whitelabel.countryCode,
+				billData = _.merge({}, ownershipConfirmationData.latestBill, { required: isBillRequired }, billMetadata),
+				dataTemplate = {
+					data: _.merge({
+						numbers: {
+							country: wizardData.nameAndNumbers.numbersToPort.country
+						}
+					}, ownershipConfirmationData),
+					directionals: self.appFlags.portWizard.cardinalDirections,
+					losingCarrier: losingCarrier,
+					isBillRequired: isBillRequired,
+				},
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
-					data: {
-						data: data,
-						directionals: self.appFlags.portWizard.cardinalDirections,
-						losingCarrier: losingCarrier,
-						isBillRequired: isBillRequired
-					},
+					data: dataTemplate,
 					submodule: 'portWizard'
 				})),
-				$form = $template.find('form');
-
-			$template
-				.find('input[data-mask]')
-					.each(function() {
-						var $this = $(this),
-							mask = $this.data('mask');
-						$this.mask(mask);
-					});
-
-			$template
-				.find('input[data-monster-mask]')
-					.each(function() {
-						var $this = $(this),
-							mask = $this.data('monster-mask');
-						monster.ui.mask($this, mask);
-					});
-
-			monster.ui.countrySelector(
-				$template.find('#service_address_country'),
-				{
-					selectedValues: _.get(data, 'serviceAddress.country', defaultCountry)
-				}
-			);
-
-			monster.ui.tooltips($template);
-
-			monster.ui.validate($form, {
-				rules: {
+				$form = $template.find('form'),
+				requiredValidationRules = self.portWizardGet([ 'requirements', 'rulesByStep', 'ownershipConfirmation' ], {}),
+				validationRules = _.merge({
 					'accountOwnership.carrier': {
 						required: true,
 						minlength: 1,
@@ -1845,7 +1831,6 @@ define(function(require) {
 						required: true
 					},
 					'accountInfo.accountNumber': {
-						required: true,
 						maxlength: 128
 					},
 					'accountInfo.pin': {
@@ -1853,9 +1838,52 @@ define(function(require) {
 					},
 					'accountInfo.btn': {
 						required: true,
-						maxlength: 20
+						maxlength: 20,
+						phoneNumber: true
 					}
-				},
+				}, requiredValidationRules),
+				validationMessages = self.portWizardGetValidationMessages({
+					step: 'ownershipConfirmation',
+					rules: validationRules
+				}),
+				shouldCountryMatchNumbers = _
+					.chain(requiredValidationRules)
+					.get([ 'serviceAddress.country', 'equalTo' ])
+					.includes('numbers.country')
+					.value(),
+				defaultCountry = shouldCountryMatchNumbers
+					? dataTemplate.data.numbers.country
+					: monster.config.whitelabel.countryCode;
+
+			$template
+				.find('input[data-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('mask');
+						$this.mask(mask);
+					});
+
+			$template
+				.find('input[data-monster-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('monster-mask');
+						monster.ui.mask($this, mask);
+					});
+
+			monster.ui.countrySelector(
+				$template.find('#service_address_country'),
+				{
+					selectedValues: _.get(ownershipConfirmationData, 'serviceAddress.country', defaultCountry)
+				}
+			);
+
+			monster.ui.tooltips($template);
+
+			monster.ui.validate($form, {
+				ignore: '',
+				rules: validationRules,
+				messages: validationMessages,
 				onfocusout: self.portWizardValidateFormField,
 				autoScrollOnInvalid: true
 			});
@@ -1868,7 +1896,7 @@ define(function(require) {
 
 			self.portWizardOwnershipConfirmationAccountInfoRenderBill({
 				template: $template,
-				bill: data.latestBill
+				bill: ownershipConfirmationData.latestBill
 			});
 
 			return $template;
@@ -1977,21 +2005,33 @@ define(function(require) {
 			});
 
 			$form = $template.find('form');
-			validationOptions = {
-				rules: _
-					.chain(requiredDocumentsMap)
-					.mapKeys(function(document) {
-						return document.key + '.name';
-					})
-					.mapValues(function() {
-						return {
-							required: true
-						};
-					})
-					.value()
-			};
 
-			monster.ui.validate($form, validationOptions);
+			requiredValidationRules = self.portWizardGet([
+				'requirements',
+				'rulesByStep',
+				'requiredDocuments'
+			], {});
+			validationRules = _
+				.chain(requiredDocumentsMap)
+				.mapKeys(function(document) {
+					return 'documents.' + document.key + '.name';
+				})
+				.mapValues(function() {
+					return {
+						required: true
+					};
+				})
+				.merge(requiredValidationRules)
+				.value();
+			validationMessages = self.portWizardGetValidationMessages({
+				step: 'requiredDocuments',
+				rules: validationRules
+			});
+
+			monster.ui.validate($form, {
+				rules: validationRules,
+				messages: validationMessages
+			});
 
 			callback({
 				template: $template,
@@ -3229,6 +3269,41 @@ define(function(require) {
 					: carrierName;
 
 			return cleanCarrierName;
+		},
+
+		/**
+		 * Get custom messages for validation rules
+		 * @param  {Object} args
+		 * @param  {String} args.step  Step name
+		 * @param  {Object} args.rules  Validation rules
+		 * @returns  {Object} Validation error messages
+		 */
+		portWizardGetValidationMessages: function(args) {
+			var self = this,
+				step = args.step,
+				rules = args.rules,
+				i18n = self.i18n.active().commonApp.portWizard.steps;
+
+			return _
+				.chain(rules)
+				.mapValues(function(fieldRules, fieldName) {
+					var fieldParts = _.split(fieldName, '.'),
+						fieldPartsHaveSection = fieldParts.length > 1,
+						section = fieldPartsHaveSection ? _.take(fieldParts, 1) : [],
+						field = fieldPartsHaveSection ? _.drop(fieldParts, 1) : fieldParts;
+
+					return _
+						.chain(fieldRules)
+						.mapValues(function(ruleValue, ruleName) {
+							var i18nPath = _.concat(step, section, ['errors'], field, ruleName);
+
+							return _.get(i18n, i18nPath);
+						})
+						.omitBy(_.isUndefined)
+						.value();
+				})
+				.omitBy(_.isEmpty)
+				.value();
 		},
 
 		/**
