@@ -731,8 +731,7 @@ define(function(require) {
 				adjustedTargetDate = (targetDate && minTargetDate < targetDate)
 					? minTargetDate
 					: targetDate,
-				omitEmpty = _.partialRight(_.omitBy, _.isEmpty),
-				wizardData = omitEmpty({
+				wizardData = self.portWizardOmitEmptyOrNilProperties({
 					portRequestId: portRequestData.id,
 					// Name and numbers are the minimum properties required for all port request
 					nameAndNumbers: {
@@ -746,12 +745,12 @@ define(function(require) {
 						}
 					},
 					carrierSelection: _.has(portRequestData, 'winning_carrier')
-						? omitEmpty({
+						? self.portWizardOmitEmptyOrNilProperties({
 							winningCarrier: portRequestData.winning_carrier
 						})
 						: null,
 					ownershipConfirmation: (billData || billAttachmentData)
-						? omitEmpty({
+						? self.portWizardOmitEmptyOrNilProperties({
 							latestBill: billAttachmentData
 								? _.merge(
 									{
@@ -759,11 +758,11 @@ define(function(require) {
 										attachmentName: billAttachmentName
 									}, documentDefaultMetadata, billAttachmentData, billDocumentMetadata)
 								: null,
-							accountOwnership: omitEmpty({
+							accountOwnership: self.portWizardOmitEmptyOrNilProperties({
 								carrier: billData.carrier,
 								billName: billData.name
 							}),
-							serviceAddress: omitEmpty({
+							serviceAddress: self.portWizardOmitEmptyOrNilProperties({
 								streetPreDir: billData.street_pre_dir,
 								streetNumber: billData.street_number,
 								streetName: billData.street_address,
@@ -775,7 +774,7 @@ define(function(require) {
 								postalCode: billData.postal_code,
 								country: billData.country
 							}),
-							accountInfo: omitEmpty({
+							accountInfo: self.portWizardOmitEmptyOrNilProperties({
 								accountNumber: billData.account_number,
 								pin: billData.pin,
 								btn: billData.btn
@@ -2824,16 +2823,16 @@ define(function(require) {
 							pin: getOrEmptyString(ownershipConfirmationData, 'accountInfo.pin'),
 							btn: getOrEmptyString(ownershipConfirmationData, 'accountInfo.btn')
 						})
-						.omitBy(_.isEmpty)
+						.thru(_.bind(self.portWizardOmitEmptyOrNilProperties, self))
 						.value()
 				},
 				winningCarrierSection = _.has(carrierSelectionData, 'winningCarrier') ? {
 					winning_carrier: carrierSelectionData.winningCarrier
 				} : {},
-				cleanEmptyRecursively = function(object, path) {
+				cleanEmptyOrNilRecursively = function(object, path) {
 					var value = _.get(object, path);
 
-					if (_.isEmpty(value)) {
+					if (self.portWizardIsValueEmptyOrNil(value)) {
 						_.unset(object, path);
 					} else {
 						return;
@@ -2843,7 +2842,7 @@ define(function(require) {
 						return;
 					}
 
-					cleanEmptyRecursively(object, path.slice(0, -1));
+					cleanEmptyOrNilRecursively(object, path.slice(0, -1));
 				},
 				// Merge port request properties that can be deeply merged with an existing port
 				// request document
@@ -2885,7 +2884,7 @@ define(function(require) {
 			);
 
 			// Clean notifications sub-object, if there were no notification e-mails
-			cleanEmptyRecursively(newPortRequestDocument, [ 'notifications', 'email', 'send_to' ]);
+			cleanEmptyOrNilRecursively(newPortRequestDocument, [ 'notifications', 'email', 'send_to' ]);
 
 			return newPortRequestDocument;
 		},
@@ -3541,6 +3540,30 @@ define(function(require) {
 			});
 
 			return data;
+		},
+
+		/**
+		 * Creates a composed object that does not contain the empty or nil properties from the
+		 * passed object
+		 * @param  {Object} object  Object to clean
+		 * @returns  {Object}  Object without empty or nil properties
+		 */
+		portWizardOmitEmptyOrNilProperties: function(object) {
+			var self = this;
+
+			return _.omitBy(object, self.portWizardIsValueEmptyOrNil);
+		},
+
+		/**
+		 * Checks if a value is empty or nil. Differs from _.isEmpty in that non plain object
+		 * values are not considered empty, except for empty strings
+		 * @param  {Any} value  Value to check
+		 * @returns  {Boolean}  Whether or not the value is empty or nil
+		 */
+		portWizardIsValueEmptyOrNil: function(value) {
+			return _.isNil(value)
+				|| value === ''
+				|| (_.isPlainObject(value) && _.isEmpty(value));
 		},
 
 		/**
