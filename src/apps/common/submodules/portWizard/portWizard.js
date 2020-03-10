@@ -2704,7 +2704,7 @@ define(function(require) {
 				callback = args.callback,
 				portRequestId = _.get(wizardData, 'portRequestId'),
 				bill = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
-				otherDocuments = _.get(wizardData, 'requiredDocuments', {}),
+				otherDocuments = _.get(wizardData, 'requiredDocuments.documents', {}),
 				allDocuments = _
 					.chain(otherDocuments)
 					.values()
@@ -2828,11 +2828,12 @@ define(function(require) {
 		portWizardSaveGetFormattedPortRequest: function(wizardData) {
 			var self = this,
 				originalPortRequestDocument = self.portWizardGet('originalPortRequest', {}),
+				allRequiredFields = _.flatMap(self.appFlags.portWizard.requirements.fields),
+				requiredFieldsByStep = self.portWizardGet('requirements.fieldsByStep'),
 				nameAndNumbersData = wizardData.nameAndNumbers,
 				carrierSelectionData = wizardData.carrierSelection,
 				ownershipConfirmationData = wizardData.ownershipConfirmation,
 				dateAndNotificationsData = wizardData.dateAndNotifications,
-				getOrEmptyString = _.partialRight(_.get, ''),
 				numbers = _.map(nameAndNumbersData.numbersToPort.formattedNumbers, 'e164Number'),
 				formattedPortRequestNumbers = _.transform(numbers, function(numbers, number) {
 					numbers[number] = {};
@@ -2841,6 +2842,7 @@ define(function(require) {
 				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
 					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
 				} : {},
+				getOrEmptyString = _.partialRight(_.get, ''),
 				billSection = _.isNil(ownershipConfirmationData) ? {} : {
 					bill: _
 						.chain(originalPortRequestDocument)
@@ -2925,6 +2927,27 @@ define(function(require) {
 
 			// Clean notifications sub-object, if there were no notification e-mails
 			cleanEmptyOrNilRecursively(newPortRequestDocument, [ 'notifications', 'email', 'send_to' ]);
+
+			// Set or clean extra data
+			_.each(allRequiredFields, function(field) {
+				var isFieldExpected = _
+						.chain(requiredFieldsByStep)
+						.get([ field.step, field.section ])
+						.some({ name: field.name })
+						.value(),
+					rawFieldValue = _.get(wizardData, [ field.step, field.section, field.name ]),
+					fieldValue;
+
+				if (isFieldExpected && !self.portWizardIsValueEmptyOrNil(rawFieldValue)) {
+					fieldValue = field.type === 'date'
+						? monster.util.dateToGregorian(rawFieldValue)
+						: rawFieldValue;
+
+					_.set(newPortRequestDocument, field.portRequestPath, fieldValue);
+				} else {
+					_.unset(newPortRequestDocument, field.portRequestPath);
+				}
+			});
 
 			return newPortRequestDocument;
 		},
