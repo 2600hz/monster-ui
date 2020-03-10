@@ -83,17 +83,74 @@ define(function(require) {
 				},
 				minTargetDateBusinessDays: 4,
 				requirements: {
-					LOA: 'form.pdf',
-					CountryInfo: 'country_info.pdf',
-					Bill: 'bill.pdf',
-					AccountNum: 'account_number.pdf',
-					TaxID: 'tax_id.pdf',
-					CustomerID: 'customer_id.pdf',
-					LegalAuth: 'legal_auth.pdf',
-					LocalAddr: 'local_address.pdf',
-					ServiceAddr: 'service_address.pdf',
-					ReleaseLetter: 'release_letter.pdf',
-					PaymentProof: 'payment_proof.pdf'
+					documents: {
+						Bill: 'bill.pdf',
+						CountryInfo: 'country_info.pdf',
+						CustomerID: 'customer_id.pdf',
+						LegalAuth: 'legal_auth.pdf',
+						LOA: 'form.pdf',
+						PaymentProof: 'payment_proof.pdf',
+						ReleaseLetter: 'release_letter.pdf',
+						TaxID: 'tax_id.pdf'
+					},
+					fields: {
+						LOA: [
+							{
+								name: 'loaSignee',
+								step: 'requiredDocuments',
+								section: 'extra',
+								type: 'text',
+								portRequestPath: 'signee_name'
+							},
+							{
+								name: 'loaSigningDate',
+								step: 'requiredDocuments',
+								section: 'extra',
+								type: 'date',
+								portRequestPath: 'signing_date'
+							}
+						]
+					},
+					rules: {
+						AccountNum: [
+							{
+								name: 'accountNumber',
+								step: 'ownershipConfirmation',
+								section: 'accountInfo',
+								required: true
+							}
+						],
+						LocalAddr: [
+							{
+								name: 'locality',
+								step: 'ownershipConfirmation',
+								section: 'serviceAddress',
+								equalTo: '[name="numbers.city"]'
+							}
+						],
+						ServiceAddr: [
+							{
+								name: 'country',
+								step: 'ownershipConfirmation',
+								section: 'serviceAddress',
+								equalTo: '[name="numbers.country"]'
+							}
+						],
+						LOA: [
+							{
+								name: 'loaSignee',
+								step: 'requiredDocuments',
+								section: 'extra',
+								required: true
+							},
+							{
+								name: 'loaSigningDate',
+								step: 'requiredDocuments',
+								section: 'extra',
+								required: true
+							}
+						]
+					}
 				},
 				requirementsByCountries: {
 					AT: {
@@ -648,7 +705,7 @@ define(function(require) {
 			var self = this,
 				portWizardAppFlags = self.appFlags.portWizard,
 				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
-				allRequiredDocuments = portWizardAppFlags.requirements,
+				allRequiredDocuments = portWizardAppFlags.requirements.documents,
 				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
 				numbersTypeValidationResult = args.numbersTypeValidationResult,
@@ -3318,14 +3375,16 @@ define(function(require) {
 						return waterfallCallback(null, numbersCarrierData);
 					}
 
-					var requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
+					var portWizardAppFlags = self.appFlags.portWizard,
+						allRequirements = portWizardAppFlags.requirements,
+						requirementsByCountry = _.get(portWizardAppFlags.requirementsByCountries, [numbersCarrierData.countryCode, numbersType]),
 						requiredDocuments = _
-							.chain(requirementsByCountries)
-							.get([numbersCarrierData.countryCode, numbersType])
-							.map(function(documentKey) {
+							.chain(allRequirements.documents)
+							.pick(requirementsByCountry)
+							.map(function(attachmentName, documentKey) {
 								return {
 									key: documentKey,
-									attachmentName: _.get(self.appFlags.portWizard.requirements, documentKey),
+									attachmentName: attachmentName,
 									required: true
 								};
 							})
