@@ -500,7 +500,7 @@ define(function(require) {
 					var wizardPortRequestData = self.portWizardFormatPortRequestData({
 						formattedNumbers: formattedPhoneNumbers,
 						numbersTypeValidationResult: numbersTypeValidationResult,
-						carrierWarningType: _.get(numbersCarrierData, 'carrierWarningType'),
+						numbersCarrierData: numbersCarrierData,
 						data: portRequestData
 					});
 
@@ -698,7 +698,7 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to be ported
 		 * @param  {('none'|'multipleTypes'|'typeMismatch')} args.numbersTypeValidationResult  Numbers type validation result
-		 * @param  {String} args.carrierWarningType  Warning type for number carriers
+		 * @param  {String} args.numbersCarrierData  Carrier data for the phone numbers to be ported
 		 * @param  {Object} args.data  Port request data
 		 */
 		portWizardFormatPortRequestData: function(args) {
@@ -709,7 +709,7 @@ define(function(require) {
 				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
 				numbersTypeValidationResult = args.numbersTypeValidationResult,
-				carrierWarningType = args.carrierWarningType,
+				numbersCarrierData = args.numbersCarrierData,
 				portRequestData = args.data,
 				billData = portRequestData.bill,
 				billAttachmentData = _.get(portRequestData.uploads, billAttachmentName),
@@ -741,7 +741,8 @@ define(function(require) {
 							numbers: _.join(numbers, ', '),
 							formattedNumbers: formattedPhoneNumbers,
 							typeValidationResult: numbersTypeValidationResult,
-							areValid: numbersTypeValidationResult === 'none' && carrierWarningType === 'none'
+							areValid: numbersTypeValidationResult === 'none' && _.get(numbersCarrierData, 'carrierWarningType') === 'none',
+							country: _.get(numbersCarrierData, 'countryCode')
 						}
 					},
 					carrierSelection: _.has(portRequestData, 'winning_carrier')
