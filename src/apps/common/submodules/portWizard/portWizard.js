@@ -2415,6 +2415,15 @@ define(function(require) {
 					});
 
 			$template
+				.find('.password-toggle')
+					.on('change', function() {
+						$(this)
+							.closest('.password-field')
+								.find('.password-value')
+									.toggleClass('password-hidden');
+					});
+
+			$template
 				.find('#port_wizard_step_print')
 					.on('click', function(e) {
 						e.preventDefault();

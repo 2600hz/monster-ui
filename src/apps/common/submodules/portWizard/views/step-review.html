@@ -80,6 +80,29 @@
 						{{value.name}}
 						<img class="country-flag" src="css/assets/flags/24/{{value.code}}.png" onerror="this.onerror=null;this.src='css/assets/flags/24/_unknown.png'" />
 					{{/horizontalFieldPartial}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.accountInfo.labels.accountNumber value=@root.data.ownershipConfirmation.accountInfo.accountNumber}}
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.accountInfo.labels.pin value=@root.data.ownershipConfirmation.accountInfo.pin hasContent=true}}
+						<div class="password-field">
+							<div class="password-value password-hidden">
+								<span class="password-text">
+									{{value}}
+								</span>
+								<span class="password-mask">
+									{{portWizardStepsI18n.review.general.labels.passwordMask}}
+								</span>
+							</div>
+							<label class="password-toggle-label">
+								<input type="checkbox" class="password-toggle" />
+								<span class="password-show">
+									{{portWizardStepsI18n.review.general.labels.show}}
+								</span>
+								<span class="password-hide">
+									{{portWizardStepsI18n.review.general.labels.hide}}
+								</span>
+							</label>
+						</div>
+					{{/horizontalFieldPartial}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.accountInfo.labels.btn value=@root.data.ownershipConfirmation.accountInfo.btn}}
 				</div>
 			</div>
 			<div class="section">
