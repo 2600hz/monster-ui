@@ -1784,6 +1784,11 @@ define(function(require) {
 					directionals: self.appFlags.portWizard.cardinalDirections,
 					losingCarrier: losingCarrier,
 					isBillRequired: isBillRequired,
+					extraFields: self.portWizardGet([
+						'requirements',
+						'fieldsByStep',
+						'ownershipConfirmation'
+					])
 				},
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
@@ -1971,11 +1976,18 @@ define(function(require) {
 				requiredDocumentsMap = _.keyBy(requiredDocumentsList, 'key'),
 				requiredDocumentsKeys = _.keys(requiredDocumentsMap),
 				requiredDocumentsData = _.get(args.data, 'requiredDocuments', {}),
-				validationOptions,
+				todayDate = moment().toDate(),
+				extraData = requiredDocumentsData.extra,
+				documentsData,
+				requiredValidationRules,
+				validationRules,
+				validationMessages,
 				$template,
 				$form;
 
 			if (_.isEmpty(requiredDocumentsList)) {
+				self.portWizardUnset('documentsData');
+
 				monster.pub('common.navigationWizard.goToStep', {
 					stepId: 4
 				});
@@ -1984,32 +1996,47 @@ define(function(require) {
 			}
 
 			// Update required documents based on current requirements
-			requiredDocumentsData = _
+			documentsData = _
 				.chain(requiredDocumentsData)
+				.get('documents', {})
 				.mapValues(function(documentData) {
 					return _.merge({}, documentData, { required: false });
 				})
 				.merge(requiredDocumentsMap)
 				.value();
 
-			self.portWizardSet('requiredDocumentsData', requiredDocumentsData);
+			self.portWizardSet('documentsData', documentsData);
 
 			$template = $(self.getTemplate({
 				name: 'step-requiredDocuments',
 				data: {
 					data: {
-						requiredDocuments: {
-							orderedKeys: requiredDocumentsKeys,
-							data: requiredDocumentsData
-						}
-					}
+						documents: documentsData,
+						extra: extraData
+					},
+					documentKeys: requiredDocumentsKeys,
+					extraFields: self.portWizardGet([
+						'requirements',
+						'fieldsByStep',
+						'requiredDocuments'
+					])
 				},
 				submodule: 'portWizard'
 			}));
 
+			$template.find('.date-picker').each(function() {
+				var $this = $(this),
+					name = $this.attr('name'),
+					dateValue = _.get(requiredDocumentsData, name, todayDate);
+
+				monster.ui.datepicker($this, {
+					maxDate: todayDate
+				}).datepicker('setDate', dateValue);
+			});
+
 			self.portWizardRequiredDocumentsBindEvents({
 				template: $template,
-				requiredDocumentsData: requiredDocumentsData
+				documentsData: documentsData
 			});
 
 			$form = $template.find('form');
@@ -2067,6 +2094,11 @@ define(function(require) {
 			// If form is not loaded, it means that the step was skipped because there are no required documents
 			if (isValid && isFormLoaded) {
 				requiredDocumentsData = self.portWizardGetFormData($form);
+
+				_.set(requiredDocumentsData, 'documents', self.portWizardGet('documentsData'));
+
+				self.portWizardUnset('documentsData');
+
 				delete args.data.requiredDocuments;
 			}
 
@@ -2082,12 +2114,12 @@ define(function(require) {
 		 * Bind Required Documents step events
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.requiredDocumentsData  Required documents
+		 * @param  {Object} args.documentsData  Required documents
 		 */
 		portWizardRequiredDocumentsBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
-				requiredDocumentsData = args.requiredDocumentsData,
+				documentsData = args.documentsData,
 				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
@@ -2095,7 +2127,7 @@ define(function(require) {
 				.each(function() {
 					var $this = $(this),
 						documentKey = $this.data('key'),
-						document = _.get(requiredDocumentsData, documentKey);
+						document = _.get(documentsData, documentKey);
 
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
@@ -2104,7 +2136,7 @@ define(function(require) {
 						fileRestrictions: pdfFilesRestrictions,
 						success: function(fileData) {
 							self.portWizardSet([
-								'requiredDocumentsData',
+								'documentsData',
 								documentKey
 							], fileData);
 						}
@@ -2112,7 +2144,7 @@ define(function(require) {
 
 					$this
 						.siblings('input[type="text"]')
-							.attr('name', document.key + '.name');
+							.attr('name', 'documents.' + document.key + '.name');
 				});
 		},
 
@@ -2441,7 +2473,8 @@ define(function(require) {
 					'requiredDocuments'
 				]),
 				bill = _.get(data, 'ownershipConfirmation.latestBill'),
-				otherDocuments = _.get(data, 'requiredDocuments', {}),
+				requiredDocumentsData = data.requiredDocuments,
+				otherDocuments = _.get(requiredDocumentsData, 'documents', {}),
 				allDocuments = _
 					.merge({
 						Bill: bill
@@ -2462,12 +2495,15 @@ define(function(require) {
 								}
 							}
 						},
-						requiredDocuments: _.map(requiredDocumentsList, function(documentMetadata) {
-							return {
-								key: documentMetadata.key,
-								name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
-							};
-						})
+						requiredDocuments: {
+							documents: _.map(requiredDocumentsList, function(documentMetadata) {
+								return {
+									key: documentMetadata.key,
+									name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
+								};
+							}),
+							extra: _.get(requiredDocumentsData, 'extra', {})
+						}
 					});
 
 			return formattedData;

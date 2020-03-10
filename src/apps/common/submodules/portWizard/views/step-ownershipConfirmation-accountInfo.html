@@ -11,14 +11,14 @@
 		{{#if ../hasContent}}	{{!-- Necessary to know if there is a @partial-block to render, and to avoid endless recursion --}}
 			{{> @partial-block section=../section name=../name value=(lookup (lookup @root.data ../section) ../name)}}
 		{{else}}
-			<input class="input-block-level" type="text" name="{{../section}}.{{../name}}" placeholder="{{coalesce (lookup sectionI18n.placeholders ../name) (tryI18n sectionI18n.labels ../name)}}"{{#if ../mask}} data-mask="{{../mask}}"{{else}}{{#if ../monsterMask}} data-monster-mask="{{../monsterMask}}"{{/if}}{{/if}} value="{{lookup (lookup @root.data ../section) ../name}}">
+			<input class="input-block-level" type="{{#if ../type}}{{../type}}{{else}}text{{/if}}" name="{{../section}}.{{../name}}" placeholder="{{coalesce (lookup sectionI18n.placeholders ../name) (tryI18n sectionI18n.labels ../name)}}"{{#if ../mask}} data-mask="{{../mask}}"{{else}}{{#if ../monsterMask}} data-monster-mask="{{../monsterMask}}"{{/if}}{{/if}} value="{{lookup (lookup @root.data ../section) ../name}}">
 		{{/if}}
 		</label>
 	{{/with}}
 	</div>
 {{/inline}}
 
-{{#*inline "directionalDropdown"}}
+{{#*inline "directionalDropdownPartial"}}
 	{{#with @root.i18n.commonApp.portWizard.steps.ownershipConfirmation as |ownershipConfirmationI18n|}}
 		<select name="{{../section}}.{{../name}}">
 		{{#select ../value}}
@@ -38,6 +38,12 @@
 	{{/with}}
 {{/inline}}
 
+{{#*inline "extraFieldsPartial"}}
+	{{#each (lookup @root.extraFields section)}}
+		{{> formFieldPartial section=section name=name type=type}}
+	{{/each}}
+{{/inline}}
+
 <div id="step_ownership_confirmation" class="wizard-step container-fluid">
 {{#with i18n.commonApp.portWizard.steps.ownershipConfirmation as |ownershipConfirmationI18n|}}
 	<div class="step-title">
@@ -46,10 +52,12 @@
 	<div class="step-body flex-row-container">
 		<div class="{{#if @root.isBillRequired}}flex-item-2{{else}}flex-item-1{{/if}}">
 			<form id="form_ownership_confirmation">
+				<input type="hidden" name="numbers.country" value="{{@root.data.numbers.country}}">
 				<div class="step-section">
 					<div class="section-body flex-row-container">
 						{{> formFieldPartial section="accountOwnership" name="carrier"}}
 						{{> formFieldPartial section="accountOwnership" name="billName"}}
+						{{> extraFieldsPartial section="accountOwnership"}}
 					</div>
 				</div>
 				<div class="step-section">
@@ -58,13 +66,13 @@
 					</div>
 					<div class="section-body flex-row-container">
 						{{#> formFieldPartial section="serviceAddress" name="streetPreDir" hasContent=true}}
-							{{> directionalDropdown}}
+							{{> directionalDropdownPartial}}
 						{{/formFieldPartial}}
 						{{> formFieldPartial section="serviceAddress" name="streetNumber" mask="000000000"}}
 						{{> formFieldPartial section="serviceAddress" name="streetName"}}
 						{{> formFieldPartial section="serviceAddress" name="streetType"}}
 						{{#> formFieldPartial section="serviceAddress" name="streetPostDir" hasContent=true}}
-							{{> directionalDropdown}}
+							{{> directionalDropdownPartial}}
 						{{/formFieldPartial}}
 						{{> formFieldPartial section="serviceAddress" name="addressLine2"}}
 						{{> formFieldPartial section="serviceAddress" name="locality"}}
@@ -73,6 +81,7 @@
 						{{#> formFieldPartial section="serviceAddress" name="country" hasContent=true}}
 							<select id="service_address_country" name="serviceAddress.country"></select>
 						{{/formFieldPartial}}
+						{{> extraFieldsPartial section="serviceAddress"}}
 					</div>
 				</div>
 				<div class="step-section">
@@ -81,8 +90,9 @@
 							{{ownershipConfirmationI18n.accountInfo.description}}
 						</div>
 						{{> formFieldPartial section="accountInfo" name="accountNumber"}}
-						{{> formFieldPartial section="accountInfo" name="pin"}}
-						{{> formFieldPartial section="accountInfo" name="btn"}}
+						{{> formFieldPartial section="accountInfo" name="pin" type="password"}}
+						{{> formFieldPartial section="accountInfo" name="btn" monsterMask="phoneNumber"}}
+						{{> extraFieldsPartial section="accountInfo"}}
 					</div>
 				</div>
 			</form>

@@ -202,7 +202,14 @@
 					"label": "Required Documents",
 					"description": "Upload any other required documents and forms for your port request.",
 					"titleSingleDocument": "Due to regulations in your country, {{variable}} is required with your port request.",
-					"titleMultipleDocuments": "Due to regulations in your country, there are {{variable}} documents that are required for this port request"
+					"titleMultipleDocuments": "Due to regulations in your country, there are {{variable}} documents that are required for this port request",
+					"extraData": {
+						"title": "Complementary Data",
+						"labels": {
+							"loaSignee": "LOA Signee",
+							"loaSigningDate": "LOA Signing Date"
+						}
+					}
 				},
 				"dateAndNotifications": {
 					"label": "Desired Date + Notifications",
