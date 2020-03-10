@@ -779,25 +779,31 @@ define(function(require) {
 							})
 						})
 						: null,
-					requiredDocuments: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
-						? _
-							.chain(portRequestData)
-							.get('uploads')
-							.omit(billAttachmentName)
-							.mapValues(function(attachmentData, attachmentName) {
-								var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
+					requiredDocuments: self.portWizardOmitEmptyOrNilProperties({
+						documents: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
+							? _
+								.chain(portRequestData)
+								.get('uploads')
+								.omit(billAttachmentName)
+								.mapValues(function(attachmentData, attachmentName) {
+									var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
 
-								return _.merge({
-									name: attachmentName,
-									attachmentName: attachmentName
-								}, documentDefaultMetadata, attachmentData, documentMetadata);
-							})
-							.mapKeys(function(document, attachmentName) {
-								return _.get(allRequiredDocumentsByAttachmentName, attachmentName, attachmentName);
-							})
-							.merge(_.omit(requiredDocumentsByKey, 'Bill'))
-							.value()
-						: null,
+									return _.merge({
+										name: attachmentName,
+										attachmentName: attachmentName
+									}, documentDefaultMetadata, attachmentData, documentMetadata);
+								})
+								.mapKeys(function(document, attachmentName) {
+									return _.get(allRequiredDocumentsByAttachmentName, attachmentName, attachmentName);
+								})
+								.merge(_.omit(requiredDocumentsByKey, 'Bill'))
+								.value()
+							: null,
+						extra: self.portWizardOmitEmptyOrNilProperties({
+							loaSignee: portRequestData.signee_name,
+							loaSigningDate: portRequestData.signing_date
+						})
+					}),
 					dateAndNotifications: _.has(portRequestData, 'transfer_date')
 						? {
 							targetDate: adjustedTargetDate,
