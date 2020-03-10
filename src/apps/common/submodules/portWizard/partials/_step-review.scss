@@ -69,6 +69,13 @@
 	}
 
 	@media print {
+		.edit-step,
+		.monster-button,
+		.password-toggle-label,
+		.password-text {
+			display: none;
+		}
+
 		.number-item {
 			width: 50%;
 		}
