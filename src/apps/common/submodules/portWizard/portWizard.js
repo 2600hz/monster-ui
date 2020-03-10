@@ -571,6 +571,38 @@ define(function(require) {
 					}
 
 					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+				},
+				function checkRequiredExtraFields($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+					// Check required complementary fields, and modify wizard step if required
+					var requiredFieldsByStep = self.portWizardGet('requirements.fieldsByStep');
+
+					_.each(stepNames, function(stepName, stepIndex) {
+						var stepHasRequiredExtraFieldMissing = _
+							.chain(requiredFieldsByStep)
+							.get(stepName, {})
+							.some(function(sectionFields, section) {
+								return _.some(sectionFields, function(field) {
+									var isFieldMissing = field.isRequired
+										&& _
+											.chain(wizardPortRequestData)
+											.get([ stepName, section, field.name ])
+											.thru(self.portWizardIsValueEmptyOrNil)
+											.value();
+
+									return isFieldMissing;
+								});
+							})
+							.value();
+
+						if (!stepHasRequiredExtraFieldMissing) {
+							return true;
+						}
+
+						wizardStepId = stepIndex;
+						return false;
+					});
+
+					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 				}
 			], function renderWizard(error, $container, wizardPortRequestData, wizardStepId) {
 				if (error) {
