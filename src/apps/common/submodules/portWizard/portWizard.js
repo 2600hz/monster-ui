@@ -550,7 +550,7 @@ define(function(require) {
 				},
 				function checkRequiredDocuments($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
 					// Check required documents, and modify wizard step if needed
-					var requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+					var requiredDocumentsCompleteList = self.portWizardGet('requirements.documentsList'),
 						requiredDocumentsMap = _.keyBy(requiredDocumentsCompleteList, 'key'),
 						isBillRequired = _.has(requiredDocumentsMap, 'Bill'),
 						isBillAttached = _.has(wizardPortRequestData, 'ownershipConfirmation.latestBill.file'),
@@ -720,7 +720,7 @@ define(function(require) {
 					required: false
 				},
 				allRequiredDocumentsByAttachmentName = _.invert(allRequiredDocuments),
-				requiredDocumentsList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsList = self.portWizardGet('requirements.documentsList'),
 				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsList, 'attachmentName'),
 				requiredDocumentsByKey = _.keyBy(requiredDocumentsList, 'key'),
 				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
@@ -1612,8 +1612,7 @@ define(function(require) {
 		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this,
 				losingCarrier = args.data.carrierSelection.losingCarrier,
-				ownershipConfirmationData = _.get(args.data, 'ownershipConfirmation'),
-				requiredDocumentsList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsList = self.portWizardGet('requirements.documentsList'),
 				billMetadata = _.find(requiredDocumentsList, { key: 'Bill' }),
 				$template = _.isUndefined(billMetadata) || _.has(args.data, 'ownershipConfirmation.latestBill')
 					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
@@ -1926,11 +1925,12 @@ define(function(require) {
 		/**
 		 * Render the Required Documents step
 		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args.data  Wizard data
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this,
-				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsCompleteList = self.portWizardGet('requirements.documentsList'),
 				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Bill' }),
 				requiredDocumentsMap = _.keyBy(requiredDocumentsList, 'key'),
 				requiredDocumentsKeys = _.keys(requiredDocumentsMap),
@@ -2408,7 +2408,7 @@ define(function(require) {
 					.merge({
 						Bill: bill
 					}, otherDocuments),
-				requiredDocumentsList = self.portWizardGet('requiredDocumentsList', []),
+				requiredDocumentsList = self.portWizardGet('requirements.documentsList', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
 						nameAndNumbers: {
@@ -3378,6 +3378,9 @@ define(function(require) {
 					var portWizardAppFlags = self.appFlags.portWizard,
 						allRequirements = portWizardAppFlags.requirements,
 						requirementsByCountry = _.get(portWizardAppFlags.requirementsByCountries, [numbersCarrierData.countryCode, numbersType]),
+						getFieldCompositeName = function(field) {
+							return field.section + '.' + field.name;
+						},
 						requiredDocuments = _
 							.chain(allRequirements.documents)
 							.pick(requirementsByCountry)
@@ -3388,12 +3391,57 @@ define(function(require) {
 									required: true
 								};
 							})
-							.value();
+							.value(),
+						requiredRulesByStep = _
+							.chain(allRequirements.rules)
+							.pick(requirementsByCountry)
+							.flatMap()
+							.groupBy('step')
+							.mapValues(function(stepRules) {
+								return _
+									.chain(stepRules)
+									.keyBy(getFieldCompositeName)
+									.mapValues(function(fieldRules) {
+										return _.omit(fieldRules, [ 'step', 'section', 'name' ]);
+									})
+									.value();
+							})
+							.value(),
+						requiredFieldsByStep = _
+							.chain(allRequirements.fields)
+							.pick(requirementsByCountry)
+							.flatMap()
+							.groupBy('step')
+							.mapValues(function(stepFields) {
+								return _
+									.chain(stepFields)
+									.groupBy('section')
+									.mapValues(function(sectionFields) {
+										return _.map(sectionFields, function(field) {
+											var fieldCompositeName = getFieldCompositeName(field);
 
-					self.portWizardSet('requiredDocumentsList', requiredDocuments);
+											return _.merge({
+												isRequired: _.get(requiredRulesByStep, [
+													field.step,
+													fieldCompositeName,
+													'required'
+												], false)
+											}, _.omit(field, 'step'));
+										});
+									})
+									.value();
+							})
+							.value(),
+						formattedRequirements = {
+							documentsList: requiredDocuments,
+							fieldsByStep: requiredFieldsByStep,
+							rulesByStep: requiredRulesByStep
+						};
+
+					self.portWizardSet('requirements', formattedRequirements);
 
 					waterfallCallback(null, _.assign(numbersCarrierData, {
-						requiredDocuments: requiredDocuments
+						requirements: formattedRequirements
 					}));
 				}
 			], callback);
