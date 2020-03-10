@@ -282,17 +282,14 @@
 				}
 			},
 			"documents": {
-				"LOA": "DIDWW LOA for a particular country",
-				"CountryInfo": "Specific information for a particular country",
 				"Bill": "Losing Carrier Bill",
-				"AccountNum": "Account number required",
-				"TaxID": "Local TAX / VAT ID or company registration number",
+				"CountryInfo": "Specific information for a particular country",
 				"CustomerID": "ID / Passport copy / Company Registration certificate",
 				"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
-				"LocalAddr": "End-user’s local address from the same city as the number to be ported",
-				"ServiceAddr": "End-user’s Service address in the same country",
+				"LOA": "DIDWW LOA for a particular country",
+				"PaymentProof": "Latest Proof of Payment",
 				"ReleaseLetter": "Letter of Release from the losing provider",
-				"PaymentProof": "Latest Proof of Payment"
+				"TaxID": "Local TAX / VAT ID or company registration number"
 			},
 			"load": {
 				"errors": {
