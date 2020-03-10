@@ -629,8 +629,7 @@ define(function(require) {
 		 */
 		portWizardGetPortRequestData: function(args) {
 			var self = this,
-				portRequestId = args.portRequestId,
-				requiredDocuments = self.appFlags.portWizard.requirements;
+				portRequestId = args.portRequestId;
 
 			monster.waterfall([
 				function(waterfallCallback) {
@@ -648,8 +647,6 @@ define(function(require) {
 				},
 				function(portRequest, waterfallCallback) {
 					monster.parallel(_.mapValues(portRequest.uploads, function(attachmentData, attachmentName) {
-						var documentMetadata = _.find(requiredDocuments, { attachmentName: attachmentName });
-
 						return function(parallelCallback) {
 							self.portWizardRequestGetAttachment({
 								data: {
@@ -660,7 +657,7 @@ define(function(require) {
 								success: function(fileData) {
 									var data = _.merge({
 										file: fileData
-									}, documentMetadata, attachmentData);
+									}, attachmentData);
 
 									parallelCallback(null, data);
 								},
@@ -670,7 +667,7 @@ define(function(require) {
 											? 'attachmentNotFound'
 											: 'attachmentDownloadFailed',
 										error: parsedError
-									}, documentMetadata, attachmentData);
+									}, attachmentData);
 
 									parallelCallback(null, data);
 								}
