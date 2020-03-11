@@ -16,4 +16,14 @@
 	.number-list {
 		margin-bottom: 0;
 	}
+
+	@media print {
+		.number-item {
+			width: 50%;
+		}
+
+		.monster-checkbox i {
+			display: none;
+		}
+	}
 }
