@@ -450,7 +450,7 @@ define(function(require) {
 					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData);
 				},
 				function getPreliminarWizardInitialStep($container, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
-					// Get preliminar wizard step to display
+					// Get preliminary wizard step to resume editing
 					var hasStepData = _.partial(_.has, wizardPortRequestData),
 						nameAndNumbersStepId = _.indexOf(stepNames, 'nameAndNumbers'),
 						wizardStepId = wizardPortRequestData.nameAndNumbers.numbersToPort.typeValidationResult === 'none'
