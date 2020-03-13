@@ -563,7 +563,7 @@ define(function(require) {
 
 			// Set new template and menu items
 			self.navigationWizardSetSelected({
-				stepId: stepId
+				stepId: _.get(result, 'goToStepId', -1) >= 0 ? result.goToStepId : stepId
 			});
 			self.navigationWizardGenerateTemplate();
 		},

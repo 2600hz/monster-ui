@@ -940,15 +940,18 @@ define(function(require) {
 		 * @param  {Object} args.data  Wizard's data that is shared across steps
 		 * @returns  {Object}  Object that contains the updated step data, and if it is valid
 		 */
-		portWizardNameAndNumbersUtil: function($template, args) {
+		portWizardNameAndNumbersUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
 				validateForm = monster.ui.validate($form),
 				isValid = monster.ui.valid($form),
+				previousE164Numbers = _.get(args, 'data.nameAndNumbers.numbersToPort.e164Numbers', []),
 				nameAndNumbersData,
 				formattedNumbers,
 				e164Numbers,
-				numbersTypeValidationResult;
+				numbersTypeValidationResult,
+				areThereNewNumbers,
+				goToStepId;
 
 			if (!isValid) {
 				return {
@@ -990,6 +993,22 @@ define(function(require) {
 				// Clean nameAndNumbers data, to avoid keeping old data inadvertently when merging
 				// the new data
 				delete args.data.nameAndNumbers;
+
+				// Check for new numbers
+				areThereNewNumbers = _
+					.chain(e164Numbers)
+					.difference(previousE164Numbers)
+					.some()
+					.value();
+
+				if (areThereNewNumbers && _.has(eventArgs, 'nextStepId')) {
+					goToStepId = _
+						.chain(args)
+						.get('steps')
+						.map('name')
+						.indexOf('carrierSelection')
+						.value();
+				}
 			} else {
 				self.portWizardNameAndNumbersShowNumberTypeValidationError({
 					validator: validateForm,
@@ -999,6 +1018,7 @@ define(function(require) {
 
 			return {
 				valid: isValid,
+				goToStepId: goToStepId,
 				data: {
 					nameAndNumbers: nameAndNumbersData
 				}
