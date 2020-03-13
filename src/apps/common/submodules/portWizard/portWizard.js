@@ -769,6 +769,7 @@ define(function(require) {
 							type: portRequestData.ui_flags.type,
 							numbers: _.join(numbers, ', '),
 							formattedNumbers: formattedPhoneNumbers,
+							e164Numbers: _.map(formattedPhoneNumbers, 'e164Number'),
 							typeValidationResult: numbersTypeValidationResult,
 							areValid: numbersTypeValidationResult === 'none' && _.get(numbersCarrierData, 'carrierWarningType') === 'none',
 							country: _.get(numbersCarrierData, 'countryCode')
@@ -945,6 +946,8 @@ define(function(require) {
 				validateForm = monster.ui.validate($form),
 				isValid = monster.ui.valid($form),
 				nameAndNumbersData,
+				formattedNumbers,
+				e164Numbers,
 				numbersTypeValidationResult;
 
 			if (!isValid) {
@@ -956,7 +959,7 @@ define(function(require) {
 			nameAndNumbersData = self.portWizardGetFormData($form);
 
 			// Extract and format numbers
-			nameAndNumbersData.numbersToPort.formattedNumbers = _
+			formattedNumbers = _
 				.chain(nameAndNumbersData.numbersToPort.numbers)
 				.split(',')
 				.map(_.trim)
@@ -964,22 +967,25 @@ define(function(require) {
 				.map(monster.util.getFormatPhoneNumber)
 				.uniqBy('e164Number')
 				.value();
+			e164Numbers = _.map(formattedNumbers, 'e164Number');
 
 			// Validate numbers type
 			numbersTypeValidationResult = self.portWizardValidateNumbersType({
-				formattedNumbers: nameAndNumbersData.numbersToPort.formattedNumbers,
+				formattedNumbers: formattedNumbers,
 				expectedNumbersType: nameAndNumbersData.numbersToPort.type
 			});
 
 			isValid = numbersTypeValidationResult === 'none';
 
 			if (isValid) {
-				// Extract numbers in standard format
-				nameAndNumbersData.numbersToPort.numbers = _
-					.chain(nameAndNumbersData.numbersToPort.formattedNumbers)
-					.map('e164Number')
-					.join(', ')
-					.value();
+				// Set numbers values
+				_.merge(nameAndNumbersData, {
+					numbersToPort: {
+						formattedNumbers: formattedNumbers,
+						e164Numbers: e164Numbers,
+						numbers: _.join(e164Numbers, ', ')
+					}
+				});
 
 				// Clean nameAndNumbers data, to avoid keeping old data inadvertently when merging
 				// the new data
@@ -2494,7 +2500,6 @@ define(function(require) {
 		 */
 		portWizardReviewFormatData: function(data) {
 			var self = this,
-				numbers = _.map(data.nameAndNumbers.numbersToPort.formattedNumbers, 'e164Number'),
 				countryCode = data.ownershipConfirmation.serviceAddress.country,
 				defaultValues = {
 					review: {
@@ -2508,6 +2513,7 @@ define(function(require) {
 				},
 				cleanData = _.omit(data, [
 					'nameAndNumbers.numbersToPort.formattedNumbers',
+					'nameAndNumbers.numbersToPort.numbers',
 					'requiredDocuments'
 				]),
 				bill = _.get(data, 'ownershipConfirmation.latestBill'),
@@ -2520,11 +2526,6 @@ define(function(require) {
 				requiredDocumentsList = self.portWizardGet('requirements.documentsList', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
-						nameAndNumbers: {
-							numbersToPort: {
-								numbers: numbers
-							}
-						},
 						ownershipConfirmation: {
 							serviceAddress: {
 								country: {
