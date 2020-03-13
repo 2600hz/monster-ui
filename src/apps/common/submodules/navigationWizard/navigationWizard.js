@@ -575,12 +575,16 @@ define(function(require) {
 		 */
 		navigationWizardComplete: function(args) {
 			var self = this,
-				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				wizardArgs = navigationWizardFlags.wizardArgs,
 				wizardThisArg = wizardArgs.thisArg,
 				eventType = args.eventType,
+				doCompleteStep = eventType === 'done',
+				currentStep = navigationWizardFlags.currentStep,
+				lastCompletedStep = _.get(navigationWizardFlags, 'lastCompletedStep', -1),
 				result = self.navigationWizardUtilForTemplate({
 					eventType: eventType,
-					completeStep: eventType === 'done'
+					completeStep: doCompleteStep
 				}),
 				completeFunctionRef = eventType === 'save'
 					? _.get(wizardArgs, 'save', wizardArgs.done)	// If save function is not provided, default to done function
@@ -589,7 +593,11 @@ define(function(require) {
 					? completeFunctionRef
 					: wizardThisArg[completeFunctionRef],	// Support function name, for backward compatibility
 				eventArgs = {
-					eventType: eventType
+					eventType: eventType,
+					currentStepId: currentStep,
+					lastCompletedStepId: doCompleteStep && result.valid && currentStep > lastCompletedStep
+						? currentStep
+						: lastCompletedStep
 				};
 
 			if (!result.valid) {
