@@ -490,17 +490,16 @@ define(function(require) {
 
 		/**
 		 * Executes the method to validate and process the current step data
-		 * @param  {Object} args
-		 * @param  {('back'|'done'|'goto'|'next'|'save')} args.eventType  Type of event that
-		 *                                                                triggered the execution
-		 *                                                                of the util method
-		 * @param  {Boolean} args.completeStep  Indicates whether or not the current step will be
-		 *                                      completed
+		 * @param  {Object} eventArgs
+		 * @param  {('back'|'done'|'goto'|'next'|'save')} eventArgs.eventType  Type of event that
+		 *                                                                     triggered the execution
+		 *                                                                     of the util method
+		 * @param  {Boolean} eventArgs.completeStep  Indicates whether or not the current step will be
+		 *                                           completed
+		 * @param  {Number} eventArgs.nextStepId  ID of the next step to be loaded, if any
 		 */
-		navigationWizardUtilForTemplate: function(args) {
+		navigationWizardUtilForTemplate: function(eventArgs) {
 			var self = this,
-				eventType = args.eventType,
-				completeStep = args.completeStep,
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				thisArg = wizardArgs.thisArg,
@@ -508,10 +507,7 @@ define(function(require) {
 				currentStep = navigationWizardFlags.currentStep,
 				util = steps[currentStep].util;
 
-			return thisArg[util](wizardArgs.template, wizardArgs, {
-				eventType: eventType,
-				completeStep: completeStep
-			});
+			return thisArg[util](wizardArgs.template, wizardArgs, eventArgs);
 		},
 
 		/**
@@ -545,7 +541,8 @@ define(function(require) {
 			if (validateCurrentStep) {
 				result = self.navigationWizardUtilForTemplate({
 					eventType: eventType,
-					completeStep: completeCurrentStep
+					completeStep: completeCurrentStep,
+					nextStepId: stepId
 				});
 
 				if (!result.valid) {
