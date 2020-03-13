@@ -1002,6 +1002,8 @@ define(function(require) {
 					.value();
 
 				if (areThereNewNumbers && _.has(eventArgs, 'nextStepId')) {
+					self.portWizardSet('jumpToStepId', eventArgs.nextStepId);
+
 					goToStepId = _
 						.chain(args)
 						.get('steps')
@@ -1231,14 +1233,14 @@ define(function(require) {
 				carrierSelectionData = _.get(args.data, 'carrierSelection');
 
 			monster.waterfall([
-				function(waterfallCallback) {
+				function getCarrierDataAndRequirements(waterfallCallback) {
 					self.portWizardLoadNumbersCarrierDataAndRequirements({
 						formattedNumbers: formattedNumbers,
 						numbersType: numbersType,
 						callback: waterfallCallback
 					});
 				},
-				function(numbersCarrierData, waterfallCallback) {
+				function setWizardButtonProps(numbersCarrierData, waterfallCallback) {
 					var areNumbersValid = numbersCarrierData.carrierWarningType === 'none';
 
 					monster.pub(
@@ -1271,22 +1273,34 @@ define(function(require) {
 						country: numbersCarrierData.countryCode
 					});
 
-					waterfallCallback(null, numbersCarrierData);
+					waterfallCallback(null, _.merge({
+						areNumbersValid: areNumbersValid
+					}, numbersCarrierData));
 				},
-				function(numbersCarrierData, waterfallCallback) {
-					var $template = (numbersCarrierData.carrierWarningType === 'none')
-						? self.portWizardCarrierSelectionSingleGetTemplate({
-							numbersCarrierData: numbersCarrierData,
-							carrierSelectionData: carrierSelectionData
-						})
-						: self.portWizardCarrierSelectionMultipleGetTemplate({
-							portRequestName: portRequestName,
-							numbersCarrierData: numbersCarrierData
+				function renderTemplate(numbersCarrierData, waterfallCallback) {
+					var jumpToStepId = self.portWizardGet('jumpToStepId', -1),
+						areNumbersValid = numbersCarrierData.areNumbersValid;
+
+					if (jumpToStepId >= 0 && areNumbersValid) {
+						self.portWizardUnset('jumpToStepId');
+
+						return waterfallCallback(null, {
+							areNumbersValid: areNumbersValid,
+							jumpToStepId: jumpToStepId
 						});
+					}
 
 					waterfallCallback(null, {
-						carrierWarningType: numbersCarrierData.carrierWarningType,
-						template: $template
+						areNumbersValid: areNumbersValid,
+						template: (numbersCarrierData.carrierWarningType === 'none')
+							? self.portWizardCarrierSelectionSingleGetTemplate({
+								numbersCarrierData: numbersCarrierData,
+								carrierSelectionData: carrierSelectionData
+							})
+							: self.portWizardCarrierSelectionMultipleGetTemplate({
+								portRequestName: portRequestName,
+								numbersCarrierData: numbersCarrierData
+							})
 					});
 				}
 			], function(err, results) {
@@ -1294,23 +1308,29 @@ define(function(require) {
 					? 'phonebookUnavailable'
 					: 'lookupNumbersError';
 
-				if (_.isNil(err)) {
-					return callback({
-						status: results.carrierWarningType === 'none' ? null : 'invalid',
-						template: results.template,
-						callback: self.portWizardScrollToTop
+				if (!_.isNil(err)) {
+					// Phonebook is not available, so go to previous step and notify
+					monster.pub('common.navigationWizard.goToStep', {
+						stepId: 0
+					});
+
+					return monster.ui.alert(
+						'error',
+						monster.util.tryI18n(self.i18n.active().commonApp.portWizard.steps.general.errors, errorMessageKey)
+					);
+				}
+
+				if (_.has(results, 'jumpToStepId')) {
+					return monster.pub('common.navigationWizard.goToStep', {
+						stepId: results.jumpToStepId
 					});
 				}
 
-				// Phonebook is not available, so go to previous step and notify
-				monster.pub('common.navigationWizard.goToStep', {
-					stepId: 0
+				callback({
+					status: results.areNumbersValid ? null : 'invalid',
+					template: results.template,
+					callback: self.portWizardScrollToTop
 				});
-
-				monster.ui.alert(
-					'error',
-					monster.util.tryI18n(self.i18n.active().commonApp.portWizard.steps.general.errors, errorMessageKey)
-				);
 			});
 		},
 
