@@ -488,7 +488,7 @@ define(function(require) {
 				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, waterfallCallback) {
 					// Format port request data, to be loaded in the wizard
 					if (!portRequestData) {
-						return waterfallCallback(null, $container, {
+						return waterfallCallback(null, $container, null, {
 							nameAndNumbers: {
 								numbersToPort: {
 									type: 'local'
@@ -504,21 +504,30 @@ define(function(require) {
 						data: portRequestData
 					});
 
-					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData);
+					waterfallCallback(null, $container, portRequestData, wizardPortRequestData, numbersCarrierData);
 				},
-				function getPreliminarWizardInitialStep($container, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
+				function getPreliminarWizardInitialStep($container, portRequestData, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
 					// Get preliminary wizard step to resume editing
-					var hasStepData = _.partial(_.has, wizardPortRequestData),
+					var lastStep = _.last(stepNames),
+						hasStepData = _.partial(_.has, wizardPortRequestData),
+						lastDataStepId = _.findLastIndex(stepNames, hasStepData),
+						savedLastCompletedStep = _.get(portRequestData, 'ui_flags.steps.lastCompleted', lastStep),
+						savedCurrentStep = _.get(portRequestData, 'ui_flags.steps.current', lastStep),
 						nameAndNumbersStepId = _.indexOf(stepNames, 'nameAndNumbers'),
-						wizardStepId = wizardPortRequestData.nameAndNumbers.numbersToPort.typeValidationResult === 'none'
-							? _.findLastIndex(stepNames, hasStepData)
-							: nameAndNumbersStepId;
+						savedLastCompletedStepId = _.indexOf(stepNames, savedLastCompletedStep),
+						savedCurrentStepId = _.indexOf(stepNames, savedCurrentStep),
+						wizardLastCompletedStepId = wizardPortRequestData.nameAndNumbers.numbersToPort.areValid
+							? _.min([ lastDataStepId, savedLastCompletedStepId ])
+							: nameAndNumbersStepId,
+						wizardCurrentStepId = wizardLastCompletedStepId + 1 < savedCurrentStepId
+							? wizardLastCompletedStepId
+							: savedCurrentStepId;
 
-					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, wizardStepId);
+					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, wizardLastCompletedStepId, wizardCurrentStepId);
 				},
-				function checkCarrierData($container, wizardPortRequestData, numbersCarrierData, wizardStepId, waterfallCallback) {
+				function checkCarrierData($container, wizardPortRequestData, numbersCarrierData, wizardLastCompletedStepId, wizardCurrentStepId, waterfallCallback) {
 					if (_.isNil(numbersCarrierData)) {
-						return waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+						return waterfallCallback(null, $container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId);
 					}
 
 					// Check carrier data, and modify wizard step if needed
@@ -527,8 +536,7 @@ define(function(require) {
 						isWinningCarrierValid = areNumbersValid
 							&& portRequestHasWinningCarrier
 							&& _.includes(numbersCarrierData.winningCarriers, wizardPortRequestData.carrierSelection.winningCarrier),
-						carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection'),
-						newWizardStepId = isWinningCarrierValid ? wizardStepId : carrierSelectionStepId;
+						carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection');
 
 					if (areNumbersValid) {
 						_.set(
@@ -543,12 +551,15 @@ define(function(require) {
 					}
 
 					if (!isWinningCarrierValid) {
+						wizardLastCompletedStepId = carrierSelectionStepId - 1;
+						wizardCurrentStepId = carrierSelectionStepId;
+
 						_.unset(wizardPortRequestData, 'carrierSelection.winningCarrier');
 					}
 
-					waterfallCallback(null, $container, wizardPortRequestData, newWizardStepId);
+					waterfallCallback(null, $container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId);
 				},
-				function checkRequiredDocuments($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+				function checkRequiredDocuments($container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId, waterfallCallback) {
 					// Check required documents, and modify wizard step if needed
 					var requiredDocumentsCompleteList = self.portWizardGet('requirements.documentsList'),
 						requiredDocumentsMap = _.keyBy(requiredDocumentsCompleteList, 'key'),
@@ -564,15 +575,17 @@ define(function(require) {
 						ownershipConfirmationStepId = _.indexOf(stepNames, 'ownershipConfirmation'),
 						requiredDocumentsStepId = _.indexOf(stepNames, 'requiredDocuments');
 
-					if (wizardStepId > ownershipConfirmationStepId && isBillRequired && !isBillAttached) {
-						wizardStepId = ownershipConfirmationStepId;
-					} else if (wizardStepId > requiredDocumentsStepId && isAnyRequiredDocumentMissing) {
-						wizardStepId = requiredDocumentsStepId;
+					if (wizardLastCompletedStepId > ownershipConfirmationStepId && isBillRequired && !isBillAttached) {
+						wizardLastCompletedStepId = ownershipConfirmationStepId - 1;
+						wizardCurrentStepId = ownershipConfirmationStepId;
+					} else if (wizardLastCompletedStepId > requiredDocumentsStepId && isAnyRequiredDocumentMissing) {
+						wizardLastCompletedStepId = requiredDocumentsStepId - 1;
+						ownershipConfirmationStepId = requiredDocumentsStepId;
 					}
 
-					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+					waterfallCallback(null, $container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId);
 				},
-				function checkRequiredExtraFields($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+				function checkRequiredExtraFields($container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId, waterfallCallback) {
 					// Check required complementary fields, and modify wizard step if required
 					var requiredFieldsByStep = self.portWizardGet('requirements.fieldsByStep');
 
@@ -595,16 +608,17 @@ define(function(require) {
 							.value();
 
 						if (!stepHasRequiredExtraFieldMissing) {
-							return true;
+							return stepIndex < wizardLastCompletedStepId;
 						}
 
-						wizardStepId = stepIndex;
+						wizardLastCompletedStepId = stepIndex - 1;
+						wizardCurrentStepId = stepIndex;
 						return false;
 					});
 
-					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+					waterfallCallback(null, $container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId);
 				}
-			], function renderWizard(error, $container, wizardPortRequestData, wizardStepId) {
+			], function renderWizard(error, $container, wizardPortRequestData, wizardLastCompletedStepId, wizardCurrentStepId) {
 				if (error) {
 					return globalCallback();
 				}
@@ -614,7 +628,7 @@ define(function(require) {
 					controlId: 'port_wizard_control',
 					data: wizardPortRequestData,
 					container: $container,
-					currentStep: wizardStepId,
+					currentStep: wizardCurrentStepId,
 					steps: _.map(stepNames, function(stepName) {
 						var pascalCasedStepName = _.upperFirst(stepName);
 
@@ -628,7 +642,7 @@ define(function(require) {
 							util: 'portWizard' + pascalCasedStepName + 'Util'
 						};
 					}),
-					stepsCompleted: _.range(wizardStepId),
+					stepsCompleted: _.range(wizardLastCompletedStepId + 1),
 					title: i18n.title,
 					cancel: self.portWizardClose,
 					'delete': self.portWizardDelete,
