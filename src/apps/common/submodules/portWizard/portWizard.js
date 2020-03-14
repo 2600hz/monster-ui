@@ -2671,10 +2671,15 @@ define(function(require) {
 		 * @param  {Object} args.data  Wizard's data that was stored across steps
 		 * @param  {Boolean} eventArgs  Event arguments
 		 * @param  {('save'|'submit')} eventArgs.eventType  Type of event that executed this function
+		 * @param  {Number} eventArgs.currentStepId  Current Step ID
+		 * @param  {Number} eventArgs.lastCompletedStepId  Last completed step ID
 		 */
 		portWizardComplete: function(args, eventArgs) {
 			var self = this,
 				submit = eventArgs.eventType === 'done',
+				currentStepId = eventArgs.currentStepId,
+				lastCompletedStepId = eventArgs.lastCompletedStepId,
+				steps = args.steps,
 				wizardData = args.data,
 				portRequestId = _.get(wizardData, 'portRequestId'),
 				accountId = self.portWizardGet('accountId'),
@@ -2685,6 +2690,8 @@ define(function(require) {
 					self.portWizardSavePortRequest({
 						accountId: accountId,
 						data: wizardData,
+						currentStep: _.get(steps, [ currentStepId, 'name' ]),
+						lastCompletedStep: _.get(steps, [ lastCompletedStepId, 'name' ]),
 						callback: waterfallCallback
 					});
 				},
@@ -2729,19 +2736,27 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String} args.accountId  Account ID
 		 * @param  {Object} args.data  Wizard data
+		 * @param  {Number} args.currentStep  Current step name
+		 * @param  {Number} args.lastCompletedStep  Last completed step name
 		 * @param  {Function} args.callback  Async.js callback
 		 */
 		portWizardSavePortRequest: function(args) {
 			var self = this,
 				accountId = args.accountId,
-				wizardData = args.data,
 				callback = args.callback,
-				portRequestId = _.get(wizardData, 'portRequestId'),
+				portRequestId = _.get(args.data, 'portRequestId'),
 				isNewPortRequest = _.isNil(portRequestId),
 				resource = isNewPortRequest ? 'port.create' : 'port.update',
+				formattedPortRequestData = self.portWizardSaveGetFormattedPortRequest(
+					_.pick(args, [
+						'data',
+						'currentStep',
+						'lastCompletedStep'
+					])
+				),
 				requestData = _.merge({
 					accountId: accountId,
-					data: self.portWizardSaveGetFormattedPortRequest(wizardData)
+					data: formattedPortRequestData
 				}, isNewPortRequest ? {
 					portRequestId: portRequestId
 				} : {});
@@ -2895,11 +2910,17 @@ define(function(require) {
 
 		/**
 		 * Build the account document to submit to the API, from the wizard data
-		 * @param  {Object} wizardData  Wizard's data
+		 * @param  {Object} args
+		 * @param  {Object} args.data  Wizard data
+		 * @param  {Number} args.currentStep  Current Step name
+		 * @param  {Number} args.lastCompletedStep  Last completed step name
 		 * @returns  {Object}  Account document
 		 */
-		portWizardSaveGetFormattedPortRequest: function(wizardData) {
+		portWizardSaveGetFormattedPortRequest: function(args) {
 			var self = this,
+				wizardData = args.data,
+				currentStep = args.currentStep,
+				lastCompletedStep = args.lastCompletedStep,
 				originalPortRequestDocument = self.portWizardGet('originalPortRequest', {}),
 				allRequiredFields = _.flatMap(self.appFlags.portWizard.requirements.fields),
 				requiredFieldsByStep = self.portWizardGet('requirements.fieldsByStep'),
@@ -2969,7 +2990,11 @@ define(function(require) {
 					ui_flags: {
 						portion: null,
 						type: nameAndNumbersData.numbersToPort.type,
-						validation: true
+						validation: true,
+						steps: {
+							current: currentStep,
+							lastCompleted: lastCompletedStep
+						}
 					}
 				}, transferDateSection, winningCarrierSection);
 
