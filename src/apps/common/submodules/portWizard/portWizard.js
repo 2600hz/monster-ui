@@ -1015,7 +1015,7 @@ define(function(require) {
 					.some()
 					.value();
 
-				if (areThereNewNumbers && _.has(eventArgs, 'nextStepId')) {
+				if (areThereNewNumbers && eventArgs.eventType === 'goto' && _.has(eventArgs, 'nextStepId')) {
 					self.portWizardSet('jumpToStepId', eventArgs.nextStepId);
 
 					goToStepId = _
@@ -1317,7 +1317,7 @@ define(function(require) {
 							})
 					});
 				}
-			], function(err, results) {
+			], function processResults(err, results) {
 				var errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
 					? 'phonebookUnavailable'
 					: 'lookupNumbersError';
