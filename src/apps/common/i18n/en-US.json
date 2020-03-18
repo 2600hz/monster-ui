@@ -246,6 +246,13 @@
 								"message": "You must read, understand, and agree to all of the following statements before you're able to submit this port request."
 							}
 						}
+					},
+					"general": {
+						"labels": {
+							"hide": "Hide",
+							"passwordMask": "**********",
+							"show": "Show"
+						}
 					}
 				},
 				"general": {
