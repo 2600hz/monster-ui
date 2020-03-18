@@ -17,7 +17,65 @@
 		margin-bottom: 0;
 	}
 
+	.password-field {
+		display: flex;
+		flex-wrap: wrap;
+
+		.password-value {
+			flex: 0 0 auto;
+			margin-right: 1rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			.password-mask {
+				display: none;
+				font-size: 1.25rem;
+			}
+
+			&.password-hidden {
+				.password-text {
+					display: none;
+				}
+
+				.password-mask {
+					display: inline;
+				}
+			}
+		}
+
+		.password-toggle-label {
+			flex: 0 0 initial;
+			margin-top: 0.25rem;
+			line-height: 0.875rem;
+			font-size: 0.75rem;
+		}
+
+		.password-toggle {
+			display: none;
+
+			&:checked {
+				& ~ .password-hide {
+					display: inline;
+				}
+				& ~ .password-show {
+					display: none;
+				}
+			}
+		}
+
+		.password-hide {
+			display: none;
+		}
+	}
+
 	@media print {
+		.edit-step,
+		.monster-button,
+		.password-toggle-label,
+		.password-text {
+			display: none;
+		}
+
 		.number-item {
 			width: 50%;
 		}
