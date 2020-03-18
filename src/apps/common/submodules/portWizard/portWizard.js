@@ -1166,16 +1166,14 @@ define(function(require) {
 					});
 				}
 			], function(err, results) {
-				var carrierWarningType = results.carrierWarningType,
-					$template = results.template,
-					errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
-						? 'phonebookUnavailable'
-						: 'lookupNumbersError';
+				var errorMessageKey = _.get(err, 'isPhonebookUnavailable', false)
+					? 'phonebookUnavailable'
+					: 'lookupNumbersError';
 
 				if (_.isNil(err)) {
 					return callback({
-						status: carrierWarningType === 'none' ? null : 'invalid',
-						template: $template,
+						status: results.carrierWarningType === 'none' ? null : 'invalid',
+						template: results.template,
 						callback: self.portWizardScrollToTop
 					});
 				}
@@ -1246,7 +1244,7 @@ define(function(require) {
 						.chain(numbersByLosingCarrier)
 						.map(function(carrierNumberGroup) {
 							return {
-								carrier: carrierNumberGroup.carrier,
+								carrier: self.portWizardCleanCarrierName(carrierNumberGroup.carrier),
 								numbers: _.map(carrierNumberGroup.numbers, 'e164Number')
 							};
 						})
@@ -1335,23 +1333,30 @@ define(function(require) {
 				carrierNumberGroup = _.head(numbersCarrierData.numbersByLosingCarrier),
 				formattedNumbers = carrierNumberGroup.numbers,
 				numbers = _.map(formattedNumbers, 'e164Number'),
+				winningCarrierList = _
+					.map(numbersCarrierData.winningCarriers, function(carrierName) {
+						return {
+							value: carrierName,
+							label: _.startCase(carrierName)
+						};
+					}),
 				dataTemplate = {
 					numbersToPort: {
 						numbers: numbers,
 						count: _.size(numbers)
 					},
-					winningCarrierList: _
-						.map(numbersCarrierData.winningCarriers, function(carrierName) {
-							return {
-								value: carrierName,
-								label: _.startCase(carrierName)
-							};
-						}),
+					winningCarrierList: winningCarrierList,
 					requiredDocuments: numbersCarrierData.requiredDocuments,
 					data: {
 						designateWinningCarrier: {
-							losingCarrier: carrierNumberGroup.carrier,
-							winningCarrier: _.get(carrierSelectionData, 'winningCarrier', '')
+							losingCarrier: self.portWizardCleanCarrierName(carrierNumberGroup.carrier),
+							winningCarrier: _.get(
+								carrierSelectionData,
+								'winningCarrier',
+								_.size(winningCarrierList) === 1
+									? _.get(winningCarrierList, [ 0, 'value' ])
+									: ''
+							)
 						}
 					}
 				},
@@ -1395,10 +1400,15 @@ define(function(require) {
 				numbersShown = _.map(formattedNumbers, 'e164Number'),
 				$elements = $template.find('.number-list .number-item'),
 				$elementsShown = $elements,
-				removeSpaces = _.partialRight(_.replace, /\s/g, ''),
-				filterNumberElements = function(filterText) {
+				removeSpacesAndHyphens = _
+					.chain(_.replace)
+					.partialRight(/[\s-]/g, '')
+					.unary()
+					.value(),
+				filterNumberElements = function(textValue) {
 					var $elementsToShow = $(),
 						$elementsToHide = $elementsShown,
+						filterText = removeSpacesAndHyphens(textValue),
 						numbersToShow = _
 							.chain(formattedNumbers)
 							.filter(function(formattedNumberData) {
@@ -1410,7 +1420,7 @@ define(function(require) {
 										'internationalFormat',
 										'userFormat'
 									])
-									.map(removeSpaces)
+									.map(removeSpacesAndHyphens)
 									.some(function(formattedNumber) {
 										return _.includes(formattedNumber, filterText);
 									})
@@ -1459,9 +1469,7 @@ define(function(require) {
 			$template
 				.find('#numbers_to_port_search_numbers')
 					.on('keyup', _.debounce(function() {
-						var value = removeSpaces($(this).val());
-
-						filterNumberElements(value);
+						filterNumberElements($(this).val());
 					}, 350));
 		},
 
@@ -2407,6 +2415,15 @@ define(function(require) {
 					});
 
 			$template
+				.find('.password-toggle')
+					.on('change', function() {
+						$(this)
+							.closest('.password-field')
+								.find('.password-value')
+									.toggleClass('password-hidden');
+					});
+
+			$template
 				.find('#port_wizard_step_print')
 					.on('click', function(e) {
 						e.preventDefault();
@@ -3142,6 +3159,20 @@ define(function(require) {
 		/**************************************************
 		 *               Utility functions                *
 		 **************************************************/
+
+		/**
+		 * Cleans the carrier name by removing unfriendly suffix data
+		 * @param  {String} carrierName  Carrier name to clean
+		 * @returns  {String}  Clean carrier name
+		 */
+		portWizardCleanCarrierName: function(carrierName) {
+			var lastColonIndex = _.lastIndexOf(carrierName, ':'),
+				cleanCarrierName = lastColonIndex > 0
+					? carrierName.substring(0, lastColonIndex)
+					: carrierName;
+
+			return cleanCarrierName;
+		},
 
 		/**
 		  * Initialize a file input field
