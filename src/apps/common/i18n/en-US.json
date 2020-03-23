@@ -32,7 +32,7 @@
 						},
 						"errors": {
 							"numbers": {
-								"invalid": "One or more numbers are invalid",
+								"phoneNumber": "One or more numbers are invalid",
 								"multipleTypes": "The listed numbers should include only Standard DID or Toll-free types exclusively",
 								"typeMismatch": "The listed numbers do not belong to the selected number type. Please select the right number type above."
 							}
@@ -165,6 +165,14 @@
 							"streetPreDir": "A word preceding the street name that indicates the directional taken by the thoroughfare from an arbitrary starting point.",
 							"streetPostDir": "A word following the street name that indicates the directional taken by the thoroughfare from an arbitrary strating point."
 						},
+						"errors": {
+							"locality": {
+								"equalTo": "End-user’s local address should belong to the same city as the number(s) to be ported"
+							},
+							"country": {
+								"equalTo": "End-user’s service address should belong to the same country as the number(s) to be ported"
+							}
+						},
 						"notices": {
 							"directionalNotRequired": "Not required unless specifically stated on bill."
 						},
@@ -194,7 +202,14 @@
 					"label": "Required Documents",
 					"description": "Upload any other required documents and forms for your port request.",
 					"titleSingleDocument": "Due to regulations in your country, {{variable}} is required with your port request.",
-					"titleMultipleDocuments": "Due to regulations in your country, there are {{variable}} documents that are required for this port request"
+					"titleMultipleDocuments": "Due to regulations in your country, there are {{variable}} documents that are required for this port request",
+					"extraData": {
+						"title": "Complementary Data",
+						"labels": {
+							"loaSignee": "LOA Signee",
+							"loaSigningDate": "LOA Signing Date"
+						}
+					}
 				},
 				"dateAndNotifications": {
 					"label": "Desired Date + Notifications",
@@ -274,17 +289,14 @@
 				}
 			},
 			"documents": {
-				"LOA": "DIDWW LOA for a particular country",
-				"CountryInfo": "Specific information for a particular country",
 				"Bill": "Losing Carrier Bill",
-				"AccountNum": "Account number required",
-				"TaxID": "Local TAX / VAT ID or company registration number",
+				"CountryInfo": "Specific information for a particular country",
 				"CustomerID": "ID / Passport copy / Company Registration certificate",
 				"LegalAuth": "Legal proof of Authorization to sign termination document (in case number belongs to company)",
-				"LocalAddr": "End-user’s local address from the same city as the number to be ported",
-				"ServiceAddr": "End-user’s Service address in the same country",
+				"LOA": "DIDWW LOA for a particular country",
+				"PaymentProof": "Latest Proof of Payment",
 				"ReleaseLetter": "Letter of Release from the losing provider",
-				"PaymentProof": "Latest Proof of Payment"
+				"TaxID": "Local TAX / VAT ID or company registration number"
 			},
 			"load": {
 				"errors": {

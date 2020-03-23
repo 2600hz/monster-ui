@@ -108,11 +108,25 @@
 			<div class="section">
 				{{> sectionTitle stepName="requiredDocuments"}}
 				<div class="section-body">
-				{{#each @root.data.requiredDocuments}}
+				{{#each @root.data.requiredDocuments.documents}}
 					{{#> horizontalFieldPartial label=(tryI18n @root.i18n.commonApp.portWizard.documents this.key) value=this.name hasContent=true}}
 						{{telicon "file" class="document-icon"}}
 						{{value}}
 					{{/horizontalFieldPartial}}
+				{{/each}}
+				<div class="flex-row-container">
+					<div class="flex-item-1 section-subtitle">
+						{{portWizardStepsI18n.requiredDocuments.extraData.title}}
+					</div>
+				</div>
+				{{#each @root.data.requiredDocuments.extra as |value key|}}
+					{{#compare key "===" "loaSigningDate"}}
+						{{#> horizontalFieldPartial label=(tryI18n portWizardStepsI18n.requiredDocuments.extraData.labels key) value=value hasContent=true}}
+							{{toFriendlyDate value "date"}}
+						{{/horizontalFieldPartial}}
+					{{else}}
+						{{> horizontalFieldPartial label=(tryI18n portWizardStepsI18n.requiredDocuments.extraData.labels key) value=value}}
+					{{/compare}}
 				{{/each}}
 				</div>
 			</div>
