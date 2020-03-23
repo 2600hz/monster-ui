@@ -83,17 +83,74 @@ define(function(require) {
 				},
 				minTargetDateBusinessDays: 4,
 				requirements: {
-					LOA: 'form.pdf',
-					CountryInfo: 'country_info.pdf',
-					Bill: 'bill.pdf',
-					AccountNum: 'account_number.pdf',
-					TaxID: 'tax_id.pdf',
-					CustomerID: 'customer_id.pdf',
-					LegalAuth: 'legal_auth.pdf',
-					LocalAddr: 'local_address.pdf',
-					ServiceAddr: 'service_address.pdf',
-					ReleaseLetter: 'release_letter.pdf',
-					PaymentProof: 'payment_proof.pdf'
+					documents: {
+						Bill: 'bill.pdf',
+						CountryInfo: 'country_info.pdf',
+						CustomerID: 'customer_id.pdf',
+						LegalAuth: 'legal_auth.pdf',
+						LOA: 'form.pdf',
+						PaymentProof: 'payment_proof.pdf',
+						ReleaseLetter: 'release_letter.pdf',
+						TaxID: 'tax_id.pdf'
+					},
+					fields: {
+						LOA: [
+							{
+								name: 'loaSignee',
+								step: 'requiredDocuments',
+								section: 'extra',
+								type: 'text',
+								portRequestPath: 'signee_name'
+							},
+							{
+								name: 'loaSigningDate',
+								step: 'requiredDocuments',
+								section: 'extra',
+								type: 'date',
+								portRequestPath: 'signing_date'
+							}
+						]
+					},
+					rules: {
+						AccountNum: [
+							{
+								name: 'accountNumber',
+								step: 'ownershipConfirmation',
+								section: 'accountInfo',
+								required: true
+							}
+						],
+						LocalAddr: [
+							{
+								name: 'locality',
+								step: 'ownershipConfirmation',
+								section: 'serviceAddress',
+								equalTo: '[name="numbers.city"]'
+							}
+						],
+						ServiceAddr: [
+							{
+								name: 'country',
+								step: 'ownershipConfirmation',
+								section: 'serviceAddress',
+								equalTo: '[name="numbers.country"]'
+							}
+						],
+						LOA: [
+							{
+								name: 'loaSignee',
+								step: 'requiredDocuments',
+								section: 'extra',
+								required: true
+							},
+							{
+								name: 'loaSigningDate',
+								step: 'requiredDocuments',
+								section: 'extra',
+								required: true
+							}
+						]
+					}
 				},
 				requirementsByCountries: {
 					AT: {
@@ -443,7 +500,7 @@ define(function(require) {
 					var wizardPortRequestData = self.portWizardFormatPortRequestData({
 						formattedNumbers: formattedPhoneNumbers,
 						numbersTypeValidationResult: numbersTypeValidationResult,
-						carrierWarningType: _.get(numbersCarrierData, 'carrierWarningType'),
+						numbersCarrierData: numbersCarrierData,
 						data: portRequestData
 					});
 
@@ -493,7 +550,7 @@ define(function(require) {
 				},
 				function checkRequiredDocuments($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
 					// Check required documents, and modify wizard step if needed
-					var requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+					var requiredDocumentsCompleteList = self.portWizardGet('requirements.documentsList'),
 						requiredDocumentsMap = _.keyBy(requiredDocumentsCompleteList, 'key'),
 						isBillRequired = _.has(requiredDocumentsMap, 'Bill'),
 						isBillAttached = _.has(wizardPortRequestData, 'ownershipConfirmation.latestBill.file'),
@@ -512,6 +569,38 @@ define(function(require) {
 					} else if (wizardStepId > requiredDocumentsStepId && isAnyRequiredDocumentMissing) {
 						wizardStepId = requiredDocumentsStepId;
 					}
+
+					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
+				},
+				function checkRequiredExtraFields($container, wizardPortRequestData, wizardStepId, waterfallCallback) {
+					// Check required complementary fields, and modify wizard step if required
+					var requiredFieldsByStep = self.portWizardGet('requirements.fieldsByStep');
+
+					_.each(stepNames, function(stepName, stepIndex) {
+						var stepHasRequiredExtraFieldMissing = _
+							.chain(requiredFieldsByStep)
+							.get(stepName, {})
+							.some(function(sectionFields, section) {
+								return _.some(sectionFields, function(field) {
+									var isFieldMissing = field.isRequired
+										&& _
+											.chain(wizardPortRequestData)
+											.get([ stepName, section, field.name ])
+											.thru(self.portWizardIsValueEmptyOrNil)
+											.value();
+
+									return isFieldMissing;
+								});
+							})
+							.value();
+
+						if (!stepHasRequiredExtraFieldMissing) {
+							return true;
+						}
+
+						wizardStepId = stepIndex;
+						return false;
+					});
 
 					waterfallCallback(null, $container, wizardPortRequestData, wizardStepId);
 				}
@@ -572,8 +661,7 @@ define(function(require) {
 		 */
 		portWizardGetPortRequestData: function(args) {
 			var self = this,
-				portRequestId = args.portRequestId,
-				requiredDocuments = self.appFlags.portWizard.requirements;
+				portRequestId = args.portRequestId;
 
 			monster.waterfall([
 				function(waterfallCallback) {
@@ -591,8 +679,6 @@ define(function(require) {
 				},
 				function(portRequest, waterfallCallback) {
 					monster.parallel(_.mapValues(portRequest.uploads, function(attachmentData, attachmentName) {
-						var documentMetadata = _.find(requiredDocuments, { attachmentName: attachmentName });
-
 						return function(parallelCallback) {
 							self.portWizardRequestGetAttachment({
 								data: {
@@ -603,7 +689,7 @@ define(function(require) {
 								success: function(fileData) {
 									var data = _.merge({
 										file: fileData
-									}, documentMetadata, attachmentData);
+									}, attachmentData);
 
 									parallelCallback(null, data);
 								},
@@ -613,7 +699,7 @@ define(function(require) {
 											? 'attachmentNotFound'
 											: 'attachmentDownloadFailed',
 										error: parsedError
-									}, documentMetadata, attachmentData);
+									}, attachmentData);
 
 									parallelCallback(null, data);
 								}
@@ -641,18 +727,18 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Array} args.formattedNumbers  Formatted data for the phone numbers to be ported
 		 * @param  {('none'|'multipleTypes'|'typeMismatch')} args.numbersTypeValidationResult  Numbers type validation result
-		 * @param  {String} args.carrierWarningType  Warning type for number carriers
+		 * @param  {String} args.numbersCarrierData  Carrier data for the phone numbers to be ported
 		 * @param  {Object} args.data  Port request data
 		 */
 		portWizardFormatPortRequestData: function(args) {
 			var self = this,
 				portWizardAppFlags = self.appFlags.portWizard,
 				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
-				allRequiredDocuments = portWizardAppFlags.requirements,
+				allRequiredDocuments = portWizardAppFlags.requirements.documents,
 				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
 				numbersTypeValidationResult = args.numbersTypeValidationResult,
-				carrierWarningType = args.carrierWarningType,
+				numbersCarrierData = args.numbersCarrierData,
 				portRequestData = args.data,
 				billData = portRequestData.bill,
 				billAttachmentData = _.get(portRequestData.uploads, billAttachmentName),
@@ -663,7 +749,7 @@ define(function(require) {
 					required: false
 				},
 				allRequiredDocumentsByAttachmentName = _.invert(allRequiredDocuments),
-				requiredDocumentsList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsList = self.portWizardGet('requirements.documentsList'),
 				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsList, 'attachmentName'),
 				requiredDocumentsByKey = _.keyBy(requiredDocumentsList, 'key'),
 				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
@@ -674,8 +760,7 @@ define(function(require) {
 				adjustedTargetDate = (targetDate && minTargetDate < targetDate)
 					? minTargetDate
 					: targetDate,
-				omitEmpty = _.partialRight(_.omitBy, _.isEmpty),
-				wizardData = omitEmpty({
+				wizardData = self.portWizardOmitEmptyOrNilProperties({
 					portRequestId: portRequestData.id,
 					// Name and numbers are the minimum properties required for all port request
 					nameAndNumbers: {
@@ -685,16 +770,17 @@ define(function(require) {
 							numbers: _.join(numbers, ', '),
 							formattedNumbers: formattedPhoneNumbers,
 							typeValidationResult: numbersTypeValidationResult,
-							areValid: numbersTypeValidationResult === 'none' && carrierWarningType === 'none'
+							areValid: numbersTypeValidationResult === 'none' && _.get(numbersCarrierData, 'carrierWarningType') === 'none',
+							country: _.get(numbersCarrierData, 'countryCode')
 						}
 					},
 					carrierSelection: _.has(portRequestData, 'winning_carrier')
-						? omitEmpty({
+						? self.portWizardOmitEmptyOrNilProperties({
 							winningCarrier: portRequestData.winning_carrier
 						})
 						: null,
 					ownershipConfirmation: (billData || billAttachmentData)
-						? omitEmpty({
+						? self.portWizardOmitEmptyOrNilProperties({
 							latestBill: billAttachmentData
 								? _.merge(
 									{
@@ -702,11 +788,11 @@ define(function(require) {
 										attachmentName: billAttachmentName
 									}, documentDefaultMetadata, billAttachmentData, billDocumentMetadata)
 								: null,
-							accountOwnership: omitEmpty({
+							accountOwnership: self.portWizardOmitEmptyOrNilProperties({
 								carrier: billData.carrier,
 								billName: billData.name
 							}),
-							serviceAddress: omitEmpty({
+							serviceAddress: self.portWizardOmitEmptyOrNilProperties({
 								streetPreDir: billData.street_pre_dir,
 								streetNumber: billData.street_number,
 								streetName: billData.street_address,
@@ -718,32 +804,38 @@ define(function(require) {
 								postalCode: billData.postal_code,
 								country: billData.country
 							}),
-							accountInfo: omitEmpty({
+							accountInfo: self.portWizardOmitEmptyOrNilProperties({
 								accountNumber: billData.account_number,
 								pin: billData.pin,
 								btn: billData.btn
 							})
 						})
 						: null,
-					requiredDocuments: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
-						? _
-							.chain(portRequestData)
-							.get('uploads')
-							.omit(billAttachmentName)
-							.mapValues(function(attachmentData, attachmentName) {
-								var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
+					requiredDocuments: self.portWizardOmitEmptyOrNilProperties({
+						documents: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
+							? _
+								.chain(portRequestData)
+								.get('uploads')
+								.omit(billAttachmentName)
+								.mapValues(function(attachmentData, attachmentName) {
+									var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
 
-								return _.merge({
-									name: attachmentName,
-									attachmentName: attachmentName
-								}, documentDefaultMetadata, attachmentData, documentMetadata);
-							})
-							.mapKeys(function(document, attachmentName) {
-								return _.get(allRequiredDocumentsByAttachmentName, attachmentName, attachmentName);
-							})
-							.merge(_.omit(requiredDocumentsByKey, 'Bill'))
-							.value()
-						: null,
+									return _.merge({
+										name: attachmentName,
+										attachmentName: attachmentName
+									}, documentDefaultMetadata, attachmentData, documentMetadata);
+								})
+								.mapKeys(function(document, attachmentName) {
+									return _.get(allRequiredDocumentsByAttachmentName, attachmentName, attachmentName);
+								})
+								.merge(_.omit(requiredDocumentsByKey, 'Bill'))
+								.value()
+							: null,
+						extra: self.portWizardOmitEmptyOrNilProperties({
+							loaSignee: portRequestData.signee_name,
+							loaSigningDate: portRequestData.signing_date
+						})
+					}),
 					dateAndNotifications: _.has(portRequestData, 'transfer_date')
 						? {
 							targetDate: adjustedTargetDate,
@@ -782,29 +874,30 @@ define(function(require) {
 							submodule: 'portWizard'
 						})),
 						$form = $template.find('form'),
+						validationRules = {
+							portRequestName: {
+								required: true
+							},
+							'numbersToPort.numbers': {
+								required: true,
+								phoneNumber: true,
+								normalizer: function(value) {
+									return _
+										.chain(value)
+										.split(',')
+										.map(_.trim)
+										.reject(_.isEmpty)
+										.value();
+								}
+							}
+						},
+						validationMessages = self.portWizardGetValidationMessages({
+							step: 'nameAndNumbers',
+							rules: validationRules
+						}),
 						validateForm = monster.ui.validate($form, {
-							rules: {
-								portRequestName: {
-									required: true
-								},
-								'numbersToPort.numbers': {
-									required: true,
-									phoneNumber: true,
-									normalizer: function(value) {
-										return _
-											.chain(value)
-											.split(',')
-											.map(_.trim)
-											.reject(_.isEmpty)
-											.value();
-									}
-								}
-							},
-							messages: {
-								'numbersToPort.numbers': {
-									phoneNumber: self.i18n.active().commonApp.portWizard.steps.nameAndNumbers.numbersToPort.errors.numbers.invalid
-								}
-							},
+							rules: validationRules,
+							messages: validationMessages,
 							onfocusout: self.portWizardValidateFormField,
 							autoScrollOnInvalid: true
 						}),
@@ -860,7 +953,7 @@ define(function(require) {
 				};
 			}
 
-			nameAndNumbersData = monster.ui.getFormData($form.get(0));
+			nameAndNumbersData = self.portWizardGetFormData($form);
 
 			// Extract and format numbers
 			nameAndNumbersData.numbersToPort.formattedNumbers = _
@@ -1120,11 +1213,11 @@ define(function(require) {
 					});
 				},
 				function(numbersCarrierData, waterfallCallback) {
-					nameAndNumbersData.numbersToPort.areValid = numbersCarrierData.carrierWarningType === 'none';
+					var areNumbersValid = numbersCarrierData.carrierWarningType === 'none';
 
 					monster.pub(
 						'common.navigationWizard.setButtonProps',
-						nameAndNumbersData.numbersToPort.areValid
+						areNumbersValid
 							? [
 								{
 									button: 'save',
@@ -1146,6 +1239,11 @@ define(function(require) {
 								}
 							]
 					);
+
+					_.assign(nameAndNumbersData.numbersToPort, {
+						areValid: areNumbersValid,
+						country: numbersCarrierData.countryCode
+					});
 
 					waterfallCallback(null, numbersCarrierData);
 				},
@@ -1209,7 +1307,7 @@ define(function(require) {
 				carrierSelectionData;
 
 			if (isValid && isSingleLosingCarrierView) {
-				formData = monster.ui.getFormData($form.get(0));
+				formData = self.portWizardGetFormData($form);
 				carrierSelectionData = _
 					.chain(formData)
 					.get('designateWinningCarrier')
@@ -1555,17 +1653,17 @@ define(function(require) {
 		portWizardOwnershipConfirmationRender: function(args, callback) {
 			var self = this,
 				losingCarrier = args.data.carrierSelection.losingCarrier,
-				ownershipConfirmationData = _.get(args.data, 'ownershipConfirmation'),
-				requiredDocumentsList = self.portWizardGet('requiredDocumentsList'),
+				data = args.data,
+				requiredDocumentsList = self.portWizardGet('requirements.documentsList'),
 				billMetadata = _.find(requiredDocumentsList, { key: 'Bill' }),
 				$template = _.isUndefined(billMetadata) || _.has(args.data, 'ownershipConfirmation.latestBill')
 					? self.portWizardOwnershipConfirmationAccountInfoGetTemplate({
 						billMetadata: billMetadata,
 						losingCarrier: losingCarrier,
-						data: ownershipConfirmationData
+						data: data
 					})
 					: self.portWizardOwnershipConfirmationBillUploadGetTemplate({
-						bill: _.get(ownershipConfirmationData, 'latestBill'),
+						bill: _.get(data, 'ownershipConfirmation.latestBill'),
 						billMetadata: billMetadata,
 						losingCarrier: losingCarrier
 					});
@@ -1590,11 +1688,22 @@ define(function(require) {
 			var self = this,
 				$form = $template.find('form'),
 				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				formData,
 				ownershipConfirmationData;
 
 			if (isValid) {
-				ownershipConfirmationData = monster.ui.getFormData($form.get(0));
-				ownershipConfirmationData.latestBill = self.portWizardGet('billData');
+				formData = self.portWizardGetFormData($form);
+				ownershipConfirmationData = _.merge({}, formData, {
+					latestBill: self.portWizardGet('billData'),
+					accountInfo: {
+						btn: _
+							.chain(formData)
+							.get('accountInfo.btn')
+							.thru(monster.util.getFormatPhoneNumber)
+							.get('e164Number', '')
+							.value()
+					}
+				});
 				self.portWizardUnset('billData');
 			}
 
@@ -1692,57 +1801,41 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {String} [args.losingCarrier]  Losing carrier name
 		 * @param  {Boolean} [args.billMetadata]  Bill metadata, if bill is required
-		 * @param  {Object} args.data  Step data
+		 * @param  {Object} args.data  WizardData
 		 */
 		portWizardOwnershipConfirmationAccountInfoGetTemplate: function(args) {
 			var self = this,
 				losingCarrier = args.losingCarrier,
-				data = args.data,
+				wizardData = args.data,
+				ownershipConfirmationData = _.get(wizardData, 'ownershipConfirmation'),
 				billMetadata = args.billMetadata,
 				isBillRequired = !_.isUndefined(billMetadata),
 				// Update required flag and bill metadata, in case the requirements changed
 				// since the last time we were in the Ownership Confirmation step
-				billData = _.merge({}, data.latestBill, { required: isBillRequired }, billMetadata),
-				defaultCountry = monster.config.whitelabel.countryCode,
+				billData = _.merge({}, ownershipConfirmationData.latestBill, { required: isBillRequired }, billMetadata),
+				dataTemplate = {
+					data: _.merge({
+						numbers: {
+							country: wizardData.nameAndNumbers.numbersToPort.country
+						}
+					}, ownershipConfirmationData),
+					directionals: self.appFlags.portWizard.cardinalDirections,
+					losingCarrier: losingCarrier,
+					isBillRequired: isBillRequired,
+					extraFields: self.portWizardGet([
+						'requirements',
+						'fieldsByStep',
+						'ownershipConfirmation'
+					])
+				},
 				$template = $(self.getTemplate({
 					name: 'step-ownershipConfirmation-accountInfo',
-					data: {
-						data: data,
-						directionals: self.appFlags.portWizard.cardinalDirections,
-						losingCarrier: losingCarrier,
-						isBillRequired: isBillRequired
-					},
+					data: dataTemplate,
 					submodule: 'portWizard'
 				})),
-				$form = $template.find('form');
-
-			$template
-				.find('input[data-mask]')
-					.each(function() {
-						var $this = $(this),
-							mask = $this.data('mask');
-						$this.mask(mask);
-					});
-
-			$template
-				.find('input[data-monster-mask]')
-					.each(function() {
-						var $this = $(this),
-							mask = $this.data('monster-mask');
-						monster.ui.mask($this, mask);
-					});
-
-			monster.ui.countrySelector(
-				$template.find('#service_address_country'),
-				{
-					selectedValues: _.get(data, 'serviceAddress.country', defaultCountry)
-				}
-			);
-
-			monster.ui.tooltips($template);
-
-			monster.ui.validate($form, {
-				rules: {
+				$form = $template.find('form'),
+				requiredValidationRules = self.portWizardGet([ 'requirements', 'rulesByStep', 'ownershipConfirmation' ], {}),
+				validationRules = _.merge({
 					'accountOwnership.carrier': {
 						required: true,
 						minlength: 1,
@@ -1789,7 +1882,6 @@ define(function(require) {
 						required: true
 					},
 					'accountInfo.accountNumber': {
-						required: true,
 						maxlength: 128
 					},
 					'accountInfo.pin': {
@@ -1797,9 +1889,52 @@ define(function(require) {
 					},
 					'accountInfo.btn': {
 						required: true,
-						maxlength: 20
+						maxlength: 20,
+						phoneNumber: true
 					}
-				},
+				}, requiredValidationRules),
+				validationMessages = self.portWizardGetValidationMessages({
+					step: 'ownershipConfirmation',
+					rules: validationRules
+				}),
+				shouldCountryMatchNumbers = _
+					.chain(requiredValidationRules)
+					.get([ 'serviceAddress.country', 'equalTo' ])
+					.includes('numbers.country')
+					.value(),
+				defaultCountry = shouldCountryMatchNumbers
+					? dataTemplate.data.numbers.country
+					: monster.config.whitelabel.countryCode;
+
+			$template
+				.find('input[data-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('mask');
+						$this.mask(mask);
+					});
+
+			$template
+				.find('input[data-monster-mask]')
+					.each(function() {
+						var $this = $(this),
+							mask = $this.data('monster-mask');
+						monster.ui.mask($this, mask);
+					});
+
+			monster.ui.countrySelector(
+				$template.find('#service_address_country'),
+				{
+					selectedValues: _.get(ownershipConfirmationData, 'serviceAddress.country', defaultCountry)
+				}
+			);
+
+			monster.ui.tooltips($template);
+
+			monster.ui.validate($form, {
+				ignore: '',
+				rules: validationRules,
+				messages: validationMessages,
 				onfocusout: self.portWizardValidateFormField,
 				autoScrollOnInvalid: true
 			});
@@ -1812,7 +1947,7 @@ define(function(require) {
 
 			self.portWizardOwnershipConfirmationAccountInfoRenderBill({
 				template: $template,
-				bill: data.latestBill
+				bill: ownershipConfirmationData.latestBill
 			});
 
 			return $template;
@@ -1869,20 +2004,28 @@ define(function(require) {
 		/**
 		 * Render the Required Documents step
 		 * @param  {Object} args  Wizard args
+		 * @param  {Object} args.data  Wizard data
 		 * @param  {Function} callback  Callback to pass the step template to be rendered
 		 */
 		portWizardRequiredDocumentsRender: function(args, callback) {
 			var self = this,
-				requiredDocumentsCompleteList = self.portWizardGet('requiredDocumentsList'),
+				requiredDocumentsCompleteList = self.portWizardGet('requirements.documentsList'),
 				requiredDocumentsList = _.reject(requiredDocumentsCompleteList, { key: 'Bill' }),
 				requiredDocumentsMap = _.keyBy(requiredDocumentsList, 'key'),
 				requiredDocumentsKeys = _.keys(requiredDocumentsMap),
 				requiredDocumentsData = _.get(args.data, 'requiredDocuments', {}),
-				validationOptions,
+				todayDate = moment().toDate(),
+				extraData = requiredDocumentsData.extra,
+				documentsData,
+				requiredValidationRules,
+				validationRules,
+				validationMessages,
 				$template,
 				$form;
 
 			if (_.isEmpty(requiredDocumentsList)) {
+				self.portWizardUnset('documentsData');
+
 				monster.pub('common.navigationWizard.goToStep', {
 					stepId: 4
 				});
@@ -1891,50 +2034,77 @@ define(function(require) {
 			}
 
 			// Update required documents based on current requirements
-			requiredDocumentsData = _
+			documentsData = _
 				.chain(requiredDocumentsData)
+				.get('documents', {})
 				.mapValues(function(documentData) {
 					return _.merge({}, documentData, { required: false });
 				})
 				.merge(requiredDocumentsMap)
 				.value();
 
-			self.portWizardSet('requiredDocumentsData', requiredDocumentsData);
+			self.portWizardSet('documentsData', documentsData);
 
 			$template = $(self.getTemplate({
 				name: 'step-requiredDocuments',
 				data: {
 					data: {
-						requiredDocuments: {
-							orderedKeys: requiredDocumentsKeys,
-							data: requiredDocumentsData
-						}
-					}
+						documents: documentsData,
+						extra: extraData
+					},
+					documentKeys: requiredDocumentsKeys,
+					extraFields: self.portWizardGet([
+						'requirements',
+						'fieldsByStep',
+						'requiredDocuments'
+					])
 				},
 				submodule: 'portWizard'
 			}));
 
+			$template.find('.date-picker').each(function() {
+				var $this = $(this),
+					name = $this.attr('name'),
+					dateValue = _.get(requiredDocumentsData, name, todayDate);
+
+				monster.ui.datepicker($this, {
+					maxDate: todayDate
+				}).datepicker('setDate', dateValue);
+			});
+
 			self.portWizardRequiredDocumentsBindEvents({
 				template: $template,
-				requiredDocumentsData: requiredDocumentsData
+				documentsData: documentsData
 			});
 
 			$form = $template.find('form');
-			validationOptions = {
-				rules: _
-					.chain(requiredDocumentsMap)
-					.mapKeys(function(document) {
-						return document.key + '.name';
-					})
-					.mapValues(function() {
-						return {
-							required: true
-						};
-					})
-					.value()
-			};
 
-			monster.ui.validate($form, validationOptions);
+			requiredValidationRules = self.portWizardGet([
+				'requirements',
+				'rulesByStep',
+				'requiredDocuments'
+			], {});
+			validationRules = _
+				.chain(requiredDocumentsMap)
+				.mapKeys(function(document) {
+					return 'documents.' + document.key + '.name';
+				})
+				.mapValues(function() {
+					return {
+						required: true
+					};
+				})
+				.merge(requiredValidationRules)
+				.value();
+			validationMessages = self.portWizardGetValidationMessages({
+				step: 'requiredDocuments',
+				rules: validationRules
+			});
+
+			monster.ui.validate($form, {
+				rules: validationRules,
+				messages: validationMessages
+			});
 
 			callback({
 				template: $template,
@@ -1961,8 +2131,12 @@ define(function(require) {
 
 			// If form is not loaded, it means that the step was skipped because there are no required documents
 			if (isValid && isFormLoaded) {
-				requiredDocumentsData = self.portWizardGet('requiredDocumentsData');
-				self.portWizardUnset('requiredDocumentsData');
+				requiredDocumentsData = self.portWizardGetFormData($form);
+
+				_.set(requiredDocumentsData, 'documents', self.portWizardGet('documentsData'));
+
+				self.portWizardUnset('documentsData');
+
 				delete args.data.requiredDocuments;
 			}
 
@@ -1978,12 +2152,12 @@ define(function(require) {
 		 * Bind Required Documents step events
 		 * @param  {Object} args
 		 * @param  {jQuery} args.template  Step template
-		 * @param  {Object} args.requiredDocumentsData  Required documents
+		 * @param  {Object} args.documentsData  Required documents
 		 */
 		portWizardRequiredDocumentsBindEvents: function(args) {
 			var self = this,
 				$template = args.template,
-				requiredDocumentsData = args.requiredDocumentsData,
+				documentsData = args.documentsData,
 				pdfFilesRestrictions = self.appFlags.portWizard.fileRestrictions.pdf;
 
 			$template
@@ -1991,7 +2165,7 @@ define(function(require) {
 				.each(function() {
 					var $this = $(this),
 						documentKey = $this.data('key'),
-						document = _.get(requiredDocumentsData, documentKey);
+						document = _.get(documentsData, documentKey);
 
 					self.portWizardInitFileUploadInput({
 						fileInput: $this,
@@ -2000,7 +2174,7 @@ define(function(require) {
 						fileRestrictions: pdfFilesRestrictions,
 						success: function(fileData) {
 							self.portWizardSet([
-								'requiredDocumentsData',
+								'documentsData',
 								documentKey
 							], fileData);
 						}
@@ -2008,7 +2182,7 @@ define(function(require) {
 
 					$this
 						.siblings('input[type="text"]')
-							.attr('name', document.key + '.name');
+							.attr('name', 'documents.' + document.key + '.name');
 				});
 		},
 
@@ -2100,16 +2274,7 @@ define(function(require) {
 				dateAndNotificationsData;
 
 			if (isValid) {
-				dateAndNotificationsData = monster.ui.getFormData($form.get(0));
-
-				// Extract and store date(s)
-				$form.find('input.hasDatepicker').each(function() {
-					var $this = $(this),
-						propertyPath = $this.attr('name'),
-						selectedDate = $this.datepicker('getDate');
-
-					_.set(dateAndNotificationsData, propertyPath, selectedDate);
-				});
+				dateAndNotificationsData = self.portWizardGetFormData($form);
 
 				// Remove empty e-mail values
 				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
@@ -2312,7 +2477,7 @@ define(function(require) {
 		portWizardReviewUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
-				reviewData = monster.ui.getFormData($form.get(0)),
+				reviewData = self.portWizardGetFormData($form),
 				isValid = !eventArgs.completeStep || _.every(reviewData.acknowledgements);
 
 			return {
@@ -2346,12 +2511,13 @@ define(function(require) {
 					'requiredDocuments'
 				]),
 				bill = _.get(data, 'ownershipConfirmation.latestBill'),
-				otherDocuments = _.get(data, 'requiredDocuments', {}),
+				requiredDocumentsData = data.requiredDocuments,
+				otherDocuments = _.get(requiredDocumentsData, 'documents', {}),
 				allDocuments = _
 					.merge({
 						Bill: bill
 					}, otherDocuments),
-				requiredDocumentsList = self.portWizardGet('requiredDocumentsList', []),
+				requiredDocumentsList = self.portWizardGet('requirements.documentsList', []),
 				formattedData = _
 					.merge(defaultValues, cleanData, {
 						nameAndNumbers: {
@@ -2367,12 +2533,15 @@ define(function(require) {
 								}
 							}
 						},
-						requiredDocuments: _.map(requiredDocumentsList, function(documentMetadata) {
-							return {
-								key: documentMetadata.key,
-								name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
-							};
-						})
+						requiredDocuments: {
+							documents: _.map(requiredDocumentsList, function(documentMetadata) {
+								return {
+									key: documentMetadata.key,
+									name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
+								};
+							}),
+							extra: _.get(requiredDocumentsData, 'extra', {})
+						}
 					});
 
 			return formattedData;
@@ -2567,7 +2736,7 @@ define(function(require) {
 				callback = args.callback,
 				portRequestId = _.get(wizardData, 'portRequestId'),
 				bill = _.get(wizardData, 'ownershipConfirmation.latestBill', []),
-				otherDocuments = _.get(wizardData, 'requiredDocuments', {}),
+				otherDocuments = _.get(wizardData, 'requiredDocuments.documents', {}),
 				allDocuments = _
 					.chain(otherDocuments)
 					.values()
@@ -2691,11 +2860,12 @@ define(function(require) {
 		portWizardSaveGetFormattedPortRequest: function(wizardData) {
 			var self = this,
 				originalPortRequestDocument = self.portWizardGet('originalPortRequest', {}),
+				allRequiredFields = _.flatMap(self.appFlags.portWizard.requirements.fields),
+				requiredFieldsByStep = self.portWizardGet('requirements.fieldsByStep'),
 				nameAndNumbersData = wizardData.nameAndNumbers,
 				carrierSelectionData = wizardData.carrierSelection,
 				ownershipConfirmationData = wizardData.ownershipConfirmation,
 				dateAndNotificationsData = wizardData.dateAndNotifications,
-				getOrEmptyString = _.partialRight(_.get, ''),
 				numbers = _.map(nameAndNumbersData.numbersToPort.formattedNumbers, 'e164Number'),
 				formattedPortRequestNumbers = _.transform(numbers, function(numbers, number) {
 					numbers[number] = {};
@@ -2704,6 +2874,7 @@ define(function(require) {
 				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
 					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
 				} : {},
+				getOrEmptyString = _.partialRight(_.get, ''),
 				billSection = _.isNil(ownershipConfirmationData) ? {} : {
 					bill: _
 						.chain(originalPortRequestDocument)
@@ -2726,16 +2897,16 @@ define(function(require) {
 							pin: getOrEmptyString(ownershipConfirmationData, 'accountInfo.pin'),
 							btn: getOrEmptyString(ownershipConfirmationData, 'accountInfo.btn')
 						})
-						.omitBy(_.isEmpty)
+						.thru(_.bind(self.portWizardOmitEmptyOrNilProperties, self))
 						.value()
 				},
 				winningCarrierSection = _.has(carrierSelectionData, 'winningCarrier') ? {
 					winning_carrier: carrierSelectionData.winningCarrier
 				} : {},
-				cleanEmptyRecursively = function(object, path) {
+				cleanEmptyOrNilRecursively = function(object, path) {
 					var value = _.get(object, path);
 
-					if (_.isEmpty(value)) {
+					if (self.portWizardIsValueEmptyOrNil(value)) {
 						_.unset(object, path);
 					} else {
 						return;
@@ -2745,7 +2916,7 @@ define(function(require) {
 						return;
 					}
 
-					cleanEmptyRecursively(object, path.slice(0, -1));
+					cleanEmptyOrNilRecursively(object, path.slice(0, -1));
 				},
 				// Merge port request properties that can be deeply merged with an existing port
 				// request document
@@ -2787,7 +2958,28 @@ define(function(require) {
 			);
 
 			// Clean notifications sub-object, if there were no notification e-mails
-			cleanEmptyRecursively(newPortRequestDocument, [ 'notifications', 'email', 'send_to' ]);
+			cleanEmptyOrNilRecursively(newPortRequestDocument, [ 'notifications', 'email', 'send_to' ]);
+
+			// Set or clean extra data
+			_.each(allRequiredFields, function(field) {
+				var isFieldExpected = _
+						.chain(requiredFieldsByStep)
+						.get([ field.step, field.section ])
+						.some({ name: field.name })
+						.value(),
+					rawFieldValue = _.get(wizardData, [ field.step, field.section, field.name ]),
+					fieldValue;
+
+				if (isFieldExpected && !self.portWizardIsValueEmptyOrNil(rawFieldValue)) {
+					fieldValue = field.type === 'date'
+						? monster.util.dateToGregorian(rawFieldValue)
+						: rawFieldValue;
+
+					_.set(newPortRequestDocument, field.portRequestPath, fieldValue);
+				} else {
+					_.unset(newPortRequestDocument, field.portRequestPath);
+				}
+			});
 
 			return newPortRequestDocument;
 		},
@@ -3175,6 +3367,41 @@ define(function(require) {
 		},
 
 		/**
+		 * Get custom messages for validation rules
+		 * @param  {Object} args
+		 * @param  {String} args.step  Step name
+		 * @param  {Object} args.rules  Validation rules
+		 * @returns  {Object} Validation error messages
+		 */
+		portWizardGetValidationMessages: function(args) {
+			var self = this,
+				step = args.step,
+				rules = args.rules,
+				i18n = self.i18n.active().commonApp.portWizard.steps;
+
+			return _
+				.chain(rules)
+				.mapValues(function(fieldRules, fieldName) {
+					var fieldParts = _.split(fieldName, '.'),
+						fieldPartsHaveSection = fieldParts.length > 1,
+						section = fieldPartsHaveSection ? _.take(fieldParts, 1) : [],
+						field = fieldPartsHaveSection ? _.drop(fieldParts, 1) : fieldParts;
+
+					return _
+						.chain(fieldRules)
+						.mapValues(function(ruleValue, ruleName) {
+							var i18nPath = _.concat(step, section, ['errors'], field, ruleName);
+
+							return _.get(i18n, i18nPath);
+						})
+						.omitBy(_.isUndefined)
+						.value();
+				})
+				.omitBy(_.isEmpty)
+				.value();
+		},
+
+		/**
 		  * Initialize a file input field
 		  * @param  {Object} args
 		  * @param  {jQuery} args.fileInput  File input element
@@ -3318,26 +3545,120 @@ define(function(require) {
 						return waterfallCallback(null, numbersCarrierData);
 					}
 
-					var requirementsByCountries = self.appFlags.portWizard.requirementsByCountries,
+					var portWizardAppFlags = self.appFlags.portWizard,
+						allRequirements = portWizardAppFlags.requirements,
+						requirementsByCountry = _.get(portWizardAppFlags.requirementsByCountries, [numbersCarrierData.countryCode, numbersType]),
+						getFieldCompositeName = function(field) {
+							return field.section + '.' + field.name;
+						},
 						requiredDocuments = _
-							.chain(requirementsByCountries)
-							.get([numbersCarrierData.countryCode, numbersType])
-							.map(function(documentKey) {
+							.chain(allRequirements.documents)
+							.pick(requirementsByCountry)
+							.map(function(attachmentName, documentKey) {
 								return {
 									key: documentKey,
-									attachmentName: _.get(self.appFlags.portWizard.requirements, documentKey),
+									attachmentName: attachmentName,
 									required: true
 								};
 							})
-							.value();
+							.value(),
+						requiredRulesByStep = _
+							.chain(allRequirements.rules)
+							.pick(requirementsByCountry)
+							.flatMap()
+							.groupBy('step')
+							.mapValues(function(stepRules) {
+								return _
+									.chain(stepRules)
+									.keyBy(getFieldCompositeName)
+									.mapValues(function(fieldRules) {
+										return _.omit(fieldRules, [ 'step', 'section', 'name' ]);
+									})
+									.value();
+							})
+							.value(),
+						requiredFieldsByStep = _
+							.chain(allRequirements.fields)
+							.pick(requirementsByCountry)
+							.flatMap()
+							.groupBy('step')
+							.mapValues(function(stepFields) {
+								return _
+									.chain(stepFields)
+									.groupBy('section')
+									.mapValues(function(sectionFields) {
+										return _.map(sectionFields, function(field) {
+											var fieldCompositeName = getFieldCompositeName(field);
 
-					self.portWizardSet('requiredDocumentsList', requiredDocuments);
+											return _.merge({
+												isRequired: _.get(requiredRulesByStep, [
+													field.step,
+													fieldCompositeName,
+													'required'
+												], false)
+											}, _.omit(field, 'step'));
+										});
+									})
+									.value();
+							})
+							.value(),
+						formattedRequirements = {
+							documentsList: requiredDocuments,
+							fieldsByStep: requiredFieldsByStep,
+							rulesByStep: requiredRulesByStep
+						};
+
+					self.portWizardSet('requirements', formattedRequirements);
 
 					waterfallCallback(null, _.assign(numbersCarrierData, {
-						requiredDocuments: requiredDocuments
+						requirements: formattedRequirements
 					}));
 				}
 			], callback);
+		},
+
+		/**
+		 * Gets the data from a form template
+		 * @param  {jQuery} $form  Form template
+		 */
+		portWizardGetFormData: function($form) {
+			var self = this,
+				data = monster.ui.getFormData($form.get(0));
+
+			// Extract and store date(s)
+			$form.find('input.hasDatepicker').each(function() {
+				var $this = $(this),
+					propertyPath = $this.attr('name'),
+					selectedDate = $this.datepicker('getDate');
+
+				_.set(data, propertyPath, selectedDate);
+			});
+
+			return data;
+		},
+
+		/**
+		 * Creates a composed object that does not contain the empty or nil properties from the
+		 * passed object
+		 * @param  {Object} object  Object to clean
+		 * @returns  {Object}  Object without empty or nil properties
+		 */
+		portWizardOmitEmptyOrNilProperties: function(object) {
+			var self = this;
+
+			return _.omitBy(object, self.portWizardIsValueEmptyOrNil);
+		},
+
+		/**
+		 * Checks if a value is empty or nil. Differs from _.isEmpty in that non plain object
+		 * values are not considered empty, except for empty strings
+		 * @param  {Any} value  Value to check
+		 * @returns  {Boolean}  Whether or not the value is empty or nil
+		 */
+		portWizardIsValueEmptyOrNil: function(value) {
+			return _.isNil(value)
+				|| value === ''
+				|| (_.isPlainObject(value) && _.isEmpty(value));
 		},
 
 		/**

@@ -7,12 +7,35 @@
 	</div>
 {{/inline}}
 
+{{#*inline "formFieldPartial"}}
+	<div class="flex-item-1">
+	{{#with @root.i18n.commonApp.portWizard.steps.requiredDocuments.extraData as |extraDataI18n|}}
+		<label class="form-field">
+			{{tryI18n extraDataI18n.labels ../name}}
+		{{#if (lookup extraDataI18n.help ../name)}}
+			<span class="help-tip" title="{{tryI18n extraDataI18n.help ../name}}" data-toggle="tooltip">
+				{{telicon "question--circle" class="iconography-small iconography-help"}}
+			</span>
+		{{/if}}
+		{{#compare ../type "===" "date"}}
+			<div class="input-box iconography-input-left">
+				<input class="input-block-level date-picker" type="text" name="{{../section}}.{{../name}}" readonly="true" />
+				{{telicon "calendar" class="iconography"}}
+			</div>
+		{{else}}
+			<input class="input-block-level" type="text" name="{{../section}}.{{../name}}" placeholder="{{coalesce (lookup extraDataI18n.placeholders ../name) (tryI18n extraDataI18n.labels ../name)}}"{{#if ../mask}} data-mask="{{../mask}}"{{else}}{{#if ../monsterMask}} data-monster-mask="{{../monsterMask}}"{{/if}}{{/if}} value="{{lookup (lookup @root.data ../section) ../name}}">
+		{{/compare}}
+		</label>
+	{{/with}}
+	</div>
+{{/inline}}
+
 <div id="step_required_documents" class="wizard-step container-fluid">
 	<div class="step-title">
-	{{#compare data.requiredDocuments.length "===" 1}}
-		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleSingleDocument (tryI18n i18n.commonApp.portWizard.documents data.requiredDocuments.[0].key)}}
+	{{#compare documentKeys.length "===" 1}}
+		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleSingleDocument (tryI18n i18n.commonApp.portWizard.documents documentKeys.[0])}}
 	{{else}}
-		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleMultipleDocuments data.requiredDocuments.length}}
+		{{replaceVar i18n.commonApp.portWizard.steps.requiredDocuments.titleMultipleDocuments documentKeys.length}}
 	{{/compare}}
 	</div>
 	<div class="step-body flex-row-container">
@@ -20,8 +43,11 @@
 			<form id="form_required_documents">
 				<div class="step-section">
 					<div class="section-body flex-row-container">
-					{{#each data.requiredDocuments.orderedKeys}}
+					{{#each documentKeys}}
 						{{> uploadFieldPartial key=this}}
+					{{/each}}
+					{{#each extraFields.extra}}
+						{{> formFieldPartial section="extra" name=name type=type classes=classes}}
 					{{/each}}
 					</div>
 				</div>
