@@ -420,6 +420,23 @@ define(function(require) {
 							});
 						});
 
+						// Set missing labels to installed apps
+						_.each(self.installedApps, function(installedApp) {
+							if (_.has(installedApp, 'label')) {
+								return;
+							}
+
+							var app = _.get(monster.appsStore, installedApp.name, {}),
+								language = _.has(app.i18n, monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage,
+								label = _.get(app.i18n, [ language, 'label' ]);
+
+							if (_.isNil(label)) {
+								return;
+							}
+
+							installedApp.label = label;
+						});
+
 						self.currentUser = results.user;
 						// This account will remain unchanged, it should be used by non-masqueradable apps
 						self.originalAccount = results.account;
