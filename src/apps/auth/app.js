@@ -366,11 +366,107 @@ define(function(require) {
 				}
 			},
 			function(err, results) {
-				var defaultApp;
-
 				if (err) {
 					return monster.util.logoutAndReload();
 				}
+
+				var afterLanguageLoaded = function() {
+						var fullAppList = _.keyBy(self.installedApps, 'id'),
+							defaultAppId = _.find(results.user.appList || [], function(appId) {
+								return fullAppList.hasOwnProperty(appId);
+							});
+
+						if (defaultAppId) {
+							defaultApp = fullAppList[defaultAppId].name;
+						} else if (self.installedApps.length > 0) {
+							defaultApp = self.installedApps[0].name;
+						}
+
+						monster.appsStore = _.keyBy(results.appsStore, 'name');
+
+						_.each(monster.appsStore, function(app) {
+							if (
+								!_.has(app, 'extends')
+								|| !_.isArray(app.extends)
+							) {
+								return;
+							}
+							_.each(app.extends, function(extended) {
+								if (
+									!_.isString(extended)
+									|| !_.has(monster.appsStore, extended)
+								) {
+									return;
+								}
+								if (_.chain(monster.appsStore).get([extended, 'extensions'], []).includes(app.name).value()) {
+									return;
+								}
+								if (!_.has(monster.appsStore, [extended, 'extensions'])) {
+									_.set(monster.appsStore, [extended, 'extensions'], []);
+								}
+								monster.appsStore[extended].extensions.push(app.name);
+							});
+						});
+
+						// Set missing labels to installed apps
+						_.each(self.installedApps, function(installedApp) {
+							if (_.has(installedApp, 'label')) {
+								return;
+							}
+
+							var app = _.get(monster.appsStore, installedApp.name, {}),
+								language = _.has(app.i18n, monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage,
+								label = _.get(app.i18n, [ language, 'label' ]);
+
+							if (_.isNil(label)) {
+								return;
+							}
+
+							installedApp.label = label;
+						});
+
+						self.currentUser = results.user;
+						// This account will remain unchanged, it should be used by non-masqueradable apps
+						self.originalAccount = results.account;
+						// This account will be overriden when masquerading, it should be used by masqueradable apps
+						self.currentAccount = $.extend(true, {}, self.originalAccount);
+
+						self.defaultApp = defaultApp;
+
+						self.showAnnouncement(self.originalAccount.announcement);
+
+						if ('ui_flags' in results.user && results.user.ui_flags.colorblind) {
+							$('body').addClass('colorblind');
+						}
+
+						if (monster.util.isAdmin()) {
+							$('#main_topbar_account_toggle_link').addClass('visible');
+						}
+
+						monster.pub('core.initializeShortcuts', dataLogin.apps);
+						monster.pub('core.socket.start');
+						monster.pub('webphone.start');
+
+						monster.pub('core.loadApps', {
+							defaultApp: defaultApp
+						});
+					},
+					loadCustomLanguage = function(language, callback) {
+						// If the user or the account we're logged into has a language settings, and if it's different than
+						if (language !== monster.config.whitelabel.language && language !== monster.defaultLanguage) {
+							monster.apps.loadLocale(monster.apps.core, language, function() {
+								monster.apps.loadLocale(self, language, function() {
+									monster.config.whitelabel.language = language;
+
+									callback && callback();
+								});
+							});
+						} else {
+							monster.config.whitelabel.language = language;
+							callback && callback();
+						}
+					},
+					defaultApp;
 
 				if (results.user.hasOwnProperty('require_password_update') && results.user.require_password_update) {
 					self.newPassword(results.user);
@@ -382,104 +478,6 @@ define(function(require) {
 				results.user.account_name = results.account.name;
 				results.user.apps = results.user.apps || {};
 				results.account.apps = results.account.apps || {};
-
-				var afterLanguageLoaded = function() {
-					var fullAppList = _.keyBy(self.installedApps, 'id'),
-						defaultAppId = _.find(results.user.appList || [], function(appId) {
-							return fullAppList.hasOwnProperty(appId);
-						});
-
-					if (defaultAppId) {
-						defaultApp = fullAppList[defaultAppId].name;
-					} else if (self.installedApps.length > 0) {
-						defaultApp = self.installedApps[0].name;
-					}
-
-					monster.appsStore = _.keyBy(results.appsStore, 'name');
-
-					_.each(monster.appsStore, function(app) {
-						if (
-							!_.has(app, 'extends')
-							|| !_.isArray(app.extends)
-						) {
-							return;
-						}
-						_.each(app.extends, function(extended) {
-							if (
-								!_.isString(extended)
-								|| !_.has(monster.appsStore, extended)
-							) {
-								return;
-							}
-							if (_.chain(monster.appsStore).get([extended, 'extensions'], []).includes(app.name).value()) {
-								return;
-							}
-							if (!_.has(monster.appsStore, [extended, 'extensions'])) {
-								_.set(monster.appsStore, [extended, 'extensions'], []);
-							}
-							monster.appsStore[extended].extensions.push(app.name);
-						});
-					});
-
-					// Set missing labels to installed apps
-					_.each(self.installedApps, function(installedApp) {
-						if (_.has(installedApp, 'label')) {
-							return;
-						}
-
-						var app = _.get(monster.appsStore, installedApp.name, {}),
-							language = _.has(app.i18n, monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage,
-							label = _.get(app.i18n, [ language, 'label' ]);
-
-						if (_.isNil(label)) {
-							return;
-						}
-
-						installedApp.label = label;
-					});
-
-					self.currentUser = results.user;
-					// This account will remain unchanged, it should be used by non-masqueradable apps
-					self.originalAccount = results.account;
-					// This account will be overriden when masquerading, it should be used by masqueradable apps
-					self.currentAccount = $.extend(true, {}, self.originalAccount);
-
-					self.defaultApp = defaultApp;
-
-					self.showAnnouncement(self.originalAccount.announcement);
-
-					if ('ui_flags' in results.user && results.user.ui_flags.colorblind) {
-						$('body').addClass('colorblind');
-					}
-
-					if (monster.util.isAdmin()) {
-						$('#main_topbar_account_toggle_link').addClass('visible');
-					}
-
-					monster.pub('core.initializeShortcuts', dataLogin.apps);
-					monster.pub('core.socket.start');
-					monster.pub('webphone.start');
-
-					monster.pub('core.loadApps', {
-						defaultApp: defaultApp
-					});
-				};
-
-				// If the user or the account we're logged into has a language settings, and if it's different than
-				var loadCustomLanguage = function(language, callback) {
-					if (language !== monster.config.whitelabel.language && language !== monster.defaultLanguage) {
-						monster.apps.loadLocale(monster.apps.core, language, function() {
-							monster.apps.loadLocale(self, language, function() {
-								monster.config.whitelabel.language = language;
-
-								callback && callback();
-							});
-						});
-					} else {
-						monster.config.whitelabel.language = language;
-						callback && callback();
-					}
-				};
 
 				/* If user has a preferred language, then set the i18n flag with this value, and download the customized i18n
 				if not, check if the account has a default preferred language */
