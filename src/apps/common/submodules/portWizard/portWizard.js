@@ -43,8 +43,13 @@ define(function(require) {
 					{
 						stepName: 'ownershipConfirmation',
 						errorTypes: [
-							'carrier_error_7115',
-							'carrier_error_7203'
+							'carrier_error_7203'	// The billing telephone number (BTN) is invalid
+						]
+					},
+					{
+						stepName: 'requiredDocuments',
+						errorTypes: [
+							'carrier_error_7115'	// The LOA authorizing person is required
 						]
 					}
 				],
