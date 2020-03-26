@@ -1077,5 +1077,9 @@
 	},
 	"charsRemaining": {
 		"label": "Characters Remaining"
+	},
+
+	"nav": {
+		"account": "Account"
 	}
 }

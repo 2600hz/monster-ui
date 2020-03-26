@@ -504,7 +504,7 @@ define(function(require) {
 				account = args.account,
 				callback = args.callback,
 				afterGetData = function(account) {
-					monster.apps.auth.currentAccount = $.extend(true, {}, account);
+					monster.pub('auth.setAccount', account);
 					self.updateApps(account.id);
 
 					monster.pub('myaccount.renderNavLinks', {
@@ -566,7 +566,7 @@ define(function(require) {
 			var self = this,
 				callback = args.callback;
 
-			monster.apps.auth.currentAccount = $.extend(true, {}, monster.apps.auth.originalAccount);
+			monster.pub('auth.setAccount', monster.apps.auth.originalAccount);
 			self.updateApps(monster.apps.auth.originalAccount.id);
 
 			monster.pub('myaccount.renderNavLinks');
