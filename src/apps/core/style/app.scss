@@ -372,6 +372,17 @@ body,
 	content: "\f085";
 }
 
+// Account Name
+#main_topbar_account_toggle #main_topbar_account_toggle_link .account-name-container {
+	float: right;
+	margin: 13px 0 0 12px;
+	line-height: 18px;
+
+	.topbar-account-name {
+		font-weight: 600;
+	}
+}
+
 /************************************************************/
 /******************** UPLOAD PROGRESS BAR *******************/
 /************************************************************/
