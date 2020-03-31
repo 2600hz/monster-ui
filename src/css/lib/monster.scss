@@ -441,12 +441,10 @@ label[class*='monster-radio'] {
 			opacity: 1;
 		}
 	}
-	& > input:focus ~ i::after,
 	&:hover > input ~ i::after {
 		opacity: 1;
 		border-color: #c0c0c9;
 	}
-	& > input:checked:focus ~ i::after,
 	&:hover > input:checked ~ i::after {
 		border-color: #e0e0e9;
 	}
