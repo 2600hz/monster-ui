@@ -490,17 +490,16 @@ define(function(require) {
 
 		/**
 		 * Executes the method to validate and process the current step data
-		 * @param  {Object} args
-		 * @param  {('back'|'done'|'goto'|'next'|'save')} args.eventType  Type of event that
-		 *                                                                triggered the execution
-		 *                                                                of the util method
-		 * @param  {Boolean} args.completeStep  Indicates whether or not the current step will be
-		 *                                      completed
+		 * @param  {Object} eventArgs
+		 * @param  {('back'|'done'|'goto'|'next'|'save')} eventArgs.eventType  Type of event that
+		 *                                                                     triggered the execution
+		 *                                                                     of the util method
+		 * @param  {Boolean} eventArgs.completeStep  Indicates whether or not the current step will be
+		 *                                           completed
+		 * @param  {Number} eventArgs.nextStepId  ID of the next step to be loaded, if any
 		 */
-		navigationWizardUtilForTemplate: function(args) {
+		navigationWizardUtilForTemplate: function(eventArgs) {
 			var self = this,
-				eventType = args.eventType,
-				completeStep = args.completeStep,
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				thisArg = wizardArgs.thisArg,
@@ -508,10 +507,7 @@ define(function(require) {
 				currentStep = navigationWizardFlags.currentStep,
 				util = steps[currentStep].util;
 
-			return thisArg[util](wizardArgs.template, wizardArgs, {
-				eventType: eventType,
-				completeStep: completeStep
-			});
+			return thisArg[util](wizardArgs.template, wizardArgs, eventArgs);
 		},
 
 		/**
@@ -545,7 +541,8 @@ define(function(require) {
 			if (validateCurrentStep) {
 				result = self.navigationWizardUtilForTemplate({
 					eventType: eventType,
-					completeStep: completeCurrentStep
+					completeStep: completeCurrentStep,
+					nextStepId: stepId
 				});
 
 				if (!result.valid) {
@@ -566,7 +563,7 @@ define(function(require) {
 
 			// Set new template and menu items
 			self.navigationWizardSetSelected({
-				stepId: stepId
+				stepId: _.get(result, 'goToStepId', -1) >= 0 ? result.goToStepId : stepId
 			});
 			self.navigationWizardGenerateTemplate();
 		},
@@ -578,12 +575,16 @@ define(function(require) {
 		 */
 		navigationWizardComplete: function(args) {
 			var self = this,
-				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				wizardArgs = navigationWizardFlags.wizardArgs,
 				wizardThisArg = wizardArgs.thisArg,
 				eventType = args.eventType,
+				doCompleteStep = eventType === 'done',
+				currentStep = navigationWizardFlags.currentStep,
+				lastCompletedStep = _.get(navigationWizardFlags, 'lastCompletedStep', -1),
 				result = self.navigationWizardUtilForTemplate({
 					eventType: eventType,
-					completeStep: eventType === 'done'
+					completeStep: doCompleteStep
 				}),
 				completeFunctionRef = eventType === 'save'
 					? _.get(wizardArgs, 'save', wizardArgs.done)	// If save function is not provided, default to done function
@@ -592,7 +593,11 @@ define(function(require) {
 					? completeFunctionRef
 					: wizardThisArg[completeFunctionRef],	// Support function name, for backward compatibility
 				eventArgs = {
-					eventType: eventType
+					eventType: eventType,
+					currentStepId: currentStep,
+					lastCompletedStepId: doCompleteStep && result.valid && currentStep > lastCompletedStep
+						? currentStep
+						: lastCompletedStep
 				};
 
 			if (!result.valid) {

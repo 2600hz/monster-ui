@@ -40,7 +40,7 @@
 				{{> sectionTitle stepName="nameAndNumbers"}}
 				<div class="section-body">
 					{{> horizontalFieldPartial label=portWizardStepsI18n.nameAndNumbers.portRequestName.labels.name value=@root.data.nameAndNumbers.portRequestName}}
-					{{#> horizontalFieldPartial label=(replaceVar portWizardStepsI18n.review.nameAndNumbers.labels.totalNumbers @root.data.nameAndNumbers.numbersToPort.numbers.length) value=@root.data.nameAndNumbers.numbersToPort.numbers hasContent=true}}
+					{{#> horizontalFieldPartial label=(replaceVar portWizardStepsI18n.review.nameAndNumbers.labels.totalNumbers @root.data.nameAndNumbers.numbersToPort.e164Numbers.length) value=@root.data.nameAndNumbers.numbersToPort.e164Numbers hasContent=true}}
 						<div class="flex-row-container number-list">
 						{{#each value}}
 							<div class="flex-item-5 number-item">
