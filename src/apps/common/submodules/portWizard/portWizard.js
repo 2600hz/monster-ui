@@ -1311,7 +1311,7 @@ define(function(require) {
 
 					waterfallCallback(null, {
 						areNumbersValid: areNumbersValid,
-						template: (numbersCarrierData.carrierWarningType === 'none')
+						template: areNumbersValid
 							? self.portWizardCarrierSelectionSingleGetTemplate({
 								numbersCarrierData: numbersCarrierData,
 								carrierSelectionData: carrierSelectionData
@@ -1509,7 +1509,7 @@ define(function(require) {
 						count: _.size(numbers)
 					},
 					winningCarrierList: winningCarrierList,
-					requiredDocuments: numbersCarrierData.requiredDocuments,
+					requiredDocuments: numbersCarrierData.requirements.documentsList,
 					data: {
 						designateWinningCarrier: {
 							losingCarrier: self.portWizardCleanCarrierName(carrierNumberGroup.carrier),
