@@ -1933,15 +1933,10 @@ define(function(require) {
 						maxlength: 128
 					},
 					'serviceAddress.region': {
-						required: true,
-						minlength: 2,
-						maxlength: 2
+						required: true
 					},
 					'serviceAddress.postalCode': {
-						required: true,
-						digits: true,
-						minlength: 5,
-						maxlength: 5
+						required: true
 					},
 					'serviceAddress.country': {
 						required: true
