@@ -86,8 +86,8 @@ body,
 }
 .core-topbar .links .inline-text {
 	display: inline-block;
-	float: left;
 	margin-right: 10px;
+	vertical-align: top;
 }
 .core-topbar .links .inline-text.red {
 	color: red;
