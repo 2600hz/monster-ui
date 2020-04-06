@@ -773,7 +773,6 @@ define(function(require) {
 		portWizardFormatPortRequestData: function(args) {
 			var self = this,
 				portWizardAppFlags = self.appFlags.portWizard,
-				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
 				allRequiredDocuments = portWizardAppFlags.requirements.documents,
 				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
@@ -793,11 +792,11 @@ define(function(require) {
 				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsList, 'attachmentName'),
 				requiredDocumentsByKey = _.keyBy(requiredDocumentsList, 'key'),
 				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
-				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+				minTargetDate = self.portWizardGetMinimumTargetDate(),
 				targetDate = _.has(portRequestData, 'transfer_date')
-					? monster.util.gregorianToDate(portRequestData.transfer_date)
+					? self.portWizardGregorianToDateWithCurrentTimeZone(portRequestData.transfer_date)
 					: undefined,
-				adjustedTargetDate = (targetDate && minTargetDate < targetDate)
+				adjustedTargetDate = (targetDate && targetDate < minTargetDate)
 					? minTargetDate
 					: targetDate,
 				wizardData = self.portWizardOmitEmptyOrNilProperties({
@@ -874,7 +873,9 @@ define(function(require) {
 							: null,
 						extra: self.portWizardOmitEmptyOrNilProperties({
 							loaSignee: portRequestData.signee_name,
-							loaSigningDate: portRequestData.signing_date
+							loaSigningDate: _.has(portRequestData, 'signing_date')
+								? self.portWizardGregorianToDateWithCurrentTimeZone(portRequestData.signing_date)
+								: undefined
 						})
 					}),
 					dateAndNotifications: _.has(portRequestData, 'transfer_date')
@@ -2287,8 +2288,7 @@ define(function(require) {
 			var self = this,
 				initTemplate = function() {
 					var dateAndNotificationsData = _.get(args.data, 'dateAndNotifications', {}),
-						minTargetDateBusinessDays = self.appFlags.portWizard.minTargetDateBusinessDays,
-						minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+						minTargetDate = self.portWizardGetMinimumTargetDate(),
 						targetDate = _.get(dateAndNotificationsData, 'targetDate', minTargetDate),
 						$template = $(self.getTemplate({
 							name: 'step-dateAndNotifications',
@@ -2601,6 +2601,7 @@ define(function(require) {
 					'requiredDocuments'
 				]),
 				bill = _.get(data, 'ownershipConfirmation.latestBill'),
+				dateAndNotificationsData = data.dateAndNotifications,
 				requiredDocumentsData = data.requiredDocuments,
 				otherDocuments = _.get(requiredDocumentsData, 'documents', {}),
 				allDocuments = _
@@ -2625,7 +2626,18 @@ define(function(require) {
 									name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
 								};
 							}),
-							extra: _.get(requiredDocumentsData, 'extra', {})
+							extra: _
+								.chain(requiredDocumentsData)
+								.get('extra', {})
+								.mapValues(function(value, key) {
+									return key === 'loaSigningDate'
+										? self.portWizardDateToGregorianWithCurrentTimeZone(value)
+										: value;
+								})
+								.value()
+						},
+						dateAndNotifications: {
+							targetDate: self.portWizardDateToGregorianWithCurrentTimeZone(dateAndNotificationsData.targetDate)
 						}
 					});
 
@@ -2978,7 +2990,7 @@ define(function(require) {
 				}, {}),
 				notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails', []),
 				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
-					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
+					transfer_date: self.portWizardDateToGregorianWithCurrentTimeZone(dateAndNotificationsData.targetDate)
 				} : {},
 				getOrEmptyString = _.partialRight(_.get, ''),
 				billSection = _.isNil(ownershipConfirmationData) ? {} : {
@@ -3082,7 +3094,7 @@ define(function(require) {
 
 				if (isFieldExpected && !self.portWizardIsValueEmptyOrNil(rawFieldValue)) {
 					fieldValue = field.type === 'date'
-						? monster.util.dateToGregorian(rawFieldValue)
+						? self.portWizardDateToGregorianWithCurrentTimeZone(rawFieldValue)
 						: rawFieldValue;
 
 					_.set(newPortRequestDocument, field.portRequestPath, fieldValue);
@@ -3745,6 +3757,45 @@ define(function(require) {
 			});
 
 			return data;
+		},
+
+		/**
+		 * Converts the date part of a Javascript Date to gregorian time, using the current time
+		 * zone
+		 * @param  {Date} date  Date to convert
+		 * @returns  {Number}  Gregorian time
+		 */
+		portWizardDateToGregorianWithCurrentTimeZone: function(date) {
+			return monster.util.dateToBeginningOfGregorianDay(
+				date,
+				monster.util.getCurrentTimeZone()
+			);
+		},
+
+		/**
+		 * Gets the minimum target date for the current port request
+		 * @returns  {Date}  Minimum port request target date
+		 */
+		portWizardGetMinimumTargetDate: function() {
+			var self = this,
+				minTargetDateBusinessDays = self.appFlags.portWizard.minTargetDateBusinessDays,
+				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays);
+
+			return moment(minTargetDate).startOf('day').toDate();
+		},
+
+		/**
+		 * Converts a gregorian time to a Javascript Date (withouth time part), using the current time zone
+		 * @param  {Number} timestamp  gregorian time
+		 * @returns  {Date}  Equivalent date, in current time zone
+		 */
+		portWizardGregorianToDateWithCurrentTimeZone: function(timestamp) {
+			var date = monster.util.gregorianToDate(timestamp),
+				momentDateWithTZ = moment.tz(date, monster.util.getCurrentTimeZone()),
+				dateAsString = momentDateWithTZ.format('YYYY-MM-DD'),
+				dateWithBrowserTZ = moment(dateAsString).toDate();
+
+			return dateWithBrowserTZ;
 		},
 
 		/**
