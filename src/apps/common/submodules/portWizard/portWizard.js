@@ -1775,22 +1775,31 @@ define(function(require) {
 				$form = $template.find('form'),
 				isValid = !eventArgs.completeStep || monster.ui.valid($form),
 				formData,
+				billData,
 				ownershipConfirmationData;
 
 			if (isValid) {
 				formData = self.portWizardGetFormData($form);
-				ownershipConfirmationData = _.merge({}, formData, {
-					latestBill: self.portWizardGet('billData'),
-					accountInfo: {
-						btn: _
-							.chain(formData)
-							.get('accountInfo.btn')
-							.thru(monster.util.getFormatPhoneNumber)
-							.get('e164Number', '')
-							.value()
-					}
-				});
+				billData = self.portWizardGet('billData');
+				ownershipConfirmationData = _.merge(
+					formData,
+					_.isEmpty(billData) ? {} : {
+						latestBill: billData
+					},
+					_.has(formData, 'accountInfo.btn') ? {
+						accountInfo: {
+							btn: _
+								.chain(formData)
+								.get('accountInfo.btn')
+								.thru(monster.util.getFormatPhoneNumber)
+								.get('e164Number', '')
+								.value()
+						}
+					} : {}
+				);
 				self.portWizardUnset('billData');
+
+				delete args.data.ownershipConfirmation;
 			}
 
 			return {
