@@ -380,7 +380,12 @@ define(function(require) {
 				portRequestId = _.get(args, 'data.portRequestId'),
 				i18n = self.i18n.active().commonApp.portWizard,
 				i18nSteps = i18n.steps,
-				stepNames = self.appFlags.portWizard.stepNames;
+				stepNames = self.appFlags.portWizard.stepNames,
+				getStepIdByName = _
+					.chain(_.indexOf)
+					.partial(stepNames)
+					.unary()
+					.value();
 
 			// Clean store, in case it was not empty, to avoid using old data
 			self.portWizardSet({});
@@ -474,8 +479,26 @@ define(function(require) {
 				function getCarrierDataAndRequirements($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, waterfallCallback) {
 					// Load carrier and requirements data, if the port request has data that
 					// goes beyond the Carrier Selection step, and the numbers type is valid
-					if (numbersTypeValidationResult !== 'none' || !(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
-						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, null);
+					var carrierSelectionStepId = getStepIdByName('carrierSelection'),
+						savedSteps = _
+							.chain(portRequestData)
+							.get('ui_flags.steps', {})
+							.pick([
+								'current',
+								'lastCompleted'
+							])
+							.mapKeys(function(value, key) {
+								return key + 'Id';
+							})
+							.mapValues(getStepIdByName)
+							.value(),
+						lastCompletedStepId = _.get(savedSteps, 'lastCompletedId', carrierSelectionStepId + 1),
+						currentStepId = _.get(savedSteps, 'currentId', carrierSelectionStepId + 1);
+
+					if (numbersTypeValidationResult !== 'none'
+							|| (lastCompletedStepId <= carrierSelectionStepId && currentStepId <= carrierSelectionStepId)
+							|| !(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
+						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, null, savedSteps);
 					}
 
 					self.portWizardLoadNumbersCarrierDataAndRequirements({
@@ -486,20 +509,20 @@ define(function(require) {
 								return waterfallCallback(err);
 							}
 
-							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData);
+							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, savedSteps);
 						}
 					});
 				},
-				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, waterfallCallback) {
+				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, savedSteps, waterfallCallback) {
 					// Format port request data, to be loaded in the wizard
 					if (!portRequestData) {
-						return waterfallCallback(null, $container, null, {
+						return waterfallCallback(null, $container, {
 							nameAndNumbers: {
 								numbersToPort: {
 									type: 'local'
 								}
 							}
-						}, numbersCarrierData);
+						}, numbersCarrierData, savedSteps);
 					}
 
 					var wizardPortRequestData = self.portWizardFormatPortRequestData({
@@ -509,18 +532,16 @@ define(function(require) {
 						data: portRequestData
 					});
 
-					waterfallCallback(null, $container, portRequestData, wizardPortRequestData, numbersCarrierData);
+					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, savedSteps);
 				},
-				function getPreliminarWizardInitialStep($container, portRequestData, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
+				function getPreliminarWizardInitialStep($container, wizardPortRequestData, numbersCarrierData, savedSteps, waterfallCallback) {
 					// Get preliminary wizard step to resume editing
-					var lastStep = _.last(stepNames),
+					var lastStepId = stepNames.length - 1,
 						hasStepData = _.partial(_.has, wizardPortRequestData),
 						lastDataStepId = _.findLastIndex(stepNames, hasStepData),
-						savedLastCompletedStep = _.get(portRequestData, 'ui_flags.steps.lastCompleted', lastStep),
-						savedCurrentStep = _.get(portRequestData, 'ui_flags.steps.current', lastStep),
-						nameAndNumbersStepId = _.indexOf(stepNames, 'nameAndNumbers'),
-						savedLastCompletedStepId = _.indexOf(stepNames, savedLastCompletedStep),
-						savedCurrentStepId = _.indexOf(stepNames, savedCurrentStep),
+						nameAndNumbersStepId = getStepIdByName('nameAndNumbers'),
+						savedLastCompletedStepId = _.get(savedSteps, 'lastCompletedId', lastStepId),
+						savedCurrentStepId = _.get(savedSteps, 'currentId', lastStepId),
 						wizardLastCompletedStepId = wizardPortRequestData.nameAndNumbers.numbersToPort.areValid
 							? _.min([ lastDataStepId, savedLastCompletedStepId ])
 							: nameAndNumbersStepId,
@@ -541,7 +562,7 @@ define(function(require) {
 						isWinningCarrierValid = areNumbersValid
 							&& portRequestHasWinningCarrier
 							&& _.includes(numbersCarrierData.winningCarriers, wizardPortRequestData.carrierSelection.winningCarrier),
-						carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection');
+						carrierSelectionStepId = getStepIdByName('carrierSelection');
 
 					if (areNumbersValid) {
 						_.set(
@@ -577,8 +598,8 @@ define(function(require) {
 								return document.required && !document.file;
 							})
 							.value(),
-						ownershipConfirmationStepId = _.indexOf(stepNames, 'ownershipConfirmation'),
-						requiredDocumentsStepId = _.indexOf(stepNames, 'requiredDocuments');
+						ownershipConfirmationStepId = getStepIdByName('ownershipConfirmation'),
+						requiredDocumentsStepId = getStepIdByName('requiredDocuments');
 
 					if (wizardLastCompletedStepId > ownershipConfirmationStepId && isBillRequired && !isBillAttached) {
 						wizardLastCompletedStepId = ownershipConfirmationStepId - 1;
