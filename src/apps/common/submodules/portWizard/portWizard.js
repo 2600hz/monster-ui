@@ -792,6 +792,11 @@ define(function(require) {
 				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsList, 'attachmentName'),
 				requiredDocumentsByKey = _.keyBy(requiredDocumentsList, 'key'),
 				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
+				uploadedRequiredDocuments = _
+					.chain(portRequestData)
+					.get('uploads')
+					.omit(billAttachmentName)
+					.value(),
 				minTargetDate = self.portWizardGetMinimumTargetDate(),
 				targetDate = _.has(portRequestData, 'transfer_date')
 					? self.portWizardGregorianToDateWithCurrentTimeZone(portRequestData.transfer_date)
@@ -852,11 +857,9 @@ define(function(require) {
 						})
 						: null,
 					requiredDocuments: self.portWizardOmitEmptyOrNilProperties({
-						documents: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
+						documents: !_.isEmpty(uploadedRequiredDocuments) || _.has(portRequestData, 'transfer_date')
 							? _
-								.chain(portRequestData)
-								.get('uploads')
-								.omit(billAttachmentName)
+								.chain(uploadedRequiredDocuments)
 								.mapValues(function(attachmentData, attachmentName) {
 									var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
 
@@ -2993,7 +2996,7 @@ define(function(require) {
 					transfer_date: self.portWizardDateToGregorianWithCurrentTimeZone(dateAndNotificationsData.targetDate)
 				} : {},
 				getOrEmptyString = _.partialRight(_.get, ''),
-				billSection = _.isNil(ownershipConfirmationData) ? {} : {
+				billSection = _.isEmpty(ownershipConfirmationData) ? {} : {
 					bill: _
 						.chain(originalPortRequestDocument)
 						.get('bill', {})
@@ -3819,7 +3822,7 @@ define(function(require) {
 		portWizardIsValueEmptyOrNil: function(value) {
 			return _.isNil(value)
 				|| value === ''
-				|| (_.isPlainObject(value) && _.isEmpty(value));
+				|| ((_.isPlainObject(value) || _.isArray(value)) && _.isEmpty(value));
 		},
 
 		/**
