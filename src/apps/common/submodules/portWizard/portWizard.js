@@ -1777,18 +1777,21 @@ define(function(require) {
 		portWizardOwnershipConfirmationUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
+				// Form is loaded only when bill has already been selected, or no bill is required
+				isFormLoaded = $form.length > 0,
 				isValid = !eventArgs.completeStep || monster.ui.valid($form),
-				formData,
+				originalBillData = args.data.ownershipConfirmation.latestBill,
 				billData,
+				formData,
 				ownershipConfirmationData;
 
 			if (isValid) {
-				formData = self.portWizardGetFormData($form);
+				formData = isFormLoaded ? self.portWizardGetFormData($form) : {};
 				billData = self.portWizardGet('billData');
 				ownershipConfirmationData = _.merge(
 					formData,
-					_.isEmpty(billData) ? {} : {
-						latestBill: billData
+					_.isEmpty(billData) && _.isEmpty(originalBillData) ? {} : {
+						latestBill: _.isEmpty(billData) ? originalBillData : billData
 					},
 					_.has(formData, 'accountInfo.btn') ? {
 						accountInfo: {
@@ -1803,7 +1806,9 @@ define(function(require) {
 				);
 				self.portWizardUnset('billData');
 
-				delete args.data.ownershipConfirmation;
+				if (isFormLoaded) {
+					delete args.data.ownershipConfirmation;
+				}
 			}
 
 			return {
