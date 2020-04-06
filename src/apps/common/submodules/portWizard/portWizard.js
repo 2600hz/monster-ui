@@ -2372,7 +2372,8 @@ define(function(require) {
 				// Remove empty e-mail values
 				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
 
-				delete args.dateAndNotifications;
+				// Delete old data, to avoid merging with new data
+				delete args.data.dateAndNotifications;
 			}
 
 			return {
