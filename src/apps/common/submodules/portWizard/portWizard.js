@@ -995,6 +995,7 @@ define(function(require) {
 				e164Numbers,
 				numbersTypeValidationResult,
 				areThereNewNumbers,
+				carrierSelectionStepId,
 				goToStepId;
 
 			if (!isValid) {
@@ -1045,15 +1046,11 @@ define(function(require) {
 					.some()
 					.value();
 
-				if (areThereNewNumbers && eventArgs.eventType === 'goto' && _.has(eventArgs, 'nextStepId')) {
-					self.portWizardSet('jumpToStepId', eventArgs.nextStepId);
+				carrierSelectionStepId = _.findIndex(args.steps, { name: 'carrierSelection' });
 
-					goToStepId = _
-						.chain(args)
-						.get('steps')
-						.map('name')
-						.indexOf('carrierSelection')
-						.value();
+				if (areThereNewNumbers && eventArgs.eventType === 'goto' && _.has(eventArgs, 'nextStepId') && eventArgs.nextStepId > carrierSelectionStepId) {
+					self.portWizardSet('jumpToStepId', eventArgs.nextStepId);
+					goToStepId = carrierSelectionStepId;
 				}
 			} else {
 				self.portWizardNameAndNumbersShowNumberTypeValidationError({
