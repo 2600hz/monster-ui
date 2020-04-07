@@ -1320,11 +1320,25 @@ define(function(require) {
 				},
 				function renderTemplate(numbersCarrierData, waterfallCallback) {
 					var jumpToStepId = self.portWizardGet('jumpToStepId', -1),
-						areNumbersValid = numbersCarrierData.areNumbersValid;
+						areNumbersValid = numbersCarrierData.areNumbersValid,
+						isJumpStepValid = jumpToStepId >= 0,
+						previousLosingCarrier = _.get(carrierSelectionData, 'losingCarrier'),
+						currentLosingCarrier = _.get(numbersCarrierData, [
+							'numbersByLosingCarrier',
+							0,
+							'carrier'
+						]),
+						previousWinningCarrier = _.get(carrierSelectionData, 'winningCarrier'),
+						isSameLosingCarrier = previousLosingCarrier === currentLosingCarrier,
+						isWinningCarrierValid = _
+							.chain(numbersCarrierData)
+							.get('winningCarriers', [])
+							.includes(previousWinningCarrier)
+							.value();
 
-					if (jumpToStepId >= 0 && areNumbersValid) {
-						self.portWizardUnset('jumpToStepId');
+					self.portWizardUnset('jumpToStepId');
 
+					if (areNumbersValid && isJumpStepValid && isSameLosingCarrier && isWinningCarrierValid) {
 						return waterfallCallback(null, {
 							areNumbersValid: areNumbersValid,
 							jumpToStepId: jumpToStepId
@@ -1333,6 +1347,7 @@ define(function(require) {
 
 					waterfallCallback(null, {
 						areNumbersValid: areNumbersValid,
+						haveCarriersChanged: areNumbersValid && isJumpStepValid && !(isSameLosingCarrier && isWinningCarrierValid),
 						template: areNumbersValid
 							? self.portWizardCarrierSelectionSingleGetTemplate({
 								numbersCarrierData: numbersCarrierData,
@@ -1370,7 +1385,18 @@ define(function(require) {
 				callback({
 					status: results.areNumbersValid ? null : 'invalid',
 					template: results.template,
-					callback: self.portWizardScrollToTop
+					callback: function() {
+						self.portWizardScrollToTop();
+
+						if (!results.haveCarriersChanged) {
+							return;
+						}
+
+						monster.ui.toast({
+							type: 'warning',
+							message: self.i18n.active().commonApp.portWizard.steps.carrierSelection.singleLosingCarrier.designateWinningCarrier.messages.carrierHasChanged
+						});
+					}
 				});
 			});
 		},
