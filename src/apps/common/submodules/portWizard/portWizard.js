@@ -3021,6 +3021,11 @@ define(function(require) {
 					numbers[number] = {};
 				}, {}),
 				notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails', []),
+				uiFlagsValidationSection = _.get(wizardData, 'ownershipConfirmation.latestBill.required', false) ? {
+					ui_flags: {
+						validation: _.has(wizardData.ownershipConfirmation.latestBill, 'file')
+					}
+				} : {},
 				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
 					transfer_date: self.portWizardDateToGregorianWithCurrentTimeZone(dateAndNotificationsData.targetDate)
 				} : {},
@@ -3078,13 +3083,12 @@ define(function(require) {
 					ui_flags: {
 						portion: null,
 						type: nameAndNumbersData.numbersToPort.type,
-						validation: true,
 						steps: {
 							current: currentStep,
 							lastCompleted: lastCompletedStep
 						}
 					}
-				}, transferDateSection, winningCarrierSection);
+				}, uiFlagsValidationSection, transferDateSection, winningCarrierSection);
 
 			// Assign top level properties that need to be fully overwritten,
 			// because some internal properties may have been removed
