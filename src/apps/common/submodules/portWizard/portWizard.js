@@ -1803,7 +1803,7 @@ define(function(require) {
 				// Form is loaded only when bill has already been selected, or no bill is required
 				isFormLoaded = $form.length > 0,
 				isValid = !eventArgs.completeStep || monster.ui.valid($form),
-				originalBillData = args.data.ownershipConfirmation.latestBill,
+				originalBillData = _.get(args, 'data.ownershipConfirmation.latestBill'),
 				billData,
 				formData,
 				ownershipConfirmationData;
