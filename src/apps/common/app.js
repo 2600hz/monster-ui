@@ -28,6 +28,7 @@ define(function(require) {
 		'portWizard',
 		'ringingDurationControl',
 		'servicePlanDetails',
+		'servicePlanItemEditor',
 		'storagePlanManager',
 		'storageSelector',
 		'webphone'
