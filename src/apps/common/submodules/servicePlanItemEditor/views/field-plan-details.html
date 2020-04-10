@@ -1,0 +1,208 @@
+<fieldset class="field-editor-wrapper">
+	<div class="field-container rate-container clearfix" data-type="rate"{{#ifInArray 'rate' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<table class="current-rate-table monster-table-skinny monster-table no-th">
+			<thead>
+				<tr>
+					<th class="quantity-cell">
+						{{@root.i18n.servicePlanItemEditor.columns.quantity}}
+					</th>
+					<th class="your-rate-cell">
+						{{@root.i18n.servicePlanItemEditor.columns.yourRate}}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each extra.currentRates}}
+				<tr class="rate-row" data-infinite="{{isInfinite}}" data-quantity="{{quantity}}" data-value="{{value}}">
+					<td class="quantity-cell">
+					{{#if isInfinite}}
+						{{quantity}}
+					{{else}}
+						0 - {{quantity}}
+					{{/if}}
+					</td>
+					<td class="your-rate-cell">
+						{{formattedValue}}
+					</td>
+				</tr>
+			{{else}}
+				<tr class="rate-row">
+					<td class="empty-cell">
+						{{@root.i18n.servicePlanItemEditor.notApplicable}}
+					</td>
+					<td class="empty-cell">
+						{{@root.i18n.servicePlanItemEditor.notApplicable}}
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+		<table class="rate-table monster-table-skinny monster-table no-th">
+			<thead>
+				<tr>
+					<th class="quantity-cell">
+						{{@root.i18n.servicePlanItemEditor.columns.quantity}}
+					</th>
+					<th class="customer-rate-cell">
+						{{@root.i18n.servicePlanItemEditor.columns.customerRate}}
+					</th>
+					<th class="margin-cell">
+						{{@root.i18n.servicePlanItemEditor.columns.margin}}
+					</th>
+					<th class="actions-cell">
+						{{@root.i18n.servicePlanItemEditor.columns.actions}}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each extra.rates}}
+				<tr class="rate-row">
+					<td class="quantity-cell">
+					{{#if isInfinite}}
+						{{quantity}}
+					{{else}}
+						0 - <input type="text" class="trigger-rate-margin input-mini" value="{{quantity}}">
+					{{/if}}
+					</td>
+					<td class="customer-rate-cell">
+						{{@root.extra.currencySymbol}} <input type="text" class="trigger-rate-margin input-mini" value="{{value}}">
+					</td>
+					<td class="margin-cell">
+						{{margin}}
+					</td>
+					<td class="actions-cell">
+					{{#if hasAdd}}
+						<i class="fa fa-plus-circle add-rate-row"></i>
+					{{/if}}
+					{{#if hasDelete}}
+						<i class="fa fa-minus-circle delete-rate-row"></i>
+					{{/if}}
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="field-container control-group" data-type="activation_charge"{{#ifInArray 'activation_charge' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<label for="activation_charge" class="control-label">
+			{{i18n.servicePlanItemEditor.editField.plan.activationCharge.label}}
+		</label>
+		<div class="controls">
+			<div class="input-prepend">
+				<span class="add-on">
+					{{extra.currencySymbol}}
+				</span>
+				<input class="input-mini" id="activation_charge" name="activation_charge" type="number" value="{{activation_charge}}">
+			</div>
+		</div>
+	</div>
+
+{{#compare key "===" "_all"}}
+	<div class="field-container row-fluid" data-type="as"{{#ifInArray 'as' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<div class="control-group span6">
+			<label for="as" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.chargeAs.label}}
+			</label>
+			<div class="controls">
+				<select name="as" id="as">
+				{{#select @root.as}}
+					{{#each @root.allOptions}}
+						<option value="{{value}}">
+							{{label}}
+						</option>
+					{{/each}}
+				{{/select}}
+				</select>
+			</div>
+		</div>
+
+		<div class="control-group span6">
+			<label for="exceptions" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.exceptions.label}}
+			</label>
+			<div class="controls">
+				<select multiple name="exceptions" id="exceptions">
+				{{#select @root.exceptions}}
+					{{#each @root.allOptions}}
+						<option value="{{value}}">
+							{{label}}
+						</option>
+					{{/each}}
+				{{/select}}
+				</select>
+			</div>
+		</div>
+	</div>
+{{/compare}}
+
+	<div class="row-fluid">
+		<div class="field-container control-group span6" data-type="maximum"{{#ifInArray 'maximum' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+			<label for="monthly_maximum" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.maximum.label}}
+			</label>
+			<div class="controls">
+				<input type="number" class="input-mini" name="maximum" id="monthly_maximum" value="{{maximum}}">
+			</div>
+		</div>
+
+		<div class="field-container control-group span6" data-type="minimum"{{#ifInArray 'minimum' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+			<label for="monthly_minimum" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.minimum.label}}
+			</label>
+			<div class="controls">
+				<input type="number" class="input-mini" name="minimum" id="monthly_minimum" value="{{minimum}}">
+			</div>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+		<div class="field-container control-group span6" data-type="prorate.additions"{{#ifInArray 'prorate.additions' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+			<label for="prorate_additions" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.prorate.additions}}
+			</label>
+			<div class="controls">
+			{{#monsterSwitch}}
+				<input type="checkbox" class="require-checkbox" id="prorate_additions" name="prorate.additions"{{#if prorate.additions}} checked{{/if}}>
+			{{/monsterSwitch}}
+			</div>
+		</div>
+
+		<div class="field-container control-group span6" data-type="prorate.removals"{{#ifInArray 'prorate.removals' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+			<label for="prorate_removals" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.prorate.removals}}
+			</label>
+			<div class="controls">
+			{{#monsterSwitch}}
+				<input type="checkbox" class="require-checkbox" id="prorate_removals" name="prorate.removals"{{#if prorate.removals}} checked{{/if}}>
+			{{/monsterSwitch}}
+			</div>
+		</div>
+	</div>
+
+	<div class="field-container control-group" data-type="step"{{#ifInArray 'step' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<label for="step" class="control-label">
+			{{i18n.servicePlanItemEditor.editField.plan.step.label}}
+		</label>
+		<div class="controls">
+			<input type="number" min="1" class="span1" id="step" name="step" value="{{step}}">
+		</div>
+	</div>
+
+	<div class="field-container control-group" data-type="cascade"{{#ifInArray 'cascade' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<label for="cascade" class="control-label">
+			{{i18n.servicePlanItemEditor.editField.plan.cascade.label}}
+		</label>
+		<div class="controls">
+		{{#monsterSwitch}}
+			<input type="checkbox" name="cascade" id="cascade"{{#if cascade}} checked{{/if}}>
+		{{/monsterSwitch}}
+			<i class="fa fa-question-circle" data-html="true" data-original-title="{{i18n.servicePlanItemEditor.editField.plan.cascade.tooltip}}" data-placement="top" data-toggle="tooltip"></i>
+		<div class="cascade-help">
+			<p>{{i18n.servicePlanItemEditor.editField.plan.cascade.help1}} <i class="cascade-icon icon-telicon-account-jump"></i></p>
+			<p>{{i18n.servicePlanItemEditor.editField.plan.cascade.help2}}</p>
+			<p>{{i18n.servicePlanItemEditor.editField.plan.cascade.help3}}</p>
+		</div>
+		</div>
+	</div>
+</fieldset>
