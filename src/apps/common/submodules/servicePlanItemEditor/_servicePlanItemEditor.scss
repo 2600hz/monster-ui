@@ -1,0 +1,82 @@
+.service-plan-item-editor-dialog {
+	.service-plan-item-editor-content {
+		width: 850px;
+		max-width: inherit;
+		max-height: inherit;
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+
+		.field-selector-wrapper {
+			padding: 2rem;
+
+			.control-group {
+				margin: 0;
+			}
+		}
+
+		.field-editor-wrapper {
+			flex: 1;
+			overflow-y: auto;
+		}
+
+		fieldset {
+			padding: 0 2rem;
+		}
+
+		.form-actions {
+			display: flex;
+			justify-content: flex-end;
+			margin: 0;
+			padding: 1rem 2rem;
+
+			& > *:not(:first-child) {
+				margin-left: 1rem;
+			}
+		}
+
+		/* Details step */
+		.cascade-help p {
+			margin-bottom: 2px;
+			font-size: 12px;
+		}
+
+		.rate-container {
+			margin-bottom: 15px;
+			display: flex;
+
+			.rate-table {
+				width: 80%;
+				margin: auto;
+				margin-top: 0;
+
+				td:not(:last-child) {
+					text-align: center;
+				}
+				td.actions-cell i {
+					margin-left: 10px;
+					cursor: pointer;
+				}
+			}
+
+			.monster-checkbox {
+				display: block;
+			}
+
+			.current-rate-table {
+				width: 20%;
+				margin-right: 5%;
+				float: left;
+			}
+
+			.current-rate-table td {
+				line-height: 30px;
+			}
+
+			.rate-table {
+				float: left;
+				width: 75%;
+			}
+		}
+	}
+}
