@@ -349,6 +349,12 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/presence/{presenceId}' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/presence/{presenceId}' }
 			},
+			qubicleChats: {
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_chats' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_chats' },
+				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_chats' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/qubicle_chats' }
+			},
 			qubicleQueues: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_queues/{queueId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/qubicle_queues' },
@@ -492,7 +498,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
 				'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
-				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
+				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' },
+				'getDevice': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
 			},
 			voicemail: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
