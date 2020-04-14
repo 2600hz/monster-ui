@@ -165,8 +165,7 @@
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/devices/status' },
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}/quickcall/{number}' },
 				'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync' },
-				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/device/{deviceId}/presence' },
-				'listDevicesByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
+				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/device/{deviceId}/presence' }
 			},
 			directory: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/directories/{directoryId}' },
@@ -493,7 +492,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
 				'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
-				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
+				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' },
+				'listDevicesByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
 			},
 			voicemail: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
