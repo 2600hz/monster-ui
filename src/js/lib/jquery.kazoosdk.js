@@ -166,7 +166,7 @@
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/devices/{deviceId}/quickcall/{number}' },
 				'restart': { verb: 'POST', url: 'accounts/{accountId}/devices/{deviceId}/sync' },
 				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/device/{deviceId}/presence' },
-				'getDevice': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
+				'listDevicesByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
 			},
 			directory: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/directories/{directoryId}' },
