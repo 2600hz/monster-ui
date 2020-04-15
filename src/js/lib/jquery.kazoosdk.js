@@ -493,7 +493,7 @@
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
 				'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
 				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' },
-				'listDevicesByUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
+				'listDevices': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
 			},
 			voicemail: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
