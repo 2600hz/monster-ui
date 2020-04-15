@@ -4,27 +4,36 @@
 			<li class="dropdown">
 				<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
 				<ul class="dropdown-menu">
-					{{#ifInArray 'cnam' features}}
-						<li><a class="cnam-number" href="javascript:void(0);"><i class="fa fa-user"></i>{{ @root.i18n.callerId.label }}</a></li>
-					{{/ifInArray}}
-					{{#ifInArray 'e911' features}}
-						<li><a class="e911-number" href="javascript:void(0);"><i class="fa fa-ambulance"></i>{{ @root.i18n.e911.label }}</a></li>
-					{{/ifInArray}}
-					{{#ifInArray 'prepend' features}}
-						<li><a class="prepend-number" href="javascript:void(0);"><i class="fa fa-file-text-o"></i>{{ @root.i18n.numberPrepend.label }}</a></li>
-					{{/ifInArray}}
-					{{#ifInArray 'failover' features}}
-						<li><a class="failover-number" href="javascript:void(0);"><i class="icon-telicon-failover"></i>{{ @root.i18n.failover.label }}</a></li>
-					{{/ifInArray}}
-					{{#ifInArray 'carrier_name' features}}
-						<li><a class="rename-carrier-number" href="javascript:void(0);"><i class="fa fa-exchange"></i>{{ @root.i18n.numberRenameCarrier.label }}</a></li>
-					{{/ifInArray}}
-					{{#ifInArray 'im' features}}
-						<li><a class="im-number" href="javascript:void(0);"><i class="fa fa-commenting"></i>{{ @root.i18n.numberIm.label }}</a></li>
-					{{/ifInArray}}
-					<li><a class="sync-number" href="javascript:void(0);"><i class="fa fa-refresh"></i>{{ @root.i18n.numbers.sync.label }}</a></li>
+				{{#ifInArray 'cnam' features}}
+					{{> featureItem feature="cnam" icon="fa fa-user" label=@root.i18n.callerId.label}}
+				{{/ifInArray}}
+				{{#ifInArray 'e911' features}}
+					{{> featureItem feature="e911" icon="fa fa-ambulance" label=@root.i18n.e911.label}}
+				{{/ifInArray}}
+				{{#ifInArray 'prepend' features}}
+					{{> featureItem feature="prepend" icon="fa fa-file-text-o" label=@root.i18n.numberPrepend.label}}
+				{{/ifInArray}}
+				{{#ifInArray 'failover' features}}
+					{{> featureItem feature="failover" icon="icon-telicon-failover" label=@root.i18n.failover.label}}
+				{{/ifInArray}}
+				{{#ifInArray 'carrier_name' features}}
+					{{> featureItem feature="rename-carrier" icon="fa fa-exchange" label=@root.i18n.numberRenameCarrier.label}}
+				{{/ifInArray}}
+				{{#ifInArray 'messaging' features}}
+					{{> featureItem feature="messaging" icon="fa fa-comment" label=@root.i18n.numberMessaging.labels.messaging}}
+				{{/ifInArray}}
+					{{> featureItem feature="sync" icon="fa fa-refresh" label=@root.i18n.numbers.sync.label}}
 				</ul>
 			</li>
 		</ul>
 	</div>
 {{/if}}
+
+{{#*inline "featureItem"}}
+<li>
+	<a class="{{feature}}-number" href="javascript:void(0);">
+		<i class="{{icon}}"></i>
+		{{label}}
+	</a>
+</li>
+{{/inline}}

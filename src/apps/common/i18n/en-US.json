@@ -1212,16 +1212,22 @@
 		"selectedApps": "Applications Selected"
 	},
 
-	"numberIm": {
-		"sms" : {
-			"title": "SMS Services"
+	"numberMessaging": {
+		"titles": {
+			"sms": "SMS",
+			"mms": "MMS",
+			"dialog": "Configure Messaging"
 		},
-		"mms" : {
-			"title": "MMS Services"
+		"labels": {
+			"sms": "SMS Services",
+			"mms": "MMS Services",
+			"messaging": "Messaging"
 		},
-		"label": "Messaging",
-		"help": "Enable or Disable messaging feature for this number.",
-		"dialogTitle": "Configure Messaging",
+		"info": "Enable or Disable {{variable}} messaging feature for this number.",
+		"warningPanel": {
+			"title": "Action Warning",
+			"text": "This service requires a manual activation. An email will be sent to Operations to complete this action. This can take up to 72 hours"
+		},
 		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}"
 	}
 }
