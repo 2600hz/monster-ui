@@ -951,13 +951,23 @@ define(function(require) {
 				template = $(coreApp.getTemplate({
 					name: 'dialog-charges',
 					data: formatData(data)
-				}));
+				})),
+				showInvoiceSummary = monster.config.whitelabel.acceptCharges.showInvoiceSummary,
+				content = showInvoiceSummary
+					? template
+					: _.get(
+						monster.config.whitelabel.acceptCharges.message,
+						monster.config.whitelabel.language,
+						coreApp.i18n.active().acceptCharges.message
+					),
+				options = _.merge({
+					title: i18n.confirmCharges.title
+				}, showInvoiceSummary ? {
+					htmlContent: true,
+					dialogClass: 'monster-charges'
+				} : {});
 
-			return self.confirm(template, callbackOk, callbackCancel, {
-				htmlContent: true,
-				title: i18n.confirmCharges.title,
-				dialogClass: 'monster-charges'
-			});
+			return self.confirm(content, callbackOk, callbackCancel, options);
 		},
 
 		// New Popup to show advanced API errors via a "More" Link.
@@ -3267,14 +3277,21 @@ define(function(require) {
 									});
 								}
 							},
-							open: function() {
-								if (!privateIsVisible) {
-									privateIsVisible = true;
-
-									$(modalSelector).fadeIn(250, function() {
-										$('#monster_content').hide();
-									});
+							/**
+							 * @param  {Function} [pArgs.callback]
+							 */
+							open: function(pArgs) {
+								if (privateIsVisible) {
+									return;
 								}
+								var args = pArgs || {};
+
+								privateIsVisible = true;
+
+								$(modalSelector).fadeIn(250, function() {
+									$('#monster_content').hide();
+									args.callback && args.callback();
+								});
 							}
 						};
 
@@ -3852,12 +3869,13 @@ define(function(require) {
 				return $target.prop('tagName') === 'DIV' ? $target[0].textContent.length : $target.val().length;
 			},
 			checkLength = function(event) {
-				var currentLenght = checkCurrentLength(),
-					allowedChars = currentLenght <= size ? size - currentLenght : 0;
+				var currentLength = checkCurrentLength(),
+					isGreaterThanMaxSize = currentLength > size,
+					allowedChars = Math.max(0, size - currentLength);
 
 				allowedCharsLabel.text(allowedChars);
 
-				if (allowedChars <= 0 || allowedChars > size) {
+				if (isGreaterThanMaxSize) {
 					label.addClass('chars-remaining-error');
 
 					event && event.preventDefault();

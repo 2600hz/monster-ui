@@ -1,4 +1,124 @@
 {
+	"servicePlanItemEditor": {
+		"keys": {
+			"phone_numbers": "Phone Numbers",
+			"number_services": "Number Services",
+			"limits": "Limits",
+			"devices": "Devices",
+			"users": "Users",
+			"branding": "Branding",
+			"ips": "IPs",
+			"ui_apps": "UI Apps",
+			"port": "Port Request",
+			"cnam": "CNAM Update",
+			"e911": "e911",
+			"ata": "ATA",
+			"cellphone": "Cell Phone",
+			"fax": "Fax",
+			"landline": "Landline",
+			"mobile": "Mobile",
+			"sip_device": "SIP Device",
+			"sip_uri": "SIP URI",
+			"smartphone": "Smartphone",
+			"softphone": "Softphone",
+			"outbound_trunks": "Outbound Trunks",
+			"inbound_trunks": "Inbound Trunks",
+			"twoway_trunks": "Twoway Trunks",
+			"did_us": "US DID",
+			"tollfree_us": "US Tollfree",
+			"rate": "Rate",
+			"activation_charge": "Activation charge",
+			"minimum": "Minimum",
+			"maximum": "Maximum",
+			"exceptions": "Exceptions",
+			"_all": "All",
+			"as": "As",
+			"user": "Standard User",
+			"admin": "Account Admin",
+			"accounts": "Accounts Manager",
+			"branding": "Branding",
+			"callflows": "Advanced Callflows",
+			"carriers": "Carriers",
+			"cluster": "Cluster Manager",
+			"debug": "Debug App",
+			"migration": "Migration",
+			"mobile": "Mobile",
+			"numbers": "Numbers Manager",
+			"pbxs": "PBX Connector",
+			"pivot": "Pivot",
+			"port": "Port Manager",
+			"provisioner": "Provisioner",
+			"reporting": "Reseller Reporting",
+			"userportal": "Userportal",
+			"voip": "Smart PBX",
+			"webhooks": "Webhooks",
+			"discounts": "Discounts",
+			"maximum": "Maximum",
+			"per-minute-voip": "Per Minute VoIP",
+			"mobile_data": "Mobile Data (100mB)",
+			"support": "Support",
+			"markup_percentage": "Markup",
+			"markup_fixed_price": "Markup",
+			"markup_rate": "Rate"
+		},
+		"fieldSelector": {
+			"label": "Fields to configure",
+			"activationCharge": "Activation Charge",
+			"as": "Charge As",
+			"cascade": "Aggregate Counts",
+			"exceptions": "Exceptions",
+			"maximum": "Monthly Maximum",
+			"minimum": "Monthly Minimum",
+			"rate": "Rates",
+			"prorateAdditions": "Prorate Additions",
+			"prorateRemovals": "Prorate Removals",
+			"step": "Step"
+		},
+		"notApplicable": "N/A",
+		"columns": {
+			"quantity": "Quantity",
+			"yourRate": "Your Rate",
+			"customerRate": "Customer Rate",
+			"margin": "Margin",
+			"actions": "Actions"
+		},
+		"editField": {
+			"plan": {
+				"prorate": {
+					"additions": "Prorate Additions",
+					"removals": "Prorate Removals"
+				},
+				"step": {
+					"label": "Step"
+				},
+				"minimum": {
+					"label": "Monthly Minimum",
+					"subLabel": "Min. Quantity"
+				},
+				"maximum": {
+					"label": "Monthly Maximum",
+					"subLabel": "Max. Quantity"
+				},
+				"activationCharge": {
+					"label": "Apply Activation Fee"
+				},
+				"exceptions": {
+					"label": "Exclude"
+				},
+				"chargeAs": {
+					"label": "Charge As",
+					"selectChoice": "-- Select an option --"
+				},
+				"cascade": {
+					"label": "Aggregate counts across all sub-accounts",
+					"tooltip": "This powerful feature lets you decide whether to calculate pricing discounts based on the total number of items for all sub-accounts combined, or whether you want to treat each sub-account individually. <br/><br/> As an example, assume two sub-accounts have 5 devices each. When this option is checked, the system will calculate pricing based on the total of 10 devices, and any discounts for having 10 devices would be applied. When unchecked, the system will calculate pricing based on each account having 5 devices, and will then add the pricing together after calculating based on 5 devices.",
+					"help1": "Indicated by the following icon: ",
+					"help2": "When checked, pricing and discount tiers are based on the total number of items across all sub-accounts.",
+					"help3": "When unchecked, pricing is based on totals for each individual sub-account, and their total costs are then added together"
+				}
+			}
+		}
+	},
 	"accountBrowser": {
 		"missingInfo": "Missing Information",
 		"addAccount": "Add New Account",

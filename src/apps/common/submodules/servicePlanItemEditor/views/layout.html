@@ -1,0 +1,29 @@
+<form class="form-horizontal service-plan-item-editor-content" id="plan_field_form">
+	<fieldset class="field-selector-wrapper">
+		<div class="control-group">
+			<label for="selector" class="control-label">
+				{{i18n.servicePlanItemEditor.fieldSelector.label}}
+			</label>
+			<div class="controls">
+				<select multiple id="selector">
+				{{#select selected}}
+					{{#each options}}
+						<option value="{{value}}">
+							{{label}}
+						</option>
+					{{/each}}
+				{{/select}}
+				</select>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset class="field-editor-wrapper"></fieldset>
+	<div class="form-actions">
+		<button type="button" class="monster-button-ghost js-cancel">
+			{{i18n.cancel}}
+		</button>
+		<button type="submit" class="monster-button-primary">
+			{{i18n.save}}
+		</button>
+	</div>
+</form>

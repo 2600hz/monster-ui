@@ -34,6 +34,8 @@ define(function(require) {
 		'developerFlags.showJsErrors': [_.isBoolean, false],
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
 		'port.resporg': [_.isString, 'http://ui.zswitch.net/Editable.Resporg.Form.pdf'],
+		'whitelabel.acceptCharges.autoAccept': [_.isBoolean, false],
+		'whitelabel.acceptCharges.showInvoiceSummary': [_.isBoolean, true],
 		'whitelabel.allowAccessList': [_.isBoolean, false],
 		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
 		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
@@ -788,6 +790,19 @@ define(function(require) {
 			return false;
 		}
 	}
+
+	/**
+	 * Returns whether the build was optimized for a production environment.
+	 * @return {Boolean} Whether the build was optimized for a production environment.
+	 */
+	function isEnvironmentProd() {
+		return _
+			.chain(monster)
+			.get('config.developerFlags.build.type')
+			.isEqual('production')
+			.value();
+	}
+	monster.isEnvironmentProd = isEnvironmentProd;
 
 	/**
 	 * Set the language on application startup.

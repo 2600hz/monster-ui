@@ -64,36 +64,61 @@ define(function() {
 				return app.name === monster.apps.getActiveApp();
 			};
 
+			/**
+			 * @param  {Object} params
+			 * @param  {String} [params.accountId]
+			 * @param  {String} params.binding
+			 * @param  {Function} params.callback
+			 * @param  {jQuery} [params.requiredElement]
+			 */
 			app.subscribeWebSocket = function(params) {
 				var accountId = app.accountId || params.accountId,
-					authToken = app.getAuthToken() || params.authToken,
 					requiredElement = params.hasOwnProperty('requiredElement') ? params.requiredElement : false;
 
+				var unsubscribe = monster.socket.bind({
+					binding: params.binding,
+					accountId: accountId,
+					listener: params.callback,
+					source: app.name
+				});
+
 				if (requiredElement) {
-					requiredElement.on('remove', function() {
-						monster.socket.unbind(params.binding, accountId, authToken, app.name);
-					});
+					requiredElement.on('remove', unsubscribe);
 				}
-
-				monster.socket.bind(params.binding, accountId, authToken, params.callback, app.name);
 			};
 
+			/**
+			 * @param  {Object} params
+			 * @param  {String} [params.accountId]
+			 * @param  {String} params.binding
+			 */
 			app.unsubscribeWebSocket = function(params) {
-				var accountId = app.accountId || params.accountId,
-					authToken = app.getAuthToken() || params.authToken;
+				var accountId = app.accountId || params.accountId;
 
-				monster.socket.unbind(params.binding, accountId, authToken, app.name);
+				monster.socket.unbind({
+					binding: params.binding,
+					accountId: accountId,
+					source: app.name
+				});
 			};
 
+			/**
+			 * @param  {Object} args
+			 * @param  {Function} args.callback
+			 * @param  {Function} [args.error]
+			 */
 			app.enforceWebSocketsConnection = function(args) {
 				app.requiresWebSockets = true;
 
-				if (monster.socket.isConnected()) {
-					args.callback();
+				monster.pub('core.socket.showDisconnectToast');
+
+				if (
+					!monster.socket.getInfo().isConnected
+					&& _.isFunction(args.error)
+				) {
+					args.error();
 				} else {
-					monster.pub('core.showWarningDisconnectedSockets', {
-						callback: args.error
-					});
+					args.callback();
 				}
 			};
 
@@ -317,7 +342,11 @@ define(function() {
 							requestEventParams: _.pick(params, 'bypassProgressIndicator')
 						},
 						params.data,
-						_.pick(params, 'onChargesCancelled'));
+						monster.config.whitelabel.acceptCharges.autoAccept ? {
+							acceptCharges: monster.config.whitelabel.acceptCharges.autoAccept
+						} : {},
+						_.pick(params, 'onChargesCancelled')
+						);
 
 						if (_.has(monster.config, 'kazooClusterId')) {
 							apiSettings.headers['X-Kazoo-Cluster-ID'] = monster.config.kazooClusterId;
@@ -451,6 +480,13 @@ define(function() {
 			});
 		},
 
+		/**
+		 * @param  {String}   name
+		 * @param  {Function} [callback]
+		 * @param  {Object}   [options={}]
+		 * @param  {String}   [options.sourceUrl]
+		 * @param  {String}   [options.apiUrl]
+		 */
 		_loadApp: function(name, callback, options) {
 			var self = this,
 				appPath = 'apps/' + name,
@@ -573,29 +609,28 @@ define(function() {
 			});
 		},
 
-		// pChangeHash will change the URL of the browser if set to true. For some apps (like auth, apploader, core, we don't want that to happen, so that's why we need this)
-		load: function(name, callback, options, pChangeHash) {
-			var self = this,
-				changeHash = pChangeHash === true ? true : false,
-				afterLoad = function(app) {
-					monster.apps.lastLoadedApp = app.name;
+		/**
+		 * @param  {String}   name
+		 * @param  {Function} [callback]
+		 * @param  {Object}   [options]
+		 */
+		load: function(name, callback, options) {
+			var self = this;
 
-					self.changeAppShortcuts(app);
+			monster.waterfall([
+				function maybeLoadApp(waterfallCb) {
+					if (_.has(monster.apps, name)) {
+						return waterfallCb(null, monster.apps[name]);
+					}
+					self._loadApp(name, waterfallCb.bind(null, null), options);
+				}
+			], function afterAppLoad(err, app) {
+				monster.apps.lastLoadedApp = app.name;
 
-					callback && callback(app);
-				};
+				self.changeAppShortcuts(app);
 
-			if (changeHash) {
-				monster.routing.updateHash('apps/' + name);
-			}
-
-			if (!(name in monster.apps)) {
-				self._loadApp(name, function(app) {
-					afterLoad(app);
-				}, options);
-			} else {
-				afterLoad(monster.apps[name]);
-			}
+				callback && callback(app);
+			});
 		},
 
 		changeAppShortcuts: function(app) {

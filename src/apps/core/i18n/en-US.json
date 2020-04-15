@@ -1,4 +1,8 @@
 {
+	"unableToAccessApp": "It looks like the app you tried to access is not available.",
+	"acceptCharges": {
+		"message": "By continuing this action, your monthly billing may change. Please contact your administrator for more details."
+	},
 	"bookkeepers": {
 		"braintree": "Braintree",
 		"default": "Default",
@@ -1040,11 +1044,8 @@
 	"__comment": "UI-3013: add better feedback of broken WS connection",
 	"__version": "4.1",
 	"brokenWebSocketsWarning": {
-		"successReconnect": "You are now properly reconnected to the WebSockets server.",
-		"title": "No WebSockets Connection",
-		"content1": "The WebSockets Connection is not working.",
-		"content2": "Please check that your Internet connection and your firewall are working as expected, as we can not display the current application without a proper connection to the WebSockets server.",
-		"content3": "We'll automatically refresh the application once the connection works properly..."
+		"successReconnect": "Real-time connection established.",
+		"disconnectMessage": "Real-time connectivity lost, reconnecting..."
 	},
 
 	"alerts": {

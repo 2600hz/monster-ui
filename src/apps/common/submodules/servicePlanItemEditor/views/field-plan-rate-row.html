@@ -1,0 +1,13 @@
+<tr class="rate-row">
+	<td class="quantity-cell">{{#if isInfinite}}{{ quantity }}{{else}}0 - <input type="text" class="trigger-rate-margin input-mini" value="{{quantity}}">{{/if}}</td>
+	<td class="customer-rate-cell">{{currencySymbol}} <input type="text" class="trigger-rate-margin input-mini" value="{{ customerValue }}"></td>
+	<td class="margin-cell">{{ margin }}</td>
+	<td class="actions-cell">
+		{{#if hasAdd}}
+			<i class="fa fa-plus-circle add-rate-row"></i>
+		{{/if}}
+		{{#if hasDelete}}
+			<i class="fa fa-minus-circle delete-rate-row"></i>
+		{{/if}}
+	</td>
+</tr>

@@ -28,6 +28,17 @@ define(function(require) {
 			kazooConnectionName: 'kazooAPI',
 			mainContainer: undefined,
 			isAuthentified: false,
+
+			/**
+			 * Holds map of capababilities returned on authentication.
+			 * @type {Object}
+			 *
+			 * Set once authentication is successful.
+			 *
+			 * This map does not need to be refreshed as capabilities are set on a per cluster basis
+			 * and not per account.
+			 */
+			capabilities: {},
 			connections: {}
 		},
 
@@ -266,6 +277,8 @@ define(function(require) {
 
 			self.appFlags.isAuthentified = true;
 
+			_.set(self.appFlags, 'capabilities', _.get(data.data, 'capabilities', {}));
+
 			self.appFlags.connections[self.appFlags.kazooConnectionName] = {
 				accountId: data.data.account_id,
 				authToken: data.auth_token,
@@ -426,7 +439,7 @@ define(function(require) {
 						}
 
 						monster.pub('core.initializeShortcuts', dataLogin.apps);
-						monster.pub('socket.start');
+						monster.pub('core.socket.start');
 						monster.pub('webphone.start');
 
 						monster.pub('core.loadApps', {
