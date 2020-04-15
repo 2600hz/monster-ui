@@ -1,0 +1,31 @@
+.trunkstore_popup.numberMessaging {
+	width: 510px;
+	margin: 0;
+
+	.popup-content {
+		padding: 15px 25px;
+
+		&:not(:first-child) {
+			border-top: 1px solid #ccc;
+		}
+
+		.help-box {
+			margin-top: 20px;
+		}
+	 }
+
+	.popup-actions .cancel-link {
+		margin-right: 10px;
+	}
+
+	.form-actions {
+		display: flex;
+		justify-content: flex-end;
+		margin: 0;
+		padding: 15px 25px;
+
+		& > button:not(:last-child) {
+			margin-right: 10px;
+		}
+	}
+}

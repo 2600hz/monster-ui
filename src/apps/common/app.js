@@ -22,7 +22,7 @@ define(function(require) {
 		'numberPrepend',
 		'numberRenameCarrier',
 		'numberSelector',
-		'numberIm',
+		'numberMessaging',
 		'numbers',
 		'portListing',
 		'portWizard',
