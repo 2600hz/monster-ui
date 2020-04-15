@@ -312,7 +312,7 @@ define(function(require) {
 							_.get(portRequest, 'numbers')
 						),
 						unactionableStatuses = ['canceled', 'completed'],
-						isAgent = self.portListingUtilIsAgent(_.get(portRequest, 'port_authority')),
+						isAgent = self.portListingUtilIsAgent(_.get(portRequest, '_read_only.port_authority')),
 						isUpdateable = !_.includes(unactionableStatuses, portRequest.port_state);
 
 					return _.merge({

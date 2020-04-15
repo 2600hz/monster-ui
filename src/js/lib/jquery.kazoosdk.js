@@ -370,12 +370,14 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
 				'updateDisable': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/disable' },
+				'updateEnable': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/enable' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients' },
 				'getStatus': { verb: 'GET', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'listStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/status' },
 				'updateStatus': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/status' },
 				'updateState': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}' },
-				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/roles' }
+				'updateRoles': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/{userId}/roles' },
+				'getQueueMembership': { verb: 'POST', url: 'accounts/{accountId}/qubicle_recipients/queue_membership' }
 			},
 			qubicleRoles: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/qubicle_roles' }
@@ -490,7 +492,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
 				'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
-				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
+				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' },
+				'listDevices': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
 			},
 			voicemail: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },

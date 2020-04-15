@@ -75,6 +75,7 @@ Key | Description | Type | Default | Required
 
 Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
+`acceptCharges` | | `Object`([#acceptCharges](#acceptCharges)) | | `false`
 `additionalCss` | Additional CSS files to load. Need to be in src/css folder | `Array` | | `false`
 `additionalCss.[]` | Path to the CSS file | `String` | | `false`
 `additionalLoggedInApps` | Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..) | `Array` | | `false`
@@ -117,6 +118,15 @@ Key | Description | Type | Default | Required
 `showPAssertedIdentity` | Whether or not to render the P-Asserted-Identity section under Callflows app > Account Settings > Caller-ID. | `Boolean` | `false` | `false`
 `social` | List of social network to expose on the login page. | `Array` | | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
+
+#### `acceptCharges`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`autoAccept` | Whether the UI bypasses the charges confirmation dialog for Kazoo requests triggering a service plan charge. When set to `false`, this prop can be overridden individually for each request.  | `Boolean` | `false` | `false`
+`showInvoiceSummary` | Whether the charges confirmation dialog should render the invoice summary or a custom message (this prop only takes effect when `autoAccept: false`). | `Boolean` | `true` | `false`
+`message` | Maps IETF language codes (`en-US`, `fr-FR` ...) to custom messages to render in place of the invoice summary (this prop only takes effect when `showInoiceSummary: false` and `autoAccept: false`). | `Object` |  | `false`
+`message[]` | Custom message to render in place of the invoice summary. | `String` |  | `false`
 
 #### `bookkeepers`
 

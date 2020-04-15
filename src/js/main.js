@@ -32,6 +32,7 @@ require.config({
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'libphonenumber': 'js/vendor/libphonenumber-js.min',
 		'lodash': 'js/vendor/lodash-4.17.4',
+		'marked': 'js/vendor/marked.min',
 		'mask': 'js/vendor/jquery.mask',
 		'md5': 'js/vendor/md5',
 		'modernizr': 'js/vendor/modernizr-2.6.2.min',
@@ -59,6 +60,7 @@ require.config({
 		'renderjson': 'js/vendor/renderjson',
 		'reqwest': 'js/vendor/reqwest-0.7.3.min',
 		'signals': 'js/vendor/signals.min',
+		'simplemde': 'js/vendor/simplemde.min',
 		'templates': 'js/templates',
 		'tether': 'js/vendor/tether.min',
 		'timepicker': 'js/vendor/jquery.timepicker.min',
@@ -141,6 +143,8 @@ require([
 		monster.ui = ui;
 		monster.util = util;
 		monster.webphone = webphone;
+
+		monster.routing.init();
 
 		monster.loadBuildConfig(function() {
 			monster.apps.load('core', function(app) {

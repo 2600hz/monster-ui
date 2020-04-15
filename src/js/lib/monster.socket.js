@@ -1,284 +1,677 @@
+/**
+ * A module managing WebSocket connections.
+ * @module monster/socket
+ */
 define(function(require) {
-	var $ = require('jquery'),
-		_ = require('lodash'),
-		monster = require('monster');
+	var _ = require('lodash');
+	var monster = require('monster');
 
-	var privateSocket = {
-		connected: false,
+	function Handshakes() {
+		this.entries = {};
+	}
+	Handshakes.prototype = {
+		add: function add(callback) {
+			var id = monster.util.guid();
 
-		printLogs: true,
+			this.entries[id] = callback;
 
-		close: function() {
-			var self = this;
-			self.object.close();
+			return id;
 		},
 
-		log: function(str, force) {
-			var self = this;
+		remove: function remove(id) {
+			delete this.entries[id];
+		},
 
-			if (self.printLogs || force) {
-				console.log(str);
+		dispatch: function dispatch(id, data) {
+			var callback = this.entries[id];
+
+			if (_.isFunction(callback)) {
+				callback(data);
+			}
+
+			this.remove(id);
+		}
+	};
+
+	function Listener(metadata) {
+		this.accountId = metadata.accountId;
+		this.source = metadata.source;
+		this.listener = metadata.listener;
+	}
+	Listener.prototype = {
+		dispatch: function dispatch(data) {
+			if (!_.isFunction(this.listener)) {
+				return;
+			}
+			this.listener(data);
+		},
+
+		isEqual: function isEqual(metadata) {
+			var accountId = metadata.accountId;
+			var source = metadata.source;
+			var listener = metadata.listener;
+
+			return this.source === source
+				&& (!accountId || this.accountId === accountId)
+				&& (!listener || this.listener === listener);
+		}
+	};
+
+	function Listeners() {
+		this.entries = [];
+	}
+	Listeners.prototype = {
+		register: function register(metadata) {
+			if (this.isRegistered(metadata)) {
+				return;
+			}
+			this.entries.push(new Listener(metadata));
+		},
+
+		unregister: function unregister(metadata) {
+			this.entries = this.entries.filter(function(listener) {
+				return !listener.isEqual(metadata);
+			});
+		},
+
+		dispatch: function dispatch(data) {
+			this.entries.forEach(function(listener) {
+				listener.dispatch(_.merge({}, data));
+			});
+		},
+
+		isEmpty: function isEmpty() {
+			return _.isEmpty(this.entries);
+		},
+
+		isRegistered: function isRegistered(metadata) {
+			return _
+				.chain(this.entries)
+				.find(function(listener) {
+					return listener.isEqual(metadata);
+				})
+				.thru(Boolean)
+				.value();
+		}
+	};
+
+	function Bindings() {
+		this.entries = {};
+	}
+	Bindings.prototype = {
+		subscribe: function subscribe(binding, metadata) {
+			if (!this.isSubscribed(binding)) {
+				this.entries[binding] = new Listeners();
+			}
+			this.entries[binding].register(metadata);
+		},
+
+		unsubscribe: function unsubscribe(binding, metadata) {
+			if (!this.isSubscribed(binding)) {
+				return;
+			}
+			var listeners = this.entries[binding];
+
+			listeners.unregister(metadata);
+
+			if (listeners.isEmpty()) {
+				delete this.entries[binding];
 			}
 		},
 
-		initialize: function() {
-			var self = this,
-				socket = self.initializeSocket();
-
-			socket.onopen = function(data) {
-				if (self.connected === false) {
-					self.log('Successful WebSocket connection');
-					self.connected = true;
-					self.object = socket;
-					self.initializeSocketEvents(socket);
-					monster.pub('socket.connected');
-				} else {
-					self.log('Socket already active');
-					socket.close();
-				}
-			};
+		isSubscribed: function isSubscribed(binding) {
+			return this.entries[binding] instanceof Listeners;
 		},
 
-		initializeSocket: function() {
-			var self = this;
-
-			return new WebSocket(monster.config.api.socket);
+		eject: function eject() {
+			var listeners = _.flatMap(this.entries, function(listeners, binding) {
+				return _.map(listeners.entries, function(metadata) {
+					return _.merge({
+						binding: binding
+					}, _.clone(metadata));
+				});
+			});
+			this.entries = {};
+			return listeners;
 		},
 
-		initializeSocketEvents: function(socket) {
-			var self = this;
+		hasSubscriptions: function hasSubscriptions() {
+			return !_.isEmpty(this.entries);
+		},
 
-			socket.onclose = function(data) {
-				monster.pub('socket.disconnected');
-				self.connected = false;
-				// We want to automatically attempt to reconnect
-				self.connect();
-				self.log('WebSocket connection closed');
+		hasListeners: function hasListeners(binding) {
+			return this.isSubscribed(binding)
+				&& !this.entries[binding].isEmpty();
+		},
+
+		dispatch: function dispatch(binding, data) {
+			if (!this.isSubscribed(binding)) {
+				return;
+			}
+			this.entries[binding].dispatch(data);
+		}
+	};
+
+	function Logger(id) {
+		this.id = id;
+		this.shouldPrint = !monster.isEnvironmentProd();
+	}
+	Logger.prototype = {
+		print: function print(content, method) {
+			if (!this.shouldPrint) {
+				return;
+			}
+			console[method].apply(console, [
+				[new Date().toISOString(), this.id].join(' | '),
+				content.length ? '|' : []
+			].concat(content));
+		},
+
+		log: function log() {
+			this.print(_.toArray(arguments), 'log');
+		},
+
+		warn: function warn() {
+			this.print(_.toArray(arguments), 'warn');
+		}
+	};
+
+	/**
+	 * Creates a new WebSocketClient instance.
+	 * @param {Object} params
+	 * @param {string} params.uri
+	 * @return {WebSocketClient}
+	 */
+	function WebSocketClient(params) {
+		/**
+		 * The URL to which to connect.
+		 * @type {string}
+		 */
+		this.uri = params.uri;
+
+		/**
+		 * Holds the WebSocket object to manage connection to server.
+		 * @type {WebSocket}
+		 */
+		this.ws = null;
+
+		/**
+		 * Holds the timeout ID before next reconnection attempt.
+		 * @type {number}
+		 */
+		this.reconnectTimeout = null;
+
+		/**
+		 * Holds the amount of time before next reconnection attempt.
+		 * @type {number}
+		 */
+		this.reconnectTimer = null;
+
+		/**
+		 * Whether the connection should be closed without reconnect attempt.
+		 * @type {boolean}
+		 */
+		this.shouldClose = false;
+
+		/**
+		 * Utility used to log messages.
+		 * @type {Logger}
+		 */
+		this.logger = new Logger(WebSocketClient.name + '(' + this.uri + ')');
+
+		/**
+		 * Maps bindings to listeners
+		 * @type {Bindings}
+		 */
+		this.bindings = new Bindings();
+
+		/**
+		 * Maps request IDs to callback
+		 * @type {Handshakes}
+		 */
+		this.handshakes = new Handshakes();
+	}
+	WebSocketClient.prototype = {
+		/**
+		 * Creates a new WebSocket connection to uri when none is already connecting/connected.
+		 */
+		connect: function connect() {
+			if (this.isConnecting() || this.isOpen()) {
+				this.logger.log('already connected');
+				return;
+			}
+
+			this.logger.log('attempting to ' + (this.reconnectTimeout ? 're' : '') + 'connect...');
+
+			try {
+				this.ws = new WebSocket(this.uri);
+
+				this.ws.addEventListener('open', this.onOpen.bind(this));
+				this.ws.addEventListener('close', this.onClose.bind(this));
+				this.ws.addEventListener('message', this.onMessage.bind(this));
+
+				this.ws.addEventListener('open', monster.pub.bind(null, 'socket.connected'));
+				this.ws.addEventListener('close', monster.pub.bind(null, 'socket.disconnected'));
+			} catch (e) {
+				this.logger.warn(
+					'failed while attempting to ' + (this.reconnectTimeout ? 're' : '') + 'connect',
+					e
+				);
+			}
+		},
+
+		/**
+		 * Schedules a new connection attempt after a delay.
+		 */
+		reconnect: function reconnect() {
+			var MAX_TIMER = 60 * 1000;
+			var MULTIPLIER = 2;
+			var timer = this.reconnectTimer || 125;
+
+			this.reconnectTimer = Math.min(
+				timer * MULTIPLIER,
+				MAX_TIMER
+			);
+			this.reconnectTimeout = setTimeout(
+				this.connect.bind(this),
+				this.reconnectTimer
+			);
+
+			this.logger.log('reconnection scheduled in ' + this.reconnectTimer / 1000 + 's');
+		},
+
+		/**
+		 * Resets reconnect related properties to their original values.
+		 */
+		resetReconnect: function resetReconnect() {
+			if (!this.reconnectTimeout) {
+				return;
+			}
+			clearTimeout(this.reconnectTimeout);
+			this.reconnectTimeout = null;
+			this.reconnectTimer = null;
+
+			this.logger.log('reconnect cleared');
+		},
+
+		/**
+		 * Closes the connection without reconnection attempts.
+		 */
+		disconnect: function disconnect() {
+			this.resetReconnect();
+
+			if (this.isClosed()) {
+				this.logger.log('already disconnected');
+				return;
+			}
+
+			if (this.shouldClose) {
+				this.logger.log('already disconnecting');
+				return;
+			}
+			this.shouldClose = true;
+
+			this.close();
+		},
+
+		/**
+		 * Closes the connection.
+		 */
+		close: function close() {
+			if (this.isClosed()) {
+				this.logger.log('already closed');
+			} else {
+				this.logger.log('attempting to ' + (this.shouldClose ? 'disconnect' : 'close') + '...');
+			}
+			try {
+				this.ws.close();
+			} catch (e) {
+				this.logger.warn('failed while attempting to close', e);
+			}
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {string} params.source
+		 * @param  {Function} params.listener
+		 * @return {Function} Callback to unsubscribe this listener specifically.
+		 */
+		bind: function bind(params) {
+			var wsc = this;
+			var binding = params.binding;
+			var isAuthError = function(payload) {
+				return _
+					.chain(payload)
+					.get('data.errors', [])
+					.find(function(message) {
+						return _.startsWith(message, 'failed to authenticate token');
+					})
+					.thru(Boolean)
+					.value();
 			};
 
-			socket.onmessage = function(event) {
-				var data = JSON.parse(event.data);
-
-				if (data.action === 'reply') {
-					self.onReply(data);
-				} else if (data.action === 'event') {
-					self.onEvent(data);
+			monster.waterfall([
+				function maybeSubscribe(callback) {
+					if (
+						wsc.bindings.isSubscribed(binding)
+						|| !wsc.isOpen()
+					) {
+						return callback(null);
+					}
+					wsc.subscribe(_.merge({
+						handleReply: function(reply) {
+							callback(reply.status === 'success' ? null : true, reply);
+						}
+					}, _.pick(params, 'accountId', 'binding')));
 				}
-			};
+			], function(err, reply) {
+				if (!err) {
+					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+					return;
+				}
+				if (!isAuthError(reply)) {
+					wsc.logger.warn('failed to subscribe to ' + params.binding);
+					return;
+				}
+				wsc.logger.log('attempting to reauthenticate...');
 
-			// Try to reconnect to all the old bindings, empty the key before trying so the addListener logic works properly
-			var oldBindings = $.extend(true, {}, self.bindings);
-
-			self.bindings = {};
-
-			_.each(oldBindings, function(binding, name) {
-				_.each(binding.listeners, function(listener) {
-					self.addListener(name, listener.accountId, listener.authToken, listener.callback, listener.source);
+				monster.pub('auth.retryLogin', {
+					success: function() {
+						wsc.logger.log('reauthentication successful');
+						wsc.bind(params);
+					},
+					error: function() {
+						wsc.loggin.warn('failed to reauthenticate, logging out');
+						monster.util.logoutAndReload();
+					}
 				});
 			});
 
-			monster.socket.bind = function(binding, accountId, authToken, func, source) {
-				self.addListener(binding, accountId, authToken, func, source);
-			};
-
-			monster.socket.unbind = function(binding, accountId, authToken, source) {
-				self.removeListener(binding, accountId, authToken, source);
-			};
-
-			monster.socket.close = function() {
-				self.close();
-			};
+			return this.unbind.bind(this, _.merge({}, params));
 		},
 
-		// Reconnect loop that retries to connect after {{startingTimeout}} ms
-		// In case it fails, we multiply the previous timeout by {{multiplier}}, and then try again once that time has gone by
-		// The max timer is set to {{maxtimeout}}
-		connect: function() {
-			var self = this,
-				timeoutDuration,
-				delayBeforeConnect = 0,
-				startingTimeout = 250,
-				maxTimeout = 1000 * 60,
-				multiplier = 2,
-				connectAttempt = function() {
-					if (!self.connected) {
-						self.initialize();
+		rebind: function rebind() {
+			if (
+				!this.reconnectTimeout
+				|| !this.bindings.hasSubscriptions()
+			) {
+				return;
+			}
+			this.logger.log('rebinding listeners');
 
-						if (timeoutDuration) {
-							if ((timeoutDuration * multiplier) < maxTimeout) {
-								timeoutDuration *= multiplier;
-							} else {
-								timeoutDuration = maxTimeout;
-							}
+			this.bindings.eject().forEach(this.bind.bind(this));
+		},
 
-							self.log('Attempting to reconnect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
-							self.log('Next try in ' + timeoutDuration / 1000 + ' seconds');
-						} else {
-							timeoutDuration = startingTimeout;
+		/**
+		 * @param  {Object} params
+		 * @param  {string} param.accountId
+		 * @param  {string} param.binding
+		 * @param  {string} param.source
+		 * @param  {Function} [param.listener]
+		 */
+		unbind: function unbind(params) {
+			var wsc = this;
+			var binding = params.binding;
 
-							self.log('Attempting to connect to WebSocket at ' + monster.util.toFriendlyDate(new Date()));
-						}
+			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
 
-						setTimeout(connectAttempt, timeoutDuration);
+			monster.waterfall([
+				function maybeUnsubscribe(callback) {
+					if (
+						wsc.bindings.hasListeners(binding)
+						|| !wsc.isOpen()
+					) {
+						return callback(null);
 					}
-				};
-
-			setTimeout(connectAttempt, delayBeforeConnect);
-		},
-
-		object: {},
-		bindings: {},
-		commands: {},
-
-		subscribe: function(accountId, authToken, binding, onReply) {
-			var self = this,
-				requestId = monster.util.guid();
-
-			self.commands[requestId] = {
-				onReply: onReply
-			};
-
-			return self.object.send(JSON.stringify({'action': 'subscribe', 'auth_token': authToken, 'request_id': requestId, 'data': { 'account_id': accountId, 'binding': binding }}));
-		},
-		unsubscribe: function(accountId, authToken, binding, onReply) {
-			var self = this,
-				requestId = monster.util.guid();
-
-			self.commands[requestId] = {
-				onReply: onReply
-			};
-
-			self.object.send(JSON.stringify({'action': 'unsubscribe', 'auth_token': authToken, 'request_id': requestId, 'data': {'binding': binding, 'account_id': accountId}}));
-		},
-
-		onEvent: function(data) {
-			var self = this,
-				bindingId = data.subscribed_key,
-				executeCallbacks = function(subscription) {
-					_.each(subscription.listeners, function(listener) {
-						listener.callback(data.data);
-					});
-				};
-
-			data.data.binding = bindingId;
-
-			if (bindingId) {
-				if (self.bindings.hasOwnProperty(bindingId)) {
-					executeCallbacks(self.bindings[bindingId]);
+					wsc.unsubscribe(_.merge({
+						handleReply: function handleReply(data) {
+							callback(data.status === 'success' ? null : true, data);
+						}
+					}, _.pick(params, 'accountId', 'binding')));
 				}
-			} else {
-				_.each(self.bindings, function(binding) {
-					executeCallbacks(binding);
-				});
+			], function(err, data) {
+				if (!err) {
+					return;
+				}
+				wsc.logger.warn('failed to unsubscribe from ' + params.binding, data);
+				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+				wsc.unbind(params);
+			});
+		},
+
+		/**
+		 * @param  {Object} parms
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {Function} params.handleReply
+		 */
+		subscribe: function subscribe(params) {
+			this.logger.log('subscribing to ' + params.binding + '...');
+
+			var requestId = this.handshakes.add(params.handleReply);
+
+			try {
+				this.ws.send(
+					JSON.stringify({
+						action: 'subscribe',
+						auth_token: monster.util.getAuthToken(),
+						request_id: requestId,
+						data: _.merge({
+							account_id: params.accountId
+						}, _.pick(params, 'binding'))
+					})
+				);
+			} catch (e) {
+				this.logger.warn(e);
+
+				this.handshakes.remove(requestId);
 			}
 		},
 
-		onReply: function(data) {
-			var self = this,
-				requestId = data.request_id;
+		/**
+		 * @param  {Object} params
+		 * @param  {string} params.accountId
+		 * @param  {string} params.binding
+		 * @param  {Function} params.handleReply
+		 */
+		unsubscribe: function unsubscribe(params) {
+			this.logger.log('unsubscribing from ' + params.binding + '...');
 
-			if (self.commands.hasOwnProperty(requestId)) {
-				self.commands[requestId].onReply(data);
-				delete self.commands[requestId];
+			var requestId = this.handshakes.add(params.handleReply);
+
+			try {
+				this.ws.send(
+					JSON.stringify({
+						action: 'unsubscribe',
+						auth_token: monster.util.getAuthToken(),
+						request_id: requestId,
+						data: _.merge({
+							account_id: params.accountId
+						}, _.pick(params, 'binding'))
+					})
+				);
+			} catch (e) {
+				this.logger.warn(e);
+
+				this.handshakes.remove(requestId);
 			}
 		},
 
-		// When we remove a listener, we make sure to delete the subscription if our listener was the only listerner for that subscription
-		// If there's more than one listener, then we just remove the listener from the array or listeners for that subscription
-		removeListener: function removeListener(binding, accountId, authToken, source) {
-			var self = this,
-				listenersToKeep = [];
+		/**
+		 * @param {Object} data Parsed MessageEvent payload.
+		 */
+		handleReply: function handleReply(data) {
+			var logger = this.logger;
+			[
+				{ key: 'errors', method: 'warn' },
+				{ key: 'subscribed', method: 'log', partial: 'subscribed successfully to' },
+				{ key: 'unsubscribed', method: 'log', partial: 'unsubscribed successfully from' }
+			].forEach(function(type) {
+				_(data).get(['data', type.key], []).forEach(
+					_.chain(logger[type.method]).bind(logger, type.partial || _).unary().value()
+				);
+			});
 
-			if (self.bindings.hasOwnProperty(binding)) {
-				_.each(self.bindings[binding].listeners, function(listener) {
-					if (!(listener.accountId === accountId && listener.authToken === authToken && listener.source === source)) {
-						listenersToKeep.push(listener);
-					}
-				});
+			this.handshakes.dispatch(data.request_id, data);
+		},
+
+		/**
+		 * @param  {Object} data Parsed MessageEvent payload.
+		 */
+		handleEvent: function handleEvent(data) {
+			this.bindings.dispatch(data.subscribed_key, data.data);
+		},
+
+		/**
+		 * Called when the connection's state changes to open.
+		 */
+		onOpen: function onOpen() {
+			this.logger.log('connected successfully');
+			this.rebind();
+			this.resetReconnect();
+		},
+
+		/**
+		 * Called when the connection's state changes to closed.
+		 * @param {CloseEvent} event
+		 */
+		onClose: function onClose(event) {
+			if (this.shouldClose) {
+				this.logger.log('disconnected successfully');
+				this.shouldClose = false;
+				return;
 			}
+			this.logger.log(
+				'closed ' + (event.wasClean ? 'cleanly' : 'abruptly'),
+				event.wasClean ? '' : event
+			);
 
-			if (listenersToKeep.length) {
-				self.bindings[binding].listeners = listenersToKeep;
-			} else {
-				// We remove it regardless of the results, because if an error happened on the WS side, we still would want to rebind the event on reconnect,
-				// and if the binding still exists it will prevent the UI from rebinding this event
-				delete self.bindings[binding];
+			this.reconnect();
+		},
 
-				self.unsubscribe(accountId, authToken, binding, function(result) {
-					self.log(result);
+		/**
+		 * @param  {MessageEvent} event
+		 */
+		onMessage: function onMessage(event) {
+			var parsedData = JSON.parse(event.data);
+			var action = parsedData.action;
 
-					if (result.status !== 'success') {
-						self.log('monster.socket: unsubscribe ' + binding + ' failed', true);
-					}
-				});
+			switch (action) {
+				case 'reply':
+					this.handleReply(parsedData);
+					break;
+				case 'event':
+					this.handleEvent(parsedData);
+					break;
+				default:
+					this.logger.log('unknown action received: ', action, event);
 			}
 		},
 
-		// We only allow one same listener (binding / accountId / authToken) per source.
-		// We look for the same exact listener, if we find it and the listener is for a different source, we store the subscription id as we can reuse the same subscription for our new source
-		// If we don't find it, then we start a new subscription and add our listener to it
-		addListener: function addListener(binding, accountId, authToken, func, source) {
-			var self = this,
-				found = false,
-				listener = {
-					accountId: accountId,
-					authToken: authToken,
-					source: source,
-					callback: func
-				},
-				tryAddingListener = function(newListener) {
-					if (!self.bindings.hasOwnProperty(binding)) {
-						self.bindings[binding] = {
-							listeners: [ newListener ]
-						};
-					} else {
-						_.each(self.bindings[binding].listeners, function(listener) {
-							if (listener.accountId === newListener.accountId && listener.authToken === newListener.authToken && listener.source === newListener.source) {
-								found = true;
-							}
-						});
+		/**
+		 * Returns whether ws is instantiated.
+		 * @return {boolean}
+		 */
+		isInstantiated: function isInstantiated() {
+			return this.ws instanceof WebSocket;
+		},
 
-						if (!found) {
-							self.bindings[binding].listeners.push(newListener);
-						} else {
-							self.log('already bound!', true);
-						}
-					}
-				};
+		/**
+		 * Returns whether the connection is not yet open.
+		 * @return {boolean}
+		 */
+		isConnecting: function isConnecting() {
+			return this.isInstantiated() && this.ws.readyState === WebSocket.CONNECTING;
+		},
 
-			if (self.bindings.hasOwnProperty(binding)) {
-				tryAddingListener(listener);
-			} else {
-				self.subscribe(accountId, authToken, binding, function(result) {
-					if (result.status === 'success') {
-						tryAddingListener(listener);
-					} else {
-						self.log('monster.socket: subscribe ' + binding + ' failed', true);
-						self.log(result);
-					}
-				});
-			}
+		/**
+		 * Returns whether the connection is open and ready to communicate.
+		 * @return {boolean}
+		 */
+		isOpen: function isOpen() {
+			return this.isInstantiated() && this.ws.readyState === WebSocket.OPEN;
+		},
+
+		/**
+		 * Returns whether the connection is in the process of closing.
+		 * @return {boolean}
+		 */
+		isClosing: function isClosing() {
+			return this.isInstantiated() && this.ws.readyState === WebSocket.CLOSING;
+		},
+
+		/**
+		 * Returns whether the connection is closed.
+		 * @return {boolean}
+		 */
+		isClosed: function isClosed() {
+			return this.isInstantiated() && this.ws.readyState === WebSocket.CLOSED;
 		}
 	};
 
-	var socket = {
-		isConnected: function() {
-			return privateSocket.connected;
+	var client;
+
+	return {
+		getInfo: function getInfo() {
+			var uri = _.get(monster, 'config.api.socket');
+
+			return {
+				isConfigured: _.isString(uri) && /^ws{1,2}:\/\//i.test(uri),
+				isConnected: !_.isUndefined(client) && client.isOpen(),
+				uri: uri
+			};
 		},
-		isEnabled: function() {
-			return monster.config.api.hasOwnProperty('socket');
-		},
-		bind: function() {
-			privateSocket.log('No WebSockets defined', true);
-		},
-		connect: function() {
-			if (monster.config.api.hasOwnProperty('socket')) {
-				privateSocket.connect();
-			} else {
-				privateSocket.log('No WebSocket API URL set in the config.js file', true);
+
+		connect: function connect() {
+			if (_.isUndefined(client)) {
+				client = new WebSocketClient({
+					uri: monster.config.api.socket
+				});
 			}
+
+			client.connect();
+		},
+
+		disconnect: function disconnect() {
+			if (_.isUndefined(client)) {
+				return;
+			}
+
+			client.disconnect();
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {String} params.accountId
+		 * @param  {String} params.binding
+		 * @param  {String} params.source
+		 * @param  {String} params.listener
+		 * @return {Function}
+		 * @return {Function} Callback to unbind listener
+		 */
+		bind: function bind(params) {
+			if (_.isUndefined(client)) {
+				return;
+			}
+
+			return client.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+		},
+
+		/**
+		 * @param  {Object} params
+		 * @param  {String} [params.accountId]
+		 * @param  {String} params.binding
+		 * @param  {String} params.source
+		 * @param  {String} [params.listener]
+		 */
+		unbind: function unbind(params) {
+			if (_.isUndefined(client)) {
+				return;
+			}
+
+			client.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
 		}
 	};
-
-	return socket;
 });

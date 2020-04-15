@@ -22,11 +22,13 @@ define(function(require) {
 		'numberPrepend',
 		'numberRenameCarrier',
 		'numberSelector',
+		'numberIm',
 		'numbers',
 		'portListing',
 		'portWizard',
 		'ringingDurationControl',
 		'servicePlanDetails',
+		'servicePlanItemEditor',
 		'storagePlanManager',
 		'storageSelector',
 		'webphone'
