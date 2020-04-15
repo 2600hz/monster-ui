@@ -11,32 +11,30 @@ define(function(require) {
 			'common.numberFeaturesMenu.render': 'numberFeaturesMenuRender'
 		},
 
-		getFeatures: function(numberData) {
-			var self = this,
-			    features = monster.util.getNumberFeatures(numberData);
-			features = features .filter(function(value) { return value !== 'im' });
-			if (features.indexOf("sms") > -1 || features.indexOf("mms") > -1) {
-				features.push("im");
-			}
-			return features;
-		},
-		
 		numberFeaturesMenuRender: function(args) {
 			var self = this,
 				numberData = args.numberData,
 				phoneNumber = numberData.hasOwnProperty('phoneNumber') ? numberData.phoneNumber : numberData.id,
-				features = self.getFeatures(numberData),
 				template = $(self.getTemplate({
 					name: 'dropdown',
-					data: {
-						features: features
-					},
+					data: self.numberFeaturesMenuFormatData(numberData),
 					submodule: 'numberFeaturesMenu'
 				}));
 
 			self.numberFeaturesMenuBindEvents(template, phoneNumber, args.afterUpdate);
 
 			args.target.append(template);
+		},
+
+		numberFeaturesMenuFormatData: function(numberData) {
+			var features = monster.util.getNumberFeatures(numberData),
+				hasMessagingFeature = _.some(['sms', 'mms'], function(feature) {
+					return _.includes(features, feature);
+				});
+
+			return {
+				features: _.concat(features, hasMessagingFeature ? ['messaging'] : [])
+			};
 		},
 
 		numberFeaturesMenuBindEvents: function(template, phoneNumber, afterUpdate) {
@@ -92,12 +90,12 @@ define(function(require) {
 				monster.pub('common.numberRenameCarrier.renderPopup', args);
 			});
 
-			template.find('.im-number').on('click', function() {
+			template.find('.messaging-number').on('click', function() {
 				if ($(this).parents('.account-section').length) {
 					args.accountId = template.parents('.account-section').data('id');
 				}
 
-				monster.pub('common.numberIm.renderPopup', args);
+				monster.pub('common.numberMessaging.renderPopup', args);
 			});
 
 			template.find('.sync-number').on('click', function() {

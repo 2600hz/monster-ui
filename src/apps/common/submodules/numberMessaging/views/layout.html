@@ -1,0 +1,40 @@
+<form class="form-horizontal trunkstore_popup numberMessaging clearfix" id="form_number_messaging">
+{{#each features}}
+	{{> featureContent}}
+{{/each}}
+	<div class="popup-content popup-actions clearfix">
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">
+				{{i18n.cancel}}
+			</a>
+			<button type="submit" class="monster-button-success">
+				{{i18n.saveChanges}}
+			</button>
+		</div>
+	</div>
+</form>
+
+{{#*inline "featureContent"}}
+	{{#if isConfigured}}
+		<div class="popup-content">
+			<div class="control-group">
+				<label for="{{feature}}_switch" class="control-label">
+					{{tryI18n @root.i18n.numberMessaging.labels feature}}
+				</label>
+				<div class="controls">
+				{{#monsterSwitch}}
+					<input type="checkbox" name="{{feature}}.enabled" id="{{feature}}_switch"{{#if isEnabled}} checked="checked"{{/if}}>
+				{{/monsterSwitch}}
+				</div>
+				{{#monsterText}}
+					{{replaceVar @root.i18n.numberMessaging.info (tryI18n @root.i18n.numberMessaging.labels feature)}}
+				{{/monsterText}}
+			</div>
+		{{#if isActivationManual}}
+			{{#monsterPanelText @root.i18n.numberMessaging.warningPanel.title "warning" "fill-width"}}
+				{{@root.i18n.numberMessaging.warningPanel.text}}
+			{{/monsterPanelText}}
+		{{/if}}
+		</div>
+{{/if}}
+{{/inline}}
