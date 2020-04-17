@@ -606,7 +606,7 @@ define(function() {
 				} else {
 					afterConfig({});
 				}
-			});
+			}, callback);
 		},
 
 		/**
