@@ -1,10 +1,21 @@
-/* number_im POPUP */
-.trunkstore_popup.numberIm {
+.trunkstore_popup.numberMessaging {
 	width: 510px;
 	margin: 0;
 
 	.popup-content {
 		padding: 15px 25px;
+
+		&:not(:first-child) {
+			border-top: 1px solid #ccc;
+		}
+
+		.help-box {
+			margin-top: 20px;
+		}
+	 }
+
+	.popup-actions .cancel-link {
+		margin-right: 10px;
 	}
 
 	.form-actions {

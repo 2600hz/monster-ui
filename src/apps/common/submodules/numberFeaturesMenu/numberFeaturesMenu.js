@@ -3,7 +3,7 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var numbersFeatuesMenu = {
+	return {
 
 		requests: {},
 
@@ -15,12 +15,9 @@ define(function(require) {
 			var self = this,
 				numberData = args.numberData,
 				phoneNumber = numberData.hasOwnProperty('phoneNumber') ? numberData.phoneNumber : numberData.id,
-				features = monster.util.getNumberFeatures(numberData),
 				template = $(self.getTemplate({
 					name: 'dropdown',
-					data: {
-						features: features
-					},
+					data: self.numberFeaturesMenuFormatData(numberData),
 					submodule: 'numberFeaturesMenu'
 				}));
 
@@ -29,8 +26,27 @@ define(function(require) {
 			args.target.append(template);
 		},
 
+		numberFeaturesMenuFormatData: function(numberData) {
+			var features = monster.util.getNumberFeatures(numberData),
+				hasMessagingFeature = _.some(['sms', 'mms'], function(feature) {
+					return _.includes(features, feature);
+				});
+
+			return {
+				features: _.concat(features, hasMessagingFeature ? ['messaging'] : [])
+			};
+		},
+
 		numberFeaturesMenuBindEvents: function(template, phoneNumber, afterUpdate) {
 			var self = this,
+				featureEvents = {
+					'failover': 'common.failover.renderPopup',
+					'cnam': 'common.callerId.renderPopup',
+					'e911': 'common.e911.renderPopup',
+					'prepend': 'common.numberPrepend.renderPopup',
+					'rename-carrier': 'common.numberRenameCarrier.renderPopup',
+					'messaging': 'common.numberMessaging.renderPopup'
+				},
 				args = {
 					phoneNumber: phoneNumber,
 					callbacks: {
@@ -40,62 +56,22 @@ define(function(require) {
 					}
 				};
 
-			template.find('.failover-number').on('click', function() {
-				// We add this at the moment of the event because in some cases, we bind the events before it's adding to a parent,
-				// which means the account-section might not be loaded yet if we bound it before the event happened.
-				if ($(this).parents('.account-section').length) {
-					args.accountId = template.parents('.account-section').data('id');
-				}
+			_.forEach(featureEvents, function(event, feature) {
+				template.find('.' + feature + '-number').on('click', function() {
+					// We add this at the moment of the event because in some cases, we bind the events before it's adding to a parent,
+					// which means the account-section might not be loaded yet if we bound it before the event happened.
+					if ($(this).parents('.account-section').length) {
+						args.accountId = template.parents('.account-section').data('id');
+					}
 
-				monster.pub('common.failover.renderPopup', args);
-			});
-
-			template.find('.cnam-number').on('click', function() {
-				if ($(this).parents('.account-section').length) {
-					args.accountId = template.parents('.account-section').data('id');
-				}
-
-				monster.pub('common.callerId.renderPopup', args);
-			});
-
-			template.find('.e911-number').on('click', function() {
-				if ($(this).parents('.account-section').length) {
-					args.accountId = template.parents('.account-section').data('id');
-				}
-
-				monster.pub('common.e911.renderPopup', args);
-			});
-
-			template.find('.prepend-number').on('click', function() {
-				if ($(this).parents('.account-section').length) {
-					args.accountId = template.parents('.account-section').data('id');
-				}
-
-				monster.pub('common.numberPrepend.renderPopup', args);
-			});
-
-			template.find('.rename-carrier-number').on('click', function() {
-				if ($(this).parents('.account-section').length) {
-					args.accountId = template.parents('.account-section').data('id');
-				}
-
-				monster.pub('common.numberRenameCarrier.renderPopup', args);
-			});
-
-			template.find('.im-number').on('click', function() {
-				if ($(this).parents('.account-section').length) {
-					args.accountId = template.parents('.account-section').data('id');
-				}
-
-				monster.pub('common.numberIm.renderPopup', args);
+					monster.pub(event, args);
+				});
 			});
 
 			template.find('.sync-number').on('click', function() {
-				var accountId = self.accountId;
-
-				if ($(this).parents('.account-section').length) {
-					accountId = $(this).parents('.account-section').data('id');
-				}
+				var accountId = $(this).parents('.account-section').length
+					? template.parents('.account-section').data('id')
+					: self.accountId;
 
 				self.numbersSyncOne(phoneNumber, accountId, function() {
 					monster.ui.toast({
@@ -126,6 +102,4 @@ define(function(require) {
 			});
 		}
 	};
-
-	return numbersFeatuesMenu;
 });

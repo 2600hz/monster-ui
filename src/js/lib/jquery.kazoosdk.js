@@ -492,7 +492,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/users' },
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
 				'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
-				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' }
+				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' },
+				'listDevices': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
 			},
 			voicemail: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },

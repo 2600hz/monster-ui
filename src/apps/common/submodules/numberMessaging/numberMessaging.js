@@ -3,10 +3,10 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var numberIm = {
+	return {
 
 		subscribe: {
-			'common.numberIm.renderPopup': 'numberImEdit'
+			'common.numberMessaging.renderPopup': 'numberMessagingEdit'
 		},
 
 		/**
@@ -16,11 +16,11 @@ define(function(require) {
 		 * @param  {Function} [args.callbacks.success]
 		 * @param  {Function} [args.callbacks.error]
 		 */
-		numberImEdit: function(args) {
+		numberMessagingEdit: function(args) {
 			var self = this,
 				argsCommon = {
 					success: function(numberData) {
-						self.numberImRender(_.merge({
+						self.numberMessagingRender(_.merge({
 							numberData: numberData,
 							accountId: args.accountId
 						}, args.callbacks));
@@ -42,7 +42,7 @@ define(function(require) {
 		 * @param  {Function} [args.success]
 		 * @param  {Function} [args.error]
 		 */
-		numberImRender: function(args) {
+		numberMessagingRender: function(args) {
 			var self = this,
 				numberData = args.numberData,
 				accountId = _.get(args, 'accountId', self.accountId),
@@ -50,35 +50,34 @@ define(function(require) {
 				error = _.get(args, 'error', function() {}),
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: numberData.im || {},
-					submodule: 'numberIm'
+					data: self.numberMessagingFormatData({
+						numberData: numberData
+					}),
+					submodule: 'numberMessaging'
 				})),
 				popup;
 
-			popup_html.find('.save').on('click', function(ev) {
+			popup_html.on('submit', function(ev) {
 				ev.preventDefault();
 
-				var $this = $(this),
-					formData = monster.ui.getFormData('form_number_im');
+				var $button = $(this).find('button[type="submit"]'),
+					formData = monster.ui.getFormData('form_number_messaging');
 
-				$this.prop('disabled', 'disabled');
+				$button.prop('disabled', 'disabled');
 
-				self.numberImPatchNumber({
+				self.numberMessagingPatchNumber({
 					data: {
 						accountId: accountId,
 						phoneNumber: encodeURIComponent(numberData.id),
-						data: {
-							im: formData
-						}
+						data: formData
 					},
 					success: function(number) {
 						var phoneNumber = monster.util.formatPhoneNumber(number.id),
 							template = self.getTemplate({
-								name: '!' + self.i18n.active().numberIm.successUpdate,
+								name: '!' + self.i18n.active().numberMessaging.successUpdate,
 								data: {
 									phoneNumber: phoneNumber
-								},
-								submodule: 'numberIm'
+								}
 							});
 
 						monster.ui.toast({
@@ -93,7 +92,7 @@ define(function(require) {
 						});
 					},
 					error: function(dataError) {
-						$this.prop('disabled', false);
+						$button.prop('disabled', false);
 						error(dataError);
 					}
 				});
@@ -105,8 +104,28 @@ define(function(require) {
 			});
 
 			popup = monster.ui.dialog(popup_html, {
-				title: self.i18n.active().numberIm.dialogTitle
+				title: self.i18n.active().numberMessaging.titles.dialog
 			});
+		},
+
+		/**
+		 * @param  {Object} args.numberData
+		 */
+		numberMessagingFormatData: function(args) {
+			var self = this,
+				numberData = args.numberData,
+				settings = _.get(numberData, '_read_only.features.settings', {});
+
+			return {
+				features: _.map(['sms', 'mms'], function(feature) {
+					return {
+						feature: feature,
+						isEnabled: _.get(numberData, [feature, 'enabled'], false),
+						isConfigured: _.get(settings, [feature, 'enabled'], false),
+						isActivationManual: _.get(settings, [feature, 'activation']) === 'manual'
+					};
+				})
+			};
 		},
 
 		/**
@@ -115,7 +134,7 @@ define(function(require) {
 		 * @param  {Function} [args.success]
 		 * @param  {Function} [args.error]
 		 */
-		numberImPatchNumber: function(args) {
+		numberMessagingPatchNumber: function(args) {
 			var self = this;
 
 			self.callApi({
@@ -135,6 +154,4 @@ define(function(require) {
 			});
 		}
 	};
-
-	return numberIm;
 });

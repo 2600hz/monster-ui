@@ -732,6 +732,12 @@
 	"__comment": "UI-2425: Number features monster.ui.helper",
 	"__version": "v4.0",
 	"iconNumberFeatures": {
+		"sms": {
+			"tooltip": "SMS Services"
+		},
+		"mms": {
+			"tooltip": "MMS Services"
+		},
 		"e911": {
 			"label": "E911",
 			"tooltip": "E911"
