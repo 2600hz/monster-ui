@@ -108,6 +108,9 @@
 							},
 							"placeholders": {
 								"winningCarrier": "Select based on best quality"
+							},
+							"messages": {
+								"carrierHasChanged": "Carrier information has changed. Please check it before continue."
 							}
 						},
 						"requiredDocuments": {

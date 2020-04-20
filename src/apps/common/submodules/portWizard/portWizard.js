@@ -380,7 +380,12 @@ define(function(require) {
 				portRequestId = _.get(args, 'data.portRequestId'),
 				i18n = self.i18n.active().commonApp.portWizard,
 				i18nSteps = i18n.steps,
-				stepNames = self.appFlags.portWizard.stepNames;
+				stepNames = self.appFlags.portWizard.stepNames,
+				getStepIdByName = _
+					.chain(_.indexOf)
+					.partial(stepNames)
+					.unary()
+					.value();
 
 			// Clean store, in case it was not empty, to avoid using old data
 			self.portWizardSet({});
@@ -474,8 +479,26 @@ define(function(require) {
 				function getCarrierDataAndRequirements($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, waterfallCallback) {
 					// Load carrier and requirements data, if the port request has data that
 					// goes beyond the Carrier Selection step, and the numbers type is valid
-					if (numbersTypeValidationResult !== 'none' || !(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
-						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, null);
+					var carrierSelectionStepId = getStepIdByName('carrierSelection'),
+						savedSteps = _
+							.chain(portRequestData)
+							.get('ui_flags.steps', {})
+							.pick([
+								'current',
+								'lastCompleted'
+							])
+							.mapKeys(function(value, key) {
+								return key + 'Id';
+							})
+							.mapValues(getStepIdByName)
+							.value(),
+						lastCompletedStepId = _.get(savedSteps, 'lastCompletedId', carrierSelectionStepId + 1),
+						currentStepId = _.get(savedSteps, 'currentId', carrierSelectionStepId + 1);
+
+					if (numbersTypeValidationResult !== 'none'
+							|| (lastCompletedStepId <= carrierSelectionStepId && currentStepId <= carrierSelectionStepId)
+							|| !(_.has(portRequestData, 'uploads') || _.has(portRequestData, 'bill'))) {
+						return waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, null, savedSteps);
 					}
 
 					self.portWizardLoadNumbersCarrierDataAndRequirements({
@@ -486,20 +509,20 @@ define(function(require) {
 								return waterfallCallback(err);
 							}
 
-							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData);
+							waterfallCallback(null, $container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, savedSteps);
 						}
 					});
 				},
-				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, waterfallCallback) {
+				function formatPortRequestData($container, portRequestData, formattedPhoneNumbers, numbersTypeValidationResult, numbersCarrierData, savedSteps, waterfallCallback) {
 					// Format port request data, to be loaded in the wizard
 					if (!portRequestData) {
-						return waterfallCallback(null, $container, null, {
+						return waterfallCallback(null, $container, {
 							nameAndNumbers: {
 								numbersToPort: {
 									type: 'local'
 								}
 							}
-						}, numbersCarrierData);
+						}, numbersCarrierData, savedSteps);
 					}
 
 					var wizardPortRequestData = self.portWizardFormatPortRequestData({
@@ -509,18 +532,16 @@ define(function(require) {
 						data: portRequestData
 					});
 
-					waterfallCallback(null, $container, portRequestData, wizardPortRequestData, numbersCarrierData);
+					waterfallCallback(null, $container, wizardPortRequestData, numbersCarrierData, savedSteps);
 				},
-				function getPreliminarWizardInitialStep($container, portRequestData, wizardPortRequestData, numbersCarrierData, waterfallCallback) {
+				function getPreliminarWizardInitialStep($container, wizardPortRequestData, numbersCarrierData, savedSteps, waterfallCallback) {
 					// Get preliminary wizard step to resume editing
-					var lastStep = _.last(stepNames),
+					var lastStepId = stepNames.length - 1,
 						hasStepData = _.partial(_.has, wizardPortRequestData),
 						lastDataStepId = _.findLastIndex(stepNames, hasStepData),
-						savedLastCompletedStep = _.get(portRequestData, 'ui_flags.steps.lastCompleted', lastStep),
-						savedCurrentStep = _.get(portRequestData, 'ui_flags.steps.current', lastStep),
-						nameAndNumbersStepId = _.indexOf(stepNames, 'nameAndNumbers'),
-						savedLastCompletedStepId = _.indexOf(stepNames, savedLastCompletedStep),
-						savedCurrentStepId = _.indexOf(stepNames, savedCurrentStep),
+						nameAndNumbersStepId = getStepIdByName('nameAndNumbers'),
+						savedLastCompletedStepId = _.get(savedSteps, 'lastCompletedId', lastStepId),
+						savedCurrentStepId = _.get(savedSteps, 'currentId', lastStepId),
 						wizardLastCompletedStepId = wizardPortRequestData.nameAndNumbers.numbersToPort.areValid
 							? _.min([ lastDataStepId, savedLastCompletedStepId ])
 							: nameAndNumbersStepId,
@@ -541,7 +562,7 @@ define(function(require) {
 						isWinningCarrierValid = areNumbersValid
 							&& portRequestHasWinningCarrier
 							&& _.includes(numbersCarrierData.winningCarriers, wizardPortRequestData.carrierSelection.winningCarrier),
-						carrierSelectionStepId = _.indexOf(stepNames, 'carrierSelection');
+						carrierSelectionStepId = getStepIdByName('carrierSelection');
 
 					if (areNumbersValid) {
 						_.set(
@@ -577,8 +598,8 @@ define(function(require) {
 								return document.required && !document.file;
 							})
 							.value(),
-						ownershipConfirmationStepId = _.indexOf(stepNames, 'ownershipConfirmation'),
-						requiredDocumentsStepId = _.indexOf(stepNames, 'requiredDocuments');
+						ownershipConfirmationStepId = getStepIdByName('ownershipConfirmation'),
+						requiredDocumentsStepId = getStepIdByName('requiredDocuments');
 
 					if (wizardLastCompletedStepId > ownershipConfirmationStepId && isBillRequired && !isBillAttached) {
 						wizardLastCompletedStepId = ownershipConfirmationStepId - 1;
@@ -752,7 +773,6 @@ define(function(require) {
 		portWizardFormatPortRequestData: function(args) {
 			var self = this,
 				portWizardAppFlags = self.appFlags.portWizard,
-				minTargetDateBusinessDays = portWizardAppFlags.minTargetDateBusinessDays,
 				allRequiredDocuments = portWizardAppFlags.requirements.documents,
 				billAttachmentName = allRequiredDocuments.Bill,
 				formattedPhoneNumbers = args.formattedNumbers,
@@ -772,11 +792,16 @@ define(function(require) {
 				requiredDocumentsByAttachmentName = _.keyBy(requiredDocumentsList, 'attachmentName'),
 				requiredDocumentsByKey = _.keyBy(requiredDocumentsList, 'key'),
 				billDocumentMetadata = _.get(requiredDocumentsByKey, 'Bill', {}),
-				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+				uploadedRequiredDocuments = _
+					.chain(portRequestData)
+					.get('uploads')
+					.omit(billAttachmentName)
+					.value(),
+				minTargetDate = self.portWizardGetMinimumTargetDate(),
 				targetDate = _.has(portRequestData, 'transfer_date')
-					? monster.util.gregorianToDate(portRequestData.transfer_date)
+					? self.portWizardGregorianToDateWithCurrentTimeZone(portRequestData.transfer_date)
 					: undefined,
-				adjustedTargetDate = (targetDate && minTargetDate < targetDate)
+				adjustedTargetDate = (targetDate && targetDate < minTargetDate)
 					? minTargetDate
 					: targetDate,
 				wizardData = self.portWizardOmitEmptyOrNilProperties({
@@ -832,11 +857,9 @@ define(function(require) {
 						})
 						: null,
 					requiredDocuments: self.portWizardOmitEmptyOrNilProperties({
-						documents: _.has(portRequestData, 'uploads') || _.has(portRequestData, 'transfer_date')
+						documents: !_.isEmpty(uploadedRequiredDocuments) || _.has(portRequestData, 'transfer_date')
 							? _
-								.chain(portRequestData)
-								.get('uploads')
-								.omit(billAttachmentName)
+								.chain(uploadedRequiredDocuments)
 								.mapValues(function(attachmentData, attachmentName) {
 									var documentMetadata = _.get(requiredDocumentsByAttachmentName, attachmentName);
 
@@ -853,7 +876,9 @@ define(function(require) {
 							: null,
 						extra: self.portWizardOmitEmptyOrNilProperties({
 							loaSignee: portRequestData.signee_name,
-							loaSigningDate: portRequestData.signing_date
+							loaSigningDate: _.has(portRequestData, 'signing_date')
+								? self.portWizardGregorianToDateWithCurrentTimeZone(portRequestData.signing_date)
+								: undefined
 						})
 					}),
 					dateAndNotifications: _.has(portRequestData, 'transfer_date')
@@ -970,6 +995,7 @@ define(function(require) {
 				e164Numbers,
 				numbersTypeValidationResult,
 				areThereNewNumbers,
+				carrierSelectionStepId,
 				goToStepId;
 
 			if (!isValid) {
@@ -1020,15 +1046,11 @@ define(function(require) {
 					.some()
 					.value();
 
-				if (areThereNewNumbers && eventArgs.eventType === 'goto' && _.has(eventArgs, 'nextStepId')) {
-					self.portWizardSet('jumpToStepId', eventArgs.nextStepId);
+				carrierSelectionStepId = _.findIndex(args.steps, { name: 'carrierSelection' });
 
-					goToStepId = _
-						.chain(args)
-						.get('steps')
-						.map('name')
-						.indexOf('carrierSelection')
-						.value();
+				if (areThereNewNumbers && eventArgs.eventType === 'goto' && _.has(eventArgs, 'nextStepId') && eventArgs.nextStepId > carrierSelectionStepId) {
+					self.portWizardSet('jumpToStepId', eventArgs.nextStepId);
+					goToStepId = carrierSelectionStepId;
 				}
 			} else {
 				self.portWizardNameAndNumbersShowNumberTypeValidationError({
@@ -1298,11 +1320,25 @@ define(function(require) {
 				},
 				function renderTemplate(numbersCarrierData, waterfallCallback) {
 					var jumpToStepId = self.portWizardGet('jumpToStepId', -1),
-						areNumbersValid = numbersCarrierData.areNumbersValid;
+						areNumbersValid = numbersCarrierData.areNumbersValid,
+						isJumpStepValid = jumpToStepId >= 0,
+						previousLosingCarrier = _.get(carrierSelectionData, 'losingCarrier'),
+						currentLosingCarrier = _.get(numbersCarrierData, [
+							'numbersByLosingCarrier',
+							0,
+							'carrier'
+						]),
+						previousWinningCarrier = _.get(carrierSelectionData, 'winningCarrier'),
+						isSameLosingCarrier = previousLosingCarrier === currentLosingCarrier,
+						isWinningCarrierValid = _
+							.chain(numbersCarrierData)
+							.get('winningCarriers', [])
+							.includes(previousWinningCarrier)
+							.value();
 
-					if (jumpToStepId >= 0 && areNumbersValid) {
-						self.portWizardUnset('jumpToStepId');
+					self.portWizardUnset('jumpToStepId');
 
+					if (areNumbersValid && isJumpStepValid && isSameLosingCarrier && isWinningCarrierValid) {
 						return waterfallCallback(null, {
 							areNumbersValid: areNumbersValid,
 							jumpToStepId: jumpToStepId
@@ -1311,7 +1347,8 @@ define(function(require) {
 
 					waterfallCallback(null, {
 						areNumbersValid: areNumbersValid,
-						template: (numbersCarrierData.carrierWarningType === 'none')
+						haveCarriersChanged: areNumbersValid && isJumpStepValid && !(isSameLosingCarrier && isWinningCarrierValid),
+						template: areNumbersValid
 							? self.portWizardCarrierSelectionSingleGetTemplate({
 								numbersCarrierData: numbersCarrierData,
 								carrierSelectionData: carrierSelectionData
@@ -1348,7 +1385,18 @@ define(function(require) {
 				callback({
 					status: results.areNumbersValid ? null : 'invalid',
 					template: results.template,
-					callback: self.portWizardScrollToTop
+					callback: function() {
+						self.portWizardScrollToTop();
+
+						if (!results.haveCarriersChanged) {
+							return;
+						}
+
+						monster.ui.toast({
+							type: 'warning',
+							message: self.i18n.active().commonApp.portWizard.steps.carrierSelection.singleLosingCarrier.designateWinningCarrier.messages.carrierHasChanged
+						});
+					}
 				});
 			});
 		},
@@ -1509,7 +1557,7 @@ define(function(require) {
 						count: _.size(numbers)
 					},
 					winningCarrierList: winningCarrierList,
-					requiredDocuments: numbersCarrierData.requiredDocuments,
+					requiredDocuments: numbersCarrierData.requirements.documentsList,
 					data: {
 						designateWinningCarrier: {
 							losingCarrier: self.portWizardCleanCarrierName(carrierNumberGroup.carrier),
@@ -1752,24 +1800,38 @@ define(function(require) {
 		portWizardOwnershipConfirmationUtil: function($template, args, eventArgs) {
 			var self = this,
 				$form = $template.find('form'),
+				// Form is loaded only when bill has already been selected, or no bill is required
+				isFormLoaded = $form.length > 0,
 				isValid = !eventArgs.completeStep || monster.ui.valid($form),
+				originalBillData = _.get(args, 'data.ownershipConfirmation.latestBill'),
+				billData,
 				formData,
 				ownershipConfirmationData;
 
 			if (isValid) {
-				formData = self.portWizardGetFormData($form);
-				ownershipConfirmationData = _.merge({}, formData, {
-					latestBill: self.portWizardGet('billData'),
-					accountInfo: {
-						btn: _
-							.chain(formData)
-							.get('accountInfo.btn')
-							.thru(monster.util.getFormatPhoneNumber)
-							.get('e164Number', '')
-							.value()
-					}
-				});
+				formData = isFormLoaded ? self.portWizardGetFormData($form) : {};
+				billData = self.portWizardGet('billData');
+				ownershipConfirmationData = _.merge(
+					formData,
+					_.isEmpty(billData) && _.isEmpty(originalBillData) ? {} : {
+						latestBill: _.isEmpty(billData) ? originalBillData : billData
+					},
+					_.has(formData, 'accountInfo.btn') ? {
+						accountInfo: {
+							btn: _
+								.chain(formData)
+								.get('accountInfo.btn')
+								.thru(monster.util.getFormatPhoneNumber)
+								.get('e164Number', '')
+								.value()
+						}
+					} : {}
+				);
 				self.portWizardUnset('billData');
+
+				if (isFormLoaded) {
+					delete args.data.ownershipConfirmation;
+				}
 			}
 
 			return {
@@ -1933,15 +1995,10 @@ define(function(require) {
 						maxlength: 128
 					},
 					'serviceAddress.region': {
-						required: true,
-						minlength: 2,
-						maxlength: 2
+						required: true
 					},
 					'serviceAddress.postalCode': {
-						required: true,
-						digits: true,
-						minlength: 5,
-						maxlength: 5
+						required: true
 					},
 					'serviceAddress.country': {
 						required: true
@@ -2262,8 +2319,7 @@ define(function(require) {
 			var self = this,
 				initTemplate = function() {
 					var dateAndNotificationsData = _.get(args.data, 'dateAndNotifications', {}),
-						minTargetDateBusinessDays = self.appFlags.portWizard.minTargetDateBusinessDays,
-						minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays),
+						minTargetDate = self.portWizardGetMinimumTargetDate(),
 						targetDate = _.get(dateAndNotificationsData, 'targetDate', minTargetDate),
 						$template = $(self.getTemplate({
 							name: 'step-dateAndNotifications',
@@ -2344,7 +2400,8 @@ define(function(require) {
 				// Remove empty e-mail values
 				_.remove(dateAndNotificationsData.notificationEmails, _.isEmpty);
 
-				delete args.dateAndNotifications;
+				// Delete old data, to avoid merging with new data
+				delete args.data.dateAndNotifications;
 			}
 
 			return {
@@ -2576,6 +2633,7 @@ define(function(require) {
 					'requiredDocuments'
 				]),
 				bill = _.get(data, 'ownershipConfirmation.latestBill'),
+				dateAndNotificationsData = data.dateAndNotifications,
 				requiredDocumentsData = data.requiredDocuments,
 				otherDocuments = _.get(requiredDocumentsData, 'documents', {}),
 				allDocuments = _
@@ -2600,7 +2658,18 @@ define(function(require) {
 									name: _.get(allDocuments, [ documentMetadata.key, 'name' ])
 								};
 							}),
-							extra: _.get(requiredDocumentsData, 'extra', {})
+							extra: _
+								.chain(requiredDocumentsData)
+								.get('extra', {})
+								.mapValues(function(value, key) {
+									return key === 'loaSigningDate'
+										? self.portWizardDateToGregorianWithCurrentTimeZone(value)
+										: value;
+								})
+								.value()
+						},
+						dateAndNotifications: {
+							targetDate: self.portWizardDateToGregorianWithCurrentTimeZone(dateAndNotificationsData.targetDate)
 						}
 					});
 
@@ -2952,11 +3021,16 @@ define(function(require) {
 					numbers[number] = {};
 				}, {}),
 				notificationEmails = _.get(dateAndNotificationsData, 'notificationEmails', []),
+				uiFlagsValidationSection = _.get(wizardData, 'ownershipConfirmation.latestBill.required', false) ? {
+					ui_flags: {
+						validation: _.has(wizardData.ownershipConfirmation.latestBill, 'file')
+					}
+				} : {},
 				transferDateSection = _.has(dateAndNotificationsData, 'targetDate') ? {
-					transfer_date: monster.util.dateToGregorian(dateAndNotificationsData.targetDate)
+					transfer_date: self.portWizardDateToGregorianWithCurrentTimeZone(dateAndNotificationsData.targetDate)
 				} : {},
 				getOrEmptyString = _.partialRight(_.get, ''),
-				billSection = _.isNil(ownershipConfirmationData) ? {} : {
+				billSection = _.isEmpty(ownershipConfirmationData) ? {} : {
 					bill: _
 						.chain(originalPortRequestDocument)
 						.get('bill', {})
@@ -3009,13 +3083,12 @@ define(function(require) {
 					ui_flags: {
 						portion: null,
 						type: nameAndNumbersData.numbersToPort.type,
-						validation: true,
 						steps: {
 							current: currentStep,
 							lastCompleted: lastCompletedStep
 						}
 					}
-				}, transferDateSection, winningCarrierSection);
+				}, uiFlagsValidationSection, transferDateSection, winningCarrierSection);
 
 			// Assign top level properties that need to be fully overwritten,
 			// because some internal properties may have been removed
@@ -3057,7 +3130,7 @@ define(function(require) {
 
 				if (isFieldExpected && !self.portWizardIsValueEmptyOrNil(rawFieldValue)) {
 					fieldValue = field.type === 'date'
-						? monster.util.dateToGregorian(rawFieldValue)
+						? self.portWizardDateToGregorianWithCurrentTimeZone(rawFieldValue)
 						: rawFieldValue;
 
 					_.set(newPortRequestDocument, field.portRequestPath, fieldValue);
@@ -3723,6 +3796,45 @@ define(function(require) {
 		},
 
 		/**
+		 * Converts the date part of a Javascript Date to gregorian time, using the current time
+		 * zone
+		 * @param  {Date} date  Date to convert
+		 * @returns  {Number}  Gregorian time
+		 */
+		portWizardDateToGregorianWithCurrentTimeZone: function(date) {
+			return monster.util.dateToBeginningOfGregorianDay(
+				date,
+				monster.util.getCurrentTimeZone()
+			);
+		},
+
+		/**
+		 * Gets the minimum target date for the current port request
+		 * @returns  {Date}  Minimum port request target date
+		 */
+		portWizardGetMinimumTargetDate: function() {
+			var self = this,
+				minTargetDateBusinessDays = self.appFlags.portWizard.minTargetDateBusinessDays,
+				minTargetDate = monster.util.getBusinessDate(minTargetDateBusinessDays);
+
+			return moment(minTargetDate).startOf('day').toDate();
+		},
+
+		/**
+		 * Converts a gregorian time to a Javascript Date (withouth time part), using the current time zone
+		 * @param  {Number} timestamp  gregorian time
+		 * @returns  {Date}  Equivalent date, in current time zone
+		 */
+		portWizardGregorianToDateWithCurrentTimeZone: function(timestamp) {
+			var date = monster.util.gregorianToDate(timestamp),
+				momentDateWithTZ = moment.tz(date, monster.util.getCurrentTimeZone()),
+				dateAsString = momentDateWithTZ.format('YYYY-MM-DD'),
+				dateWithBrowserTZ = moment(dateAsString).toDate();
+
+			return dateWithBrowserTZ;
+		},
+
+		/**
 		 * Creates a composed object that does not contain the empty or nil properties from the
 		 * passed object
 		 * @param  {Object} object  Object to clean
@@ -3743,7 +3855,7 @@ define(function(require) {
 		portWizardIsValueEmptyOrNil: function(value) {
 			return _.isNil(value)
 				|| value === ''
-				|| (_.isPlainObject(value) && _.isEmpty(value));
+				|| ((_.isPlainObject(value) || _.isArray(value)) && _.isEmpty(value));
 		},
 
 		/**

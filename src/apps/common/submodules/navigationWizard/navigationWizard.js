@@ -641,6 +641,7 @@ define(function(require) {
 			var self = this,
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
+				wizardSteps = wizardArgs.steps,
 				$wizardTemplate = wizardArgs.template,
 				$wizardFooterActions = $wizardTemplate.find('.footer .actions'),
 				thisArg = wizardArgs.thisArg,
@@ -699,6 +700,8 @@ define(function(require) {
 					afterRenderCallback = results.callback,
 					status = _.get(results, 'status', null),
 					insertTemplateCallback = function() {
+						var followingStepIds;
+
 						if (_.isFunction(afterRenderCallback)) {
 							afterRenderCallback();
 						}
@@ -712,6 +715,26 @@ define(function(require) {
 						self.navigationWizardSetStepStatuses({
 							stepId: stepId,
 							statuses: [ 'selected', status ]
+						});
+
+						if (status !== 'invalid' || navigationWizardFlags.lastCompletedStep < stepId) {
+							return;
+						}
+
+						if (stepId === 0) {
+							delete navigationWizardFlags.lastCompletedStep;
+						} else {
+							navigationWizardFlags.lastCompletedStep = stepId - 1;
+						}
+
+						// Un-complete following steps
+						followingStepIds = _.range(stepId + 1, wizardSteps.length);
+
+						_.each(followingStepIds, function(followingStepId) {
+							self.navigationWizardSetStepStatuses({
+								stepId: followingStepId,
+								statuses: []
+							});
 						});
 					};
 
