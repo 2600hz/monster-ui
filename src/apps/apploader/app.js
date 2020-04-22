@@ -540,7 +540,7 @@ define(function(require) {
 					var lang = monster.config.whitelabel.language,
 						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
 						formattedApps = _.map(appList, function(app) {
-							var currentLang = _.has(app.i18n, isoFormattedLang) ? isoFormattedLang : 'en-US',
+							var currentLang = _.has(app.i18n, isoFormattedLang) ? isoFormattedLang : monster.defaultLanguage,
 								i18n = app.i18n[currentLang];
 
 							return {
