@@ -89,6 +89,9 @@ define(function(require) {
 					}
 					self.getUserApps(_.partial(callback, null));
 				},
+				function insertAppLinks(appList, callback) {
+					callback(null, self.insertAppLinks(appList));
+				},
 				function renderTemplate(appList, callback) {
 					var templateTypes = {
 							dropdown: {
@@ -496,6 +499,7 @@ define(function(require) {
 
 					var currentUser = monster.apps.auth.currentUser,
 						userApps = _.get(currentUser, 'appList', []),
+						appLinks = _.keys(monster.config.whitelabel.appLinks),
 						updateUserApps = false,
 						isAppInstalled = function(app) {
 							if (app) {
@@ -543,7 +547,11 @@ define(function(require) {
 					});
 
 					if (forceFetch && updateUserApps) {
-						monster.apps.auth.currentUser.appList = userApps;
+						monster.apps.auth.currentUser.appList = _
+							.chain(userApps)
+							.concat(appLinks)
+							.sortBy(self.sortByOrderOf(currentUser.appList))
+							.value();
 						self.userUpdate();
 					}
 
@@ -585,6 +593,67 @@ define(function(require) {
 
 				_.has(args, 'success') && args.success(appList);
 			});
+		},
+
+		/**
+		 * Inserts app links to applist if any are defined
+		 * @param  {Array} appList
+		 * @return {Array}
+		 */
+		insertAppLinks: function insertAppLinks(appList) {
+			var self = this,
+				appLinks = _
+					.chain(monster.config.whitelabel)
+					.get('appLinks')
+					.map(function(metadata, url) {
+						var i18nKey = _.find([
+								monster.config.whitelabel.language,
+								monster.defaultLanguage,
+								_.keys(metadata.i18n)[0]
+							], function(key) {
+								return _.has(metadata.i18n, key);
+							}),
+							i18n = _.get(metadata.i18n, i18nKey, {});
+
+						return _.merge({
+							id: url,
+							icon: metadata.icon
+						}, _.pick(i18n, [
+							'label',
+							'description'
+						]));
+					})
+					.uniqBy('id')
+					.reject(function(link) {
+						return _.isEmpty(link.label);
+					})
+					.value();
+
+			return _
+				.chain(appList)
+				.slice(0, 1)
+				.concat(
+					_
+						.chain(appLinks)
+						.concat(_.slice(appList, 1))
+						.sortBy(self.sortByOrderOf(monster.apps.auth.currentUser.appList, 'id'))
+						.value()
+				)
+				.value();
+		},
+
+		/**
+		 * Returns a function that returns the index of an item/path in list
+		 * @param  {Array} list
+		 * @param  {String} [path]
+		 * @return {Function}
+		 */
+		sortByOrderOf: function(list, path) {
+			return function(item) {
+				var value = path ? _.get(item, path) : item;
+
+				return _.indexOf(list, value);
+			};
 		},
 
 		/**
