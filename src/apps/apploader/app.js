@@ -80,48 +80,62 @@ define(function(require) {
 		 */
 		render: function(pArgs) {
 			var self = this,
-				args = pArgs || {},
-				template;
+				globalCallback = _.get(pArgs, 'callback');
 
-			if (!self.isRendered()) {
-				self.getUserApps(function(appList) {
-					if (monster.config.whitelabel.useDropdownApploader) {
-						template = $(self.getTemplate({
-							name: 'appList',
-							data: {
-								defaultApp: appList[0],
-								apps: appList,
-								allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore
-							}
-						}));
-
-						$('#appList').empty().append(template);
-
-						self.bindDropdownApploaderEvents(template);
-					} else {
-						template = $(self.getTemplate({
-							name: 'app',
-							data: {
-								allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore,
-								defaultApp: monster.ui.formatIconApp(appList[0]),
-								apps: appList
-							}
-						}));
-
-						self.bindEvents(template, appList);
-
-						self.appFlags.modal = monster.ui.fullScreenModal(template, {
-							hideClose: true,
-							destroyOnClose: false
-						});
+			monster.waterfall([
+				function maybeFetchApps(callback) {
+					if (self.isRendered()) {
+						return callback(true);
 					}
-					args.callback && args.callback();
-				});
-			} else {
-				self.show({
-					callback: args.callback
-				});
-			}
+					self.getUserApps(_.partial(callback, null));
+				},
+				function renderTemplate(appList, callback) {
+					var templateTypes = {
+							dropdown: {
+								name: 'appList',
+								defaultApp: _.head(appList),
+								insert: function(template) {
+									self.bindDropdownApploaderEvents(template);
+
+									$('#appList').empty().append(template);
+								}
+							},
+							modal: {
+								name: 'app',
+								defaultApp: monster.ui.formatIconApp(appList[0]),
+								insert: function(template) {
+									self.bindEvents(template, appList);
+
+									self.appFlags.modal = monster.ui.fullScreenModal(template, {
+										hideClose: true,
+										destroyOnClose: false
+									});
+								}
+							}
+						},
+						templateData = _.get(templateTypes, monster.config.whitelabel.useDropdownApploader ? 'dropdown' : 'modal'),
+						$template = $(self.getTemplate({
+							name: templateData.name,
+							data: _.merge({
+								allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore,
+								apps: appList
+							}, _.pick(templateData, [
+								'defaultApp'
+							]))
+						}));
+
+					templateData.insert($template);
+
+					callback(null, appList);
+				}
+			], function(isRendered) {
+				if (isRendered) {
+					return self.show({
+						callback: globalCallback
+					});
+				}
+				globalCallback && globalCallback();
+			});
 		},
 
 		bindDropdownApploaderEvents: function(parent) {

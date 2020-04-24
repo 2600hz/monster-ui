@@ -48,7 +48,7 @@
 		<h3>{{i18n.appList.title}}</h3>
 		<div class="app-list">
 		{{#each apps}}
-			<div class="app-element{{#compare ../defaultApp.id '===' id}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}" data-search="{{label}}">
+			<div class="app-element{{#compare ../defaultApp.id '===' id}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}" data-search="{{label}}" data-type="{{#if name}}app{{else}}link{{/if}}">
 				<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image: url({{icon}})"{{/if}}></div>
 				<div class="app-name">{{label}}</div>
 			</div>
