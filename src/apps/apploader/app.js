@@ -161,14 +161,12 @@ define(function(require) {
 		bindEvents: function(parent, appList) {
 			var self = this,
 				updateAppInfo = function updateAppInfo(id) {
-					var app = appList.filter(function(v) { return id === v.id; })[0];
+					var app = _.find(appList, { id: id }),
+						isLink = _.includes(_.keys(monster.config.whitelabel.appLinks), id);
 
-					parent.find('.app-description')
-							.find('h4')
-							.text(app.label)
-							.addBack()
-							.find('p')
-							.text(app.description);
+					parent.find('.app-description h4')[isLink ? 'addClass' : 'removeClass']('is-link');
+					parent.find('.app-description .title').text(app.label);
+					parent.find('.app-description p').text(app.description || '');
 				};
 
 			setTimeout(function() { parent.find('.search-query').focus(); });
