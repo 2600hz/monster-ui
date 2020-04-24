@@ -174,6 +174,9 @@ define(function(require) {
 			parent.find('.app-container').sortable({
 				cancel: '.ui-sortable-disabled',
 				receive: function(event, ui) {
+					if (ui.item.data('type') !== 'app') {
+						return ui.sender.sortable('cancel');
+					}
 					var item = $(ui.item),
 						itemId = item.data('id');
 
