@@ -144,11 +144,15 @@ define(function(require) {
 		bindDropdownApploaderEvents: function(parent) {
 			var self = this;
 
-			parent.find('.appSelector').on('click', function() {
+			parent.find('.appSelector').on('click', function(event) {
+				event.preventDefault();
+
 				var $this = $(this),
 					appName = $this.data('name');
 
-				if (appName) {
+				if ($this.data('type') === 'link') {
+					window.open($this.data('id'));
+				} else if (appName) {
 					monster.routing.goTo('apps/' + appName);
 				}
 			});
@@ -270,7 +274,9 @@ define(function(require) {
 				var $this = $(this),
 					appName = $this.data('name');
 
-				if (appName) {
+				if ($this.data('type') === 'link') {
+					window.open($this.data('id'));
+				} else if (appName) {
 					if (appName === 'appstore' || !(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
 						monster.routing.goTo('apps/' + appName);
 
