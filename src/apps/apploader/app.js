@@ -129,7 +129,7 @@ define(function(require) {
 
 					templateData.insert($template);
 
-					callback(null, appList);
+					callback(null);
 				}
 			], function(isRendered) {
 				if (isRendered) {
