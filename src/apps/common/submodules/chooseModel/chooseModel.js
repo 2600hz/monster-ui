@@ -18,6 +18,18 @@ define(function(require) {
 			'common.chooseModel.render': 'chooseModelRender'
 		},
 
+		appFlags: {
+			chooseModel: {
+				/**
+				 * Family names for which model names should be prefixed by its family name
+				 * @type {Array}
+				 */
+				familyNamesAsPrefix: [
+					'vvx'
+				]
+			}
+		},
+
 		chooseModelRender: function(args) {
 			var self = this;
 
@@ -35,7 +47,7 @@ define(function(require) {
 		},
 
 		chooseModelFormatProvisionerData: function(data) {
-			var familiesAsPrefix = ['vvx'];
+			var self = this;
 
 			return {
 				brands: _.map(data, function(brand, brandKey) {
@@ -49,7 +61,7 @@ define(function(require) {
 								models: _.map(family.models, function(model, modelKey) {
 									return {
 										id: _.toLower(modelKey),
-										name: _.includes(familiesAsPrefix, family)
+										name: _.includes(self.appFlags.chooseModel.familyNamesAsPrefix, family)
 											? _.toUpper(family) + ' ' + model
 											: model
 									};
