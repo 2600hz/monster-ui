@@ -35,41 +35,30 @@ define(function(require) {
 		},
 
 		chooseModelFormatProvisionerData: function(data) {
-			var formattedData = {
-					brands: []
-				},
-				families,
-				models,
-				prefix = ['vvx'];
+			var familiesAsPrefix = ['vvx'];
 
-			_.each(data, function(brand, brandKey) {
-				families = [];
-
-				_.each(brand.families, function(family, familyKey) {
-					models = [];
-
-					_.each(family.models, function(model, modelKey) {
-						models.push({
-							id: modelKey.toLowerCase(),
-							name: prefix.includes(family.name) ? _.toUpper(family.name) + ' ' + model.name : model.name
-						});
-					});
-
-					families.push({
-						id: familyKey.toLowerCase(),
-						name: family.name,
-						models: models
-					});
-				});
-
-				formattedData.brands.push({
-					id: brandKey.toLowerCase(),
-					name: brand.name,
-					families: families
-				});
-			});
-
-			return formattedData;
+			return {
+				brands: _.map(data, function(brand, brandKey) {
+					return {
+						id: _.lowerCase(brandKey),
+						name: brand.name,
+						families: _.map(brand.families, function(family, familyKey) {
+							return {
+								id: _.toLower(familyKey),
+								name: family.name,
+								models: _.map(family.models, function(model, modelKey) {
+									return {
+										id: _.toLower(modelKey),
+										name: _.includes(familiesAsPrefix, family)
+											? _.toUpper(family) + ' ' + model
+											: model
+									};
+								})
+							};
+						})
+					};
+				})
+			};
 		},
 
 		hideDeviceFooter: function(templateDevice) {
