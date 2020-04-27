@@ -47,7 +47,18 @@ define(function(require) {
 		},
 
 		chooseModelFormatProvisionerData: function(data) {
-			var self = this;
+			var self = this,
+				resolveModelName = function resolveModelName(familyName, modelName) {
+					return _
+						.chain(self.appFlags.chooseModel.familyNamesAsPrefix)
+						.filter(function(name) {
+							return name === familyName;
+						})
+						.map(_.toUpper)
+						.concat([modelName])
+						.join(' ')
+						.value();
+				};
 
 			return {
 				brands: _.map(data, function(brand, brandKey) {
@@ -61,9 +72,7 @@ define(function(require) {
 								models: _.map(family.models, function(model, modelKey) {
 									return {
 										id: _.toLower(modelKey),
-										name: _.includes(self.appFlags.chooseModel.familyNamesAsPrefix, family)
-											? _.toUpper(family) + ' ' + model
-											: model
+										name: resolveModelName(family.name, model.name)
 									};
 								})
 							};
