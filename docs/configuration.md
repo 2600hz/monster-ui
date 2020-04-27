@@ -80,6 +80,7 @@ Key | Description | Type | Default | Required
 `additionalCss.[]` | Path to the CSS file | `String` | | `false`
 `additionalLoggedInApps` | Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..) | `Array` | | `false`
 `additionalLoggedInApps.[]` | Name of the app to side load | `String` | | `false`
+`appLinks` | Links accessible alongside apps in apploader (will open in a new tab). | `Object`([#appLinks](#appLinks)) | | `false`
 `allowAccessList` | If set to true, will allow the user to modify access_lists from the account settings page. | `Boolean` | `false` | `false`
 `allowAnyOwnedNumberAsCallerID` | Whether or not to allow any phone number on the account to be used as caller ID. | `Boolean` | | `false`
 `announcement` | Message to show every time a user logs in. | `String` | | `false`
@@ -127,6 +128,17 @@ Key | Description | Type | Default | Required
 `showInvoiceSummary` | Whether the charges confirmation dialog should render the invoice summary or a custom message (this prop only takes effect when `autoAccept: false`). | `Boolean` | `true` | `false`
 `message` | Maps IETF language codes (`en-US`, `fr-FR` ...) to custom messages to render in place of the invoice summary (this prop only takes effect when `showInoiceSummary: false` and `autoAccept: false`). | `Object` |  | `false`
 `message[]` | Custom message to render in place of the invoice summary. | `String` |  | `false`
+
+#### `appLinks`
+
+Each object key corresponds to a unique URL while its value is:
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`icon` | URL to icon asset. | `String` | | `true`
+`i18n` | Internationalization information, requires at least one entry. | `Object` |  | `true`
+`i18n[]` | Each object key corresponds to a unique language identifier (`en-US`, `fr-FR`...). | `Object` |  | `true`
+`i18n[].label` | Name for the link. | `String` |  | `true`
+`i18n[].description` | Description for the link. | `String` |  | `false`
 
 #### `bookkeepers`
 
