@@ -41,7 +41,7 @@ define(function(require) {
 				families,
 				models,
 				prefix = ['vvx'];
-				
+
 			_.each(data, function(brand, brandKey) {
 				families = [];
 
@@ -51,7 +51,7 @@ define(function(require) {
 					_.each(family.models, function(model, modelKey) {
 						models.push({
 							id: modelKey.toLowerCase(),
-							name: prefix.includes(family.name) ? _.toUpper(family.name) + " " + model.name : model.name
+							name: prefix.includes(family.name) ? _.toUpper(family.name) + ' ' + model.name : model.name
 						});
 					});
 
