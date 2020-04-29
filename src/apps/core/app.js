@@ -41,7 +41,11 @@ define(function(require) {
 		//Default app to render if the user is logged in, can be changed by setting a default app
 		_defaultApp: 'appstore',
 
-		spinner: {},
+		/**
+		 * Holds timeout IDs for global progress indicator
+		 * @type {Object}
+		 */
+		indicator: {},
 
 		// Global var to determine if there is a request in progress
 		request: {
@@ -292,7 +296,7 @@ define(function(require) {
 
 		bindEvents: function(container) {
 			var self = this,
-				spinner = container.find('.loading-wrapper');
+				indicator = container.find('.progress-indicator');
 
 			window.onerror = function(message, fileName, lineNumber, columnNumber, error) {
 				monster.error('js', {
@@ -304,16 +308,16 @@ define(function(require) {
 				});
 			};
 
-			/* Only subscribe to the requestStart and End event when the spinner is loaded */
+			/* Only subscribe to the requestStart and End event when the indicator is loaded */
 			monster.sub('monster.requestStart', function(params) {
 				self.onRequestStart(_.merge({
-					spinner: spinner
+					indicator: indicator
 				}, params));
 			});
 
 			monster.sub('monster.requestEnd', function(params) {
 				self.onRequestEnd(_.merge({
-					spinner: spinner
+					indicator: indicator
 				}, params));
 			});
 
@@ -672,7 +676,7 @@ define(function(require) {
 		onRequestStart: function(args) {
 			var self = this,
 				waitTime = 250,
-				$spinner = args.spinner,
+				$indicator = args.indicator,
 				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
 
 			// If indicated, bypass progress indicator display/hide process
@@ -683,27 +687,27 @@ define(function(require) {
 			self.request.counter++;
 
 			// If we start a request, we cancel any existing timeout that was checking if the loading was over
-			clearTimeout(self.spinner.endTimeout);
+			clearTimeout(self.indicator.endTimeout);
 
 			if (self.request.counter) {
 				self.request.active = true;
 			}
 
 			// And we start a timeout that will check if there are still some active requests after %waitTime%.
-			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
-			self.spinner.startTimeout = setTimeout(function() {
-				if (self.request.counter && !$spinner.hasClass('active')) {
-					$spinner.addClass('active');
+			// If yes, it will then show the indicator. We do this to avoid showing the indicator to often, and just show it on long requests.
+			self.indicator.startTimeout = setTimeout(function() {
+				if (self.request.counter && !$indicator.hasClass('active')) {
+					$indicator.addClass('active');
 				}
 
-				clearTimeout(self.spinner.startTimeout);
+				clearTimeout(self.indicator.startTimeout);
 			}, waitTime);
 		},
 
 		onRequestEnd: function(args) {
 			var self = this,
 				waitTime = 50,
-				$spinner = args.spinner,
+				$indicator = args.indicator,
 				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
 
 			// If indicated, bypass progress indicator display/hide process
@@ -714,18 +718,18 @@ define(function(require) {
 			self.request.counter--;
 
 			// If there are no active requests, we set a timeout that will check again after %waitTime%
-			// If there are no active requests after the timeout, then we can safely remove the spinner.
-			// We do this to avoid showing and hiding the spinner too quickly
+			// If there are no active requests after the timeout, then we can safely remove the indicator.
+			// We do this to avoid showing and hiding the indicator too quickly
 			if (!self.request.counter) {
 				self.request.active = false;
 
-				self.spinner.endTimeout = setTimeout(function() {
-					if ($spinner.hasClass('active')) {
-						$spinner.removeClass('active');
+				self.indicator.endTimeout = setTimeout(function() {
+					if ($indicator.hasClass('active')) {
+						$indicator.removeClass('active');
 					}
 
-					clearTimeout(self.spinner.startTimeout);
-					clearTimeout(self.spinner.endTimeout);
+					clearTimeout(self.indicator.startTimeout);
+					clearTimeout(self.indicator.endTimeout);
 				}, waitTime);
 			}
 		},
