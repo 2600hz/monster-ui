@@ -30,7 +30,9 @@ body,
 
 .core-topbar-wrapper {
 	background-color: #303039;
-	border-top: 5px solid $primary-color;
+	padding-top: 5px;
+
+	@import "./partials/progress-indicator.scss";
 }
 
 .core-wrapper.dashboard .core-topbar-wrapper {
