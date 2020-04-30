@@ -18,6 +18,18 @@ define(function(require) {
 			'common.chooseModel.render': 'chooseModelRender'
 		},
 
+		appFlags: {
+			chooseModel: {
+				/**
+				 * Family names for which model names should be prefixed by its family name
+				 * @type {Array}
+				 */
+				familyNamesAsPrefix: [
+					'vvx'
+				]
+			}
+		},
+
 		chooseModelRender: function(args) {
 			var self = this;
 
@@ -35,40 +47,39 @@ define(function(require) {
 		},
 
 		chooseModelFormatProvisionerData: function(data) {
-			var formattedData = {
-					brands: []
-				},
-				families,
-				models;
+			var self = this,
+				resolveModelName = function resolveModelName(familyName, modelName) {
+					return _
+						.chain(self.appFlags.chooseModel.familyNamesAsPrefix)
+						.filter(function(name) {
+							return name === familyName;
+						})
+						.map(_.toUpper)
+						.concat([modelName])
+						.join(' ')
+						.value();
+				};
 
-			_.each(data, function(brand, brandKey) {
-				families = [];
-
-				_.each(brand.families, function(family, familyKey) {
-					models = [];
-
-					_.each(family.models, function(model, modelKey) {
-						models.push({
-							id: modelKey.toLowerCase(),
-							name: model.name
-						});
-					});
-
-					families.push({
-						id: familyKey.toLowerCase(),
-						name: family.name,
-						models: models
-					});
-				});
-
-				formattedData.brands.push({
-					id: brandKey.toLowerCase(),
-					name: brand.name,
-					families: families
-				});
-			});
-
-			return formattedData;
+			return {
+				brands: _.map(data, function(brand, brandKey) {
+					return {
+						id: _.lowerCase(brandKey),
+						name: brand.name,
+						families: _.map(brand.families, function(family, familyKey) {
+							return {
+								id: _.toLower(familyKey),
+								name: family.name,
+								models: _.map(family.models, function(model, modelKey) {
+									return {
+										id: _.toLower(modelKey),
+										name: resolveModelName(family.name, model.name)
+									};
+								})
+							};
+						})
+					};
+				})
+			};
 		},
 
 		hideDeviceFooter: function(templateDevice) {

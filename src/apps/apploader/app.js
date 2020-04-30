@@ -80,58 +80,79 @@ define(function(require) {
 		 */
 		render: function(pArgs) {
 			var self = this,
-				args = pArgs || {},
-				template;
+				globalCallback = _.get(pArgs, 'callback');
 
-			if (!self.isRendered()) {
-				self.getUserApps(function(appList) {
-					if (monster.config.whitelabel.useDropdownApploader) {
-						template = $(self.getTemplate({
-							name: 'appList',
-							data: {
-								defaultApp: appList[0],
-								apps: appList,
-								allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore
-							}
-						}));
-
-						$('#appList').empty().append(template);
-
-						self.bindDropdownApploaderEvents(template);
-					} else {
-						template = $(self.getTemplate({
-							name: 'app',
-							data: {
-								allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore,
-								defaultApp: monster.ui.formatIconApp(appList[0]),
-								apps: appList
-							}
-						}));
-
-						self.bindEvents(template, appList);
-
-						self.appFlags.modal = monster.ui.fullScreenModal(template, {
-							hideClose: true,
-							destroyOnClose: false
-						});
+			monster.waterfall([
+				function maybeFetchApps(callback) {
+					if (self.isRendered()) {
+						return callback(true);
 					}
-					args.callback && args.callback();
-				});
-			} else {
-				self.show({
-					callback: args.callback
-				});
-			}
+					self.getUserApps(_.partial(callback, null));
+				},
+				function insertAppLinks(appList, callback) {
+					callback(null, self.insertAppLinks(appList));
+				},
+				function renderTemplate(appList, callback) {
+					var templateTypes = {
+							dropdown: {
+								name: 'appList',
+								defaultApp: _.head(appList),
+								insert: function(template) {
+									self.bindDropdownApploaderEvents(template);
+
+									$('#appList').empty().append(template);
+								}
+							},
+							modal: {
+								name: 'app',
+								defaultApp: monster.ui.formatIconApp(appList[0]),
+								insert: function(template) {
+									self.bindEvents(template, appList);
+
+									self.appFlags.modal = monster.ui.fullScreenModal(template, {
+										hideClose: true,
+										destroyOnClose: false
+									});
+								}
+							}
+						},
+						templateData = _.get(templateTypes, monster.config.whitelabel.useDropdownApploader ? 'dropdown' : 'modal'),
+						$template = $(self.getTemplate({
+							name: templateData.name,
+							data: _.merge({
+								allowAppstore: monster.apps.auth.currentUser.priv_level === 'admin' && !monster.config.whitelabel.hideAppStore,
+								apps: appList
+							}, _.pick(templateData, [
+								'defaultApp'
+							]))
+						}));
+
+					templateData.insert($template);
+
+					callback(null);
+				}
+			], function(isRendered) {
+				if (isRendered) {
+					return self.show({
+						callback: globalCallback
+					});
+				}
+				globalCallback && globalCallback();
+			});
 		},
 
 		bindDropdownApploaderEvents: function(parent) {
 			var self = this;
 
-			parent.find('.appSelector').on('click', function() {
+			parent.find('.appSelector').on('click', function(event) {
+				event.preventDefault();
+
 				var $this = $(this),
 					appName = $this.data('name');
 
-				if (appName) {
+				if ($this.data('type') === 'link') {
+					window.open($this.data('id'));
+				} else if (appName) {
 					monster.routing.goTo('apps/' + appName);
 				}
 			});
@@ -139,15 +160,17 @@ define(function(require) {
 
 		bindEvents: function(parent, appList) {
 			var self = this,
+				$appDescription = parent.find('.app-description'),
+				$appDescriptionTitle = $appDescription.find('h4'),
+				$appDescriptionTitleText = $appDescription.find('.title'),
+				$appDescriptionParagraph = $appDescription.find('p'),
 				updateAppInfo = function updateAppInfo(id) {
-					var app = appList.filter(function(v) { return id === v.id; })[0];
+					var app = _.find(appList, { id: id }),
+						isLink = _.includes(_.keys(monster.config.whitelabel.appLinks), id);
 
-					parent.find('.app-description')
-							.find('h4')
-							.text(app.label)
-							.addBack()
-							.find('p')
-							.text(app.description);
+					$appDescriptionTitle[isLink ? 'addClass' : 'removeClass']('is-link');
+					$appDescriptionTitleText.text(app.label);
+					$appDescriptionParagraph.text(app.description || '');
 				};
 
 			setTimeout(function() { parent.find('.search-query').focus(); });
@@ -155,6 +178,9 @@ define(function(require) {
 			parent.find('.app-container').sortable({
 				cancel: '.ui-sortable-disabled',
 				receive: function(event, ui) {
+					if (ui.item.data('type') !== 'app') {
+						return ui.sender.sortable('cancel');
+					}
 					var item = $(ui.item),
 						itemId = item.data('id');
 
@@ -253,7 +279,9 @@ define(function(require) {
 				var $this = $(this),
 					appName = $this.data('name');
 
-				if (appName) {
+				if ($this.data('type') === 'link') {
+					window.open($this.data('id'));
+				} else if (appName) {
 					if (appName === 'appstore' || !(monster.util.isMasquerading() && monster.appsStore[appName].masqueradable === false)) {
 						monster.routing.goTo('apps/' + appName);
 
@@ -482,6 +510,7 @@ define(function(require) {
 
 					var currentUser = monster.apps.auth.currentUser,
 						userApps = _.get(currentUser, 'appList', []),
+						appLinks = _.keys(monster.config.whitelabel.appLinks),
 						updateUserApps = false,
 						isAppInstalled = function(app) {
 							if (app) {
@@ -529,7 +558,11 @@ define(function(require) {
 					});
 
 					if (forceFetch && updateUserApps) {
-						monster.apps.auth.currentUser.appList = userApps;
+						monster.apps.auth.currentUser.appList = _
+							.chain(userApps)
+							.concat(appLinks)
+							.sortBy(self.sortByOrderOf(currentUser.appList))
+							.value();
 						self.userUpdate();
 					}
 
@@ -540,7 +573,7 @@ define(function(require) {
 					var lang = monster.config.whitelabel.language,
 						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
 						formattedApps = _.map(appList, function(app) {
-							var currentLang = _.has(app.i18n, isoFormattedLang) ? isoFormattedLang : 'en-US',
+							var currentLang = _.has(app.i18n, isoFormattedLang) ? isoFormattedLang : monster.defaultLanguage,
 								i18n = app.i18n[currentLang];
 
 							return {
@@ -571,6 +604,67 @@ define(function(require) {
 
 				_.has(args, 'success') && args.success(appList);
 			});
+		},
+
+		/**
+		 * Inserts app links to applist if any are defined
+		 * @param  {Array} appList
+		 * @return {Array}
+		 */
+		insertAppLinks: function insertAppLinks(appList) {
+			var self = this,
+				appLinks = _
+					.chain(monster.config.whitelabel)
+					.get('appLinks')
+					.map(function(metadata, url) {
+						var i18nKey = _.find([
+								monster.config.whitelabel.language,
+								monster.defaultLanguage,
+								_.keys(metadata.i18n)[0]
+							], function(key) {
+								return _.has(metadata.i18n, key);
+							}),
+							i18n = _.get(metadata.i18n, i18nKey, {});
+
+						return _.merge({
+							id: url,
+							icon: metadata.icon
+						}, _.pick(i18n, [
+							'label',
+							'description'
+						]));
+					})
+					.uniqBy('id')
+					.reject(function(link) {
+						return _.isEmpty(link.label);
+					})
+					.value();
+
+			return _
+				.chain(appList)
+				.slice(0, 1)
+				.concat(
+					_
+						.chain(appLinks)
+						.concat(_.slice(appList, 1))
+						.sortBy(self.sortByOrderOf(monster.apps.auth.currentUser.appList, 'id'))
+						.value()
+				)
+				.value();
+		},
+
+		/**
+		 * Returns a function that returns the index of an item/path in list
+		 * @param  {Array} list
+		 * @param  {String} [path]
+		 * @return {Function}
+		 */
+		sortByOrderOf: function(list, path) {
+			return function(item) {
+				var value = path ? _.get(item, path) : item;
+
+				return _.indexOf(list, value);
+			};
 		},
 
 		/**

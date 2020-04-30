@@ -37,6 +37,7 @@ define(function(require) {
 		'whitelabel.acceptCharges.autoAccept': [_.isBoolean, false],
 		'whitelabel.acceptCharges.showInvoiceSummary': [_.isBoolean, true],
 		'whitelabel.allowAccessList': [_.isBoolean, false],
+		'whitelabel.appLinks': [_.isPlainObject, {}],
 		'whitelabel.applicationTitle': [_.isString, 'Monster UI'],
 		'whitelabel.bookkeepers.braintree': [_.isBoolean, true],
 		'whitelabel.bookkeepers.payphone': [_.isBoolean, true],

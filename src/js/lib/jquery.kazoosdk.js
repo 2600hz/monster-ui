@@ -148,7 +148,8 @@
 				'getQueueDetails': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_details/{queueId}' },
 				'getQueueOverview': { verb: 'POST', url: 'accounts/{accountId}/dashboards/queue_overview' },
 				'getRecipientOverview': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_overview' },
-				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' }
+				'getRecipientPerformance': { verb: 'GET', url: 'accounts/{accountId}/dashboards/recipient_performance' },
+				'getActivityLog': { verb: 'POST', url: 'accounts/{accountId}/dashboards/activity_log' }
 			},
 			desktop: {
 				'getWindows': { verb: 'GET', url: 'accounts/{accountId}/desktop/windows' },

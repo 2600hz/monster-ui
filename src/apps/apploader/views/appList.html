@@ -1,12 +1,12 @@
 <div class="app-list-dropdown-wrapper">
 	{{#each apps}}
 		<li>
-			<a href="javascript:void(0);" class="appSelector" data-name="{{this.name}}" data-id="{{this.id}}">{{this.label}}</a>
+			<a class="appSelector" data-name="{{name}}" data-id="{{id}}" data-type="{{#if name}}app{{else}}link{{/if}}">{{label}}</a>
 			<ul>
 				<li>
 					<a>
-						{{#if this.description}}
-							{{this.description}}
+						{{#if description}}
+							{{description}}
 						{{else}}
 							{{i18n.noDescription}}
 						{{/if}}
