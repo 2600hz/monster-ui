@@ -77,6 +77,9 @@ define(function(require) {
 			var self = this;
 
 			if (self.appFlags.modal) {
+				if (self.appFlags.modal.isVisible()) {
+					monster.pub('apploader.closed');
+				}
 				self.appFlags.modal.destroy();
 				self.appFlags.modal = undefined;
 			}
@@ -357,6 +360,7 @@ define(function(require) {
 
 			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
 				if (self.appFlags.modal) {
+					monster.pub('apploader.closed');
 					self.appFlags.modal.close();
 				}
 			}
@@ -372,6 +376,8 @@ define(function(require) {
 
 					if (self.appFlags.modal.isVisible()) {
 						apploader.find('.search-query').val('').focus();
+					} else {
+						monster.pub('apploader.closed');
 					}
 				}
 			} else {
