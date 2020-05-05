@@ -25,6 +25,7 @@ define(function(require) {
 		},
 
 		subscribe: {
+			'myaccount.closed': 'onMyaccountClosed',
 			'apploader.destroy': '_destroy',
 			'apploader.show': 'render',
 			'apploader.hide': '_hide',
@@ -64,6 +65,12 @@ define(function(require) {
 			} else {
 				return typeof self.appFlags.modal !== 'undefined';
 			}
+		},
+
+		onMyaccountClosed: function onMyaccountClosed() {
+			var self = this;
+
+			monster.pub('core.isActiveAppPlugin', _.bind(self.render, self));
 		},
 
 		_destroy: function() {
