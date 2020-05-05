@@ -93,9 +93,14 @@ define(function(require) {
 				globalCallback = _.get(pArgs, 'callback');
 
 			monster.waterfall([
+				function shouldRender(callback) {
+					monster.pub('myaccount.hasToShowWalkthrough', function(hasToShowWalkthrough) {
+						callback(hasToShowWalkthrough ? 'doNotRender' : null);
+					});
+				},
 				function maybeFetchApps(callback) {
 					if (self.isRendered()) {
-						return callback(true);
+						return callback('isRendered');
 					}
 					self.getUserApps(_.partial(callback, null));
 				},
@@ -141,8 +146,11 @@ define(function(require) {
 
 					callback(null);
 				}
-			], function(isRendered) {
-				if (isRendered) {
+			], function(exitReason) {
+				if (exitReason === 'doNotRender') {
+					return;
+				}
+				if (exitReason === 'isRendered') {
 					return self.show({
 						callback: globalCallback
 					});
