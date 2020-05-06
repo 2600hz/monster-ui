@@ -21,7 +21,7 @@ define(function(require) {
 					mimeTypes: [
 						'application/pdf'
 					],
-					maxSize: 8
+					maxSize: 5
 				},
 				knownErrors: {
 					billUpload: {
