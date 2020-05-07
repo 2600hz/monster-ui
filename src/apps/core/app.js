@@ -29,6 +29,7 @@ define(function(require) {
 		requests: {},
 
 		subscribe: {
+			'core.isActiveAppPlugin': 'isActiveAppPlugin',
 			'core.loadApps': '_loadApps',
 			'core.showAppName': 'showAppName',
 			'core.triggerMasquerading': 'triggerMasquerading',
@@ -235,23 +236,23 @@ define(function(require) {
 			}
 		},
 
-		initializeBaseApps: function() {
+		isActiveAppPlugin: function isActiveAppPlugin(callback) {
 			var self = this;
 
-			if (_.has(self.appFlags, 'baseApps')) {
+			if (!_.includes(self.getPlugins(), monster.apps.getActiveApp())) {
 				return;
 			}
 
-			self.appFlags.baseApps = _
-				.chain(monster.config.whitelabel)
-				.get('additionalLoggedInApps', [])
-				.concat([
-					'apploader',
-					'appstore',
-					'common',
-					'myaccount'
-				])
-				.value();
+			callback && callback();
+		},
+
+		getPlugins: function getPlugins(callback) {
+			var plugins = [
+				'apploader',
+				'common',
+				'myaccount'
+			];
+			return _.isFunction(callback) ? callback(plugins) : plugins;
 		},
 
 		/**
@@ -259,19 +260,19 @@ define(function(require) {
 		 * @param  {String} [args.defaultApp]
 		 */
 		_loadApps: function(args) {
-			var self = this;
+			var self = this,
+				loggedInAppsToLoad = _
+					.chain(monster.config.whitelabel)
+					.get('additionalLoggedInApps', [])
+					.concat(self.getPlugins())
+					.reject(function(name) {
+						return _.has(monster.apps, name);
+					})
+					.value();
 
-			self.initializeBaseApps();
-
-			monster.parallel(self.appFlags.baseApps.map(function(name) {
+			monster.parallel(_.map(loggedInAppsToLoad, function(name) {
 				return function(callback) {
-					monster.apps.load(name, function() {
-						_.remove(self.appFlags.baseApps, function(appName) {
-							return appName === name;
-						});
-
-						callback(null);
-					});
+					monster.apps.load(name, _.partial(callback, null));
 				};
 			}), function afterBaseAppsLoad(err, result) {
 				// If admin with no app, go to app store, otherwite, oh well...
