@@ -40,6 +40,7 @@ define(function(require) {
 		},
 
 		subscribe: {
+			'apploader.closed': 'onAppLoaderClosed',
 			'myaccount.hide': '_hide',
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.events': '_myaccountEvents',
@@ -86,6 +87,16 @@ define(function(require) {
 				app: self,
 				callback: _callback
 			});
+		},
+
+		onAppLoaderClosed: function onAppLoaderClosed() {
+			var self = this;
+
+			if ($(self.mainContainer).hasClass('myaccount-open')) {
+				return;
+			}
+
+			monster.pub('core.isActiveAppPlugin', _.bind(self.clickMyAccount, self));
 		},
 
 		getDefaultCategory: function() {
