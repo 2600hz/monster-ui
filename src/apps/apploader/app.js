@@ -25,6 +25,7 @@ define(function(require) {
 		},
 
 		subscribe: {
+			'myaccount.closed': 'onMyaccountClosed',
 			'apploader.destroy': '_destroy',
 			'apploader.show': 'render',
 			'apploader.hide': '_hide',
@@ -66,10 +67,19 @@ define(function(require) {
 			}
 		},
 
+		onMyaccountClosed: function onMyaccountClosed() {
+			var self = this;
+
+			monster.pub('core.isActiveAppPlugin', _.bind(self.render, self));
+		},
+
 		_destroy: function() {
 			var self = this;
 
 			if (self.appFlags.modal) {
+				if (self.appFlags.modal.isVisible()) {
+					monster.pub('apploader.closed');
+				}
 				self.appFlags.modal.destroy();
 				self.appFlags.modal = undefined;
 			}
@@ -83,9 +93,14 @@ define(function(require) {
 				globalCallback = _.get(pArgs, 'callback');
 
 			monster.waterfall([
+				function shouldRender(callback) {
+					monster.pub('myaccount.hasToShowWalkthrough', function(hasToShowWalkthrough) {
+						callback(hasToShowWalkthrough ? 'doNotRender' : null);
+					});
+				},
 				function maybeFetchApps(callback) {
 					if (self.isRendered()) {
-						return callback(true);
+						return callback('isRendered');
 					}
 					self.getUserApps(_.partial(callback, null));
 				},
@@ -131,8 +146,11 @@ define(function(require) {
 
 					callback(null);
 				}
-			], function(isRendered) {
-				if (isRendered) {
+			], function(exitReason) {
+				if (exitReason === 'doNotRender') {
+					return;
+				}
+				if (exitReason === 'isRendered') {
 					return self.show({
 						callback: globalCallback
 					});
@@ -350,6 +368,7 @@ define(function(require) {
 
 			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
 				if (self.appFlags.modal) {
+					monster.pub('apploader.closed');
 					self.appFlags.modal.close();
 				}
 			}
@@ -365,6 +384,8 @@ define(function(require) {
 
 					if (self.appFlags.modal.isVisible()) {
 						apploader.find('.search-query').val('').focus();
+					} else {
+						monster.pub('apploader.closed');
 					}
 				}
 			} else {
