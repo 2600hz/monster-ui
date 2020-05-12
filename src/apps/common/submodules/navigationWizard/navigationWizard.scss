@@ -687,12 +687,16 @@ $media-size-medium: "(max-width : 980px)";
 					&[type="text"] {
 						display: block;
 						flex: 1;
+						width: auto;
+						min-width: 80px;
 						padding-left: 0.75rem;
 						padding-right: 0.75rem;
 						border-right: none;
 						border-top-right-radius: 0;
 						border-bottom-right-radius: 0;
 						cursor: pointer;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 					}
 					&[type="file"] {
 						// If display: none is used, Safari might disable this input
@@ -704,9 +708,10 @@ $media-size-medium: "(max-width : 980px)";
 
 				button {
 					flex: initial;
-					min-width: 100px;
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
+					white-space: nowrap;
+					text-overflow: ellipsis;
 				}
 
 				.monster-invalid {
