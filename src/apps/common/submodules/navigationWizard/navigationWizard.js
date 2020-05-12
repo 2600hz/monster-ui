@@ -82,7 +82,8 @@ define(function(require) {
 				stepsCompleted = _.get(args, 'stepsCompleted', []),
 				templateDataDefaults = {
 					saveEnabled: _.get(args, 'saveEnabled', false),
-					deleteEnabled: _.has(args, 'delete')
+					deleteEnabled: !!args.delete,
+					cancelEnabled: !!args.cancel
 				},
 				templateDataArgs = _.pick(args, [
 					'controlId',
