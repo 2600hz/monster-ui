@@ -59,8 +59,7 @@ define(function(require) {
 			'auth.showTrialInfo': 'showTrialInfo',
 			'auth.loginToSSOProvider': 'loginToSSOProvider',
 			'auth.paintSSOPhoto': 'paintSSOPhoto',
-			'auth.triggerImpersonateUser': 'triggerImpersonateUser',
-			'auth.setAccount': 'setAccount'
+			'auth.triggerImpersonateUser': 'triggerImpersonateUser'
 		},
 
 		load: function(callback) {
@@ -425,7 +424,7 @@ define(function(require) {
 						// This account will remain unchanged, it should be used by non-masqueradable apps
 						self.originalAccount = results.account;
 						// This account will be overriden when masquerading, it should be used by masqueradable apps
-						self.setAccount(self.originalAccount);
+						self.currentAccount = $.extend(true, {}, self.originalAccount);
 
 						self.defaultApp = defaultApp;
 
@@ -1604,16 +1603,6 @@ define(function(require) {
 					callback && callback(data);
 				}
 			});
-		},
-
-		/**
-		 * Set currentAccount and change titles in DOM
-		 *
-		 * @param {Object} account - To set as current account (typically logged-in or when masquerading)
-		 */
-		setAccount: function(account) {
-			this.currentAccount = $.extend(true, {}, account);
-			$('.topbar-account-name').html(account.name);
 		}
 	};
 
