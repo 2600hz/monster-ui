@@ -15,7 +15,7 @@
 					},
 					"numbersToPort": {
 						"title": "Numbers to Port",
-						"description": "Please input the numbers you wish to port below. Please note that ALL numbers you wish to port MUST be from the same carrier. If the numbers you input below are not from the same carrier, you will need to submit a port request for each carrier that you wish to port from.",
+						"description": "Please input the numbers you wish to port below, separating each of them by a comma. Please note that ALL numbers you wish to port MUST be from the same carrier. If the numbers you input below are not from the same carrier, you will need to submit a port request for each carrier that you wish to port from.",
 						"labels": {
 							"file": "Upload .csv File",
 							"numberType": "Number Type:",
