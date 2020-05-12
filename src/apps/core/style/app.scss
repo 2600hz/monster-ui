@@ -188,14 +188,51 @@ body,
 .core-topbar #main_topbar_apploader {
 	display: none;
 }
+.core-topbar #main_topbar_myaccount .links {
+	height: 62px;
+	display: flex;
+	align-items: center;
+}
 .core-topbar #main_topbar_myaccount_user {
 	max-width: 190px;
+	color: $mischka;
+	font-size: 16px;
+	font-weight: 600;
+}
+.core-topbar #main_topbar_myaccount_user,
+.core-topbar #main_topbar_myaccount_accountname {
+	line-height: 23px;
+}
+.core-topbar #main_topbar_myaccount_icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 38px;
+	height: 38px;
+	margin-right: 10px;
+	background-color: $manatee;
+	border-radius: 50%;
+	color: white;
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: 1px;
+}
+.core-topbar .masquerading #main_topbar_myaccount_user {
+	color: $warning-color;
+}
+.core-topbar .masquerading #main_topbar_myaccount_icon {
+	background-color: $warning-color;
+}
+.core-topbar .masquerading #main_topbar_myaccount_icon i {
+	font-size: 24px;
+	color: black;
 }
 .core-topbar .links:hover,
 .core-topbar .links:hover i,
 .core-topbar .links:hover svg,
 .core-topbar #main_topbar_current_app_name:hover,
-.core-topbar #main_topbar_myaccount_masquerade_label {
+.core-topbar #main_topbar_myaccount_masquerade_label,
+.core-topbar #main_topbar_myaccount .links:hover #main_topbar_myaccount_accountname > * {
 	color: $primary-color;
 }
 .core-topbar .inline-text,
@@ -367,20 +404,6 @@ body,
 }
 .core-topbar #main_topbar_account_toggle_container .home-account-link:hover {
 	color: #c0c0c9;
-}
-#main_topbar_account_toggle.masquerading ~ #main_topbar_myaccount i.fa:before {
-	content: "\f085";
-}
-
-// Account Name
-#main_topbar_account_toggle #main_topbar_account_toggle_link .account-name-container {
-	float: right;
-	margin: 13px 0 0 12px;
-	line-height: 18px;
-
-	.topbar-account-name {
-		font-weight: 600;
-	}
 }
 
 /************************************************************/

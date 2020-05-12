@@ -320,9 +320,13 @@ define(function(require) {
 				restrictions: monster.apps.auth.originalAccount.ui_restrictions,
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
+						isMasquerading = monster.util.isMasquerading(),
 						dataTemplate = {
 							name: args && args.name || monster.util.getUserFullName(),
-							showMyaccount: showMyaccount
+							initials: monster.util.getUserInitials(),
+							account: monster.apps.auth.currentAccount.name,
+							showMyaccount: showMyaccount,
+							isMasquerading: isMasquerading
 						},
 						navHtml = $(self.getTemplate({
 							name: 'nav',
