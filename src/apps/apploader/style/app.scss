@@ -24,14 +24,6 @@
 	margin-bottom: 35px;
 }
 
-#apploader .vertical-align {
-	position: relative;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform:     translateY(-50%);
-	transform:         translateY(-50%);
-}
-
 #apploader .app-element {
 	display: inline-block;
 	width: 176px;
@@ -154,12 +146,28 @@
 }
 
 #apploader .app-description {
+	display: flex;
+	align-items: center;
 	height: 110px;
 }
 
 #apploader .app-description h4 {
+	display: flex;
+	align-items: center;
 	overflow: hidden;
 	max-height: 20px;
+
+	i {
+		display: none;
+		margin-left: 10px;
+		color: $primary-color;
+	}
+
+	&.is-link {
+		i {
+			display: inherit;
+		}
+	}
 }
 
 #apploader .app-description p {
