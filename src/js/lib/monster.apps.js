@@ -377,31 +377,47 @@ define(function() {
 		 */
 		loadDependencies: function(app, globalCallback) {
 			var self = this,
+				currentUser = _.get(monster, 'apps.auth.currentUser', {}),
+				isExtensionPermitted = function isExtensionPermitted(extensionName, user) {
+					var extension = _.get(monster, ['appsStore', extensionName], {}),
+						level = extension.allowed_users,
+						users = _
+							.chain(extension)
+							.get('users', [])
+							.map('id')
+							.value();
+
+					return (level === 'all')
+						|| (level === 'admins' && user.priv_level === 'admin')
+						|| (level === 'specific' && _.includes(users, user.id));
+				},
 				dependencies = _
 					.chain(app)
 					.get('externalScripts', [])
 					.map(function(dependency) {
 						return function(callback) {
-							monster.getScript(app.appPath + '/external/' + dependency + '.js', function() {
-								callback(null);
-							});
+							monster.getScript(
+								app.appPath + '/external/' + dependency + '.js',
+								_.partial(callback, null)
+							);
 						};
 					})
 					.value(),
 				extensions = _
-					.chain(monster.appsStore)
-					.get([app.name, 'extensions'], [])
+					.chain(monster)
+					.get(['appsStore', app.name, 'extensions'], [])
+					.reject(function(extension) {
+						var isNotInAppStore = !_.has(monster, ['appsStore', extension]),
+							isAlreadyLoaded = _.has(monster, ['apps', extension]),
+							isNotPermittedForLoggedInUser = !isExtensionPermitted(extension, currentUser);
+
+						return isNotInAppStore
+							|| isAlreadyLoaded
+							|| isNotPermittedForLoggedInUser;
+					})
 					.map(function(extension) {
 						return function(callback) {
-							if (
-								!_.has(monster.appsStore, extension)
-								|| _.has(monster.apps, extension)
-							) {
-								return callback(null);
-							}
-							self._loadApp(extension, function() {
-								callback(null);
-							});
+							self._loadApp(extension, _.partial(callback, null));
 						};
 					})
 					.value();
@@ -606,7 +622,7 @@ define(function() {
 				} else {
 					afterConfig({});
 				}
-			});
+			}, callback);
 		},
 
 		/**

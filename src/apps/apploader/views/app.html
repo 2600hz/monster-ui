@@ -26,10 +26,20 @@
 		<div class="app-description">
 			<div class="vertical-align">
 			{{#if defaultApp}}
-				<h4>{{defaultApp.label}}</h4>
+				<h4>
+					<div class="title">
+						{{defaultApp.label}}
+					</div>
+					<i class="fa fa-external-link"></i>
+				</h4>
 				<p>{{defaultApp.description}}</p>
 			{{else}}
-				<h4>{{i18n.appDescription.title}}</h4>
+				<h4>
+					<div class="title">
+						{{i18n.appDescription.title}}
+					</div>
+					<i class="fa fa-external-link"></i>
+				</h4>
 				<p>{{i18n.appDescription.label}}</p>
 			{{/if}}
 			</div>
@@ -48,7 +58,7 @@
 		<h3>{{i18n.appList.title}}</h3>
 		<div class="app-list">
 		{{#each apps}}
-			<div class="app-element{{#compare ../defaultApp.id '===' id}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}" data-search="{{label}}">
+			<div class="app-element{{#compare ../defaultApp.id '===' id}} active{{/compare}}" data-id="{{id}}" data-name="{{name}}" data-search="{{label}}" data-type="{{#if name}}app{{else}}link{{/if}}">
 				<div class="app-icon {{extraCssClass}}"{{#if icon}} style="background-image: url({{icon}})"{{/if}}></div>
 				<div class="app-name">{{label}}</div>
 			</div>

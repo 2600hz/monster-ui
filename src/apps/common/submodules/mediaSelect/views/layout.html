@@ -21,7 +21,7 @@
 	<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
 		<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
 		<div class="input controls">
-			<input type="text" class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+			<input type="url" required class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}" />
 		</div>
 		<div class="shoutcast-warning">
 			{{#monsterText 'warning'}}
