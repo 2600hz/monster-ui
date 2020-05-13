@@ -1083,5 +1083,9 @@
 	},
 	"charsRemaining": {
 		"label": "Characters Remaining"
+	},
+
+	"nav": {
+		"masquerading": "! Masquerading"
 	}
 }

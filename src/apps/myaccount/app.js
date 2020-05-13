@@ -322,7 +322,10 @@ define(function(require) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
 							name: args && args.name || monster.util.getUserFullName(),
-							showMyaccount: showMyaccount
+							showMyaccount: showMyaccount,
+							initials: monster.util.getUserInitials(),
+							account: monster.apps.auth.currentAccount.name,
+							isMasquerading: monster.util.isMasquerading()
 						},
 						navHtml = $(self.getTemplate({
 							name: 'nav',
