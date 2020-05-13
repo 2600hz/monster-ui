@@ -162,6 +162,9 @@
 		font-size: 16px;
 		font-weight: 600;
 	}
+	#main_topbar_myaccount_accountname {
+		max-width: 190px;
+	}
 	#main_topbar_myaccount_user,
 	#main_topbar_myaccount_accountname {
 		line-height: 23px;
@@ -201,7 +204,9 @@
 	.inline-text,
 	.cell-text,
 	#main_topbar_current_app_name,
-	#main_topbar_trial_link_label {
+	#main_topbar_trial_link_label,
+	#main_topbar_myaccount_user,
+	#main_topbar_myaccount_accountname {
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
