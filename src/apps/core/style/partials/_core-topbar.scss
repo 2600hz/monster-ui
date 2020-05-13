@@ -1,0 +1,398 @@
+.core-topbar {
+	height: 62px;
+
+	.open .links {
+		i, svg {
+			color: $primary-color;
+		}
+	}
+	.links {
+		line-height: 62px;
+		display: inline-block;
+		color: $french-gray;
+
+		&:hover,
+		&:focus {
+			cursor: pointer;
+			background: transparent;
+		}
+
+		i {
+			font-size: 16px;
+			vertical-align: middle;
+		}
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+
+		i, svg {
+			color: $french-gray;
+		}
+
+		.inline-text {
+			display: inline-block;
+			margin-right: 10px;
+			vertical-align: top;
+
+			&.red {
+				color: red;
+			}
+		}
+
+		.cell-text {
+			line-height: 21px;
+			text-align: center;
+		}
+
+		&.cell {
+			padding: 10px 20px;
+		}
+	}
+	.main-links {
+		float: left;
+		height: inherit;
+	}
+	.nav {
+		float: right;
+
+		.links {
+			padding: 0 20px;
+			position: relative;
+
+			.badge {
+				// Colors
+				color: $woodsmoke;
+
+				// Text
+				font-size: 12px;
+				font-weight: bold;
+				line-height: 20px;
+				text-align: center;
+
+				// Shape
+				border-radius: 10px;
+				box-shadow: -1px 1px 0 0 $shark2;
+
+				// Size
+				height: 20px;
+				width: 12px;
+
+				// Position
+				padding: 0px 6px;
+				position: absolute;
+				right: 5px;
+				top: 14px;
+
+				&.danger {
+					background-color: $danger-color;
+				}
+			}
+		}
+
+		& > li {
+			float: left;
+			height: 100%;
+			text-decoration: none;
+
+			& > a {
+				border-left: 1px solid $shark;
+			}
+
+			&.open > a {
+				background-color: $shark;
+			}
+		}
+	}
+	.main-links,
+	.nav {
+		margin: 0;
+	}
+	.topbar-dropdown-container {
+		position: absolute;
+		z-index: 21; /* 1 more than myAccount */
+	}
+	#main_topbar_brand {
+		width: 192px;
+		height: 100%;
+		margin: auto 24px;
+		background: no-repeat center center;
+	}
+	#main_topbar_current_app {
+		padding: 0 25px;
+		border-left: 1px solid $shark;
+	}
+	#main_topbar_current_app_icon {
+		display: inline-block;
+		width: 32px;
+		height: 32px;
+		background: no-repeat center;
+		background-size: contain;
+
+		-webkit-transform: translateY(-50%);
+		   -moz-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+				transform: translateY(-50%);
+	}
+	#main_topbar_current_app_name {
+		font-size: 16px;
+		display: inline-block;
+		max-width: 269px;
+		height: 62px;
+		padding-left: 15px;
+		color:$white;
+	}
+	#main_topbar_trial_link_label {
+		display: inline-block;
+		float: left;
+		max-width: 130px;
+	}
+	#main_topbar_apploader {
+		display: none;
+	}
+	#main_topbar_myaccount .links {
+		height: 62px;
+		display: flex;
+		align-items: center;
+	}
+	#main_topbar_myaccount_user {
+		max-width: 190px;
+		color: $mischka;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	#main_topbar_myaccount_user,
+	#main_topbar_myaccount_accountname {
+		line-height: 23px;
+	}
+	#main_topbar_myaccount_icon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 38px;
+		height: 38px;
+		margin-right: 10px;
+		background-color: $manatee;
+		border-radius: 50%;
+		color: white;
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: 1px;
+	}
+	.masquerading #main_topbar_myaccount_user {
+		color: $secondary-color;
+	}
+	.masquerading #main_topbar_myaccount_icon {
+		background-color: $secondary-color;
+	}
+	.masquerading #main_topbar_myaccount_icon i {
+		font-size: 24px;
+		color: black;
+	}
+	.links:hover,
+	.links:hover i,
+	.links:hover svg,
+	#main_topbar_current_app_name:hover,
+	#main_topbar_myaccount_masquerade_label,
+	#main_topbar_myaccount .links:hover #main_topbar_myaccount_accountname > * {
+		color: $primary-color;
+	}
+	.inline-text,
+	.cell-text,
+	#main_topbar_current_app_name,
+	#main_topbar_trial_link_label {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
+
+@media (max-width: 1199px) {
+	.core-topbar {
+		#main_topbar_brand {
+			margin-right: 10px;
+		}
+
+		.nav .links,
+		#main_topbar_current_app {
+			padding-right: 10px;
+			padding-left: 10px;
+		}
+
+		#main_topbar_current_app_name {
+			padding-left: 10px;
+		}
+
+		/* Needed to allow enough space for the account toggle */
+		#main_topbar_myaccount_user {
+			max-width: 118px;
+		}
+	}
+}
+@media (max-width: 999px) {
+	.core-topbar {
+		#main_topbar_current_app_icon {
+			transform: none;
+			vertical-align: middle;
+			margin-bottom: 5px;
+		}
+
+		#main_topbar_current_app_name,
+		#main_topbar_trial {
+			display: none;
+		}
+	}
+}
+
+/***** Account Toggle *****/
+.core-topbar {
+	#main_topbar_account_toggle {
+		&.open {
+			background-color: $shark;
+		}
+
+		&:not(.open) {
+			#main_topbar_account_toggle_container {
+				display: none;
+			}
+		}
+
+		&:not(.masquerading) .home-account-link {
+			display: none;
+		}
+
+		#main_topbar_account_toggle_link {
+			display: none;
+
+			&.visible {
+				display: block;
+
+			}
+		}
+
+		#main_topbar_account_toggle_container {
+			.account-toggle-header {
+				background: $shark;
+				color: $french-gray;
+				padding: 10px 12px 0px 12px;
+				position: relative;
+				width: 198px;
+
+				.current-account-label {
+					font-size: 12px;
+				}
+				.current-account-container {
+					color: $primary-color;
+
+					.missing-info {
+						color: $manatee;
+						font-style: italic;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					}
+				}
+				.home-account-link {
+					position: absolute;
+					top: 15px;
+					right: 15px;
+					cursor: pointer;
+					color: $midgray;
+
+					&:hover {
+						color: $french-gray;
+					}
+				}
+			}
+			.account-browser-container {
+				background-color: $shark;
+				width: 220px;
+				padding: 1px;
+				border-right: none;
+
+				.search-box {
+					width: auto;
+					padding: 10px;
+					border-bottom: none;
+
+					i {
+						color: $french-gray;
+						margin: 8px 0 0 8px;
+					}
+
+					.search-query {
+						background-color: $tuna2;
+						color: $french-gray;
+						box-sizing: border-box;
+						width: 100%;
+						border-radius: 0px;
+						border: solid 1px $manatee;
+						box-shadow: none;
+						height: 30px;
+					}
+				}
+
+				.account-list-container {
+					width: 440px;
+				}
+				.account-list,
+				.account-list-slider {
+					width: 220px;
+				}
+				.account-list-element {
+					border-color: $shark;
+
+					& > div {
+						background: $tuna;
+						color: $french-gray;
+						border-color: $shark;
+					}
+
+					.active > div {
+						color: $primary-color;
+					}
+				}
+
+				.account-link .account-name {
+					font-size: 14px;
+				}
+				.account-children-link {
+					i:before {
+						font-size: 10px;
+						color: $french-gray;
+						content: "\f054";
+					}
+
+					&.local-back i:before {
+						content: "\f053";
+					}
+				}
+				.account-search-link {
+					color: $french-gray;
+					background: $shark;
+					border-color: $manatee;
+					border-top: solid 1px;
+
+					.account-search-value {
+						text-shadow: none;
+						font-weight: 700;
+					}
+				}
+				.account-previous-link {
+					line-height: 20px;
+					border: none;
+
+					* {
+						color: $manatee;
+						font-size: 12px;
+						vertical-align: middle;
+					}
+
+					i:before {
+						content: "\f060";
+					}
+				}
+			}
+		}
+	}
+}
