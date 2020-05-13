@@ -96,10 +96,6 @@
 			height: 100%;
 			text-decoration: none;
 
-			& > a {
-				border-left: 1px solid $shark;
-			}
-
 			&.open > a {
 				background-color: $shark;
 			}
