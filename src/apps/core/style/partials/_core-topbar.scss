@@ -147,11 +147,6 @@
 		padding-left: 15px;
 		color: $white;
 	}
-	#main_topbar_trial_link_label {
-		display: inline-block;
-		float: left;
-		max-width: 130px;
-	}
 	#main_topbar_apploader {
 		display: none;
 	}
@@ -209,7 +204,6 @@
 	.inline-text,
 	.cell-text,
 	#main_topbar_current_app_name,
-	#main_topbar_trial_link_label,
 	#main_topbar_myaccount_user,
 	#main_topbar_myaccount_accountname {
 		overflow: hidden;

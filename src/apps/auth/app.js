@@ -500,9 +500,12 @@ define(function(require) {
 				template = $(self.getTemplate({
 					name: 'trial-message',
 					data: {
+						hasDaysLeft: daysLeft >= 0,
 						daysLeft: daysLeft
 					}
 				}));
+
+			monster.ui.tooltips(template);
 
 			template.find('.links').on('click', function() {
 				self.showTrialPopup(daysLeft);
