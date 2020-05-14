@@ -120,6 +120,8 @@
 		background: no-repeat center center;
 	}
 	#main_topbar_current_app {
+		display: flex;
+		align-items: center;
 		padding: 0 25px;
 		border-left: 1px solid $woodsmoke;
 
@@ -133,11 +135,6 @@
 		height: 32px;
 		background: no-repeat center;
 		background-size: contain;
-
-		-webkit-transform: translateY(-50%);
-		   -moz-transform: translateY(-50%);
-			-ms-transform: translateY(-50%);
-				transform: translateY(-50%);
 	}
 	#main_topbar_current_app_name {
 		font-size: 16px;
