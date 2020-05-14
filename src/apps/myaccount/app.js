@@ -485,6 +485,7 @@ define(function(require) {
 								self.displayUserSection();
 
 								myaccount.addClass('myaccount-open');
+								$('#main_topbar_myaccount').addClass('open');
 
 								myaccount.one('transitionend', function() {
 									$('#monster_content').hide();
@@ -553,6 +554,7 @@ define(function(require) {
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.find('.myaccount-dialog-container').empty();
 			myaccount.removeClass('myaccount-open');
+			$('#main_topbar_myaccount').removeClass('open');
 			$('#monster_content').show();
 
 			monster.pub('myaccount.closed');
