@@ -1,7 +1,5 @@
 .core-topbar {
 	display: flex;
-	justify-content: space-between;
-	min-width: 652px;
 	height: 62px;
 
 	.open .links {
@@ -18,7 +16,6 @@
 		height: 100%;
 		color: $french-gray2;
 		background-color: transparent;
-		border-left: 1px solid $tuna;
 
 		&:hover,
 		&:focus {
@@ -28,16 +25,12 @@
 
 		i {
 			font-size: 16px;
-			vertical-align: middle;
-		}
-
-		svg {
-			width: 16px;
-			height: 16px;
 		}
 
 		i, svg {
 			color: $french-gray;
+			width: 16px;
+			height: 16px;
 		}
 
 		.inline-text {
@@ -59,34 +52,37 @@
 			padding: 10px 20px;
 		}
 	}
+	#main_topbar_brand {
+		flex-shrink: 0;
+		width: 192px;
+		height: 100%;
+		padding: 0 10px;
+		background: no-repeat center center;
+		border-right: 1px solid $woodsmoke;
+	}
 	.main-links {
 		display: flex;
-
-		#main_topbar_brand {
-			width: 192px;
-			height: 100%;
-			margin: auto 24px;
-			background: no-repeat center center;
-		}
+		justify-content: flex-end;
+		flex-grow: 1;
+		flex-shrink: 0;
+		min-width: 0;
 
 		#main_topbar_current_app {
-			padding: 0 25px;
-			border-left: 1px solid $woodsmoke;
+			flex-shrink: 0;
+			min-width: 0;
+			padding: 0 15px;
 
-			&:hover {
-				border-left-color: transparent;
-			}
 			#main_topbar_current_app_icon {
-				display: inline-block;
-				width: 32px;
+				flex-shrink: 0;
+				min-width: 32px;
 				height: 32px;
 				background: no-repeat center;
 				background-size: contain;
 			}
 			#main_topbar_current_app_name {
+				display: none;
 				font-size: 16px;
-				display: inline-block;
-				max-width: 269px;
+				max-width: 300px;
 				padding-left: 15px;
 				color: $white;
 			}
@@ -97,7 +93,7 @@
 		margin: 0;
 
 		.links {
-			padding: 0 20px;
+			padding: 0 23px;
 			position: relative;
 
 			.badge {
@@ -142,18 +138,10 @@
 	#main_topbar_apploader {
 		display: none;
 	}
-	#main_topbar_myaccount_user {
-		max-width: 190px;
-		color: $mischka;
-		font-size: 16px;
-		font-weight: 600;
-	}
-	#main_topbar_myaccount_accountname {
-		max-width: 190px;
-	}
-	#main_topbar_myaccount_user,
-	#main_topbar_myaccount_accountname {
-		line-height: 23px;
+	#main_topbar_myaccount {
+		& > .links {
+			padding: 0 12px;
+		}
 	}
 	#main_topbar_myaccount_icon {
 		display: flex;
@@ -161,13 +149,27 @@
 		align-items: center;
 		width: 38px;
 		height: 38px;
-		margin-right: 10px;
 		background-color: $manatee;
 		border-radius: 50%;
 		color: white;
 		font-size: 18px;
 		font-weight: 600;
 		letter-spacing: 1px;
+	}
+	#main_topbar_myaccount_labels {
+		display: none;
+		flex-direction: column;
+		max-width: 180px;
+		padding-left: 12px;
+	}
+	#main_topbar_myaccount_user {
+		color: $mischka;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	#main_topbar_myaccount_user,
+	#main_topbar_myaccount_accountname {
+		line-height: 23px;
 	}
 	.masquerading #main_topbar_myaccount_user {
 		color: $secondary-color;
@@ -198,49 +200,48 @@
 	}
 }
 
-@media (max-width: 1170px) {
+@media (min-width: 860px) {
 	.core-topbar {
-		#main_topbar_current_app_name {
-			max-width: 180px;
+		.main-links {
+			justify-content: space-between;
+
+			.links {
+				padding: 0 10px;
+			}
+
+			#main_topbar_current_app {
+				flex-shrink: unset;
+			}
 		}
-		#main_topbar_myaccount_user,
-		#main_topbar_myaccount_accountname {
-			max-width: 120px;
+		.nav {
+			#main_topbar_myaccount_labels {
+				display: inherit;
+			}
 		}
 	}
 }
 
-@media (max-width: 1011px) {
+@media (min-width: 1024px) {
 	.core-topbar {
+		.main-links {
+			#main_topbar_current_app {
+				#main_topbar_current_app_name {
+					display: inherit;
+				}
+			}
+		}
+	}
+}
+
+@media (min-width: 1280px) {
+	.core-topbar {
+		.main-links {
+			.links {
+				padding: 0 23px;
+			}
+		}
 		#main_topbar_brand {
-			margin-right: 10px;
-		}
-		.nav .links {
-			padding-left: 10px;
-			padding-right: 10px;
-		}
-		#main_topbar_current_app {
-			padding: 0 15px;
-		}
-		#main_topbar_current_app_name {
-			padding-left: 10px;
-		}
-	}
-}
-
-@media (max-width: 852px) {
-	.core-topbar {
-		#main_topbar_current_app_name,
-		#main_topbar_myaccount_user,
-		#main_topbar_myaccount_accountname {
-			display: none;
-		}
-		#main_topbar_myaccount_icon {
-			margin: 0;
-		}
-		.nav .links {
-			padding-left: 20px;
-			padding-right: 20px;
+			padding: 0 24px;
 		}
 	}
 }
