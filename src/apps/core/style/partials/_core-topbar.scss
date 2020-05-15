@@ -171,15 +171,18 @@
 	#main_topbar_myaccount_accountname {
 		line-height: 23px;
 	}
-	.masquerading #main_topbar_myaccount_user {
-		color: $secondary-color;
-	}
-	.masquerading #main_topbar_myaccount_icon {
-		background-color: $secondary-color;
-	}
-	.masquerading #main_topbar_myaccount_icon i {
-		font-size: 24px;
-		color: black;
+	.masquerading {
+		#main_topbar_myaccount_user {
+			color: $secondary-color;
+		}
+		#main_topbar_myaccount_icon {
+			background-color: $secondary-color;
+
+			svg {
+				font-size: 24px;
+				color: black;
+			}
+		}
 	}
 	.links:hover,
 	.links:hover i,
