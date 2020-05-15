@@ -8,9 +8,9 @@
 		transition: visibility 0.25s, opacity 0.25s ease-in-out;
 
 		// Rest of styles
-		width: 425px;
+		width: 440px;
 		margin-top: 8px;
-		margin-left:-356px;
+		margin-left: -356px;
 		background-color: $woodsmoke;
 		font-size: 14px;
 
@@ -19,7 +19,7 @@
 			float: right;
 			width: 1px;
 			margin-top: -5px;
-			margin-right: 45px;
+			margin-right: 48px;
 			border-left: 5px solid transparent;
 			border-right: 5px solid transparent;
 			border-bottom: 5px solid $woodsmoke;
@@ -152,12 +152,26 @@
 	}
 }
 
-@media(min-width: 1200px) {
-	#main_topbar_alerts_container {
-		width: 440px !important;
+@media (min-width: 768px) {
+	#main_topbar_alerts {
+		#main_topbar_alerts_container {
+			margin-left: -380px;
 
-		&::before {
-			margin-right: 50px !important;
+			&::before {
+				margin-right: 36px;
+			}
+		}
+	}
+}
+
+@media (min-width: 1200px) {
+	#main_topbar_alerts {
+		#main_topbar_alerts_container {
+			margin-left: -354px;
+
+			&::before {
+				margin-right: 50px;
+			}
 		}
 	}
 }

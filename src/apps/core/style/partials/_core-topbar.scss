@@ -16,6 +16,7 @@
 		height: 100%;
 		color: $french-gray2;
 		background-color: transparent;
+		border-left: 1px solid $tuna;
 
 		&:hover,
 		&:focus {
@@ -71,6 +72,7 @@
 			flex-shrink: 0;
 			min-width: 0;
 			padding: 0 15px;
+			border: 0;
 
 			#main_topbar_current_app_icon {
 				flex-shrink: 0;
@@ -82,7 +84,7 @@
 			#main_topbar_current_app_name {
 				display: none;
 				font-size: 16px;
-				max-width: 300px;
+				max-width: 294px;
 				padding-left: 15px;
 				color: $white;
 			}
@@ -180,7 +182,7 @@
 
 			svg {
 				font-size: 24px;
-				color: black;
+				color: $woodsmoke;
 			}
 		}
 	}
@@ -203,7 +205,7 @@
 	}
 }
 
-@media (min-width: 860px) {
+@media (min-width: 768px) {
 	.core-topbar {
 		.main-links {
 			justify-content: space-between;
@@ -227,6 +229,8 @@
 @media (min-width: 1024px) {
 	.core-topbar {
 		.main-links {
+			flex-shrink: 1;
+
 			#main_topbar_current_app {
 				#main_topbar_current_app_name {
 					display: inherit;
@@ -236,7 +240,7 @@
 	}
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
 	.core-topbar {
 		.main-links {
 			.links {
