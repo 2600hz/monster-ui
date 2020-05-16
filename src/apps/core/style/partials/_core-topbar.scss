@@ -71,13 +71,14 @@
 		#main_topbar_current_app {
 			flex-shrink: 0;
 			min-width: 0;
-			padding: 0 15px;
+			padding: 0;
 			border: 0;
 
 			#main_topbar_current_app_icon {
 				flex-shrink: 0;
 				min-width: 32px;
 				height: 32px;
+				margin: 0 15px;
 				background: no-repeat center;
 				background-size: contain;
 			}
@@ -232,8 +233,12 @@
 			flex-shrink: 1;
 
 			#main_topbar_current_app {
+				#main_topbar_current_app_icon {
+					margin-right: 0;
+				}
 				#main_topbar_current_app_name {
 					display: inherit;
+					margin-right: 15px;
 				}
 			}
 		}

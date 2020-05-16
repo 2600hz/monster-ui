@@ -550,7 +550,7 @@ define(function(require) {
 			var self = this,
 				myaccount = myaccount || $(self.mainContainer);
 
-			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
+			monster.pub('core.showAppName');
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.find('.myaccount-dialog-container').empty();
 			myaccount.removeClass('myaccount-open');
