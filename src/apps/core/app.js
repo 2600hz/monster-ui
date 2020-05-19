@@ -148,92 +148,43 @@ define(function(require) {
 			});
 		},
 
-		showAppName: function(appName) {
+		/**
+		 * Updates topbar current app with active/specified app
+		 * @param  {String} pName Unique app name
+		 */
+		showAppName: function(pName) {
 			var self = this,
-				navbar = $('.core-topbar'),
-				currentApp = navbar.find('#main_topbar_current_app'),
-				unsetDisplay = function() {
-					// Used to unset the display inline style that may be set by jQuery's fadeIn
-					// function, which is 'block' by default when the element is not displayed
-					// (display: none), so it does not override the display property set via CSS
-					// classes
-					$(this).css('display', '');
-				},
-				defaultApp;
+				name = _.isString(pName) ? pName : monster.apps.getActiveApp(),
+				$navbar = $('.core-topbar'),
+				$current = $navbar.find('#main_topbar_current_app'),
+				$new = name !== 'appstore' ? $(self.getTemplate({
+					name: 'current-app',
+					data: _
+						.chain(monster.apps.auth.installedApps)
+						.concat([{
+							name: 'myaccount',
+							label: self.i18n.active().controlCenter
+						}])
+						.filter({ name: name })
+						.map(function(app) {
+							return _
+								.chain({
+									icon: monster.util.getAppIconPath(app)
+								})
+								.merge(app)
+								.thru(monster.ui.formatIconApp)
+								.value();
+						})
+						.find({ name: name })
+						.value()
+				})) : '';
 
-			if (appName === 'myaccount') {
-				var myaccount = {
-					name: appName,
-					label: self.i18n.active().controlCenter
-				};
-
-				myaccount.icon = monster.util.getAppIconPath(myaccount);
-
-				monster.ui.formatIconApp(myaccount);
-
-				if (currentApp.is(':empty')) {
-					currentApp
-						.append($(self.getTemplate({
-							name: 'current-app',
-							data: myaccount
-						})));
-
-					navbar
-						.find('#main_topbar_current_app_name')
-							.data('originalName', 'appstore')
-							.fadeIn(100, unsetDisplay);
-				} else {
-					var originalName = navbar.find('#main_topbar_current_app_name').data('name');
-
-					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
-						currentApp
-							.empty()
-							.append($(self.getTemplate({
-								name: 'current-app',
-								data: myaccount
-							})));
-
-						navbar
-							.find('#main_topbar_current_app_name')
-								.data('originalName', originalName)
-								.fadeIn(100, unsetDisplay);
-					});
-				}
-			} else {
-				_.each(monster.apps.auth.installedApps, function(val) {
-					if (val.name === appName) {
-						defaultApp = val;
-						defaultApp.icon = monster.util.getAppIconPath(val);
-					}
-				});
-
-				monster.ui.formatIconApp(defaultApp);
-
-				if (appName === 'appstore') {
-					currentApp.empty();
-				} else if (currentApp.is(':empty')) {
-					currentApp
-						.append($(self.getTemplate({
-							name: 'current-app',
-							data: defaultApp
-						})));
-
-					navbar.find('#main_topbar_current_app_name')
-						.fadeIn(100, unsetDisplay);
-				} else {
-					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
-						currentApp
-							.empty()
-							.append($(self.getTemplate({
-								name: 'current-app',
-								data: defaultApp
-							})));
-
-						navbar.find('#main_topbar_current_app_name')
-							.fadeIn(100, unsetDisplay);
-					});
-				}
-			}
+			$current.fadeOut(100, function() {
+				$current
+					.empty()
+					.append($new)
+					.fadeIn(100);
+			});
 		},
 
 		isActiveAppPlugin: function isActiveAppPlugin(callback) {
