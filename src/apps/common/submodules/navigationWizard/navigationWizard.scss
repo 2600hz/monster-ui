@@ -796,3 +796,12 @@ $media-size-medium: "(max-width : 980px)";
 		}
 	}
 }
+
+/*****************************************************************/
+/**************** WIZARD INSIDE FULL-SCREEN MODAL ****************/
+/****************************************************************/
+
+.modal-full-screen-wrapper .modal-content #navigation_wizard_wrapper .right-content {
+	// TODO: Use flexbox to prevent using viewport units and specific calculations
+	min-height: calc(100vh - 137px);
+}
