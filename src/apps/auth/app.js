@@ -496,13 +496,21 @@ define(function(require) {
 		showTrialInfo: function(timeLeft) {
 			var self = this,
 				daysLeft = timeLeft > 0 ? Math.ceil(timeLeft / (60 * 60 * 24)) : -1,
+				hasDaysLeft = daysLeft >= 1,
 				hasAlreadyLogIn = self.uiFlags.user.get('hasLoggedIn') ? true : false,
 				template = $(self.getTemplate({
 					name: 'trial-message',
-					data: {
-						daysLeft: daysLeft
-					}
+					data: _.merge({
+						hasDaysLeft: hasDaysLeft
+					}, hasDaysLeft ? {
+						daysLeft: daysLeft,
+						badgeLabel: daysLeft > 9 ? '9+' : daysLeft
+					} : {
+						badgeLabel: '!'
+					})
 				}));
+
+			monster.ui.tooltips(template);
 
 			template.find('.links').on('click', function() {
 				self.showTrialPopup(daysLeft);
