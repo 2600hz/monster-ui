@@ -48,6 +48,7 @@ nav:
       - 'docs/monster-ui/insertTemplate().md'
       - 'docs/monster-ui/jsoneditor().md'
       - 'docs/monster-ui/keyValueEditor().md'
+      - 'docs/monster-ui/keyValueSelector().md'
       - 'docs/monster-ui/loadTab().md'
       - 'docs/monster-ui/mask().md'
       - 'docs/monster-ui/monthpicker().md'
