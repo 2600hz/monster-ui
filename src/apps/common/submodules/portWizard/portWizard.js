@@ -651,7 +651,7 @@ define(function(require) {
 
 				monster.pub('common.navigationWizard.render', {
 					thisArg: self,
-					controlId: 'port_wizard_control',
+					cssClass: 'port-wizard',
 					data: wizardPortRequestData,
 					container: $container,
 					currentStep: wizardCurrentStepId,
