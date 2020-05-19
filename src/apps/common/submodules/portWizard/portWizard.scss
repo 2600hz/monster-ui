@@ -1,7 +1,7 @@
 @import '../../../../css/partials/base';
 
-#navigation_wizard_wrapper #port_wizard_control {
-	@import 'partials/_portWizardControl.scss';
+#navigation_wizard_wrapper.port-wizard {
+	@import 'partials/_common.scss';
 	@import 'partials/_step-nameAndNumbers.scss';
 	@import 'partials/_step-carrierSelection.scss';
 	@import 'partials/_step-ownershipConfirmation.scss';
