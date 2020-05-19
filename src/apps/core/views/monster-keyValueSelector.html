@@ -1,0 +1,70 @@
+<div id="key_value_selector_dialog">
+	<form class="form-horizontal" id="key_value_selector_form">
+		<div class="form-header">
+			<fieldset>
+				<legend>
+					{{coalesce i18nCustom.categories i18n.keyValueSelector.legends.categories}}
+				</legend>
+			</fieldset>
+			<fieldset>
+				<legend>
+					{{coalesce i18nCustom.items i18n.keyValueSelector.legends.items}}
+				</legend>
+			</fieldset>
+		</div>
+		<div class="form-content">
+			<fieldset>
+			{{#each choices}}
+				{{#monsterRadio label}}
+					<input type="radio" name="categoryId" value="{{id}}">
+				{{/monsterRadio}}
+			{{/each}}
+			{{#if isEditable}}
+				{{#if choices}}
+					<hr>
+				{{/if}}
+				{{#monsterRadio (coalesce i18nCustom.newCategory i18n.keyValueSelector.newCategory.label)}}
+					<input type="radio" name="categoryId" value="">
+				{{/monsterRadio}}
+				<div class="control">
+					<input type="text" name="newCategoryId" class="span2" placeholder="{{coalesce i18nCustom.categoryName i18n.keyValueSelector.newCategory.placeholder}}" style="display: none;">
+				</div>
+			{{/if}}
+			</fieldset>
+
+			<fieldset>
+			{{#each choices}}
+				{{> sub-category-wrapper}}
+			{{/each}}
+				{{> sub-category-wrapper id="" isEditable="true"}}
+			</fieldset>
+		</div>
+		<div class="form-actions">
+			<button type="button" class="monster-button-ghost js-cancel">
+				{{coalesce i18nCustom.cancel i18n.cancel}}
+			</button>
+			<button type="submit" class="monster-button-primary js-select" disabled="disabled">
+				{{coalesce i18nCustom.select i18n.select}}
+			</button>
+		</div>
+	</form>
+</div>
+
+{{#*inline "sub-category-wrapper"}}
+<div class="sub-category-wrapper" data-category="{{id}}" style="display: none;">
+{{#each items}}
+	{{#monsterRadio label}}
+		<input type="radio" name="itemId" value="{{id}}">
+	{{/monsterRadio}}
+{{/each}}
+{{#if isEditable}}
+	{{#if items}}<hr>{{/if}}
+	{{#monsterRadio (coalesce @root.i18nCustom.newItem @root.i18n.keyValueSelector.newItem.label)}}
+		<input type="radio" name="itemId" value="">
+	{{/monsterRadio}}
+	<div class="control">
+		<input type="text" name="newItemId.{{id}}" class="span2" placeholder="{{coalesce @root.i18nCustom.itemName @root.i18n.keyValueSelector.newItem.placeholder}}" style="display: none;">
+	</div>
+{{/if}}
+</div>
+{{/inline}}
