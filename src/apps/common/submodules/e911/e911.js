@@ -47,10 +47,9 @@ define(function(require) {
 					data: self.e911Format(dataNumber.e911),
 					submodule: 'e911'
 				})),
-				$form = popupHtml.find('#e911'),
 				popup;
 
-			monster.ui.validate($form, {
+			monster.ui.validate(popupHtml, {
 				rules: {
 					notification_contact_emails: {
 						normalizer: _.trim,
@@ -92,7 +91,7 @@ define(function(require) {
 			popupHtml.find('#submit_btn').on('click', function(ev) {
 				ev.preventDefault();
 
-				if (!monster.ui.valid($form)) {
+				if (!monster.ui.valid(popupHtml)) {
 					return;
 				}
 
@@ -115,7 +114,7 @@ define(function(require) {
 						message: template
 					});
 
-					popup.dialog('destroy').remove();
+					popup.dialog('close');
 
 					callbacks.success && callbacks.success(data);
 				};
@@ -139,9 +138,7 @@ define(function(require) {
 						});
 
 						templatePopupAddresses.find('.cancel-link').on('click', function() {
-							popupAddress
-								.dialog('destroy')
-								.remove();
+							popupAddress.dialog('close');
 						});
 
 						templatePopupAddresses.find('.save-address').on('click', function() {
@@ -153,9 +150,7 @@ define(function(require) {
 
 								self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 									success: function(data) {
-										popupAddress
-											.dialog('destroy')
-											.remove();
+										popupAddress.dialog('close');
 
 										callbackSuccess(data);
 									}
@@ -205,7 +200,7 @@ define(function(require) {
 										message: template
 									});
 
-									popup.dialog('destroy').remove();
+									popup.dialog('close');
 
 									callbacks.success && callbacks.success(data);
 								}
@@ -215,6 +210,12 @@ define(function(require) {
 						}
 					}
 				});
+			});
+
+			popupHtml.find('.cancel-link').on('click', function(event) {
+				event.preventDefault();
+
+				popup.dialog('close');
 			});
 
 			popup = monster.ui.dialog(popupHtml, {
