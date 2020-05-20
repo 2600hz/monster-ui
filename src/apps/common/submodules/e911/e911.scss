@@ -2,70 +2,95 @@
 
 /* e911 POPUP */
 .trunkstore_popup.e911 {
-	padding:15px 15px 5px 15px;
-	width: 480px
-}
+	margin-bottom: 0;
+	width: 510px;
 
-.trunkstore_popup.e911 .e911-title {
-	margin-left: 320px;
-	font-size: 18px;
-	font-weight: 600;
-	margin-bottom: 15px;
-}
+	.row-fluid {
+		padding: 0 15px;
+		box-sizing: border-box;
 
-.trunkstore_popup.e911 .rotated-text {
-	-webkit-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	text-transform: uppercase;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	font-size: 20px;
-	font-weight: 600;
-	color: #ccc;
-}
+		&:first-child {
+			padding: 15px 15px 0;
+		}
+		&:last-child {
+			padding: 0 15px 15px;
+		}
+	}
 
-.trunkstore_popup.e911 .e911_image {
-	width: 80px;
-	height: 265px;
-	margin: 0 10px 0 30px;
-}
+	.e911-title {
+		margin-left: 320px;
+		font-size: 18px;
+		font-weight: 600;
+		margin-bottom: 15px;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal {
-	margin-bottom: 0px;
-}
+	.rotated-text {
+		-webkit-transform: rotate(-90deg);
+		-moz-transform: rotate(-90deg);
+		text-transform: uppercase;
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		font-size: 20px;
+		font-weight: 600;
+		color: #ccc;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal .control-group {
-	margin-bottom: 10px;
-}
+	.e911_image {
+		width: 80px;
+		height: 265px;
+		margin: 0 10px 0 30px;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal .control-group .control-label {
-	width: 140px;
-	padding-top: 10px;
-}
+	.control-group {
+		margin-bottom: 10px;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal .control-group .control-label.remove-btn-container {
-	padding-top: 0;
-}
+	.control-group .control-label {
+		width: 140px;
+		padding-top: 10px;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal .control-group .controls {
-	margin-left: 160px;
-}
+	.control-group .controls {
+		margin-left: 160px;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal .control-group .controls input {
-	width: 186px;
-	padding: 10px 5px;
-}
+	.control-group .controls input,
+	.control-group .controls textarea {
+		width: 186px;
+		padding: 10px 5px;
+	}
 
-.trunkstore_popup.e911 form.form-horizontal .control-group .controls button {
-	width: 200px;
-	text-transform: uppercase;
-}
+	.control-group .controls button {
+		width: 200px;
+		text-transform: uppercase;
+	}
 
-.trunkstore_popup.e911 .e911_text {
-	font-weight: 600;
-	font-size: 16px;
-	line-height: 30px;
+	.e911_text {
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 30px;
+	}
+
+	.form-actions {
+		display: flex;
+		justify-content: space-between;
+		background: none;
+		margin-bottom: 0;
+		padding: 15px;
+
+		&::before,
+		&::after {
+			content: none;
+		}
+
+		.actions-group {
+
+			& > *:not(:last-child) {
+				margin-right: 10px;
+			}
+		}
+	}
 }
 
 /* MULTIPLE ADDRESSES POPUP */
