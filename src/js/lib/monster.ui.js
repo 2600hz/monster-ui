@@ -821,6 +821,10 @@ define(function(require) {
 				zIndex: 20000,
 				// Event handlers
 				close: function() {
+					var hasOtherDialogsOpen = _.some($body.find('.ui-dialog .ui-dialog-content'), function(element) {
+						return _.isFunction($(element).dialog) && $(element).dialog('isOpen');
+					});
+
 					// Clear events
 					$window.off('resize', windowResizeHandler);
 
@@ -828,7 +832,10 @@ define(function(require) {
 					$('div.popover').remove();
 					$dialogBody.dialog('destroy');
 					$dialogBody.remove();
-					$body.removeClass('monster-dialog-active');
+
+					if (!hasOtherDialogsOpen) {
+						$body.removeClass('monster-dialog-active');
+					}
 
 					// Execute close callback, if possible
 					if (_.isFunction(onClose)) {
