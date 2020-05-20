@@ -198,6 +198,10 @@ $media-size-medium: "(max-width : 980px)";
 		border-bottom: 1px solid $input-border-color;
 		border-left: 1px solid $input-border-color;
 		min-height: calc(100vh - 204px);
+
+		.monster-loading-view.no-background {
+			margin-top: 0;
+		}
 	}
 
 	.footer {

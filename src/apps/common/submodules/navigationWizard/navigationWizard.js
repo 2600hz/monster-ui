@@ -649,7 +649,13 @@ define(function(require) {
 				$container = wizardArgs.container,
 				stepId = navigationWizardFlags.currentStep,
 				renderStepTemplate = args.callback,
-				loadTemplateOptions = _.get(args, 'options', {}),
+				loadTemplateOptions = _
+					.chain(args)
+					.get('options', {})
+					.merge({
+						hasBackground: false
+					})
+					.value(),
 				enableFooterActions = function(enable) {
 					var $buttons = _
 							.chain(navigationWizardFlags.buttons)
