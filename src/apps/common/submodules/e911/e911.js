@@ -44,10 +44,24 @@ define(function(require) {
 				accountId = pAccountId || self.accountId,
 				popupHtml = $(self.getTemplate({
 					name: 'dialog',
-					data: dataNumber.e911 || {},
+					data: self.e911Format(dataNumber.e911),
 					submodule: 'e911'
 				})),
 				popup;
+
+			monster.ui.validate(popupHtml, {
+				rules: {
+					notification_contact_emails: {
+						normalizer: _.trim,
+						regex: /^(?:([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4})(?: ?))*$/
+					}
+				},
+				messages: {
+					notification_contact_emails: {
+						regex: self.i18n.active().e911.email.error
+					}
+				}
+			});
 
 			popupHtml.find('#postal_code').change(function() {
 				var zipCode = $(this).val();
@@ -77,7 +91,11 @@ define(function(require) {
 			popupHtml.find('#submit_btn').on('click', function(ev) {
 				ev.preventDefault();
 
-				var e911FormData = monster.ui.getFormData('e911');
+				if (!monster.ui.valid(popupHtml)) {
+					return;
+				}
+
+				var e911FormData = self.e911Normalize(monster.ui.getFormData('e911'));
 
 				_.extend(dataNumber, { e911: e911FormData });
 
@@ -96,7 +114,7 @@ define(function(require) {
 						message: template
 					});
 
-					popup.dialog('destroy').remove();
+					popup.dialog('close');
 
 					callbacks.success && callbacks.success(data);
 				};
@@ -120,9 +138,7 @@ define(function(require) {
 						});
 
 						templatePopupAddresses.find('.cancel-link').on('click', function() {
-							popupAddress
-								.dialog('destroy')
-								.remove();
+							popupAddress.dialog('close');
 						});
 
 						templatePopupAddresses.find('.save-address').on('click', function() {
@@ -134,9 +150,7 @@ define(function(require) {
 
 								self.e911UpdateNumber(dataNumber.id, accountId, dataNumber, {
 									success: function(data) {
-										popupAddress
-											.dialog('destroy')
-											.remove();
+										popupAddress.dialog('close');
 
 										callbackSuccess(data);
 									}
@@ -186,7 +200,7 @@ define(function(require) {
 										message: template
 									});
 
-									popup.dialog('destroy').remove();
+									popup.dialog('close');
 
 									callbacks.success && callbacks.success(data);
 								}
@@ -198,6 +212,12 @@ define(function(require) {
 				});
 			});
 
+			popupHtml.find('.cancel-link').on('click', function(event) {
+				event.preventDefault();
+
+				popup.dialog('close');
+			});
+
 			popup = monster.ui.dialog(popupHtml, {
 				title: self.i18n.active().e911.dialogTitle
 			});
@@ -206,7 +226,34 @@ define(function(require) {
 			var rotatedText = popup.find('#e911_rotated_text'),
 				rotatedTextOffset = rotatedText.width() / 2;
 
-			rotatedText.css({'top': 40 + rotatedTextOffset + 'px', 'left': 25 - rotatedTextOffset + 'px'});
+			rotatedText.css({
+				top: 40 + rotatedTextOffset + 'px',
+				left: 25 - rotatedTextOffset + 'px'
+			});
+		},
+
+		e911Format: function(data) {
+			return _.merge({}, data, {
+				notification_contact_emails: _
+					.chain(data)
+					.get('notification_contact_emails', [])
+					.join(' ')
+					.value()
+			});
+		},
+
+		e911Normalize: function(data) {
+			return _.merge({}, data, {
+				notification_contact_emails: _
+					.chain(data)
+					.get('notification_contact_emails', '')
+					.trim()
+					.toLower()
+					.split(' ')
+					.reject(_.isEmpty)
+					.uniq()
+					.value()
+			});
 		},
 
 		e911UpdateNumber: function(phoneNumber, accountId, data, callbacks) {
