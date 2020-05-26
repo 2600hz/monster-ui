@@ -45,6 +45,7 @@ nav:
       - 'docs/monster-ui/getSvgIconTemplate().md'
       - 'docs/monster-ui/highlight().md'
       - 'docs/monster-ui/insertTemplate().md'
+      - 'docs/monster-ui/jsoneditor().md'
       - 'docs/monster-ui/keyValueEditor().md'
       - 'docs/monster-ui/loadTab().md'
       - 'docs/monster-ui/mask().md'
