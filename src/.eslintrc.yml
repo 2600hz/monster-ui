@@ -20,7 +20,12 @@ globals:
 rules:
   standard/no-callback-literal: off
   no-tabs: off
-  indent: [ "error", "tab", { "SwitchCase": 1, "MemberExpression": "off" }]
+  indent:
+    - error
+    - tab
+    - SwitchCase: 1
+      MemberExpression: off
+      flatTernaryExpressions: true
   semi:
     - error
     - always
