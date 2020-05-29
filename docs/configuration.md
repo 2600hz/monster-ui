@@ -113,6 +113,7 @@ Key | Description | Type | Default | Required
 `nav.logout` | Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior | `Object` | | `false`
 `port` | | `Object`([#/port](#port)) | | `false`
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
+`provisioner` | | `Object`([#/provisioner](#provisioner)) | | `false`
 `sso` | Cookie information to force a specific SSO provider to be used. | `Object` | | `false`
 `sso_providers` | List of SSO providers available on login. | `Array` | | `false`
 `showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
@@ -162,6 +163,14 @@ Key | Description | Type | Default | Required
 `resporg` | Link to RespOrg document downloaded by users on port request submission. | `String` | | `false`
 `carriers` | List of losing carriers to select from on port request submission. | `Array` | | `false`
 `carriers.[]` | Name of losing carrier (should be unique). | `String` | | `false`
+
+#### `provisioner`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`brands` | Map custom settings individually by device brand | `Object` | | `false`
+`brands.[]` | Each object key correspont to the device brand name (`yealink`, `avaya`...) | `Object` | | `false`
+`brands.[].keyFunctions` | List key functions available per brand | `Array` | | `false`
 
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
 [country-codes]: https://www.iso.org/obp/ui/#search
