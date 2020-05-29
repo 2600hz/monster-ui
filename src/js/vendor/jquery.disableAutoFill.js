@@ -1,216 +1,108 @@
-/**
- * Jquery - DisableAutoFill plugin
- * The easiest solution for disabling Google Chrome auto-fill, auto-complete functions.
- *
- * @license MIT
- * @version 1.2.8
- * @author  Terry, https://github.com/terrylinooo/
- * @updated 2019-04-03
- * @link    https://github.com/terrylinooo/jquery.disableAutoFill
- */
-
 (function($) {
+	function guid() {
+		var result = '';
 
-    'use strict';
+		for (var i = 0; i < 4; i++) {
+			result += (Math.random().toString(16)).substr(2, 8);
+		}
 
-    var realFields = [];
-    var realFieldsMapper = {};
+		return result;
+	}
 
-    var realPasswordMapper = [];
-    var tmpPasswordMapper = [];
-    var passwordLenMapper = [];
+	$.widget('custom.disableAutoFill', {
+		options: {
+			validator: function() {
+				return true;
+			}
+		},
 
-    // An Object for Helper functions.
-    var _helper = {};
+		idToName: {},
+		idToPassword: {},
 
-    /**
-     * Helper function - passwordListener
-     * - Hide the original password string.
-     *
-     * @param {object} obj      jQuery DOM object (form)
-     * @param {object} settings plugin settings.
-     */
-    _helper.passwordListener = function(obj, settings) {
-        var passObj = (settings.passwordField === '') ? '.disabledAutoFillPassword' : settings.passwordField;
+		_create: function _create() {
+			var widget = this;
+			var $form = widget.element;
 
-        if (obj.find('[type=password]').length > 0) {
-            obj.find('[type=password]').attr('type', 'text').addClass('disabledAutoFillPassword');
-        }
+			[
+				$form,
+				$form.find('input[name]')
+			].forEach(function(el) {
+				$(el).prop('autocomplete', 'off');
+			});
 
-        obj.on('keyup', passObj, function () {
+			$form
+				.find('button[type="submit"]')
+					.addClass('disableAutoFillSubmit')
+					.prop('type', 'button');
 
-            if (!this.id) {
-                this.id = Math.random().toString(36).substring(5);
-            }
+			this._obfuscateInputNames();
+			this._obfuscatePasswordInputs();
 
-            if (!realPasswordMapper.hasOwnProperty(this.id)) {
-                realPasswordMapper[this.id] = [];
-            }
+			$form
+				.on('focus', '.disableAutoFillPassword', function() {
+					$(this)
+						.val(widget.idToPassword[this.disableAutoFillPasswordId])
+						.select();
+				})
+				.on('blur', '.disableAutoFillPassword', function() {
+					var $input = $(this);
+					var value = $input.val();
 
-            var realPassword = realPasswordMapper[this.id];
+					widget.idToPassword[this.disableAutoFillPasswordId] = value;
 
-            tmpPasswordMapper[this.id] = $(this).val();
-            var tmpPassword = tmpPasswordMapper[this.id];
+					$input.val(value.replace(/./g, '\u25CF'));
+				})
+				.on('click', '.disableAutoFillSubmit', function() {
+					$form.find('input[name]').each(function() {
+						$(this).prop('name', widget.idToName[this.disableAutofillNameId]);
+					});
+					$form.find('.disableAutoFillPassword').each(function() {
+						$(this)
+							.val(widget.idToPassword[this.disableAutoFillPasswordId])
+							.prop('type', 'password');
+					});
 
-            passwordLenMapper[this.id] = tmpPassword.length;
-            var passwordLen = passwordLenMapper[this.id];
+					if (widget.options.validator()) {
+						$form.submit();
+					}
 
-            // Get current keyup character position.
-            var currKeyupPos = this.selectionStart;
+					widget.idToName = {};
+					widget._obfuscateInputNames();
 
-            for (var i = 0; i < passwordLen; i++) {
-                if (tmpPassword[i] !== settings.hidingChar) {
-                    realPassword[i] = tmpPassword[i];
-                }
-            }
+					widget.idToPassword = {};
+					widget._obfuscatePasswordInputs();
+				});
+		},
 
-            if (passwordLen < realPassword.length) {
-                var diff = realPassword.length - passwordLen;
+		_obfuscateInputNames: function _obfuscateInputNames() {
+			var widget = this;
 
-                var key = event.keyCode || event.charCode;
+			widget.element.find('input[name]').each(function() {
+				var $input = $(this);
+				var name = $input.prop('name');
 
-                // Check if last keypress was backspace or delete
-                if (key == 8 || key == 46) {
-                    realPassword.splice(currKeyupPos, diff);
-                }
-                // User highlighted and overwrote a portion of the password
-                else {
-                    realPassword.splice(currKeyupPos - 1, diff + 1);
-                    realPassword.splice(currKeyupPos - 1, 0, tmpPassword[currKeyupPos - 1]);
-                }
-            }
+				this.disableAutofillNameId = this.disableAutofillNameId || guid();
+				widget.idToName[this.disableAutofillNameId] = name;
 
-            if (settings.hidingChar !== false) {
-                $(this).val(tmpPassword.replace(/./g, settings.hidingChar));
-            }
+				$input.prop('name', this.disableAutofillNameId);
+			});
+		},
 
-            if (settings.debugMode) {
-                console.log('Current keyup position: ' + currKeyupPos);
-                console.log('Password length: ' + passwordLen);
-                console.log('Real password:');
-                console.log(realPassword);
-            }
-        });
-    }
+		_obfuscatePasswordInputs: function _obfuscatePasswordInputs() {
+			var widget = this;
 
-    /**
-     * Helper function - formSubmitListener
-     * - Replace submit button to normal button to make sure everything works fine.
-     *
-     * @param {object} obj      jQuery DOM object (form)
-     * @param {object} settings plugin settings.
-     */
-    _helper.formSubmitListener = function(obj, settings) {
-        var btnObj = (settings.submitButton == '') ? '.disableAutoFillSubmit' : settings.submitButton;
+			widget.element.find('input[type="password"]').each(function() {
+				var $input = $(this);
+				var value = $input.val();
 
-        obj.on('click', btnObj, function(event) {
-            _helper.restoreInput(obj, settings);
+				this.disableAutoFillPasswordId = this.disableAutoFillPasswordId || guid();
+				widget.idToPassword[this.disableAutoFillPasswordId] = value;
 
-            if (settings.callback.call()) {
-                if (settings.debugMode) {
-                    console.log(obj.serialize())
-                } else {
-                    // Native HTML form validation requires "type=submit" to work with.
-                    if (settings.html5FormValidate) {
-                        $(btnObj).attr('type', 'submit').trigger('submit');
-                        // Change "type=submit" back to "type=button".
-                        setTimeout(function() {
-                            $(btnObj).attr('type', 'button');
-                        }, 1000);
-
-                    } else {
-                        obj.submit();
-                    }
-                }
-            }
-        });
-    };
-
-    /**
-     * Helper function - ramdomizeInput
-     * - Add random chars on "name" attribute to avid Browser remember what you submitted before.
-     *
-     * @param {object} obj      jQuery DOM object (form)
-     * @param {object} settings plugin settings.
-     */
-    _helper.randomizeInput = function(obj, settings) {
-        obj.find('input').each(function(i) {
-            realFields[i] = $(this).attr('name');
-            if(realFieldsMapper[realFields[i]]) {
-                $(this).attr('name', realFieldsMapper[realFields[i]]);
-            } else {
-                var randomName = Math.random().toString(36).replace(/[^a-z]+/g, '');
-                $(this).attr('name', randomName);
-                realFieldsMapper[realFields[i]] = randomName;
-            }
-        });
-    };
-
-    /**
-     * Helper function - restoreInput
-     * - Remove random chars on "name" attribute, so we can submit correct data then.
-     * - Restore password from star signs to original input password.
-     *
-     * @param {object} obj      jQuery DOM object (form)
-     * @param {object} settings plugin settings.
-     */
-    _helper.restoreInput = function(obj, settings) {
-        if (settings.randomizeInputName) {
-            obj.find('input').each(function(i) {
-                $(this).attr('name', realFields[i]);
-            });
-        }
-        if (settings.textToPassword) {
-            obj.find(settings.passwordField).attr('type', 'password');
-        }
-
-        obj.find(settings.passwordField).each(function (i) {
-            $(this).val(realPasswordMapper[this.id].join(''));
-        });
-
-
-    };
-
-    /**
-     * Core function
-     */
-    $.fn.disableAutoFill = function(options) {
-        var settings = $.extend(
-            {},
-            $.fn.disableAutoFill.defaults,
-            options
-        );
-
-        // Add autocomplete attribute to form, and set it to 'off'
-        this.attr('autocomplete', 'off');
-
-        if (this.find('[type=submit]').length > 0) {
-            this.find('[type=submit]').addClass('disableAutoFillSubmit').attr('type', 'button');
-        }
-
-        if (settings.submitButton != '') {
-            this.find(settings.submitButton).addClass('disableAutoFillSubmit').attr('type', 'button');
-        }
-
-        if (settings.randomizeInputName) {
-            _helper.randomizeInput(this, settings);
-        }
-        _helper.passwordListener(this, settings);
-        _helper.formSubmitListener(this, settings);
-
-    };
-
-    $.fn.disableAutoFill.defaults = {
-        debugMode: false,
-        textToPassword: true,
-        randomizeInputName: true,
-        passwordField: '',
-        hidingChar: '●',
-        html5FormValidate: false,
-        submitButton: '',
-        callback: function() {
-            return true;
-        },
-    };
-
-})(jQuery);
+				$input
+					.val(value.replace(/./g, '\u25CF'))
+					.prop('type', 'text')
+					.addClass('disableAutoFillPassword');
+			});
+		}
+	});
+}(jQuery));
