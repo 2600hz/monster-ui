@@ -45,7 +45,6 @@ define(function(require) {
 		},
 
 		numbersRender: function(pArgs) {
-			console.log('here');
 			var self = this,
 				args = pArgs || {},
 				container = args.container || $('#monster_content'),
@@ -792,7 +791,6 @@ define(function(require) {
 			};
 
 			parent.on('click', '.list-numbers[data-type="spare"] button.search-numbers', function(e) {
-				console.log('spare');
 				var spareList = parent.find('.list-numbers[data-type="spare"]'),
 					searchString = spareList.find('.search-custom input[type="text"]').val().toLowerCase();
 
@@ -811,7 +809,6 @@ define(function(require) {
 			});
 
 			parent.on('click', '.list-numbers[data-type="used"] button.search-numbers', function(e) {
-				console.log('used');
 				var usedList = parent.find('.list-numbers[data-type="used"]'),
 					searchString = usedList.find('.search-custom input[type="text"]').val().toLowerCase();
 
@@ -831,7 +828,6 @@ define(function(require) {
 		},
 
 		numbersGetSubAccountNumber: function(accountId, number, callback) {
-			console.log('here2');
 			var self = this;
 
 			self.callApi({
@@ -1132,7 +1128,6 @@ define(function(require) {
 		},
 
 		numbersSearchAccount: function(phoneNumber, success) {
-			console.log('here');
 			var self = this;
 
 			self.callApi({
