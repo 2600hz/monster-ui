@@ -170,7 +170,9 @@ Key | Description | Type | Default | Required
 --- | --- | :---: | :---: | :---:
 `brands` | Map custom settings individually by device brand | `Object` | | `false`
 `brands.[]` | Each object key correspont to the device brand name (`yealink`, `avaya`...) | `Object` | | `false`
-`brands.[].keyFunctions` | List key functions available per brand | `Array` | | `false`
+`brands.[].keyFunctions` | List key functions available per brand ([schema][combo-keys-schema]) | `Array` | | `false`
 
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
 [country-codes]: https://www.iso.org/obp/ui/#search
+[combo-keys-schema]: https://github.com/2600hz/kazoo/blob/master/applications/crossbar/priv/couchdb/schemas/devices.combo_key.json
+
