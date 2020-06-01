@@ -454,7 +454,7 @@
 							$.each(methodSettings.filters, function(filterKey, filterValue) {
 								var valueArray = [].concat(filterValue);
 								$.each(valueArray, function(key, value) {
-									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + value;
+									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + encodeURIComponent(value);
 								});
 							});
 						}
@@ -478,7 +478,7 @@
 							if(methodInfo.verb.toLowerCase() === 'post' && k === ids.length-1 && !(v in methodSettings)) {
 								requestSettings.data[v] = requestSettings.data.data.id;
 							} else {
-								requestSettings.data[v] = staticValues[v];
+								requestSettings.data[v] = encodeURIComponent(staticValues[v]);
 								checkReservedKeywords(v, requestSettings);
 								delete methodSettings[v];
 							}
