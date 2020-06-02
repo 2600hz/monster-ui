@@ -546,7 +546,7 @@
 							if (methodInfo.verb.toLowerCase() === 'post' && k === ids.length - 1 && !(v in methodSettings)) {
 								requestSettings.data[v] = requestSettings.data.data.id;
 							} else {
-								requestSettings.data[v] = encodeURIComponent(staticValues[v]);
+								requestSettings.data[v] = staticValues[v];
 								checkReservedKeywords(v, requestSettings);
 								delete methodSettings[v];
 							}
@@ -633,7 +633,7 @@
 		settings.url = settings.url.replace(rurlData, function(match, key) {
 			if (key in data) {
 				mappedKeys.push(key);
-				return data[key];
+				return encodeURIComponent(data[key]);
 			}
 		});
 
