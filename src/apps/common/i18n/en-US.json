@@ -174,7 +174,6 @@
 		"notUsedNumber": "{{number}}: This number is not used but belongs to {{accountName}}. (Switch to Spare Numbers view to see this number)",
 		"notSpareNumber": "{{number}}: This number is not a spare number but is used by {{accountName}}. (Switch to the Numbers in Use view to see this number)",
 		"numberNotFound": "The number you searched was not found! Make sure to enter the full number as we don't allow partial searches (but the formatting doesn't matter).",
-
 		"dialogConfirm": {
 			"from": "From ",
 			"cancel": "Cancel",
@@ -192,7 +191,9 @@
 				"button": "move number(s)"
 			}
 		},
-
+		"dialogAlertNowAllowed": {
+			"info": "The number you searched for exists, but you are not allowed to manage it"
+		},
 		"__comment": "UI-1219: Adding the prepend feature to numbers",
 		"__version": "v3.20_s1",
 		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone",
