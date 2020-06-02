@@ -834,10 +834,18 @@ define(function(require) {
 				resource: 'numbers.get',
 				data: {
 					accountId: accountId,
+					generateError: false,
 					phoneNumber: encodeURIComponent(number)
 				},
 				success: function(data) {
 					callback && callback(data.data);
+				},
+				error: function(parsedError, error, globalHandler) {
+					if (error.status === 403) {
+						monster.ui.alert(self.i18n.active().numbers.dialogAlertNowAllowed.info);
+					} else {
+						globalHandler(parsedError, { generateError: true });
+					}
 				}
 			});
 		},
