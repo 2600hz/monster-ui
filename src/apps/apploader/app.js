@@ -491,7 +491,7 @@ define(function(require) {
 
 			monster.waterfall([
 				// Get all apps
-				function(waterfallCallback) {
+				function getAllApps(waterfallCallback) {
 					var allAps = monster.appsStore;
 
 					if (!forceFetch && !_.isEmpty(allAps)) {
@@ -512,7 +512,7 @@ define(function(require) {
 					});
 				},
 				// Filter apps according to scope, if necessary
-				function(allApps, waterfallCallback) {
+				function filterAppsByScope(allApps, waterfallCallback) {
 					if (scope === 'all') {
 						waterfallCallback(null, allApps);
 						return;
@@ -534,25 +534,17 @@ define(function(require) {
 						appLinks = _.keys(monster.config.whitelabel.appLinks),
 						updateUserApps = false,
 						isAppInstalled = function(app) {
-							if (app) {
-								var appUsers = _
-									.chain(app)
-									.get('users', [])
-									.map(function(val) {
-										return val.id;
-									})
-									.value();
+							var appAllowedUsers = _.get(app, 'allowed_users'),
+								areAllUsersAllowed = appAllowedUsers === 'all',
+								isAdminUserAllowed = appAllowedUsers === 'admins' && currentUser.priv_level === 'admin',
+								isCurrentUserAllowed = appAllowedUsers === 'specific'
+									&& _
+										.chain(app)
+										.get('users', [])
+										.some({ id: currentUser.id })
+										.value();
 
-								if (app && app.allowed_users
-									&& (
-										(app.allowed_users === 'all')
-										|| (app.allowed_users === 'admins' && currentUser.priv_level === 'admin')
-										|| (app.allowed_users === 'specific' && _.includes(appUsers, currentUser.id))
-									)) {
-									return true;
-								}
-							}
-							return false;
+							return areAllUsersAllowed || isAdminUserAllowed || isCurrentUserAllowed;
 						};
 
 					filteredAppList = [];
@@ -590,7 +582,7 @@ define(function(require) {
 					waterfallCallback(null, filteredAppList);
 				},
 				// Format app list
-				function(appList, waterfallCallback) {
+				function formatApps(appList, waterfallCallback) {
 					var lang = monster.config.whitelabel.language,
 						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
 						formattedApps = _.map(appList, function(app) {
@@ -618,7 +610,7 @@ define(function(require) {
 						waterfallCallback(err, formattedApps);
 					});
 				}
-			], function(err, appList) {
+			], function processAppsResult(err, appList) {
 				if (err) {
 					return _.has(args, 'error') && args.error(err);
 				}
