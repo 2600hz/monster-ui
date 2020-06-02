@@ -491,7 +491,7 @@ define(function(require) {
 
 			monster.waterfall([
 				// Get all apps
-				function(waterfallCallback) {
+				function getAllApps(waterfallCallback) {
 					var allAps = monster.appsStore;
 
 					if (!forceFetch && !_.isEmpty(allAps)) {
@@ -512,85 +512,60 @@ define(function(require) {
 					});
 				},
 				// Filter apps according to scope, if necessary
-				function(allApps, waterfallCallback) {
+				function filterApps(allApps, waterfallCallback) {
 					if (scope === 'all') {
 						waterfallCallback(null, allApps);
 						return;
 					}
 
-					var filteredAppList;
-
 					if (scope === 'account') {
-						filteredAppList = _.filter(allApps, function(app) {
+						waterfallCallback(null, _.filter(allApps, function(app) {
 							return _.has(app, 'allowed_users') && app.allowed_users !== 'specific';
-						});
-
-						waterfallCallback(null, filteredAppList);
+						}));
 						return;
 					}
 
 					var currentUser = monster.apps.auth.currentUser,
 						userApps = _.get(currentUser, 'appList', []),
 						appLinks = _.keys(monster.config.whitelabel.appLinks),
-						updateUserApps = false,
-						isAppInstalled = function(app) {
-							if (app) {
-								var appUsers = _
-									.chain(app)
-									.get('users', [])
-									.map(function(val) {
-										return val.id;
-									})
-									.value();
+						allowedUserAppList = _
+							.chain(allApps)
+							.filter(function(app) {
+								var appAllowedUsers = _.get(app, 'allowed_users'),
+									areAllUsersAllowed = appAllowedUsers === 'all',
+									isAdminUserAllowed = appAllowedUsers === 'admins' && currentUser.priv_level === 'admin',
+									isCurrentUserAllowed = appAllowedUsers === 'specific'
+										&& _
+											.chain(app)
+											.get('users', [])
+											.some({ id: currentUser.id })
+											.value();
 
-								if (app && app.allowed_users
-									&& (
-										(app.allowed_users === 'all')
-										|| (app.allowed_users === 'admins' && currentUser.priv_level === 'admin')
-										|| (app.allowed_users === 'specific' && _.includes(appUsers, currentUser.id))
-									)) {
-									return true;
-								}
-							}
-							return false;
-						};
-
-					filteredAppList = [];
-					allApps = _.keyBy(allApps, 'id');
-
-					userApps = _.filter(userApps, function(appId) {
-						var app = allApps[appId];
-						if (isAppInstalled(app)) {
-							filteredAppList.push(app);
-							return true;
-						} else {
-							updateUserApps = true;
-							return false;
-						}
-					});
-
-					_.each(allApps, function(app) {
-						if (!_.includes(userApps, app.id) && isAppInstalled(app)) {
-							filteredAppList.push(app);
-
-							userApps.push(app.id);
-							updateUserApps = true;
-						}
-					});
+								return areAllUsersAllowed || isAdminUserAllowed || isCurrentUserAllowed;
+							})
+							.sortBy(self.sortByOrderOf(userApps, 'id'))
+							.value(),
+						allowedUserAppIdList = _.map(allowedUserAppList, 'id'),
+						updateUserApps = _
+							.chain(allowedUserAppIdList)
+							.intersection(userApps)
+							.size()
+							.isEqual(userApps.length)
+							.value();
 
 					if (forceFetch && updateUserApps) {
 						monster.apps.auth.currentUser.appList = _
-							.chain(userApps)
+							.chain(allowedUserAppIdList)
 							.concat(appLinks)
 							.sortBy(self.sortByOrderOf(currentUser.appList))
 							.value();
 						self.userUpdate();
 					}
 
-					waterfallCallback(null, filteredAppList);
+					waterfallCallback(null, allowedUserAppList);
 				},
 				// Format app list
-				function(appList, waterfallCallback) {
+				function formatApps(appList, waterfallCallback) {
 					var lang = monster.config.whitelabel.language,
 						isoFormattedLang = lang.substr(0, 3).concat(lang.substr(lang.length - 2, 2).toUpperCase()),
 						formattedApps = _.map(appList, function(app) {
