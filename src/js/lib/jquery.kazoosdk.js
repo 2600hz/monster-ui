@@ -597,7 +597,7 @@
 							$.each(methodSettings.filters, function(filterKey, filterValue) {
 								var valueArray = [].concat(filterValue);
 								$.each(valueArray, function(key, value) {
-									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + value;
+									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + encodeURIComponent(value);
 								});
 							});
 						}
@@ -708,7 +708,7 @@
 		settings.url = settings.url.replace(rurlData, function(match, key) {
 			if (key in data) {
 				mappedKeys.push(key);
-				return data[key];
+				return encodeURIComponent(data[key]);
 			}
 		});
 
