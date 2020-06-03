@@ -114,7 +114,7 @@ define(function(require) {
 				$.each(options.data.filters, function(filterKey, filterValue) {
 					var valueArray = [].concat(filterValue);
 					$.each(valueArray, function(key, value) {
-						settings.url += (settings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + value;
+						settings.url += (settings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + encodeURIComponent(value);
 					});
 				});
 			}
@@ -128,7 +128,7 @@ define(function(require) {
 			settings.url = settings.url.replace(rurlData, function(v, key) {
 				if (key in data) {
 					mappedKeys.push(key);
-					return data[key];
+					return encodeURIComponent(data[key]);
 				}
 			});
 
