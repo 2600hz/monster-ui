@@ -3651,7 +3651,7 @@ define(function(require) {
 
 		var container = $target[0],
 			jsonObject = _.get(options, 'json', {}),
-			formattedOptions = _.merge({}, _.omit(options, ['json'])),
+			formattedOptions = _.merge({ mode: 'code' }, _.omit(options, ['json'])),
 			editor = new JSONEditor(container, formattedOptions);
 
 		editor.set(jsonObject);
