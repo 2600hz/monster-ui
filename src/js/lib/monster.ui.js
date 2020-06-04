@@ -3641,26 +3641,17 @@ define(function(require) {
 	 * Create a new instance of jsoneditor
 	 * @param {jQuery} $target Contatiner to append the editor to
 	 * @param {Object} [options] Editor options
-	 * @param {Object} [json] JSON object to set in the editor as initial data
-	 * @param {String} [customClass] Custom ccs class for the container
+	 * @param {Object} [options.json] JSON object to set in the editor as initial data
 	 * @return {JSONEditor} editor
 	 */
-	function jsoneditor($target, options, json, customClass) {
+	function jsoneditor($target, options) {
 		if (!($target instanceof $)) {
 			throw TypeError('"$target" is not a jQuery object');
 		}
 
-		$target
-			.addClass(customClass ? customClass : 'monster-jsoneditor');
-
 		var container = $target[0],
-			jsonObject = json || {},
-			formattedOptions = _.merge({}, {
-				mode: 'code',
-				enableSort: false,
-				enableTransform: false,
-				search: true
-			}, options),
+			jsonObject = _.get(options, 'json', {}),
+			formattedOptions = _.merge({}, _.omit(options, ['json'])),
 			editor = new JSONEditor(container, formattedOptions);
 
 		editor.set(jsonObject);
