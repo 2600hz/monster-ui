@@ -28,7 +28,7 @@ Key | Description | Type | Default | Required
 An instance of the JSONEditor
 
 ## Description
-The `monster.ui.jsoneditor()` method renders a powerfull jsoneditor into the specified `target` which is completely customizable passing the `options` parameter. This method returns the `JSONEditor` instance so you have access to its properties and methods. Please see [JSONEditor](https://github.com/josdejong/jsoneditor) for reference.
+The `monster.ui.jsoneditor()` method renders a powerfull jsoneditor into the specified `target` which is completely customizable passing the `options` parameter. This method returns the `JSONEditor` instance so you have access to its properties and methods. Please see [JSONEditor](https://github.com/josdejong/jsoneditor) for reference. To get the JSONEditor instance from the DOM please see [getJsoneditor()](./getJsoneditor().md)
 
 To initialize the JSONEditor, you just need to pass the `target` parameter:
 ```html

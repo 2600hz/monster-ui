@@ -42,6 +42,7 @@ nav:
       - 'docs/monster-ui/disableAutoFill().md'
       - 'docs/monster-ui/generateAppLayout().md'
       - 'docs/monster-ui/getFormData().md'
+      - 'docs/monster-ui/getJsoneditor().md'
       - 'docs/monster-ui/getSvgIconTemplate().md'
       - 'docs/monster-ui/highlight().md'
       - 'docs/monster-ui/insertTemplate().md'
