@@ -3638,6 +3638,20 @@ define(function(require) {
 	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	/**
+	 * Get the jsoneditor instance from the container as long as exists
+	 * @param {jQuery} $target jsoneditor container
+	 * @return {JSONEditor | null}
+	 */
+	function getJsoneditor($target) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		return _.get($target, 'jsoneditor', null);
+	}
+	ui.getJsoneditor = getJsoneditor;
+
+	/**
 	 * Create a new instance of jsoneditor
 	 * @param {jQuery} $target Contatiner to append the editor to
 	 * @param {Object} [options] Editor options
