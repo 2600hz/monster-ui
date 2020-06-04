@@ -7,7 +7,7 @@ The `monster.ui.jsoneditor()` method generates an instance of a JSON editor with
 
 ## Syntax
 ```javascript
-monster.ui.jsoneditor(target[,options, json, customClass])
+monster.ui.jsoneditor(target[,options])
 ```
 
 ### Parameters
@@ -15,14 +15,27 @@ monster.ui.jsoneditor(target[,options, json, customClass])
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `target` | A Jquery object which is automatically contain the JSON Editor | `jQuery` | |`true`
-`options` | Let you override default editor options that can be found on the [JSONEditor](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md) page | `Object` | |`false`
-`json` | Initial JSON object data to be loaded in the editor | `Object` | |`false`
-`customClass` | Custom CSS class for the editor container (overrides the default one, so you have to assing the mandatory `with` and `height` style properties in your custom class) | `String` | `monster-jsoneditor` |`false`
+`options` | Let you override default editor options that can be found on the [JSONEditor](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md) page | ([#options](#options)) | |`false`
+
+### `options`
+Here is a list of the customization settings specific to Monster UI.
+
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`json` | Default JSON to set in the editor | `Object` | | `false`
+
+### Return
+An instance of the JSONEditor
 
 ## Description
 The `monster.ui.jsoneditor()` method renders a powerfull jsoneditor into the specified `target` which is completely customizable passing the `options` parameter. This method returns the `JSONEditor` instance so you have access to its properties and methods. Please see [JSONEditor](https://github.com/josdejong/jsoneditor) for reference.
 
 To initialize the JSONEditor, you just need to pass the `target` parameter:
+```html
+<!--You must have to set the size of the container-->
+<div id="jsoneditor" style="width: 400px; height: 400px;"></div>
+```
+
 ```javascript
 var $target = $('#jsoneditor');
 
