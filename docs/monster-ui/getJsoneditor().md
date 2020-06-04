@@ -1,0 +1,29 @@
+title: getJsoneditor()
+
+# monster.ui.getJsoneditor()
+The `monster.ui.getJsoneditor()` method gets a JSONEditor instance from the DOM with the editor's container
+
+## Syntax
+```javascript
+monster.ui.getJsoneditor(target)
+```
+
+### Parameters
+
+Key | Description | Type | Default | Required
+:-: | --- | :-: | :-: | :-:
+`target` | A Jquery object which contains the JSON Editor | `jQuery` | |`true`
+
+### Return
+An instance of the JSONEditor or null if the editor's container does not exist
+
+## Description
+The `monster.ui.getJsoneditor()` method provides us access to the editor's instance from the DOM using the `target` parameter, which is the [JSONEditor](./jsoneditor().md) container. This method returns the `JSONEditor` instance.
+
+To get the JSONEditor, you just need to pass the `target` parameter:
+```javascript
+// Editor's container
+var $target = $('#jsoneditor');
+
+var jsoneditor = monster.ui.getJsoneditor($target)
+```
