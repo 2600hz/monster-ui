@@ -3655,6 +3655,8 @@ define(function(require) {
 			editor = new JSONEditor(container, formattedOptions);
 
 		editor.set(jsonObject);
+		// Attach the instance to the container
+		$target.jsoneditor = editor;
 
 		return editor;
 	}
