@@ -3647,7 +3647,9 @@ define(function(require) {
 			throw TypeError('"$target" is not a jQuery object');
 		}
 
-		return _.get($target, 'jsoneditor', null);
+		var container = $target[0];
+
+		return _.get(container, 'jsoneditor', null);
 	}
 	ui.getJsoneditor = getJsoneditor;
 
@@ -3670,7 +3672,7 @@ define(function(require) {
 
 		editor.set(jsonObject);
 		// Attach the instance to the container
-		$target.jsoneditor = editor;
+		container.jsoneditor = editor;
 
 		return editor;
 	}
