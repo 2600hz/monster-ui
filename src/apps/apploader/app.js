@@ -535,14 +535,16 @@ define(function(require) {
 						updateUserApps = false,
 						isAppInstalled = function(app) {
 							var appAllowedUsers = _.get(app, 'allowed_users'),
+								appUserIds = _
+									.chain(app)
+									.get('users', [])
+									.map('id')
+									.value(),
 								areAllUsersAllowed = appAllowedUsers === 'all',
-								isAdminUserAllowed = appAllowedUsers === 'admins' && currentUser.priv_level === 'admin',
+								isAdminUserAllowed = appAllowedUsers === 'admins'
+									&& currentUser.priv_level === 'admin',
 								isCurrentUserAllowed = appAllowedUsers === 'specific'
-									&& _
-										.chain(app)
-										.get('users', [])
-										.some({ id: currentUser.id })
-										.value();
+									&& _.includes(appUserIds, currentUser.id);
 
 							return areAllUsersAllowed || isAdminUserAllowed || isCurrentUserAllowed;
 						};
