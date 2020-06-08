@@ -1029,5 +1029,9 @@
 		"fr-FR": "Französisch (fr-FR)",
 		"nl-NL": "Niederländisch (nl-NL)",
 		"ru-RU": "Russisch (ru-RU)"
+	},
+
+	"nav": {
+		"masquerading": "Maskierung"
 	}
 }
