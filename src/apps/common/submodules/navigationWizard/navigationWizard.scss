@@ -49,6 +49,7 @@ $media-size-medium: "(max-width : 980px)";
 
 	.left-content {
 		width: 280px;
+		flex: 0 0  auto;
 
 		.nav {
 			margin: 33px 0 22px 1.5rem;
@@ -159,7 +160,6 @@ $media-size-medium: "(max-width : 980px)";
 		background-color: $athens-gray;
 		border-bottom: 1px solid $input-border-color;
 		border-left: 1px solid $input-border-color;
-		min-height: calc(100vh - 204px);
 		flex-grow: 1;
 	}
 
