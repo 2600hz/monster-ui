@@ -113,7 +113,10 @@ define(function(require) {
 										isEven: (index % 2 === 0)
 									}, app);
 								})
-								.sortBy('label')
+								.sortBy(_.flow([
+									_.partial(_.get, _, 'label'),
+									_.toLower
+								]))
 								.value(),
 							filters: filters,
 							scope: scope,
