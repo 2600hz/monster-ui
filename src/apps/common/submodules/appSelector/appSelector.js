@@ -106,7 +106,15 @@ define(function(require) {
 							};
 						}),
 						dataTemplate = {
-							apps: apps,
+							apps: _
+								.chain(apps)
+								.map(function(app, index) {
+									return _.merge({
+										isEven: (index % 2 === 0)
+									}, app);
+								})
+								.sortBy('label')
+								.value(),
 							filters: filters,
 							scope: scope,
 							selectedAppIds: selectedAppIds,
@@ -150,8 +158,6 @@ define(function(require) {
 				success: function(appList) {
 					var $template;
 
-					appList = _.sortBy(appList, 'label');
-
 					self.appSelectorSetStore('apps', _.keyBy(appList, 'id'));
 					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
 
@@ -171,13 +177,6 @@ define(function(require) {
 							return _.includes(excludedApps, app.id);
 						});
 					}
-
-					// Mark initial even elements
-					appList = _.map(appList, function(app, index) {
-						return _.merge({
-							isEven: (index % 2 === 0)
-						}, app);
-					});
 
 					// Init template after saving selected apps to store, so they can be rendered
 					$template = initTemplate(appList);
