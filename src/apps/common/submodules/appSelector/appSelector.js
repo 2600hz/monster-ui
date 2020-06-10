@@ -1,8 +1,9 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		isotope = require('isotope'),
 		monster = require('monster');
+
+	require('isotope');
 
 	var appSelector = {
 		// Defines API requests not included in the SDK
