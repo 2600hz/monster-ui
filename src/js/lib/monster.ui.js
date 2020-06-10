@@ -892,7 +892,9 @@ define(function(require) {
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
 					break;
 				default:
-					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
+					closeBtnText = getSvgIconTemplate({
+						id: 'telicon2--x--circle'
+					});
 					break;
 			}
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
