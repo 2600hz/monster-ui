@@ -18,6 +18,7 @@ define(function(require) {
 		moment = require('moment'),
 		simplemde = require('simplemde'),
 		marked = require('marked');
+		JSONEditor = require('jsoneditor');
 
 	require('chosen');
 	require('disableAutoFill');
@@ -3635,6 +3636,47 @@ define(function(require) {
 		});
 	}
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+
+	/**
+	 * Get the jsoneditor instance from the container as long as exists
+	 * @param {jQuery} $target jsoneditor container
+	 * @return {JSONEditor | null}
+	 */
+	function getJsoneditor($target) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		var container = $target[0];
+
+		return _.get(container, 'jsoneditor', null);
+	}
+	ui.getJsoneditor = getJsoneditor;
+
+	/**
+	 * Create a new instance of jsoneditor
+	 * @param {jQuery} $target Contatiner to append the editor to
+	 * @param {Object} [options] Editor options
+	 * @param {Object} [options.json] JSON object to set in the editor as initial data
+	 * @return {JSONEditor} editor
+	 */
+	function jsoneditor($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		var container = $target[0],
+			jsonObject = _.get(options, 'json', {}),
+			formattedOptions = _.merge({ mode: 'code' }, _.omit(options, ['json'])),
+			editor = new JSONEditor(container, formattedOptions);
+
+		editor.set(jsonObject);
+		// Attach the instance to the container
+		container.jsoneditor = editor;
+
+		return editor;
+	}
+	ui.jsoneditor = jsoneditor;
 
 	/**
 	 * Generates a key-value pair editor
