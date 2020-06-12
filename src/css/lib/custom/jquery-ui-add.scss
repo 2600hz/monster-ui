@@ -20,6 +20,13 @@
 	border: none;
 	border-radius: 3px;
 	box-shadow: 1px 1px 3px 1px #606069;
+
+	.ui-dialog-titlebar-close {
+		width: 40px;
+		border: none;
+		background: none;
+		color: darken($primary-color, 17.06);
+	}
 }
 .ui-dialog .ui-dialog-content {
 	min-width: 300px;
@@ -41,34 +48,6 @@
 	letter-spacing: .4px;
 	color: #fff;
 }
-.ui-dialog .ui-dialog-titlebar-close {
-	width: 40px;
-	border: none;
-	background: none;
-}
-.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close {
-	color: #fff;
-	border: solid 1px;
-	border-radius: 10px;
-	height: 20px;
-	width: 20px;
-	box-sizing: border-box;
-	display: inline-block;
-	position: relative;
-}
-.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close:before,
-.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close:after {
-	content: '';
-	position: absolute;
-	border: solid 1px;
-	width: 8px;
-	top: 8px;
-	left: 4px;
-	transform:rotate(45deg);
-}
-.ui-dialog .ui-dialog-titlebar-close i.monster-dialog-titlebar-close:after {
-	transform:rotate(-45deg);
-}
 /* Special rules for alerts & confirms */
 .ui-dialog.monster-alert .ui-dialog-titlebar,
 .ui-dialog.monster-confirm .ui-dialog-titlebar {
@@ -89,9 +68,6 @@
 	margin: auto;
 }
 
-.ui-dialog.monster-alert .ui-dialog-titlebar-close i.monster-dialog-titlebar-close {
-	color: #303039;
-}
 .ui-dialog.monster-alert .ui-dialog-titlebar-close,
 .ui-dialog.monster-confirm .ui-dialog-titlebar-close {
 	display: none;
