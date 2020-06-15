@@ -2226,11 +2226,11 @@ define(function(require) {
 
 		/**
 		 * @desc Helper that will load the tooltip of a template only when we mouseover them by default.
-		 * @param target - mandatory jQuery Object
-		 * @param args - optional object including options for this helper
-		 * args.selector - optional, to change the default CSS selector that will find the tooltips, defaults to '[data-toggle="tooltip"]'
-		 * args.options - optional, to add some options to the Bootstrap tooltips,
-		 * args.trigger - optional, to change the default trigger of the tooltip, defaults to 'mouseover'
+		 * @param  {jQuery} target  Mandatory jQuery Object
+		 * @param  {Object} [args]  Optional object including options for this helper
+		 * @param  {String} [args.selector='[data-toggle="tooltip"]']  Optional, to change the default CSS selector that will find the tooltips, defaults to '[data-toggle="tooltip"]'
+		 * @param  {Object} [args.options]  Optional, to add some options to the Bootstrap tooltips
+		 * @param  {String} [args.trigger='mouseover']  Optional, to change the default trigger of the tooltip, defaults to 'mouseover'
 		 */
 		tooltips: function(target, args) {
 			var args = args || {},
