@@ -96,6 +96,9 @@ define(function(require) {
 				excludedApps = _.get(args, 'excludedApps'),
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
 				$container = args.container,
+				isElementOverflown = function(element) {
+					return (element.offsetWidth < element.scrollWidth);
+				},
 				initTemplate = function initTemplate(apps) {
 					var selectedAppIds = self.appSelectorGetSelectedApps(),
 						tagCount = _.chain(apps).flatMap('tags').countBy().value(),
@@ -142,6 +145,19 @@ define(function(require) {
 									.sortBy()
 									.join(', ')
 									.value();
+							}
+						}
+					});
+
+					monster.ui.tooltips($template.find('.app-selector-list'), {
+						selector: '.app-item',
+						options: {
+							container: '.app-selector',
+							title: function() {
+								var $this = $(this),
+									descriptionElement = $this.find('.app-description').get(0);
+
+								return isElementOverflown(descriptionElement) ? $this.data('title') : null;
 							}
 						}
 					});
