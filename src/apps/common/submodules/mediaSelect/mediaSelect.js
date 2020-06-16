@@ -20,6 +20,11 @@ define(function(require) {
 		 * @param {Array} args.options
 		 * @param {Array} args.mimeTypes - Allowed file formats to be uploaded if `dragableUpload` is true
 		 * @param {Boolean} [args.dragableUpload]
+		 * @param {Object} [args.tts] - Enable text to speech tab if present
+		 * @param {String} [args.tts.id] - Current media id, used when the media is updated
+		 * @param {String} [args.tts.text] - Current tts text
+		 * @param {String} [args.tts.name]
+		 * @param {String} [args.tts.type]
 		 */
 		mediaSelectRender: function(args) {
 			var self = this,
@@ -33,8 +38,8 @@ define(function(require) {
 				.append(template);
 
 			callback && callback({
-				getValue: function() {
-					return self.mediaSelectGetValue(template, args);
+				getValue: function(callback) {
+					self.mediaSelectGetValue(template, args, callback);
 				}
 			});
 		},
@@ -54,7 +59,8 @@ define(function(require) {
 					hasShoutcast: true,
 					hasSilence: true,
 					isShoutcast: false,
-					shoutcastURLInputClass: ''
+					shoutcastURLInputClass: '',
+					tts: {}
 				},
 				formattedData = $.extend(true, {}, defaultData, args),
 				optionShoutcast = {
@@ -98,6 +104,7 @@ define(function(require) {
 		mediaSelectGetSkinnedTemplate: function(args, formattedData) {
 			var self = this,
 				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
+				enableTextspeechTab = args.hasOwnProperty('tts'),
 				template;
 
 			if (skin === 'default') {
@@ -113,7 +120,9 @@ define(function(require) {
 			} else if (skin === 'tabs') {
 				template = $(self.getTemplate({
 					name: 'tabs-layout',
-					data: formattedData,
+					data: _.merge(formattedData, {
+						enableTextspeechTab: enableTextspeechTab
+					}),
 					submodule: 'mediaSelect'
 				}));
 				self.mediaSelectBindTabsTemplate(template);
@@ -122,23 +131,27 @@ define(function(require) {
 			return template;
 		},
 
-		mediaSelectGetValue: function(template) {
+		mediaSelectGetValue: function(template, args, callback) {
 			var self = this,
-				response;
+				ttsTab = template.find('.monster-tab-content.monster-tab-content-tts.active');
 
 			if (template) {
 				var val = template.find('.media-dropdown').val();
 
 				if (val === 'shoutcast') {
-					response = template.find('.shoutcast-div input').val();
+					callback(template.find('.shoutcast-div input').val());
+				} else if (ttsTab.length) {
+					args.tts.text = ttsTab.find('.custom-greeting-text').val();
+
+					self.mediaSelectUpdateTTSMedia(args, function(id) {
+						callback(id);
+					});
 				} else {
-					response = val;
+					callback(val);
 				}
 			} else {
-				response = 'invalid_template';
+				callback('invalid_template');
 			}
-
-			return response;
 		},
 
 		mediaSelectBindCommon: function(template, mediaToUpload, callbackAfterSave, mimeTypes) {
@@ -294,6 +307,46 @@ define(function(require) {
 			monster.ui.fancyTabs(template.find('.monster-tab-wrapper'));
 
 			self.mediaSelectBindCommon(template, mediaToUpload);
+		},
+
+		mediaSelectUpdateTTSMedia: function(args, callback) {
+			var self = this,
+				greetingMedia = {
+					description: '<Text to Speech>',
+					media_source: 'tts',
+					name: args.tts.name,
+					streamable: true,
+					type: args.tts.type,
+					tts: {
+						text: args.tts.text,
+						voice: 'female/en-US'
+					}
+				};
+
+			if (args.tts.id) {
+				self.callApi({
+					resource: 'media.update',
+					data: {
+						accountId: self.accountId,
+						mediaId: args.tts.id,
+						data: greetingMedia
+					},
+					success: function(data) {
+						callback && callback(data.data.id);
+					}
+				});
+			} else {
+				return self.callApi({
+					resource: 'media.create',
+					data: {
+						accountId: self.accountId,
+						data: greetingMedia
+					},
+					success: function(data) {
+						callback && callback(data.data.id);
+					}
+				});
+			}
 		}
 	};
 
