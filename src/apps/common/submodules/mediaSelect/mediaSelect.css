@@ -82,4 +82,15 @@
 .monster-media-selection.monster-media-tabs-skin .monster-tab-content-tts .custom-greeting-text {
 	width: 100%;
 	box-sizing: border-box;
+	margin-bottom: 4px;
+}
+
+.monster-media-selection.monster-media-tabs-skin .monster-tab-content-tts .chars-remaining-counter {
+	font-size: 12px;
+	color: #64646c
+}
+
+.monster-media-selection.monster-media-tabs-skin .monster-tab-content-tts .chars-remaining-counter span {
+	font-weight: bold;
+	margin-right: 4px;
 }
