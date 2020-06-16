@@ -78,3 +78,8 @@
 .monster-media-selection.monster-media-tabs-skin .upload-div {
 	margin-top: 0;
 }
+
+.monster-media-selection.monster-media-tabs-skin .monster-tab-content-tts .custom-greeting-text {
+	width: 100%;
+	box-sizing: border-box;
+}
