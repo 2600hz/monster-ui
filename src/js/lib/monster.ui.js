@@ -2120,96 +2120,127 @@ define(function(require) {
 			}
 		},
 
-		showPasswordStrength: function(input, options) {
-			if (input) {
-				var i18n = monster.apps.core.i18n.active(),
-					options = options || {},
-					display = options.display || 'bar',
-					tooltipPosition = options.tooltipPosition || 'top',
-					regexes = [
-						{
-							key: 'strong',
-							regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
-							color: '#18b309',
-							size: 100
-						},
-						{
-							key: 'good',
-							regex: new RegExp('^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$'),
-							color: '#33db24',
-							size: 70
-						},
-						{
-							key: 'medium',
-							regex: new RegExp('^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$'),
-							color: '#ffcc33',
-							size: 50
-						},
-						{
-							key: 'weak',
-							regex: new RegExp('^(?=.{6,}).*$'),
-							color: '#ff6a57',
-							size: 40
-						},
-						{
-							key: 'bad',
-							regex: new RegExp('^.+$'),
-							color: '#ff3d24',
-							size: 20
-						},
-						{
-							key: 'empty',
-							regex: new RegExp('^\\s*$'),
-							color: '#c0c0c9',
-							size: 0
-						}
-					],
-					strengthDisplay;
-
-				switch (display) {
-					case 'icon': {
-						strengthDisplay = $('<i class="fa fa-lock icon-small monster-password-strength" data-original-title="' + i18n.passwordStrength.empty + '" data-placement="' + tooltipPosition + '" data-toggle="tooltip"></i>');
-						input.on('keyup keypress change', function(e) {
-							$.each(regexes, function(key, val) {
-								if (val.regex.test(input.val())) {
-									strengthDisplay
-										.css('color', val.color)
-										.attr('data-original-title', i18n.passwordStrength[val.key])
-										.tooltip('fixTitle');
-									return false;
-								}
-							});
-						});
-						break;
-					}
-					case 'bar':
-					default: {
-						strengthDisplay = $('<div class="monster-password-strength"><div><span>' + i18n.passwordStrength.empty + '</span></div></div>');
-						input.on('keyup keypress change', function(e) {
-							$.each(regexes, function(key, val) {
-								if (val.regex.test(input.val())) {
-									strengthDisplay
-										.children('div')
-										.css({
-											backgroundColor: val.color,
-											width: val.size + '%'
-										}).children('span')
-										.html(i18n.passwordStrength[val.key]);
-									return false;
-								}
-							});
-						});
-						break;
-					}
-				}
-
-				if (options.container) {
-					options.container.append(strengthDisplay);
-				} else {
-					input.after(strengthDisplay);
-				}
-			} else {
+		/**
+		 * Shows a password strength indicator
+		 * @param  {jQuery} input  Input field
+		 * @param  {Object} [options]  Indicator options
+		 * @param  {('bar'|'icon')} [options.display='bar']  Type of indicator to display
+		 * @param  {('top'|'bottom'|'left'|'right')} [options.tooltipPosition='top']  Tooltip position for 'icon' display
+		 * @param  {jQuery} [options.container]  Container for the indicator. If not provided, the indicator is inserted after the input field.
+		 */
+		showPasswordStrength: function(input, pOptions) {
+			if (!input) {
 				throw new Error('You must provide at least one input field');
+			}
+			if (!(input instanceof $)) {
+				throw new TypeError('"input" is not a jQuery object');
+			}
+			if (!_.isUndefined(pOptions) && !_.isPlainObject(pOptions)) {
+				throw TypeError('"options" is not a plain object');
+			}
+
+			var i18n = monster.apps.core.i18n.active();
+			var options = pOptions || {};
+			var display = _.get(options, 'display', 'bar');
+			if (!_.includes(['bar', 'icon'], display)) {
+				throw new Error('`' + display + '`' + ' is not a valid display option. It should be `bar` or `icon`.');
+			}
+			if (display !== 'icon' && _.has(options, 'tooltipPosition')) {
+				console.warn('"options.tooltipPosition" is only supported for `icon` display, so it will be ignored');
+			}
+
+			var tooltipPosition = _.get(options, 'tooltipPosition', 'top');
+			if (!_.includes(['top', 'bottom', 'left', 'right'], tooltipPosition)) {
+				throw new Error('`' + tooltipPosition + '`' + ' is not a valid tooltip position option. It should be one of `top`, `bottom`, `left` or `right`.');
+			}
+
+			var $container = _.get(options, 'container');
+			if (!_.isUndefined($container) && !($container instanceof $)) {
+				throw new TypeError('"options.container" is not a jQuery object');
+			}
+
+			var regexes = _.map([
+				{
+					key: 'strong',
+					regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
+					color: '#18b309',
+					size: 100
+				},
+				{
+					key: 'good',
+					regex: new RegExp('^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$'),
+					color: '#33db24',
+					size: 70
+				},
+				{
+					key: 'medium',
+					regex: new RegExp('^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$'),
+					color: '#ffcc33',
+					size: 50
+				},
+				{
+					key: 'weak',
+					regex: new RegExp('^(?=.{6,}).*$'),
+					color: '#ff6a57',
+					size: 40
+				},
+				{
+					key: 'bad',
+					regex: new RegExp('^.+$'),
+					color: '#ff3d24',
+					size: 20
+				},
+				{
+					key: 'empty',
+					regex: new RegExp('^\\s*$'),
+					color: '#c0c0c9',
+					size: 0
+				}
+			], function(val) {
+				return _.merge({
+					label: monster.util.tryI18n(i18n.passwordStrength, val.key)
+				}, val);
+			});
+			var templateName = 'monster-password-strength-' + display;
+			var $template = $(monster.template(
+				monster.apps.core,
+				templateName,
+				{
+					tooltipPosition: tooltipPosition
+				}));
+			var updateIndicator = _.get({
+				icon: function(strengthArgs) {
+					$template
+						.css('color', strengthArgs.color)
+						.attr('data-original-title', strengthArgs.label)
+						.tooltip('fixTitle');
+				},
+				bar: function(strengthArgs) {
+					$template
+						.children('div')
+						.css({
+							backgroundColor: strengthArgs.color,
+							width: strengthArgs.size + '%'
+						}).children('span')
+						.html(strengthArgs.label);
+				}
+			}, display);
+
+			input.on('keyup keypress change', function(e) {
+				_.each(regexes, function(strengthData) {
+					if (!strengthData.regex.test(input.val())) {
+						return;
+					}
+
+					updateIndicator(strengthData);
+					return false;
+				});
+			});
+
+			if ($container) {
+				$container.append($template);
+			} else {
+				input.after($template);
 			}
 		},
 
