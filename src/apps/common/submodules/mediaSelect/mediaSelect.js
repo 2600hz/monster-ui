@@ -125,6 +125,12 @@ define(function(require) {
 					}),
 					submodule: 'mediaSelect'
 				}));
+
+				monster.ui.charsRemaining(template.find('.custom-greeting-text'), {
+					size: 350,
+					customClass: 'chars-remaining-counter'
+				});
+
 				self.mediaSelectBindTabsTemplate(template);
 			}
 
