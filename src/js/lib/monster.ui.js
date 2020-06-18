@@ -2121,12 +2121,12 @@ define(function(require) {
 		},
 
 		/**
-		 * Shows a password strength indicator
-		 * @param  {jQuery} input  Input field
+		 * Adds a password strength indicator for a specific input, in the form of either a bar, an emoji or a color-changing lock icon.
+		 * @param  {jQuery} input  Input on which the method will be applied. Best suited for an input of the `password` type.
 		 * @param  {Object} [options]  Indicator options
-		 * @param  {('bar'|'emoji'|'icon')} [options.display='bar']  Type of indicator to display
-		 * @param  {('top'|'bottom'|'left'|'right')} [options.tooltipPosition='top']  Tooltip position for 'icon' display
-		 * @param  {jQuery} [options.container]  Container for the indicator. If not provided, the indicator is inserted after the input field.
+		 * @param  {jQuery} [options.container]  Where to append the password strength display (by default, it will be appended after the `input`).
+		 * @param  {('bar'|'emoji'|'icon')} [options.display='bar']  Type of indicator to display: a bar, an emoji or a color-changing lock icon.
+		 * @param  {('top'|'bottom'|'left'|'right')} [options.tooltipPosition='top']  When the display is set to 'icon', you can choose the position of the tooltip on the icon.
 		 */
 		showPasswordStrength: function(input, pOptions) {
 			if (!input) {
