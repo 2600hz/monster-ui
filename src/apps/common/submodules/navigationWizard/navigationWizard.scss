@@ -334,6 +334,26 @@ $media-size-medium: "(max-width : 980px)";
 			color: $woodsmoke;
 		}
 
+		.input-box.iconography-input-left {
+			position: relative;
+			width: 100%;
+
+			input {
+				box-sizing: border-box;
+				width: 100%;
+				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+				font-size: 0.875rem;
+				line-height: 0.875rem;
+			}
+
+			.iconography {
+				position: absolute;
+				top: 11px;
+				right: 0.75rem;
+				color: $manatee;
+			}
+		}
+
 		.step-title {
 			padding-bottom: 1.5rem;
 			font-size: 23px;
