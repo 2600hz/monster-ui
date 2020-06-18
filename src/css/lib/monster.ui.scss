@@ -458,21 +458,39 @@ div.monster-password-strength {
 	margin-top: 5px;
 	border: solid 1px #c0c0c9;
 	border-radius: 2px;
+
+	.monster-password-strength {
+		&-bar {
+			font-size: 12px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+					box-sizing: border-box;
+			cursor: default;
+		}
+
+		&-label {
+			margin-left: 5px;
+			white-space: nowrap;
+		}
+	}
 }
-div.monster-password-strength > div {
-	font-size: 12px;
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-			box-sizing: border-box;
-	cursor: default;
-}
-div.monster-password-strength > div > span {
-	margin-left: 5px;
-	white-space: nowrap;
-}
-i.monster-password-strength {
-	margin-left: 5px;
-	color: #c0c0c9;
+
+span.monster-password-strength {
+	.monster-password-strength {
+		&-icon {
+			margin-left: 5px;
+			color: $french-gray;
+		}
+
+		&-label {
+			display: block;
+			position: absolute;
+			right: 0;
+			font-size: 0.75rem;
+			color: $midgray2;
+			white-space: nowrap;
+		}
+	}
 }
 
 /*********************************************************************************************************/

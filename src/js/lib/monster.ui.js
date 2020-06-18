@@ -2217,11 +2217,13 @@ define(function(require) {
 				},
 				bar: function(strengthArgs) {
 					$template
-						.children('div')
+						.find('.monster-password-strength-bar')
 						.css({
 							backgroundColor: strengthArgs.color,
 							width: strengthArgs.size + '%'
-						}).children('span')
+						});
+					$template
+						.find('.monster-password-strength-label')
 						.html(strengthArgs.label);
 				}
 			}, display);
