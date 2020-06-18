@@ -17,11 +17,11 @@ Key | Description | Type | Default | Required
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `container` | Where to append the password strength display (by default, it will be appended after the `input`). | `jQuery` | | `false`
-`display` | Can be set to 'icon' in order to display the password strength as a color-changing lock icon (with tooltips) instead of a bar. | `String('bar' | 'icon')` | `bar` | `false`
+`display` | Type of indicator to display: a bar, an emoji or a color-changing lock icon. | `String('bar' | 'emoji' | 'icon')` | `bar` | `false`
 `tooltipPosition` | When the display is set to 'icon', you can choose the position of the tooltip on the icon. | `String('top' | 'bottom' | 'right' | 'left')` | `top` | `false`
 
 ## Description
-This method allows you to add a password strength indicator for a specific input, in the form of either a bar or an icon.
+This method allows you to add a password strength indicator for a specific input, in the form of either a bar, an emoji or a color-changing lock icon.
 
 ## Examples
 ### Using the default options to show a bar below the input
