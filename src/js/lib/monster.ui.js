@@ -2124,7 +2124,7 @@ define(function(require) {
 		 * Shows a password strength indicator
 		 * @param  {jQuery} input  Input field
 		 * @param  {Object} [options]  Indicator options
-		 * @param  {('bar'|'icon')} [options.display='bar']  Type of indicator to display
+		 * @param  {('bar'|'emoji'|'icon')} [options.display='bar']  Type of indicator to display
 		 * @param  {('top'|'bottom'|'left'|'right')} [options.tooltipPosition='top']  Tooltip position for 'icon' display
 		 * @param  {jQuery} [options.container]  Container for the indicator. If not provided, the indicator is inserted after the input field.
 		 */
@@ -2142,8 +2142,8 @@ define(function(require) {
 			var i18n = monster.apps.core.i18n.active();
 			var options = pOptions || {};
 			var display = _.get(options, 'display', 'bar');
-			if (!_.includes(['bar', 'icon'], display)) {
-				throw new Error('`' + display + '`' + ' is not a valid display option. It should be `bar` or `icon`.');
+			if (!_.includes(['bar', 'emoji', 'icon'], display)) {
+				throw new Error('`' + display + '`' + ' is not a valid display option. It should be `bar`, `emoji` or `icon`.');
 			}
 			if (display !== 'icon' && _.has(options, 'tooltipPosition')) {
 				console.warn('"options.tooltipPosition" is only supported for `icon` display, so it will be ignored');
@@ -2164,37 +2164,43 @@ define(function(require) {
 					key: 'strong',
 					regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
 					color: '#18b309',
-					size: 100
+					size: 100,
+					emojiChar: '&#x1F60E;'
 				},
 				{
 					key: 'good',
 					regex: new RegExp('^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$'),
 					color: '#33db24',
-					size: 70
+					size: 70,
+					emojiChar: '&#x1F603;'
 				},
 				{
 					key: 'medium',
 					regex: new RegExp('^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$'),
 					color: '#ffcc33',
-					size: 50
+					size: 50,
+					emojiChar: '&#x1F610;'
 				},
 				{
 					key: 'weak',
 					regex: new RegExp('^(?=.{6,}).*$'),
 					color: '#ff6a57',
-					size: 40
+					size: 40,
+					emojiChar: '&#x1F61E;'
 				},
 				{
 					key: 'bad',
 					regex: new RegExp('^.+$'),
 					color: '#ff3d24',
-					size: 20
+					size: 20,
+					emojiChar: '&#x1F621;'
 				},
 				{
 					key: 'empty',
 					regex: new RegExp('^\\s*$'),
 					color: '#c0c0c9',
-					size: 0
+					size: 0,
+					emojiChar: '&nbsp;'
 				}
 			], function(val) {
 				return _.merge({
@@ -2209,12 +2215,6 @@ define(function(require) {
 					tooltipPosition: tooltipPosition
 				}));
 			var updateIndicator = _.get({
-				icon: function(strengthArgs) {
-					$template
-						.css('color', strengthArgs.color)
-						.attr('data-original-title', strengthArgs.label)
-						.tooltip('fixTitle');
-				},
 				bar: function(strengthArgs) {
 					$template
 						.find('.monster-password-strength-bar')
@@ -2225,6 +2225,22 @@ define(function(require) {
 					$template
 						.find('.monster-password-strength-label')
 						.html(strengthArgs.label);
+				},
+				emoji: function(strengthArgs) {
+					$template
+						.find('.monster-password-strength-icon')
+						.css('color', strengthArgs.color)
+						.html(strengthArgs.emojiChar);
+					$template
+						.find('.monster-password-strength-label')
+						.html(strengthArgs.label);
+				},
+				icon: function(strengthArgs) {
+					$template
+						.find('.monster-password-strength-icon')
+						.css('color', strengthArgs.color)
+						.attr('data-original-title', strengthArgs.label)
+						.tooltip('fixTitle');
 				}
 			}, display);
 
