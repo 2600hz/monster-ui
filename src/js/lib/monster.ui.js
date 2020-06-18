@@ -2243,8 +2243,7 @@ define(function(require) {
 						.tooltip('fixTitle');
 				}
 			}, display);
-
-			input.on('keyup keypress change', function(e) {
+			var checkStrength = function() {
 				_.each(regexes, function(strengthData) {
 					if (!strengthData.regex.test(input.val())) {
 						return;
@@ -2253,13 +2252,17 @@ define(function(require) {
 					updateIndicator(strengthData);
 					return false;
 				});
-			});
+			};
+
+			input.on('keyup keypress change', checkStrength);
 
 			if ($container) {
 				$container.append($template);
 			} else {
 				input.after($template);
 			}
+
+			checkStrength();
 		},
 
 		results: function(data) {
