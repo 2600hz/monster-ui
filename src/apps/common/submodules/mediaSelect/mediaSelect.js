@@ -20,11 +20,8 @@ define(function(require) {
 		 * @param {Array} args.options
 		 * @param {Array} args.mimeTypes - Allowed file formats to be uploaded if `dragableUpload` is true
 		 * @param {Boolean} [args.dragableUpload]
-		 * @param {Object} [args.tts] - Enable text to speech tab if present
-		 * @param {String} [args.tts.id] - Current media id, used when the media is updated
-		 * @param {String} [args.tts.text] - Current tts text
-		 * @param {String} [args.tts.name]
-		 * @param {String} [args.tts.type]
+		 * @param {Boolean} [args.enableTTS] - Show text to speech tab
+		 * @param {(String|Object)} args.selectedOption - The current media to be edited or changed
 		 */
 		mediaSelectRender: function(args) {
 			var self = this,
@@ -39,7 +36,13 @@ define(function(require) {
 
 			callback && callback({
 				getValue: function(callback) {
-					self.mediaSelectGetValue(template, args, callback);
+					if (args.enableTTS) {
+						self.mediaSelectGetValue(template, _.merge({}, args, {
+							callback: callback
+						}));
+					} else {
+						return self.mediaSelectGetValue(template, args);
+					}
 				}
 			});
 		},
@@ -60,7 +63,10 @@ define(function(require) {
 					hasSilence: true,
 					isShoutcast: false,
 					shoutcastURLInputClass: '',
-					tts: {}
+					tts: _.merge({}, args.selectedOption, {
+						id: _.get(args, 'selectedOption.id', args.selectedOption)
+					}),
+					mediaId: _.get(args, 'selectedOption.id', args.selectedOption)
 				},
 				formattedData = $.extend(true, {}, defaultData, args),
 				optionShoutcast = {
@@ -75,7 +81,7 @@ define(function(require) {
 					id: 'silence_stream://300000',
 					name: self.i18n.active().mediaSelect.silence
 				},
-				isShoutcast = formattedData.selectedOption && formattedData.selectedOption.indexOf('://') >= 0 && formattedData.selectedOption !== 'silence_stream://300000',
+				isShoutcast = defaultData.mediaId && defaultData.mediaId.indexOf('://') >= 0 && defaultData.mediaId !== 'silence_stream://300000',
 				options = [];
 
 			if (formattedData.hasNone) {
@@ -94,7 +100,7 @@ define(function(require) {
 
 			if (isShoutcast) {
 				formattedData.isShoutcast = isShoutcast;
-				formattedData.shoutcastValue = formattedData.selectedOption;
+				formattedData.shoutcastValue = _.get(formattedData, 'selectedOption.id', formattedData.selectedOption);
 				formattedData.selectedOption = 'shoutcast';
 			}
 
@@ -104,7 +110,7 @@ define(function(require) {
 		mediaSelectGetSkinnedTemplate: function(args, formattedData) {
 			var self = this,
 				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
-				enableTextspeechTab = args.hasOwnProperty('tts'),
+				enableTextspeechTab = args.enableTTS,
 				template;
 
 			if (skin === 'default') {
@@ -120,7 +126,7 @@ define(function(require) {
 			} else if (skin === 'tabs') {
 				template = $(self.getTemplate({
 					name: 'tabs-layout',
-					data: _.merge(formattedData, {
+					data: _.merge({}, formattedData, {
 						enableTextspeechTab: enableTextspeechTab
 					}),
 					submodule: 'mediaSelect'
@@ -137,26 +143,34 @@ define(function(require) {
 			return template;
 		},
 
-		mediaSelectGetValue: function(template, args, callback) {
+		mediaSelectGetValue: function(template, args) {
 			var self = this,
-				ttsTab = template.find('.monster-tab-content.monster-tab-content-tts.active');
+				ttsTab = template.find('.monster-tab-content.monster-tab-content-tts.active'),
+				callback = args.callback,
+				response;
 
 			if (template) {
 				var val = template.find('.media-dropdown').val();
 
 				if (val === 'shoutcast') {
-					callback(template.find('.shoutcast-div input').val());
-				} else if (ttsTab.length) {
-					args.tts.text = ttsTab.find('.custom-greeting-text').val();
+					response = template.find('.shoutcast-div input').val();
+				} else if (ttsTab.length && callback) {
+					args.selectedOption.tts.text = ttsTab.find('.custom-greeting-text').val();
 
-					self.mediaSelectUpdateTTSMedia(args, function(id) {
-						callback(id);
-					});
+					self.mediaSelectUpdateTTSMedia(args, callback);
 				} else {
-					callback(val);
+					response = val;
 				}
 			} else {
-				callback('invalid_template');
+				response = 'invalid_template';
+			}
+
+			if (args.enableTTS) {
+				if (!ttsTab.length) {
+					callback(response);
+				};
+			} else {
+				return response;
 			}
 		},
 
@@ -320,21 +334,21 @@ define(function(require) {
 				greetingMedia = {
 					description: '<Text to Speech>',
 					media_source: 'tts',
-					name: args.tts.name,
+					name: args.selectedOption.name,
 					streamable: true,
-					type: args.tts.type,
+					type: args.selectedOption.type,
 					tts: {
-						text: args.tts.text,
+						text: args.selectedOption.tts.text,
 						voice: 'female/en-US'
 					}
 				};
 
-			if (args.tts.id) {
+			if (args.selectedOption.id) {
 				self.callApi({
 					resource: 'media.update',
 					data: {
 						accountId: self.accountId,
-						mediaId: args.tts.id,
+						mediaId: args.selectedOption.id,
 						data: greetingMedia
 					},
 					success: function(data) {
