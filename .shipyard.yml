@@ -1,12 +1,12 @@
 ---
 name: monster-ui-core
-base_branch: origin/master
+base_branch: 'origin/5.0'
 metapackage:
   - name: meta-monster-ui
     type: required
-    branch: master
+    branch: '5.0'
     package: monster-ui-core
-base_core: 
+base_core:
 template: monster-ui-core.spec.tmpl
 package:
   centos7:
