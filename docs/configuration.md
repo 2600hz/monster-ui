@@ -171,6 +171,7 @@ Key | Description | Type | Default | Required
 `brands` | Map custom settings individually by device brand. | `Object` | | `false`
 `brands.[]` | Each object key correspont to the device brand name (`yealink`, `avaya`...). | `Object` | | `false`
 `brands.[].keyFunctions` | List key functions available per brand ([schema][combo-keys-schema]). | `Array` | | `false`
+`brands.[].lineKeys` | List of keys to be used as default line keys per brand. | `Array` | | `false`
 
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
 [country-codes]: https://www.iso.org/obp/ui/#search
