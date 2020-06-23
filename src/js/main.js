@@ -86,6 +86,9 @@ require.config({
 		'hasher': ['signals'],
 		'image-select': ['chosen'],
 		'jqueryui': ['jquery'],
+		'jstz': {
+			exports: 'jstz'
+		},
 		'kazoo': {
 			'exports': 'kazoo'
 		},

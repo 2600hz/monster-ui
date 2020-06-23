@@ -1,9 +1,8 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		jstz = require('jstz'),
 		monster = require('monster');
-
-	require('jstz');
 
 	var timezone = {
 
