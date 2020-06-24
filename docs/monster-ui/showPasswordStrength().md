@@ -20,6 +20,13 @@ Key | Description | Type | Default | Required
 `display` | Type of indicator to display: a bar, an emoji or a color-changing lock icon. | `String('bar' | 'emoji' | 'icon')` | `bar` | `false`
 `tooltipPosition` | When the display is set to 'icon', you can choose the position of the tooltip on the icon. | `String('top' | 'bottom' | 'right' | 'left')` | `top` | `false`
 
+### Errors
+* `"input" is not a jQuery object`: `input` is not a jQuery object.
+* `"options" is not a plain object`: `options` is not a plain JavaScript object.
+* `` `{display}` is not a valid display option. It should be `bar`, `emoji` or `icon` ``: `options.display` does not contain a valid value. It should be one of the following: `bar`, `emoji` or `icon`.
+* `` `{tooltipPosition}` is not a valid tooltip position option. It should be one of `top`, `bottom`, `left` or `right`.``: `options.tooltipPosition` does not contain a valid value. It should be one of the following: `top`, `bottom`, `left` or `right`.
+* `"options.container" is not a jQuery object`: `options.container` parameter was provided, but it is not a `jQuery` object.
+
 ## Description
 This method allows you to add a password strength indicator for a specific input, in the form of either a bar, an emoji or a color-changing lock icon.
 
