@@ -2156,7 +2156,7 @@ define(function(require) {
 				throw new TypeError('"options.container" is not a jQuery object');
 			}
 
-			var regexes = _.map([
+			var strengthLevels = _.map([
 				{
 					key: 'strong',
 					regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
@@ -2212,43 +2212,40 @@ define(function(require) {
 					tooltipPosition: tooltipPosition
 				}));
 			var updateIndicator = _.get({
-				bar: function(strengthArgs) {
+				bar: function(strengthLevel) {
 					$template
 						.find('.monster-password-strength-bar')
 						.css({
-							backgroundColor: strengthArgs.color,
-							width: strengthArgs.size + '%'
+							backgroundColor: strengthLevel.color,
+							width: strengthLevel.size + '%'
 						});
 					$template
 						.find('.monster-password-strength-label')
-						.html(strengthArgs.label);
+						.html(strengthLevel.label);
 				},
-				emoji: function(strengthArgs) {
+				emoji: function(strengthLevel) {
 					$template
 						.find('.monster-password-strength-icon')
-						.css('color', strengthArgs.color)
-						.html(strengthArgs.emojiChar);
+						.css('color', strengthLevel.color)
+						.html(strengthLevel.emojiChar);
 					$template
 						.find('.monster-password-strength-label')
-						.html(strengthArgs.label);
+						.html(strengthLevel.label);
 				},
-				icon: function(strengthArgs) {
+				icon: function(strengthLevel) {
 					$template
 						.find('.monster-password-strength-icon')
-						.css('color', strengthArgs.color)
-						.attr('data-original-title', strengthArgs.label)
+						.css('color', strengthLevel.color)
+						.attr('data-original-title', strengthLevel.label)
 						.tooltip('fixTitle');
 				}
 			}, display);
 			var checkStrength = function() {
-				_.each(regexes, function(strengthData) {
-					if (!strengthData.regex.test(input.val())) {
-						return;
-					}
-
-					updateIndicator(strengthData);
-					return false;
+				var strengthLevel = _.find(strengthLevels, function(level) {
+					return level.regex.test(input.val());
 				});
+
+				!_.isUndefined(strengthLevel) && updateIndicator(strengthLevel);
 			};
 
 			input.on('keyup keypress change', checkStrength);
