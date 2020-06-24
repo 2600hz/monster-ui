@@ -651,7 +651,7 @@
 		"uploadNewMedia": "Upload New Media",
 		"textToSpeech": {
 			"tab": "Text-to-Speech",
-			"info": "Customize your greeting message using Text-to-Speech. Type your desired greeting below. Once your changes are saved, anyone who calls this number will be greeted with your custom message.",
+			"info": "Customize your greeting message using Text-to-Speech. Type your desired greeting below. Once your changes are saved, anyone who calls this {{entity}} will be greeted with your custom message.",
 			"placeholder": "Type your custom greeting…"
 		}
 	},
