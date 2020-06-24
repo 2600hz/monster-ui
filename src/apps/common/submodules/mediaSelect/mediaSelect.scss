@@ -2,6 +2,8 @@
 /************************************************************/
 /***************** MONSTER MEDIA SELECTION ******************/
 /************************************************************/
+@import '../../../../css/partials/base';
+
 .monster-media-selection {
 	.media-dropdown {
 		margin-bottom: 0px;
@@ -91,7 +93,7 @@
 
 			.chars-remaining-counter {
 				font-size: 12px;
-				color: #64646c;
+				color: $midgray2;
 
 				span {
 					font-weight: bold;
