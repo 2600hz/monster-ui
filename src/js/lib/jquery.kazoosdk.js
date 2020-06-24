@@ -553,6 +553,12 @@
 				'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
 				'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
 				'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}' }
+			},
+			localTrunks: {
+				'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/local_resources' },
+				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/local_resources/{localResouceId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/local_resources/{localResouceId}' },
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/local_resources' }
 			}
 		},
 		authTokens = {};
