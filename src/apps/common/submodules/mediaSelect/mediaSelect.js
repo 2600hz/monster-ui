@@ -22,6 +22,7 @@ define(function(require) {
 		 * @param {Boolean} [args.dragableUpload]
 		 * @param {Boolean} [args.enableTTS] - Show text to speech tab
 		 * @param {(String|Object)} args.selectedOption - The current media to be edited or changed
+		 * @param {String} [args.ttsEntity] - The text to speech entity
 		 */
 		mediaSelectRender: function(args) {
 			var self = this,
@@ -127,7 +128,14 @@ define(function(require) {
 				template = $(self.getTemplate({
 					name: 'tabs-layout',
 					data: _.merge({}, formattedData, {
-						enableTextspeechTab: enableTextspeechTab
+						enableTextspeechTab: enableTextspeechTab,
+						ttsInfo: self.getTemplate({
+							name: '!' + self.i18n.active().mediaSelect.textToSpeech.info,
+							data: {
+								entity: args.ttsEntity
+							},
+							submodule: 'mediaSelect'
+						})
 					}),
 					submodule: 'mediaSelect'
 				}));
