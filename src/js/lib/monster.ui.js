@@ -2129,9 +2129,6 @@ define(function(require) {
 		 * @param  {('top'|'bottom'|'left'|'right')} [options.tooltipPosition='top']  When the display is set to 'icon', you can choose the position of the tooltip on the icon.
 		 */
 		showPasswordStrength: function(input, pOptions) {
-			if (!input) {
-				throw new Error('You must provide at least one input field');
-			}
 			if (!(input instanceof $)) {
 				throw new TypeError('"input" is not a jQuery object');
 			}
