@@ -450,9 +450,7 @@ input.monster-invalid[type="text"]:not(.search-query),
 
 div.monster-password-strength {
 	line-height: 18px;
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-			box-sizing: border-box;
+	box-sizing: border-box;
 	width: 100%;
 	height: 20px;
 	margin-top: 5px;
@@ -462,9 +460,7 @@ div.monster-password-strength {
 	.monster-password-strength {
 		&-bar {
 			font-size: 12px;
-			-webkit-box-sizing: border-box;
-			-moz-box-sizing: border-box;
-					box-sizing: border-box;
+			box-sizing: border-box;
 			cursor: default;
 		}
 
