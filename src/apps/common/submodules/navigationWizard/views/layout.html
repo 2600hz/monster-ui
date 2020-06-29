@@ -1,5 +1,5 @@
 <div id="navigation_wizard_wrapper">
-	<div class="header">
+	<div class="navigation-header">
 		<div class="nav-title">
 			<h4>{{title}}</h4>
 		</div>
@@ -8,23 +8,25 @@
 		</div>
 	</div>
 
-	<div class="left-content">
-		<div class="nav">
-			<ol>
-			{{#each steps}}
-				<div class="step" data-id="{{@key}}">
-					<span class="fa fa-circle"></span>
-					<i class="fa fa-check-circle"></i>
-					<i class="fa fa-exclamation-triangle"></i>
-					<li>{{this.label}}</li>
-					<span class="description">{{this.description}}</span>
-				</div>
-			{{/each}}
-			</ol>
+	<div class="flex-main-container">
+		<div class="left-content">
+			<div class="nav">
+				<ol>
+				{{#each steps}}
+					<div class="step" data-id="{{@key}}">
+						<span class="fa fa-circle"></span>
+						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-exclamation-triangle"></i>
+						<li>{{this.label}}</li>
+						<span class="description">{{this.description}}</span>
+					</div>
+				{{/each}}
+				</ol>
+			</div>
 		</div>
-	</div>
 
-	<div class="right-content">
+		<div class="right-content">
+		</div>
 	</div>
 
 	<div class="footer">
