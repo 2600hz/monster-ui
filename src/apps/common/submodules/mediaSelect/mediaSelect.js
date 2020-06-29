@@ -97,7 +97,10 @@ define(function(require) {
 				options.push(optionShoutcast);
 			}
 
-			formattedData.options = options.concat(args.options);
+			formattedData.options = _(options)
+				.concat(args.options)
+				.filter(opt => opt.media_source !== 'tts')
+				.value();
 
 			if (isShoutcast) {
 				formattedData.isShoutcast = isShoutcast;
