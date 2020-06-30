@@ -27,28 +27,32 @@ define(function(require) {
 		mediaSelectRender: function(args) {
 			var self = this,
 				container = args.container,
-				callback = args.callback,
-				formattedData = self.mediaSelectFormatData(args),
-				template = self.mediaSelectGetSkinnedTemplate(args, formattedData);
+				callback = args.callback;
 
-			container
+			self.mediaSelectFormatData(args, function(formattedData) {
+				console.log('formattedData', formattedData);
+
+				var template = self.mediaSelectGetSkinnedTemplate(args, formattedData);
+
+				container
 				.empty()
 				.append(template);
 
-			callback && callback({
-				getValue: function(callback) {
-					if (args.enableTTS) {
-						self.mediaSelectGetValue(template, _.merge({}, args, {
-							callback: callback
-						}));
-					} else {
-						return self.mediaSelectGetValue(template, args);
+				callback && callback({
+					getValue: function(callback) {
+						if (args.enableTTS) {
+							self.mediaSelectGetValue(template, _.merge({}, args, {
+								callback: callback
+							}));
+						} else {
+							return self.mediaSelectGetValue(template, args);
+						}
 					}
-				}
+				});
 			});
 		},
 
-		mediaSelectFormatData: function(args) {
+		mediaSelectFormatData: function(args, callback) {
 			var self = this,
 				defaultData = {
 					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
@@ -68,47 +72,72 @@ define(function(require) {
 						id: _.get(args, 'selectedOption.id', args.selectedOption)
 					}),
 					mediaId: _.get(args, 'selectedOption.id', args.selectedOption)
-				},
-				formattedData = $.extend(true, {}, defaultData, args),
-				optionShoutcast = {
-					id: 'shoutcast',
-					name: self.i18n.active().mediaSelect.shoutcastURL
-				},
-				optionNone = {
-					id: 'none',
-					name: formattedData.noneLabel
-				},
-				optionSilence = {
-					id: 'silence_stream://300000',
-					name: self.i18n.active().mediaSelect.silence
-				},
-				isShoutcast = defaultData.mediaId && defaultData.mediaId.indexOf('://') >= 0 && defaultData.mediaId !== 'silence_stream://300000',
-				options = [];
+				};
 
-			if (formattedData.hasNone) {
-				options.push(optionNone);
-			}
+			monster.parallel({
+				medias: function(cb) {
+					if (_.has(args, 'options') && args.options.length.length > 0) {
+						cb(null, args.options);
+						return;
+					}
 
-			if (formattedData.hasSilence) {
-				options.push(optionSilence);
-			}
+					self.callApi({
+						resource: 'media.list',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							cb(null, data.data);
+						},
+						error: function(err) {
+							cb(err, null);
+						}
+					});
+				}
+			}, function(err, result) {
+				args.options = result.medias;
 
-			if (formattedData.hasShoutcast) {
-				options.push(optionShoutcast);
-			}
+				var formattedData = $.extend(true, {}, defaultData, args),
+					optionShoutcast = {
+						id: 'shoutcast',
+						name: self.i18n.active().mediaSelect.shoutcastURL
+					},
+					optionNone = {
+						id: 'none',
+						name: formattedData.noneLabel
+					},
+					optionSilence = {
+						id: 'silence_stream://300000',
+						name: self.i18n.active().mediaSelect.silence
+					},
+					isShoutcast = defaultData.mediaId && defaultData.mediaId.indexOf('://') >= 0 && defaultData.mediaId !== 'silence_stream://300000',
+					options = [];
 
-			formattedData.options = _(options)
-				.concat(args.options)
-				.filter(opt => opt.media_source !== 'tts')
-				.value();
+				if (formattedData.hasNone) {
+					options.push(optionNone);
+				}
 
-			if (isShoutcast) {
-				formattedData.isShoutcast = isShoutcast;
-				formattedData.shoutcastValue = _.get(formattedData, 'selectedOption.id', formattedData.selectedOption);
-				formattedData.selectedOption = 'shoutcast';
-			}
+				if (formattedData.hasSilence) {
+					options.push(optionSilence);
+				}
 
-			return formattedData;
+				if (formattedData.hasShoutcast) {
+					options.push(optionShoutcast);
+				}
+
+				formattedData.options = _(options)
+					.concat(args.options)
+					.filter(opt => opt.media_source !== 'tts')
+					.value();
+
+				if (isShoutcast) {
+					formattedData.isShoutcast = isShoutcast;
+					formattedData.shoutcastValue = _.get(formattedData, 'selectedOption.id', formattedData.selectedOption);
+					formattedData.selectedOption = 'shoutcast';
+				}
+
+				callback(formattedData);
+			});
 		},
 
 		mediaSelectGetSkinnedTemplate: function(args, formattedData) {
