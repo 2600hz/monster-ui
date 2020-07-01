@@ -49,7 +49,14 @@ define(function(require) {
 
 					return template;
 				},
-				afterInsert = function afterInsert() {};
+				afterInsert = function afterInsert() {
+					if (args.selectedMedia.media_source === 'tts') {
+						$('.monster-media-tabs-skin .navbar-menu-item a.active').removeClass('active');
+						$('.monster-media-tabs-skin .monster-tab-content.active').removeClass('active');
+
+						$('.monster-media-tabs-skin [data-tab="text_to_speech"]').addClass('active');
+					}
+				};
 
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
 				monster.parallel({
@@ -88,7 +95,7 @@ define(function(require) {
 						});
 					}
 				}, function(error, results) {
-					insertTemplateCallback(initTemplate(results), afterInsert(results.media));
+					insertTemplateCallback(initTemplate(results), afterInsert);
 				});
 			});
 		},
