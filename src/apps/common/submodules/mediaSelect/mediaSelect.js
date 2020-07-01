@@ -216,6 +216,10 @@ define(function(require) {
 				} else {
 					response = val;
 				}
+
+				if (args.selectedMedia.media_source === 'tts' && !ttsTab.length) {
+					self.deleteTTSMedia(args.selectedMedia.id);
+				}
 			} else {
 				response = 'invalid_template';
 			}
@@ -382,6 +386,19 @@ define(function(require) {
 			monster.ui.fancyTabs(template.find('.monster-tab-wrapper'));
 
 			self.mediaSelectBindCommon(template, mediaToUpload);
+		},
+
+		deleteTTSMedia: function(mediaId) {
+			var self = this;
+
+			self.callApi({
+				resource: 'media.delete',
+				bypassProgressIndicator: true,
+				data: {
+					accountId: self.accountId,
+					mediaId: mediaId
+				}
+			});
 		},
 
 		mediaSelectUpdateTTSMedia: function(args, callback) {
