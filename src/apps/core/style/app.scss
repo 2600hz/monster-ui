@@ -1,375 +1,39 @@
 @import "../../../css/partials/base";
-@import url('../submodules/alerts/alerts.css');
+@import "../submodules/alerts/alerts.css";
 
 html,
-body,
-.core-wrapper {
-	height: 100%;
+body {
+	height: 100vh;
 }
 
-/* Disabling for now, remove if it no longer creates an issue */
-/* body,
-.core-topbar,
-#myaccount,
-#auth_app_container,
-.core-content {
-	min-width: 200px;
-} */
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 
-.core-wrapper.dashboard .core-content {
-	height: 100%;
-}
+	.core-wrapper {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 
-.core-content {
-	height: calc(100% - 67px);
-}
+		.core-topbar-wrapper {
+			background-color: $tuna;
+			padding-top: 5px;
 
-/************************************************************/
-/************************** TOPBAR **************************/
-/************************************************************/
+			@import "./partials/progress-indicator.scss";
+			@import "./partials/core-topbar.scss";
+		}
 
-.core-topbar-wrapper {
-	background-color: #303039;
-	padding-top: 5px;
+		.core-content {
+			flex: 1;
+		}
 
-	@import "./partials/progress-indicator.scss";
-}
-
-.core-wrapper.dashboard .core-topbar-wrapper {
-	display: none;
-}
-
-.core-topbar {
-	height: 62px;
-
-	.open .links {
-		i, svg {
-			color: $primary-color;
+		&.dashboard {
+			.core-topbar-wrapper {
+				display: none;
+			}
 		}
 	}
-
-	.topbar-dropdown-container {
-		position: absolute;
-		z-index: 21; /* 1 more than myAccount */
-	}
-}
-
-.core-topbar .main-links {
-	height: inherit;
-}
-.core-topbar .main-links,
-.core-topbar .nav {
-	float: left;
-	margin: 0;
-}
-.core-topbar .links {
-	line-height: 62px;
-	display: inline-block;
-	color: $french-gray;
-
-	&:hover, &:focus {
-		cursor: pointer;
-		background: transparent;
-	}
-
-	i {
-		font-size: 16px;
-		vertical-align: middle;
-	}
-
-	svg {
-		width: 16px;
-		height: 16px;
-	}
-
-	i, svg {
-		color: $french-gray;
-	}
-}
-.core-topbar .links .inline-text {
-	display: inline-block;
-	margin-right: 10px;
-	vertical-align: top;
-}
-.core-topbar .links .inline-text.red {
-	color: red;
-}
-.core-topbar .links .cell-text {
-	line-height: 21px;
-	text-align: center;
-}
-.core-topbar .nav {
-	float: right;
-}
-.core-topbar .nav .links {
-	padding: 0 20px;
-	position: relative;
-
-	.badge {
-		// Colors
-		color: $woodsmoke;
-
-		// Text
-		font-size: 12px;
-		font-weight: bold;
-		line-height: 20px;
-		text-align: center;
-
-		// Shape
-		border-radius: 10px;
-		box-shadow: -1px 1px 0 0 $shark2;
-
-		// Size
-		height: 20px;
-		width: 12px;
-
-		// Position
-		padding: 0px 6px;
-		position: absolute;
-		right: 5px;
-		top: 14px;
-
-		&.danger {
-			background-color: $danger-color;
-		}
-	}
-}
-.core-topbar .nav > li {
-	float: left;
-	height: 100%;
-	text-decoration: none;
-
-	& > a {
-		border-left: 1px solid $shark;
-	}
-
-	&.open > a {
-		background-color: $shark;
-	}
-}
-.core-topbar .links.cell {
-	padding: 10px 20px;
-}
-.core-topbar #main_topbar_brand {
-	width: 192px;
-	height: 100%;
-	margin: auto 24px;
-	background: no-repeat center center;
-}
-.core-topbar #main_topbar_current_app {
-	padding: 0 25px;
-	border-left: 1px solid #202029;
-}
-.core-topbar #main_topbar_current_app_icon {
-	display: inline-block;
-	width: 32px;
-	height: 32px;
-	background: no-repeat center;
-	background-size: contain;
-
-	-webkit-transform: translateY(-50%);
-	   -moz-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-			transform: translateY(-50%);
-}
-.core-topbar #main_topbar_current_app_name {
-	font-size: 16px;
-	display: inline-block;
-	max-width: 269px;
-	height: 62px;
-	padding-left: 15px;
-	color: #fff;
-}
-.core-topbar #main_topbar_trial_link_label {
-	display: inline-block;
-	float: left;
-	max-width: 130px;
-}
-.core-topbar #main_topbar_apploader {
-	display: none;
-}
-.core-topbar #main_topbar_myaccount_user {
-	max-width: 190px;
-}
-.core-topbar .links:hover,
-.core-topbar .links:hover i,
-.core-topbar .links:hover svg,
-.core-topbar #main_topbar_current_app_name:hover,
-.core-topbar #main_topbar_myaccount_masquerade_label {
-	color: $primary-color;
-}
-.core-topbar .inline-text,
-.core-topbar .cell-text,
-.core-topbar #main_topbar_current_app_name,
-.core-topbar #main_topbar_trial_link_label {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-@media (max-width: 1199px) {
-	.core-topbar #main_topbar_brand {
-		margin-right: 10px;
-	}
-
-	.core-topbar .nav .links,
-	.core-topbar #main_topbar_current_app {
-		padding-right: 10px;
-		padding-left: 10px;
-	}
-
-	.core-topbar #main_topbar_current_app_name {
-		padding-left: 10px;
-	}
-
-	/* Needed to allow enough space for the account toggle */
-	.core-topbar #main_topbar_myaccount_user {
-		max-width: 118px;
-	}
-}
-@media (max-width: 999px) {
-	.core-topbar #main_topbar_current_app_icon {
-		transform: none;
-		vertical-align: middle;
-		margin-bottom: 5px;
-	}
-	.core-topbar #main_topbar_current_app_name,
-	.core-topbar #main_topbar_trial {
-		display: none;
-	}
-}
-
-/***** Account Toggle *****/
-.core-topbar .links#main_topbar_account_toggle_link {
-	display: none;
-}
-
-.core-topbar .links#main_topbar_account_toggle_link.visible {
-	display: block;
-}
-
-.core-topbar #main_topbar_account_toggle.open {
-	background-color: $shark;
-}
-.core-topbar #main_topbar_account_toggle:not(.open) #main_topbar_account_toggle_container {
-	display: none;
-}
-
-.core-topbar #main_topbar_account_toggle_container .account-browser-container {
-	background-color: $shark;
-	width: 220px;
-	padding: 1px;
-	border-right: none;
-}
-.core-topbar #main_topbar_account_toggle_container .search-box {
-	width: auto;
-	padding: 10px;
-	border-bottom: none;
-}
-.core-topbar #main_topbar_account_toggle_container .search-box i {
-	color: #c0c0c9;
-	margin: 8px 0 0 8px;
-}
-.core-topbar #main_topbar_account_toggle_container .search-box .search-query {
-	background-color: #404049;
-	color: #c0c0c9;
-	box-sizing: border-box;
-	width: 100%;
-	border-radius: 0px;
-	border: solid 1px #909099;
-	box-shadow: none;
-	height: 30px;
-}
-.core-topbar #main_topbar_account_toggle_container .account-list-container {
-	width: 440px;
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list,
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-slider {
-	width: 220px;
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element {
-	border-color: #202029;
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element > div {
-	background: #303039;
-	color: #c0c0c9;
-	border-color: #202029;
-}
-
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-list-element.active > div {
-	color: $primary-color;
-}
-
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-link .account-name {
-	font-size: 14px;
-}
-.core-topbar #main_topbar_account_toggle_container .account-children-link i:before {
-	font-size: 10px;
-	color: #c0c0c9;
-	content: "\f054";
-}
-.core-topbar #main_topbar_account_toggle_container .account-children-link.local-back i:before {
-	content: "\f053";
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link {
-	color: #c0c0c9;
-	background: #202029;
-	border-color: #909099;
-	border-top: solid 1px;
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-search-link .account-search-value {
-	text-shadow: none;
-	font-weight: 700;
-}
-
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link {
-	line-height: 20px;
-	border: none;
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link * {
-	color: #909099;
-	font-size: 12px;
-	vertical-align: middle;
-}
-.core-topbar #main_topbar_account_toggle_container .account-browser-container .account-previous-link i:before {
-	content: "\f060";
-}
-
-.core-topbar #main_topbar_account_toggle_container .account-toggle-header {
-	background: #202029;
-	color: #c0c0c9;
-	padding: 10px 12px 0px 12px;
-	position: relative;
-	width: 198px;
-}
-.core-topbar #main_topbar_account_toggle_container .current-account-label {
-	font-size: 12px;
-}
-.core-topbar #main_topbar_account_toggle_container .current-account-container {
-	color: $primary-color;
-}
-
-.core-topbar #main_topbar_account_toggle_container .missing-info {
-	color: #909099;
-	font-style: italic;
-	text-overflow: ellipsis;
-	overflow: hidden;
-}
-
-.core-topbar #main_topbar_account_toggle_container .home-account-link {
-	position: absolute;
-	top: 15px;
-	right: 15px;
-	cursor: pointer;
-	color: #606069;
-}
-.core-topbar #main_topbar_account_toggle:not(.masquerading) .home-account-link {
-	display: none;
-}
-.core-topbar #main_topbar_account_toggle_container .home-account-link:hover {
-	color: #c0c0c9;
-}
-#main_topbar_account_toggle.masquerading ~ #main_topbar_myaccount i.fa:before {
-	content: "\f085";
 }
 
 /************************************************************/

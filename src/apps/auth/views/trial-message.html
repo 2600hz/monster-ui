@@ -1,13 +1,8 @@
-<li id="main_topbar_trial">
-	<a href="#" class="links" id="main_topbar_trial_link">
-	{{#compare daysLeft ">=" 0}}
-		<span class="blue" id="main_topbar_trial_link_label">
-			{{replaceVar i18n.trialDaysLeft daysLeft}}
+<li>
+	<a href="#" class="links" data-title="{{#if hasDaysLeft}}{{replaceVar i18n.trialDaysLeft daysLeft}}{{else}}{{i18n.trialExpired}}{{/if}}" data-placement="bottom" data-toggle="tooltip">
+		<i class="fa fa-flask"></i>
+		<span class="badge danger">
+			{{badgeLabel}}
 		</span>
-	{{else}}
-		<span class="red" id="main_topbar_trial_link_label">
-			{{replaceVar i18n.trialExpired}}
-		</span>
-	{{/compare}}
 	</a>
 </li>

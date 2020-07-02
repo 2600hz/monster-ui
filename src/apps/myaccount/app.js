@@ -322,7 +322,10 @@ define(function(require) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
 							name: args && args.name || monster.util.getUserFullName(),
-							showMyaccount: showMyaccount
+							showMyaccount: showMyaccount,
+							initials: monster.util.getUserInitials(),
+							account: monster.apps.auth.currentAccount.name,
+							isMasquerading: monster.util.isMasquerading()
 						},
 						navHtml = $(self.getTemplate({
 							name: 'nav',
@@ -482,6 +485,7 @@ define(function(require) {
 								self.displayUserSection();
 
 								myaccount.addClass('myaccount-open');
+								$('#main_topbar_myaccount').addClass('open');
 
 								myaccount.one('transitionend', function() {
 									$('#monster_content').hide();
@@ -546,10 +550,11 @@ define(function(require) {
 			var self = this,
 				myaccount = myaccount || $(self.mainContainer);
 
-			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
+			monster.pub('core.showAppName');
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.find('.myaccount-dialog-container').empty();
 			myaccount.removeClass('myaccount-open');
+			$('#main_topbar_myaccount').removeClass('open');
 			$('#monster_content').show();
 
 			monster.pub('myaccount.closed');

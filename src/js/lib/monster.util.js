@@ -1366,6 +1366,39 @@ define(function(require) {
 	util.getUserFullName = getUserFullName;
 
 	/**
+	 * Returns the initials (two characters) of a specific user or,
+	 * if missing, of the currently logged in user.
+	 *
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 *
+	 * @return {String}                   User's initials
+	 */
+	function getUserInitials(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+
+		return (user.first_name || '').charAt(0) + (user.last_name || '').charAt(0);
+	}
+	util.getUserInitials = getUserInitials;
+
+	/**
 	 * Converts a Gregorian timestamp into a Date instance
 	 * @param  {Number} pTimestamp Gregorian timestamp
 	 * @return {Date}           Converted Date instance

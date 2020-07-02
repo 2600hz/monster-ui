@@ -174,7 +174,6 @@
 		"notUsedNumber": "{{number}}: This number is not used but belongs to {{accountName}}. (Switch to Spare Numbers view to see this number)",
 		"notSpareNumber": "{{number}}: This number is not a spare number but is used by {{accountName}}. (Switch to the Numbers in Use view to see this number)",
 		"numberNotFound": "The number you searched was not found! Make sure to enter the full number as we don't allow partial searches (but the formatting doesn't matter).",
-
 		"dialogConfirm": {
 			"from": "From ",
 			"cancel": "Cancel",
@@ -192,7 +191,9 @@
 				"button": "move number(s)"
 			}
 		},
-
+		"dialogAlertNowAllowed": {
+			"info": "The number you searched for exists, but you are not allowed to manage it"
+		},
 		"__comment": "UI-1219: Adding the prepend feature to numbers",
 		"__version": "v3.20_s1",
 		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone",
@@ -314,19 +315,24 @@
 	},
 
 	"e911": {
+		"email": {
+			"label": "Email Address(es)",
+			"error": "Invalid space separated address(es)",
+			"placeholder": "Space separated"
+		},
 		"addressLine1": "Address Line 1",
 		"addressLine2": "Address Line 2",
 		"city": "City",
 		"dialogTitle": "Edit 911 Location",
 		"gmapPinLabel": "Your+E911+Location",
-		"infoBox": "This address will show up to 911 emergency services when you dial it from your number.",
+		"infoBox": "This information will show up to 911 emergency services when you dial it from your number.",
 		"label": "e911",
 		"lastE911Error": "You must have e911 set up on at least one number in your account. Please set it up on another number before removing it from this one.",
 		"postalCode": "Zip Code",
 		"rotatedText": "For emergency services",
 		"state": "State",
-		"successE911": "You successfully updated the e911 address of <br> {{phoneNumber}}",
-		"title": "E911 Address",
+		"successE911": "You successfully updated the e911 information of <br> {{phoneNumber}}",
+		"title": "E911 Information",
 		"verifyLocation": "Verify Location",
 		"__comment": "UI-1355: Add USPS format to addresses",
 		"__version": "v3.20_s4",

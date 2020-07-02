@@ -361,31 +361,31 @@ define(function(require) {
 				statuses: [ 'selected' ]
 			});
 
-			//hide clear button if it's not a form
+			// Hide clear button if it's not a form
 			if (steps[stepId].default) {
 				template
 					.find('#clear')
-						.show();
+						.removeClass('hidden');
 			} else {
 				template
 					.find('#clear')
-						.hide();
+						.addClass('hidden');
 			}
 
-			//Hide back button in the first page
+			// Hide back button in the first page
 			if (stepId === 0) {
-				template.find('.back').hide();
+				template.find('.back').addClass('hidden');
 			} else {
-				template.find('.back').show();
+				template.find('.back').removeClass('hidden');
 			}
 
-			//Display done button
+			// Display done button
 			if ((steps.length - 1) === stepId) {
-				template.find('#next').hide();
-				template.find('#done').show();
+				template.find('#next').addClass('hidden');
+				template.find('#done').removeClass('hidden');
 			} else {
-				template.find('#done').hide();
-				template.find('#next').show();
+				template.find('#done').addClass('hidden');
+				template.find('#next').removeClass('hidden');
 			}
 		},
 
@@ -659,9 +659,9 @@ define(function(require) {
 
 				if (_.has(props, 'display')) {
 					if (props.display) {
-						buttonElement.show();
+						buttonElement.removeClass('hidden');
 					} else {
-						buttonElement.hide();
+						buttonElement.addClass('hidden');
 					}
 				}
 

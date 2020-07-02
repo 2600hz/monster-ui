@@ -1,0 +1,407 @@
+.core-topbar {
+	display: flex;
+	height: 62px;
+
+	.open .links {
+		background-color: $woodsmoke;
+		color: $white;
+
+		i, svg {
+			color: $white;
+		}
+	}
+	.links {
+		display: flex;
+		align-items: center;
+		height: 100%;
+		color: $french-gray2;
+		background-color: transparent;
+		border-left: 1px solid $tuna;
+
+		&:hover,
+		&:focus {
+			cursor: pointer;
+			background-color: $woodsmoke;
+		}
+
+		i {
+			font-size: 16px;
+		}
+
+		i, svg {
+			color: $french-gray;
+			width: 16px;
+			height: 16px;
+		}
+
+		.inline-text {
+			display: inline-block;
+			margin-right: 10px;
+			vertical-align: top;
+
+			&.red {
+				color: red;
+			}
+		}
+
+		.cell-text {
+			line-height: 21px;
+			text-align: center;
+		}
+
+		&.cell {
+			padding: 10px 20px;
+		}
+	}
+	#main_topbar_brand {
+		flex-shrink: 0;
+		width: 192px;
+		height: 100%;
+		padding: 0 10px;
+		background: no-repeat center center;
+		border-right: 1px solid $woodsmoke;
+	}
+	.main-links {
+		display: flex;
+		justify-content: flex-end;
+		flex-grow: 1;
+		flex-shrink: 0;
+		min-width: 0;
+
+		#main_topbar_current_app {
+			flex-shrink: 0;
+			min-width: 0;
+			padding: 0;
+			border: 0;
+
+			#main_topbar_current_app_icon {
+				flex-shrink: 0;
+				min-width: 32px;
+				height: 32px;
+				margin: 0 15px;
+				background: no-repeat center;
+				background-size: contain;
+			}
+			#main_topbar_current_app_name {
+				display: none;
+				font-size: 16px;
+				max-width: 294px;
+				padding-left: 15px;
+				color: $white;
+			}
+		}
+	}
+	.nav {
+		display: flex;
+		margin: 0;
+
+		.links {
+			padding: 0 23px;
+			position: relative;
+
+			.badge {
+				// Colors
+				color: $woodsmoke;
+
+				// Text
+				font-size: 12px;
+				font-weight: bold;
+				line-height: 20px;
+				text-align: center;
+
+				// Shape
+				border-radius: 10px;
+				box-shadow: -1px 1px 0 0 $shark2;
+
+				// Size
+				height: 20px;
+				width: 12px;
+
+				// Position
+				padding: 0px 6px;
+				position: absolute;
+				right: 5px;
+				top: 14px;
+
+				&.danger {
+					background-color: $danger-color;
+				}
+			}
+		}
+
+		& > li {
+			height: 100%;
+			text-decoration: none;
+		}
+	}
+	.topbar-dropdown-container {
+		position: absolute;
+		z-index: 21; /* 1 more than myAccount */
+	}
+	#main_topbar_apploader {
+		display: none;
+	}
+	#main_topbar_myaccount {
+		& > .links {
+			padding: 0 12px;
+		}
+	}
+	#main_topbar_myaccount_icon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 38px;
+		height: 38px;
+		background-color: $manatee;
+		border-radius: 50%;
+		color: white;
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: 1px;
+	}
+	#main_topbar_myaccount_labels {
+		display: none;
+		flex-direction: column;
+		max-width: 180px;
+		padding-left: 12px;
+	}
+	#main_topbar_myaccount_user {
+		color: $mischka;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	#main_topbar_myaccount_user,
+	#main_topbar_myaccount_accountname {
+		line-height: 23px;
+	}
+	.masquerading {
+		#main_topbar_myaccount_user {
+			color: $secondary-color;
+		}
+		#main_topbar_myaccount_icon {
+			background-color: $secondary-color;
+
+			svg {
+				font-size: 24px;
+				color: $woodsmoke;
+			}
+		}
+	}
+	.links:hover,
+	.links:hover i,
+	.links:hover svg,
+	#main_topbar_current_app_name:hover,
+	#main_topbar_myaccount .links:hover:not(.masquerading) #main_topbar_myaccount_user,
+	#main_topbar_myaccount .links:hover #main_topbar_myaccount_accountname, {
+		color: $white;
+	}
+	.inline-text,
+	.cell-text,
+	#main_topbar_current_app_name,
+	#main_topbar_myaccount_user,
+	#main_topbar_myaccount_accountname {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
+
+@media (min-width: 768px) {
+	.core-topbar {
+		.main-links {
+			justify-content: space-between;
+
+			.links {
+				padding: 0 10px;
+			}
+
+			#main_topbar_current_app {
+				flex-shrink: unset;
+			}
+		}
+		.nav {
+			#main_topbar_myaccount_labels {
+				display: inherit;
+			}
+		}
+	}
+}
+
+@media (min-width: 1024px) {
+	.core-topbar {
+		.main-links {
+			flex-shrink: 1;
+
+			#main_topbar_current_app {
+				#main_topbar_current_app_icon {
+					margin-right: 0;
+				}
+				#main_topbar_current_app_name {
+					display: inherit;
+					margin-right: 15px;
+				}
+			}
+		}
+	}
+}
+
+@media (min-width: 1200px) {
+	.core-topbar {
+		.main-links {
+			.links {
+				padding: 0 23px;
+			}
+		}
+		#main_topbar_brand {
+			padding: 0 24px;
+		}
+	}
+}
+
+/***** Account Toggle *****/
+.core-topbar {
+	#main_topbar_account_toggle {
+		&:not(.open) {
+			#main_topbar_account_toggle_container {
+				display: none;
+			}
+		}
+
+		&:not(.masquerading) .home-account-link {
+			display: none;
+		}
+
+		#main_topbar_account_toggle_link {
+			display: none;
+
+			&.visible {
+				display: flex;
+
+			}
+		}
+
+		#main_topbar_account_toggle_container {
+			.account-toggle-header {
+				background: $shark;
+				color: $french-gray;
+				padding: 10px 12px 0px 12px;
+				position: relative;
+				width: 198px;
+
+				.current-account-label {
+					font-size: 12px;
+				}
+				.current-account-container {
+					color: $primary-color;
+
+					.missing-info {
+						color: $manatee;
+						font-style: italic;
+						text-overflow: ellipsis;
+						overflow: hidden;
+					}
+				}
+				.home-account-link {
+					position: absolute;
+					top: 15px;
+					right: 15px;
+					cursor: pointer;
+					color: $midgray;
+
+					&:hover {
+						color: $french-gray;
+					}
+				}
+			}
+			.account-browser-container {
+				background-color: $shark;
+				width: 220px;
+				padding: 1px;
+				border-right: none;
+
+				.search-box {
+					width: auto;
+					padding: 10px;
+					border-bottom: none;
+
+					i {
+						color: $french-gray;
+						margin: 8px 0 0 8px;
+					}
+
+					.search-query {
+						background-color: $tuna2;
+						color: $french-gray;
+						box-sizing: border-box;
+						width: 100%;
+						border-radius: 0px;
+						border: solid 1px $manatee;
+						box-shadow: none;
+						height: 30px;
+					}
+				}
+
+				.account-list-container {
+					width: 440px;
+				}
+				.account-list,
+				.account-list-slider {
+					width: 220px;
+				}
+				.account-list-element {
+					border-color: $shark;
+
+					& > div {
+						background: $tuna;
+						color: $french-gray;
+						border-color: $shark;
+					}
+
+					.active > div {
+						color: $primary-color;
+					}
+				}
+
+				.account-link .account-name {
+					font-size: 14px;
+				}
+				.account-children-link {
+					i:before {
+						font-size: 10px;
+						color: $french-gray;
+						content: "\f054";
+					}
+
+					&.local-back i:before {
+						content: "\f053";
+					}
+				}
+				.account-search-link {
+					color: $french-gray;
+					background: $shark;
+					border-color: $manatee;
+					border-top: solid 1px;
+
+					.account-search-value {
+						text-shadow: none;
+						font-weight: 700;
+					}
+				}
+				.account-previous-link {
+					line-height: 20px;
+					border: none;
+
+					* {
+						color: $manatee;
+						font-size: 12px;
+						vertical-align: middle;
+					}
+
+					i:before {
+						content: "\f060";
+					}
+				}
+			}
+		}
+	}
+}
