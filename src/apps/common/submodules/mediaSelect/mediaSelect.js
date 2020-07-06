@@ -432,6 +432,10 @@ define(function(require) {
 					},
 					success: function(data) {
 						callback && callback(data.data.id);
+					},
+					error: function() {
+						monster.ui.alert(self.i18n.active().mediaSelect.textToSpeech.errors.update);
+						callback && callback(null);
 					}
 				});
 			} else {
@@ -443,6 +447,10 @@ define(function(require) {
 					},
 					success: function(data) {
 						callback && callback(data.data.id);
+					},
+					error: function() {
+						monster.ui.alert(self.i18n.active().mediaSelect.textToSpeech.errors.create);
+						callback && callback(null);
 					}
 				});
 			}
