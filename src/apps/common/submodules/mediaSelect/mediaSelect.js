@@ -217,7 +217,11 @@ define(function(require) {
 				if (val === 'shoutcast') {
 					response = template.find('.shoutcast-div input').val();
 				} else if (ttsTab.length && callback) {
-					args.selectedMedia.tts.text = ttsTab.find('.custom-greeting-text').val();
+					args.selectedMedia = _.merge({}, {
+						tts: {
+							text: ttsTab.find('.custom-greeting-text').val()
+						}
+					});
 
 					self.mediaSelectUpdateTTSMedia(args, callback);
 				} else {
@@ -422,7 +426,7 @@ define(function(require) {
 					}
 				};
 
-			if (args.selectedMedia.id) {
+			if (args.selectedMedia.id && args.selectedMedia.media_source === 'tts') {
 				self.callApi({
 					resource: 'media.update',
 					data: {
