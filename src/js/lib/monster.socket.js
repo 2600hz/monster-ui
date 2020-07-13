@@ -436,8 +436,6 @@ define(function(require) {
 					return;
 				}
 				wsc.logger.warn('failed to unsubscribe from ' + params.binding, data);
-				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
-				wsc.unbind(params);
 			});
 		},
 
