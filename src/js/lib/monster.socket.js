@@ -383,7 +383,7 @@ define(function(require) {
 						wsc.bind(params);
 					},
 					error: function() {
-						wsc.loggin.warn('failed to reauthenticate, logging out');
+						wsc.logger.warn('failed to reauthenticate, logging out');
 						monster.util.logoutAndReload();
 					}
 				});
