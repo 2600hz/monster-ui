@@ -22,7 +22,10 @@ define(function(require) {
 		 * @param {Boolean} [args.dragableUpload]
 		 * @param {Boolean} [args.enableTTS] - Show text to speech tab
 		 * @param {String} args.selectedOption - The current media id
-		 * @param {String} [args.ttsEntity] - The text to speech entity
+		 * @param {Object} [args.tts] - Options required if enableTTS is true
+		 * @param {String} [args.tts.entity] - Displayed in the tts tab instructions
+		 * @param {String} [args.tts.name] - The tts media name
+		 * @param {String} [args.tts.type] - The tts media type
 		 */
 		mediaSelectRender: function(args) {
 			var self = this,
@@ -191,7 +194,7 @@ define(function(require) {
 						ttsInfo: self.getTemplate({
 							name: '!' + self.i18n.active().mediaSelect.textToSpeech.info,
 							data: {
-								entity: args.ttsEntity
+								entity: _.get(args, 'tts.entity', '')
 							},
 							submodule: 'mediaSelect'
 						})
