@@ -61,6 +61,11 @@ define(function(require) {
 			monster.ui.insertTemplate(container, function(insertTemplateCallback) {
 				monster.parallel({
 					media: function(cb) {
+						if (_.isEmpty(args.selectedOption)) {
+							cb(null, {});
+							return;
+						}
+
 						self.callApi({
 							resource: 'media.get',
 							data: {
