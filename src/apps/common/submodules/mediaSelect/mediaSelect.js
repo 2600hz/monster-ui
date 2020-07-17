@@ -73,7 +73,8 @@ define(function(require) {
 							resource: 'media.get',
 							data: {
 								accountId: self.accountId,
-								mediaId: args.selectedOption
+								mediaId: args.selectedOption,
+								generateError: false
 							},
 							success: function(data) {
 								cb(null, data.data);
@@ -92,7 +93,8 @@ define(function(require) {
 						self.callApi({
 							resource: 'media.list',
 							data: {
-								accountId: self.accountId
+								accountId: self.accountId,
+								generateError: false
 							},
 							success: function(data) {
 								cb(null, data.data);
@@ -173,7 +175,8 @@ define(function(require) {
 		mediaSelectGetSkinnedTemplate: function(args, formattedData) {
 			var self = this,
 				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
-				enableTextspeechTab = args.enableTTS,
+				mediaSource = _.get(formattedData, 'selectedMedia.media_source', null),
+				enableTextspeechTab = args.enableTTS || mediaSource === 'tts',
 				template;
 
 			if (skin === 'default') {
@@ -225,9 +228,15 @@ define(function(require) {
 				if (val === 'shoutcast') {
 					response = template.find('.shoutcast-div input').val();
 				} else if (ttsTab.length && callback) {
+					var ttsText = ttsTab.find('.custom-greeting-text').val();
+
+					if (_.isEmpty(ttsText)) {
+						return;
+					}
+
 					args.selectedMedia = _.merge({}, {
 						tts: {
-							text: ttsTab.find('.custom-greeting-text').val()
+							text: ttsText
 						}
 					});
 
@@ -425,9 +434,9 @@ define(function(require) {
 				greetingMedia = {
 					description: '<Text to Speech>',
 					media_source: 'tts',
-					name: args.tts.name,
+					name: _.get(args, 'tts.name', ''),
 					streamable: true,
-					type: args.tts.type,
+					type: _.get(args, 'tts.type', ''),
 					tts: {
 						text: args.selectedMedia.tts.text,
 						voice: 'female/en-US'
