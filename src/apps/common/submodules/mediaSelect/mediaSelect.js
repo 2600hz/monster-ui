@@ -197,7 +197,7 @@ define(function(require) {
 						ttsInfo: self.getTemplate({
 							name: '!' + self.i18n.active().mediaSelect.textToSpeech.info,
 							data: {
-								entity: _.get(args, 'tts.entity', '')
+								entity: _.get(args, 'tts.entity', '<Entity>')
 							},
 							submodule: 'mediaSelect'
 						})
@@ -434,7 +434,7 @@ define(function(require) {
 				greetingMedia = {
 					description: '<Text to Speech>',
 					media_source: 'tts',
-					name: _.get(args, 'tts.name', ''),
+					name: _.get(args, 'tts.name', '<Text to Speech>'),
 					streamable: true,
 					type: _.get(args, 'tts.type', ''),
 					tts: {
