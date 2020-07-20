@@ -160,7 +160,9 @@ define(function(require) {
 
 			formattedData.options = _(options)
 				.concat(args.options)
-				.filter(opt => opt.media_source !== 'tts')
+				.filter(function(opt) {
+					return opt.media_source !== 'tts';
+				})
 				.value();
 
 			if (isShoutcast) {
