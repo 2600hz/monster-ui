@@ -80,7 +80,7 @@ define(function(require) {
 								cb(null, data.data);
 							},
 							error: function(err) {
-								cb(null);
+								cb(null, {});
 							}
 						});
 					},
