@@ -2,7 +2,7 @@ title: Branch Workflow
 
 # Branch Workflow
 
-In order for of our builds to run/packages to be published automatically, we follow a custom workflow when it comes to feature branch management. To better understand that workflow, let's run through an example.
+In order for of our builds to run and packages to be published automatically, we follow a custom workflow when it comes to feature branch management. To better understand that workflow, let's run through an example.
 
 ## Create a Pull Request of `master`
 All feature branches are based of `master` as it is the "base" branch for all repositories against which pull requests are made.
@@ -23,7 +23,7 @@ You can then create your feature branch named after the issue ticket you are wor
 ```
 
 ### Commit your changes
-Apply changes relate to the feature you are working on.
+Apply changes related to the feature you are working on.
 
 ```shell
 ~/monster-ui (<TICKET-#>)$ git add -p
