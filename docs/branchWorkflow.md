@@ -50,7 +50,7 @@ Don't forget to add reviewers to your pull request as at least one review is req
 ## Create a Pull Request of `<latest>`
 Now you need to create a branch based out of `<latest>` and cherry-pick the changes contained in `<TICKET-#>` into it.
 
-At the time of writing, the `<latest>` branch is `4.3`.
+At the time of writing, the `<latest>` branch is `5.0`.
 
 ### Start with `<latest>`
 ```shell
