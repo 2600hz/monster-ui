@@ -26,8 +26,6 @@ define(function() {
 
 			self._addAppCss(app);
 
-			self._addAppI18n(app);
-
 			app.uiFlags = {
 				user: {
 					set: function(flagName, value, user) {
@@ -364,10 +362,12 @@ define(function() {
 				return monster.util.getAuthToken(connectionName);
 			};
 
-			monster.apps[app.name] = app;
+			self._addAppI18n(app, function() {
+				monster.apps[app.name] = app;
 
-			self.loadDependencies(app, function() {
-				app.load(callback);
+				self.loadDependencies(app, function() {
+					app.load(callback);
+				});
 			});
 		},
 
@@ -460,7 +460,7 @@ define(function() {
 			});
 		},
 
-		_addAppI18n: function(app) {
+		_addAppI18n: function(app, callback) {
 			var self = this;
 
 			_.extend(app.data, { i18n: {} });
@@ -470,6 +470,17 @@ define(function() {
 				if (monster.apps.hasOwnProperty('core')) {
 					$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
 				}
+
+				// add an active property method to the i18n array within the app.
+				_.extend(app.i18n, {
+					active: function() {
+						var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
+
+						return app.data.i18n[language];
+					}
+				});
+
+				callback();
 			};
 
 			// We automatically load the default language (en-US) i18n files
@@ -483,15 +494,6 @@ define(function() {
 				} else {
 					// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
 					addCoreI18n();
-				}
-			});
-
-			// add an active property method to the i18n array within the app.
-			_.extend(app.i18n, {
-				active: function() {
-					var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
-
-					return app.data.i18n[language];
 				}
 			});
 		},
@@ -682,7 +684,6 @@ define(function() {
 					$.ajax({
 						url: monster.util.cacheUrl(app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
-						async: false,
 						success: function(data) {
 							afterLoading && afterLoading(data);
 
