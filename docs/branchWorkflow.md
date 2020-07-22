@@ -54,8 +54,8 @@ At the time of writing, the `<latest>` branch is `5.0`.
 
 ### Start with `<latest>`
 ```shell
-~/monster-ui (<TICKET-#>)$ git checkout <latest>
-~/monster-ui (<latest>)$ git pull origin
+~/monster-ui (<TICKET-#>)$ git checkout -b <latest> origin/<latest>
+~/monster-ui (<latest>)$ git pull
 ```
 
 ### Create your feature branch
@@ -74,7 +74,7 @@ Log the commits in the `<TICKET-#>` branch and take note of the first and last S
 
 ### Push your mirror feature branch
 ```shell
-~/monster-ui (<latest>-<TICKET-#>)$ git push origin <latest>-<TICKET-#>
+~/monster-ui (<latest>-<TICKET-#>)$ git push origin HEAD
 ```
 
 ### Create a pull request
