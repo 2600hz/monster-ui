@@ -57,6 +57,11 @@ define(function(require) {
 		},
 
 		appFlags: {
+			/**
+			 * Whether myaccount should be rendered
+			 * @type {Boolean}
+			 */
+			showMyAccount: false,
 			common: {
 				outboundPrivacy: [
 					'inherit',
@@ -188,6 +193,8 @@ define(function(require) {
 					showMyaccount = true;
 				}
 			});
+
+			self.appFlags.showMyAccount = showMyaccount;
 
 			args.callback(args.restrictions, showMyaccount);
 		},
