@@ -625,7 +625,7 @@ define(function(require) {
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough
 		hasToShowWalkthrough: function(callback) {
 			var self = this,
-				response = self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
+				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
 
 			if (typeof callback === 'function') {
 				callback(response);
