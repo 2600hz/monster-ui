@@ -321,7 +321,7 @@ define(function(require) {
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
-							name: args && args.name || monster.util.getUserFullName(),
+							name: (args && args.name) || monster.util.getUserFullName(),
 							showMyaccount: showMyaccount,
 							initials: monster.util.getUserInitials(),
 							account: monster.apps.auth.currentAccount.name,
