@@ -155,9 +155,13 @@ define(function(require) {
 			};
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} [args.restrictions]
+		 * @param  {Function} args.callback
+		 */
 		_UIRestrictionsCompatibility: function(args) {
-			var self = this,
-				showMyaccount = false;
+			var self = this;
 
 			if (args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount')) {
 				args.restrictions = $.extend(true, {}, self.getDefaultRestrictions(), args.restrictions.myaccount);// = args.restrictions.myaccount;
@@ -188,15 +192,9 @@ define(function(require) {
 				delete args.restrictions.profile;
 			}
 
-			_.each(args.restrictions, function(value, key) {
-				if (value.show_tab) {
-					showMyaccount = true;
-				}
-			});
+			self.appFlags.showMyAccount = _.every(args.restrictions, _.partial(_.get, _, 'show_tab', false));
 
-			self.appFlags.showMyAccount = showMyaccount;
-
-			args.callback(args.restrictions, showMyaccount);
+			args.callback(args.restrictions, self.appFlags.showMyAccount);
 		},
 
 		formatUiRestrictions: function(restrictions, callback) {
