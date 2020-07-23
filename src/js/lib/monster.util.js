@@ -974,12 +974,15 @@ define(function(require) {
 	 * @return {String} Formatted string representation of the value.
 	 */
 	function formatVariableToDisplay(variable) {
-		var str = variable || '',
-			formattedString = str.replace(/_/g, ' ');
+		var str = variable || '';
 
-		formattedString = formattedString.replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-
-		return formattedString;
+		return _
+			.chain(str)
+			.replace(/_/g, ' ')
+			.replace(/\w\S*/g, function(txt) {
+				return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+			})
+			.value();
 	}
 	util.formatVariableToDisplay = formatVariableToDisplay;
 
