@@ -147,7 +147,7 @@ define(function(require) {
 			var self = this;
 
 			self.subscribeWebSocket({
-				binding: 'conference.event.' + conferenceId + '.*',
+				binding: 'conference.event.' + conferenceId + '.*.*',
 				requiredElement: template,
 				callback: function(event) {
 					self.conferenceViewerOnParticipantAction(event);
