@@ -2,7 +2,7 @@ title: Branch Workflow
 
 # Branch Workflow
 
-In order for of our builds to run/packages to be published automatically, we follow a custom workflow when it comes to feature branch management. To better understand that workflow, let's run through an example.
+In order for of our builds to run and packages to be published automatically, we follow a custom workflow when it comes to feature branch management. To better understand that workflow, let's run through an example.
 
 ## Create a Pull Request of `master`
 All feature branches are based of `master` as it is the "base" branch for all repositories against which pull requests are made.
@@ -23,7 +23,7 @@ You can then create your feature branch named after the issue ticket you are wor
 ```
 
 ### Commit your changes
-Apply changes relate to the feature you are working on.
+Apply changes related to the feature you are working on.
 
 ```shell
 ~/monster-ui (<TICKET-#>)$ git add -p
@@ -50,35 +50,35 @@ Don't forget to add reviewers to your pull request as at least one review is req
 ## Create a Pull Request of `<latest>`
 Now you need to create a branch based out of `<latest>` and cherry-pick the changes contained in `<TICKET-#>` into it.
 
-At the time of writing, the `<latest>` branch is `4.3`.
+At the time of writing, the `<latest>` branch is `5.0`.
 
 ### Start with `<latest>`
 ```shell
-~/monster-ui (<TICKET-#>)$ git checkout <latest>
-~/monster-ui (<latest>)$ git pull origin
+~/monster-ui (<TICKET-#>)$ git checkout -b <latest> origin/<latest>
+~/monster-ui (<latest>)$ git pull
 ```
 
 ### Create your feature branch
 ```shell
-~/monster-ui (<latest>)$ git checkout -b <latest>-<TICKET-#> <latest>
+~/monster-ui (<latest>)$ git checkout -b <TICKET-#>-<latest> <latest>
 ```
 
 Notice how `<latest>` is appended to the branch name.
 
 ### Cherry-pick your changes
-Log the commits in the `<TICKET-#>` branch and take note of the first and last SHA-1 hashes for the commits related to the work on that branch. Those references will be used to cherry-pick your changes into the `<latest>-<TICKET-#>` branch.
+Log the commits in the `<TICKET-#>` branch and take note of the first and last SHA-1 hashes for the commits related to the work on that branch. Those references will be used to cherry-pick your changes into the `<TICKET-#>-<latest>` branch.
 
 ```shell
-~/monster-ui (<latest>-<TICKET-#>)$ git cherry-pick <first-sha-1>^..<last-sha-1>
+~/monster-ui (<TICKET-#>-<latest>)$ git cherry-pick <first-sha-1>^..<last-sha-1>
 ```
 
 ### Push your mirror feature branch
 ```shell
-~/monster-ui (<latest>-<TICKET-#>)$ git push origin <latest>-<TICKET-#>
+~/monster-ui (<TICKET-#>-<latest>)$ git push origin HEAD
 ```
 
 ### Create a pull request
-Once your branch is on the remote server, you can create a pull request with `<latest>-<TICKET-#>` as the head branch and `<latest>` as the base branch.
+Once your branch is on the remote server, you can create a pull request with `<TICKET-#>-<latest>` as the head branch and `<latest>` as the base branch.
 
 The naming convention regarding pull request out of `<latest>` is as follows:
 ```
