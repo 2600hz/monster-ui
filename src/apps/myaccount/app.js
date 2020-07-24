@@ -118,41 +118,40 @@ define(function(require) {
 		},
 
 		getDefaultRestrictions: function() {
-			return {
-				account: {
-					show_tab: true
-				},
-				balance: {
-					show_credit: true,
-					show_header: true,
-					show_minutes: true,
-					show_tab: true
-				},
-				billing: {
-					show_tab: true
-				},
-				inbound: {
-					show_tab: true
-				},
-				outbound: {
-					show_tab: true
-				},
-				twoway: {
-					show_tab: true
-				},
-				service_plan: {
-					show_tab: true
-				},
-				transactions: {
-					show_tab: true
-				},
-				user: {
-					show_tab: true
-				},
-				errorTracker: {
-					show_tab: true
-				}
+			var restrictions = {
+				account: ['show_tab'],
+				balance: ['show_credit', 'show_header', 'show_minutes', 'show_tab'],
+				billing: ['show_tab'],
+				errorTracker: ['show_tab'],
+				inbound: ['show_tab'],
+				outbound: ['show_tab'],
+				service_plan: ['show_tab'],
+				transactions: ['show_tab'],
+				twoway: ['show_tab'],
+				user: ['show_tab']
 			};
+			return _
+				.chain(restrictions)
+				.keys()
+				.map(function(tabId) {
+					return {
+						tabId: tabId,
+						toggles: _
+							.chain(restrictions[tabId])
+							.map(function(toggle) {
+								return {
+									toggle: toggle,
+									isEnabled: !(monster.apps.auth.currentUser.priv_level === 'user' && !_.includes(['errorTracker', 'user'], tabId))
+								};
+							})
+							.keyBy('toggle')
+							.mapValues('isEnabled')
+							.value()
+					};
+				})
+				.keyBy('tabId')
+				.mapValues('toggles')
+				.value();
 		},
 
 		/**
@@ -175,14 +174,6 @@ define(function(require) {
 						return !_.includes(validTabIds, tabId);
 					})
 					.value();
-
-			if (monster.apps.auth.currentUser.priv_level === 'user') {
-				_.each(restrictions, function(restriction, tab) {
-					if (tab !== 'user' && tab !== 'errorTracker') {
-						restriction.show_tab = false;
-					}
-				});
-			}
 
 			self.appFlags.showMyAccount = _.every(restrictions, _.partial(_.get, _, 'show_tab', false));
 
