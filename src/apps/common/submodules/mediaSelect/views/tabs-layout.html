@@ -12,6 +12,13 @@
 						{{ i18n.mediaSelect.uploadNewMedia }}
 					</a>
 				</li>
+				{{#if enableTextspeechTab}}
+					<li class="navbar-menu-item">
+						<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab="text_to_speech">
+							{{ i18n.mediaSelect.textToSpeech.tab }}
+						</a>
+					</li>
+				{{/if}}
 			</ul>
 		</nav>
 
@@ -20,7 +27,7 @@
 				<label class="control-label" for="{{ name }}">{{ label }}</label>
 				<div class="controls">
 					<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
-						{{#select selectedOption}}
+						{{#select mediaId}}
 							{{#each options}}
 								<option value="{{id}}">{{name}}</option>
 							{{/each}}
@@ -57,6 +64,13 @@
 				</div>
 			{{/if}}
 			</div>
+		</div>
+
+		<div class="monster-tab-content monster-tab-content-tts" data-tab="text_to_speech">
+			{{#monsterText}}
+				{{{ ttsInfo }}}
+			{{/monsterText}}
+			<textarea rows="5" placeholder="{{ i18n.mediaSelect.textToSpeech.placeholder }}" class="custom-greeting-text">{{selectedMedia.tts.text}}</textarea>
 		</div>
 	</div>
 </div>
