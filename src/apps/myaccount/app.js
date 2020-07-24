@@ -161,23 +161,23 @@ define(function(require) {
 		 * @param  {Function} args.callback
 		 */
 		_UIRestrictionsCompatibility: function(args) {
-			var self = this;
+			var self = this,
+				restrictions = _.merge(
+					{},
+					self.getDefaultRestrictions(),
+					_.get(args, 'restrictions.myaccount', {})
+				);
 
-			if (args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount')) {
-				args.restrictions = $.extend(true, {}, self.getDefaultRestrictions(), args.restrictions.myaccount);// = args.restrictions.myaccount;
-			} else {
-				args.restrictions = self.getDefaultRestrictions();
-			}
 			if (monster.apps.auth.currentUser.priv_level === 'user') {
-				_.each(args.restrictions, function(restriction, tab) {
+				_.each(restrictions, function(restriction, tab) {
 					if (tab !== 'user' && tab !== 'errorTracker') {
 						restriction.show_tab = false;
 					}
 				});
 			}
 
-			if (!args.restrictions.hasOwnProperty('user')) {
-				args.restrictions = $.extend(args.restrictions, {
+			if (!restrictions.hasOwnProperty('user')) {
+				restrictions = $.extend(restrictions, {
 					account: {
 						show_tab: true
 					},
@@ -189,12 +189,12 @@ define(function(require) {
 					}
 				});
 
-				delete args.restrictions.profile;
+				delete restrictions.profile;
 			}
 
-			self.appFlags.showMyAccount = _.every(args.restrictions, _.partial(_.get, _, 'show_tab', false));
+			self.appFlags.showMyAccount = _.every(restrictions, _.partial(_.get, _, 'show_tab', false));
 
-			args.callback(args.restrictions, self.appFlags.showMyAccount);
+			args.callback(restrictions, self.appFlags.showMyAccount);
 		},
 
 		formatUiRestrictions: function(restrictions, callback) {
