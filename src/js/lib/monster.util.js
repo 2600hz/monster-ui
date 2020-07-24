@@ -978,9 +978,7 @@ define(function(require) {
 			.chain(variable)
 			.toString()
 			.replace(/_/g, ' ')
-			.replace(/\w\S*/g, function(txt) {
-				return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-			})
+			.replace(/\w\S*/g, _.capitalize)
 			.value();
 	}
 	util.formatVariableToDisplay = formatVariableToDisplay;
