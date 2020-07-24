@@ -162,11 +162,19 @@ define(function(require) {
 		 */
 		_UIRestrictionsCompatibility: function(args) {
 			var self = this,
-				restrictions = _.merge(
-					{},
-					self.getDefaultRestrictions(),
-					_.get(args, 'restrictions.myaccount', {})
-				);
+				defaultRestrictions = self.getDefaultRestrictions(),
+				validTabIds = _.keys(defaultRestrictions),
+				restrictions = _
+					.chain({})
+					.merge(
+						defaultRestrictions,
+						_.get(args, 'restrictions.myaccount', {})
+					)
+					// Remove legacy properties no longer used
+					.omitBy(function(toggles, tabId) {
+						return !_.includes(validTabIds, tabId);
+					})
+					.value();
 
 			if (monster.apps.auth.currentUser.priv_level === 'user') {
 				_.each(restrictions, function(restriction, tab) {
@@ -174,22 +182,6 @@ define(function(require) {
 						restriction.show_tab = false;
 					}
 				});
-			}
-
-			if (!restrictions.hasOwnProperty('user')) {
-				restrictions = $.extend(restrictions, {
-					account: {
-						show_tab: true
-					},
-					billing: {
-						show_tab: true
-					},
-					user: {
-						show_tab: true
-					}
-				});
-
-				delete restrictions.profile;
 			}
 
 			self.appFlags.showMyAccount = _.every(restrictions, _.partial(_.get, _, 'show_tab', false));
