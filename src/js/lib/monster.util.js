@@ -156,17 +156,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
-		// Useful to display hardcoded data from the database that hasn't make it to the i18n files.
-		formatVariableToDisplay: function(variable) {
-			var str = variable || '',
-				formattedString = str.replace(/_/g, ' ');
-
-			formattedString = formattedString.replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-
-			return formattedString;
-		},
-
 		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
 		isSuperDuper: function(pAccount) {
 			var self = this,
@@ -975,6 +964,24 @@ define(function(require) {
 		return formatter.format(price);
 	}
 	util.formatPrice = formatPrice;
+
+	/**
+	 * Takes a string and replace all the "_" from it with a " ".
+	 * Also capitalizes first word.
+	 * Useful to display hardcoded data from the database that hasn't make it to
+	 * the i18n files.
+	 * @param  {*} variable Value to format.
+	 * @return {String} Formatted string representation of the value.
+	 */
+	function formatVariableToDisplay(variable) {
+		return _
+			.chain(variable)
+			.toString()
+			.replace(/_/g, ' ')
+			.replace(/\w\S*/g, _.capitalize)
+			.value();
+	}
+	util.formatVariableToDisplay = formatVariableToDisplay;
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
