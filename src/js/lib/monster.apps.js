@@ -365,9 +365,7 @@ define(function() {
 			self._addAppI18n(app, function() {
 				monster.apps[app.name] = app;
 
-				self.loadDependencies(app, function() {
-					app.load(callback);
-				});
+				callback(null, app);
 			});
 		},
 
@@ -422,15 +420,10 @@ define(function() {
 					})
 					.value();
 
-			monster.parallel(
-				_.concat(
-					dependencies,
-					extensions
-				),
-				function(err, results) {
-					globalCallback && globalCallback();
-				}
-			);
+			monster.parallel(_.concat(
+				dependencies,
+				extensions
+			), _.partial(globalCallback, _, app));
 		},
 
 		_addAppCss: function(app) {
@@ -575,7 +568,9 @@ define(function() {
 							};
 						})
 						.value()
-					, _.partial(callback, _, app));
+					, function(err) {
+						callback(err, app);
+					});
 				},
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
@@ -620,9 +615,11 @@ define(function() {
 
 			monster.waterfall([
 				_.partial(loadApp, path, appPath, apiUrl, options),
-				loadSubModules
+				loadSubModules,
+				_.bind(self.monsterizeApp, self),
+				_.bind(self.loadDependencies, self)
 			], function(err, app) {
-				self.monsterizeApp(app, mainCallback);
+				app.load(mainCallback);
 			});
 		},
 
