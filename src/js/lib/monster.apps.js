@@ -507,6 +507,48 @@ define(function() {
 		 */
 		_loadApp: function(name, mainCallback, options) {
 			var self = this,
+				loadApp = function loadApp(path, appPath, apiUrl, options, callback) {
+					monster.waterfall([
+						function requireApp(waterfallCallback) {
+							require([path], function(app) {
+								_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
+
+								app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
+
+								if (options && 'apiUrl' in options) {
+									app.apiUrl = options.apiUrl;
+								}
+
+								waterfallCallback(null, app);
+							}, _.partial(waterfallCallback, true));
+						},
+						function maybeRetrieveBuildConfig(app, waterfallCallback) {
+							if (!app.hasConfigFile) {
+								return waterfallCallback(null, app, {});
+							}
+							$.ajax({
+								url: app.appPath + '/app-build-config.json',
+								dataType: 'json',
+								beforeSend: _.partial(monster.pub, 'monster.requestStart'),
+								complete: _.partial(monster.pub, 'monster.requestEnd'),
+								success: _.partial(waterfallCallback, null, app),
+								error: _.partial(waterfallCallback, null, app, {})
+							});
+						}
+					], function applyConfig(err, app, config) {
+						app.buildConfig = config;
+
+						if (app.buildConfig.version === 'pro') {
+							if (!app.hasOwnProperty('subModules')) {
+								app.subModules = [];
+							}
+
+							app.subModules.push('pro');
+						}
+
+						callback(err, app);
+					});
+				},
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
 						.chain(app)
@@ -576,52 +618,12 @@ define(function() {
 
 			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
-			require([path], function(app) {
-				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
-
-				app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
-
-				if (options && 'apiUrl' in options) {
-					app.apiUrl = options.apiUrl;
-				}
-
-				var afterConfig = function(config) {
-					app.buildConfig = config;
-
-					if (app.buildConfig.version === 'pro') {
-						if (!app.hasOwnProperty('subModules')) {
-							app.subModules = [];
-						}
-
-						app.subModules.push('pro');
-					}
-
-					loadSubModules(app, function(err, app) {
-						self.monsterizeApp(app, mainCallback);
-					});
-				};
-
-				if (app.hasConfigFile) {
-					monster.pub('monster.requestStart');
-					$.ajax({
-						url: app.appPath + '/app-build-config.json',
-						dataType: 'json',
-						async: false,
-						success: function(data) {
-							afterConfig(data);
-
-							monster.pub('monster.requestEnd');
-						},
-						error: function(data, status, error) {
-							afterConfig({});
-
-							monster.pub('monster.requestEnd');
-						}
-					});
-				} else {
-					afterConfig({});
-				}
-			}, mainCallback);
+			monster.waterfall([
+				_.partial(loadApp, path, appPath, apiUrl, options),
+				loadSubModules
+			], function(err, app) {
+				self.monsterizeApp(app, mainCallback);
+			});
 		},
 
 		/**
