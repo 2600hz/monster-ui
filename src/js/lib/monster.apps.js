@@ -505,8 +505,36 @@ define(function() {
 		 * @param  {String}   [options.sourceUrl]
 		 * @param  {String}   [options.apiUrl]
 		 */
-		_loadApp: function(name, callback, options) {
+		_loadApp: function(name, mainCallback, options) {
 			var self = this,
+				loadSubModules = function loadSubModules(app, callback) {
+					monster.parallel(_
+						.chain(app)
+						.get('subModules', [])
+						.map(function(subModule) {
+							return function(parallelCallback) {
+								var pathSubModule = app.appPath + '/submodules/',
+									path = pathSubModule + subModule + '/' + subModule;
+
+								require([path], function(module) {
+									/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
+									var oldSubscribes = $.extend(true, {}, app.subscribe);
+									$.extend(true, app, module);
+									app.subscribe = oldSubscribes;
+
+									_.each(module.subscribe, function(callback, topic) {
+										var cb = typeof callback === 'string' ? app[callback] : callback;
+
+										monster.sub(topic, cb, app);
+									});
+
+									parallelCallback(null);
+								}, _.partial(parallelCallback, true));
+							};
+						})
+						.value()
+					, _.partial(callback, _, app));
+				},
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
@@ -568,40 +596,9 @@ define(function() {
 						app.subModules.push('pro');
 					}
 
-					if ('subModules' in app && app.subModules.length > 0) {
-						var toInit = app.subModules.length,
-							loadModule = function(subModule, callback) {
-								var pathSubModule = app.appPath + '/submodules/',
-									path = pathSubModule + subModule + '/' + subModule;
-
-								require([path], function(module) {
-									/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
-									var oldSubscribes = $.extend(true, {}, app.subscribe);
-									$.extend(true, app, module);
-									app.subscribe = oldSubscribes;
-
-									_.each(module.subscribe, function(callback, topic) {
-										var cb = typeof callback === 'string' ? app[callback] : callback;
-
-										monster.sub(topic, cb, app);
-									});
-
-									callback && callback();
-								});
-							};
-
-						_.each(app.subModules, function(subModule) {
-							loadModule(subModule, function() {
-								toInit--;
-
-								if (toInit === 0) {
-									self.monsterizeApp(app, callback);
-								}
-							});
-						});
-					} else {
-						self.monsterizeApp(app, callback);
-					}
+					loadSubModules(app, function(err, app) {
+						self.monsterizeApp(app, mainCallback);
+					});
 				};
 
 				if (app.hasConfigFile) {
@@ -624,7 +621,7 @@ define(function() {
 				} else {
 					afterConfig({});
 				}
-			}, callback);
+			}, mainCallback);
 		},
 
 		/**
