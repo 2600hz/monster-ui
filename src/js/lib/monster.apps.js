@@ -415,7 +415,7 @@ define(function() {
 					})
 					.map(function(extension) {
 						return function(callback) {
-							self._loadApp(extension, _.partial(callback, null));
+							self._loadApp(extension, callback);
 						};
 					})
 					.value();
@@ -423,7 +423,9 @@ define(function() {
 			monster.parallel(_.concat(
 				dependencies,
 				extensions
-			), _.partial(globalCallback, _, app));
+			), function(err) {
+				globalCallback(err, app);
+			});
 		},
 
 		_addAppCss: function(app) {
@@ -572,6 +574,13 @@ define(function() {
 						callback(err, app);
 					});
 				},
+				initializeApp = function initializeApp(app, callback) {
+					try {
+						app.load(_.partial(callback, null));
+					} catch (error) {
+						callback(error);
+					}
+				},
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
@@ -617,10 +626,9 @@ define(function() {
 				_.partial(loadApp, path, appPath, apiUrl, options),
 				loadSubModules,
 				_.bind(self.monsterizeApp, self),
-				_.bind(self.loadDependencies, self)
-			], function(err, app) {
-				app.load(mainCallback);
-			});
+				_.bind(self.loadDependencies, self),
+				initializeApp
+			], mainCallback);
 		},
 
 		/**
@@ -636,14 +644,14 @@ define(function() {
 					if (_.has(monster.apps, name)) {
 						return waterfallCb(null, monster.apps[name]);
 					}
-					self._loadApp(name, waterfallCb.bind(null, null), options);
+					self._loadApp(name, waterfallCb, options);
 				}
 			], function afterAppLoad(err, app) {
 				monster.apps.lastLoadedApp = app.name;
 
 				self.changeAppShortcuts(app);
 
-				callback && callback(app);
+				callback && callback(err, app);
 			});
 		},
 

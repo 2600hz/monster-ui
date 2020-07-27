@@ -151,7 +151,7 @@ require([
 		monster.routing.init();
 
 		monster.loadBuildConfig(function() {
-			monster.apps.load('core', function(app) {
+			monster.apps.load('core', function(err, app) {
 				app.render($('.core-wrapper'));
 			});
 		});
