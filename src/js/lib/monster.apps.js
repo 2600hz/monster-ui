@@ -531,6 +531,9 @@ define(function() {
 							});
 						}
 					], function applyConfig(err, app, config) {
+						if (err) {
+							return callback(err);
+						}
 						app.buildConfig = config;
 
 						if (app.buildConfig.version === 'pro') {
@@ -541,7 +544,7 @@ define(function() {
 							app.subModules.push('pro');
 						}
 
-						callback(err, app);
+						callback(null, app);
 					});
 				},
 				loadSubModules = function loadSubModules(app, callback) {
@@ -647,11 +650,14 @@ define(function() {
 					self._loadApp(name, waterfallCb, options);
 				}
 			], function afterAppLoad(err, app) {
+				if (err) {
+					return callback && callback(err);
+				}
 				monster.apps.lastLoadedApp = app.name;
 
 				self.changeAppShortcuts(app);
 
-				callback && callback(err, app);
+				callback && callback(null, app);
 			});
 		},
 
