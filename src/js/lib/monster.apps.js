@@ -502,34 +502,36 @@ define(function() {
 		 */
 		_loadApp: function(name, mainCallback, options) {
 			var self = this,
+				requireApp = function requireApp(path, appPath, apiUrl, options, callback) {
+					require([path], function(app) {
+						_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
+
+						app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
+
+						if (options && 'apiUrl' in options) {
+							app.apiUrl = options.apiUrl;
+						}
+
+						callback(null, app);
+					}, _.partial(callback, true));
+				},
+				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
+					if (!app.hasConfigFile) {
+						return callback(null, app, {});
+					}
+					$.ajax({
+						url: app.appPath + '/app-build-config.json',
+						dataType: 'json',
+						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
+						complete: _.partial(monster.pub, 'monster.requestEnd'),
+						success: _.partial(callback, null, app),
+						error: _.partial(callback, null, app, {})
+					});
+				},
 				loadApp = function loadApp(path, appPath, apiUrl, options, callback) {
 					monster.waterfall([
-						function requireApp(waterfallCallback) {
-							require([path], function(app) {
-								_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
-
-								app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
-
-								if (options && 'apiUrl' in options) {
-									app.apiUrl = options.apiUrl;
-								}
-
-								waterfallCallback(null, app);
-							}, _.partial(waterfallCallback, true));
-						},
-						function maybeRetrieveBuildConfig(app, waterfallCallback) {
-							if (!app.hasConfigFile) {
-								return waterfallCallback(null, app, {});
-							}
-							$.ajax({
-								url: app.appPath + '/app-build-config.json',
-								dataType: 'json',
-								beforeSend: _.partial(monster.pub, 'monster.requestStart'),
-								complete: _.partial(monster.pub, 'monster.requestEnd'),
-								success: _.partial(waterfallCallback, null, app),
-								error: _.partial(waterfallCallback, null, app, {})
-							});
-						}
+						_.partial(requireApp, path, appPath, apiUrl, options),
+						maybeRetrieveBuildConfig
 					], function applyConfig(err, app, config) {
 						if (err) {
 							return callback(err);
@@ -547,30 +549,31 @@ define(function() {
 						callback(null, app);
 					});
 				},
+				requireSubModule = function(app, subModule, callback) {
+					var pathSubModule = app.appPath + '/submodules/',
+						path = pathSubModule + subModule + '/' + subModule;
+
+					require([path], function(module) {
+						/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
+						var oldSubscribes = $.extend(true, {}, app.subscribe);
+						$.extend(true, app, module);
+						app.subscribe = oldSubscribes;
+
+						_.each(module.subscribe, function(callback, topic) {
+							var cb = typeof callback === 'string' ? app[callback] : callback;
+
+							monster.sub(topic, cb, app);
+						});
+
+						callback(null);
+					}, _.partial(callback, true));
+				},
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
 						.chain(app)
 						.get('subModules', [])
 						.map(function(subModule) {
-							return function(parallelCallback) {
-								var pathSubModule = app.appPath + '/submodules/',
-									path = pathSubModule + subModule + '/' + subModule;
-
-								require([path], function(module) {
-									/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
-									var oldSubscribes = $.extend(true, {}, app.subscribe);
-									$.extend(true, app, module);
-									app.subscribe = oldSubscribes;
-
-									_.each(module.subscribe, function(callback, topic) {
-										var cb = typeof callback === 'string' ? app[callback] : callback;
-
-										monster.sub(topic, cb, app);
-									});
-
-									parallelCallback(null);
-								}, _.partial(parallelCallback, true));
-							};
+							return _.partial(requireSubModule, app, subModule);
 						})
 						.value()
 					, function(err) {
@@ -639,25 +642,26 @@ define(function() {
 		 * @param  {Function} [callback]
 		 * @param  {Object}   [options]
 		 */
-		load: function(name, callback, options) {
-			var self = this;
+		load: function(name, mainCallback, options) {
+			var self = this,
+				maybeLoadApp = function maybeLoadApp(name, options, callback) {
+					if (_.has(monster.apps, name)) {
+						return callback(null, monster.apps[name]);
+					}
+					self._loadApp(name, callback, options);
+				};
 
 			monster.waterfall([
-				function maybeLoadApp(waterfallCb) {
-					if (_.has(monster.apps, name)) {
-						return waterfallCb(null, monster.apps[name]);
-					}
-					self._loadApp(name, waterfallCb, options);
-				}
+				_.partial(maybeLoadApp, name, options)
 			], function afterAppLoad(err, app) {
 				if (err) {
-					return callback && callback(err);
+					return mainCallback && mainCallback(err);
 				}
 				monster.apps.lastLoadedApp = app.name;
 
 				self.changeAppShortcuts(app);
 
-				callback && callback(null, app);
+				mainCallback && mainCallback(null, app);
 			});
 		},
 
