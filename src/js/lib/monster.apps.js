@@ -362,7 +362,10 @@ define(function() {
 				return monster.util.getAuthToken(connectionName);
 			};
 
-			self._addAppI18n(app, function() {
+			self._addAppI18n(app, function(err) {
+				if (err) {
+					return callback(err);
+				}
 				monster.apps[app.name] = app;
 
 				callback(null, app);
@@ -461,7 +464,10 @@ define(function() {
 			_.extend(app.data, { i18n: {} });
 
 			// We'll merge the Core I18n once we're done loading the different I18n coming with the application
-			var addCoreI18n = function() {
+			var addCoreI18n = function(err) {
+				if (err) {
+					return callback(err);
+				}
 				if (monster.apps.hasOwnProperty('core')) {
 					$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
 				}
@@ -475,20 +481,20 @@ define(function() {
 					}
 				});
 
-				callback();
+				callback(null);
 			};
 
 			// We automatically load the default language (en-US) i18n files
-			self.loadLocale(app, monster.defaultLanguage, function() {
+			self.loadLocale(app, monster.defaultLanguage, function(err) {
 				// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
 				if (monster.config.whitelabel.language.toLowerCase() !== monster.defaultLanguage.toLowerCase()) {
 					self.loadLocale(app, monster.config.whitelabel.language, function() {
 						// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
-						addCoreI18n();
+						addCoreI18n(null);
 					});
 				} else {
 					// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
-					addCoreI18n();
+					addCoreI18n(err);
 				}
 			});
 		},
@@ -699,12 +705,12 @@ define(function() {
 						url: monster.util.cacheUrl(app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
 						success: function(data) {
-							afterLoading && afterLoading(data);
+							afterLoading && afterLoading(null, data);
 
 							monster.pub('monster.requestEnd');
 						},
 						error: function(data, status, error) {
-							afterLoading && afterLoading({});
+							afterLoading && afterLoading(true);
 
 							monster.pub('monster.requestEnd');
 
@@ -714,7 +720,9 @@ define(function() {
 				};
 
 			if (app.i18n.hasOwnProperty(language)) {
-				loadFile(function(data) {
+				loadFile(function(err, i18n) {
+					var data = i18n || {};
+
 					// If we're loading the default language, then we add it, and also merge the core i18n to it
 					if (language === monster.defaultLanguage) {
 						app.data.i18n[language] = data;
@@ -723,12 +731,12 @@ define(function() {
 						app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[monster.defaultLanguage], data);
 					}
 
-					callback && callback();
+					callback && callback(err);
 				});
 			} else {
 				console.info(language + ' isn\'t a supported language by this application: ' + app.name);
 
-				callback && callback();
+				callback && callback(true);
 			}
 		}
 	};
