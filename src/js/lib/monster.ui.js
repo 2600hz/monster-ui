@@ -3674,14 +3674,13 @@ define(function(require) {
 				text: coreApp.i18n.active().insertTemplate.text,
 				duration: 250
 			}, pOptions),
-			dataToTemplate = {
-				hasBackground: options.hasBackground,
-				cssClass: options.cssClass,
-				cssId: options.cssId,
-				title: options.title,
-				text: options.text
-			},
-			loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
+			loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', _.pick(options, [
+				'hasBackground',
+				'cssClass',
+				'cssId',
+				'title',
+				'text'
+			])),
 			appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
 				$container
 					.empty()
