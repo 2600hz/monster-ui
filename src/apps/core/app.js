@@ -143,7 +143,7 @@ define(function(require) {
 		loadAuth: function() {
 			var self = this;
 
-			monster.apps.load('auth', function(app) {
+			monster.apps.load('auth', function(err, app) {
 				app.render($('#monster_content'));
 			});
 		},
@@ -223,7 +223,7 @@ define(function(require) {
 
 			monster.parallel(_.map(loggedInAppsToLoad, function(name) {
 				return function(callback) {
-					monster.apps.load(name, _.partial(callback, null));
+					monster.apps.load(name, callback);
 				};
 			}), function afterBaseAppsLoad(err, result) {
 				// If admin with no app, go to app store, otherwite, oh well...
@@ -348,7 +348,7 @@ define(function(require) {
 				var appName = $(this).find('#main_topbar_current_app_name').data('name');
 
 				if (appName === 'myaccount') {
-					monster.apps.load(appName, function(app) {
+					monster.apps.load(appName, function(err, app) {
 						app.renderDropdown(false);
 					});
 				} else {
