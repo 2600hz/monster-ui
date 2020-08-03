@@ -468,49 +468,6 @@ define(function(require) {
 	}
 
 	var ui = {
-		/**
-		 * Show a loading view if a request starts before inoking the callback
-		 * to insert a template in the container once all requests finish
-		 * @param  {jQuey Object}   $container target where to insert the template
-		 * @param  {Function} callback   callback sending the template
-		 * @param  {Object}   pOptions   loading view options
-		 */
-		insertTemplate: function($container, callback, pOptions) {
-			var coreApp = monster.apps.core,
-				options = $.extend(true, {
-					hasBackground: true,
-					title: coreApp.i18n.active().insertTemplate.title,
-					text: coreApp.i18n.active().insertTemplate.text,
-					duration: 250
-				}, pOptions),
-				dataToTemplate = {
-					hasBackground: options.hasBackground,
-					cssClass: options.cssClass,
-					cssId: options.cssId,
-					title: options.title,
-					text: options.text
-				},
-				loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
-				appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
-					$container
-						.empty()
-						.hide()
-						.append(template)
-						.fadeIn(options.duration, function() {
-							fadeInCallback && fadeInCallback();
-						});
-
-					insertTemplateCallback && insertTemplateCallback();
-				};
-
-			callback(appendTemplate);
-
-			// Only insert the loading template if a request is in progress
-			if (monster.apps.core.request.active) {
-				appendTemplate(loadingTemplate);
-			}
-		},
-
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
 		// for the options, and this tool will take care of the standard configuration, with no need to provide the "step", "min" or "max" options.
 		slider: function(target, pOptions) {
@@ -3700,6 +3657,51 @@ define(function(require) {
 		return _.get(container, 'jsoneditor', null);
 	}
 	ui.getJsoneditor = getJsoneditor;
+
+
+	/**
+	 * Show a loading view if a request starts before inoking the callback
+	 * to insert a template in the container once all requests finish
+	 * @param  {jQuey Object}   $container target where to insert the template
+	 * @param  {Function} callback   callback sending the template
+	 * @param  {Object}   pOptions   loading view options
+	 */
+	function insertTemplate($container, callback, pOptions) {
+		var coreApp = monster.apps.core,
+			options = $.extend(true, {
+				hasBackground: true,
+				title: coreApp.i18n.active().insertTemplate.title,
+				text: coreApp.i18n.active().insertTemplate.text,
+				duration: 250
+			}, pOptions),
+			dataToTemplate = {
+				hasBackground: options.hasBackground,
+				cssClass: options.cssClass,
+				cssId: options.cssId,
+				title: options.title,
+				text: options.text
+			},
+			loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', dataToTemplate),
+			appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
+				$container
+					.empty()
+					.hide()
+					.append(template)
+					.fadeIn(options.duration, function() {
+						fadeInCallback && fadeInCallback();
+					});
+
+				insertTemplateCallback && insertTemplateCallback();
+			};
+
+		callback(appendTemplate);
+
+		// Only insert the loading template if a request is in progress
+		if (monster.apps.core.request.active) {
+			appendTemplate(loadingTemplate);
+		}
+	}
+	ui.insertTemplate = insertTemplate;
 
 	/**
 	 * Create a new instance of jsoneditor
