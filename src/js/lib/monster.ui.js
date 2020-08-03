@@ -3668,7 +3668,7 @@ define(function(require) {
 	 */
 	function insertTemplate($container, callback, pOptions) {
 		var coreApp = monster.apps.core,
-			options = $.extend(true, {
+			options = _.merge({
 				hasBackground: true,
 				title: coreApp.i18n.active().insertTemplate.title,
 				text: coreApp.i18n.active().insertTemplate.text,
