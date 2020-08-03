@@ -648,7 +648,16 @@
 		"silence": "Silence",
 		"shoutcastURLWarning": "WARNING: If the stream selected here attempts to be played, and is unavailable, the call may fail completely. Please make sure the stream you use is available 24/7.",
 		"useExistingMedia": "Use Existing Media",
-		"uploadNewMedia": "Upload New Media"
+		"uploadNewMedia": "Upload New Media",
+		"textToSpeech": {
+			"tab": "Text-to-Speech",
+			"info": "Customize your greeting message using Text-to-Speech. Type your desired greeting below. Once your changes are saved, anyone who calls this {{entity}} will be greeted with your custom message.",
+			"placeholder": "Type your custom greeting…",
+			"errors": {
+				"create": "Error creating text to speech media",
+				"update": "Error updating text to speech media"
+			}
+		}
 	},
 
 	"__comment": "UI-2279: Webphone strings",
