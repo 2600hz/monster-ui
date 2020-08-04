@@ -323,7 +323,7 @@ define(function(require) {
 						nextStartKey = accountList.data('next-key'),
 						apiData = _.merge({
 							filters: {
-								start_key: encodeURIComponent(nextStartKey)
+								start_key: nextStartKey
 							}
 						}, searchValue ? {
 							accountName: searchValue

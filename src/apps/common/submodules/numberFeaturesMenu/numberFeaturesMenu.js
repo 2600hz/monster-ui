@@ -94,7 +94,7 @@ define(function(require) {
 				resource: 'numbers.syncOne',
 				data: {
 					accountId: accountId,
-					number: encodeURIComponent(number)
+					number: number
 				},
 				success: function(data) {
 					callback && callback(data.data);
