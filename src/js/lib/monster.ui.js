@@ -3660,13 +3660,13 @@ define(function(require) {
 
 
 	/**
-	 * Show a loading view if a request starts before inoking the callback
-	 * to insert a template in the container once all requests finish
+	 * Cleanly insert a template in a container by animating it and showing a
+	 * loading view until the callback is called.
 	 * @param  {jQuey Object}   $container target where to insert the template
-	 * @param  {Function} callback   callback sending the template
+	 * @param  {jQuery|Function} template   template or callback providing the template
 	 * @param  {Object}   pOptions   loading view options
 	 */
-	function insertTemplate($container, callback, pOptions) {
+	function insertTemplate($container, template, pOptions) {
 		var coreApp = monster.apps.core,
 			options = _.merge({
 				hasBackground: true,
@@ -3694,9 +3694,11 @@ define(function(require) {
 				insertTemplateCallback && insertTemplateCallback();
 			};
 
-		appendTemplate(loadingTemplate);
+		appendTemplate(template instanceof $ ? template : loadingTemplate);
 
-		callback(appendTemplate);
+		if (_.isFunction(template)) {
+			template(appendTemplate);
+		}
 	}
 	ui.insertTemplate = insertTemplate;
 
