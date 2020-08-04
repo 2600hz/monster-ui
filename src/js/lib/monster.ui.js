@@ -3683,6 +3683,7 @@ define(function(require) {
 			])),
 			appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
 				$container
+					.stop()
 					.empty()
 					.hide()
 					.append(template)
@@ -3693,12 +3694,9 @@ define(function(require) {
 				insertTemplateCallback && insertTemplateCallback();
 			};
 
-		callback(appendTemplate);
+		appendTemplate(loadingTemplate);
 
-		// Only insert the loading template if a request is in progress
-		if (monster.apps.core.request.active) {
-			appendTemplate(loadingTemplate);
-		}
+		callback(appendTemplate);
 	}
 	ui.insertTemplate = insertTemplate;
 
