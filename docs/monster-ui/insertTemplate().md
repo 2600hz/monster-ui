@@ -4,14 +4,14 @@ title: insertTemplate()
 
 ## Syntax
 ```javascript
-monster.ui.insertTemplate(target, callback[, options]);
+monster.ui.insertTemplate(target, template[, options]);
 ```
 
 ### Parameters
 Key | Description | Type | Default | Required
 :-: | --- | :-: | :-: | :-:
 `target` | Insert the template at the end of the target element | `jQuery` | | `true`
-`callback` | A function that exposes the helper's callback that will receive the template to insert in the target. | `Function` | | `true`
+`template` | Either a jQuery object representing a template or a function providing a callback that will receive the template to insert in the target. | `jQuery`|`Function` | | `true`
 `options` | List of options to customize the loading view. | `Object`([#/options](#options)) | | `false`
 
 #### options
@@ -26,7 +26,9 @@ Key | Description | Type | Default | Required
 
 ## Description
 
-The `monster.ui.insertTemplate()` method is a handy helper that gives developers the power to have the same animations when inserting a template in the DOM, but most of all, automatically detects if a request is in progress and add a loading template if it is the case.
+The `monster.ui.insertTemplate()` method is a handy helper giving you the power to have the same animations when inserting a template in the DOM.
+
+When `template` is a function, a loading template will be rendered until the callback is invoked.
 
 ## Examples
 ### Insert a template that does not need data from requests:
@@ -41,9 +43,7 @@ function initTempate() {
   return template;
 }
 
-monster.ui.insertTemplate($target, function(callback) {
-  callback(initTemplate());
-});
+monster.ui.insertTemplate($target, initTemplate());
 ```
 ### Insert a template that need data from requests:
 ```javascript
