@@ -2827,7 +2827,7 @@ define(function(require) {
 						finalOptions.getData(filters, function(rows, data) {
 							loadedPages.push(rows);
 
-							filters.start_key = encodeURIComponent(data.next_start_key);
+							filters.start_key = data.next_start_key;
 							if (!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
 								allDataLoaded();
 							}
