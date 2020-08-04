@@ -1340,7 +1340,7 @@ define(function(require) {
 			winkstart.request(false, 'buyNumbers.activateNumber', {
 					account_id: winkstart.apps['auth'].account_id,
 					api_url: winkstart.apps['auth'].api_url,
-					phone_number: encodeURIComponent(phone_number),
+					phone_number: phone_number,
 					data: {}
 				},
 				function(_data, status) {
