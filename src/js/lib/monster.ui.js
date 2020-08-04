@@ -3,28 +3,31 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
-		bhotkeys = require('hotkeys'),
 		Toastr = require('toastr'),
-		validate = require('validate'),
-		wysiwyg = require('wysiwyg'),
-		timepicker = require('timepicker'),
 		introJs = require('introJs'),
-		mask = require('mask'),
 		renderJSON = require('renderjson'),
 		footable = require('footable'),
-		mousetrap = require('mousetrap'),
+		form2object = require('form2object'),
+		Mousetrap = require('mousetrap'),
 		Drop = require('drop'),
 		Clipboard = require('clipboard'),
 		moment = require('moment'),
-		simplemde = require('simplemde'),
-		marked = require('marked');
+		SimpleMDE = require('simplemde'),
+		marked = require('marked'),
+		Popup = require('popup-redirect'),
 		JSONEditor = require('jsoneditor');
 
+	// Import for side effects only
 	require('chosen');
 	require('disableAutoFill');
+	require('hotkeys');
 	require('image-select');
+	require('mask');
 	require('moment-timezone');
 	require('monthpicker');
+	require('timepicker');
+	require('validate');
+	require('wysiwyg');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
@@ -58,15 +61,15 @@ define(function(require) {
 				}
 
 				operators = {
-					'==': function(a, b) { return a == b; },
+					'==': function(a, b) { return a == b; }, // eslint-disable-line eqeqeq
 					'===': function(a, b) { return a === b; },
-					'!=': function(a, b) { return a != b; },
+					'!=': function(a, b) { return a != b; }, // eslint-disable-line eqeqeq
 					'!==': function(a, b) { return a !== b; },
 					'<': function(a, b) { return a < b; },
 					'>': function(a, b) { return a > b; },
 					'<=': function(a, b) { return a <= b; },
 					'>=': function(a, b) { return a >= b; },
-					'typeof': function(a, b) { return typeof a === b; }
+					'typeof': function(a, b) { return typeof a === b; } // eslint-disable-line valid-typeof
 				};
 
 				if (!operators[operator]) {
@@ -1155,7 +1158,7 @@ define(function(require) {
 					options,
 					'startDate',
 					today
-					),
+				),
 				endDate = moment(initDate).tz(timezone).endOf('day');
 
 			if (options.startDate) {
@@ -1222,7 +1225,7 @@ define(function(require) {
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
 					dateMax = minMoment.isAfter(today) ? today.toDate() : minMoment.toDate();
 				} else if (input.id === 'startDate') {
-					dateMin = moment({years: 2011}).startOf('year').toDate();
+					dateMin = moment({ years: 2011 }).startOf('year').toDate();
 					dateMax = moment().toDate();
 				}
 
@@ -1512,7 +1515,7 @@ define(function(require) {
 				throw TypeError('"options" is not a plain object');
 			}
 
-			return new simplemde(_.merge({
+			return new SimpleMDE(_.merge({
 				element: $target[0],
 				status: false,
 				autosave: false,
@@ -1914,9 +1917,7 @@ define(function(require) {
 		datepicker: function(target, options) {
 			var self = this,
 				datePickerFormat = 'mm/dd/yy',
-				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
-							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('date_format')
-							? monster.apps.auth.currentUser.ui_flags.date_format : 'mdy';
+				userFormat = _.get(monster, 'apps.auth.currentUser.ui_flags.date_format', 'mdy');
 
 			if (userFormat === 'mdy') {
 				datePickerFormat = 'mm/dd/yy';
@@ -1952,9 +1953,7 @@ define(function(require) {
 		 */
 		timepicker: function(target, pOptions) {
 			var self = this,
-				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
-							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode')
-							? monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
+				is12hMode = _.get(monster, 'apps.auth.currentUser.ui_flags.twelve_hours_mode', false),
 				defaultOptions = {
 					timeFormat: is12hMode ? 'g:ia' : 'G:i',
 					lang: monster.apps.core.i18n.active().timepicker
@@ -2760,7 +2759,7 @@ define(function(require) {
 					level: options.hasOwnProperty('level') ? options.level : 4,
 					theme: options.hasOwnProperty('theme') && validThemes.indexOf(options.theme) >= 0 ? options.theme : 'light'
 				},
-				html = renderjson.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
+				html = renderJSON.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
 
 			$(html).addClass('theme-' + finalOptions.theme);
 

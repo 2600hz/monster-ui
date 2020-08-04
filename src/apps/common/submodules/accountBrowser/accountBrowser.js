@@ -113,7 +113,7 @@ define(function(require) {
 					var parentAccountId = accountList.data('current') || self.accountId,
 						selectedAccountId = accountList.find('.account-list-element.active').data('id'),
 						newAccountParentId = selectedAccountId || parentAccountId;
-						
+
 					onNewAccountClick && onNewAccountClick(newAccountParentId);
 				});
 			}
