@@ -1,0 +1,37 @@
+<form class="form csv-uploader-common-control-container">
+	<div class="form-content">
+		<div class="control-group">
+			<label for="file_input" class="control-label">
+			{{#if url}}
+				{{i18n.csvUploader.uploadCsvStep}}
+			{{else}}
+				{{i18n.csvUploader.uploadCsv}}
+			{{/if}}
+			</label>
+			<div class="inputs file-upload-container">
+				<input type="file" class="file-upload-input">
+			</div>
+		</div>
+	{{#if url}}
+		<div class="control-group">
+			<label for="" class="control-label">
+				{{replaceVar i18n.csvUploader.downloadCsv (coalesce dataLabel i18n.csvUploader.defaultData)}}
+			</label>
+			<a href="{{url}}" download="{{coalesce filename i18n.csvUploader.defaultFilename}}" class="monster-link download-link">
+				{{telicon "download"}}
+				<span class="text">
+					{{i18n.csvUploader.downloadTemplate}}
+				</span>
+			</a>
+		</div>
+	{{/if}}
+	</div>
+	<div class="form-actions">
+		<button type="button" class="monster-button-ghost cancel">
+			{{i18n.cancel}}
+		</button>
+		<button type="submit" class="monster-button-success monster-button-fit" disabled>
+			{{i18n.csvUploader.import}}
+		</button>
+	</div>
+</form>
