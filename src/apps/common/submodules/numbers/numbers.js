@@ -835,7 +835,7 @@ define(function(require) {
 				data: {
 					accountId: accountId,
 					generateError: false,
-					phoneNumber: encodeURIComponent(number)
+					phoneNumber: number
 				},
 				success: function(data) {
 					callback && callback(data.data);
@@ -1134,7 +1134,7 @@ define(function(require) {
 				resource: 'numbers.identify',
 				data: {
 					accountId: self.accountId,
-					phoneNumber: encodeURIComponent(phoneNumber),
+					phoneNumber: phoneNumber,
 					generateError: false
 				},
 				success: function(_data, status) {
@@ -1185,7 +1185,7 @@ define(function(require) {
 				resource: 'numbers.create',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(number)
+					phoneNumber: number
 				},
 				success: function(data) {
 					success && success(data.data);
@@ -1234,7 +1234,7 @@ define(function(require) {
 				resource: 'numbers.activate',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(number)
+					phoneNumber: number
 				},
 				success: function(data) {
 					success && success(data.data);
@@ -1527,7 +1527,7 @@ define(function(require) {
 				resource: 'numbers.get',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(phoneNumber)
+					phoneNumber: phoneNumber
 				},
 				success: function(_data, status) {
 					success && success(_data.data);
