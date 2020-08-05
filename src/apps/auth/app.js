@@ -101,7 +101,7 @@ define(function(require) {
 					apiUrl: self.customAuth.api_url
 				};
 
-				monster.apps.load(self.customAuth.name, function(app) {
+				monster.apps.load(self.customAuth.name, function(err, app) {
 					app.render(self.appFlags.mainContainer);
 				}, options);
 			} else if (monster.config.whitelabel.hasOwnProperty('sso')) {
