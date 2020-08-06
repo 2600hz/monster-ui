@@ -652,6 +652,7 @@
 			data: {
 				data: settings.data
 			},
+			removeHeaders: ['X-Auth-Token'],
 			generateError: settings.hasOwnProperty('generateError') ? settings.generateError : true,
 			isRetryLoginRequest: settings.hasOwnProperty('isRetryLoginRequest') ? settings.isRetryLoginRequest : false,
 			success: function(data, status, jqXHR) {
