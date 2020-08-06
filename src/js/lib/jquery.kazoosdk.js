@@ -646,7 +646,7 @@
 
 	function authFunction(settings, defaultSettings, url) {
 		var apiRoot = settings.apiRoot || defaultSettings.apiRoot;
-		request($.extend({}, defaultSettings, {
+		request(_.mergeWith({}, defaultSettings, {
 			url: apiRoot + url,
 			verb: 'PUT',
 			data: {
@@ -660,6 +660,10 @@
 				settings.success && settings.success(data, status, jqXHR);
 			},
 			error: settings.error
+		}, function(dest, src) {
+			return _.every([dest, src], _.isArray)
+				? _.chain(dest).concat(src).uniq().value()
+				: undefined;
 		}));
 	}
 
