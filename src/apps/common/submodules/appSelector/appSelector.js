@@ -1,8 +1,9 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		isotope = require('isotope'),
 		monster = require('monster');
+
+	require('isotope');
 
 	var appSelector = {
 		// Defines API requests not included in the SDK
@@ -71,21 +72,24 @@ define(function(require) {
 		 * Render app selector
 		 * @param  {Object} args
 		 * @param  {jQuery} args.container  Element that will contain the app selector
-		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
+		 * @param  {String} [args.accountId=self.accountId]  ID of the account from which to get
+		 *                                                   the app list
+		 * @param  {('all'|'account'|'user')} [args.scope='all']  App list scope
 		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
 		 *                                            using the cached one
 		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
-		 *                                              displayed. This is applied on top of the
-		 *                                              selected scope, and takes precedence over
-		 *                                              args.excludedApps.
+		 *                                             displayed. This is applied on top of the
+		 *                                             selected scope, and takes precedence over
+		 *                                             args.excludedApps.
 		 * @param  {String[]} [args.excludedApps=[]]  List of App IDs of the apps to be excluded
-		 *                                             from the list. This is applied on top of the
-		 *                                             selected scope.
+		 *                                            from the list. This is applied on top of the
+		 *                                            selected scope.
 		 * @param  {String[]} [args.selectedAppIds=[]]  Pre-selected application IDs
 		 * @param  {Function} [args.callback]  Optional callback to be executed after render
 		 */
 		appSelectorRender: function(args) {
 			var self = this,
+				accountId = _.get(args, 'accountId', self.accountId),
 				scope = _.get(args, 'scope', 'all'),
 				forceFetch = _.get(args, 'forceFetch', false),
 				availableApps = _.get(args, 'availableApps'),
@@ -102,7 +106,18 @@ define(function(require) {
 							};
 						}),
 						dataTemplate = {
-							apps: apps,
+							apps: _
+								.chain(apps)
+								.map(function(app, index) {
+									return _.merge({
+										isEven: (index % 2 === 0)
+									}, app);
+								})
+								.sortBy(_.flow([
+									_.partial(_.get, _, 'label'),
+									_.toLower
+								]))
+								.value(),
 							filters: filters,
 							scope: scope,
 							selectedAppIds: selectedAppIds,
@@ -140,12 +155,11 @@ define(function(require) {
 				};
 
 			monster.pub('apploader.getAppList', {
+				accountId: accountId,
 				scope: scope,
-				forceFetch: forceFetch,
+				forceFetch: forceFetch || accountId !== self.accountId,
 				success: function(appList) {
 					var $template;
-
-					appList = _.sortBy(appList, 'label');
 
 					self.appSelectorSetStore('apps', _.keyBy(appList, 'id'));
 					self.appSelectorSetStore('selectedAppIds', selectedAppIds);
@@ -166,13 +180,6 @@ define(function(require) {
 							return _.includes(excludedApps, app.id);
 						});
 					}
-
-					// Mark initial even elements
-					appList = _.map(appList, function(app, index) {
-						return _.merge({
-							isEven: (index % 2 === 0)
-						}, app);
-					});
 
 					// Init template after saving selected apps to store, so they can be rendered
 					$template = initTemplate(appList);
@@ -199,6 +206,8 @@ define(function(require) {
 		/**
 		 * Render app selector as a dialog
 		 * @param  {Object} args
+		 * @param  {String} [args.accountId=self.accountId]  ID of the account from which to get
+		 *                                                   the app list
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
 		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
 		 *                                            using the cached one
@@ -224,6 +233,7 @@ define(function(require) {
 				renderArgs = _
 					.chain(args)
 					.pick([
+						'accountId',
 						'scope',
 						'forceFetch',
 						'availableApps',

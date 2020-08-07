@@ -110,7 +110,11 @@ define(function(require) {
 
 			if (!monster.config.whitelabel.hideNewAccountCreation) {
 				template.find('.account-list-add').on('click', function() {
-					onNewAccountClick && onNewAccountClick();
+					var parentAccountId = accountList.data('current') || self.accountId,
+						selectedAccountId = accountList.find('.account-list-element.active').data('id'),
+						newAccountParentId = selectedAccountId || parentAccountId;
+
+					onNewAccountClick && onNewAccountClick(newAccountParentId);
 				});
 			}
 
@@ -316,16 +320,20 @@ define(function(require) {
 					accountList.append(loader);
 					var searchValue = accountList.data('search-value'),
 						apiResource = searchValue ? 'account.searchByName' : 'account.listChildren',
-						apiData = searchValue ? { accountName: searchValue } : { accountId: accountList.data('current') },
-						nextStartKey = accountList.data('next-key');
+						nextStartKey = accountList.data('next-key'),
+						apiData = _.merge({
+							filters: {
+								start_key: nextStartKey
+							}
+						}, searchValue ? {
+							accountName: searchValue
+						} : {
+							accountId: accountList.data('current')
+						});
 
 					self.callApi({
 						resource: apiResource,
-						data: $.extend(true, apiData, {
-							filters: {
-								'start_key': encodeURIComponent(nextStartKey)
-							}
-						}),
+						data: apiData,
 						success: function(data, status) {
 							var nextStartKey = data.next_start_key,
 								listTemplate = $(self.getTemplate({

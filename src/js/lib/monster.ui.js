@@ -3,27 +3,31 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		Handlebars = require('handlebars'),
-		bhotkeys = require('hotkeys'),
 		Toastr = require('toastr'),
-		validate = require('validate'),
-		wysiwyg = require('wysiwyg'),
-		timepicker = require('timepicker'),
 		introJs = require('introJs'),
-		mask = require('mask'),
 		renderJSON = require('renderjson'),
 		footable = require('footable'),
-		mousetrap = require('mousetrap'),
+		form2object = require('form2object'),
+		Mousetrap = require('mousetrap'),
 		Drop = require('drop'),
 		Clipboard = require('clipboard'),
 		moment = require('moment'),
-		simplemde = require('simplemde'),
-		marked = require('marked');
+		SimpleMDE = require('simplemde'),
+		marked = require('marked'),
+		Popup = require('popup-redirect'),
+		JSONEditor = require('jsoneditor');
 
+	// Import for side effects only
 	require('chosen');
 	require('disableAutoFill');
+	require('hotkeys');
 	require('image-select');
+	require('mask');
 	require('moment-timezone');
 	require('monthpicker');
+	require('timepicker');
+	require('validate');
+	require('wysiwyg');
 
 	function initializeHandlebarsHelper() {
 		Handlebars.registerHelper({
@@ -57,15 +61,15 @@ define(function(require) {
 				}
 
 				operators = {
-					'==': function(a, b) { return a == b; },
+					'==': function(a, b) { return a == b; }, // eslint-disable-line eqeqeq
 					'===': function(a, b) { return a === b; },
-					'!=': function(a, b) { return a != b; },
+					'!=': function(a, b) { return a != b; }, // eslint-disable-line eqeqeq
 					'!==': function(a, b) { return a !== b; },
 					'<': function(a, b) { return a < b; },
 					'>': function(a, b) { return a > b; },
 					'<=': function(a, b) { return a <= b; },
 					'>=': function(a, b) { return a >= b; },
-					'typeof': function(a, b) { return typeof a === b; }
+					'typeof': function(a, b) { return typeof a === b; } // eslint-disable-line valid-typeof
 				};
 
 				if (!operators[operator]) {
@@ -821,6 +825,10 @@ define(function(require) {
 				zIndex: 20000,
 				// Event handlers
 				close: function() {
+					var hasOtherDialogsOpen = _.some($body.find('.ui-dialog .ui-dialog-content'), function(element) {
+						return _.isFunction($(element).dialog) && $(element).dialog('isOpen');
+					});
+
 					// Clear events
 					$window.off('resize', windowResizeHandler);
 
@@ -828,7 +836,10 @@ define(function(require) {
 					$('div.popover').remove();
 					$dialogBody.dialog('destroy');
 					$dialogBody.remove();
-					$body.removeClass('monster-dialog-active');
+
+					if (!hasOtherDialogsOpen) {
+						$body.removeClass('monster-dialog-active');
+					}
 
 					// Execute close callback, if possible
 					if (_.isFunction(onClose)) {
@@ -884,7 +895,9 @@ define(function(require) {
 					closeBtnText = '<i class="fa fa-times icon-small"></i>';
 					break;
 				default:
-					closeBtnText = '<i class="monster-dialog-titlebar-close"></i>';
+					closeBtnText = getSvgIconTemplate({
+						id: 'telicon2--x--circle'
+					});
 					break;
 			}
 			$dialogBody.siblings().find('.ui-dialog-titlebar-close').html(closeBtnText);
@@ -1145,7 +1158,7 @@ define(function(require) {
 					options,
 					'startDate',
 					today
-					),
+				),
 				endDate = moment(initDate).tz(timezone).endOf('day');
 
 			if (options.startDate) {
@@ -1212,7 +1225,7 @@ define(function(require) {
 					// Set the max date to be as far as possible from the min date (We take the dateMaxRange unless it's after "today", we don't want users to search in the future)
 					dateMax = minMoment.isAfter(today) ? today.toDate() : minMoment.toDate();
 				} else if (input.id === 'startDate') {
-					dateMin = moment({years: 2011}).startOf('year').toDate();
+					dateMin = moment({ years: 2011 }).startOf('year').toDate();
 					dateMax = moment().toDate();
 				}
 
@@ -1502,7 +1515,7 @@ define(function(require) {
 				throw TypeError('"options" is not a plain object');
 			}
 
-			return new simplemde(_.merge({
+			return new SimpleMDE(_.merge({
 				element: $target[0],
 				status: false,
 				autosave: false,
@@ -1904,9 +1917,7 @@ define(function(require) {
 		datepicker: function(target, options) {
 			var self = this,
 				datePickerFormat = 'mm/dd/yy',
-				userFormat = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
-							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('date_format')
-							? monster.apps.auth.currentUser.ui_flags.date_format : 'mdy';
+				userFormat = _.get(monster, 'apps.auth.currentUser.ui_flags.date_format', 'mdy');
 
 			if (userFormat === 'mdy') {
 				datePickerFormat = 'mm/dd/yy';
@@ -1942,9 +1953,7 @@ define(function(require) {
 		 */
 		timepicker: function(target, pOptions) {
 			var self = this,
-				is12hMode = monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser')
-							&& monster.apps.auth.currentUser.hasOwnProperty('ui_flags') && monster.apps.auth.currentUser.ui_flags.hasOwnProperty('twelve_hours_mode')
-							? monster.apps.auth.currentUser.ui_flags.twelve_hours_mode : false,
+				is12hMode = _.get(monster, 'apps.auth.currentUser.ui_flags.twelve_hours_mode', false),
 				defaultOptions = {
 					timeFormat: is12hMode ? 'g:ia' : 'G:i',
 					lang: monster.apps.core.i18n.active().timepicker
@@ -2110,97 +2119,143 @@ define(function(require) {
 			}
 		},
 
-		showPasswordStrength: function(input, options) {
-			if (input) {
-				var i18n = monster.apps.core.i18n.active(),
-					options = options || {},
-					display = options.display || 'bar',
-					tooltipPosition = options.tooltipPosition || 'top',
-					regexes = [
-						{
-							key: 'strong',
-							regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
-							color: '#18b309',
-							size: 100
-						},
-						{
-							key: 'good',
-							regex: new RegExp('^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$'),
-							color: '#33db24',
-							size: 70
-						},
-						{
-							key: 'medium',
-							regex: new RegExp('^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$'),
-							color: '#ffcc33',
-							size: 50
-						},
-						{
-							key: 'weak',
-							regex: new RegExp('^(?=.{6,}).*$'),
-							color: '#ff6a57',
-							size: 40
-						},
-						{
-							key: 'bad',
-							regex: new RegExp('^.+$'),
-							color: '#ff3d24',
-							size: 20
-						},
-						{
-							key: 'empty',
-							regex: new RegExp('^\\s*$'),
-							color: '#c0c0c9',
-							size: 0
-						}
-					],
-					strengthDisplay;
-
-				switch (display) {
-					case 'icon': {
-						strengthDisplay = $('<i class="fa fa-lock icon-small monster-password-strength" data-original-title="' + i18n.passwordStrength.empty + '" data-placement="' + tooltipPosition + '" data-toggle="tooltip"></i>');
-						input.on('keyup keypress change', function(e) {
-							$.each(regexes, function(key, val) {
-								if (val.regex.test(input.val())) {
-									strengthDisplay
-										.css('color', val.color)
-										.attr('data-original-title', i18n.passwordStrength[val.key])
-										.tooltip('fixTitle');
-									return false;
-								}
-							});
-						});
-						break;
-					}
-					case 'bar':
-					default: {
-						strengthDisplay = $('<div class="monster-password-strength"><div><span>' + i18n.passwordStrength.empty + '</span></div></div>');
-						input.on('keyup keypress change', function(e) {
-							$.each(regexes, function(key, val) {
-								if (val.regex.test(input.val())) {
-									strengthDisplay
-										.children('div')
-										.css({
-											backgroundColor: val.color,
-											width: val.size + '%'
-										}).children('span')
-										.html(i18n.passwordStrength[val.key]);
-									return false;
-								}
-							});
-						});
-						break;
-					}
-				}
-
-				if (options.container) {
-					options.container.append(strengthDisplay);
-				} else {
-					input.after(strengthDisplay);
-				}
-			} else {
-				throw new Error('You must provide at least one input field');
+		/**
+		 * Adds a password strength indicator for a specific input, in the form of either a bar, an emoji or a color-changing lock icon.
+		 * @param  {jQuery} input  Input on which the method will be applied. Best suited for an input of the `password` type.
+		 * @param  {Object} [options]  Indicator options
+		 * @param  {jQuery} [options.container]  Where to append the password strength display (by default, it will be appended after the `input`).
+		 * @param  {('bar'|'emoji'|'icon')} [options.display='bar']  Type of indicator to display: a bar, an emoji or a color-changing lock icon.
+		 * @param  {('top'|'bottom'|'left'|'right')} [options.tooltipPosition='top']  When the display is set to 'icon', you can choose the position of the tooltip on the icon.
+		 */
+		showPasswordStrength: function(input, pOptions) {
+			if (!(input instanceof $)) {
+				throw new TypeError('"input" is not a jQuery object');
 			}
+			if (!_.isUndefined(pOptions) && !_.isPlainObject(pOptions)) {
+				throw TypeError('"options" is not a plain object');
+			}
+
+			var i18n = monster.apps.core.i18n.active();
+			var options = pOptions || {};
+			var display = _.get(options, 'display', 'bar');
+			if (!_.includes(['bar', 'emoji', 'icon'], display)) {
+				throw new Error('`' + display + '`' + ' is not a valid display option. It should be `bar`, `emoji` or `icon`.');
+			}
+			if (display !== 'icon' && _.has(options, 'tooltipPosition')) {
+				console.warn('"options.tooltipPosition" is only supported for `icon` display, so it will be ignored');
+			}
+
+			var tooltipPosition = _.get(options, 'tooltipPosition', 'top');
+			if (!_.includes(['top', 'bottom', 'left', 'right'], tooltipPosition)) {
+				throw new Error('`' + tooltipPosition + '`' + ' is not a valid tooltip position option. It should be one of `top`, `bottom`, `left` or `right`.');
+			}
+
+			var $container = _.get(options, 'container');
+			if (!_.isUndefined($container) && !($container instanceof $)) {
+				throw new TypeError('"options.container" is not a jQuery object');
+			}
+
+			var strengthLevels = _.map([
+				{
+					key: 'strong',
+					regex: new RegExp('^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\W_]).*$'),
+					color: '#18b309',
+					size: 100,
+					emojiChar: '&#x1F60E;'
+				},
+				{
+					key: 'good',
+					regex: new RegExp('^(?=.{8,})(((?=.*[A-Z])(?=.*[\\W_]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[\\W_])(?=.*[0-9]))).*$'),
+					color: '#33db24',
+					size: 70,
+					emojiChar: '&#x1F603;'
+				},
+				{
+					key: 'medium',
+					regex: new RegExp('^(?=.{6,})((?=.*[\\W_])|(?=.*[A-Z])|(?=.*[0-9])).*$'),
+					color: '#ffcc33',
+					size: 50,
+					emojiChar: '&#x1F610;'
+				},
+				{
+					key: 'weak',
+					regex: new RegExp('^(?=.{6,}).*$'),
+					color: '#ff6a57',
+					size: 40,
+					emojiChar: '&#x1F61E;'
+				},
+				{
+					key: 'bad',
+					regex: new RegExp('^.+$'),
+					color: '#ff3d24',
+					size: 20,
+					emojiChar: '&#x1F621;'
+				},
+				{
+					key: 'empty',
+					regex: new RegExp('^\\s*$'),
+					color: '#c0c0c9',
+					size: 0,
+					emojiChar: '&nbsp;'
+				}
+			], function(val) {
+				return _.merge({
+					label: monster.util.tryI18n(i18n.passwordStrength, val.key)
+				}, val);
+			});
+			var templateName = 'monster-password-strength-' + display;
+			var $template = $(monster.template(
+				monster.apps.core,
+				templateName,
+				{
+					tooltipPosition: tooltipPosition
+				}));
+			var updateIndicator = _.get({
+				bar: function(strengthLevel) {
+					$template
+						.find('.monster-password-strength-bar')
+						.css({
+							backgroundColor: strengthLevel.color,
+							width: strengthLevel.size + '%'
+						});
+					$template
+						.find('.monster-password-strength-label')
+						.html(strengthLevel.label);
+				},
+				emoji: function(strengthLevel) {
+					$template
+						.find('.monster-password-strength-icon')
+						.css('color', strengthLevel.color)
+						.html(strengthLevel.emojiChar);
+					$template
+						.find('.monster-password-strength-label')
+						.html(strengthLevel.label);
+				},
+				icon: function(strengthLevel) {
+					$template
+						.find('.monster-password-strength-icon')
+						.css('color', strengthLevel.color)
+						.attr('data-original-title', strengthLevel.label)
+						.tooltip('fixTitle');
+				}
+			}, display);
+			var checkStrength = function() {
+				var strengthLevel = _.find(strengthLevels, function(level) {
+					return level.regex.test(input.val());
+				});
+
+				!_.isUndefined(strengthLevel) && updateIndicator(strengthLevel);
+			};
+
+			input.on('keyup keypress change', checkStrength);
+
+			if ($container) {
+				$container.append($template);
+			} else {
+				input.after($template);
+			}
+
+			checkStrength();
 		},
 
 		results: function(data) {
@@ -2704,7 +2759,7 @@ define(function(require) {
 					level: options.hasOwnProperty('level') ? options.level : 4,
 					theme: options.hasOwnProperty('theme') && validThemes.indexOf(options.theme) >= 0 ? options.theme : 'light'
 				},
-				html = renderjson.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
+				html = renderJSON.set_show_to_level(finalOptions.level).set_sort_objects(finalOptions.sort)(data);
 
 			$(html).addClass('theme-' + finalOptions.theme);
 
@@ -2772,7 +2827,7 @@ define(function(require) {
 						finalOptions.getData(filters, function(rows, data) {
 							loadedPages.push(rows);
 
-							filters.start_key = encodeURIComponent(data.next_start_key);
+							filters.start_key = data.next_start_key;
 							if (!data.hasOwnProperty('next_start_key') || data.next_start_key === data.start_key) {
 								allDataLoaded();
 							}
@@ -3486,9 +3541,7 @@ define(function(require) {
 		if (!_.isUndefined(options) && !_.isPlainObject(options)) {
 			throw TypeError('"options" is not a plain object');
 		}
-		$target.disableAutoFill(_.merge({}, options, {
-			hidingChar: false
-		}));
+		$target.disableAutoFill(options);
 	}
 	ui.disableAutoFill = disableAutoFill;
 
@@ -3630,6 +3683,47 @@ define(function(require) {
 		});
 	}
 	ui.getSvgIconTemplate = getSvgIconTemplate;
+
+	/**
+	 * Get the jsoneditor instance from the container as long as exists
+	 * @param {jQuery} $target jsoneditor container
+	 * @return {JSONEditor | null}
+	 */
+	function getJsoneditor($target) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		var container = $target[0];
+
+		return _.get(container, 'jsoneditor', null);
+	}
+	ui.getJsoneditor = getJsoneditor;
+
+	/**
+	 * Create a new instance of jsoneditor
+	 * @param {jQuery} $target Contatiner to append the editor to
+	 * @param {Object} [options] Editor options
+	 * @param {Object} [options.json] JSON object to set in the editor as initial data
+	 * @return {JSONEditor} editor
+	 */
+	function jsoneditor($target, options) {
+		if (!($target instanceof $)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+
+		var container = $target[0],
+			jsonObject = _.get(options, 'json', {}),
+			formattedOptions = _.merge({ mode: 'code' }, _.omit(options, ['json'])),
+			editor = new JSONEditor(container, formattedOptions);
+
+		editor.set(jsonObject);
+		// Attach the instance to the container
+		container.jsoneditor = editor;
+
+		return editor;
+	}
+	ui.jsoneditor = jsoneditor;
 
 	/**
 	 * Generates a key-value pair editor

@@ -156,17 +156,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		// Takes a string and replace all the "_" from it with a " ". Also capitalizes first word.
-		// Useful to display hardcoded data from the database that hasn't make it to the i18n files.
-		formatVariableToDisplay: function(variable) {
-			var str = variable || '',
-				formattedString = str.replace(/_/g, ' ');
-
-			formattedString = formattedString.replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-
-			return formattedString;
-		},
-
 		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
 		isSuperDuper: function(pAccount) {
 			var self = this,
@@ -977,6 +966,24 @@ define(function(require) {
 	util.formatPrice = formatPrice;
 
 	/**
+	 * Takes a string and replace all the "_" from it with a " ".
+	 * Also capitalizes first word.
+	 * Useful to display hardcoded data from the database that hasn't make it to
+	 * the i18n files.
+	 * @param  {*} variable Value to format.
+	 * @return {String} Formatted string representation of the value.
+	 */
+	function formatVariableToDisplay(variable) {
+		return _
+			.chain(variable)
+			.toString()
+			.replace(/_/g, ' ')
+			.replace(/\w\S*/g, _.capitalize)
+			.value();
+	}
+	util.formatVariableToDisplay = formatVariableToDisplay;
+
+	/**
 	 * Returns a list of bookkeepers available for Monster UI
 	 * @return {Array} List of bookkeepers availalbe
 	 */
@@ -1364,6 +1371,39 @@ define(function(require) {
 		});
 	}
 	util.getUserFullName = getUserFullName;
+
+	/**
+	 * Returns the initials (two characters) of a specific user or,
+	 * if missing, of the currently logged in user.
+	 *
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {String} pUser.first_name  User's first name
+	 * @param  {String} pUser.last_name   User's last name
+	 *
+	 * @return {String}                   User's initials
+	 */
+	function getUserInitials(pUser) {
+		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+			throw new Error('There is no logged in user');
+		}
+		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
+			throw new TypeError('"user" is not an object');
+		}
+		if (
+			_.isPlainObject(pUser)
+			&& (!_.has(pUser, 'first_name')
+			|| !_.has(pUser, 'last_name'))
+		) {
+			throw new Error('"user" is missing "first_name" or "last_name');
+		}
+
+		var user = _.isUndefined(pUser)
+			? monster.apps.auth.currentUser
+			: pUser;
+
+		return (user.first_name || '').charAt(0) + (user.last_name || '').charAt(0);
+	}
+	util.getUserInitials = getUserInitials;
 
 	/**
 	 * Converts a Gregorian timestamp into a Date instance

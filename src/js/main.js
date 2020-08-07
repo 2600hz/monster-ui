@@ -27,6 +27,7 @@ require.config({
 		'isotope': 'js/vendor/jquery.isotope.min',
 		'jquery': 'js/vendor/jquery-1.9.1.min',
 		'jqueryui': 'js/vendor/jquery-ui-1.10.3.custom.min',
+		'jsoneditor': 'js/vendor/jsoneditor/jsoneditor-8.6.8.min',
 		'jstz': 'js/vendor/jstz.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
@@ -82,9 +83,15 @@ require.config({
 		},
 		'footable-filter': ['footable'],
 		'footable-sort': ['footable'],
+		form2object: {
+			exports: 'form2object'
+		},
 		'hasher': ['signals'],
 		'image-select': ['chosen'],
 		'jqueryui': ['jquery'],
+		'jstz': {
+			exports: 'jstz'
+		},
 		'kazoo': {
 			'exports': 'kazoo'
 		},
@@ -93,6 +100,12 @@ require.config({
 			'exports': '_'
 		},
 		'moment-timezone': ['moment'],
+		'popup-redirect': {
+			exports: 'Popup'
+		},
+		renderjson: {
+			exports: 'renderjson'
+		},
 		'touch-punch': ['jqueryui'],
 		vfs_fonts: ['pdfmake']
 	},
@@ -147,7 +160,7 @@ require([
 		monster.routing.init();
 
 		monster.loadBuildConfig(function() {
-			monster.apps.load('core', function(app) {
+			monster.apps.load('core', function(err, app) {
 				app.render($('.core-wrapper'));
 			});
 		});

@@ -1,33 +1,38 @@
 <header class="core-topbar-wrapper">
+	<div class="progress-indicator">
+		<div class="indeterminate"></div>
+	</div>
 	<nav class="core-topbar">
-		<a href="javascript:void(0);" class="links main-links" id="main_topbar_brand"></a>
-		<a href="javascript:void(0);" class="links main-links" id="main_topbar_current_app"></a>
-		<ul class="nav" id="main_topbar_nav">
-			<li id="main_topbar_account_toggle">
-				<a href="javascript:void(0);" class="links" id="main_topbar_account_toggle_link" data-title="{{i18n.accountToggle.toggleTooltip}}" data-placement="bottom" data-toggle="tooltip">
-					<i class="icon-telicon-account-jump"></i>
-				</a>
-				<div id="main_topbar_account_toggle_container" class="topbar-dropdown-container">
-					<div class="account-toggle-header">
-						<div class="current-account-label">{{i18n.accountToggle.currentAccountLabel}}</div>
-						<a id="TESTJR" href="javascript:void(0);" class="current-account-container"></a>
-						<i class="home-account-link fa fa-undo"></i>
+		<a href="javascript:void(0);" class="links" id="main_topbar_brand"></a>
+		<div class="main-links">
+			<a href="javascript:void(0);" class="links" id="main_topbar_current_app"></a>
+			<ul class="nav" id="main_topbar_nav">
+				<li id="main_topbar_account_toggle">
+					<a href="javascript:void(0);" class="links" id="main_topbar_account_toggle_link" data-title="{{i18n.accountToggle.toggleTooltip}}" data-placement="bottom" data-toggle="tooltip">
+						<i class="icon-telicon-account-jump"></i>
+					</a>
+					<div id="main_topbar_account_toggle_container" class="topbar-dropdown-container">
+						<div class="account-toggle-header">
+							<div class="current-account-label">{{i18n.accountToggle.currentAccountLabel}}</div>
+							<a id="TESTJR" href="javascript:void(0);" class="current-account-container"></a>
+							<i class="home-account-link fa fa-undo"></i>
+						</div>
+						<div class="account-toggle-content"></div>
 					</div>
-					<div class="account-toggle-content"></div>
-				</div>
-			</li>
-			<li id="main_topbar_apploader">
-				<ul id="appList"></ul>
-				<a href="javascript:void(0);" class="links" id="main_topbar_apploader_link" {{#unless useDropdownApploader}}data-title="{{i18n.apps}}" data-placement="bottom" data-toggle="tooltip"{{/unless}}>
-					<i class="icon-telicon-apps"></i>
-				</a>
-			</li>
-			<li id="main_topbar_signout">
-				<a href="javascript:void(0);" class="links" id="main_topbar_signout_link">
-					<i class="fa fa-sign-out"></i>
-				</a>
-			</li>
-		</ul>
+				</li>
+				<li id="main_topbar_apploader">
+					<ul id="appList"></ul>
+					<a href="javascript:void(0);" class="links" id="main_topbar_apploader_link" {{#unless useDropdownApploader}}data-title="{{i18n.apps}}" data-placement="bottom" data-toggle="tooltip"{{/unless}}>
+						<i class="icon-telicon-apps"></i>
+					</a>
+				</li>
+				<li id="main_topbar_signout">
+					<a href="javascript:void(0);" class="links" id="main_topbar_signout_link">
+						<i class="fa fa-sign-out"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
 	</nav>
 </header>
 
@@ -47,12 +52,6 @@
 </footer>
 
 <div class="core-absolute">
-	<div class="loading-wrapper fixed-right">
-		<div class="line outer">
-			<div class="line inner"></div>
-		</div>
-	</div>
-
 	<div id="upload_progress">
 		<div class="upload-progress-overlay"></div>
 		<div class="upload-progress-content">

@@ -40,6 +40,7 @@ define(function(require) {
 		},
 
 		subscribe: {
+			'apploader.closed': 'onAppLoaderClosed',
 			'myaccount.hide': '_hide',
 			'myaccount.updateMenu': '_updateMenu',
 			'myaccount.events': '_myaccountEvents',
@@ -56,6 +57,11 @@ define(function(require) {
 		},
 
 		appFlags: {
+			/**
+			 * Whether myaccount should be rendered
+			 * @type {Boolean}
+			 */
+			showMyAccount: false,
 			common: {
 				outboundPrivacy: [
 					'inherit',
@@ -88,6 +94,16 @@ define(function(require) {
 			});
 		},
 
+		onAppLoaderClosed: function onAppLoaderClosed() {
+			var self = this;
+
+			if ($(self.mainContainer).hasClass('myaccount-open')) {
+				return;
+			}
+
+			monster.pub('core.isActiveAppPlugin', _.bind(self.clickMyAccount, self));
+		},
+
 		getDefaultCategory: function() {
 			var self = this,
 				defaultApp = {
@@ -102,83 +118,66 @@ define(function(require) {
 		},
 
 		getDefaultRestrictions: function() {
-			return {
-				account: {
-					show_tab: true
-				},
-				balance: {
-					show_credit: true,
-					show_header: true,
-					show_minutes: true,
-					show_tab: true
-				},
-				billing: {
-					show_tab: true
-				},
-				inbound: {
-					show_tab: true
-				},
-				outbound: {
-					show_tab: true
-				},
-				twoway: {
-					show_tab: true
-				},
-				service_plan: {
-					show_tab: true
-				},
-				transactions: {
-					show_tab: true
-				},
-				user: {
-					show_tab: true
-				},
-				errorTracker: {
-					show_tab: true
-				}
+			var restrictions = {
+				account: ['show_tab'],
+				balance: ['show_credit', 'show_header', 'show_minutes', 'show_tab'],
+				billing: ['show_tab'],
+				errorTracker: ['show_tab'],
+				inbound: ['show_tab'],
+				outbound: ['show_tab'],
+				service_plan: ['show_tab'],
+				transactions: ['show_tab'],
+				twoway: ['show_tab'],
+				user: ['show_tab']
 			};
+			return _
+				.chain(restrictions)
+				.keys()
+				.map(function(tabId) {
+					return {
+						tabId: tabId,
+						toggles: _
+							.chain(restrictions[tabId])
+							.map(function(toggle) {
+								return {
+									toggle: toggle,
+									isEnabled: !(monster.apps.auth.currentUser.priv_level === 'user' && !_.includes(['errorTracker', 'user'], tabId))
+								};
+							})
+							.keyBy('toggle')
+							.mapValues('isEnabled')
+							.value()
+					};
+				})
+				.keyBy('tabId')
+				.mapValues('toggles')
+				.value();
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} [args.restrictions]
+		 * @param  {Function} args.callback
+		 */
 		_UIRestrictionsCompatibility: function(args) {
 			var self = this,
-				showMyaccount = false;
+				defaultRestrictions = self.getDefaultRestrictions(),
+				validTabIds = _.keys(defaultRestrictions),
+				restrictions = _
+					.chain({})
+					.merge(
+						defaultRestrictions,
+						_.get(args, 'restrictions.myaccount', {})
+					)
+					// Remove legacy properties no longer used
+					.omitBy(function(toggles, tabId) {
+						return !_.includes(validTabIds, tabId);
+					})
+					.value();
 
-			if (args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount')) {
-				args.restrictions = $.extend(true, {}, self.getDefaultRestrictions(), args.restrictions.myaccount);// = args.restrictions.myaccount;
-			} else {
-				args.restrictions = self.getDefaultRestrictions();
-			}
-			if (monster.apps.auth.currentUser.priv_level === 'user') {
-				_.each(args.restrictions, function(restriction, tab) {
-					if (tab !== 'user' && tab !== 'errorTracker') {
-						restriction.show_tab = false;
-					}
-				});
-			}
+			self.appFlags.showMyAccount = _.every(restrictions, _.partial(_.get, _, 'show_tab', false));
 
-			if (!args.restrictions.hasOwnProperty('user')) {
-				args.restrictions = $.extend(args.restrictions, {
-					account: {
-						show_tab: true
-					},
-					billing: {
-						show_tab: true
-					},
-					user: {
-						show_tab: true
-					}
-				});
-
-				delete args.restrictions.profile;
-			}
-
-			_.each(args.restrictions, function(value, key) {
-				if (value.show_tab) {
-					showMyaccount = true;
-				}
-			});
-
-			args.callback(args.restrictions, showMyaccount);
+			args.callback(restrictions, self.appFlags.showMyAccount);
 		},
 
 		formatUiRestrictions: function(restrictions, callback) {
@@ -310,8 +309,11 @@ define(function(require) {
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
-							name: args && args.name || monster.util.getUserFullName(),
-							showMyaccount: showMyaccount
+							name: (args && args.name) || monster.util.getUserFullName(),
+							showMyaccount: showMyaccount,
+							initials: monster.util.getUserInitials(),
+							account: monster.apps.auth.currentAccount.name,
+							isMasquerading: monster.util.isMasquerading()
 						},
 						navHtml = $(self.getTemplate({
 							name: 'nav',
@@ -471,6 +473,7 @@ define(function(require) {
 								self.displayUserSection();
 
 								myaccount.addClass('myaccount-open');
+								$('#main_topbar_myaccount').addClass('open');
 
 								myaccount.one('transitionend', function() {
 									$('#monster_content').hide();
@@ -535,10 +538,11 @@ define(function(require) {
 			var self = this,
 				myaccount = myaccount || $(self.mainContainer);
 
-			monster.pub('core.showAppName', $('#main_topbar_current_app_name').data('originalName'));
+			monster.pub('core.showAppName');
 			myaccount.find('.myaccount-right .myaccount-content').empty();
 			myaccount.find('.myaccount-dialog-container').empty();
 			myaccount.removeClass('myaccount-open');
+			$('#main_topbar_myaccount').removeClass('open');
 			$('#monster_content').show();
 
 			monster.pub('myaccount.closed');
@@ -602,7 +606,7 @@ define(function(require) {
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough
 		hasToShowWalkthrough: function(callback) {
 			var self = this,
-				response = self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
+				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
 
 			if (typeof callback === 'function') {
 				callback(response);

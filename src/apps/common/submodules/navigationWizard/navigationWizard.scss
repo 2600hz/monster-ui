@@ -23,11 +23,16 @@ $media-size-medium: "(max-width : 980px)";
 
 	background-color: $white;
 
-	.header {
+	.flex-main-container {
+		display: flex;
+		min-height: calc(100vh - 204px);
+	}
+
+	.navigation-header {
+		height: 64px;
 		display: flex;
 		position: relative;
 		justify-content: space-between;
-		padding: 13px 24px;
 		box-shadow: inset 0 -1px 0 0 $french-gray2,
 			0 1px 4px 0 rgba($woodsmoke, 0.24);
 
@@ -35,6 +40,7 @@ $media-size-medium: "(max-width : 980px)";
 			font-size: 18px;
 			font-weight: normal;
 			color: $woodsmoke;
+			margin: 23px 0 0 24px;;
 		}
 
 		.actions .monster-button:not(:last-child) {
@@ -43,8 +49,8 @@ $media-size-medium: "(max-width : 980px)";
 	}
 
 	.left-content {
-		float: left;
 		width: 280px;
+		flex: 0 0  auto;
 
 		.nav {
 			margin: 33px 0 22px 1.5rem;
@@ -153,15 +159,13 @@ $media-size-medium: "(max-width : 980px)";
 
 	.right-content {
 		background-color: $athens-gray;
-		margin-left: 281px;
 		border-bottom: 1px solid $input-border-color;
 		border-left: 1px solid $input-border-color;
-		min-height: calc(100vh - 204px);
+		flex-grow: 1;
 	}
 
 	.footer {
-		margin-right: 25px;
-		margin-left: 281px;
+		margin: 0 25px 0 280px;
 		border-left: 1px solid $input-border-color;
 		height: 70px;
 
@@ -186,6 +190,7 @@ $media-size-medium: "(max-width : 980px)";
 
 	#cancel {
 		min-width: 74px;
+		margin: 13px 24px 0 0;
 	}
 
 	#cancel,
@@ -218,7 +223,7 @@ $media-size-medium: "(max-width : 980px)";
 	}
 
 	@media print {
-		.header {
+		.navigation-header {
 			display: none;
 		}
 
@@ -334,6 +339,26 @@ $media-size-medium: "(max-width : 980px)";
 			color: $woodsmoke;
 		}
 
+		.input-box.iconography-input-left {
+			position: relative;
+			width: 100%;
+
+			input {
+				box-sizing: border-box;
+				width: 100%;
+				padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+				font-size: 0.875rem;
+				line-height: 0.875rem;
+			}
+
+			.iconography {
+				position: absolute;
+				top: 11px;
+				right: 0.75rem;
+				color: $manatee;
+			}
+		}
+
 		.step-title {
 			padding-bottom: 1.5rem;
 			font-size: 23px;
@@ -347,7 +372,6 @@ $media-size-medium: "(max-width : 980px)";
 			margin-left: 0.75rem;
 			padding: 0.5rem;
 		}
-
 
 		.section-title {
 			margin-top: 1rem;

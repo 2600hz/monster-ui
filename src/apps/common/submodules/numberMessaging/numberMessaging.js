@@ -68,7 +68,7 @@ define(function(require) {
 				self.numberMessagingPatchNumber({
 					data: {
 						accountId: accountId,
-						phoneNumber: encodeURIComponent(numberData.id),
+						phoneNumber: numberData.id,
 						data: formData
 					},
 					success: function(number) {

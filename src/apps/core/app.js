@@ -29,6 +29,7 @@ define(function(require) {
 		requests: {},
 
 		subscribe: {
+			'core.isActiveAppPlugin': 'isActiveAppPlugin',
 			'core.loadApps': '_loadApps',
 			'core.showAppName': 'showAppName',
 			'core.triggerMasquerading': 'triggerMasquerading',
@@ -41,7 +42,11 @@ define(function(require) {
 		//Default app to render if the user is logged in, can be changed by setting a default app
 		_defaultApp: 'appstore',
 
-		spinner: {},
+		/**
+		 * Holds timeout IDs for global progress indicator
+		 * @type {Object}
+		 */
+		indicator: {},
 
 		// Global var to determine if there is a request in progress
 		request: {
@@ -138,116 +143,67 @@ define(function(require) {
 		loadAuth: function() {
 			var self = this;
 
-			monster.apps.load('auth', function(app) {
+			monster.apps.load('auth', function(err, app) {
 				app.render($('#monster_content'));
 			});
 		},
 
-		showAppName: function(appName) {
+		/**
+		 * Updates topbar current app with active/specified app
+		 * @param  {String} pName Unique app name
+		 */
+		showAppName: function(pName) {
 			var self = this,
-				navbar = $('.core-topbar'),
-				currentApp = navbar.find('#main_topbar_current_app'),
-				unsetDisplay = function() {
-					// Used to unset the display inline style that may be set by jQuery's fadeIn
-					// function, which is 'block' by default when the element is not displayed
-					// (display: none), so it does not override the display property set via CSS
-					// classes
-					$(this).css('display', '');
-				},
-				defaultApp;
+				name = _.isString(pName) ? pName : monster.apps.getActiveApp(),
+				$navbar = $('.core-topbar'),
+				$current = $navbar.find('#main_topbar_current_app'),
+				$new = name !== 'appstore' ? $(self.getTemplate({
+					name: 'current-app',
+					data: _
+						.chain(monster.apps.auth.installedApps)
+						.concat([{
+							name: 'myaccount',
+							label: self.i18n.active().controlCenter
+						}])
+						.filter({ name: name })
+						.map(function(app) {
+							return _
+								.chain({
+									icon: monster.util.getAppIconPath(app)
+								})
+								.merge(app)
+								.thru(monster.ui.formatIconApp)
+								.value();
+						})
+						.find({ name: name })
+						.value()
+				})) : '';
 
-			if (appName === 'myaccount') {
-				var myaccount = {
-					name: appName,
-					label: self.i18n.active().controlCenter
-				};
-
-				myaccount.icon = monster.util.getAppIconPath(myaccount);
-
-				monster.ui.formatIconApp(myaccount);
-
-				if (currentApp.is(':empty')) {
-					currentApp
-						.append($(self.getTemplate({
-							name: 'current-app',
-							data: myaccount
-						})));
-
-					navbar
-						.find('#main_topbar_current_app_name')
-							.data('originalName', 'appstore')
-							.fadeIn(100, unsetDisplay);
-				} else {
-					var originalName = navbar.find('#main_topbar_current_app_name').data('name');
-
-					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
-						currentApp
-							.empty()
-							.append($(self.getTemplate({
-								name: 'current-app',
-								data: myaccount
-							})));
-
-						navbar
-							.find('#main_topbar_current_app_name')
-								.data('originalName', originalName)
-								.fadeIn(100, unsetDisplay);
-					});
-				}
-			} else {
-				_.each(monster.apps.auth.installedApps, function(val) {
-					if (val.name === appName) {
-						defaultApp = val;
-						defaultApp.icon = monster.util.getAppIconPath(val);
-					}
-				});
-
-				monster.ui.formatIconApp(defaultApp);
-
-				if (appName === 'appstore') {
-					currentApp.empty();
-				} else if (currentApp.is(':empty')) {
-					currentApp
-						.append($(self.getTemplate({
-							name: 'current-app',
-							data: defaultApp
-						})));
-
-					navbar.find('#main_topbar_current_app_name')
-						.fadeIn(100, unsetDisplay);
-				} else {
-					navbar.find('#main_topbar_current_app_name').fadeOut(100, function() {
-						currentApp
-							.empty()
-							.append($(self.getTemplate({
-								name: 'current-app',
-								data: defaultApp
-							})));
-
-						navbar.find('#main_topbar_current_app_name')
-							.fadeIn(100, unsetDisplay);
-					});
-				}
-			}
+			$current.fadeOut(100, function() {
+				$current
+					.empty()
+					.append($new)
+					.fadeIn(100);
+			});
 		},
 
-		initializeBaseApps: function() {
+		isActiveAppPlugin: function isActiveAppPlugin(callback) {
 			var self = this;
 
-			if (_.has(self.appFlags, 'baseApps')) {
+			if (!_.includes(self.getPlugins(), monster.apps.getActiveApp())) {
 				return;
 			}
 
-			self.appFlags.baseApps = _
-				.chain(monster.config.whitelabel)
-				.get('additionalLoggedInApps', [])
-				.concat([
-					'apploader',
-					'appstore',
-					'common',
-					'myaccount'
-				])
-				.value();
+			callback && callback();
+		},
+
+		getPlugins: function getPlugins(callback) {
+			var plugins = [
+				'apploader',
+				'common',
+				'myaccount'
+			];
+			return _.isFunction(callback) ? callback(plugins) : plugins;
 		},
 
 		/**
@@ -255,19 +211,19 @@ define(function(require) {
 		 * @param  {String} [args.defaultApp]
 		 */
 		_loadApps: function(args) {
-			var self = this;
+			var self = this,
+				loggedInAppsToLoad = _
+					.chain(monster.config.whitelabel)
+					.get('additionalLoggedInApps', [])
+					.concat(self.getPlugins())
+					.reject(function(name) {
+						return _.has(monster.apps, name);
+					})
+					.value();
 
-			self.initializeBaseApps();
-
-			monster.parallel(self.appFlags.baseApps.map(function(name) {
+			monster.parallel(_.map(loggedInAppsToLoad, function(name) {
 				return function(callback) {
-					monster.apps.load(name, function() {
-						_.remove(self.appFlags.baseApps, function(appName) {
-							return appName === name;
-						});
-
-						callback(null);
-					});
+					monster.apps.load(name, callback);
 				};
 			}), function afterBaseAppsLoad(err, result) {
 				// If admin with no app, go to app store, otherwite, oh well...
@@ -292,7 +248,7 @@ define(function(require) {
 
 		bindEvents: function(container) {
 			var self = this,
-				spinner = container.find('.loading-wrapper');
+				indicator = container.find('.progress-indicator');
 
 			window.onerror = function(message, fileName, lineNumber, columnNumber, error) {
 				monster.error('js', {
@@ -304,16 +260,16 @@ define(function(require) {
 				});
 			};
 
-			/* Only subscribe to the requestStart and End event when the spinner is loaded */
+			/* Only subscribe to the requestStart and End event when the indicator is loaded */
 			monster.sub('monster.requestStart', function(params) {
 				self.onRequestStart(_.merge({
-					spinner: spinner
+					indicator: indicator
 				}, params));
 			});
 
 			monster.sub('monster.requestEnd', function(params) {
 				self.onRequestEnd(_.merge({
-					spinner: spinner
+					indicator: indicator
 				}, params));
 			});
 
@@ -392,7 +348,7 @@ define(function(require) {
 				var appName = $(this).find('#main_topbar_current_app_name').data('name');
 
 				if (appName === 'myaccount') {
-					monster.apps.load(appName, function(app) {
+					monster.apps.load(appName, function(err, app) {
 						app.renderDropdown(false);
 					});
 				} else {
@@ -672,7 +628,7 @@ define(function(require) {
 		onRequestStart: function(args) {
 			var self = this,
 				waitTime = 250,
-				$spinner = args.spinner,
+				$indicator = args.indicator,
 				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
 
 			// If indicated, bypass progress indicator display/hide process
@@ -683,27 +639,27 @@ define(function(require) {
 			self.request.counter++;
 
 			// If we start a request, we cancel any existing timeout that was checking if the loading was over
-			clearTimeout(self.spinner.endTimeout);
+			clearTimeout(self.indicator.endTimeout);
 
 			if (self.request.counter) {
 				self.request.active = true;
 			}
 
 			// And we start a timeout that will check if there are still some active requests after %waitTime%.
-			// If yes, it will then show the spinner. We do this to avoid showing the spinner to often, and just show it on long requests.
-			self.spinner.startTimeout = setTimeout(function() {
-				if (self.request.counter && !$spinner.hasClass('active')) {
-					$spinner.addClass('active');
+			// If yes, it will then show the indicator. We do this to avoid showing the indicator to often, and just show it on long requests.
+			self.indicator.startTimeout = setTimeout(function() {
+				if (self.request.counter && !$indicator.hasClass('active')) {
+					$indicator.addClass('active');
 				}
 
-				clearTimeout(self.spinner.startTimeout);
+				clearTimeout(self.indicator.startTimeout);
 			}, waitTime);
 		},
 
 		onRequestEnd: function(args) {
 			var self = this,
 				waitTime = 50,
-				$spinner = args.spinner,
+				$indicator = args.indicator,
 				bypassProgressIndicator = _.get(args, 'bypassProgressIndicator', false);
 
 			// If indicated, bypass progress indicator display/hide process
@@ -714,18 +670,18 @@ define(function(require) {
 			self.request.counter--;
 
 			// If there are no active requests, we set a timeout that will check again after %waitTime%
-			// If there are no active requests after the timeout, then we can safely remove the spinner.
-			// We do this to avoid showing and hiding the spinner too quickly
+			// If there are no active requests after the timeout, then we can safely remove the indicator.
+			// We do this to avoid showing and hiding the indicator too quickly
 			if (!self.request.counter) {
 				self.request.active = false;
 
-				self.spinner.endTimeout = setTimeout(function() {
-					if ($spinner.hasClass('active')) {
-						$spinner.removeClass('active');
+				self.indicator.endTimeout = setTimeout(function() {
+					if ($indicator.hasClass('active')) {
+						$indicator.removeClass('active');
 					}
 
-					clearTimeout(self.spinner.startTimeout);
-					clearTimeout(self.spinner.endTimeout);
+					clearTimeout(self.indicator.startTimeout);
+					clearTimeout(self.indicator.endTimeout);
 				}, waitTime);
 			}
 		},

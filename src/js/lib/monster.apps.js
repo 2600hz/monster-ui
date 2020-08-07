@@ -26,8 +26,6 @@ define(function() {
 
 			self._addAppCss(app);
 
-			self._addAppI18n(app);
-
 			app.uiFlags = {
 				user: {
 					set: function(flagName, value, user) {
@@ -364,10 +362,13 @@ define(function() {
 				return monster.util.getAuthToken(connectionName);
 			};
 
-			monster.apps[app.name] = app;
+			self._addAppI18n(app, function(err) {
+				if (err) {
+					return callback(err);
+				}
+				monster.apps[app.name] = app;
 
-			self.loadDependencies(app, function() {
-				app.load(callback);
+				callback(null, app);
 			});
 		},
 
@@ -377,44 +378,57 @@ define(function() {
 		 */
 		loadDependencies: function(app, globalCallback) {
 			var self = this,
+				currentUser = _.get(monster, 'apps.auth.currentUser', {}),
+				isExtensionPermitted = function isExtensionPermitted(extensionName, user) {
+					var extension = _.get(monster, ['appsStore', extensionName], {}),
+						level = extension.allowed_users,
+						users = _
+							.chain(extension)
+							.get('users', [])
+							.map('id')
+							.value();
+
+					return (level === 'all')
+						|| (level === 'admins' && user.priv_level === 'admin')
+						|| (level === 'specific' && _.includes(users, user.id));
+				},
 				dependencies = _
 					.chain(app)
 					.get('externalScripts', [])
 					.map(function(dependency) {
 						return function(callback) {
-							monster.getScript(app.appPath + '/external/' + dependency + '.js', function() {
-								callback(null);
-							});
+							monster.getScript(
+								app.appPath + '/external/' + dependency + '.js',
+								_.partial(callback, null)
+							);
 						};
 					})
 					.value(),
 				extensions = _
-					.chain(monster.appsStore)
-					.get([app.name, 'extensions'], [])
+					.chain(monster)
+					.get(['appsStore', app.name, 'extensions'], [])
+					.reject(function(extension) {
+						var isNotInAppStore = !_.has(monster, ['appsStore', extension]),
+							isAlreadyLoaded = _.has(monster, ['apps', extension]),
+							isNotPermittedForLoggedInUser = !isExtensionPermitted(extension, currentUser);
+
+						return isNotInAppStore
+							|| isAlreadyLoaded
+							|| isNotPermittedForLoggedInUser;
+					})
 					.map(function(extension) {
 						return function(callback) {
-							if (
-								!_.has(monster.appsStore, extension)
-								|| _.has(monster.apps, extension)
-							) {
-								return callback(null);
-							}
-							self._loadApp(extension, function() {
-								callback(null);
-							});
+							self._loadApp(extension, callback);
 						};
 					})
 					.value();
 
-			monster.parallel(
-				_.concat(
-					dependencies,
-					extensions
-				),
-				function(err, results) {
-					globalCallback && globalCallback();
-				}
-			);
+			monster.parallel(_.concat(
+				dependencies,
+				extensions
+			), function(err) {
+				globalCallback(err, app);
+			});
 		},
 
 		_addAppCss: function(app) {
@@ -444,39 +458,50 @@ define(function() {
 			});
 		},
 
-		_addAppI18n: function(app) {
-			var self = this;
+		_addAppI18n: function(app, mainCallback) {
+			var self = this,
+				loadDefaultLanguage = _.bind(self.loadLocale, self, app, monster.defaultLanguage),
+				maybeLoadPreferredLanguage = function maybeLoadPreferredLanguage(app, language, callback) {
+					if (language.toLowerCase() === monster.defaultLanguage.toLowerCase()) {
+						return callback(null);
+					}
+					if (!_.has(app.i18n, language)) {
+						console.info(language + ' isn\'t a supported language by this application: ' + app.name);
+						return callback(null);
+					}
+					// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
+					self.loadLocale(
+						app,
+						language,
+						// Prepend null as we don't care if it errors out, the app can still load
+						_.partial(callback, null)
+					);
+				};
 
 			_.extend(app.data, { i18n: {} });
 
-			// We'll merge the Core I18n once we're done loading the different I18n coming with the application
-			var addCoreI18n = function() {
+			monster.waterfall([
+				loadDefaultLanguage,
+				_.partial(maybeLoadPreferredLanguage, app, monster.config.whitelabel.language)
+			], function augmentI18n(err) {
+				if (err) {
+					return mainCallback && mainCallback(err);
+				}
+				// We'll merge the Core I18n once we're done loading the different I18n coming with the application
 				if (monster.apps.hasOwnProperty('core')) {
 					$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
 				}
-			};
 
-			// We automatically load the default language (en-US) i18n files
-			self.loadLocale(app, monster.defaultLanguage, function() {
-				// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
-				if (monster.config.whitelabel.language.toLowerCase() !== monster.defaultLanguage.toLowerCase()) {
-					self.loadLocale(app, monster.config.whitelabel.language, function() {
-						// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
-						addCoreI18n();
-					});
-				} else {
-					// We're done loading the i18n files for this app, so we just merge the Core I18n to it.
-					addCoreI18n();
-				}
-			});
+				// add an active property method to the i18n array within the app.
+				_.extend(app.i18n, {
+					active: function() {
+						var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
 
-			// add an active property method to the i18n array within the app.
-			_.extend(app.i18n, {
-				active: function() {
-					var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
+						return app.data.i18n[language];
+					}
+				});
 
-					return app.data.i18n[language];
-				}
+				mainCallback && mainCallback(null);
 			});
 		},
 
@@ -487,8 +512,93 @@ define(function() {
 		 * @param  {String}   [options.sourceUrl]
 		 * @param  {String}   [options.apiUrl]
 		 */
-		_loadApp: function(name, callback, options) {
+		_loadApp: function(name, mainCallback, options) {
 			var self = this,
+				requireApp = function requireApp(path, appPath, apiUrl, options, callback) {
+					require([path], function(app) {
+						_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
+
+						app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
+
+						if (options && 'apiUrl' in options) {
+							app.apiUrl = options.apiUrl;
+						}
+
+						callback(null, app);
+					}, _.partial(callback, true));
+				},
+				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
+					if (!app.hasConfigFile) {
+						return callback(null, app, {});
+					}
+					$.ajax({
+						url: app.appPath + '/app-build-config.json',
+						dataType: 'json',
+						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
+						complete: _.partial(monster.pub, 'monster.requestEnd'),
+						success: _.partial(callback, null, app),
+						error: _.partial(callback, null, app, {})
+					});
+				},
+				loadApp = function loadApp(path, appPath, apiUrl, options, callback) {
+					monster.waterfall([
+						_.partial(requireApp, path, appPath, apiUrl, options),
+						maybeRetrieveBuildConfig
+					], function applyConfig(err, app, config) {
+						if (err) {
+							return callback(err);
+						}
+						app.buildConfig = config;
+
+						if (app.buildConfig.version === 'pro') {
+							if (!app.hasOwnProperty('subModules')) {
+								app.subModules = [];
+							}
+
+							app.subModules.push('pro');
+						}
+
+						callback(null, app);
+					});
+				},
+				requireSubModule = function(app, subModule, callback) {
+					var pathSubModule = app.appPath + '/submodules/',
+						path = pathSubModule + subModule + '/' + subModule;
+
+					require([path], function(module) {
+						/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
+						var oldSubscribes = $.extend(true, {}, app.subscribe);
+						$.extend(true, app, module);
+						app.subscribe = oldSubscribes;
+
+						_.each(module.subscribe, function(callback, topic) {
+							var cb = typeof callback === 'string' ? app[callback] : callback;
+
+							monster.sub(topic, cb, app);
+						});
+
+						callback(null);
+					}, _.partial(callback, true));
+				},
+				loadSubModules = function loadSubModules(app, callback) {
+					monster.parallel(_
+						.chain(app)
+						.get('subModules', [])
+						.map(function(subModule) {
+							return _.partial(requireSubModule, app, subModule);
+						})
+						.value()
+					, function(err) {
+						callback(err, app);
+					});
+				},
+				initializeApp = function initializeApp(app, callback) {
+					try {
+						app.load(_.partial(callback, null));
+					} catch (error) {
+						callback(error);
+					}
+				},
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
@@ -530,83 +640,13 @@ define(function() {
 
 			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
-			require([path], function(app) {
-				_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
-
-				app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
-
-				if (options && 'apiUrl' in options) {
-					app.apiUrl = options.apiUrl;
-				}
-
-				var afterConfig = function(config) {
-					app.buildConfig = config;
-
-					if (app.buildConfig.version === 'pro') {
-						if (!app.hasOwnProperty('subModules')) {
-							app.subModules = [];
-						}
-
-						app.subModules.push('pro');
-					}
-
-					if ('subModules' in app && app.subModules.length > 0) {
-						var toInit = app.subModules.length,
-							loadModule = function(subModule, callback) {
-								var pathSubModule = app.appPath + '/submodules/',
-									path = pathSubModule + subModule + '/' + subModule;
-
-								require([path], function(module) {
-									/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
-									var oldSubscribes = $.extend(true, {}, app.subscribe);
-									$.extend(true, app, module);
-									app.subscribe = oldSubscribes;
-
-									_.each(module.subscribe, function(callback, topic) {
-										var cb = typeof callback === 'string' ? app[callback] : callback;
-
-										monster.sub(topic, cb, app);
-									});
-
-									callback && callback();
-								});
-							};
-
-						_.each(app.subModules, function(subModule) {
-							loadModule(subModule, function() {
-								toInit--;
-
-								if (toInit === 0) {
-									self.monsterizeApp(app, callback);
-								}
-							});
-						});
-					} else {
-						self.monsterizeApp(app, callback);
-					}
-				};
-
-				if (app.hasConfigFile) {
-					monster.pub('monster.requestStart');
-					$.ajax({
-						url: app.appPath + '/app-build-config.json',
-						dataType: 'json',
-						async: false,
-						success: function(data) {
-							afterConfig(data);
-
-							monster.pub('monster.requestEnd');
-						},
-						error: function(data, status, error) {
-							afterConfig({});
-
-							monster.pub('monster.requestEnd');
-						}
-					});
-				} else {
-					afterConfig({});
-				}
-			});
+			monster.waterfall([
+				_.partial(loadApp, path, appPath, apiUrl, options),
+				loadSubModules,
+				_.bind(self.monsterizeApp, self),
+				_.bind(self.loadDependencies, self),
+				initializeApp
+			], mainCallback);
 		},
 
 		/**
@@ -614,22 +654,26 @@ define(function() {
 		 * @param  {Function} [callback]
 		 * @param  {Object}   [options]
 		 */
-		load: function(name, callback, options) {
-			var self = this;
+		load: function(name, mainCallback, options) {
+			var self = this,
+				maybeLoadApp = function maybeLoadApp(name, options, callback) {
+					if (_.has(monster.apps, name)) {
+						return callback(null, monster.apps[name]);
+					}
+					self._loadApp(name, callback, options);
+				};
 
 			monster.waterfall([
-				function maybeLoadApp(waterfallCb) {
-					if (_.has(monster.apps, name)) {
-						return waterfallCb(null, monster.apps[name]);
-					}
-					self._loadApp(name, waterfallCb.bind(null, null), options);
-				}
+				_.partial(maybeLoadApp, name, options)
 			], function afterAppLoad(err, app) {
+				if (err) {
+					return mainCallback && mainCallback(err);
+				}
 				monster.apps.lastLoadedApp = app.name;
 
 				self.changeAppShortcuts(app);
 
-				callback && callback(app);
+				mainCallback && mainCallback(null, app);
 			});
 		},
 
@@ -656,49 +700,40 @@ define(function() {
 			return monster.apps.lastLoadedApp;
 		},
 
-		loadLocale: function(app, language, callback) {
+		loadLocale: function(app, language, mainCallback) {
 			var self = this,
 				// Automatic upper case for text after the hyphen (example: change en-us to en-US)
-				language = language.replace(/-.*/, function(a) { return a.toUpperCase(); }),
-				loadFile = function(afterLoading) {
-					monster.pub('monster.requestStart');
-
+				language = language.replace(/-.*/, _.toUpper),
+				loadFile = function loadFile(app, language, callback) {
 					$.ajax({
 						url: monster.util.cacheUrl(app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
-						async: false,
-						success: function(data) {
-							afterLoading && afterLoading(data);
-
-							monster.pub('monster.requestEnd');
-						},
+						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
+						complete: _.partial(monster.pub, 'monster.requestEnd'),
+						success: _.partial(callback, null),
 						error: function(data, status, error) {
-							afterLoading && afterLoading({});
-
-							monster.pub('monster.requestEnd');
-
 							console.log('_loadLocale error: ', status, error);
+
+							callback(true);
 						}
 					});
 				};
 
-			if (app.i18n.hasOwnProperty(language)) {
-				loadFile(function(data) {
-					// If we're loading the default language, then we add it, and also merge the core i18n to it
-					if (language === monster.defaultLanguage) {
-						app.data.i18n[language] = data;
-					} else {
-						// Otherwise, if we load a custom language, we merge the translation to the en-one
-						app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[monster.defaultLanguage], data);
-					}
+			monster.waterfall([
+				_.partial(loadFile, app, language)
+			], function applyI18n(err, i18n) {
+				var data = i18n || {};
 
-					callback && callback();
-				});
-			} else {
-				console.info(language + ' isn\'t a supported language by this application: ' + app.name);
+				// If we're loading the default language, then we add it, and also merge the core i18n to it
+				if (language === monster.defaultLanguage) {
+					app.data.i18n[language] = data;
+				} else {
+					// Otherwise, if we load a custom language, we merge the translation to the en-one
+					app.data.i18n[language] = $.extend(true, app.data.i18n[language] || {}, app.data.i18n[monster.defaultLanguage], data);
+				}
 
-				callback && callback();
-			}
+				mainCallback && mainCallback(err);
+			});
 		}
 	};
 

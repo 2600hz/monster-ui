@@ -45,6 +45,7 @@ const libsToExcludeFromApp = [
 	'isotope',
 	'jquery',
 	'jqueryui',
+	'jsoneditor',
 	'jstz',
 	'kazoo',
 	'kazoosdk',

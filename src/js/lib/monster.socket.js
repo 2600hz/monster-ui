@@ -383,7 +383,7 @@ define(function(require) {
 						wsc.bind(params);
 					},
 					error: function() {
-						wsc.loggin.warn('failed to reauthenticate, logging out');
+						wsc.logger.warn('failed to reauthenticate, logging out');
 						monster.util.logoutAndReload();
 					}
 				});
@@ -436,8 +436,6 @@ define(function(require) {
 					return;
 				}
 				wsc.logger.warn('failed to unsubscribe from ' + params.binding, data);
-				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
-				wsc.unbind(params);
 			});
 		},
 
@@ -617,11 +615,13 @@ define(function(require) {
 		getInfo: function getInfo() {
 			var uri = _.get(monster, 'config.api.socket');
 
-			return {
+			return _.merge({
 				isConfigured: _.isString(uri) && /^ws{1,2}:\/\//i.test(uri),
 				isConnected: !_.isUndefined(client) && client.isOpen(),
 				uri: uri
-			};
+			}, !monster.isEnvironmentProd() && {
+				client: client
+			});
 		},
 
 		connect: function connect() {

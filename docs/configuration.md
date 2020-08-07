@@ -80,6 +80,7 @@ Key | Description | Type | Default | Required
 `additionalCss.[]` | Path to the CSS file | `String` | | `false`
 `additionalLoggedInApps` | Additional apps to load once the user is logged in (will be loaded along the appstore, apploader, common controls etc..) | `Array` | | `false`
 `additionalLoggedInApps.[]` | Name of the app to side load | `String` | | `false`
+`appLinks` | Links accessible alongside apps in apploader (will open in a new tab). | `Object`([#appLinks](#appLinks)) | | `false`
 `allowAccessList` | If set to true, will allow the user to modify access_lists from the account settings page. | `Boolean` | `false` | `false`
 `allowAnyOwnedNumberAsCallerID` | Whether or not to allow any phone number on the account to be used as caller ID. | `Boolean` | | `false`
 `announcement` | Message to show every time a user logs in. | `String` | | `false`
@@ -112,6 +113,7 @@ Key | Description | Type | Default | Required
 `nav.logout` | Link used when clicking on logging out. By default the UI logs out the user after confirmation, but some people wanted to override that behavior | `Object` | | `false`
 `port` | | `Object`([#/port](#port)) | | `false`
 `preventDIDFormatting` | If set to true, the UI will stop trying to pretty print DIDs. Typically you want to leave this on if you handle US numbers, but if you handle different countries, it won't display numbers properly. While we're working on a better fix, this is a quick way to disable the pretty printing from the time being | `Boolean` | `false` | `false`
+`provisioner` | | `Object`([#/provisioner](#provisioner)) | | `false`
 `sso` | Cookie information to force a specific SSO provider to be used. | `Object` | | `false`
 `sso_providers` | List of SSO providers available on login. | `Array` | | `false`
 `showMediaUploadDisclosure` | Whether or not to display a message disclosing customer's responsibility when uploading a media file. | `Boolean` | `false` | `false`
@@ -127,6 +129,17 @@ Key | Description | Type | Default | Required
 `showInvoiceSummary` | Whether the charges confirmation dialog should render the invoice summary or a custom message (this prop only takes effect when `autoAccept: false`). | `Boolean` | `true` | `false`
 `message` | Maps IETF language codes (`en-US`, `fr-FR` ...) to custom messages to render in place of the invoice summary (this prop only takes effect when `showInoiceSummary: false` and `autoAccept: false`). | `Object` |  | `false`
 `message[]` | Custom message to render in place of the invoice summary. | `String` |  | `false`
+
+#### `appLinks`
+
+Each object key corresponds to a unique URL while its value is:
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`icon` | URL to icon asset. | `String` | | `true`
+`i18n` | Internationalization information, requires at least one entry. | `Object` |  | `true`
+`i18n[]` | Each object key corresponds to a unique language identifier (`en-US`, `fr-FR`...). | `Object` |  | `true`
+`i18n[].label` | Name for the link. | `String` |  | `true`
+`i18n[].description` | Description for the link. | `String` |  | `false`
 
 #### `bookkeepers`
 
@@ -151,5 +164,16 @@ Key | Description | Type | Default | Required
 `carriers` | List of losing carriers to select from on port request submission. | `Array` | | `false`
 `carriers.[]` | Name of losing carrier (should be unique). | `String` | | `false`
 
+#### `provisioner`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`brands` | Map custom settings individually by device brand. | `Object` | | `false`
+`brands.[]` | Each object key correspont to the device brand name (`yealink`, `avaya`...). | `Object` | | `false`
+`brands.[].keyFunctions` | List key functions available per brand ([schema][combo-keys-schema]). | `Array` | | `false`
+`brands.[].lineKeys` | List of keys to be used as default line keys per brand. | `Array` | | `false`
+
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
 [country-codes]: https://www.iso.org/obp/ui/#search
+[combo-keys-schema]: https://github.com/2600hz/kazoo/blob/master/applications/crossbar/priv/couchdb/schemas/devices.combo_key.json
+
