@@ -356,7 +356,7 @@ define(function(require) {
 						data: {
 							accountId: accountId,
 							filters: {
-								'filter_mobile.mdn': encodeURIComponent(mdn)
+								'filter_mobile.mdn': mdn
 							}
 						},
 						success: function(mobileDevices) {

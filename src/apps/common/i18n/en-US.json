@@ -1,4 +1,17 @@
 {
+	"csvUploader": {
+		"defaultTitle": "Import CSV File",
+		"uploadCsv": "Upload your CSV file to import",
+		"uploadCsvStep": "1. Upload your CSV file to import",
+		"downloadCsv": "2. Or download a CSV template and enter your {{variable}} then upload",
+		"defaultData": "data",
+		"noFile": "No file selected...",
+		"chooseFile": "Choose File",
+		"defaultFilename": "template.csv",
+		"invalidFile": "Only .csv files accepted",
+		"downloadTemplate": "Download CSV Template",
+		"import": "Import"
+	},
 	"servicePlanItemEditor": {
 		"keys": {
 			"phone_numbers": "Phone Numbers",

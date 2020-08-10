@@ -646,12 +646,13 @@
 
 	function authFunction(settings, defaultSettings, url) {
 		var apiRoot = settings.apiRoot || defaultSettings.apiRoot;
-		request($.extend({}, defaultSettings, {
+		request(_.mergeWith({}, defaultSettings, {
 			url: apiRoot + url,
 			verb: 'PUT',
 			data: {
 				data: settings.data
 			},
+			removeHeaders: ['X-Auth-Token'],
 			generateError: settings.hasOwnProperty('generateError') ? settings.generateError : true,
 			isRetryLoginRequest: settings.hasOwnProperty('isRetryLoginRequest') ? settings.isRetryLoginRequest : false,
 			success: function(data, status, jqXHR) {
@@ -659,6 +660,10 @@
 				settings.success && settings.success(data, status, jqXHR);
 			},
 			error: settings.error
+		}, function(dest, src) {
+			return _.every([dest, src], _.isArray)
+				? _.chain(dest).concat(src).uniq().value()
+				: undefined;
 		}));
 	}
 

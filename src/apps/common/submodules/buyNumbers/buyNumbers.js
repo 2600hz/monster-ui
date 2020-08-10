@@ -554,15 +554,15 @@ define(function(require) {
 			// 		var tollfreePrefixes = availableCountries[data.selectedData.value].toll_free,
 			// 			radioGroup = container.find('#tollfree_radio_group');
 
-					// .radioGroup
-					// 	.empty()
-					// 	.append($(self.getTemplate({
-					// 	  	name: 'tolfree',
-					// 	  	data: {
-					// 	  		tollfreePrefixes: tollfreePrefixes
-					// 	  	},
-					// 	  	submodule: 'buyNumbers'
-					// 	  })));
+			// 		radioGroup
+			// 			.empty()
+			// 			.append($(self.getTemplate({
+			// 				name: 'tolfree',
+			// 				data: {
+			// 					tollfreePrefixes: tollfreePrefixes
+			// 				},
+			// 				submodule: 'buyNumbers'
+			// 			})));
 
 			// 		radioGroup.find('input:radio:first').prop('checked', true);
 			// 	}
@@ -1104,56 +1104,56 @@ define(function(require) {
 		 * Initialize the map and show the list of locations as markers
 		 * @param  {Object} mapData         List of locations to show on the map
 		 */
-		buyNumbersInitAreaCodeMap: function(mapData) {
-			var self = this,
-				init = function init() {
-					var bounds = new google.maps.LatLngBounds(),
-						infoWindow = new google.maps.InfoWindow(),
-						mapOptions = {
-							panControl: false,
-							zoomControl: true,
-							mapTypeControl: false,
-							scaleControl: true,
-							streetViewControl: false,
-							overviewMapControl: true
-						},
-						map = new google.maps.Map(document.getElementById('area_code_map'), mapOptions);
+		// buyNumbersInitAreaCodeMap: function(mapData) {
+		// 	var self = this,
+		// 		init = function init() {
+		// 			var bounds = new google.maps.LatLngBounds(),
+		// 				infoWindow = new google.maps.InfoWindow(),
+		// 				mapOptions = {
+		// 					panControl: false,
+		// 					zoomControl: true,
+		// 					mapTypeControl: false,
+		// 					scaleControl: true,
+		// 					streetViewControl: false,
+		// 					overviewMapControl: true
+		// 				},
+		// 				map = new google.maps.Map(document.getElementById('area_code_map'), mapOptions);
 
-					_.each(mapData.locales, function(markerValue, markerKey) {
-						bounds.extend(setMarker(map, infoWindow, markerKey, markerValue).getPosition());
-					});
+		// 			_.each(mapData.locales, function(markerValue, markerKey) {
+		// 				bounds.extend(setMarker(map, infoWindow, markerKey, markerValue).getPosition());
+		// 			});
 
-					// Center the map to the geometric center of all bounds
-					map.setCenter(bounds.getCenter());
-					// Sets the viewport to contain the given bounds
-					map.fitBounds(bounds);
-				},
-				setMarker = function setMarker(map, infoWindow, key, value) {
-					var position = new google.maps.LatLng(parseFloat(value.latitude), parseFloat(value.longitude)),
-						markerOptions = {
-							animation: google.maps.Animation.DROP,
-							areaCodes: value.prefixes,
-							position: position,
-							title: key,
-							map: map
-						},
-						marker = new google.maps.Marker(markerOptions);
+		// 			// Center the map to the geometric center of all bounds
+		// 			map.setCenter(bounds.getCenter());
+		// 			// Sets the viewport to contain the given bounds
+		// 			map.fitBounds(bounds);
+		// 		},
+		// 		setMarker = function setMarker(map, infoWindow, key, value) {
+		// 			var position = new google.maps.LatLng(parseFloat(value.latitude), parseFloat(value.longitude)),
+		// 				markerOptions = {
+		// 					animation: google.maps.Animation.DROP,
+		// 					areaCodes: value.prefixes,
+		// 					position: position,
+		// 					title: key,
+		// 					map: map
+		// 				},
+		// 				marker = new google.maps.Marker(markerOptions);
 
-					marker.addListener('click', function() {
-						infoWindow.setContent(
-							'<p>' + self.i18n.active().buyNumbers.markerAreaCodes + this.title + ':</p/>'
-							+ '<ul>'
-							+ '<li><b>' + this.areaCodes.join('<b/></li><li><b>') + '</b>' + '</li>'
-							+ '</ul>'
-						);
-						infoWindow.open(map, marker);
-					});
+		// 			marker.addListener('click', function() {
+		// 				infoWindow.setContent(
+		// 					'<p>' + self.i18n.active().buyNumbers.markerAreaCodes + this.title + ':</p/>'
+		// 					+ '<ul>'
+		// 					+ '<li><b>' + this.areaCodes.join('<b/></li><li><b>') + '</b>' + '</li>'
+		// 					+ '</ul>'
+		// 				);
+		// 				infoWindow.open(map, marker);
+		// 			});
 
-					return marker;
-				};
+		// 			return marker;
+		// 		};
 
-			init();
-		},
+		// 	init();
+		// },
 
 		/**************************************************
 		 *            Data manipulation helpers           *
@@ -1340,7 +1340,7 @@ define(function(require) {
 			winkstart.request(false, 'buyNumbers.activateNumber', {
 					account_id: winkstart.apps['auth'].account_id,
 					api_url: winkstart.apps['auth'].api_url,
-					phone_number: encodeURIComponent(phone_number),
+					phone_number: phone_number,
 					data: {}
 				},
 				function(_data, status) {
