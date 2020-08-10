@@ -1,0 +1,60 @@
+@import "../../../../css/partials/base";
+
+.csv-uploader-common-control-container {
+	min-width: 448px;
+	margin: 0;
+
+	.form-content {
+		padding: 2rem 1rem;
+
+		.control-group {
+			margin: 0;
+
+			&:not(:first-child) {
+				margin-top: 40px;
+			}
+
+			.file-upload {
+				display: flex;
+				position: relative;
+				margin: 0;
+
+				input[type="text"] {
+					z-index: 1;
+					width: 100%;
+					height: 30px;
+					border-top-left-radius: 2px;
+					border-bottom-left-radius: 2px;
+				}
+
+				label.monster-invalid {
+					bottom: -20px;
+				}
+			}
+
+			.download-link {
+				display: flex;
+				align-items: center;
+				margin-top: 1rem;
+
+				svg {
+					margin-right: .5rem;
+					color: $midgray;
+				}
+
+				.text {
+					color: $primary-color
+				}
+			}
+		}
+	}
+	.form-actions {
+		margin: 0;
+		display: flex;
+		justify-content: flex-end;
+
+		& > *:not(:last-child) {
+			margin-right: 12px;
+		}
+	}
+}

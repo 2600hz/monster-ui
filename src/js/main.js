@@ -83,6 +83,9 @@ require.config({
 		},
 		'footable-filter': ['footable'],
 		'footable-sort': ['footable'],
+		form2object: {
+			exports: 'form2object'
+		},
 		'hasher': ['signals'],
 		'image-select': ['chosen'],
 		'jqueryui': ['jquery'],
@@ -97,6 +100,12 @@ require.config({
 			'exports': '_'
 		},
 		'moment-timezone': ['moment'],
+		'popup-redirect': {
+			exports: 'Popup'
+		},
+		renderjson: {
+			exports: 'renderjson'
+		},
 		'touch-punch': ['jqueryui'],
 		vfs_fonts: ['pdfmake']
 	},
@@ -151,7 +160,7 @@ require([
 		monster.routing.init();
 
 		monster.loadBuildConfig(function() {
-			monster.apps.load('core', function(app) {
+			monster.apps.load('core', function(err, app) {
 				app.render($('.core-wrapper'));
 			});
 		});
