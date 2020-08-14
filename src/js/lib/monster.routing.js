@@ -110,7 +110,6 @@ define(function(require) {
 				}
 				monster.pub('apploader.getAppList', {
 					scope: 'user',
-					forceFetch: true,
 					accountId: _.get(monster.apps.auth, [
 						monster.util.isMasquerading() ? 'originalAccount' : 'currentAccount',
 						'id'
