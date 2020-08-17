@@ -26,6 +26,7 @@ define(function(require) {
 		 * @param {String} [args.tts.entity] - Displayed in the tts tab instructions
 		 * @param {String} [args.tts.name] - The tts media name
 		 * @param {String} [args.tts.type] - The tts media type
+		 * @param {Boolean} [args.required] - If `true`, a valid media ID should be selected, `none` media isn't allowed
 		 */
 		mediaSelectRender: function(args) {
 			var self = this,
@@ -40,12 +41,21 @@ define(function(require) {
 
 					callback && callback({
 						getValue: function(callback) {
-							if (args.enableTTS) {
-								self.mediaSelectGetValue(template, _.merge({}, args, {
-									callback: callback
-								}));
+							var selectedMediaId = template.find('.media-dropdown').val();
+
+							if (selectedMediaId === 'none' && args.required) {
+								monster.ui.toast({
+									type: 'error',
+									message: self.i18n.active().mediaSelect.invalidMedia
+								});
 							} else {
-								return self.mediaSelectGetValue(template, args);
+								if (args.enableTTS) {
+									self.mediaSelectGetValue(template, _.merge({}, args, {
+										callback: callback
+									}));
+								} else {
+									return self.mediaSelectGetValue(template, args);
+								}
 							}
 						}
 					});
