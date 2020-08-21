@@ -138,7 +138,7 @@ define(function(require) {
 						})
 					});
 
-					popup.dialog('destroy').remove();
+					popup.dialog('close');
 
 					args.hasOwnProperty('success') && args.success(data);
 				});
@@ -146,7 +146,7 @@ define(function(require) {
 
 			popup_html.find('.cancel-link').on('click', function(e) {
 				e.preventDefault();
-				popup.dialog('destroy').remove();
+				popup.dialog('close');
 			});
 
 			popup = monster.ui.dialog(popup_html, {
