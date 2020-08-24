@@ -41,21 +41,28 @@ define(function(require) {
 
 					callback && callback({
 						getValue: function(callback) {
-							var selectedMediaId = template.find('.media-dropdown').val();
+							var mediaForm = template.find('#select_media_form');
 
-							if (selectedMediaId === 'none' && args.required) {
-								monster.ui.toast({
-									type: 'error',
-									message: self.i18n.active().mediaSelect.invalidMedia
-								});
-							} else {
-								if (args.enableTTS) {
-									self.mediaSelectGetValue(template, _.merge({}, args, {
-										callback: callback
-									}));
-								} else {
-									return self.mediaSelectGetValue(template, args);
+							if (args.required) {
+								if (monster.ui.valid(mediaForm)) {
+									if (args.enableTTS) {
+										self.mediaSelectGetValue(template, _.merge({}, args, {
+											callback: callback
+										}));
+									} else {
+										return self.mediaSelectGetValue(template, args);
+									}
 								}
+
+								return;
+							}
+
+							if (args.enableTTS) {
+								self.mediaSelectGetValue(template, _.merge({}, args, {
+									callback: callback
+								}));
+							} else {
+								return self.mediaSelectGetValue(template, args);
 							}
 						}
 					});
@@ -128,7 +135,7 @@ define(function(require) {
 					selectedOption: false,
 					uploadButton: true,
 					options: [],
-					name: undefined,
+					name: 'mediaId',
 					uploadLabel: self.i18n.active().upload,
 					label: args.hasOwnProperty('label') ? args.label : self.i18n.active().mediaSelect.defaultLabel,
 					hasNone: true,
@@ -217,9 +224,23 @@ define(function(require) {
 					submodule: 'mediaSelect'
 				}));
 
+				var mediaForm = template.find('#select_media_form');
+
 				monster.ui.charsRemaining(template.find('.custom-greeting-text'), {
 					size: 350,
 					customClass: 'chars-remaining-counter'
+				});
+
+				monster.ui.validate(mediaForm, {
+					rules: {
+						'mediaId': {
+							required: true,
+							regex: /^(?!none$)/
+						}
+					},
+					messages: {
+						mediaId: self.i18n.active().mediaSelect.invalidMedia
+					}
 				});
 
 				self.mediaSelectBindTabsTemplate(template);
