@@ -180,9 +180,9 @@ define(function(require) {
 				listSearchedAccounts = [ self.accountId ],
 				showLinks = function() {
 					if (parent.find('.number-box.selected').size() > 0) {
-						parent.find('#trigger_links').show();
+						parent.find('#trigger_links').addClass('active');
 					} else {
-						parent.find('#trigger_links').hide();
+						parent.find('#trigger_links').removeClass('active');
 					}
 				},
 				displayNumberList = function(accountId, callback, forceRefresh) {
