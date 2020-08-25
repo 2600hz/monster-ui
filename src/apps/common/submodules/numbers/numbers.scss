@@ -261,6 +261,10 @@
 
 #numbers_container .actions-wrapper #trigger_links {
 	display: none;
+
+	&.active {
+		display: inline;
+	}
 }
 
 #numbers_container .buy-numbers-dropdown {

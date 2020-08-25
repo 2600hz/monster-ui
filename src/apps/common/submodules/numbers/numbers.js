@@ -179,11 +179,8 @@ define(function(require) {
 				listType = dataNumbers.viewType && dataNumbers.viewType === 'manager' ? 'full' : 'partial',
 				listSearchedAccounts = [ self.accountId ],
 				showLinks = function() {
-					if (parent.find('.number-box.selected').size() > 0) {
-						parent.find('#trigger_links').show();
-					} else {
-						parent.find('#trigger_links').hide();
-					}
+					var methodToUse = parent.find('.number-box.selected').size() > 0 ? 'addClass' : 'removeClass';
+					parent.find('#trigger_links')[methodToUse]('active');
 				},
 				displayNumberList = function(accountId, callback, forceRefresh) {
 					var alreadySearched = _.indexOf(listSearchedAccounts, accountId) >= 0,
