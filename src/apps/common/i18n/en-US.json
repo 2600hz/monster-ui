@@ -655,6 +655,7 @@
 		"defaultLabel": "Media",
 		"emptyUploadAlert": "Empty Upload",
 		"fileTooBigAlert": "File Too Big",
+		"invalidMedia": "Select a valid media",
 		"shoutcastURL": "Stream URL",
 		"shoutcastURLHelp": "You can type any URL including :// (http, https, shout...)",
 		"noneLabel": "- None -",

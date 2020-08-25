@@ -26,6 +26,7 @@ define(function(require) {
 		 * @param {String} [args.tts.entity] - Displayed in the tts tab instructions
 		 * @param {String} [args.tts.name] - The tts media name
 		 * @param {String} [args.tts.type] - The tts media type
+		 * @param {Boolean} [args.required] - If `true`, a valid media ID should be selected, `none` media isn't allowed
 		 */
 		mediaSelectRender: function(args) {
 			var self = this,
@@ -40,6 +41,22 @@ define(function(require) {
 
 					callback && callback({
 						getValue: function(callback) {
+							var mediaForm = template.find('#select_media_form');
+
+							if (args.required) {
+								if (monster.ui.valid(mediaForm)) {
+									if (args.enableTTS) {
+										self.mediaSelectGetValue(template, _.merge({}, args, {
+											callback: callback
+										}));
+									} else {
+										return self.mediaSelectGetValue(template, args);
+									}
+								}
+
+								return;
+							}
+
 							if (args.enableTTS) {
 								self.mediaSelectGetValue(template, _.merge({}, args, {
 									callback: callback
@@ -118,7 +135,7 @@ define(function(require) {
 					selectedOption: false,
 					uploadButton: true,
 					options: [],
-					name: undefined,
+					name: 'mediaId',
 					uploadLabel: self.i18n.active().upload,
 					label: args.hasOwnProperty('label') ? args.label : self.i18n.active().mediaSelect.defaultLabel,
 					hasNone: true,
@@ -207,9 +224,23 @@ define(function(require) {
 					submodule: 'mediaSelect'
 				}));
 
+				var mediaForm = template.find('#select_media_form');
+
 				monster.ui.charsRemaining(template.find('.custom-greeting-text'), {
 					size: 350,
 					customClass: 'chars-remaining-counter'
+				});
+
+				monster.ui.validate(mediaForm, {
+					rules: {
+						'mediaId': {
+							required: true,
+							regex: /^(?!none$)/
+						}
+					},
+					messages: {
+						mediaId: self.i18n.active().mediaSelect.invalidMedia
+					}
 				});
 
 				self.mediaSelectBindTabsTemplate(template);

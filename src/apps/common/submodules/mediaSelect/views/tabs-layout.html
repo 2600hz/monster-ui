@@ -23,31 +23,33 @@
 		</nav>
 
 		<div class="monster-tab-content" data-tab="use_existing">
-			<div class="control-group">
-				<label class="control-label" for="{{ name }}">{{ label }}</label>
-				<div class="controls">
-					<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
-						{{#select mediaId}}
-							{{#each options}}
-								<option value="{{id}}">{{name}}</option>
-							{{/each}}
-						{{/select}}
-					</select>
-				</div>
-			</div>
-
-			<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
-				<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
-				<div class="input controls">
-					<input type="url" required class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+			<form id="select_media_form">
+				<div class="control-group">
+					<label class="control-label" for="{{ name }}">{{ label }}</label>
+					<div class="controls">
+						<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
+							{{#select mediaId}}
+								{{#each options}}
+									<option value="{{id}}">{{name}}</option>
+								{{/each}}
+							{{/select}}
+						</select>
+					</div>
 				</div>
 
-				<div class="shoutcast-warning">
-					{{#monsterPanelText i18n.warning 'warning' 'fill-width'}}
-						{{ i18n.mediaSelect.shoutcastURLWarning }}
-					{{/monsterPanelText}}
+				<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
+					<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
+					<div class="input controls">
+						<input type="url" required class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+					</div>
+
+					<div class="shoutcast-warning">
+						{{#monsterPanelText i18n.warning 'warning' 'fill-width'}}
+							{{ i18n.mediaSelect.shoutcastURLWarning }}
+						{{/monsterPanelText}}
+					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 
 		<div class="monster-tab-content" data-tab="upload_new">
