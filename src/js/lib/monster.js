@@ -705,6 +705,7 @@ define(function(require) {
 	 * @param  {Function} args.requestHandler
 	 * @param  {Object} args.error
 	 * @param  {Object} args.options
+	 * @param  {Function} [args.options.onChargesCancelled]
 	 */
 	function error402Handler(args) {
 		var requestHandler = args.requestHandler;
@@ -718,13 +719,13 @@ define(function(require) {
 		});
 		var responseText = _.get(error, 'responseText');
 		var parsedError = responseText ? $.parseJSON(responseText) : error;
+		var onChargesAccepted = _.partial(requestHandler, updatedOptions);
+		var onChargesCancelled = _.isFunction(options.onChargesCancelled)
+			? options.onChargesCancelled
+			: function() {};
 
 		// Notify the user about the charges
-		monster.ui.charges(parsedError.data, function() {
-			requestHandler(updatedOptions);
-		}, function() {
-			_.isFunction(options.onChargesCancelled) && options.onChargesCancelled();
-		});
+		monster.ui.charges(parsedError.data, onChargesAccepted, onChargesCancelled);
 	}
 
 	/**
