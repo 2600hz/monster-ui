@@ -716,11 +716,8 @@ define(function(require) {
 			acceptCharges: true,
 			preventCallbackError: true
 		});
-		var parsedError = error;
-
-		if (_.has(error, 'responseText') && error.responseText) {
-			parsedError = $.parseJSON(error.responseText);
-		}
+		var responseText = _.get(error, 'responseText');
+		var parsedError = responseText ? $.parseJSON(responseText) : error;
 
 		// Notify the user about the charges
 		monster.ui.charges(parsedError.data, function() {
