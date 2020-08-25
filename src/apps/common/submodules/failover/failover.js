@@ -95,7 +95,7 @@ define(function(require) {
 									message: template
 								});
 
-								popup.dialog('destroy').remove();
+								popup.dialog('close');
 
 								callbacks.success && callbacks.success(data);
 							},
@@ -134,7 +134,7 @@ define(function(require) {
 							message: template
 						});
 
-						popup.dialog('destroy').remove();
+						popup.dialog('close');
 
 						callbacks.success && callbacks.success(data);
 					},
