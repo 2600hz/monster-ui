@@ -705,30 +705,27 @@ define(function(require) {
 	 * @param  {Function} args.requestHandler
 	 * @param  {Object} args.error
 	 * @param  {Object} args.options
+	 * @param  {Function} [args.options.onChargesCancelled]
 	 */
 	function error402Handler(args) {
 		var requestHandler = args.requestHandler;
 		var error = args.error;
 		var options = args.options;
-		var originalPreventCallbackError = options.preventCallbackError;
-		var parsedError = error;
-
-		if (_.has(error, 'responseText') && error.responseText) {
-			parsedError = $.parseJSON(error.responseText);
-		}
-
-		// Prevent the execution of the custom error callback, as it is a
-		// charges notification that will be handled here
-		options.preventCallbackError = true;
+		// Prevent the execution of the custom error callback, as it is a charges notification that
+		// will be handled here
+		var updatedOptions = _.merge({}, options, {
+			acceptCharges: true,
+			preventCallbackError: true
+		});
+		var responseText = _.get(error, 'responseText');
+		var parsedError = responseText ? $.parseJSON(responseText) : error;
+		var onChargesAccepted = _.partial(requestHandler, updatedOptions);
+		var onChargesCancelled = _.isFunction(options.onChargesCancelled)
+			? options.onChargesCancelled
+			: function() {};
 
 		// Notify the user about the charges
-		monster.ui.charges(parsedError.data, function() {
-			options.acceptCharges = true;
-			options.preventCallbackError = originalPreventCallbackError;
-			requestHandler(options);
-		}, function() {
-			_.isFunction(options.onChargesCancelled) && options.onChargesCancelled();
-		});
+		monster.ui.charges(parsedError.data, onChargesAccepted, onChargesCancelled);
 	}
 
 	/**
