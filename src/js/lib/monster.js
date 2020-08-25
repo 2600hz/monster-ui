@@ -710,22 +710,21 @@ define(function(require) {
 		var requestHandler = args.requestHandler;
 		var error = args.error;
 		var options = args.options;
-		var originalPreventCallbackError = options.preventCallbackError;
+		// Prevent the execution of the custom error callback, as it is a charges notification that
+		// will be handled here
+		var updatedOptions = _.merge({}, options, {
+			acceptCharges: true,
+			preventCallbackError: true
+		});
 		var parsedError = error;
 
 		if (_.has(error, 'responseText') && error.responseText) {
 			parsedError = $.parseJSON(error.responseText);
 		}
 
-		// Prevent the execution of the custom error callback, as it is a
-		// charges notification that will be handled here
-		options.preventCallbackError = true;
-
 		// Notify the user about the charges
 		monster.ui.charges(parsedError.data, function() {
-			options.acceptCharges = true;
-			options.preventCallbackError = originalPreventCallbackError;
-			requestHandler(options);
+			requestHandler(updatedOptions);
 		}, function() {
 			_.isFunction(options.onChargesCancelled) && options.onChargesCancelled();
 		});
