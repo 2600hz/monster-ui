@@ -75,7 +75,6 @@ const libsToExcludeFromApp = [
 	'postal',
 	'randomColor',
 	'renderjson',
-	'reqwest',
 	'signals',
 	'simplemde',
 	'templates',
