@@ -11,8 +11,7 @@ define(function(require) {
 		kazoosdk = require('kazoosdk'),
 		libphonenumber = require('libphonenumber'),
 		md5 = require('md5'),
-		postal = require('postal'),
-		reqwest = require('reqwest');
+		postal = require('postal');
 
 	var defaultCountryCode = 'US';
 	var defaultCurrencyCode = 'USD';
