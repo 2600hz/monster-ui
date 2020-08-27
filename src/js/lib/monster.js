@@ -11,8 +11,7 @@ define(function(require) {
 		kazoosdk = require('kazoosdk'),
 		libphonenumber = require('libphonenumber'),
 		md5 = require('md5'),
-		postal = require('postal'),
-		reqwest = require('reqwest');
+		postal = require('postal');
 
 	var defaultCountryCode = 'US';
 	var defaultCurrencyCode = 'USD';
@@ -91,7 +90,7 @@ define(function(require) {
 		_requests: {},
 
 		_cacheString: function(request) {
-			if (request.cache || request.method.toLowerCase() !== 'get') {
+			if (request.cache || request.type.toLowerCase() !== 'get') {
 				return '';
 			}
 
@@ -169,7 +168,7 @@ define(function(require) {
 							// Added this to be able to display more data in the UI
 							error.monsterData = {
 								url: settings.url,
-								verb: settings.method
+								verb: settings.type
 							};
 
 							monster.error('api', error, generateError);
@@ -194,7 +193,7 @@ define(function(require) {
 				delete data[name];
 			});
 
-			if (settings.method.toLowerCase() !== 'get') {
+			if (settings.type.toLowerCase() !== 'get') {
 				var postData = data.data,
 					envelopeKeys = {};
 
@@ -232,7 +231,7 @@ define(function(require) {
 				});
 			}
 
-			return reqwest(settings);
+			return $.ajax(settings);
 		},
 
 		apps: {},
@@ -599,17 +598,17 @@ define(function(require) {
 		var settings = {
 			cache: _.get(request, 'cache', false),
 			url: apiUrl + request.url,
-			type: request.dataType || 'json',
-			method: request.verb || 'get',
+			dataType: request.dataType || 'json',
+			type: request.verb || 'get',
 			contentType: _.includes(headersToRemove, 'content-type')
 				? false
 				: _.get(request, 'type', 'application/json'),
-			crossOrigin: true,
+			crossDomain: true,
 			processData: false,
 			customFlags: {
 				generateError: _.get(request, 'generateError', true)
 			},
-			before: function(ampXHR) {
+			beforeSend: function(jqXHR) {
 				var headers = _
 					.chain(request)
 					.get('headers', {})
@@ -628,7 +627,7 @@ define(function(require) {
 				monster.pub('monster.requestStart');
 
 				_.forEach(headers, function(value, key) {
-					ampXHR.setRequestHeader(key, value);
+					jqXHR.setRequestHeader(key, value);
 				});
 			}
 		};
