@@ -710,11 +710,9 @@ define(function(require) {
 		var requestHandler = args.requestHandler;
 		var error = args.error;
 		var options = args.options;
-		// Prevent the execution of the custom error callback, as it is a charges notification that
-		// will be handled here
 		var updatedOptions = _.merge({}, options, {
 			acceptCharges: true,
-			preventCallbackError: true
+			preventCallbackError: false
 		});
 		var responseText = _.get(error, 'responseText');
 		var parsedError = responseText ? $.parseJSON(responseText) : error;
@@ -722,6 +720,10 @@ define(function(require) {
 		var onChargesCancelled = _.isFunction(options.onChargesCancelled)
 			? options.onChargesCancelled
 			: function() {};
+
+		// Prevent the execution of the custom error callback, as it is a charges notification that
+		// will be handled here
+		options.preventCallbackError = true;
 
 		// Notify the user about the charges
 		monster.ui.charges(parsedError.data, onChargesAccepted, onChargesCancelled);
