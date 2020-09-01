@@ -293,7 +293,21 @@ define(function(require) {
 							appId: app.id,
 							data: appInstallInfo
 						},
-						success: function(_data, status) {
+						success: function(data, status) {
+							var allApps = monster.appsStore,
+								allowedUsers = _.get(data.data, 'allowed_users', null),
+								updatedApp = _.get(allApps, app.name, {}),
+								appUsers = _.get(data.data, 'users', []);
+
+							if (_.isEmpty(data.data)) {
+								allApps[app.name] = _.omit(updatedApp, ['users', 'allowed_users']);
+							} else {
+								_.assign(updatedApp, {
+									allowed_users: allowedUsers,
+									users: appUsers
+								});
+							}
+
 							monster.pub('apploader.destroy');
 							successCallback && successCallback();
 						},
