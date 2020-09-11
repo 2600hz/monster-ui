@@ -536,13 +536,13 @@ define(function(require) {
 							}
 
 							if (requestData.numbers.length === 0) {
-								dialogTemplate.parent().parent().remove();
+								popup.dialog('close');
 							}
 						}
 					});
 
 					dialogTemplate.on('click', '.cancel-link', function() {
-						popup.remove();
+						popup.dialog('close');
 					});
 
 					dialogTemplate.on('click', '#delete_action', function() {
@@ -561,7 +561,7 @@ define(function(require) {
 								}
 							});
 
-							popup.remove();
+							popup.dialog('close');
 
 							self.numbersShowDeletedNumbers(data);
 
@@ -620,12 +620,11 @@ define(function(require) {
 					requestData = {
 						numbers: listNumbers,
 						accountId: destinationAccountId
-					};
-
-				monster.ui.dialog(dialogTemplate, {
-					width: '540px',
-					title: self.i18n.active().numbers.moveNumbersConfirmationTitle
-				});
+					},
+					popup = monster.ui.dialog(dialogTemplate, {
+						width: '540px',
+						title: self.i18n.active().numbers.moveNumbersConfirmationTitle
+					});
 
 				dialogTemplate.on('click', '.remove-number', function() {
 					for (var number in requestData.numbers) {
@@ -645,16 +644,13 @@ define(function(require) {
 						}
 
 						if (requestData.numbers.length === 0) {
-							dialogTemplate.parent().parent().remove();
+							popup.dialog('close');
 						}
 					}
 				});
 
 				dialogTemplate.on('click', '.cancel-link', function() {
-					dialogTemplate
-						.parent()
-						.parent()
-						.remove();
+					popup.dialog('close');
 				});
 
 				dialogTemplate.on('click', '#move_action', function() {
@@ -705,7 +701,7 @@ define(function(require) {
 										submodule: 'numbers'
 									});
 
-								dialogTemplate.parent().parent().remove();
+								popup.dialog('close');
 
 								monster.ui.toast({
 									type: 'success',
@@ -872,7 +868,7 @@ define(function(require) {
 			addRecapTemplate.find('.results-wrapper').append(monster.ui.results(formattedData));
 
 			addRecapTemplate.find('#continue').on('click', function() {
-				popup.remove();
+				popup.dialog('close');
 			});
 
 			var popup = monster.ui.dialog(addRecapTemplate, {
@@ -989,7 +985,7 @@ define(function(require) {
 				});
 
 				dialogTemplate.on('click', '.cancel-link', function() {
-					popup.remove();
+					popup.dialog('close');
 				});
 
 				dialogTemplate.on('click', '#add_numbers', function(ev) {
@@ -1059,7 +1055,7 @@ define(function(require) {
 			deleteRecapTemplate.find('.results-wrapper').append(monster.ui.results(formattedData));
 
 			deleteRecapTemplate.find('#continue').on('click', function() {
-				popup.remove();
+				popup.dialog('close');
 			});
 
 			var popup = monster.ui.dialog(deleteRecapTemplate, {
