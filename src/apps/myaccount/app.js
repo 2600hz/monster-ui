@@ -175,7 +175,7 @@ define(function(require) {
 					})
 					.value();
 
-			self.appFlags.showMyAccount = _.every(restrictions, _.partial(_.get, _, 'show_tab', false));
+			self.appFlags.showMyAccount = _.some(restrictions, _.partial(_.get, _, 'show_tab', false));
 
 			args.callback(restrictions, self.appFlags.showMyAccount);
 		},
