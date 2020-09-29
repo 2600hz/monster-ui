@@ -175,7 +175,7 @@ define(function(require) {
 					})
 					.value();
 
-			self.appFlags.showMyAccount = _.every(restrictions, _.partial(_.get, _, 'show_tab', false));
+			self.appFlags.showMyAccount = _.some(restrictions, _.partial(_.get, _, 'show_tab', false));
 
 			args.callback(restrictions, self.appFlags.showMyAccount);
 		},
@@ -234,10 +234,17 @@ define(function(require) {
 		},
 
 		render: function() {
-			var self = this;
+			var self = this,
+				resolveCurrencyCode = function resolveCurrencyCode() {
+					var fontAwesomeSupported = ['eur', 'gbp', 'ils', 'inr', 'jpy', 'krw', 'usd', 'rub', 'try'],
+						currencyCode = _.toLower(monster.config.currencyCode);
+
+					return _.find(fontAwesomeSupported, _.partial(_.isEqual, currencyCode));
+				};
 
 			self.formatUiRestrictions(monster.apps.auth.originalAccount.ui_restrictions, function(uiRestrictions) {
 				var dataTemplate = {
+						currencyCode: resolveCurrencyCode(),
 						restrictions: uiRestrictions
 					},
 					myaccountHtml = $(self.getTemplate({
