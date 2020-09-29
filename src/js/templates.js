@@ -43,5 +43,11 @@ Handlebars.getTemplate = function(app, submodule, name, ignoreCache) {
 		monster.cache.templates[app.name][pathSubmodule][name] = _template;
 	}
 
+	monster.pub('monster.onTemplateLoad', {
+		app: app,
+		submodule: submodule,
+		name: name
+	});
+
 	return _template;
 };
