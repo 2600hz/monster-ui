@@ -46,6 +46,7 @@ define(function(require) {
 		'whitelabel.hideAppStore': [_.isBoolean, false],
 		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
 		'whitelabel.hideNewAccountCreation': [_.isBoolean, false],
+		'whitelabel.includes': [_.isArray, []],
 		'whitelabel.language': [_.isString, defaultLanguage, supportedLanguages],
 		'whitelabel.logoutTimer': [_.isNumber, 15],
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],

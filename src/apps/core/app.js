@@ -36,7 +36,8 @@ define(function(require) {
 			'core.restoreMasquerading': 'restoreMasquerading',
 			'core.initializeShortcuts': 'initializeShortcuts',
 			'webphone.start': 'startWebphone',
-			'core.hideTopbarDropdowns': 'hideTopbarDropdowns'
+			'core.hideTopbarDropdowns': 'hideTopbarDropdowns',
+			'core.onTemplateLoad': 'onTemplateLoad'
 		},
 
 		//Default app to render if the user is logged in, can be changed by setting a default app
@@ -140,12 +141,44 @@ define(function(require) {
 			monster.webphone.init();
 		},
 
+		loadIncludes: function(callback) {
+			var includesUrl = monster.config.whitelabel.includes;
+
+			if (!_.isEmpty(includesUrl)) {
+				monster.parallel(_.map(includesUrl, function(url) {
+					return function(next) {
+						require([url], next);
+					};
+				}), function(err, results) {
+					if (err) {
+						console.warn('There was an error loading the script' + url);
+					}
+				});
+			}
+		},
+
+		onTemplateLoad: function(args) {
+			var includesUrl = monster.config.whitelabel.includes,
+				app = args.app,
+				submodule = args.submodule,
+				name = args.name;
+
+			if (!_.isEmpty(includesUrl)) {
+				console.log(app.name + '_' + submodule + '_' + name);
+				setTimeout(function() {
+					hj('trigger', app.name + '_' + submodule + '_' + name);
+				}, 2);
+			}
+		},
+
 		loadAuth: function() {
 			var self = this;
 
 			monster.apps.load('auth', function(err, app) {
 				app.render($('#monster_content'));
 			});
+
+			self.loadIncludes(); //include scripts for hotjar and other third party ones
 		},
 
 		/**
