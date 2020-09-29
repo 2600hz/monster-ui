@@ -21,6 +21,8 @@ require.config({
 		'form2object': 'js/vendor/form2object',
 		'handlebars': 'js/vendor/handlebars-v4.4.1',
 		'hasher': 'js/vendor/hasher.min',
+		'hotjar': 'js/vendor/hotjar',
+		'hotjarTriggers': 'js/vendor/hotjarTriggers',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
 		'image-select': 'js/vendor/ImageSelect.jquery',
 		'introJs': 'js/vendor/intro.min',
@@ -106,7 +108,8 @@ require.config({
 			exports: 'renderjson'
 		},
 		'touch-punch': ['jqueryui'],
-		vfs_fonts: ['pdfmake']
+		vfs_fonts: ['pdfmake'],
+		'hotjarTriggers': ['hotjar']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
 });
