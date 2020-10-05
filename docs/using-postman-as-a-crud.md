@@ -36,7 +36,7 @@ The last thing to do before you are able to make requests is to define `Global V
 1. Click on the eye icon next to the dropdown and select `Edit` for your newly added environment.
 
 1. Define the first four variables as follow:
-    - `base_api`: server URL where Kazoo is running (no trailing slash)
+    - `base_url`: server URL where Kazoo is running (no trailing slash)
     - `username`: username to login to your account
     - `password`: password to login to your account
     - `account_name`: name of the account to login to
