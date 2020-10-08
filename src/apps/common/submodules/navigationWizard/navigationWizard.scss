@@ -211,7 +211,7 @@ $media-size-medium: "(max-width : 980px)";
 	}
 
 	.footer {
-		margin: 0 25px 0 280px;
+		margin-left: 280px;
 		border-left: 1px solid $input-border-color;
 		height: 70px;
 
@@ -226,24 +226,15 @@ $media-size-medium: "(max-width : 980px)";
 	}
 
 	.actions {
-		.back {
-			margin-right: 15px;
-		}
+		margin: 0.75rem 1.5rem 0.75rem 0;
 
 		.monster-button {
 			background: linear-gradient(-180deg, $white 0%, $athens-gray 100%);
 			border: 1px solid $french-gray2;
 			color: $midgray2;
-
-			&:not(:last-child) {
-				margin-right: 0.75rem;
-			}
+			min-width: 74px;
+			margin-left: 0.75rem;
 		}
-	}
-
-	#cancel {
-		min-width: 74px;
-		margin: 13px 24px 0 0;
 	}
 
 	#next {
