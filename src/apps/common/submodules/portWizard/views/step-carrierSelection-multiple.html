@@ -1,0 +1,64 @@
+<div id="step_carrier_selection" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.carrierSelection.multipleLosingCarriers as |carrierSelectionMultipleI18n|}}
+	<div class="step-title">
+		{{carrierSelectionMultipleI18n.title}}
+	</div>
+	<div class="step-body">
+		<div class="step-section">
+			<div class="section-body flex-row-container">
+				<div class="flex-item-2">
+					{{#with (lookup carrierSelectionMultipleI18n.noticeAndDownload.notices @root.data.carrierWarningType) as |noticeI18n|}}
+						{{#monsterPanelText noticeI18n.title 'warning'}}
+							{{noticeI18n.message}}
+						{{/monsterPanelText}}
+					{{/with}}
+				</div>
+				<div class="flex-item-2 flex-row-container flex-justify-end">
+					<div class="flex-initial document-icon">
+						{{svgIcon "other--file-csv" class="iconography-xlarge"}}
+					</div>
+					<div class="flex-item-4-3">
+						<div class="text-block">
+						{{#compare @root.data.carrierWarningType "===" "multipleLosingCarriers"}}
+							{{carrierSelectionMultipleI18n.noticeAndDownload.labels.multipleLosingCarriersDescription}}
+						{{else}}
+							{{carrierSelectionMultipleI18n.noticeAndDownload.labels.unsupportedCarrierDescription}}
+						{{/compare}}
+						</div>
+						<button id="download_number_files" class="monster-button">
+							{{telicon "download-cloud" class="iconography-button-left"}}
+							{{replaceVar carrierSelectionMultipleI18n.noticeAndDownload.labels.downloadFilesButton @root.data.losingCarriersCount}}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="step-section">
+			<div class="section-title">
+				{{replaceVar carrierSelectionMultipleI18n.losingCarriers.title @root.data.losingCarriersCount}}
+			</div>
+			<div class="section-body">
+			{{#each @root.data.numbersByLosingCarrier as |carrierNumberGroup|}}
+				<div class="flex-row-container flex-align-top">
+					<div class="flex-item-4">
+						<div class="carrier-name">
+							{{carrierNumberGroup.carrier}}
+						</div>
+						<div class="carrier-number-count">
+							{{replaceVar carrierSelectionMultipleI18n.losingCarriers.formats.numberCount carrierNumberGroup.numbers.length}}
+						</div>
+					</div>
+					<div class="flex-item-4-3 flex-row-container number-list">
+					{{#each carrierNumberGroup.numbers}}
+						<div class="flex-item-5 number-item">
+							{{formatPhoneNumber this}}
+						</div>
+					{{/each}}
+					</div>
+				</div>
+			{{/each}}
+			</div>
+		</div>
+	</div>
+{{/with}}
+</div>
