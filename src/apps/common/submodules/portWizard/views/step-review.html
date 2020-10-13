@@ -1,0 +1,174 @@
+{{#*inline "sectionTitle"}}
+	<div class="section-title section-title-numbered">
+		{{lookupPath (lookup @root.i18n.commonApp.portWizard.steps stepName) "label" stepName}}
+		<a href="javascript:void(0)" class="edit-step help-tip" data-step_name="{{stepName}}" title="{{i18n.accountsApp.wizard.steps.general.help.edit}}" data-toggle="tooltip">
+			{{telicon "edit" class="iconography-medium iconography-help"}}
+		</a>
+	</div>
+{{/inline}}
+
+{{#*inline "horizontalFieldPartial"}}
+	{{#if value}}
+		<div class="flex-row-container">
+			<div class="field-label-horizontal flex-item-4">
+				{{label}}
+			</div>
+			<div class="field-value-horizontal flex-item-4-3">
+			{{#if hasContent}}	{{!-- Necessary to know if there is a @partial-block to render, and to avoid endless recursion --}}
+				{{> @partial-block label=null value=value}}
+			{{else}}
+				{{value}}
+			{{/if}}
+			</div>
+		</div>
+	{{/if}}
+{{/inline}}
+
+<div id="step_review" class="wizard-step wizard-step-review">
+{{#with i18n.commonApp.portWizard.steps as |portWizardStepsI18n|}}
+	<div class="step-title flex-container">
+		<div class="flex-fit">
+			{{portWizardStepsI18n.review.title}}
+		</div>
+		<button id="port_wizard_step_print" class="monster-button step-action flex-initial">
+			{{telicon "device-fax"}}
+		</button>
+	</div>
+	<div class="step-body">
+		<form id="form_review">
+			<div class="section">
+				{{> sectionTitle stepName="nameAndNumbers"}}
+				<div class="section-body">
+					{{> horizontalFieldPartial label=portWizardStepsI18n.nameAndNumbers.portRequestName.labels.name value=@root.data.nameAndNumbers.portRequestName}}
+					{{#> horizontalFieldPartial label=(replaceVar portWizardStepsI18n.review.nameAndNumbers.labels.totalNumbers @root.data.nameAndNumbers.numbersToPort.e164Numbers.length) value=@root.data.nameAndNumbers.numbersToPort.e164Numbers hasContent=true}}
+						<div class="flex-row-container number-list">
+						{{#each value}}
+							<div class="flex-item-5 number-item">
+								{{formatPhoneNumber this}}
+							</div>
+						{{/each}}
+						</div>
+					{{/horizontalFieldPartial}}
+				</div>
+			</div>
+			<div class="section">
+				{{> sectionTitle stepName="carrierSelection"}}
+				<div class="section-body">
+					{{> horizontalFieldPartial label=portWizardStepsI18n.carrierSelection.singleLosingCarrier.designateWinningCarrier.labels.losingCarrier value=@root.data.carrierSelection.losingCarrier}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.carrierSelection.singleLosingCarrier.designateWinningCarrier.labels.winningCarrier value=@root.data.carrierSelection.winningCarrier}}
+				</div>
+			</div>
+			<div class="section">
+				{{> sectionTitle stepName="ownershipConfirmation"}}
+				<div class="section-body">
+					{{> horizontalFieldPartial label=portWizardStepsI18n.review.ownershipConfirmation.labels.nameOnAccount value=@root.data.ownershipConfirmation.accountOwnership.billName}}
+					<div class="flex-row-container">
+						<div class="flex-item-1 section-subtitle">
+							{{portWizardStepsI18n.ownershipConfirmation.serviceAddress.title}}
+						</div>
+					</div>
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.streetPreDir value=@root.data.ownershipConfirmation.serviceAddress.streetPreDir}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.streetNumber value=@root.data.ownershipConfirmation.serviceAddress.streetNumber}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.streetName value=@root.data.ownershipConfirmation.serviceAddress.streetName}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.streetType value=@root.data.ownershipConfirmation.serviceAddress.streetType}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.streetPostDir value=@root.data.ownershipConfirmation.serviceAddress.streetPostDir}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.addressLine2 value=@root.data.ownershipConfirmation.serviceAddress.addressLine2}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.locality value=@root.data.ownershipConfirmation.serviceAddress.locality}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.region value=@root.data.ownershipConfirmation.serviceAddress.region}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.postalCode value=@root.data.ownershipConfirmation.serviceAddress.postalCode}}
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.serviceAddress.labels.country value=@root.data.ownershipConfirmation.serviceAddress.country hasContent=true}}
+						{{value.name}}
+						<img class="country-flag" src="css/assets/flags/24/{{value.code}}.png" onerror="this.onerror=null;this.src='css/assets/flags/24/_unknown.png'" />
+					{{/horizontalFieldPartial}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.accountInfo.labels.accountNumber value=@root.data.ownershipConfirmation.accountInfo.accountNumber}}
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.accountInfo.labels.pin value=@root.data.ownershipConfirmation.accountInfo.pin hasContent=true}}
+						<div class="password-field">
+							<div class="password-value password-hidden">
+								<span class="password-text">
+									{{value}}
+								</span>
+								<span class="password-mask">
+									{{portWizardStepsI18n.review.general.labels.passwordMask}}
+								</span>
+							</div>
+							<label class="password-toggle-label">
+								<input type="checkbox" class="password-toggle" />
+								<span class="password-show">
+									{{portWizardStepsI18n.review.general.labels.show}}
+								</span>
+								<span class="password-hide">
+									{{portWizardStepsI18n.review.general.labels.hide}}
+								</span>
+							</label>
+						</div>
+					{{/horizontalFieldPartial}}
+					{{> horizontalFieldPartial label=portWizardStepsI18n.ownershipConfirmation.accountInfo.labels.btn value=@root.data.ownershipConfirmation.accountInfo.btn}}
+				</div>
+			</div>
+			<div class="section">
+				{{> sectionTitle stepName="requiredDocuments"}}
+				<div class="section-body">
+				{{#each @root.data.requiredDocuments.documents}}
+					{{#> horizontalFieldPartial label=(tryI18n @root.i18n.commonApp.portWizard.documents this.key) value=this.name hasContent=true}}
+						{{telicon "file" class="document-icon"}}
+						{{value}}
+					{{/horizontalFieldPartial}}
+				{{/each}}
+				<div class="flex-row-container">
+					<div class="flex-item-1 section-subtitle">
+						{{portWizardStepsI18n.requiredDocuments.extraData.title}}
+					</div>
+				</div>
+				{{#each @root.data.requiredDocuments.extra as |value key|}}
+					{{#compare key "===" "loaSigningDate"}}
+						{{#> horizontalFieldPartial label=(tryI18n portWizardStepsI18n.requiredDocuments.extraData.labels key) value=value hasContent=true}}
+							{{toFriendlyDate value "date"}}
+						{{/horizontalFieldPartial}}
+					{{else}}
+						{{> horizontalFieldPartial label=(tryI18n portWizardStepsI18n.requiredDocuments.extraData.labels key) value=value}}
+					{{/compare}}
+				{{/each}}
+				</div>
+			</div>
+			<div class="section">
+				{{> sectionTitle stepName="dateAndNotifications"}}
+				<div class="section-body">
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.desiredTargetDate.labels.targetDate value=@root.data.dateAndNotifications.targetDate hasContent=true}}
+						{{toFriendlyDate value "date"}}
+					{{/horizontalFieldPartial}}
+				{{#if @root.data.dateAndNotifications.notificationEmails.length}}
+					{{#> horizontalFieldPartial label=portWizardStepsI18n.dateAndNotifications.notifications.labels.notifyByEmail value=@root.data.dateAndNotifications.notificationEmails hasContent=true}}
+						{{#each value}}
+							{{this}}{{#unless @last}}<br />{{/unless}}
+						{{/each}}
+					{{/horizontalFieldPartial}}
+				{{/if}}
+				</div>
+			</div>
+			<div class="section">
+				<div class="section-title">
+					{{portWizardStepsI18n.review.requiredAcknowledgements.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="field-label-horizontal flex-item-2">
+							{{#monsterPanelText portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.title "warning"}}
+								{{portWizardStepsI18n.review.requiredAcknowledgements.notices.acknowledgement.message}}
+							{{/monsterPanelText}}
+						</div>
+					</div>
+				</div>
+				<div id="required_acknowledgements" class="flex-row-container">
+				{{#each @root.data.review.acknowledgements as |value key|}}
+					<div class="field-label-horizontal flex-item-1">
+						{{#monsterCheckbox (tryI18n portWizardStepsI18n.review.requiredAcknowledgements.labels.acknowledgements key)}}
+							<input name="acknowledgements.{{key}}" type="checkbox" data-value="{{value}}"{{#if value}} checked{{/if}}/>
+						{{/monsterCheckbox}}
+					</div>
+				{{/each}}
+				</div>
+			</div>
+		</form>
+	</div>
+{{/with}}
+</div>

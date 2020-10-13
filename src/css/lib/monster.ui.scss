@@ -228,17 +228,23 @@ label.monster-invalid {
 	line-height: 16px;
 	position: absolute;
 	margin: 0;
-	color: red;
+	color: $error-color;
 }
 
 // Add specificity to override bootstrap styles
-input.monster-invalid, select.monster-invalid,
+input.monster-invalid,
 input.monster-invalid[type="email"],
 input.monster-invalid[type="text"]:not(.search-query),
+textarea.monster-invalid,
+select.monster-invalid,
 .ui-widget.ui-spinner.monster-invalid,
 .chosen-container-single.monster-invalid .chosen-single,
 .chosen-container-multi.monster-invalid .chosen-choices {
-	border: 1px solid $danger-color;
+	border: 1px solid $error-color;
+}
+
+textarea.monster-invalid {
+	box-shadow: none;
 }
 
 /************************************************************/
