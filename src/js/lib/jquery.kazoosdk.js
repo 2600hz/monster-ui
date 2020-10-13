@@ -471,6 +471,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
 			},
