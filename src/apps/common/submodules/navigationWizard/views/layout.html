@@ -1,10 +1,29 @@
-<div id="navigation_wizard_wrapper">
+<div id="navigation_wizard_wrapper"{{#if cssClass}} class="{{cssClass}}"{{/if}}>
 	<div class="navigation-header">
 		<div class="nav-title">
 			<h4>{{title}}</h4>
 		</div>
 		<div class="actions">
-			<button id="cancel" class="monster-button">{{ i18n.navigationWizard.buttons.cancel }}</button>
+		{{#if saveEnabled}}
+			<button id="navigation_wizard_save" class="monster-button">
+				{{telicon "download-cloud" class="iconography-medium iconography-button-left"}}
+				{{i18n.navigationWizard.buttons.saveDraft}}
+			</button>
+		{{/if}}
+		{{#if deleteEnabled}}
+			<button id="navigation_wizard_delete" class="monster-button">
+				{{#if deleteButton}}
+					{{deleteButton}}
+				{{else}}
+					{{i18n.navigationWizard.buttons.delete}}
+				{{/if}}
+			</button>
+		{{/if}}
+		{{#if cancelEnabled}}
+			<button id="cancel" class="monster-button">
+				{{ i18n.navigationWizard.buttons.cancel }}
+			</button>
+		{{/if}}
 		</div>
 	</div>
 

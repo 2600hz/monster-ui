@@ -1,0 +1,21 @@
+#step_date_and_notifications.wizard-step {
+	.notification-email-item {
+		transition: opacity 200ms ease-in-out;
+
+		&:only-child .remove-item-button {
+			visibility: hidden;
+
+			&.active {
+				visibility: visible;
+			}
+		}
+
+		&.remove {
+			opacity: 0;
+		}
+
+		label.monster-invalid {
+			margin: 38px 0 0 0;
+		}
+	}
+}

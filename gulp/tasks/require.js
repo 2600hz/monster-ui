@@ -47,6 +47,7 @@ const libsToExcludeFromApp = [
 	'jqueryui',
 	'jsoneditor',
 	'jstz',
+	'jszip',
 	'kazoo',
 	'kazoosdk',
 	'libphonenumber',
