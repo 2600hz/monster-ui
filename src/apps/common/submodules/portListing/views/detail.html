@@ -242,32 +242,30 @@
 		{{/if}}
 			</ul>
 		</div>
-	{{#if canComment}}
 		<div class="textarea-wrapper">
 			<textarea name="comment" rows="1" placeholder="{{@root.i18n.portListing.detail.textarea.placeholder}}"></textarea>
 			{{#if isAgent}}
 				<div class="btn-group dropup">
+			{{/if}}
 					<button type="button" class="monster-button-success add-comment">
 						{{@root.i18n.portListing.detail.buttons.send}}
 					</button>
+			{{#if isAgent}}
 					<button class="monster-button-success dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu pull-right">
+					{{#if canRequireAction}}
 						<li>
 							<a class="add-comment" data-is_requiring_action="true">{{@root.i18n.portListing.detail.buttons.actionRequired}}</a>
 						</li>
+					{{/if}}
 						<li>
 							<a class="add-comment" data-is_private="true">{{@root.i18n.portListing.detail.buttons.sendPrivate}}</a>
 						</li>
 					</ul>
 				</div>
-			{{else}}
-				<button type="button" class="monster-button-success add-comment">
-					{{@root.i18n.portListing.detail.buttons.send}}
-				</button>
 			{{/if}}
 		</div>
-	{{/if}}
 	</div>
 </div>
