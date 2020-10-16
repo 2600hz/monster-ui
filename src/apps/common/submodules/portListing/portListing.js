@@ -317,8 +317,8 @@ define(function(require) {
 
 					return _.merge({
 						isAgent: isAgent,
-						canComment: isUpdateable,
 						canUpdate: isAgent && isUpdateable,
+						canRequireAction: isUpdateable,
 						lastSubmitted: _.isUndefined(lastSubmitted)
 							? undefined
 							: {
