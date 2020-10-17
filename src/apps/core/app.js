@@ -103,18 +103,9 @@ define(function(require) {
 
 			container.append(mainTemplate);
 
-			self.loadIncludes(function(err, results) {
-				require(['hotjarTriggers'], function(module) {
-					_.each(module.subscribe, function(callback, topic) {
-						var cb = typeof callback === 'string' ? module[callback] : callback;
-						monster.sub(topic, cb, module);
-					});
-
-					self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
-				}); //temporary
-
-			}); //include scripts for hotjar and other third party ones
-
+			monster.waterfall([
+				_.bind(self.loadIncludes, self)
+			], _.bind(self.loadAuth, self));
 		},
 
 		loadSVG: function() {
@@ -152,11 +143,17 @@ define(function(require) {
 		},
 
 		loadIncludes: function(callback) {
-			monster.parallel(_.map(monster.config.whitelabel.includes, function(url) {
-				return function(next) {
-					require([url], next, next);
+			var requireUrl = function(url, next) {
+					require([url], next, _.partial(_.ary(next, 1), null));
+				},
+				requireUrlFactory = function(url) {
+					return _.partial(requireUrl, url);
 				};
-			}), callback);
+
+			monster.series(_.map(
+				monster.config.whitelabel.includes,
+				requireUrlFactory
+			), callback);
 		},
 
 		loadAuth: function() {
