@@ -1917,7 +1917,7 @@ define(function(require) {
 			var self = this,
 				is12hMode = _.get(monster, 'apps.auth.currentUser.ui_flags.twelve_hours_mode', false),
 				defaultOptions = {
-					timeFormat: is12hMode ? 'g:ia' : 'G:i',
+					timeFormat: is12hMode ? 'g:i A' : 'G:i',
 					lang: monster.apps.core.i18n.active().timepicker
 				},
 				options = $.extend(true, {}, defaultOptions, pOptions);
