@@ -408,6 +408,10 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
 			},
+			schemas: {
+				'list': { verb: 'GET', url: 'schemas' },
+				'get': { verb: 'GET', url: 'schemas/{schemaId}' }
+			},
 			security: {
 				'listModules': { verb: 'GET', url: 'security' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/security' },
