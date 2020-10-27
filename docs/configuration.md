@@ -102,6 +102,7 @@ Key | Description | Type | Default | Required
 `hide_port` | Whether or not to make porting actions available through the UI. | `Boolean` | `false` | `false`
 `hidePasswordRecovery` | Whether or not to hide the "Forgot your info?" feature from the login page. | `Boolean` | `false` | `false`
 `hide_powered` | Whether or not to hide the "powered by" info shown in the bottom of the page. | `Boolean` | | `false`
+`includes` | Scripts to download before authentication step (pulling happens sequentially). | `URL[]` | | `false`
 `jiraFeedback` | If you want to provide a "Provide Feedback" button tied with JIRA issue collector, you can set this object to enabled: true, and provide the URL of the JIRA Issue collector to the url property. If this item is removed or set to enabled: false, nothing will appear in the UI. | `Object` | | `false`
 `jiraFeedback.enabled` | | `Boolean` | `false` | `false`
 `jiraFeedback.url` | | `String` | | `false`
