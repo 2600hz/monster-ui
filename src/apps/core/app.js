@@ -103,7 +103,9 @@ define(function(require) {
 
 			container.append(mainTemplate);
 
-			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
+			monster.waterfall([
+				_.bind(self.loadIncludes, self)
+			], _.bind(self.loadAuth, self));
 		},
 
 		loadSVG: function() {
@@ -138,6 +140,20 @@ define(function(require) {
 			var self = this;
 
 			monster.webphone.init();
+		},
+
+		loadIncludes: function(callback) {
+			var requireUrl = function(url, next) {
+					require([url], next, _.partial(_.ary(next, 1), null));
+				},
+				requireUrlFactory = function(url) {
+					return _.partial(requireUrl, url);
+				};
+
+			monster.series(_.map(
+				monster.config.whitelabel.includes,
+				requireUrlFactory
+			), callback);
 		},
 
 		loadAuth: function() {
