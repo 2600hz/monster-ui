@@ -1020,6 +1020,109 @@ define(function(require) {
 	util.getAppIconPath = getAppIconPath;
 
 	/**
+	 * @param  {Object[]} apps List of apps to get app metadata from.
+	 * @param  {String} input Either an app id or name to look for in `apps`.
+	 * @return {Object} Formatted app metadata.
+	 */
+	function getAppMetadata(apps, input) {
+		var validNames = _.map(apps, 'name');
+		var validIds = _.map(apps, 'id');
+		var app = _.includes(validNames, input) ? _.find(apps, { name: input })
+			: _.includes(validIds, input) ? _.find(apps, { id: input })
+			: undefined;
+
+		if (_.isUndefined(app)) {
+			return undefined;
+		}
+
+		var locale = _.replace(
+			monster.config.whitelabel.language,
+			/^([a-z]{2}).+([a-z]{2})$/i,
+			function(match, language, country) {
+				return _.join([
+					_.toLower(language),
+					_.toUpper(country)
+				], '-');
+			}
+		);
+		var iconMetadata = _.merge({
+			icon: getAppIconPath(app)
+		}, _.includes(['alpha', 'beta'], app.phase) && {
+			extraCssClass: app.phase + '-overlay-icon'
+		});
+		var activeLocale = _.has(app.i18n, locale)
+			? locale
+			: monster.defaultLanguage;
+		var activeI18n = _.get(app.i18n, activeLocale);
+
+		return _.merge({}, _.omit(app, 'i18n'), activeI18n, iconMetadata);
+	}
+
+	/**
+	 * @param  {String} input Either an app id or name to look for in the apps store.
+	 * @return {Object} Formatted app metadata.
+	 */
+	function getAppStoreMetadata(input) {
+		return getAppMetadata(monster.appsStore, input);
+	}
+	util.getAppStoreMetadata = getAppStoreMetadata;
+
+	/**
+	 * @param  {Object[]} apps List of apps to filter by `scope`.
+	 * @param  {'all'|'account'|'user'} scope Scope to filter `apps` against.
+	 * @return {Object[]} List of `apps` filtered for a `scope`.
+	 */
+	function listAppsMetadata(apps, scope) {
+		var filterForAccount = _.partial(_.filter, _, _.flow(
+			_.partial(_.ary(_.get, 2), _, 'allowed_users'),
+			_.overEvery(
+				_.isString,
+				_.partial(_.negate(_.isEqual), 'specific')
+			)
+		));
+		var isCurrentUserPermittedApp = _.partial(
+			isUserPermittedApp,
+			_.get(monster.apps, 'auth.currentUser')
+		);
+		var filterForCurrentUser = _.partial(_.filter, _, isCurrentUserPermittedApp);
+		var getFilterForScope = function(pScope) {
+			var filtersPerScope = {
+				undefined: _.identity,
+				all: _.identity,
+				account: filterForAccount,
+				user: filterForCurrentUser
+			};
+			var scope = _
+				.chain(filtersPerScope)
+				.keys()
+				.find(_.partial(_.isEqual, pScope))
+				.value();
+
+			return _.get(filtersPerScope, scope);
+		};
+		var formatMetadata = _.flow(
+			_.partial(_.ary(_.get, 2), _, 'id'),
+			_.partial(getAppMetadata, apps)
+		);
+
+		return _
+			.chain(apps)
+			.thru(getFilterForScope(scope))
+			.map(formatMetadata)
+			.value();
+	}
+	util.listAppsMetadata = listAppsMetadata;
+
+	/**
+	 * @param  {String} scope
+	 * @return {Object[]}
+	 */
+	function listAppStoreMetadata(scope) {
+		return listAppsMetadata(monster.appsStore, scope);
+	}
+	util.listAppStoreMetadata = listAppStoreMetadata;
+
+	/**
 	 * Returns the auth token of a given connection.
 	 * @param  {String} [pConnectionName]
 	 * @return {String|Undefined}
@@ -1120,6 +1223,29 @@ define(function(require) {
 			|| moment.tz.guess();
 	}
 	util.getCurrentTimeZone = getCurrentTimeZone;
+
+	/**
+	 * Returns the app considered as default for current user.
+	 * @return {Object|Undefined} Current user's default app.
+	 *
+	 * When user document does not have an `appList`, defaults to using the first user accessible
+	 * app from app store.
+	 * When user does not have access to any app, returns `undefined`.
+	 */
+	function getCurrentUserDefaultApp() {
+		var user = _.get(monster.apps, 'auth.currentUser', {});
+		var validApps = listAppStoreMetadata('user');
+		var validAppIds = _.map(validApps, 'id');
+
+		return _
+			.chain(user)
+			.get('appList', [])
+			.find(_.partial(_.includes, validAppIds))
+			.thru(monster.util.getAppStoreMetadata)
+			.defaultTo(_.head(validApps))
+			.value();
+	}
+	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
@@ -1513,6 +1639,45 @@ define(function(require) {
 		return _.get(account, 'is_reseller', false);
 	}
 	util.isReseller = isReseller;
+
+	/**
+	 * Returns whether a user is allowed to access an app.
+	 * @param  {Object}  user User document to check against.
+	 * @param  {Object}  app  App metadata to check for.
+	 * @return {Boolean}      Whether `user` has access to `app`.
+	 */
+	function isUserPermittedApp(user, app) {
+		var allowedIds = _
+			.chain(app)
+			.get('users', [])
+			.map('id')
+			.value();
+		var checksPerPermission = {
+			all: function() {
+				return true;
+			},
+			admins: _.flow(
+				_.partial(_.get, _, 'priv_level'),
+				_.partial(_.isEqual, 'admin')
+			),
+			specific: _.flow(
+				_.partial(_.get, _, 'id'),
+				_.partial(_.includes, allowedIds)
+			),
+			undefined: function() {
+				return false;
+			}
+		};
+		var permission = _
+			.chain(checksPerPermission)
+			.keys()
+			.find(_.partial(_.isEqual, _.get(app, 'allowed_users')))
+			.value();
+		var checkForPermission = _.get(checksPerPermission, permission);
+
+		return checkForPermission(user);
+	}
+	util.isUserPermittedApp = isUserPermittedApp;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
