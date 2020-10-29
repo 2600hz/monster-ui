@@ -6,7 +6,6 @@ define(function(require) {
 		moment = require('moment');
 
 	require('moment-timezone');
-	//momentTimezone = require('moment-timezone');
 
 	var util = {
 
@@ -651,26 +650,6 @@ define(function(require) {
 			return true;
 		},
 
-		// Monster helper used to get the path to the icon of an app
-		// Some app have their icons loaded locally, whereas some new apps won't have them
-		getAppIconPath: function(app) {
-			var self = this,
-				response,
-				authApp = monster.apps.auth,
-				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
-					'cluster', 'conferences', 'csv-onboarding', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
-					'migration', 'mobile', 'myaccount', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
-					'service-plan-override', 'tasks', 'taxation', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
-
-			if (localIcons.indexOf(app.name) >= 0) {
-				response = 'css/assets/appIcons/' + app.name + '.png';
-			} else {
-				response = authApp.apiUrl + 'accounts/' + authApp.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.getAuthToken();
-			}
-
-			return response;
-		},
-
 		guid: function() {
 			var result = '';
 
@@ -679,17 +658,6 @@ define(function(require) {
 			}
 
 			return result;
-		},
-
-		getAuthToken: function(pConnectionName) {
-			var self = this,
-				authToken;
-
-			if (monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth')) {
-				authToken = monster.apps.auth.getAuthTokenByConnection(pConnectionName);
-			}
-
-			return authToken;
 		},
 
 		getVersion: function() {
@@ -982,6 +950,87 @@ define(function(require) {
 			.value();
 	}
 	util.formatVariableToDisplay = formatVariableToDisplay;
+
+	/**
+	 * Returns an app's icon path/URL.
+	 * @param  {Object} app
+	 * @param  {String} app.name
+	 * @param  {String} app.id
+	 * @return {String}
+	 *
+	 * Some app have their icons loaded locally, whereas some new apps won't have them.
+	 */
+	function getAppIconPath(app) {
+		var authApp = monster.apps.auth;
+		var localIcons = [
+			'accounts',
+			'auth-security',
+			'blacklists',
+			'branding',
+			'callflows',
+			'callqueues',
+			'call-recording',
+			'carriers',
+			'cluster',
+			'conferences',
+			'csv-onboarding',
+			'debug',
+			'developer',
+			'dialplans',
+			'duo',
+			'fax',
+			'integration-aws',
+			'integration-google-drive',
+			'migration',
+			'mobile',
+			'myaccount',
+			'numbers',
+			'operator',
+			'operator-pro',
+			'pbxs',
+			'pivot',
+			'port',
+			'provisioner',
+			'reporting',
+			'reseller_reporting',
+			'service-plan-override',
+			'tasks',
+			'taxation',
+			'userportal',
+			'voicemails',
+			'voip',
+			'webhooks',
+			'websockets'
+		];
+
+		if (_.includes(localIcons, app.name)) {
+			return 'css/assets/appIcons/' + app.name + '.png';
+		} else {
+			return _.join([
+				authApp.apiUrl,
+				'accounts/',
+				authApp.accountId,
+				'/apps_store/',
+				app.id,
+				'/icon?auth_token=',
+				getAuthToken()
+			], '');
+		}
+	}
+	util.getAppIconPath = getAppIconPath;
+
+	/**
+	 * Returns the auth token of a given connection.
+	 * @param  {String} [pConnectionName]
+	 * @return {String|Undefined}
+	 */
+	function getAuthToken(pConnectionName) {
+		if (!isLoggedIn()) {
+			return;
+		}
+		return monster.apps.auth.getAuthTokenByConnection(pConnectionName);
+	}
+	util.getAuthToken = getAuthToken;
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
