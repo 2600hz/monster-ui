@@ -1025,35 +1025,32 @@ define(function(require) {
 	 * @return {Object} Formatted app metadata.
 	 */
 	function getAppMetadata(apps, input) {
-		var validNames = _.map(apps, 'name');
-		var validIds = _.map(apps, 'id');
-		var app = _.includes(validNames, input) ? _.find(apps, { name: input })
-			: _.includes(validIds, input) ? _.find(apps, { id: input })
-			: undefined;
+		var app = _.find(apps, _.overSome(
+			_.flow(
+				_.partial(_.get, _, 'id'),
+				_.partial(_.isEqual, input)
+			),
+			_.flow(
+				_.partial(_.get, _, 'name'),
+				_.partial(_.isEqual, input)
+			)
+		));
 
 		if (_.isUndefined(app)) {
 			return undefined;
 		}
 
-		var locale = _.replace(
-			monster.config.whitelabel.language,
-			/^([a-z]{2}).+([a-z]{2})$/i,
-			function(match, language, country) {
-				return _.join([
-					_.toLower(language),
-					_.toUpper(country)
-				], '-');
-			}
-		);
 		var iconMetadata = _.merge({
 			icon: getAppIconPath(app)
 		}, _.includes(['alpha', 'beta'], app.phase) && {
 			extraCssClass: app.phase + '-overlay-icon'
 		});
-		var activeLocale = _.has(app.i18n, locale)
-			? locale
-			: monster.defaultLanguage;
-		var activeI18n = _.get(app.i18n, activeLocale);
+		var locale = _.find([
+			monster.config.whitelabel.language,
+			monster.defaultLanguage,
+			_.head(_.keys(app.i18n))
+		], _.partial(_.has, app.i18n));
+		var activeI18n = _.get(app.i18n, locale);
 
 		return _.merge({}, _.omit(app, 'i18n'), activeI18n, iconMetadata);
 	}
@@ -1063,7 +1060,10 @@ define(function(require) {
 	 * @return {Object} Formatted app metadata.
 	 */
 	function getAppStoreMetadata(input) {
-		return getAppMetadata(monster.appsStore, input);
+		return getAppMetadata(
+			_.get(monster.apps, 'auth.appsStore', []),
+			input
+		);
 	}
 	util.getAppStoreMetadata = getAppStoreMetadata;
 
@@ -1118,7 +1118,10 @@ define(function(require) {
 	 * @return {Object[]}
 	 */
 	function listAppStoreMetadata(scope) {
-		return listAppsMetadata(monster.appsStore, scope);
+		return listAppsMetadata(
+			_.get(monster.apps, 'auth.appsStore', []),
+			scope
+		);
 	}
 	util.listAppStoreMetadata = listAppStoreMetadata;
 
@@ -1678,6 +1681,54 @@ define(function(require) {
 		return checkForPermission(user);
 	}
 	util.isUserPermittedApp = isUserPermittedApp;
+
+	/**
+	 * Returns list of formatted app links defined on whitelabel document.
+	 * @return {Object[]} List of formatted app links.
+	 */
+	function listAppLinks() {
+		var getOneKey = _.flow(
+			_.keys,
+			_.head
+		);
+		var formatLink = _.partial(function(locales, metadata, url) {
+			var locale = _
+					.chain(locales)
+					.find(_.partial(_.has, metadata.i18n))
+					.defaultTo(getOneKey(metadata.i18n))
+					.value(),
+				i18n = _.get(metadata.i18n, locale, {});
+
+			return _.merge({
+				id: url
+			}, _.pick(metadata, [
+				'icon'
+			]), _.pick(i18n, [
+				'label',
+				'description'
+			]));
+		}, [
+			monster.config.whitelabel.language,
+			monster.defaultLanguage
+		]);
+		var hasInvalidProps = _.partial(function(props, link) {
+			return _.some(props, _.flow(
+				_.partial(_.get, link),
+				_.negate(_.isString)
+			));
+		}, [
+			'id',
+			'icon',
+			'label'
+		]);
+
+		return _
+			.chain(monster.config.whitelabel.appLinks)
+			.map(formatLink)
+			.reject(hasInvalidProps)
+			.value();
+	}
+	util.listAppLinks = listAppLinks;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a

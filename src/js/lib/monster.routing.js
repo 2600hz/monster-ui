@@ -43,7 +43,7 @@ define(function(require) {
 			if (
 				appName !== 'appstore'
 				&& monster.util.isMasquerading()
-				&& monster.appsStore[appName].masqueradable !== true
+				&& !monster.util.getAppStoreMetadata(appName).masqueradable
 			) {
 				monster.ui.toast({
 					type: 'error',
@@ -108,22 +108,14 @@ define(function(require) {
 				if (!monster.util.isLoggedIn()) {
 					return;
 				}
-				monster.pub('apploader.getAppList', {
-					scope: 'user',
-					accountId: _.get(monster.apps.auth, [
-						monster.util.isMasquerading() ? 'originalAccount' : 'currentAccount',
-						'id'
-					]),
-					success: function(availableApps) {
-						// try loading the requested app
-						if (isAppLoadable(appName, availableApps)) {
-							loadApp(appName, query, availableApps);
-						} else {
-							handleInvalidAppLoad(availableApps);
-						}
-					},
-					error: monster.util.logoutAndReload.bind(monster.util)
-				});
+				var availableApps = monster.util.listAppStoreMetadata('user');
+
+				// try loading the requested app
+				if (isAppLoadable(appName, availableApps)) {
+					loadApp(appName, query, availableApps);
+				} else {
+					handleInvalidAppLoad(availableApps);
+				}
 			});
 		},
 

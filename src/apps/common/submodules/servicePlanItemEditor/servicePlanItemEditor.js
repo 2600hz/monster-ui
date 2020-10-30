@@ -154,9 +154,10 @@ define(function() {
 					.map(function(item) {
 						return {
 							value: item,
-							label: _.includes(['account_apps', 'user_apps'], category) && _.has(monster.appsStore, item)
-								? monster.appsStore[item].i18n[monster.config.whitelabel.language].label
-								: monster.util.tryI18n(self.i18n.active().servicePlanItemEditor.keys, item)
+							label: _.find([
+								_.includes(['account_apps', 'user_apps'], category) && _.get(monster.util.getAppStoreMetadata(item), 'label'),
+								monster.util.tryI18n(self.i18n.active().servicePlanItemEditor.keys, item)
+							], _.isString)
 						};
 					})
 					.sortBy('label')
@@ -486,13 +487,14 @@ define(function() {
 			});
 
 			if (category === 'ui_apps') {
-				if (monster.appsStore.hasOwnProperty(key)) {
-					var accId = monster.appsStore[key].account_id;
+				var app = monster.util.getAppStoreMetadata(key);
+				if (app) {
+					var accId = app.account_id;
 					var formattedAccDb = 'account%2F' + accId.substring(0, 2) + '%2F' + accId.substr(2, 2) + '%2F' + accId.substr(4, accId.length - 4);
-					formattedItem.app_id = monster.appsStore[key].id;
+					formattedItem.app_id = app.id;
 					formattedItem.account_db = formattedAccDb;
 				}
-				if (monster.appsStore.hasOwnProperty(key) || key === '_all') {
+				if (app || key === '_all') {
 					// UI-3137: automatically enable apps when added
 					formattedItem.enabled = true;
 				}
