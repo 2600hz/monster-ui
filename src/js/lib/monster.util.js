@@ -810,8 +810,7 @@ define(function(require) {
 	};
 
 	/**
-	 * Formats a string into a string representation of a MAC address, using
-	 * colons as separator.
+	 * Formats a string into a string representation of a MAC address, using colons as separator.
 	 * @param  {String} macAddress   String to format as MAC address.
 	 * @return {String}              String representation of a MAC address.
 	 */
@@ -878,8 +877,8 @@ define(function(require) {
 	 * @param  {Number|String} phoneNumber Input to format as phone number
 	 * @return {String}                    Input formatted as phone number
 	 *
-	 * Warning: this method is used to format entities other than phone
-	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
+	 * Warning: this method is used to format entities other than phone numbers (e.g. extensions)
+	 * so keep that in mind if you plan to update it.
 	 */
 	function formatPhoneNumber(input) {
 		var phoneNumber = getFormatPhoneNumber(input);
@@ -893,16 +892,14 @@ define(function(require) {
 	 * Decimal and currency formatting for prices
 	 * @deprecated
 	 * @param  {Object}  args
-	 * @param  {Number}  args.price        Price to format (number or string
-	 *                                     representation of a number).
-	 * @param  {Number}  args.digits       Number of digits to appear after the
-	 *                                     decimal point.
+	 * @param  {Number}  args.price        Price to format (number or string representation of a
+	 *                                     number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the decimal point.
 	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
 	 * @return {String}                    String representation of `price`.
 	 *
-	 * If `digits` is not specified, integers will have no digits and floating
-	 * numbers with at least one significant number after the decimal point
-	 * will have two digits.
+	 * If `digits` is not specified, integers will have no digits and floating numbers with at least
+	 * one significant number after the decimal point will have two digits.
 	 */
 	function formatPrice(args) {
 		if (
@@ -936,8 +933,7 @@ define(function(require) {
 	/**
 	 * Takes a string and replace all the "_" from it with a " ".
 	 * Also capitalizes first word.
-	 * Useful to display hardcoded data from the database that hasn't make it to
-	 * the i18n files.
+	 * Useful to display hardcoded data from the database that hasn't make it to the i18n files.
 	 * @param  {*} variable Value to format.
 	 * @return {String} Formatted string representation of the value.
 	 */
@@ -1216,9 +1212,9 @@ define(function(require) {
 	 * Returns the timezone of the currently authenticated session
 	 * @return {String}  Current time zone identifier.
 	 *
-	 * By default, the time zone of the logged in user will be returned. If that
-	 * time zone is not set, then the account time zone will be used. If not set,
-	 * the browser’s time zone will be used as a last resort.
+	 * By default, the time zone of the logged in user will be returned. If that time zone is not
+	 * set, then the account time zone will be used. If not set, the browser’s time zone will be
+	 * used as a last resort.
 	 */
 	function getCurrentTimeZone() {
 		return _.get(monster, 'apps.auth.currentUser.timezone')
@@ -1251,7 +1247,10 @@ define(function(require) {
 	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
 
 	function getFormatPhoneNumber(input) {
-		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
+		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
+			_.toString(input),
+			monster.config.whitelabel.countryCode
+		);
 		var user = _.get(monster, 'apps.auth.currentUser', {});
 		var account = _.get(monster, 'apps.auth.originalAccount', {});
 		var formattedData = {
@@ -1260,20 +1259,21 @@ define(function(require) {
 			userFormat: input // Setting it as a default, in case the number is not valid
 		};
 		var getUserFormatFromEntity = function(entity, data) {
-			var response = '';
+			var formatter = _.get({
+				national: _.partial(_.get, _, 'nationalFormat'),
+				international: _.partial(_.get, _, 'internationalFormat'),
+				international_with_exceptions: function(metadata) {
+					var isException = _
+						.chain(entity)
+						.get('ui_flags.numbers_format_exceptions', [])
+						.includes(metadata.country.code)
+						.value();
 
-			if (entity.ui_flags.numbers_format === 'national') {
-				response = data.nationalFormat;
-			} else if (entity.ui_flags.numbers_format === 'international') {
-				response = data.internationalFormat;
-			} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
-				if (_.includes(_.get(entity, 'ui_flags.numbers_format_exceptions', []), data.country.code)) {
-					response = data.nationalFormat;
-				} else {
-					response = data.internationalFormat;
+					return _.get(metadata, isException ? 'nationalFormat' : 'internationalFormat');
 				}
-			}
-			return response;
+			}, entity.ui_flags);
+
+			return formatter(data);
 		};
 
 		if (
@@ -1515,9 +1515,9 @@ define(function(require) {
 	util.getUrlVars = getUrlVars;
 
 	/**
-	 * Returns the full name of a specific user or, if missing, of the currently
-	 * logged in user.
-	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * Returns the full name of a specific user or, if missing, of the currently logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and
+	 *                                    last_name
 	 * @param  {String} pUser.first_name  User's first name
 	 * @param  {String} pUser.last_name   User's last name
 	 * @return {String}                   User's full name
@@ -1551,10 +1551,11 @@ define(function(require) {
 	util.getUserFullName = getUserFullName;
 
 	/**
-	 * Returns the initials (two characters) of a specific user or,
-	 * if missing, of the currently logged in user.
+	 * Returns the initials (two characters) of a specific user or, if missing, of the currently
+	 * logged in user.
 	 *
-	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and
+	 *                                    last_name
 	 * @param  {String} pUser.first_name  User's first name
 	 * @param  {String} pUser.last_name   User's last name
 	 *
@@ -1614,9 +1615,9 @@ define(function(require) {
 	 * @param  {Object}  pAccount Account object to check from (optional)
 	 * @return {Boolean}          Indicate whether or not the feature is enabled
 	 *
-	 * The check is made against a flag in the account document but it can be
-	 * overridden by a flag in `config.js/whitelabel.disableNumbersFeatures`. If
-	 * none of those flags are set, it will return `true` by default.
+	 * The check is made against a flag in the account document but it can be overridden by a flag
+	 * in `config.js/whitelabel.disableNumbersFeatures`. If none of those flags are set, it will
+	 * return `true` by default.
 	 */
 	function isNumberFeatureEnabled(feature, pAccount) {
 		return monster.config.whitelabel.disableNumbersFeatures
@@ -1787,19 +1788,17 @@ define(function(require) {
 	 * @param  {Date|String} pDate   Representation of the date to format.
 	 * @param  {String} pFormat      Tokens to format the date with.
 	 * @param  {Object} pUser        Specific user to use for formatting.
-	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
-	 *                                gregorian format.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in gregorian format.
 	 * @param  {String} pTz           Timezone to format the date with.
 	 * @return {String}              Representation of the formatted date.
 	 *
-	 * If pDate is undefined then return an empty string. Useful for form which
-	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
-	 * would display NaN/NaN/NaN in Firefox for example.
+	 * If pDate is undefined then return an empty string. Useful for form which use toFriendlyDate
+	 * for some fields with an undefined value. Otherwise it would display NaN/NaN/NaN in Firefox
+	 * for example.
 	 *
-	 * By default, the timezone of the specified or logged in user will be used
-	 * to format the date. If that timezone is not set, then the account
-	 * timezone will be used. If not set, the browser’s timezone will be used as
-	 * a last resort.
+	 * By default, the timezone of the specified or logged in user will be used to format the date.
+	 * If that timezone is not set, then the account timezone will be used. If not set, the
+	 * browser’s timezone will be used as a last resort.
 	 */
 	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, pTz) {
 		if (_.isUndefined(pDate)) {
@@ -1842,12 +1841,12 @@ define(function(require) {
 	 * @param  {Number} pTimestamp Unix timestamp
 	 * @return {Date}           Converted Date instance
 	 *
-	 * Sometimes Unix times are defined with more precision, such as with the
-	 * /legs API which returns channel created time in microseconds, so we need
-	 * need to remove this extra precision to use the Date constructor.
+	 * Sometimes Unix times are defined with more precision, such as with the /legs API which
+	 * returns channel created time in microseconds, so we need need to remove this extra precision
+	 * to use the Date constructor.
 	 *
-	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
-	 * get milliseconds in order to use the Date constructor.
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to get milliseconds in
+	 * order to use the Date constructor.
 	 */
 	function unixToDate(pTimestamp) {
 		var max = 9999999999999;
