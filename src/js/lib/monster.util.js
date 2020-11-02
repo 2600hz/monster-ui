@@ -999,15 +999,18 @@ define(function(require) {
 	util.listAppStoreMetadata = listAppStoreMetadata;
 
 	/**
-	 * Returns the auth token of a given connection.
-	 * @param  {String} [pConnectionName]
-	 * @return {String|Undefined}
+	 * Returns auth token for `connectionName`.
+	 * @param  {String} [connectionName]
+	 * @return {String}                 Auth token for `connectionName`.
 	 */
-	function getAuthToken(pConnectionName) {
-		if (!isLoggedIn()) {
-			return;
-		}
-		return monster.apps.auth.getAuthTokenByConnection(pConnectionName);
+	function getAuthToken(connectionName) {
+		var getToken = _.get(
+			monster.apps,
+			'auth.getAuthTokenByConnection',
+			function() { return undefined; }
+		);
+
+		return getToken(connectionName);
 	}
 	util.getAuthToken = getAuthToken;
 
