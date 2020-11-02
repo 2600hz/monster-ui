@@ -453,25 +453,6 @@ define(function(require) {
 			return (previousIterationNumber) ? previousIterationNumber + increment : lowestNumber;
 		},
 
-		findCallflowNode: function(callflow, module, data) {
-			var self = this,
-				result = [],
-				matchNode = function(node) {
-					if (node.module === module) {
-						if (!data || _.isEqual(data, node.data)) {
-							result.push(node);
-						}
-					}
-					_.each(node.children, function(child) {
-						matchNode(child);
-					});
-				};
-
-			matchNode(callflow.flow);
-
-			return result.length > 1 ? result : result[0];
-		},
-
 		guid: function() {
 			var result = '';
 
@@ -677,6 +658,32 @@ define(function(require) {
 			: 0;
 	}
 	util.cmp = cmp;
+
+	/**
+	 * Collects callflow nodes matching `module` and `data`.
+	 * @param  {Object} callflow Callfow object to scan.
+	 * @param  {String} module   Node module to look for.
+	 * @param  {Object} [data]   Node metadata to match.
+	 * @return {Object|Object[]}          Nodes matching `module`/`data`.
+	 */
+	function findCallflowNode(callflow, module, data) {
+		var result = [];
+		var matchNode = function(node) {
+			if (node.module === module) {
+				if (!data || _.isEqual(data, node.data)) {
+					result.push(node);
+				}
+			}
+			_.each(node.children, function(child) {
+				matchNode(child);
+			});
+		};
+
+		matchNode(callflow.flow);
+
+		return result.length > 1 ? result : result[0];
+	}
+	util.findCallflowNode = findCallflowNode;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
