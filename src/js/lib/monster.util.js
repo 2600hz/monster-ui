@@ -362,16 +362,6 @@ define(function(require) {
 			return result;
 		},
 
-		guid: function() {
-			var result = '';
-
-			for (var i = 0; i < 4; i++) {
-				result += (Math.random().toString(16) + '000000000').substr(2, 8);
-			}
-
-			return result;
-		},
-
 		getVersion: function() {
 			return monster.config.developerFlags.build.version;
 		},
@@ -1552,6 +1542,21 @@ define(function(require) {
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
 	util.gregorianToDate = gregorianToDate;
+
+	/**
+	 * Returns a globally unique identifier.
+	 * @return {String} Identifier.
+	 */
+	function guid() {
+		var result = '';
+
+		for (var i = 0; i < 4; i++) {
+			result += (Math.random().toString(16) + '000000000').substr(2, 8);
+		}
+
+		return result;
+	}
+	util.guid = guid;
 
 	/**
 	 * Returns whether a user has admin privileges.
