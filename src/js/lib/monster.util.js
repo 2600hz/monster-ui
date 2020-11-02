@@ -221,18 +221,6 @@ define(function(require) {
 			}
 
 			return (hours * 3600 + minutes * 60).toString();
-		},
-
-		logoutAndReload: function() {
-			var self = this;
-
-			// Unbind window events before logout, via namespace (useful for events like
-			// 'beforeunload', which may block the logout action)
-			$(window).off('.unbindBeforeLogout');
-
-			resetAuthCookies();
-
-			reload();
 		}
 	};
 
@@ -1809,6 +1797,20 @@ define(function(require) {
 		monster.cookies.remove('monster-sso-auth');
 	}
 	util.resetAuthCookies = resetAuthCookies;
+
+	/**
+	 * Triggers logout metchanism.
+	 */
+	function logoutAndReload() {
+		// Unbind window events before logout, via namespace (useful for events like 'beforeunload',
+		// which may block the logout action)
+		$(window).off('.unbindBeforeLogout');
+
+		resetAuthCookies();
+
+		reload();
+	}
+	util.logoutAndReload = logoutAndReload;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
