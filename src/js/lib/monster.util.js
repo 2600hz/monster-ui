@@ -232,22 +232,7 @@ define(function(require) {
 
 			resetAuthCookies();
 
-			self.reload();
-		},
-
-		reload: function() {
-			var self = this;
-
-			if (monster.config.whitelabel.hasOwnProperty('sso')) {
-				var sso = monster.config.whitelabel.sso;
-				/* this didn't work
-					$.cookie(sso.cookie.name, null, {domain : sso.cookie.domain ,path:'/'});
-				*/
-
-				window.location = sso.logout;
-			} else {
-				window.location = window.location.pathname;
-			}
+			reload();
 		}
 	};
 
@@ -1798,6 +1783,23 @@ define(function(require) {
 				.value();
 	}
 	util.randomString = randomString;
+
+	/**
+	 * Reloads current URL or SSO logout one if configured.
+	 */
+	function reload() {
+		if (monster.config.whitelabel.hasOwnProperty('sso')) {
+			var sso = monster.config.whitelabel.sso;
+			/* this didn't work
+				$.cookie(sso.cookie.name, null, {domain : sso.cookie.domain ,path:'/'});
+			*/
+
+			window.location = sso.logout;
+		} else {
+			window.location = window.location.pathname;
+		}
+	}
+	util.reload = reload;
 
 	/**
 	 * Unset authentication related cookies.
