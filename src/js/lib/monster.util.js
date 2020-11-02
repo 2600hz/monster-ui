@@ -157,50 +157,6 @@ define(function(require) {
 			return seconds >= 0 ? displayTime : '00:00:00';
 		},
 
-		/*
-			This function will automatically logout the user after %wait% minutes (defaults to 30).
-			This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
-		*/
-		autoLogout: function() {
-			if (!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
-				var i18n = monster.apps.core.i18n.active(),
-					timerAlert,
-					timerLogout,
-					wait = monster.config.whitelabel.logoutTimer || 30,
-					alertBeforeLogout = 2,
-					alertTriggered = false,
-					alertDialog,
-					logout = function()	{
-						monster.pub('auth.logout');
-					},
-					resetTimer = function() {
-						clearTimeout(timerAlert);
-						clearTimeout(timerLogout);
-
-						if (alertTriggered) {
-							alertTriggered = false;
-
-							alertDialog.dialog('close').remove();
-						}
-
-						timerAlert = setTimeout(function() {
-							alertTriggered = true;
-
-							alertDialog = monster.ui.alert(i18n.alertLogout);
-						}, 60000 * (wait - alertBeforeLogout));
-
-						timerLogout = setTimeout(function() {
-							logout();
-						}, 60000 * wait);
-					};
-
-				document.onkeypress = resetTimer;
-				document.onmousemove = resetTimer;
-
-				resetTimer();
-			}
-		},
-
 		getDefaultRangeDates: function(pRange) {
 			var self = this,
 				range = pRange || 7,
@@ -299,6 +255,56 @@ define(function(require) {
 			}
 		}
 	};
+
+	/**
+	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
+	 * Shows a warning popup `alertBeforeLogout` minutes before logging out (defaults to 2).
+	 * If the user moves his cursor, the timer resets.
+	 */
+	function autoLogout() {
+		var minutesUntilLogout = monster.config.whitelabel.logoutTimer;
+		var shouldScheduleAutoLogout = minutesUntilLogout > 0;
+
+		if (!shouldScheduleAutoLogout) {
+			return;
+		}
+		var i18n = monster.apps.core.i18n.active();
+		var minutesUntilAlert = minutesUntilLogout - 2;
+		var minutesToMilliseconds = _.partial(_.multiply, 60000);
+		var delayBeforeLogout = minutesToMilliseconds(minutesUntilLogout);
+		var delayBeforeAlert = minutesToMilliseconds(minutesUntilAlert);
+		var wasAlertTriggered = false;
+		var alertDialog;
+		var timerAlert;
+		var timerLogout;
+		var openAlertDialog = function() {
+			wasAlertTriggered = true;
+
+			alertDialog = monster.ui.alert(i18n.alertLogout);
+		};
+		var logout = function()	{
+			monster.pub('auth.logout');
+		};
+		var resetTimer = function() {
+			clearTimeout(timerAlert);
+			clearTimeout(timerLogout);
+
+			if (wasAlertTriggered) {
+				wasAlertTriggered = false;
+
+				alertDialog.dialog('close').remove();
+			}
+
+			timerAlert = setTimeout(openAlertDialog, delayBeforeAlert);
+			timerLogout = setTimeout(logout, delayBeforeLogout);
+		};
+
+		document.addEventListener('keydown', resetTimer);
+		document.addEventListener('mousemove', resetTimer);
+
+		resetTimer();
+	}
+	util.autoLogout = autoLogout;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
