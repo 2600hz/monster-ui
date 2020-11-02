@@ -362,13 +362,6 @@ define(function(require) {
 			return result;
 		},
 
-		jwt_decode: function(Token) {
-			var base64Url = Token.split('.')[1],
-				base64 = base64Url.replace('-', '+').replace('_', '/');
-
-			return JSON.parse(window.atob(base64));
-		},
-
 		tryI18n: function(obj, key) {
 			return obj.hasOwnProperty(key) ? obj[key] : monster.util.formatVariableToDisplay(key);
 		},
@@ -1737,6 +1730,26 @@ define(function(require) {
 			.value();
 	}
 	util.isWhitelabeling = isWhitelabeling;
+
+	/**
+	 * Returns object representation of decoded JWT.
+	 * @param  {String} token     JWT to decode.
+	 * @return {Object|Undefined} Object representation of decoded `token`.
+	 */
+	function jwt_decode(token) {
+		var base64Url = token.split('.')[1];
+		var base64 = base64Url.replace('-', '+').replace('_', '/');
+		var object;
+
+		try {
+			object = JSON.parse(atob(base64));
+		} catch (error) {
+			object = undefined;
+		}
+
+		return object;
+	}
+	util.jwt_decode = jwt_decode;
 
 	/**
 	 * Returns list of formatted app links defined on whitelabel document.
