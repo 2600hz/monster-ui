@@ -223,11 +223,6 @@ define(function(require) {
 			return (hours * 3600 + minutes * 60).toString();
 		},
 
-		resetAuthCookies: function() {
-			monster.cookies.remove('monster-auth');
-			monster.cookies.remove('monster-sso-auth');
-		},
-
 		logoutAndReload: function() {
 			var self = this;
 
@@ -235,7 +230,7 @@ define(function(require) {
 			// 'beforeunload', which may block the logout action)
 			$(window).off('.unbindBeforeLogout');
 
-			self.resetAuthCookies();
+			resetAuthCookies();
 
 			self.reload();
 		},
@@ -1803,6 +1798,15 @@ define(function(require) {
 				.value();
 	}
 	util.randomString = randomString;
+
+	/**
+	 * Unset authentication related cookies.
+	 */
+	function resetAuthCookies() {
+		monster.cookies.remove('monster-auth');
+		monster.cookies.remove('monster-sso-auth');
+	}
+	util.resetAuthCookies = resetAuthCookies;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
