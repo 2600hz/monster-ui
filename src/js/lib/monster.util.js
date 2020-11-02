@@ -362,10 +362,6 @@ define(function(require) {
 			return result;
 		},
 
-		getVersion: function() {
-			return monster.config.developerFlags.build.version;
-		},
-
 		jwt_decode: function(Token) {
 			var base64Url = Token.split('.')[1],
 				base64 = base64Url.replace('-', '+').replace('_', '/');
@@ -1526,6 +1522,15 @@ define(function(require) {
 		return (user.first_name || '').charAt(0) + (user.last_name || '').charAt(0);
 	}
 	util.getUserInitials = getUserInitials;
+
+	/**
+	 * Returns Monster-UI version number.
+	 * @return {String} Monster-UI version number.
+	 */
+	function getVersion() {
+		return monster.config.developerFlags.build.version;
+	}
+	util.getVersion = getVersion;
 
 	/**
 	 * Converts a Gregorian timestamp into a Date instance
