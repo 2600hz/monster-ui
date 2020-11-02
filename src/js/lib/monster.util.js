@@ -360,10 +360,6 @@ define(function(require) {
 			}
 
 			return result;
-		},
-
-		tryI18n: function(obj, key) {
-			return obj.hasOwnProperty(key) ? obj[key] : monster.util.formatVariableToDisplay(key);
 		}
 	};
 
@@ -1902,6 +1898,17 @@ define(function(require) {
 			.format(format);
 	}
 	util.toFriendlyDate = toFriendlyDate;
+
+	/**
+	 * Looks for `path`'s value' in `obj`, otherwise use human readable format of `path`.
+	 * @param  {Object} obj Object to search.
+	 * @param  {String} path Path to resolve.
+	 * @return {String}     Value at `path` or humanl readable `path`.
+	 */
+	function tryI18n(obj, path) {
+		return _.get(obj, path, formatVariableToDisplay(path));
+	}
+	util.tryI18n = tryI18n;
 
 	/**
 	 * Normalize phone number by using E.164 format
