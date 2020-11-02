@@ -505,27 +505,6 @@ define(function(require) {
 			return monster.config.developerFlags.build.version;
 		},
 
-		cacheUrl: function(url) {
-			var self = this;
-
-			return url;
-
-			/* Commenting this as we don't want to add this just yet. We have issues with this code because versions from apps != versions in VERSION
-			   If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change, which means we wouldn't change the query sting used to get assets from any app, even monster-ui-voip...
-			   This only gets incremented when master build runs, whereas we need it to be changed when an app is built as well...
-			   Leaving this here for now, might have to just remove and forget about it eventually :/
-
-				var self = this,
-				prepend = url.indexOf('?') >= 0 ? '&' : '?',
-				isDev = monster.config.developerFlags.build.type === 'development',
-				devCacheString = (new Date()).getTime(),
-				prodCacheString = monster.util.getVersion(),
-				cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString),
-				finalString = url + cacheString;
-
-			return finalString;*/
-		},
-
 		jwt_decode: function(Token) {
 			var base64Url = Token.split('.')[1],
 				base64 = base64Url.replace('-', '+').replace('_', '/');
@@ -622,6 +601,40 @@ define(function(require) {
 			printLogs();
 		}
 	};
+
+	/**
+	 * Formats a string into a string representation of a MAC address, using colons as separator.
+	 * @param  {String} url
+	 * @return {String}
+	 *
+	 * Commenting this as we don't want to add this just yet. We have issues with this code because
+	 * versions from apps != versions in VERSION.
+	 *
+	 * If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change,
+	 * which means we wouldn't change the query sting used to get assets from any app, even
+	 * monster-ui-voip...
+	 *
+	 * This only gets incremented when master build runs, whereas we need it to be changed when an
+	 * app is built as well...
+	 *
+	 * Leaving this here for now, might have to just remove and forget about it eventually :/
+	 */
+	function cacheUrl(url) {
+		var self = this;
+
+		return url;
+
+		// var self = this;
+		// var prepend = url.indexOf('?') >= 0 ? '&' : '?';
+		// var isDev = monster.config.developerFlags.build.type === 'development';
+		// var devCacheString = (new Date()).getTime();
+		// var prodCacheString = monster.util.getVersion();
+		// var cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString);
+		// var finalString = url + cacheString;
+
+		// return finalString;
+	}
+	util.cacheUrl = cacheUrl;
 
 	/**
 	 * Returns whether an account is allowed to add external phone numbers.
