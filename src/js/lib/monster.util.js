@@ -9,33 +9,6 @@ define(function(require) {
 
 	var util = {
 
-		/**
-		 * Format bytes to display its decimal multiple
-		 * @param  {Number} bytes   Number in bytes to format
-		 * @param  {Number} pDigits Number of digits after decimal point
-		 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
-		 * @return {Object}         Object containing the formatted data about the initial bytes value
-		 */
-		formatBytes: function(bytes, pDigits) {
-			var base = 1000,
-				sizes = monster.apps.core.i18n.active().unitsMultiple.byte,
-				exponent = Math.floor(Math.log(bytes) / Math.log(base)),
-				value = bytes / Math.pow(base, exponent),
-				digits = pDigits || (exponent > 2 ? 1 : 0);
-
-			if (bytes === 0) {
-				return {
-					value: 0,
-					unit: sizes[0]
-				};
-			} else {
-				return {
-					value: value.toFixed(digits),
-					unit: sizes[exponent]
-				};
-			}
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -684,6 +657,34 @@ define(function(require) {
 		return result.length > 1 ? result : result[0];
 	}
 	util.findCallflowNode = findCallflowNode;
+
+	/**
+	 * Parses bytes value into human readable value/unit pair.
+	 * @param  {Number} bytes   Value in bytes to format
+	 * @param  {Number} [digits] Digits after decimal point
+	 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
+	 * @return {Object}         Formatted data about `bytes`.
+	 */
+	function formatBytes(bytes, pDigits) {
+		var base = 1000;
+		var sizes = monster.apps.core.i18n.active().unitsMultiple.byte;
+		var exponent = Math.floor(Math.log(bytes) / Math.log(base));
+		var value = bytes / Math.pow(base, exponent);
+		var digits = pDigits || (exponent > 2 ? 1 : 0);
+
+		if (bytes === 0) {
+			return {
+				value: 0,
+				unit: sizes[0]
+			};
+		} else {
+			return {
+				value: value.toFixed(digits),
+				unit: sizes[exponent]
+			};
+		}
+	}
+	util.formatBytes = formatBytes;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
