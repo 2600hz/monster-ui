@@ -108,10 +108,6 @@ define(function(require) {
 			return format;
 		},
 
-		cmp: function(a, b) {
-			return (a > b) ? 1 : (a < b) ? -1 : 0;
-		},
-
 		/**
 		 * @desc add or remove business days to the current date or to a specific date
 		 * @param numberOfDays - mandatory integer representing the number of business days to add
@@ -668,6 +664,19 @@ define(function(require) {
 		monster.ui.confirm(i18n.olderVersion, callback);
 	}
 	util.checkVersion = checkVersion;
+
+	/**
+	 * Compare function for `Array#sort`.
+	 * @param  {*} a
+	 * @param  {*} b
+	 * @return {Number}
+	 */
+	function cmp(a, b) {
+		return a > b ? 1
+			: a < b ? -1
+			: 0;
+	}
+	util.cmp = cmp;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
