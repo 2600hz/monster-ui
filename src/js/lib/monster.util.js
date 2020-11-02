@@ -40,24 +40,6 @@ define(function(require) {
 			return formattedResponse;
 		},
 
-		getModbID: function(id, timestamp) {
-			var jsDate = gregorianToDate(timestamp),
-				UTCYear = jsDate.getUTCFullYear() + '',
-				UTCMonth = jsDate.getUTCMonth() + 1,
-				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
-				modbDBprefix = UTCYear + formattedUTCMonth + '-',
-				modbString;
-
-			// Verify that the ID we got is not already a MODB ID
-			if (id.substr(0, 7) !== modbDBprefix) {
-				modbString = UTCYear + formattedUTCMonth + '-' + id;
-			} else {
-				modbString = id;
-			}
-
-			return modbString;
-		},
-
 		dateToUnix: function(date) {
 			var formattedResponse;
 
@@ -1217,6 +1199,20 @@ define(function(require) {
 		return formattedData;
 	}
 	util.getFormatPhoneNumber = getFormatPhoneNumber;
+
+	/**
+	 * Prepends MoDB prefix to a value when it does not already starts with it.
+	 * @param  {String} id        Value to be prepended.
+	 * @param  {Number} gregorian Gregorian timestamp.
+	 * @return {String}           MoDB identifier.
+	 */
+	function getModbID(id, gregorian) {
+		var date = gregorianToDate(gregorian);
+		var prefix = moment(date).utc().format('YYYYMM-');
+
+		return _.startsWith(id, prefix) ? id : prefix + id;
+	}
+	util.getModbID = getModbID;
 
 	/**
 	 * Determine the date format from a specific or current user's settings
