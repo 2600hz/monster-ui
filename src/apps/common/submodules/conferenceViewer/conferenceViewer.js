@@ -346,6 +346,7 @@ define(function(require) {
 				action = data.event,
 				container = $('.view-conference-wrapper'),
 				toasterActions = ['mute-member', 'unmute-member', 'deaf-member', 'undeaf-member', 'del-member', 'lock', 'unlock'],
+				$addButton = container.find('.conference-action[data-action="add"]'),
 				$userDiv = container.find('.conference-user-wrapper[data-id="' + data.participant_id + '"]'),
 				userName = $userDiv.data('name');
 
@@ -391,10 +392,12 @@ define(function(require) {
 				case 'lock':
 					container.find('.conference-action[data-action="lock"]').addClass('hidden');
 					container.find('.conference-action[data-action="unlock"]').removeClass('hidden');
+					$addButton.prop('disabled', 'disabled');
 					break;
 				case 'unlock':
 					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
 					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
+					$addButton.prop('disabled', false);
 					break;
 				default:
 					break;
