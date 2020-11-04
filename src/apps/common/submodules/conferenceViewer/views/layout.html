@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="other-actions">
-			<button type="button" data-action="add" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.add }}">
+			<button type="button" data-action="add"{{#if conference.isLocked}} disabled="disabled"{{/if}} class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.add }}">
 				<i class="fa fa-plus"></i>
 			</button>
 		</div>
