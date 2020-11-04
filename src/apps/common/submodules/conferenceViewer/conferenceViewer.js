@@ -395,12 +395,12 @@ define(function(require) {
 				case 'lock':
 					container.find('.conference-action[data-action="lock"]').addClass('hidden');
 					container.find('.conference-action[data-action="unlock"]').removeClass('hidden');
-					$addButton.prop('disabled', 'disabled');
+					$addButton.addClass('disabled');
 					break;
 				case 'unlock':
 					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
 					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
-					$addButton.prop('disabled', false);
+					$addButton.removeClass('disabled');
 					break;
 				default:
 					break;
