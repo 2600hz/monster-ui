@@ -246,67 +246,70 @@ define(function(require) {
 
 		conferenceViewerFormatData: function(data, args) {
 			var self = this,
-				formattedData = {
-					backButton: args.backButton,
-					conference: {
-						id: data.conference.id,
-						name: data.conference.name,
-						duration: data.conference._read_only.duration,
-						isLocked: data.conference._read_only.is_locked,
-						participants: [],
-						moderators: []
-					}
-				};
+				isModerator = _.flow(
+					_.partial(_.ary(_.get, 2), _, 'is_moderator'),
+					_.partial(_.isEqual, true)
+				),
+				users = self.conferenceViewerFormatUsers(data.participants),
+				moderators = _.filter(users, isModerator),
+				participants = _.reject(users, isModerator);
 
-			data.participants = self.conferenceViewerFormatUsers(data.participants);
-
-			_.each(data.participants, function(participant) {
-				participant.is_moderator ? formattedData.conference.moderators.push(participant) : formattedData.conference.participants.push(participant);
-			});
-
-			formattedData.conference.disabledActions = formattedData.conference.participants.length + formattedData.conference.moderators.length === 0;
-
-			return formattedData;
+			return {
+				backButton: args.backButton,
+				conference: _.merge({
+					duration: data.conference._read_only.duration,
+					isLocked: data.conference._read_only.is_locked,
+					participants: participants,
+					moderators: moderators
+				}, _.pick(data.conference, [
+					'id',
+					'name'
+				]))
+			};
 		},
 
-		conferenceViewerFormatParticipant: function(oldParticipant) {
+		conferenceViewerFormatParticipant: function(participant) {
 			var self = this,
-				mapUsers = self.appFlags.conferenceViewer.mapUsers,
-				ownerId,
-				participant = $.extend(true, {}, oldParticipant);
+				ownerId = _
+					.chain([
+						'channel.custom_channel_vars.owner_id',
+						'custom_channel_vars.owner_id'
+					])
+					.map(_.partial(_.ary(_.get, 2), participant))
+					.find(_.negate(_.isUndefined))
+					.value(),
+				user = _.get(self.appFlags.conferenceViewer.mapUsers, ownerId);
 
-			if (participant.channel && participant.channel.custom_channel_vars && participant.channel.custom_channel_vars.owner_id) {
-				ownerId = participant.channel.custom_channel_vars.owner_id;
-			} else if (participant.custom_channel_vars && participant.custom_channel_vars.owner_id) {
-				ownerId = participant.custom_channel_vars.owner_id;
-			}
-
-			if (mapUsers.hasOwnProperty(ownerId)) {
-				participant.displayName = mapUsers[ownerId].first_name + ' ' + mapUsers[ownerId].last_name;
-				participant.initials = mapUsers[ownerId].first_name.charAt(0) + mapUsers[ownerId].last_name.charAt(0);
-				participant.backgroundColor = randomColor();
-			} else {
-				participant.displayName = participant.caller_id_name;
-				participant.initials = '?';
-				participant.backgroundColor = randomColor({ hue: 'monochrome', luminosity: 'light' });
-			}
-
-			for (var key in participant.conference_channel_vars) {
-				participant[key] = participant.conference_channel_vars[key];
-			}
-
-			return participant;
+			return _.merge(_.isUndefined(user) ? {
+				backgroundColor: randomColor({
+					hue: 'monochrome',
+					luminosity: 'light'
+				}),
+				displayName: participant.caller_id_name,
+				initials: '?'
+			} : {
+				backgroundColor: randomColor(),
+				displayName: monster.util.getUserFullName(user),
+				initials: _
+					.chain(['first_name', 'last_name'])
+					.map(_.flow(
+						_.partial(_.ary(_.get, 2), user),
+						_.head
+					))
+					.join('')
+					.toUpper()
+					.value()
+			}, _.pick(participant, [
+				'caller_id_number',
+				'duration',
+				'participant_id'
+			]), participant.conference_channel_vars);
 		},
 
 		conferenceViewerFormatUsers: function(participants) {
-			var self = this,
-				formattedData = [];
+			var self = this;
 
-			_.each(participants, function(participant) {
-				formattedData.push(self.conferenceViewerFormatParticipant(participant));
-			});
-
-			return formattedData;
+			return _.map(participants, _.bind(self.conferenceViewerFormatParticipant, self));
 		},
 
 		conferenceViewerFormatUser: function(participant) {
@@ -392,12 +395,12 @@ define(function(require) {
 				case 'lock':
 					container.find('.conference-action[data-action="lock"]').addClass('hidden');
 					container.find('.conference-action[data-action="unlock"]').removeClass('hidden');
-					$addButton.prop('disabled', 'disabled');
+					$addButton.addClass('disabled');
 					break;
 				case 'unlock':
 					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
 					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
-					$addButton.prop('disabled', false);
+					$addButton.removeClass('disabled');
 					break;
 				default:
 					break;
