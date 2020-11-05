@@ -181,14 +181,6 @@ define(function(require) {
 			return isTrial;
 		},
 
-		// Function returning if a user is an admin or not
-		isAdmin: function(pUser) {
-			var self = this,
-				user = pUser || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') ? monster.apps.auth.currentUser : {});
-
-			return user.priv_level === 'admin';
-		},
-
 		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
 		isWhitelabeling: function() {
 			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
@@ -1603,6 +1595,21 @@ define(function(require) {
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
 	util.gregorianToDate = gregorianToDate;
+
+	/**
+	 * Returns whether a user has admin privileges.
+	 * @param  {Object}  [user] User document to check against.
+	 * @return {Boolean}      Whether `user` has admin privileges.
+	 *
+	 * When no `user` is provided, check against current user.
+	 */
+	function isAdmin(user) {
+		return _.isMatch(
+			user || _.get(monster.apps, 'auth.currentUser', {}),
+			{ priv_level: 'admin' }
+		);
+	}
+	util.isAdmin = isAdmin;
 
 	/**
 	 * Returns whether or not a user is logged in
