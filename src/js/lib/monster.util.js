@@ -155,19 +155,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isSuperDuper: function(pAccount) {
-			var self = this,
-				isSuperDuper = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('superduper_admin')) {
-				isSuperDuper = account.superduper_admin;
-			}
-
-			return isSuperDuper;
-		},
-
 		// Function returning if an account is in trial or not
 		isTrial: function(pAccount) {
 			var self = this,
@@ -776,7 +763,7 @@ define(function(require) {
 	 * @return {Boolean}           Whether `accountId` has the ability to impersonate.
 	 */
 	function canImpersonate(accountId) {
-		return util.isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
+		return isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
 	}
 	util.canImpersonate = canImpersonate;
 
@@ -1663,6 +1650,21 @@ define(function(require) {
 		return _.get(account, 'is_reseller', false);
 	}
 	util.isReseller = isReseller;
+
+	/**
+	 * Returns whether an account is superduper admin.
+	 * @param  {Object}  [account] Account document to check against.
+	 * @return {Boolean}         Whether `account` is superduper admin.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function isSuperDuper(account) {
+		return _.isMatch(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			{ superduper_admin: true }
+		);
+	}
+	util.isSuperDuper = isSuperDuper;
 
 	/**
 	 * Returns whether a user is allowed to access an app.
