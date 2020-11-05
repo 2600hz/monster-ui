@@ -189,19 +189,6 @@ define(function(require) {
 			return isTrial;
 		},
 
-		// Function returning if an account can add external numbers or not
-		canAddExternalNumbers: function(pAccount) {
-			var self = this,
-				hasRights = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('wnm_allow_additions') && account.wnm_allow_additions) {
-				hasRights = true;
-			}
-
-			return hasRights;
-		},
-
 		// Function returning if a user is an admin or not
 		isAdmin: function(pUser) {
 			var self = this,
@@ -808,6 +795,21 @@ define(function(require) {
 			printLogs();
 		}
 	};
+
+	/**
+	 * Returns whether an account is allowed to add external phone numbers.
+	 * @param  {Object} [account] Account document to check against.
+	 * @return {Boolean}          Whether `account` is allowed to add external phone numbers.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function canAddExternalNumbers(account) {
+		return _.isMatch(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			{ wnm_allow_additions: true }
+		);
+	}
+	util.canAddExternalNumbers = canAddExternalNumbers;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
