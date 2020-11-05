@@ -168,14 +168,6 @@ define(function(require) {
 			return isSuperDuper;
 		},
 
-		// We only let super duper admins impersonate users from subaccounts. If you're not a super duper admin, or if you're using the account you logged in with, you shouldn't have access to impersonating.
-		canImpersonate: function(accountId) {
-			var self = this,
-				isDifferentAccount = monster.apps.auth.originalAccount.id !== accountId;
-
-			return monster.util.isSuperDuper() && isDifferentAccount;
-		},
-
 		// Function returning if an account is in trial or not
 		isTrial: function(pAccount) {
 			var self = this,
@@ -810,6 +802,16 @@ define(function(require) {
 		);
 	}
 	util.canAddExternalNumbers = canAddExternalNumbers;
+
+	/**
+	 * Returns whether `accountId` has the ability to impersonate sub-account users.
+	 * @param  {String} accountId Account ID to check against.
+	 * @return {Boolean}           Whether `accountId` has the ability to impersonate.
+	 */
+	function canImpersonate(accountId) {
+		return util.isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
+	}
+	util.canImpersonate = canImpersonate;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
