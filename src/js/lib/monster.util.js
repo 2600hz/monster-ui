@@ -608,19 +608,6 @@ define(function(require) {
 			return result.length > 1 ? result : result[0];
 		},
 
-		// Check if the object is parsable or not
-		isJSON: function(obj) {
-			var self = this;
-
-			try {
-				JSON.stringify(obj);
-			} catch (e) {
-				return false;
-			}
-
-			return true;
-		},
-
 		guid: function() {
 			var result = '';
 
@@ -1610,6 +1597,21 @@ define(function(require) {
 		);
 	}
 	util.isAdmin = isAdmin;
+
+	/**
+	 * Returns whether a value can be converted into JSON.
+	 * @param  {*}  value Value to check.
+	 * @return {Boolean}     Whether `value` can be converted into JSON.
+	 */
+	function isJSON(value) {
+		try {
+			JSON.stringify(value);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
+	util.isJSON = isJSON;
 
 	/**
 	 * Returns whether or not a user is logged in
