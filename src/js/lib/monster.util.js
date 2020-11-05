@@ -186,18 +186,6 @@ define(function(require) {
 			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
 		},
 
-		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
-		isMasquerading: function() {
-			var self = this,
-				isMasquerading = false;
-
-			if (monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
-				isMasquerading = monster.apps.auth.originalAccount.id !== monster.apps.auth.currentAccount.id;
-			}
-
-			return isMasquerading;
-		},
-
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
 		// Takes seconds and transforms it into a timer
@@ -1621,6 +1609,25 @@ define(function(require) {
 		return _.get(monster, 'apps.auth.appFlags.isAuthentified', false);
 	}
 	util.isLoggedIn = isLoggedIn;
+
+	/**
+	 * Returns whether current account is masquerading.
+	 * @return {Boolean} Whether current account is masquerading.
+	 */
+	function isMasquerading() {
+		return _
+			.chain([
+				'auth.originalAccount.id',
+				'auth.accountId'
+			])
+			.map(_.partial(_.ary(_.get, 2), monster.apps))
+			.thru(_.overEvery(
+				_.partial(_.every, _, _.isString),
+				_.spread(_.negate(_.isEqual))
+			))
+			.value();
+	}
+	util.isMasquerading = isMasquerading;
 
 	/**
 	 * Determine if a specific number feature is enabled on the current account
