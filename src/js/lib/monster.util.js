@@ -189,15 +189,6 @@ define(function(require) {
 			return digit < 10 ? '0' + digit : '' + digit;
 		},
 
-		dateToBeginningOfGregorianDay: function(date, pTimezone) {
-			var self = this,
-				timezone = pTimezone || moment.tz.guess(),
-				// we do month + 1 because jsDate returns 0 for January ... 11 for December
-				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 000000', timezone).unix();
-
-			return self.dateToGregorian(newDate);
-		},
-
 		dateToEndOfGregorianDay: function(date, pTimezone) {
 			var self = this,
 				timezone = pTimezone || moment.tz.guess(),
@@ -368,6 +359,20 @@ define(function(require) {
 			: 0;
 	}
 	util.cmp = cmp;
+
+	/**
+	 * @param  {Date} date      Date to convert to gregorian.
+	 * @param  {String} [timezone] Timezone to set date in.
+	 * @return {Number}           Gregorian timestamp to beginning of day.
+	 */
+	function dateToBeginningOfGregorianDay(date, pTimezone) {
+		var dateStartOfDay = moment(date).startOf('day');
+		var timezone = pTimezone || moment.tz.guess();
+		var newDate = moment.tz(dateStartOfDay, timezone).unix();
+
+		return util.dateToGregorian(newDate);
+	}
+	util.dateToBeginningOfGregorianDay = dateToBeginningOfGregorianDay;
 
 	/**
 	 * Collects callflow nodes matching `module` and `data`.
