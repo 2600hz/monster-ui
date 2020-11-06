@@ -27,19 +27,6 @@ define(function(require) {
 			return new Date(dateString.replace(regex, dateFormats[format]));
 		},
 
-		dateToGregorian: function(date) {
-			var formattedResponse;
-
-			// This checks that the parameter is an object and not null, or if it's a UNIX time
-			if (typeof date === 'object' && date) {
-				formattedResponse = parseInt((date.getTime() / 1000) + 62167219200);
-			} else if (typeof date === 'number' && date) {
-				formattedResponse = date + 62167219200;
-			}
-
-			return formattedResponse;
-		},
-
 		dateToUnix: function(date) {
 			var formattedResponse;
 
@@ -361,7 +348,7 @@ define(function(require) {
 		var timezone = pTimezone || moment.tz.guess();
 		var newDate = moment.tz(dateStartOfDay, timezone).unix();
 
-		return util.dateToGregorian(newDate);
+		return dateToGregorian(newDate);
 	}
 	util.dateToBeginningOfGregorianDay = dateToBeginningOfGregorianDay;
 
@@ -375,9 +362,28 @@ define(function(require) {
 		var timezone = pTimezone || moment.tz.guess();
 		var newDate = moment.tz(dateEndOfDay, timezone).unix();
 
-		return util.dateToGregorian(newDate);
+		return dateToGregorian(newDate);
 	}
 	util.dateToEndOfGregorianDay = dateToEndOfGregorianDay;
+
+	/**
+	 * @param  {Date|Number} date Date or UNIX timestanp
+	 * @return {Number}      Gregorian timestamp.
+	 */
+	function dateToGregorian(date) {
+		var unixToGregorian = function(timestamp) {
+			return _.isNumber(timestamp) ? _.add(timestamp, 62167219200) : undefined;
+		};
+		var dateToGregorian = _.flow(
+			util.dateToUnix,
+			unixToGregorian
+		);
+
+		return _.isDate(date) ? dateToGregorian(date)
+			: _.isNumber(date) ? unixToGregorian(date)
+			: undefined;
+	}
+	util.dateToGregorian = dateToGregorian;
 
 	/**
 	 * Collects callflow nodes matching `module` and `data`.
