@@ -84,55 +84,6 @@ define(function(require) {
 
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
-		// Takes seconds and transforms it into a timer
-		friendlyTimer: function(pSeconds, pMode) {
-			var mode = pMode || 'normal',
-				seconds = Math.floor(pSeconds),
-				minutes = Math.floor(seconds / 60) % 60,
-				hours = Math.floor(seconds / 3600) % 24,
-				days = Math.floor(seconds / 86400),
-				remainingSeconds = seconds % 60,
-				i18n = monster.apps.core.i18n.active(),
-				format2Digits = function(number) {
-					if (typeof number === 'string') {
-						number = parseInt(number);
-					}
-					return (number < 10 ? '0' : '') + number;
-				},
-				displayTime = '';
-
-			if (mode === 'verbose') {
-				displayTime = ''.concat(hours, ' ', i18n.friendlyTimer.hours, ', ', minutes, ' ', i18n.friendlyTimer.minutesAnd, ' ', remainingSeconds, ' ', i18n.friendlyTimer.seconds);
-			} else if (mode === 'shortVerbose') {
-				if (hours > 0) {
-					var stringHour = hours === 1 ? i18n.friendlyTimer.hour : i18n.friendlyTimer.hours;
-					displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
-				}
-
-				if (minutes > 0) {
-					var stringMinutes = minutes === 1 ? i18n.friendlyTimer.minute : i18n.friendlyTimer.minutes;
-					displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
-				}
-
-				if (remainingSeconds > 0) {
-					var stringSeconds = remainingSeconds === 1 ? i18n.friendlyTimer.second : i18n.friendlyTimer.seconds;
-					displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
-				}
-			} else {
-				displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
-
-				if (hours || days) {
-					displayTime = format2Digits(hours) + ':' + displayTime;
-				}
-
-				if (days) {
-					displayTime = format2Digits(days) + ':' + displayTime;
-				}
-			}
-
-			return seconds >= 0 ? displayTime : '00:00:00';
-		},
-
 		getDefaultRangeDates: function(pRange) {
 			var self = this,
 				range = pRange || 7,
@@ -764,6 +715,71 @@ define(function(require) {
 		return getToken(connectionName);
 	}
 	util.getAuthToken = getAuthToken;
+
+	/**
+	 * Parses an amount of seconds and returns a time representation such as [DD:]HH:MM:SS.
+	 * @param  {Number} seconds Amount of seconds to format.
+	 * @param  {'verbose'|'shortVerbose'} [mode] Formatting type of time representation.
+	 * @return {String} Time representation of `seconds`.
+	 */
+	function friendlyTimer(seconds, pMode) {
+		var mode = pMode || 'normal';
+		var seconds = Math.floor(seconds);
+		var minutes = Math.floor(seconds / 60) % 60;
+		var hours = Math.floor(seconds / 3600) % 24;
+		var days = Math.floor(seconds / 86400);
+		var remainingSeconds = seconds % 60;
+		var i18n = monster.apps.core.i18n.active();
+		var format2Digits = function(number) {
+			if (typeof number === 'string') {
+				number = parseInt(number);
+			}
+			return (number < 10 ? '0' : '') + number;
+		};
+		var getString = function(quantity, keys) {
+			return i18n.frendlyTimer[quantity === 1 ? keys[0] : keys[1]];
+		};
+		var displayTime = '';
+
+		if (mode === 'verbose') {
+			displayTime = _.join([
+				hours,
+				i18n.friendlyTimer.hours + ',',
+				minutes,
+				i18n.friendlyTimer.minutesAnd,
+				remainingSeconds,
+				i18n.friendlyTimer.seconds
+			], ' ');
+		} else if (mode === 'shortVerbose') {
+			if (hours > 0) {
+				var stringHour = getString(hours, ['hour', 'hours']);
+				displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
+			}
+
+			if (minutes > 0) {
+				var stringMinutes = getString(minutes, ['minute', 'minutes']);
+				displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
+			}
+
+			if (remainingSeconds > 0) {
+				var stringSeconds = getString(remainingSeconds, ['second', 'seconds']);
+				displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
+			}
+		} else {
+			displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
+
+			if (hours || days) {
+				displayTime = format2Digits(hours) + ':' + displayTime;
+			}
+
+			if (days) {
+				displayTime = format2Digits(days) + ':' + displayTime;
+			}
+		}
+
+		return seconds >= 0 ? displayTime : '00:00:00';
+	}
+	util.friendlyTimer = friendlyTimer;
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
