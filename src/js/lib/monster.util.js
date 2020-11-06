@@ -41,30 +41,6 @@ define(function(require) {
 
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
-		getDefaultRangeDates: function(pRange) {
-			var self = this,
-				range = pRange || 7,
-				dates = {
-					from: '',
-					to: ''
-				};
-
-			var fromDefault = new Date(),
-				toDefault = new Date();
-
-			if (range === 'monthly') {
-				fromDefault.setMonth(fromDefault.getMonth() - 1);
-			} else {
-				fromDefault.setDate(fromDefault.getDate() - range);
-			}
-			fromDefault.setDate(fromDefault.getDate() + 1);
-
-			dates.from = fromDefault;
-			dates.to = toDefault;
-
-			return dates;
-		},
-
 		getTZDate: function(date, tz) {
 			return new Date(moment.tz(date, tz).unix() * 1000);
 		},
@@ -915,6 +891,32 @@ define(function(require) {
 		};
 	}
 	util.dataFlags = getDataFlagsManager();
+
+	/**
+	 * @param  {'monthly'|Number} [range=7]
+	 * @return {Object}
+	 */
+	function getDefaultRangeDates(pRange) {
+		var range = pRange || 7;
+		var now = moment();
+		var params = range === 'monthly' ? {
+			quantity: 1,
+			period: 'month'
+		} : {
+			quantity: range,
+			period: 'days'
+		};
+
+		return {
+			from: now
+				.clone()
+				.subtract(params.quantity, params.period)
+				.add(1, 'days')
+				.toDate(),
+			to: now.toDate()
+		};
+	}
+	util.getDefaultRangeDates = getDefaultRangeDates;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
