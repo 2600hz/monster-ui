@@ -155,11 +155,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isWhitelabeling: function() {
-			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
-		},
-
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
 		// Takes seconds and transforms it into a timer
@@ -1706,6 +1701,19 @@ define(function(require) {
 		return checkForPermission(user);
 	}
 	util.isUserPermittedApp = isUserPermittedApp;
+
+	/**
+	 * Returns whether whitelabelling is configured for current domain.
+	 * @return {Boolean} Whether whitelabelling is configured for current domain.
+	 */
+	function isWhitelabeling() {
+		return !_
+			.chain(monster.config.whitelabel)
+			.get('domain')
+			.isEmpty()
+			.value();
+	}
+	util.isWhitelabeling = isWhitelabeling;
 
 	/**
 	 * Returns list of formatted app links defined on whitelabel document.
