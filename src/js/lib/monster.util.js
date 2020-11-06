@@ -155,19 +155,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		// Function returning if an account is in trial or not
-		isTrial: function(pAccount) {
-			var self = this,
-				isTrial = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('trial_time_left')) {
-				isTrial = true;
-			}
-
-			return isTrial;
-		},
-
 		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
 		isWhitelabeling: function() {
 			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
@@ -1665,6 +1652,21 @@ define(function(require) {
 		);
 	}
 	util.isSuperDuper = isSuperDuper;
+
+	/**
+	 * Returns whether an account is in trial period.
+	 * @param  {Object}  [account] Account document to check against.
+	 * @return {Boolean}         Whether `account` is on Trial.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function isTrial(account) {
+		return _.has(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			'trial_time_left'
+		);
+	}
+	util.isTrial = isTrial;
 
 	/**
 	 * Returns whether a user is allowed to access an app.
