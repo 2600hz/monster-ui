@@ -189,15 +189,6 @@ define(function(require) {
 			return digit < 10 ? '0' + digit : '' + digit;
 		},
 
-		dateToEndOfGregorianDay: function(date, pTimezone) {
-			var self = this,
-				timezone = pTimezone || moment.tz.guess(),
-				// we do month + 1 because jsDate returns 0 for January ... 11 for December
-				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 235959', timezone).unix();
-
-			return self.dateToGregorian(newDate);
-		},
-
 		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
 		timeToSeconds: function(time) {
 			var suffix = time.substring(time.length - 2).toLowerCase(),
@@ -373,6 +364,20 @@ define(function(require) {
 		return util.dateToGregorian(newDate);
 	}
 	util.dateToBeginningOfGregorianDay = dateToBeginningOfGregorianDay;
+
+	/**
+	 * @param  {Date} date      Date to convert to gregorian.
+	 * @param  {String} [timezone] Timezone to set date in.
+	 * @return {Number}           Gregorian timestamp to end of day.
+	 */
+	function dateToEndOfGregorianDay(date, pTimezone) {
+		var dateEndOfDay = moment(date).endOf('day');
+		var timezone = pTimezone || moment.tz.guess();
+		var newDate = moment.tz(dateEndOfDay, timezone).unix();
+
+		return util.dateToGregorian(newDate);
+	}
+	util.dateToEndOfGregorianDay = dateToEndOfGregorianDay;
 
 	/**
 	 * Collects callflow nodes matching `module` and `data`.
