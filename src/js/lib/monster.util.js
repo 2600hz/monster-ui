@@ -39,49 +39,6 @@ define(function(require) {
 			return format;
 		},
 
-		/**
-		 * @desc add or remove business days to the current date or to a specific date
-		 * @param numberOfDays - mandatory integer representing the number of business days to add
-		 * @param from - optional JavaScript Date Object
-		 */
-		getBusinessDate: function(numberOfDays, pFrom) {
-			var self = this,
-				from = pFrom && pFrom instanceof Date ? pFrom : new Date(),
-				weeks = Math.floor(numberOfDays / 5),
-				days = ((numberOfDays % 5) + 5) % 5,
-				dayOfTheWeek = from.getDay();
-
-			if (dayOfTheWeek === 6 && days > -1) {
-				if (days === 0) {
-					days -= 2;
-					dayOfTheWeek += 2;
-				}
-
-				days++;
-				dayOfTheWeek -= 6;
-			}
-
-			if (dayOfTheWeek === 0 && days < 1) {
-				if (days === 0) {
-					days += 2;
-					dayOfTheWeek -= 2;
-				}
-
-				days--;
-				dayOfTheWeek += 6;
-			}
-
-			if (dayOfTheWeek + days > 5) {
-				days += 2;
-			}
-
-			if (dayOfTheWeek + days < 1) {
-				days -= 2;
-			}
-
-			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
-		},
-
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
 		getDefaultRangeDates: function(pRange) {
@@ -816,6 +773,50 @@ define(function(require) {
 		]);
 	}
 	util.getBookkeepers = getBookkeepers;
+
+	/**
+	 * Adds/removes business days to/from the current date or a specific date.
+	 * @param  {Number} numberOfDays Number of business days to add/remove.
+	 * @param  {Date} [from]        Specific date to calculate from.
+	 * @return {Date}              Adjusted date.
+	 */
+	function getBusinessDate(numberOfDays, pFrom) {
+		var from = _.isDate(pFrom) ? pFrom : new Date();
+		var weeks = Math.floor(numberOfDays / 5);
+		var days = ((numberOfDays % 5) + 5) % 5;
+		var dayOfTheWeek = from.getDay();
+
+		if (dayOfTheWeek === 6 && days > -1) {
+			if (days === 0) {
+				days -= 2;
+				dayOfTheWeek += 2;
+			}
+
+			days++;
+			dayOfTheWeek -= 6;
+		}
+
+		if (dayOfTheWeek === 0 && days < 1) {
+			if (days === 0) {
+				days += 2;
+				dayOfTheWeek -= 2;
+			}
+
+			days--;
+			dayOfTheWeek += 6;
+		}
+
+		if (dayOfTheWeek + days > 5) {
+			days += 2;
+		}
+
+		if (dayOfTheWeek + days < 1) {
+			days -= 2;
+		}
+
+		return new Date(from.setDate(from.getDate() + weeks * 7 + days));
+	}
+	util.getBusinessDate = getBusinessDate;
 
 	/**
 	 * Returns capability information about a resource/feature.
