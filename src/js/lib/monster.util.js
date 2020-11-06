@@ -526,33 +526,6 @@ define(function(require) {
 			return finalString;*/
 		},
 
-		dataFlags: {
-			get: function(flagName, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				return object.markers.monster[flagName];
-			},
-
-			add: function(flags, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				$.extend(true, object.markers.monster, flags);
-
-				return object;
-			},
-
-			destroy: function(flagName, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				delete object.markers.monster[flagName];
-
-				return object;
-			}
-		},
-
 		jwt_decode: function(Token) {
 			var base64Url = Token.split('.')[1],
 				base64 = base64Url.replace('-', '+').replace('_', '/');
@@ -1111,6 +1084,28 @@ define(function(require) {
 			.value();
 	}
 	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
+
+	/**
+	 * @private
+	 * @return {Object} Data flags manager module.
+	 */
+	function getDataFlagsManager() {
+		var getPath = _.partial(_.concat, ['markers', 'monster']);
+		return {
+			get: function(name, object) {
+				return _.get(object, getPath(name));
+			},
+			add: function(flags, object) {
+				_.set(object, getPath(), flags);
+				return object;
+			},
+			destroy: function(name, object) {
+				_.unset(object, getPath(name));
+				return object;
+			}
+		};
+	}
+	util.dataFlags = getDataFlagsManager();
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
