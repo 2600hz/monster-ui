@@ -47,22 +47,6 @@ define(function(require) {
 
 		formatDateDigits: function(digit) {
 			return digit < 10 ? '0' + digit : '' + digit;
-		},
-
-		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
-		timeToSeconds: function(time) {
-			var suffix = time.substring(time.length - 2).toLowerCase(),
-				timeArr = time.split(':'),
-				hours = parseInt(timeArr[0], 10),
-				minutes = parseInt(timeArr[1], 10);
-
-			if (suffix === 'pm' && hours < 12) {
-				hours += 12;
-			} else if (suffix === 'am' && hours === 12) {
-				hours = 0;
-			}
-
-			return (hours * 3600 + minutes * 60).toString();
 		}
 	};
 
@@ -1844,6 +1828,26 @@ define(function(require) {
 		reload();
 	}
 	util.logoutAndReload = logoutAndReload;
+
+	/**
+	 * @param  {String} time Time in hh:mmA format
+	 * @return {String}      Amount of seconds in `time`.
+	 */
+	function timeToSeconds(time) {
+		var suffix = time.substring(time.length - 2).toLowerCase();
+		var timeArr = time.split(':');
+		var hours = parseInt(timeArr[0], 10);
+		var minutes = parseInt(timeArr[1], 10);
+
+		if (suffix === 'pm' && hours < 12) {
+			hours += 12;
+		} else if (suffix === 'am' && hours === 12) {
+			hours = 0;
+		}
+
+		return (hours * 3600 + minutes * 60).toString();
+	}
+	util.timeToSeconds = timeToSeconds;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
