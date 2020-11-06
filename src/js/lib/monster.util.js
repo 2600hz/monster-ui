@@ -27,17 +27,6 @@ define(function(require) {
 			return new Date(dateString.replace(regex, dateFormats[format]));
 		},
 
-		dateToUnix: function(date) {
-			var formattedResponse;
-
-			// This checks that the parameter is an object and not null
-			if (typeof date === 'object' && date) {
-				formattedResponse = parseInt(date.getTime() / 1000);
-			}
-
-			return formattedResponse;
-		},
-
 		getDefaultNumbersFormat: function() {
 			var self = this,
 				account = monster.apps.auth.originalAccount || {},
@@ -375,7 +364,7 @@ define(function(require) {
 			return _.isNumber(timestamp) ? _.add(timestamp, 62167219200) : undefined;
 		};
 		var dateToGregorian = _.flow(
-			util.dateToUnix,
+			dateToUnix,
 			unixToGregorian
 		);
 
@@ -384,6 +373,15 @@ define(function(require) {
 			: undefined;
 	}
 	util.dateToGregorian = dateToGregorian;
+
+	/**
+	 * @param  {Date} date
+	 * @return {Number}      UNIX timestamp.
+	 */
+	function dateToUnix(date) {
+		return _.isDate(date) ? _.floor(date.getTime() / 1000) : undefined;
+	}
+	util.dateToUnix = dateToUnix;
 
 	/**
 	 * Collects callflow nodes matching `module` and `data`.
