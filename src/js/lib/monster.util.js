@@ -7,48 +7,7 @@ define(function(require) {
 
 	require('moment-timezone');
 
-	var util = {
-
-		parseDateString: function(dateString, dateFormat) {
-			var self = this,
-				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
-				dateFormats = {
-					'mdy': '$1/$2/$3',
-					'dmy': '$2/$1/$3',
-					'ymd': '$2/$3/$1'
-				},
-				format = (dateFormat in dateFormats) ? dateFormat : null;
-
-			if (!format) {
-				var user = monster.apps.auth.currentUser;
-				format = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy';
-			}
-
-			return new Date(dateString.replace(regex, dateFormats[format]));
-		},
-
-		getDefaultNumbersFormat: function() {
-			var self = this,
-				account = monster.apps.auth.originalAccount || {},
-				format = 'international'; // default
-
-			if (account && account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
-				format = account.ui_flags.numbers_format;
-			}
-
-			return format;
-		},
-
-		/****************** Helpers not documented because people shouldn't need to use them *******************/
-
-		getTZDate: function(date, tz) {
-			return new Date(moment.tz(date, tz).unix() * 1000);
-		},
-
-		formatDateDigits: function(digit) {
-			return digit < 10 ? '0' + digit : '' + digit;
-		}
-	};
+	var util = {};
 
 	/**
 	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
