@@ -318,11 +318,10 @@ define(function(require) {
 		 * Closes the connection.
 		 */
 		close: function close() {
-			if (this.isClosed()) {
-				this.logger.log('already closed');
-			} else {
-				this.logger.log('attempting to ' + (this.shouldClose ? 'disconnect' : 'close') + '...');
-			}
+			this.logger.log(this.isClosed()
+				? 'already closed'
+				: 'attempting to ' + (this.shouldClose ? 'disconnect' : 'close') + '...'
+			);
 			try {
 				this.ws.close();
 			} catch (e) {
@@ -368,7 +367,11 @@ define(function(require) {
 				}
 			], function(err, reply) {
 				if (!err) {
-					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, [
+						'accountId',
+						'source',
+						'listener'
+					])));
 					return;
 				}
 				if (!isAuthError(reply)) {
@@ -415,7 +418,11 @@ define(function(require) {
 			var wsc = this;
 			var binding = params.binding;
 
-			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, [
+				'accountId',
+				'source',
+				'listener'
+			])));
 
 			monster.waterfall([
 				function maybeUnsubscribe(callback) {
@@ -656,7 +663,12 @@ define(function(require) {
 				return;
 			}
 
-			return client.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+			return client.bind(_.merge({}, _.pick(params, [
+				'accountId',
+				'binding',
+				'source',
+				'listener'
+			])));
 		},
 
 		/**
@@ -671,7 +683,12 @@ define(function(require) {
 				return;
 			}
 
-			client.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+			client.unbind(_.merge({}, _.pick(params, [
+				'accountId',
+				'binding',
+				'source',
+				'listener'
+			])));
 		}
 	};
 });
