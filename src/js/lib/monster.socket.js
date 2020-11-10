@@ -50,10 +50,16 @@ define(function(require) {
 			var accountId = metadata.accountId;
 			var source = metadata.source;
 			var callback = metadata.callback;
+			var checks = [this.source === source];
 
-			return this.source === source
-				&& (!accountId || this.accountId === accountId)
-				&& (!callback || this.callback === callback);
+			if (!_.isUndefined(accountId)) {
+				checks.push(this.accountId === accountId);
+			}
+			if (!_.isUndefined(callback)) {
+				checks.push(this.callback === callback);
+			}
+
+			return _.every(checks);
 		}
 	};
 
