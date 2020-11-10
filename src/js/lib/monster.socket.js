@@ -36,24 +36,24 @@ define(function(require) {
 	function Listener(metadata) {
 		this.accountId = metadata.accountId;
 		this.source = metadata.source;
-		this.listener = metadata.listener;
+		this.callback = metadata.callback;
 	}
 	Listener.prototype = {
 		dispatch: function dispatch(data) {
-			if (!_.isFunction(this.listener)) {
+			if (!_.isFunction(this.callback)) {
 				return;
 			}
-			this.listener(data);
+			this.callback(data);
 		},
 
 		isEqual: function isEqual(metadata) {
 			var accountId = metadata.accountId;
 			var source = metadata.source;
-			var listener = metadata.listener;
+			var callback = metadata.callback;
 
 			return this.source === source
 				&& (!accountId || this.accountId === accountId)
-				&& (!listener || this.listener === listener);
+				&& (!callback || this.callback === callback);
 		}
 	};
 
@@ -334,7 +334,7 @@ define(function(require) {
 		 * @param  {string} params.accountId
 		 * @param  {string} params.binding
 		 * @param  {string} params.source
-		 * @param  {Function} params.listener
+		 * @param  {Function} params.callback
 		 * @return {Function} Callback to unsubscribe this listener specifically.
 		 */
 		bind: function bind(params) {
@@ -370,7 +370,7 @@ define(function(require) {
 					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, [
 						'accountId',
 						'source',
-						'listener'
+						'callback'
 					])));
 					return;
 				}
@@ -412,7 +412,7 @@ define(function(require) {
 		 * @param  {string} param.accountId
 		 * @param  {string} param.binding
 		 * @param  {string} param.source
-		 * @param  {Function} [param.listener]
+		 * @param  {Function} [param.callback]
 		 */
 		unbind: function unbind(params) {
 			var wsc = this;
@@ -421,7 +421,7 @@ define(function(require) {
 			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, [
 				'accountId',
 				'source',
-				'listener'
+				'callback'
 			])));
 
 			monster.waterfall([
@@ -654,7 +654,7 @@ define(function(require) {
 		 * @param  {String} params.accountId
 		 * @param  {String} params.binding
 		 * @param  {String} params.source
-		 * @param  {String} params.listener
+		 * @param  {String} params.callback
 		 * @return {Function}
 		 * @return {Function} Callback to unbind listener
 		 */
@@ -667,7 +667,7 @@ define(function(require) {
 				'accountId',
 				'binding',
 				'source',
-				'listener'
+				'callback'
 			])));
 		},
 
@@ -676,7 +676,7 @@ define(function(require) {
 		 * @param  {String} [params.accountId]
 		 * @param  {String} params.binding
 		 * @param  {String} params.source
-		 * @param  {String} [params.listener]
+		 * @param  {String} [params.callback]
 		 */
 		unbind: function unbind(params) {
 			if (_.isUndefined(client)) {
@@ -687,7 +687,7 @@ define(function(require) {
 				'accountId',
 				'binding',
 				'source',
-				'listener'
+				'callback'
 			])));
 		}
 	};
