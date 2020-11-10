@@ -56,7 +56,9 @@ define(function(require) {
 				checks.push(this.accountId === accountId);
 			}
 			if (!_.isUndefined(callback)) {
-				checks.push(this.callback === callback);
+				checks.push(
+					this.callback === callback || this.callback.toString() === callback.toString()
+				);
 			}
 
 			return _.every(checks);
