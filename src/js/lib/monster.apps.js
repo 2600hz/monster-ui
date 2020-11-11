@@ -78,7 +78,7 @@ define(function() {
 				var unsubscribe = monster.socket.bind({
 					binding: params.binding,
 					accountId: accountId,
-					listener: params.callback,
+					callback: params.callback,
 					source: app.name
 				});
 
