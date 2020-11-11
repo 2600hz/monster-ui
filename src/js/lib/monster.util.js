@@ -6,7 +6,6 @@ define(function(require) {
 		moment = require('moment');
 
 	require('moment-timezone');
-	//momentTimezone = require('moment-timezone');
 
 	var util = {
 
@@ -651,26 +650,6 @@ define(function(require) {
 			return true;
 		},
 
-		// Monster helper used to get the path to the icon of an app
-		// Some app have their icons loaded locally, whereas some new apps won't have them
-		getAppIconPath: function(app) {
-			var self = this,
-				response,
-				authApp = monster.apps.auth,
-				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
-					'cluster', 'conferences', 'csv-onboarding', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
-					'migration', 'mobile', 'myaccount', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
-					'service-plan-override', 'tasks', 'taxation', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
-
-			if (localIcons.indexOf(app.name) >= 0) {
-				response = 'css/assets/appIcons/' + app.name + '.png';
-			} else {
-				response = authApp.apiUrl + 'accounts/' + authApp.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.getAuthToken();
-			}
-
-			return response;
-		},
-
 		guid: function() {
 			var result = '';
 
@@ -679,17 +658,6 @@ define(function(require) {
 			}
 
 			return result;
-		},
-
-		getAuthToken: function(pConnectionName) {
-			var self = this,
-				authToken;
-
-			if (monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth')) {
-				authToken = monster.apps.auth.getAuthTokenByConnection(pConnectionName);
-			}
-
-			return authToken;
 		},
 
 		getVersion: function() {
@@ -984,6 +952,193 @@ define(function(require) {
 	util.formatVariableToDisplay = formatVariableToDisplay;
 
 	/**
+	 * Returns an app's icon path/URL.
+	 * @param  {Object} app
+	 * @param  {String} app.name
+	 * @param  {String} app.id
+	 * @return {String}
+	 *
+	 * Some app have their icons loaded locally, whereas some new apps won't have them.
+	 */
+	function getAppIconPath(app) {
+		var authApp = monster.apps.auth;
+		var localIcons = [
+			'accounts',
+			'auth-security',
+			'blacklists',
+			'branding',
+			'callflows',
+			'callqueues',
+			'call-recording',
+			'carriers',
+			'cluster',
+			'conferences',
+			'csv-onboarding',
+			'debug',
+			'developer',
+			'dialplans',
+			'duo',
+			'fax',
+			'integration-aws',
+			'integration-google-drive',
+			'migration',
+			'mobile',
+			'myaccount',
+			'numbers',
+			'operator',
+			'operator-pro',
+			'pbxs',
+			'pivot',
+			'port',
+			'provisioner',
+			'reporting',
+			'reseller_reporting',
+			'service-plan-override',
+			'tasks',
+			'taxation',
+			'userportal',
+			'voicemails',
+			'voip',
+			'webhooks',
+			'websockets'
+		];
+
+		if (_.includes(localIcons, app.name)) {
+			return 'css/assets/appIcons/' + app.name + '.png';
+		} else {
+			return _.join([
+				authApp.apiUrl,
+				'accounts/',
+				authApp.accountId,
+				'/apps_store/',
+				app.id,
+				'/icon?auth_token=',
+				getAuthToken()
+			], '');
+		}
+	}
+	util.getAppIconPath = getAppIconPath;
+
+	/**
+	 * @param  {Object[]} apps List of apps to get app metadata from.
+	 * @param  {String} input Either an app id or name to look for in `apps`.
+	 * @return {Object} Formatted app metadata.
+	 */
+	function getAppMetadata(apps, input) {
+		var app = _.find(apps, _.overSome(
+			_.flow(
+				_.partial(_.get, _, 'id'),
+				_.partial(_.isEqual, input)
+			),
+			_.flow(
+				_.partial(_.get, _, 'name'),
+				_.partial(_.isEqual, input)
+			)
+		));
+
+		if (_.isUndefined(app)) {
+			return undefined;
+		}
+
+		var iconMetadata = _.merge({
+			icon: getAppIconPath(app)
+		}, _.includes(['alpha', 'beta'], app.phase) && {
+			extraCssClass: app.phase + '-overlay-icon'
+		});
+		var locale = _.find([
+			monster.config.whitelabel.language,
+			monster.defaultLanguage,
+			_.head(_.keys(app.i18n))
+		], _.partial(_.has, app.i18n));
+		var activeI18n = _.get(app.i18n, locale);
+
+		return _.merge({}, _.omit(app, 'i18n'), activeI18n, iconMetadata);
+	}
+
+	/**
+	 * @param  {String} input Either an app id or name to look for in the apps store.
+	 * @return {Object} Formatted app metadata.
+	 */
+	function getAppStoreMetadata(input) {
+		return getAppMetadata(
+			_.get(monster.apps, 'auth.appsStore', []),
+			input
+		);
+	}
+	util.getAppStoreMetadata = getAppStoreMetadata;
+
+	/**
+	 * @param  {Object[]} apps List of apps to filter by `scope`.
+	 * @param  {'all'|'account'|'user'} scope Scope to filter `apps` against.
+	 * @return {Object[]} List of `apps` filtered for a `scope`.
+	 */
+	function listAppsMetadata(apps, scope) {
+		var filterForAccount = _.partial(_.filter, _, _.flow(
+			_.partial(_.ary(_.get, 2), _, 'allowed_users'),
+			_.overEvery(
+				_.isString,
+				_.partial(_.negate(_.isEqual), 'specific')
+			)
+		));
+		var isCurrentUserPermittedApp = _.partial(
+			isUserPermittedApp,
+			_.get(monster.apps, 'auth.currentUser')
+		);
+		var filterForCurrentUser = _.partial(_.filter, _, isCurrentUserPermittedApp);
+		var getFilterForScope = function(pScope) {
+			var filtersPerScope = {
+				undefined: _.identity,
+				all: _.identity,
+				account: filterForAccount,
+				user: filterForCurrentUser
+			};
+			var scope = _
+				.chain(filtersPerScope)
+				.keys()
+				.find(_.partial(_.isEqual, pScope))
+				.value();
+
+			return _.get(filtersPerScope, scope);
+		};
+		var formatMetadata = _.flow(
+			_.partial(_.ary(_.get, 2), _, 'id'),
+			_.partial(getAppMetadata, apps)
+		);
+
+		return _
+			.chain(apps)
+			.thru(getFilterForScope(scope))
+			.map(formatMetadata)
+			.value();
+	}
+	util.listAppsMetadata = listAppsMetadata;
+
+	/**
+	 * @param  {String} scope
+	 * @return {Object[]}
+	 */
+	function listAppStoreMetadata(scope) {
+		return listAppsMetadata(
+			_.get(monster.apps, 'auth.appsStore', []),
+			scope
+		);
+	}
+	util.listAppStoreMetadata = listAppStoreMetadata;
+
+	/**
+	 * Returns the auth token of a given connection.
+	 * @param  {String} [pConnectionName]
+	 * @return {String|Undefined}
+	 */
+	function getAuthToken(pConnectionName) {
+		if (!isLoggedIn()) {
+			return;
+		}
+		return monster.apps.auth.getAuthTokenByConnection(pConnectionName);
+	}
+	util.getAuthToken = getAuthToken;
+
+	/**
 	 * Returns a list of bookkeepers available for Monster UI
 	 * @return {Array} List of bookkeepers availalbe
 	 */
@@ -1071,6 +1226,29 @@ define(function(require) {
 			|| moment.tz.guess();
 	}
 	util.getCurrentTimeZone = getCurrentTimeZone;
+
+	/**
+	 * Returns the app considered as default for current user.
+	 * @return {Object|Undefined} Current user's default app.
+	 *
+	 * When user document does not have an `appList`, defaults to using the first user accessible
+	 * app from app store.
+	 * When user does not have access to any app, returns `undefined`.
+	 */
+	function getCurrentUserDefaultApp() {
+		var user = _.get(monster.apps, 'auth.currentUser', {});
+		var validApps = listAppStoreMetadata('user');
+		var validAppIds = _.map(validApps, 'id');
+
+		return _
+			.chain(user)
+			.get('appList', [])
+			.find(_.partial(_.includes, validAppIds))
+			.thru(monster.util.getAppStoreMetadata)
+			.defaultTo(_.head(validApps))
+			.value();
+	}
+	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
@@ -1464,6 +1642,93 @@ define(function(require) {
 		return _.get(account, 'is_reseller', false);
 	}
 	util.isReseller = isReseller;
+
+	/**
+	 * Returns whether a user is allowed to access an app.
+	 * @param  {Object}  user User document to check against.
+	 * @param  {Object}  app  App metadata to check for.
+	 * @return {Boolean}      Whether `user` has access to `app`.
+	 */
+	function isUserPermittedApp(user, app) {
+		var allowedIds = _
+			.chain(app)
+			.get('users', [])
+			.map('id')
+			.value();
+		var checksPerPermission = {
+			all: function() {
+				return true;
+			},
+			admins: _.flow(
+				_.partial(_.get, _, 'priv_level'),
+				_.partial(_.isEqual, 'admin')
+			),
+			specific: _.flow(
+				_.partial(_.get, _, 'id'),
+				_.partial(_.includes, allowedIds)
+			),
+			undefined: function() {
+				return false;
+			}
+		};
+		var permission = _
+			.chain(checksPerPermission)
+			.keys()
+			.find(_.partial(_.isEqual, _.get(app, 'allowed_users')))
+			.value();
+		var checkForPermission = _.get(checksPerPermission, permission);
+
+		return checkForPermission(user);
+	}
+	util.isUserPermittedApp = isUserPermittedApp;
+
+	/**
+	 * Returns list of formatted app links defined on whitelabel document.
+	 * @return {Object[]} List of formatted app links.
+	 */
+	function listAppLinks() {
+		var getOneKey = _.flow(
+			_.keys,
+			_.head
+		);
+		var formatLink = _.partial(function(locales, metadata, url) {
+			var locale = _
+					.chain(locales)
+					.find(_.partial(_.has, metadata.i18n))
+					.defaultTo(getOneKey(metadata.i18n))
+					.value(),
+				i18n = _.get(metadata.i18n, locale, {});
+
+			return _.merge({
+				id: url
+			}, _.pick(metadata, [
+				'icon'
+			]), _.pick(i18n, [
+				'label',
+				'description'
+			]));
+		}, [
+			monster.config.whitelabel.language,
+			monster.defaultLanguage
+		]);
+		var hasInvalidProps = _.partial(function(props, link) {
+			return _.some(props, _.flow(
+				_.partial(_.get, link),
+				_.negate(_.isString)
+			));
+		}, [
+			'id',
+			'icon',
+			'label'
+		]);
+
+		return _
+			.chain(monster.config.whitelabel.appLinks)
+			.map(formatLink)
+			.reject(hasInvalidProps)
+			.value();
+	}
+	util.listAppLinks = listAppLinks;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
