@@ -399,80 +399,6 @@ define(function(require) {
 			}
 		},
 
-		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
-		// internal function used by different apps to set their own help flags.
-		uiFlags: {
-			user: {
-				get: function(appName, flagName, pUser) {
-					var user = pUser || monster.apps.auth.currentUser,
-						value;
-
-					if (user.hasOwnProperty('ui_help') && user.ui_help.hasOwnProperty(appName) && user.ui_help[appName].hasOwnProperty(flagName)) {
-						value = user.ui_help[appName][flagName];
-					}
-
-					return value;
-				},
-				set: function(appName, flagName, value, pUser) {
-					var user = pUser || monster.apps.auth.currentUser;
-
-					user.ui_help = user.ui_help || {};
-					user.ui_help[appName] = user.ui_help[appName] || {};
-					user.ui_help[appName][flagName] = value;
-
-					return user;
-				},
-				destroy: function(appName, flagName, pUser) {
-					var user = pUser || monster.apps.auth.currentUser;
-
-					user.ui_help = user.ui_help || {};
-					user.ui_help[appName] = user.ui_help[appName] || {};
-					delete user.ui_help[appName][flagName];
-
-					if (_.isEmpty(user.ui_help[appName])) {
-						delete user.ui_help[appName];
-					}
-
-					return user;
-				}
-			},
-
-			account: {
-				get: function(appName, flagName, pAccount) {
-					var account = pAccount || monster.apps.auth.currentAccount,
-						value;
-
-					if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty(appName) && account.ui_flags[appName].hasOwnProperty(flagName)) {
-						value = account.ui_flags[appName][flagName];
-					}
-
-					return value;
-				},
-				set: function(appName, flagName, value, pAccount) {
-					var account = pAccount || monster.apps.auth.currentAccount;
-
-					account.ui_flags = account.ui_flags || {};
-					account.ui_flags[appName] = account.ui_flags[appName] || {};
-					account.ui_flags[appName][flagName] = value;
-
-					return account;
-				},
-				destroy: function(appName, flagName, pAccount) {
-					var account = pAccount || monster.apps.auth.currentAccount;
-
-					account.ui_flags = account.ui_flags || {};
-					account.ui_flags[appName] = account.ui_flags[appName] || {};
-					delete account.ui_flags[appName][flagName];
-
-					if (_.isEmpty(account.ui_flags[appName])) {
-						delete account.ui_flags[appName];
-					}
-
-					return account;
-				}
-			}
-		},
-
 		// takes a HTML element, and update img relative paths to complete paths if they need to be updated
 		// without this, img with relative path would  be displayed from the domain name of the browser, which we want to avoid since we're loading sources from external URLs for some apps
 		updateImagePath: function(markup, app) {
@@ -598,33 +524,6 @@ define(function(require) {
 				finalString = url + cacheString;
 
 			return finalString;*/
-		},
-
-		dataFlags: {
-			get: function(flagName, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				return object.markers.monster[flagName];
-			},
-
-			add: function(flags, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				$.extend(true, object.markers.monster, flags);
-
-				return object;
-			},
-
-			destroy: function(flagName, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				delete object.markers.monster[flagName];
-
-				return object;
-			}
 		},
 
 		jwt_decode: function(Token) {
@@ -1186,6 +1085,28 @@ define(function(require) {
 	}
 	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
 
+	/**
+	 * @private
+	 * @return {Object} Data flags manager module.
+	 */
+	function getDataFlagsManager() {
+		var getPath = _.partial(_.concat, ['markers', 'monster']);
+		return {
+			get: function(name, object) {
+				return _.get(object, getPath(name));
+			},
+			add: function(flags, object) {
+				_.set(object, getPath(), flags);
+				return object;
+			},
+			destroy: function(name, object) {
+				_.unset(object, getPath(name));
+				return object;
+			}
+		};
+	}
+	util.dataFlags = getDataFlagsManager();
+
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
 			_.toString(input),
@@ -1342,6 +1263,49 @@ define(function(require) {
 		return _.get(number, pathToFeatures, []);
 	}
 	util.getNumberFeatures = getNumberFeatures;
+
+	/**
+	 * To keep the structure of the help settings consistent, we built this helper so devs don't
+	 * have to know the exact structure internal function used by different apps to set their own
+	 * help flags.
+	 * @private
+	 * @param  {'account'|'user'} context Context to use.
+	 * @return {Object} UI flags manager module.
+	 */
+	function getUiFlagsManager(context) {
+		var appliersPerContext = {
+			account: function(func) {
+				return function(object, app, flag, value) {
+					var path = ['ui_flags', app, flag];
+					return func(object || monster.apps.auth.currentAccount, path, value);
+				};
+			},
+			user: function(func) {
+				return function(object, app, flag, value) {
+					var path = ['ui_help', app, flag];
+					return func(object || monster.apps.auth.currentUser, path, value);
+				};
+			}
+		};
+		var applier = _.get(appliersPerContext, context);
+		var unset = function(object, path) {
+			_.unset(object, path);
+			if (_.isEmpty(_.get(object, _.slice(path, -1), ''))) {
+				_.unset(object, _.slice(path, -1));
+			}
+			return object;
+		};
+
+		return {
+			get: applier(_.get),
+			set: applier(_.set),
+			destroy: applier(unset)
+		};
+	}
+	util.uiFlags = {
+		account: getUiFlagsManager('account'),
+		user: getUiFlagsManager('user')
+	};
 
 	/**
 	 * Returns map of URL parameters, with the option to return the value of a specific parameter
