@@ -155,78 +155,6 @@ define(function(require) {
 			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 		},
 
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isSuperDuper: function(pAccount) {
-			var self = this,
-				isSuperDuper = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('superduper_admin')) {
-				isSuperDuper = account.superduper_admin;
-			}
-
-			return isSuperDuper;
-		},
-
-		// We only let super duper admins impersonate users from subaccounts. If you're not a super duper admin, or if you're using the account you logged in with, you shouldn't have access to impersonating.
-		canImpersonate: function(accountId) {
-			var self = this,
-				isDifferentAccount = monster.apps.auth.originalAccount.id !== accountId;
-
-			return monster.util.isSuperDuper() && isDifferentAccount;
-		},
-
-		// Function returning if an account is in trial or not
-		isTrial: function(pAccount) {
-			var self = this,
-				isTrial = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('trial_time_left')) {
-				isTrial = true;
-			}
-
-			return isTrial;
-		},
-
-		// Function returning if an account can add external numbers or not
-		canAddExternalNumbers: function(pAccount) {
-			var self = this,
-				hasRights = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('wnm_allow_additions') && account.wnm_allow_additions) {
-				hasRights = true;
-			}
-
-			return hasRights;
-		},
-
-		// Function returning if a user is an admin or not
-		isAdmin: function(pUser) {
-			var self = this,
-				user = pUser || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') ? monster.apps.auth.currentUser : {});
-
-			return user.priv_level === 'admin';
-		},
-
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isWhitelabeling: function() {
-			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
-		},
-
-		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
-		isMasquerading: function() {
-			var self = this,
-				isMasquerading = false;
-
-			if (monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
-				isMasquerading = monster.apps.auth.originalAccount.id !== monster.apps.auth.currentAccount.id;
-			}
-
-			return isMasquerading;
-		},
-
 		/****************** Helpers not documented because people shouldn't need to use them *******************/
 
 		// Takes seconds and transforms it into a timer
@@ -637,19 +565,6 @@ define(function(require) {
 			return result.length > 1 ? result : result[0];
 		},
 
-		// Check if the object is parsable or not
-		isJSON: function(obj) {
-			var self = this;
-
-			try {
-				JSON.stringify(obj);
-			} catch (e) {
-				return false;
-			}
-
-			return true;
-		},
-
 		guid: function() {
 			var result = '';
 
@@ -810,8 +725,32 @@ define(function(require) {
 	};
 
 	/**
-	 * Formats a string into a string representation of a MAC address, using
-	 * colons as separator.
+	 * Returns whether an account is allowed to add external phone numbers.
+	 * @param  {Object} [account] Account document to check against.
+	 * @return {Boolean}          Whether `account` is allowed to add external phone numbers.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function canAddExternalNumbers(account) {
+		return _.isMatch(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			{ wnm_allow_additions: true }
+		);
+	}
+	util.canAddExternalNumbers = canAddExternalNumbers;
+
+	/**
+	 * Returns whether `accountId` has the ability to impersonate sub-account users.
+	 * @param  {String} accountId Account ID to check against.
+	 * @return {Boolean}           Whether `accountId` has the ability to impersonate.
+	 */
+	function canImpersonate(accountId) {
+		return isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
+	}
+	util.canImpersonate = canImpersonate;
+
+	/**
+	 * Formats a string into a string representation of a MAC address, using colons as separator.
 	 * @param  {String} macAddress   String to format as MAC address.
 	 * @return {String}              String representation of a MAC address.
 	 */
@@ -878,8 +817,8 @@ define(function(require) {
 	 * @param  {Number|String} phoneNumber Input to format as phone number
 	 * @return {String}                    Input formatted as phone number
 	 *
-	 * Warning: this method is used to format entities other than phone
-	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
+	 * Warning: this method is used to format entities other than phone numbers (e.g. extensions)
+	 * so keep that in mind if you plan to update it.
 	 */
 	function formatPhoneNumber(input) {
 		var phoneNumber = getFormatPhoneNumber(input);
@@ -893,16 +832,14 @@ define(function(require) {
 	 * Decimal and currency formatting for prices
 	 * @deprecated
 	 * @param  {Object}  args
-	 * @param  {Number}  args.price        Price to format (number or string
-	 *                                     representation of a number).
-	 * @param  {Number}  args.digits       Number of digits to appear after the
-	 *                                     decimal point.
+	 * @param  {Number}  args.price        Price to format (number or string representation of a
+	 *                                     number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the decimal point.
 	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
 	 * @return {String}                    String representation of `price`.
 	 *
-	 * If `digits` is not specified, integers will have no digits and floating
-	 * numbers with at least one significant number after the decimal point
-	 * will have two digits.
+	 * If `digits` is not specified, integers will have no digits and floating numbers with at least
+	 * one significant number after the decimal point will have two digits.
 	 */
 	function formatPrice(args) {
 		if (
@@ -936,8 +873,7 @@ define(function(require) {
 	/**
 	 * Takes a string and replace all the "_" from it with a " ".
 	 * Also capitalizes first word.
-	 * Useful to display hardcoded data from the database that hasn't make it to
-	 * the i18n files.
+	 * Useful to display hardcoded data from the database that hasn't make it to the i18n files.
 	 * @param  {*} variable Value to format.
 	 * @return {String} Formatted string representation of the value.
 	 */
@@ -1216,9 +1152,9 @@ define(function(require) {
 	 * Returns the timezone of the currently authenticated session
 	 * @return {String}  Current time zone identifier.
 	 *
-	 * By default, the time zone of the logged in user will be returned. If that
-	 * time zone is not set, then the account time zone will be used. If not set,
-	 * the browser’s time zone will be used as a last resort.
+	 * By default, the time zone of the logged in user will be returned. If that time zone is not
+	 * set, then the account time zone will be used. If not set, the browser’s time zone will be
+	 * used as a last resort.
 	 */
 	function getCurrentTimeZone() {
 		return _.get(monster, 'apps.auth.currentUser.timezone')
@@ -1251,7 +1187,10 @@ define(function(require) {
 	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
 
 	function getFormatPhoneNumber(input) {
-		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
+		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
+			_.toString(input),
+			monster.config.whitelabel.countryCode
+		);
 		var user = _.get(monster, 'apps.auth.currentUser', {});
 		var account = _.get(monster, 'apps.auth.originalAccount', {});
 		var formattedData = {
@@ -1260,20 +1199,20 @@ define(function(require) {
 			userFormat: input // Setting it as a default, in case the number is not valid
 		};
 		var getUserFormatFromEntity = function(entity, data) {
-			var response = '';
+			var isException = _.flow(
+				_.partial(_.get, _, 'ui_flags.numbers_format_exceptions', []),
+				_.partial(_.includes, _, _.get(data, 'country.code'))
+			);
+			var rawFormat = entity.ui_flags.numbers_format;
+			var format = rawFormat !== 'international_with_exceptions' ? rawFormat
+				: isException(entity) ? 'national'
+				: 'international';
+			var formatter = _.get({
+				national: _.partial(_.get, _, 'nationalFormat'),
+				international: _.partial(_.get, _, 'internationalFormat')
+			}, format);
 
-			if (entity.ui_flags.numbers_format === 'national') {
-				response = data.nationalFormat;
-			} else if (entity.ui_flags.numbers_format === 'international') {
-				response = data.internationalFormat;
-			} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
-				if (_.includes(_.get(entity, 'ui_flags.numbers_format_exceptions', []), data.country.code)) {
-					response = data.nationalFormat;
-				} else {
-					response = data.internationalFormat;
-				}
-			}
-			return response;
+			return formatter(data);
 		};
 
 		if (
@@ -1515,9 +1454,9 @@ define(function(require) {
 	util.getUrlVars = getUrlVars;
 
 	/**
-	 * Returns the full name of a specific user or, if missing, of the currently
-	 * logged in user.
-	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * Returns the full name of a specific user or, if missing, of the currently logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and
+	 *                                    last_name
 	 * @param  {String} pUser.first_name  User's first name
 	 * @param  {String} pUser.last_name   User's last name
 	 * @return {String}                   User's full name
@@ -1551,10 +1490,11 @@ define(function(require) {
 	util.getUserFullName = getUserFullName;
 
 	/**
-	 * Returns the initials (two characters) of a specific user or,
-	 * if missing, of the currently logged in user.
+	 * Returns the initials (two characters) of a specific user or, if missing, of the currently
+	 * logged in user.
 	 *
-	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and
+	 *                                    last_name
 	 * @param  {String} pUser.first_name  User's first name
 	 * @param  {String} pUser.last_name   User's last name
 	 *
@@ -1600,6 +1540,36 @@ define(function(require) {
 	util.gregorianToDate = gregorianToDate;
 
 	/**
+	 * Returns whether a user has admin privileges.
+	 * @param  {Object}  [user] User document to check against.
+	 * @return {Boolean}      Whether `user` has admin privileges.
+	 *
+	 * When no `user` is provided, check against current user.
+	 */
+	function isAdmin(user) {
+		return _.isMatch(
+			user || _.get(monster.apps, 'auth.currentUser', {}),
+			{ priv_level: 'admin' }
+		);
+	}
+	util.isAdmin = isAdmin;
+
+	/**
+	 * Returns whether a value can be converted into JSON.
+	 * @param  {*}  value Value to check.
+	 * @return {Boolean}     Whether `value` can be converted into JSON.
+	 */
+	function isJSON(value) {
+		try {
+			JSON.stringify(value);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
+	util.isJSON = isJSON;
+
+	/**
 	 * Returns whether or not a user is logged in
 	 * @return {Boolean} Whether a user is logged in or not
 	 */
@@ -1609,14 +1579,33 @@ define(function(require) {
 	util.isLoggedIn = isLoggedIn;
 
 	/**
+	 * Returns whether current account is masquerading.
+	 * @return {Boolean} Whether current account is masquerading.
+	 */
+	function isMasquerading() {
+		return _
+			.chain([
+				'auth.originalAccount.id',
+				'auth.accountId'
+			])
+			.map(_.partial(_.ary(_.get, 2), monster.apps))
+			.thru(_.overEvery(
+				_.partial(_.every, _, _.isString),
+				_.spread(_.negate(_.isEqual))
+			))
+			.value();
+	}
+	util.isMasquerading = isMasquerading;
+
+	/**
 	 * Determine if a specific number feature is enabled on the current account
 	 * @param  {String}  feature  Feature to check (e.g. e911, cnam)
 	 * @param  {Object}  pAccount Account object to check from (optional)
 	 * @return {Boolean}          Indicate whether or not the feature is enabled
 	 *
-	 * The check is made against a flag in the account document but it can be
-	 * overridden by a flag in `config.js/whitelabel.disableNumbersFeatures`. If
-	 * none of those flags are set, it will return `true` by default.
+	 * The check is made against a flag in the account document but it can be overridden by a flag
+	 * in `config.js/whitelabel.disableNumbersFeatures`. If none of those flags are set, it will
+	 * return `true` by default.
 	 */
 	function isNumberFeatureEnabled(feature, pAccount) {
 		return monster.config.whitelabel.disableNumbersFeatures
@@ -1642,6 +1631,36 @@ define(function(require) {
 		return _.get(account, 'is_reseller', false);
 	}
 	util.isReseller = isReseller;
+
+	/**
+	 * Returns whether an account is superduper admin.
+	 * @param  {Object}  [account] Account document to check against.
+	 * @return {Boolean}         Whether `account` is superduper admin.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function isSuperDuper(account) {
+		return _.isMatch(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			{ superduper_admin: true }
+		);
+	}
+	util.isSuperDuper = isSuperDuper;
+
+	/**
+	 * Returns whether an account is in trial period.
+	 * @param  {Object}  [account] Account document to check against.
+	 * @return {Boolean}         Whether `account` is on Trial.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function isTrial(account) {
+		return _.has(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			'trial_time_left'
+		);
+	}
+	util.isTrial = isTrial;
 
 	/**
 	 * Returns whether a user is allowed to access an app.
@@ -1681,6 +1700,19 @@ define(function(require) {
 		return checkForPermission(user);
 	}
 	util.isUserPermittedApp = isUserPermittedApp;
+
+	/**
+	 * Returns whether whitelabelling is configured for current domain.
+	 * @return {Boolean} Whether whitelabelling is configured for current domain.
+	 */
+	function isWhitelabeling() {
+		return !_
+			.chain(monster.config.whitelabel)
+			.get('domain')
+			.isEmpty()
+			.value();
+	}
+	util.isWhitelabeling = isWhitelabeling;
 
 	/**
 	 * Returns list of formatted app links defined on whitelabel document.
@@ -1787,19 +1819,17 @@ define(function(require) {
 	 * @param  {Date|String} pDate   Representation of the date to format.
 	 * @param  {String} pFormat      Tokens to format the date with.
 	 * @param  {Object} pUser        Specific user to use for formatting.
-	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
-	 *                                gregorian format.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in gregorian format.
 	 * @param  {String} pTz           Timezone to format the date with.
 	 * @return {String}              Representation of the formatted date.
 	 *
-	 * If pDate is undefined then return an empty string. Useful for form which
-	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
-	 * would display NaN/NaN/NaN in Firefox for example.
+	 * If pDate is undefined then return an empty string. Useful for form which use toFriendlyDate
+	 * for some fields with an undefined value. Otherwise it would display NaN/NaN/NaN in Firefox
+	 * for example.
 	 *
-	 * By default, the timezone of the specified or logged in user will be used
-	 * to format the date. If that timezone is not set, then the account
-	 * timezone will be used. If not set, the browser’s timezone will be used as
-	 * a last resort.
+	 * By default, the timezone of the specified or logged in user will be used to format the date.
+	 * If that timezone is not set, then the account timezone will be used. If not set, the
+	 * browser’s timezone will be used as a last resort.
 	 */
 	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, pTz) {
 		if (_.isUndefined(pDate)) {
@@ -1842,12 +1872,12 @@ define(function(require) {
 	 * @param  {Number} pTimestamp Unix timestamp
 	 * @return {Date}           Converted Date instance
 	 *
-	 * Sometimes Unix times are defined with more precision, such as with the
-	 * /legs API which returns channel created time in microseconds, so we need
-	 * need to remove this extra precision to use the Date constructor.
+	 * Sometimes Unix times are defined with more precision, such as with the /legs API which
+	 * returns channel created time in microseconds, so we need need to remove this extra precision
+	 * to use the Date constructor.
 	 *
-	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
-	 * get milliseconds in order to use the Date constructor.
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to get milliseconds in
+	 * order to use the Date constructor.
 	 */
 	function unixToDate(pTimestamp) {
 		var max = 9999999999999;
