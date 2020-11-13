@@ -2893,20 +2893,6 @@ define(function(require) {
 			self.handleDisplayFootable(container, finalOptions);
 		},
 
-		formatIconApp: function(app) {
-			if (app && app.hasOwnProperty('name')) {
-				if (monster.appsStore.hasOwnProperty(app.name)) {
-					if (monster.appsStore[app.name].phase === 'beta') {
-						app.extraCssClass = 'beta-overlay-icon';
-					} else if (monster.appsStore[app.name].phase === 'alpha') {
-						app.extraCssClass = 'alpha-overlay-icon';
-					}
-				}
-			}
-
-			return app;
-		},
-
 		// Takes a file in parameter, and then outputs the PDF preview of that file in an iframe that's added to the container
 		renderPDF: function(file, container, pOptions) {
 			var self = this,

@@ -12,13 +12,11 @@
 			{{ conference.name }} (<span class="conference-duration main-conference-timer"></span>)
 		</div>
 
-		<div class="other-actions">
-			<button type="button" data-action="add" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.add }}">
+		<div class="admin-actions">
+			<button type="button" data-action="add" class="{{#if conference.isLocked}}disabled {{/if}}conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.add }}">
 				<i class="fa fa-plus"></i>
 			</button>
-		</div>
 
-		<div class="admin-actions">
 			<button type="button" data-action="lock" class="{{#if conference.isLocked}}hidden {{/if}}conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.lock }}">
 				<i class="fa fa-lock"></i>
 			</button>
