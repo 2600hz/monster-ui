@@ -250,21 +250,6 @@ define(function(require) {
 			}
 		},
 
-		checkVersion: function(obj, callback) {
-			var self = this,
-				i18n = monster.apps.core.i18n.active();
-
-			if (obj.hasOwnProperty('ui_metadata') && obj.ui_metadata.hasOwnProperty('ui')) {
-				if (obj.ui_metadata.ui !== 'monster-ui') {
-					monster.ui.confirm(i18n.olderVersion, callback);
-				} else {
-					callback && callback();
-				}
-			} else {
-				callback && callback();
-			}
-		},
-
 		accountArrayToTree: function(accountArray, rootAccountId) {
 			var result = {};
 
@@ -660,6 +645,29 @@ define(function(require) {
 		return isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
 	}
 	util.canImpersonate = canImpersonate;
+
+	/**
+	 * Prompts for user confirmation when `object` has non Monster-UI metadata.
+	 * @param  {Object} object    Object to check.
+	 * @param  {Function} [callback] Calback to execute on confirmation.
+	 */
+	function checkVersion(object, pCallback) {
+		var callback = pCallback || function() {};
+		var i18n = monster.apps.core.i18n.active();
+		var wasModifiedByDifferentUi = _.flow(
+			_.partial(_.get, 'ui_metadata.ui'),
+			_.overEvery(
+				_.negate(_.isUndefined),
+				_.partial(_.negate(_.isEqual), 'monster-ui')
+			)
+		);
+
+		if (!wasModifiedByDifferentUi(object)) {
+			return callback();
+		}
+		monster.ui.confirm(i18n.olderVersion, callback);
+	}
+	util.checkVersion = checkVersion;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
