@@ -9,33 +9,6 @@ define(function(require) {
 
 	var util = {
 
-		/**
-		 * Format bytes to display its decimal multiple
-		 * @param  {Number} bytes   Number in bytes to format
-		 * @param  {Number} pDigits Number of digits after decimal point
-		 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
-		 * @return {Object}         Object containing the formatted data about the initial bytes value
-		 */
-		formatBytes: function(bytes, pDigits) {
-			var base = 1000,
-				sizes = monster.apps.core.i18n.active().unitsMultiple.byte,
-				exponent = Math.floor(Math.log(bytes) / Math.log(base)),
-				value = bytes / Math.pow(base, exponent),
-				digits = pDigits || (exponent > 2 ? 1 : 0);
-
-			if (bytes === 0) {
-				return {
-					value: 0,
-					unit: sizes[0]
-				};
-			} else {
-				return {
-					value: value.toFixed(digits),
-					unit: sizes[exponent]
-				};
-			}
-		},
-
 		parseDateString: function(dateString, dateFormat) {
 			var self = this,
 				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
@@ -67,24 +40,6 @@ define(function(require) {
 			return formattedResponse;
 		},
 
-		getModbID: function(id, timestamp) {
-			var jsDate = gregorianToDate(timestamp),
-				UTCYear = jsDate.getUTCFullYear() + '',
-				UTCMonth = jsDate.getUTCMonth() + 1,
-				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
-				modbDBprefix = UTCYear + formattedUTCMonth + '-',
-				modbString;
-
-			// Verify that the ID we got is not already a MODB ID
-			if (id.substr(0, 7) !== modbDBprefix) {
-				modbString = UTCYear + formattedUTCMonth + '-' + id;
-			} else {
-				modbString = id;
-			}
-
-			return modbString;
-		},
-
 		dateToUnix: function(date) {
 			var formattedResponse;
 
@@ -106,10 +61,6 @@ define(function(require) {
 			}
 
 			return format;
-		},
-
-		cmp: function(a, b) {
-			return (a > b) ? 1 : (a < b) ? -1 : 0;
 		},
 
 		/**
@@ -250,57 +201,6 @@ define(function(require) {
 			}
 		},
 
-		checkVersion: function(obj, callback) {
-			var self = this,
-				i18n = monster.apps.core.i18n.active();
-
-			if (obj.hasOwnProperty('ui_metadata') && obj.ui_metadata.hasOwnProperty('ui')) {
-				if (obj.ui_metadata.ui !== 'monster-ui') {
-					monster.ui.confirm(i18n.olderVersion, callback);
-				} else {
-					callback && callback();
-				}
-			} else {
-				callback && callback();
-			}
-		},
-
-		accountArrayToTree: function(accountArray, rootAccountId) {
-			var result = {};
-
-			$.each(accountArray, function(k, v) {
-				if (v.id === rootAccountId) {
-					if (!result[v.id]) { result[v.id] = {}; }
-					result[v.id].name = v.name;
-					result[v.id].realm = v.realm;
-				} else {
-					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
-						currentAcc;
-
-					for (var i = 0; i < parents.length; i++) {
-						if (!currentAcc) {
-							if (!result[parents[i]]) { result[parents[i]] = {}; }
-
-							currentAcc = result[parents[i]];
-						} else {
-							if (!currentAcc.children) { currentAcc.children = {}; }
-							if (!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
-
-							currentAcc = currentAcc.children[parents[i]];
-						}
-					}
-
-					if (!currentAcc.children) { currentAcc.children = {}; }
-					if (!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
-
-					currentAcc.children[v.id].name = v.name;
-					currentAcc.children[v.id].realm = v.realm;
-				}
-			});
-
-			return result;
-		},
-
 		getDefaultRangeDates: function(pRange) {
 			var self = this,
 				range = pRange || 7,
@@ -397,231 +297,42 @@ define(function(require) {
 			} else {
 				window.location = window.location.pathname;
 			}
-		},
-
-		// takes a HTML element, and update img relative paths to complete paths if they need to be updated
-		// without this, img with relative path would  be displayed from the domain name of the browser, which we want to avoid since we're loading sources from external URLs for some apps
-		updateImagePath: function(markup, app) {
-			var $markup = $(markup),
-				listImg = $markup.find('img'),
-				result = '';
-
-			// For each image, check if the path is correct based on the appPath, and if not change it
-			for (var i = 0; i < listImg.length; i++) {
-				var	currentSrc = listImg[i].src;
-
-				// If it's an image belonging to an app, and the current path doesn't contain the right appPath
-				if (currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
-					// We replace it by the app path and append the path of the image (we strip the name of the app, since it's already part of the appPath)
-					var newPath = app.appPath + currentSrc.substring(currentSrc.indexOf(app.name) + app.name.length, currentSrc.length);
-
-					listImg[i].src = newPath;
-				}
-			}
-
-			for (var j = 0; j < $markup.length; j++) {
-				result += $markup[j].outerHTML;
-			}
-
-			return result;
-		},
-
-		/* Helper function that takes an array of number in parameter, sorts it, and returns the first number not in the array, greater than the minVal */
-		getNextExtension: function(listNumbers) {
-			var orderedArray = listNumbers,
-				previousIterationNumber,
-				minNumber = 1000,
-				lowestNumber = minNumber,
-				increment = 1;
-
-			orderedArray.sort(function(a, b) {
-				var parsedA = parseInt(a),
-					parsedB = parseInt(b);
-
-				if (isNaN(parsedA)) {
-					return -1;
-				} else if (isNaN(parsedB)) {
-					return 1;
-				} else {
-					return parsedA > parsedB ? 1 : -1;
-				}
-			});
-
-			_.each(orderedArray, function(number) {
-				var currentNumber = parseInt(number);
-
-				// First we make sure it's a valid number, if not we move on to the next number
-				if (!isNaN(currentNumber)) {
-					// If we went through this loop already, previousIterationNumber will be set to the number of the previous iteration
-					if (typeof previousIterationNumber !== 'undefined') {
-						// If there's a gap for a number between the last number and the current number, we check if it's a valid possible number (ie, greater than minNumber)
-						// And If yes, we return it, if not we just continue
-						if (currentNumber - previousIterationNumber !== increment && previousIterationNumber >= minNumber) {
-							return previousIterationNumber + increment;
-						}
-					// else, it's the first iteration, we initialize the minValue to the first number in the ordered array
-					// only if it's greater than 1000, because we don't want to recommend lower numbers
-					} else if (currentNumber > minNumber) {
-						lowestNumber = currentNumber;
-					}
-					// We store current as the previous number for the next iteration
-					previousIterationNumber = currentNumber;
-				}
-			});
-
-			return (previousIterationNumber) ? previousIterationNumber + increment : lowestNumber;
-		},
-
-		findCallflowNode: function(callflow, module, data) {
-			var self = this,
-				result = [],
-				matchNode = function(node) {
-					if (node.module === module) {
-						if (!data || _.isEqual(data, node.data)) {
-							result.push(node);
-						}
-					}
-					_.each(node.children, function(child) {
-						matchNode(child);
-					});
-				};
-
-			matchNode(callflow.flow);
-
-			return result.length > 1 ? result : result[0];
-		},
-
-		guid: function() {
-			var result = '';
-
-			for (var i = 0; i < 4; i++) {
-				result += (Math.random().toString(16) + '000000000').substr(2, 8);
-			}
-
-			return result;
-		},
-
-		getVersion: function() {
-			return monster.config.developerFlags.build.version;
-		},
-
-		cacheUrl: function(url) {
-			var self = this;
-
-			return url;
-
-			/* Commenting this as we don't want to add this just yet. We have issues with this code because versions from apps != versions in VERSION
-			   If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change, which means we wouldn't change the query sting used to get assets from any app, even monster-ui-voip...
-			   This only gets incremented when master build runs, whereas we need it to be changed when an app is built as well...
-			   Leaving this here for now, might have to just remove and forget about it eventually :/
-
-				var self = this,
-				prepend = url.indexOf('?') >= 0 ? '&' : '?',
-				isDev = monster.config.developerFlags.build.type === 'development',
-				devCacheString = (new Date()).getTime(),
-				prodCacheString = monster.util.getVersion(),
-				cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString),
-				finalString = url + cacheString;
-
-			return finalString;*/
-		},
-
-		jwt_decode: function(Token) {
-			var base64Url = Token.split('.')[1],
-				base64 = base64Url.replace('-', '+').replace('_', '/');
-
-			return JSON.parse(window.atob(base64));
-		},
-
-		tryI18n: function(obj, key) {
-			return obj.hasOwnProperty(key) ? obj[key] : monster.util.formatVariableToDisplay(key);
-		},
-
-		// Functions used to replace displayed phone numbers by other "fake" numbers. Can be useful to generate marketing documents or screenshots with lots of data without showing sensitive information
-		protectSensitivePhoneNumbers: function() {
-			var self,
-				numbers = {},
-				logs = [],
-				printLogs = function() {
-					var str = '';
-
-					_.each(logs, function(item, index) {
-						str += index + ' - replace ' + item.oldValue + ' by ' + item.newValue + '\n';
-					});
-
-					console.log(str);
-				},
-				randomNumber = function(format) {
-					return (Math.floor(Math.random() * 9 * format) + 1 * format);
-				},
-				randomPhoneNumber = function() {
-					return '+1 555 ' + randomNumber(100) + ' ' + randomNumber(1000);
-				},
-				randomExtension = function() {
-					return '10' + randomNumber(10);
-				},
-				replacePhoneNumbers = function(element) {
-					var text = element.innerText,
-						regex = /(\+?[()\- \d]{10,})/g,
-						match = regex.exec(text);
-
-					while (match != null) {
-						var key = match[0],
-							formattedKey = monster.util.formatPhoneNumber(key);
-
-						if (!numbers.hasOwnProperty(formattedKey)) {
-							numbers[formattedKey] = randomPhoneNumber();
-						}
-
-						if (formattedKey !== key) {
-							replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
-						} else {
-							replaceHTML(element, key, numbers[key]);
-						}
-
-						match = regex.exec(text);
-					}
-				},
-				replaceExtensions = function(element) {
-					var text = element.innerText,
-						regex = /(\d{4,7})/g,
-						match = regex.exec(text);
-
-					while (match != null) {
-						var key = match[0];
-
-						if (!numbers.hasOwnProperty(key)) {
-							numbers[key] = randomExtension();
-						}
-
-						replaceHTML(element, key, numbers[key]);
-
-						match = regex.exec(text);
-					}
-				},
-				replaceHTML = function(element, oldValue, newValue) {
-					// First we need to escape the old value, since we're creating a regex out of it, we can't have special regex characters like the "+" that are often present in phone numbers
-					var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'),
-						// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
-						regexOldValue = new RegExp(escapedOldvalue, 'g');
-
-					// Replace all occurences of old value by the new value
-					element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
-
-					logs.push({ oldValue: oldValue, newValue: newValue });
-				},
-				replaceBoth = function(element) {
-					replaceExtensions(element);
-					replacePhoneNumbers(element);
-				};
-
-			document.querySelectorAll('.number-div,.monster-phone-number-value,.phone-number').forEach(replacePhoneNumbers);
-			document.querySelectorAll('.extension').forEach(replaceExtensions);
-			document.querySelectorAll('span,.number,.sub-cell,.element-title, .multi-line-div').forEach(replaceBoth);
-
-			printLogs();
 		}
 	};
+
+	/**
+	 * Formats a string into a string representation of a MAC address, using colons as separator.
+	 * @param  {String} url
+	 * @return {String}
+	 *
+	 * Commenting this as we don't want to add this just yet. We have issues with this code because
+	 * versions from apps != versions in VERSION.
+	 *
+	 * If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change,
+	 * which means we wouldn't change the query sting used to get assets from any app, even
+	 * monster-ui-voip...
+	 *
+	 * This only gets incremented when master build runs, whereas we need it to be changed when an
+	 * app is built as well...
+	 *
+	 * Leaving this here for now, might have to just remove and forget about it eventually :/
+	 */
+	function cacheUrl(url) {
+		var self = this;
+
+		return url;
+
+		// var self = this;
+		// var prepend = url.indexOf('?') >= 0 ? '&' : '?';
+		// var isDev = monster.config.developerFlags.build.type === 'development';
+		// var devCacheString = (new Date()).getTime();
+		// var prodCacheString = monster.util.getVersion();
+		// var cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString);
+		// var finalString = url + cacheString;
+
+		// return finalString;
+	}
+	util.cacheUrl = cacheUrl;
 
 	/**
 	 * Returns whether an account is allowed to add external phone numbers.
@@ -647,6 +358,96 @@ define(function(require) {
 		return isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
 	}
 	util.canImpersonate = canImpersonate;
+
+	/**
+	 * Prompts for user confirmation when `object` has non Monster-UI metadata.
+	 * @param  {Object} object    Object to check.
+	 * @param  {Function} [callback] Calback to execute on confirmation.
+	 */
+	function checkVersion(object, pCallback) {
+		var callback = pCallback || function() {};
+		var i18n = monster.apps.core.i18n.active();
+		var wasModifiedByDifferentUi = _.flow(
+			_.partial(_.get, 'ui_metadata.ui'),
+			_.overEvery(
+				_.negate(_.isUndefined),
+				_.partial(_.negate(_.isEqual), 'monster-ui')
+			)
+		);
+
+		if (!wasModifiedByDifferentUi(object)) {
+			return callback();
+		}
+		monster.ui.confirm(i18n.olderVersion, callback);
+	}
+	util.checkVersion = checkVersion;
+
+	/**
+	 * Compare function for `Array#sort`.
+	 * @param  {*} a
+	 * @param  {*} b
+	 * @return {Number}
+	 */
+	function cmp(a, b) {
+		return a > b ? 1
+			: a < b ? -1
+			: 0;
+	}
+	util.cmp = cmp;
+
+	/**
+	 * Collects callflow nodes matching `module` and `data`.
+	 * @param  {Object} callflow Callfow object to scan.
+	 * @param  {String} module   Node module to look for.
+	 * @param  {Object} [data]   Node metadata to match.
+	 * @return {Object|Object[]}          Nodes matching `module`/`data`.
+	 */
+	function findCallflowNode(callflow, module, data) {
+		var result = [];
+		var matchNode = function(node) {
+			if (node.module === module) {
+				if (!data || _.isEqual(data, node.data)) {
+					result.push(node);
+				}
+			}
+			_.each(node.children, function(child) {
+				matchNode(child);
+			});
+		};
+
+		matchNode(callflow.flow);
+
+		return result.length > 1 ? result : result[0];
+	}
+	util.findCallflowNode = findCallflowNode;
+
+	/**
+	 * Parses bytes value into human readable value/unit pair.
+	 * @param  {Number} bytes   Value in bytes to format
+	 * @param  {Number} [digits] Digits after decimal point
+	 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
+	 * @return {Object}         Formatted data about `bytes`.
+	 */
+	function formatBytes(bytes, pDigits) {
+		var base = 1000;
+		var sizes = monster.apps.core.i18n.active().unitsMultiple.byte;
+		var exponent = Math.floor(Math.log(bytes) / Math.log(base));
+		var value = bytes / Math.pow(base, exponent);
+		var digits = pDigits || (exponent > 2 ? 1 : 0);
+
+		if (bytes === 0) {
+			return {
+				value: 0,
+				unit: sizes[0]
+			};
+		} else {
+			return {
+				value: value.toFixed(digits),
+				unit: sizes[exponent]
+			};
+		}
+	}
+	util.formatBytes = formatBytes;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
@@ -961,15 +762,18 @@ define(function(require) {
 	util.listAppStoreMetadata = listAppStoreMetadata;
 
 	/**
-	 * Returns the auth token of a given connection.
-	 * @param  {String} [pConnectionName]
-	 * @return {String|Undefined}
+	 * Returns auth token for `connectionName`.
+	 * @param  {String} [connectionName]
+	 * @return {String}                 Auth token for `connectionName`.
 	 */
-	function getAuthToken(pConnectionName) {
-		if (!isLoggedIn()) {
-			return;
-		}
-		return monster.apps.auth.getAuthTokenByConnection(pConnectionName);
+	function getAuthToken(connectionName) {
+		var getToken = _.get(
+			monster.apps,
+			'auth.getAuthTokenByConnection',
+			function() { return undefined; }
+		);
+
+		return getToken(connectionName);
 	}
 	util.getAuthToken = getAuthToken;
 
@@ -1178,6 +982,20 @@ define(function(require) {
 	util.getFormatPhoneNumber = getFormatPhoneNumber;
 
 	/**
+	 * Prepends MoDB prefix to a value when it does not already starts with it.
+	 * @param  {String} id        Value to be prepended.
+	 * @param  {Number} gregorian Gregorian timestamp.
+	 * @return {String}           MoDB identifier.
+	 */
+	function getModbID(id, gregorian) {
+		var date = gregorianToDate(gregorian);
+		var prefix = moment(date).utc().format('YYYYMM-');
+
+		return _.startsWith(id, prefix) ? id : prefix + id;
+	}
+	util.getModbID = getModbID;
+
+	/**
 	 * Determine the date format from a specific or current user's settings
 	 * @private
 	 * @param  {String} pFormat Specific format for the user
@@ -1244,6 +1062,64 @@ define(function(require) {
 		}
 		return shortcuts[format];
 	}
+
+	/**
+	 * Helper function that takes an array of number in parameter, sorts it, and returns the first
+	 * number not in the array, greater than the minVal.
+	 * @param  {String[]} listNumbers Values treated as existing extensions.
+	 * @return {Number}             Next extension.
+	 */
+	function getNextExtension(listNumbers) {
+		var orderedArray = listNumbers;
+		var previousIterationNumber;
+		var minNumber = 1000;
+		var lowestNumber = minNumber;
+		var increment = 1;
+
+		orderedArray.sort(function(a, b) {
+			var parsedA = parseInt(a);
+			var parsedB = parseInt(b);
+
+			if (isNaN(parsedA)) {
+				return -1;
+			} else if (isNaN(parsedB)) {
+				return 1;
+			} else {
+				return parsedA > parsedB ? 1 : -1;
+			}
+		});
+
+		_.each(orderedArray, function(number) {
+			var currentNumber = parseInt(number);
+
+			// First we make sure it's a valid number, if not we move on to the next number
+			if (!isNaN(currentNumber)) {
+				// If we went through this loop already, previousIterationNumber will be set to the
+				// number of the previous iteration
+				if (typeof previousIterationNumber !== 'undefined') {
+					// If there's a gap for a number between the last number and the current number,
+					// we check if it's a valid possible number (ie, greater than minNumber).
+					// And If yes, we return it, if not we just continue
+					if (
+						currentNumber - previousIterationNumber !== increment
+						&& previousIterationNumber >= minNumber
+					) {
+						return previousIterationNumber + increment;
+					}
+				// else, it's the first iteration, we initialize the minValue to the first number in
+				// the ordered array.
+				// only if it's greater than 1000, because we don't want to recommend lower numbers
+				} else if (currentNumber > minNumber) {
+					lowestNumber = currentNumber;
+				}
+				// We store current as the previous number for the next iteration
+				previousIterationNumber = currentNumber;
+			}
+		});
+
+		return (previousIterationNumber) ? previousIterationNumber + increment : lowestNumber;
+	}
+	util.getNextExtension = getNextExtension;
 
 	/**
 	 * Returns a list of features available for a Kazoo phone number.
@@ -1489,6 +1365,15 @@ define(function(require) {
 	util.getUserInitials = getUserInitials;
 
 	/**
+	 * Returns Monster-UI version number.
+	 * @return {String} Monster-UI version number.
+	 */
+	function getVersion() {
+		return monster.config.developerFlags.build.version;
+	}
+	util.getVersion = getVersion;
+
+	/**
 	 * Converts a Gregorian timestamp into a Date instance
 	 * @param  {Number} pTimestamp Gregorian timestamp
 	 * @return {Date}           Converted Date instance
@@ -1503,6 +1388,21 @@ define(function(require) {
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
 	util.gregorianToDate = gregorianToDate;
+
+	/**
+	 * Returns a globally unique identifier.
+	 * @return {String} Identifier.
+	 */
+	function guid() {
+		var result = '';
+
+		for (var i = 0; i < 4; i++) {
+			result += (Math.random().toString(16) + '000000000').substr(2, 8);
+		}
+
+		return result;
+	}
+	util.guid = guid;
 
 	/**
 	 * Returns whether a user has admin privileges.
@@ -1680,6 +1580,26 @@ define(function(require) {
 	util.isWhitelabeling = isWhitelabeling;
 
 	/**
+	 * Returns object representation of decoded JWT.
+	 * @param  {String} token     JWT to decode.
+	 * @return {Object|Undefined} Object representation of decoded `token`.
+	 */
+	function jwt_decode(token) {
+		var base64Url = token.split('.')[1];
+		var base64 = base64Url.replace('-', '+').replace('_', '/');
+		var object;
+
+		try {
+			object = JSON.parse(atob(base64));
+		} catch (error) {
+			object = undefined;
+		}
+
+		return object;
+	}
+	util.jwt_decode = jwt_decode;
+
+	/**
 	 * Returns list of formatted app links defined on whitelabel document.
 	 * @return {Object[]} List of formatted app links.
 	 */
@@ -1726,6 +1646,106 @@ define(function(require) {
 			.value();
 	}
 	util.listAppLinks = listAppLinks;
+
+	/**
+	 * Function used to replace displayed phone numbers by "fake" numbers.
+	 * Can be useful to generate marketing documents or screenshots with lots of data without
+	 * showing sensitive information.
+	 */
+	function protectSensitivePhoneNumbers() {
+		var numbers = {};
+		var logs = [];
+		var printLogs = function() {
+			var str = '';
+
+			_.each(logs, function(item, index) {
+				str += index + ' - replace ' + item.oldValue + ' by ' + item.newValue + '\n';
+			});
+
+			console.log(str);
+		};
+		var randomNumber = function(format) {
+			return (Math.floor(Math.random() * 9 * format) + 1 * format);
+		};
+		var randomPhoneNumber = function() {
+			return '+1 555 ' + randomNumber(100) + ' ' + randomNumber(1000);
+		};
+		var randomExtension = function() {
+			return '10' + randomNumber(10);
+		};
+		var replacePhoneNumbers = function(element) {
+			var text = element.innerText;
+			var regex = /(\+?[()\- \d]{10,})/g;
+			var match = regex.exec(text);
+
+			while (match != null) {
+				var key = match[0];
+				var formattedKey = monster.util.formatPhoneNumber(key);
+
+				if (!numbers.hasOwnProperty(formattedKey)) {
+					numbers[formattedKey] = randomPhoneNumber();
+				}
+
+				if (formattedKey !== key) {
+					replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
+				} else {
+					replaceHTML(element, key, numbers[key]);
+				}
+
+				match = regex.exec(text);
+			}
+		};
+		var replaceExtensions = function(element) {
+			var text = element.innerText;
+			var regex = /(\d{4,7})/g;
+			var match = regex.exec(text);
+
+			while (match != null) {
+				var key = match[0];
+
+				if (!numbers.hasOwnProperty(key)) {
+					numbers[key] = randomExtension();
+				}
+
+				replaceHTML(element, key, numbers[key]);
+
+				match = regex.exec(text);
+			}
+		};
+		var replaceHTML = function(element, oldValue, newValue) {
+			// First we need to escape the old value, since we're creating a regex out of it, we
+			// can't have special regex characters like the "+" that are often present in phone
+			// numbers
+			var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+			// Then we create a regex, because we want to replace all the occurences in the
+			// innerHTML, not just the first one
+			var regexOldValue = new RegExp(escapedOldvalue, 'g');
+
+			// Replace all occurences of old value by the new value
+			element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
+
+			logs.push({ oldValue: oldValue, newValue: newValue });
+		};
+		var replaceBoth = function(element) {
+			replaceExtensions(element);
+			replacePhoneNumbers(element);
+		};
+
+		document
+			.querySelectorAll('.number-div,.monster-phone-number-value,.phone-number')
+			.forEach(replacePhoneNumbers);
+		document
+			.querySelectorAll('.extension')
+			.forEach(replaceExtensions);
+		document
+			.querySelectorAll('span,.number,.sub-cell,.element-title, .multi-line-div')
+			.forEach(replaceBoth);
+
+		if (!monster.isEnvironmentProd()) {
+			printLogs();
+		}
+	}
+	util.protectSensitivePhoneNumbers = protectSensitivePhoneNumbers;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
@@ -1817,6 +1837,17 @@ define(function(require) {
 	util.toFriendlyDate = toFriendlyDate;
 
 	/**
+	 * Looks for `path`'s value' in `obj`, otherwise use human readable format of `path`.
+	 * @param  {Object} obj Object to search.
+	 * @param  {String} path Path to resolve.
+	 * @return {String}     Value at `path` or humanl readable `path`.
+	 */
+	function tryI18n(obj, path) {
+		return _.get(obj, path, formatVariableToDisplay(path));
+	}
+	util.tryI18n = tryI18n;
+
+	/**
 	 * Normalize phone number by using E.164 format
 	 * @param  {String} input Input to normalize
 	 * @return {String}       Input normalized as E.164 phone number
@@ -1864,6 +1895,45 @@ define(function(require) {
 		return new Date(timestamp);
 	}
 	util.unixToDate = unixToDate;
+
+	/**
+	 * Updates img relative paths to absolute paths if needed.
+	 * @param  {HTMLElement} markup
+	 * @param  {Object} app
+	 * @return {String}
+	 *
+	 * Without this, img with relative path would be displayed from the domain name of the browser,
+	 * which we want to avoid since we're loading sources from external URLs for some apps.
+	 */
+	function updateImagePath(markup, app) {
+		var $markup = $(markup);
+		var listImg = $markup.find('img');
+		var result = '';
+
+		// For each image, check if the path is correct based on the appPath, and if not change it
+		for (var i = 0; i < listImg.length; i++) {
+			var	currentSrc = listImg[i].src;
+
+			// If it's an image belonging to an app, and the current path doesn't contain the right
+			// appPath
+			if (currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
+				// We replace it by the app path and append the path of the image (we strip the name
+				// of the app, since it's already part of the appPath)
+				var newPath = app.appPath + currentSrc.substring(
+					currentSrc.indexOf(app.name) + app.name.length, currentSrc.length
+				);
+
+				listImg[i].src = newPath;
+			}
+		}
+
+		for (var j = 0; j < $markup.length; j++) {
+			result += $markup[j].outerHTML;
+		}
+
+		return result;
+	}
+	util.updateImagePath = updateImagePath;
 
 	return util;
 });
