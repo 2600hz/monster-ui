@@ -7,222 +7,7 @@ define(function(require) {
 
 	require('moment-timezone');
 
-	var util = {
-
-		parseDateString: function(dateString, dateFormat) {
-			var self = this,
-				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
-				dateFormats = {
-					'mdy': '$1/$2/$3',
-					'dmy': '$2/$1/$3',
-					'ymd': '$2/$3/$1'
-				},
-				format = (dateFormat in dateFormats) ? dateFormat : null;
-
-			if (!format) {
-				var user = monster.apps.auth.currentUser;
-				format = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy';
-			}
-
-			return new Date(dateString.replace(regex, dateFormats[format]));
-		},
-
-		dateToGregorian: function(date) {
-			var formattedResponse;
-
-			// This checks that the parameter is an object and not null, or if it's a UNIX time
-			if (typeof date === 'object' && date) {
-				formattedResponse = parseInt((date.getTime() / 1000) + 62167219200);
-			} else if (typeof date === 'number' && date) {
-				formattedResponse = date + 62167219200;
-			}
-
-			return formattedResponse;
-		},
-
-		dateToUnix: function(date) {
-			var formattedResponse;
-
-			// This checks that the parameter is an object and not null
-			if (typeof date === 'object' && date) {
-				formattedResponse = parseInt(date.getTime() / 1000);
-			}
-
-			return formattedResponse;
-		},
-
-		getDefaultNumbersFormat: function() {
-			var self = this,
-				account = monster.apps.auth.originalAccount || {},
-				format = 'international'; // default
-
-			if (account && account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
-				format = account.ui_flags.numbers_format;
-			}
-
-			return format;
-		},
-
-		/**
-		 * @desc add or remove business days to the current date or to a specific date
-		 * @param numberOfDays - mandatory integer representing the number of business days to add
-		 * @param from - optional JavaScript Date Object
-		 */
-		getBusinessDate: function(numberOfDays, pFrom) {
-			var self = this,
-				from = pFrom && pFrom instanceof Date ? pFrom : new Date(),
-				weeks = Math.floor(numberOfDays / 5),
-				days = ((numberOfDays % 5) + 5) % 5,
-				dayOfTheWeek = from.getDay();
-
-			if (dayOfTheWeek === 6 && days > -1) {
-				if (days === 0) {
-					days -= 2;
-					dayOfTheWeek += 2;
-				}
-
-				days++;
-				dayOfTheWeek -= 6;
-			}
-
-			if (dayOfTheWeek === 0 && days < 1) {
-				if (days === 0) {
-					days += 2;
-					dayOfTheWeek -= 2;
-				}
-
-				days--;
-				dayOfTheWeek += 6;
-			}
-
-			if (dayOfTheWeek + days > 5) {
-				days += 2;
-			}
-
-			if (dayOfTheWeek + days < 1) {
-				days -= 2;
-			}
-
-			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
-		},
-
-		/****************** Helpers not documented because people shouldn't need to use them *******************/
-
-		// Takes seconds and transforms it into a timer
-		friendlyTimer: function(pSeconds, pMode) {
-			var mode = pMode || 'normal',
-				seconds = Math.floor(pSeconds),
-				minutes = Math.floor(seconds / 60) % 60,
-				hours = Math.floor(seconds / 3600) % 24,
-				days = Math.floor(seconds / 86400),
-				remainingSeconds = seconds % 60,
-				i18n = monster.apps.core.i18n.active(),
-				format2Digits = function(number) {
-					if (typeof number === 'string') {
-						number = parseInt(number);
-					}
-					return (number < 10 ? '0' : '') + number;
-				},
-				displayTime = '';
-
-			if (mode === 'verbose') {
-				displayTime = ''.concat(hours, ' ', i18n.friendlyTimer.hours, ', ', minutes, ' ', i18n.friendlyTimer.minutesAnd, ' ', remainingSeconds, ' ', i18n.friendlyTimer.seconds);
-			} else if (mode === 'shortVerbose') {
-				if (hours > 0) {
-					var stringHour = hours === 1 ? i18n.friendlyTimer.hour : i18n.friendlyTimer.hours;
-					displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
-				}
-
-				if (minutes > 0) {
-					var stringMinutes = minutes === 1 ? i18n.friendlyTimer.minute : i18n.friendlyTimer.minutes;
-					displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
-				}
-
-				if (remainingSeconds > 0) {
-					var stringSeconds = remainingSeconds === 1 ? i18n.friendlyTimer.second : i18n.friendlyTimer.seconds;
-					displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
-				}
-			} else {
-				displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
-
-				if (hours || days) {
-					displayTime = format2Digits(hours) + ':' + displayTime;
-				}
-
-				if (days) {
-					displayTime = format2Digits(days) + ':' + displayTime;
-				}
-			}
-
-			return seconds >= 0 ? displayTime : '00:00:00';
-		},
-
-		getDefaultRangeDates: function(pRange) {
-			var self = this,
-				range = pRange || 7,
-				dates = {
-					from: '',
-					to: ''
-				};
-
-			var fromDefault = new Date(),
-				toDefault = new Date();
-
-			if (range === 'monthly') {
-				fromDefault.setMonth(fromDefault.getMonth() - 1);
-			} else {
-				fromDefault.setDate(fromDefault.getDate() - range);
-			}
-			fromDefault.setDate(fromDefault.getDate() + 1);
-
-			dates.from = fromDefault;
-			dates.to = toDefault;
-
-			return dates;
-		},
-
-		getTZDate: function(date, tz) {
-			return new Date(moment.tz(date, tz).unix() * 1000);
-		},
-
-		formatDateDigits: function(digit) {
-			return digit < 10 ? '0' + digit : '' + digit;
-		},
-
-		dateToBeginningOfGregorianDay: function(date, pTimezone) {
-			var self = this,
-				timezone = pTimezone || moment.tz.guess(),
-				// we do month + 1 because jsDate returns 0 for January ... 11 for December
-				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 000000', timezone).unix();
-
-			return self.dateToGregorian(newDate);
-		},
-
-		dateToEndOfGregorianDay: function(date, pTimezone) {
-			var self = this,
-				timezone = pTimezone || moment.tz.guess(),
-				// we do month + 1 because jsDate returns 0 for January ... 11 for December
-				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 235959', timezone).unix();
-
-			return self.dateToGregorian(newDate);
-		},
-
-		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
-		timeToSeconds: function(time) {
-			var suffix = time.substring(time.length - 2).toLowerCase(),
-				timeArr = time.split(':'),
-				hours = parseInt(timeArr[0], 10),
-				minutes = parseInt(timeArr[1], 10);
-
-			if (suffix === 'pm' && hours < 12) {
-				hours += 12;
-			} else if (suffix === 'am' && hours === 12) {
-				hours = 0;
-			}
-
-			return (hours * 3600 + minutes * 60).toString();
-		}
-	};
+	var util = {};
 
 	/**
 	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
@@ -368,6 +153,60 @@ define(function(require) {
 			: 0;
 	}
 	util.cmp = cmp;
+
+	/**
+	 * @param  {Date} date      Date to convert to gregorian.
+	 * @param  {String} [timezone] Timezone to set date in.
+	 * @return {Number}           Gregorian timestamp to beginning of day.
+	 */
+	function dateToBeginningOfGregorianDay(date, pTimezone) {
+		var dateToStartOfDay = moment(date).format('YYYYMMDD 000000');
+		var timezone = pTimezone || moment.tz.guess();
+		var unixTimestamp = moment.tz(dateToStartOfDay, timezone).unix();
+		return dateToGregorian(unixTimestamp);
+	}
+	util.dateToBeginningOfGregorianDay = dateToBeginningOfGregorianDay;
+
+	/**
+	 * @param  {Date} date      Date to convert to gregorian.
+	 * @param  {String} [timezone] Timezone to set date in.
+	 * @return {Number}           Gregorian timestamp to end of day.
+	 */
+	function dateToEndOfGregorianDay(date, pTimezone) {
+		var dateToEndOfDay = moment(date).format('YYYYMMDD 235959');
+		var timezone = pTimezone || moment.tz.guess();
+		var unixTimestamp = moment.tz(dateToEndOfDay, timezone).unix();
+		return dateToGregorian(unixTimestamp);
+	}
+	util.dateToEndOfGregorianDay = dateToEndOfGregorianDay;
+
+	/**
+	 * @param  {Date|Number} date Date or UNIX timestanp
+	 * @return {Number}      Gregorian timestamp.
+	 */
+	function dateToGregorian(date) {
+		var unixToGregorian = function(timestamp) {
+			return _.isNumber(timestamp) ? _.add(timestamp, 62167219200) : undefined;
+		};
+		var dateToGregorian = _.flow(
+			dateToUnix,
+			unixToGregorian
+		);
+
+		return _.isDate(date) ? dateToGregorian(date)
+			: _.isNumber(date) ? unixToGregorian(date)
+			: undefined;
+	}
+	util.dateToGregorian = dateToGregorian;
+
+	/**
+	 * @param  {Date} date
+	 * @return {Number}      UNIX timestamp.
+	 */
+	function dateToUnix(date) {
+		return _.isDate(date) ? _.floor(date.getTime() / 1000) : undefined;
+	}
+	util.dateToUnix = dateToUnix;
 
 	/**
 	 * Collects callflow nodes matching `module` and `data`.
@@ -748,6 +587,71 @@ define(function(require) {
 	util.getAuthToken = getAuthToken;
 
 	/**
+	 * Parses an amount of seconds and returns a time representation such as [DD:]HH:MM:SS.
+	 * @param  {Number} seconds Amount of seconds to format.
+	 * @param  {'verbose'|'shortVerbose'} [mode] Formatting type of time representation.
+	 * @return {String} Time representation of `seconds`.
+	 */
+	function friendlyTimer(seconds, pMode) {
+		var mode = pMode || 'normal';
+		var seconds = Math.floor(seconds);
+		var minutes = Math.floor(seconds / 60) % 60;
+		var hours = Math.floor(seconds / 3600) % 24;
+		var days = Math.floor(seconds / 86400);
+		var remainingSeconds = seconds % 60;
+		var i18n = monster.apps.core.i18n.active();
+		var format2Digits = function(number) {
+			if (typeof number === 'string') {
+				number = parseInt(number);
+			}
+			return (number < 10 ? '0' : '') + number;
+		};
+		var getString = function(quantity, keys) {
+			return i18n.frendlyTimer[quantity === 1 ? keys[0] : keys[1]];
+		};
+		var displayTime = '';
+
+		if (mode === 'verbose') {
+			displayTime = _.join([
+				hours,
+				i18n.friendlyTimer.hours + ',',
+				minutes,
+				i18n.friendlyTimer.minutesAnd,
+				remainingSeconds,
+				i18n.friendlyTimer.seconds
+			], ' ');
+		} else if (mode === 'shortVerbose') {
+			if (hours > 0) {
+				var stringHour = getString(hours, ['hour', 'hours']);
+				displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
+			}
+
+			if (minutes > 0) {
+				var stringMinutes = getString(minutes, ['minute', 'minutes']);
+				displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
+			}
+
+			if (remainingSeconds > 0) {
+				var stringSeconds = getString(remainingSeconds, ['second', 'seconds']);
+				displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
+			}
+		} else {
+			displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
+
+			if (hours || days) {
+				displayTime = format2Digits(hours) + ':' + displayTime;
+			}
+
+			if (days) {
+				displayTime = format2Digits(days) + ':' + displayTime;
+			}
+		}
+
+		return seconds >= 0 ? displayTime : '00:00:00';
+	}
+	util.friendlyTimer = friendlyTimer;
+
+	/**
 	 * Returns a list of bookkeepers available for Monster UI
 	 * @return {Array} List of bookkeepers availalbe
 	 */
@@ -782,6 +686,50 @@ define(function(require) {
 		]);
 	}
 	util.getBookkeepers = getBookkeepers;
+
+	/**
+	 * Adds/removes business days to/from the current date or a specific date.
+	 * @param  {Number} numberOfDays Number of business days to add/remove.
+	 * @param  {Date} [from]        Specific date to calculate from.
+	 * @return {Date}              Adjusted date.
+	 */
+	function getBusinessDate(numberOfDays, pFrom) {
+		var from = _.isDate(pFrom) ? pFrom : new Date();
+		var weeks = Math.floor(numberOfDays / 5);
+		var days = ((numberOfDays % 5) + 5) % 5;
+		var dayOfTheWeek = from.getDay();
+
+		if (dayOfTheWeek === 6 && days > -1) {
+			if (days === 0) {
+				days -= 2;
+				dayOfTheWeek += 2;
+			}
+
+			days++;
+			dayOfTheWeek -= 6;
+		}
+
+		if (dayOfTheWeek === 0 && days < 1) {
+			if (days === 0) {
+				days += 2;
+				dayOfTheWeek -= 2;
+			}
+
+			days--;
+			dayOfTheWeek += 6;
+		}
+
+		if (dayOfTheWeek + days > 5) {
+			days += 2;
+		}
+
+		if (dayOfTheWeek + days < 1) {
+			days -= 2;
+		}
+
+		return new Date(from.setDate(from.getDate() + weeks * 7 + days));
+	}
+	util.getBusinessDate = getBusinessDate;
 
 	/**
 	 * Returns capability information about a resource/feature.
@@ -880,6 +828,32 @@ define(function(require) {
 		};
 	}
 	util.dataFlags = getDataFlagsManager();
+
+	/**
+	 * @param  {'monthly'|Number} [range=7]
+	 * @return {Object}
+	 */
+	function getDefaultRangeDates(pRange) {
+		var range = pRange || 7;
+		var now = moment();
+		var params = range === 'monthly' ? {
+			quantity: 1,
+			period: 'month'
+		} : {
+			quantity: range,
+			period: 'days'
+		};
+
+		return {
+			from: now
+				.clone()
+				.subtract(params.quantity, params.period)
+				.add(1, 'days')
+				.toDate(),
+			to: now.toDate()
+		};
+	}
+	util.getDefaultRangeDates = getDefaultRangeDates;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
@@ -1806,6 +1780,26 @@ define(function(require) {
 		reload();
 	}
 	util.logoutAndReload = logoutAndReload;
+
+	/**
+	 * @param  {String} time Time in hh:mmA format
+	 * @return {String}      Amount of seconds in `time`.
+	 */
+	function timeToSeconds(time) {
+		var suffix = time.substring(time.length - 2).toLowerCase();
+		var timeArr = time.split(':');
+		var hours = parseInt(timeArr[0], 10);
+		var minutes = parseInt(timeArr[1], 10);
+
+		if (suffix === 'pm' && hours < 12) {
+			hours += 12;
+		} else if (suffix === 'am' && hours === 12) {
+			hours = 0;
+		}
+
+		return (hours * 3600 + minutes * 60).toString();
+	}
+	util.timeToSeconds = timeToSeconds;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
