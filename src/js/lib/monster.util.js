@@ -77,15 +77,12 @@ define(function(require) {
 	 * Leaving this here for now, might have to just remove and forget about it eventually :/
 	 */
 	function cacheUrl(url) {
-		var self = this;
-
 		return url;
 
-		// var self = this;
 		// var prepend = url.indexOf('?') >= 0 ? '&' : '?';
 		// var isDev = monster.config.developerFlags.build.type === 'development';
 		// var devCacheString = (new Date()).getTime();
-		// var prodCacheString = monster.util.getVersion();
+		// var prodCacheString = getVersion();
 		// var cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString);
 		// var finalString = url + cacheString;
 
@@ -801,7 +798,7 @@ define(function(require) {
 			.chain(user)
 			.get('appList', [])
 			.find(_.partial(_.includes, validAppIds))
-			.thru(monster.util.getAppStoreMetadata)
+			.thru(getAppStoreMetadata)
 			.defaultTo(_.head(validApps))
 			.value();
 	}
@@ -1246,7 +1243,7 @@ define(function(require) {
 	 * @return {String}                   User's full name
 	 */
 	function getUserFullName(pUser) {
-		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+		if (_.isUndefined(pUser) && !isLoggedIn()) {
 			throw new Error('There is no logged in user');
 		}
 		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
@@ -1285,7 +1282,7 @@ define(function(require) {
 	 * @return {String}                   User's initials
 	 */
 	function getUserInitials(pUser) {
-		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+		if (_.isUndefined(pUser) && !isLoggedIn()) {
 			throw new Error('There is no logged in user');
 		}
 		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
@@ -1623,7 +1620,7 @@ define(function(require) {
 
 			while (match != null) {
 				var key = match[0];
-				var formattedKey = monster.util.formatPhoneNumber(key);
+				var formattedKey = formatPhoneNumber(key);
 
 				if (!numbers.hasOwnProperty(formattedKey)) {
 					numbers[formattedKey] = randomPhoneNumber();
