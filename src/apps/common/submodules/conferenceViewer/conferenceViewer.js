@@ -398,9 +398,7 @@ define(function(require) {
 					$addButton.addClass('disabled');
 					break;
 				case 'unlock':
-					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
-					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
-					$addButton.removeClass('disabled');
+					self.conferenceViewerUnlockAction();
 					break;
 				default:
 					break;
@@ -417,6 +415,15 @@ define(function(require) {
 					})
 				});
 			}
+		},
+
+		conferenceViewerUnlockAction: function() {
+			var container = $('.view-conference-wrapper'),
+				$addButton = container.find('.conference-action[data-action="add"]');
+
+			container.find('.conference-action[data-action="unlock"]').addClass('hidden');
+			container.find('.conference-action[data-action="lock"]').removeClass('hidden');
+			$addButton.removeClass('disabled');
 		},
 
 		conferenceViewerStartConference: function(duration, container) {
@@ -603,6 +610,7 @@ define(function(require) {
 
 			if (moderatorsCount + participantsCount === 0) {
 				self.conferenceViewerStopConference();
+				self.conferenceViewerUnlockAction();
 				container.find('.admin-actions button').addClass('disabled');
 			}
 
