@@ -1,13 +1,82 @@
 define(function(require) {
-	var $ = require('jquery'),
-		_ = require('lodash'),
-		monster = require('monster'),
-		libphonenumber = require('libphonenumber'),
-		moment = require('moment');
+	var $ = require('jquery');
+	var _ = require('lodash');
+	var monster = require('monster');
+	var libphonenumber = require('libphonenumber');
+	var moment = require('moment');
 
 	require('moment-timezone');
 
-	var util = {};
+	return {
+		autoLogout: autoLogout,
+		cacheUrl: cacheUrl,
+		canAddExternalNumbers: canAddExternalNumbers,
+		canImpersonate: canImpersonate,
+		checkVersion: checkVersion,
+		cmp: cmp,
+		dataFlags: getDataFlagsManager(),
+		dateToBeginningOfGregorianDay: dateToBeginningOfGregorianDay,
+		dateToEndOfGregorianDay: dateToEndOfGregorianDay,
+		dateToGregorian: dateToGregorian,
+		dateToUnix: dateToUnix,
+		findCallflowNode: findCallflowNode,
+		formatBytes: formatBytes,
+		formatMacAddress: formatMacAddress,
+		formatNumber: formatNumber,
+		formatPhoneNumber: formatPhoneNumber,
+		formatPrice: formatPrice,
+		formatVariableToDisplay: formatVariableToDisplay,
+		friendlyTimer: friendlyTimer,
+		getAppIconPath: getAppIconPath,
+		getAppStoreMetadata: getAppStoreMetadata,
+		getAuthToken: getAuthToken,
+		getBookkeepers: getBookkeepers,
+		getBusinessDate: getBusinessDate,
+		getCapability: getCapability,
+		getCurrencySymbol: getCurrencySymbol,
+		getCurrentTimeZone: getCurrentTimeZone,
+		getCurrentUserDefaultApp: getCurrentUserDefaultApp,
+		getDefaultRangeDates: getDefaultRangeDates,
+		getFormatPhoneNumber: getFormatPhoneNumber,
+		getModbID: getModbID,
+		getNextExtension: getNextExtension,
+		getNumberFeatures: getNumberFeatures,
+		getUrlVars: getUrlVars,
+		getUserFullName: getUserFullName,
+		getUserInitials: getUserInitials,
+		getVersion: getVersion,
+		gregorianToDate: gregorianToDate,
+		guid: guid,
+		isAdmin: isAdmin,
+		isJSON: isJSON,
+		isLoggedIn: isLoggedIn,
+		isMasquerading: isMasquerading,
+		isNumberFeatureEnabled: isNumberFeatureEnabled,
+		isReseller: isReseller,
+		isSuperDuper: isSuperDuper,
+		isTrial: isTrial,
+		isUserPermittedApp: isUserPermittedApp,
+		isWhitelabeling: isWhitelabeling,
+		jwt_decode: jwt_decode,
+		listAppsMetadata: listAppsMetadata,
+		listAppStoreMetadata: listAppStoreMetadata,
+		listAppLinks: listAppLinks,
+		protectSensitivePhoneNumbers: protectSensitivePhoneNumbers,
+		randomString: randomString,
+		reload: reload,
+		resetAuthCookies: resetAuthCookies,
+		logoutAndReload: logoutAndReload,
+		timeToSeconds: timeToSeconds,
+		toFriendlyDate: toFriendlyDate,
+		tryI18n: tryI18n,
+		uiFlags: {
+			account: getUiFlagsManager('account'),
+			user: getUiFlagsManager('user')
+		},
+		unformatPhoneNumber: unformatPhoneNumber,
+		unixToDate: unixToDate,
+		updateImagePath: updateImagePath
+	};
 
 	/**
 	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
@@ -57,7 +126,6 @@ define(function(require) {
 
 		resetTimer();
 	}
-	util.autoLogout = autoLogout;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
@@ -88,7 +156,6 @@ define(function(require) {
 
 		// return finalString;
 	}
-	util.cacheUrl = cacheUrl;
 
 	/**
 	 * Returns whether an account is allowed to add external phone numbers.
@@ -103,7 +170,6 @@ define(function(require) {
 			{ wnm_allow_additions: true }
 		);
 	}
-	util.canAddExternalNumbers = canAddExternalNumbers;
 
 	/**
 	 * Returns whether `accountId` has the ability to impersonate sub-account users.
@@ -113,7 +179,6 @@ define(function(require) {
 	function canImpersonate(accountId) {
 		return isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
 	}
-	util.canImpersonate = canImpersonate;
 
 	/**
 	 * Prompts for user confirmation when `object` has non Monster-UI metadata.
@@ -136,7 +201,6 @@ define(function(require) {
 		}
 		monster.ui.confirm(i18n.olderVersion, callback);
 	}
-	util.checkVersion = checkVersion;
 
 	/**
 	 * Compare function for `Array#sort`.
@@ -149,7 +213,6 @@ define(function(require) {
 			: a < b ? -1
 			: 0;
 	}
-	util.cmp = cmp;
 
 	/**
 	 * @param  {Date} date      Date to convert to gregorian.
@@ -162,7 +225,6 @@ define(function(require) {
 		var unixTimestamp = moment.tz(dateToStartOfDay, timezone).unix();
 		return dateToGregorian(unixTimestamp);
 	}
-	util.dateToBeginningOfGregorianDay = dateToBeginningOfGregorianDay;
 
 	/**
 	 * @param  {Date} date      Date to convert to gregorian.
@@ -175,7 +237,6 @@ define(function(require) {
 		var unixTimestamp = moment.tz(dateToEndOfDay, timezone).unix();
 		return dateToGregorian(unixTimestamp);
 	}
-	util.dateToEndOfGregorianDay = dateToEndOfGregorianDay;
 
 	/**
 	 * @param  {Date|Number} date Date or UNIX timestanp
@@ -194,7 +255,6 @@ define(function(require) {
 			: _.isNumber(date) ? unixToGregorian(date)
 			: undefined;
 	}
-	util.dateToGregorian = dateToGregorian;
 
 	/**
 	 * @param  {Date} date
@@ -203,7 +263,6 @@ define(function(require) {
 	function dateToUnix(date) {
 		return _.isDate(date) ? _.floor(date.getTime() / 1000) : undefined;
 	}
-	util.dateToUnix = dateToUnix;
 
 	/**
 	 * Collects callflow nodes matching `module` and `data`.
@@ -229,7 +288,6 @@ define(function(require) {
 
 		return result.length > 1 ? result : result[0];
 	}
-	util.findCallflowNode = findCallflowNode;
 
 	/**
 	 * Parses bytes value into human readable value/unit pair.
@@ -257,7 +315,6 @@ define(function(require) {
 			};
 		}
 	}
-	util.formatBytes = formatBytes;
 
 	/**
 	 * Formats a string into a string representation of a MAC address, using colons as separator.
@@ -277,7 +334,6 @@ define(function(require) {
 			? matches.slice(0, 6).join(':')
 			: '';
 	}
-	util.formatMacAddress = formatMacAddress;
 
 	/**
 	 * Wrapper over Intl.NumberFormat constructor's format function
@@ -320,7 +376,6 @@ define(function(require) {
 		});
 		return formatter.format(number);
 	}
-	util.formatNumber = formatNumber;
 
 	/**
 	 * Phone number formatting according to user preferences.
@@ -336,7 +391,6 @@ define(function(require) {
 			? _.get(phoneNumber, 'userFormat')
 			: _.toString(input);
 	}
-	util.formatPhoneNumber = formatPhoneNumber;
 
 	/**
 	 * Decimal and currency formatting for prices
@@ -378,7 +432,6 @@ define(function(require) {
 
 		return formatter.format(price);
 	}
-	util.formatPrice = formatPrice;
 
 	/**
 	 * Takes a string and replace all the "_" from it with a " ".
@@ -395,7 +448,6 @@ define(function(require) {
 			.replace(/\w\S*/g, _.capitalize)
 			.value();
 	}
-	util.formatVariableToDisplay = formatVariableToDisplay;
 
 	/**
 	 * Returns an app's icon path/URL.
@@ -463,7 +515,6 @@ define(function(require) {
 			], '');
 		}
 	}
-	util.getAppIconPath = getAppIconPath;
 
 	/**
 	 * @param  {Object[]} apps List of apps to get app metadata from.
@@ -511,7 +562,6 @@ define(function(require) {
 			input
 		);
 	}
-	util.getAppStoreMetadata = getAppStoreMetadata;
 
 	/**
 	 * @param  {Object[]} apps List of apps to filter by `scope`.
@@ -557,7 +607,6 @@ define(function(require) {
 			.map(formatMetadata)
 			.value();
 	}
-	util.listAppsMetadata = listAppsMetadata;
 
 	/**
 	 * @param  {String} scope
@@ -569,7 +618,6 @@ define(function(require) {
 			scope
 		);
 	}
-	util.listAppStoreMetadata = listAppStoreMetadata;
 
 	/**
 	 * Returns auth token for `connectionName`.
@@ -581,7 +629,6 @@ define(function(require) {
 			? monster.apps.auth.getAuthTokenByConnection(connectionName)
 			: undefined;
 	}
-	util.getAuthToken = getAuthToken;
 
 	/**
 	 * Parses an amount of seconds and returns a time representation such as [DD:]HH:MM:SS.
@@ -646,7 +693,6 @@ define(function(require) {
 
 		return seconds >= 0 ? displayTime : '00:00:00';
 	}
-	util.friendlyTimer = friendlyTimer;
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
@@ -682,7 +728,6 @@ define(function(require) {
 				.value()
 		]);
 	}
-	util.getBookkeepers = getBookkeepers;
 
 	/**
 	 * Adds/removes business days to/from the current date or a specific date.
@@ -726,7 +771,6 @@ define(function(require) {
 
 		return new Date(from.setDate(from.getDate() + weeks * 7 + days));
 	}
-	util.getBusinessDate = getBusinessDate;
 
 	/**
 	 * Returns capability information about a resource/feature.
@@ -749,7 +793,6 @@ define(function(require) {
 			defaultValue: _.get(node, 'default')
 		} : {});
 	}
-	util.getCapability = getCapability;
 
 	/**
 	 * Return the symbol of the currency used through the UI
@@ -764,7 +807,6 @@ define(function(require) {
 
 		return formatter.format(base).replace('NaN', '').trim();
 	}
-	util.getCurrencySymbol = getCurrencySymbol;
 
 	/**
 	 * Returns the timezone of the currently authenticated session
@@ -779,7 +821,6 @@ define(function(require) {
 			|| _.get(monster, 'apps.auth.currentAccount.timezone')
 			|| moment.tz.guess();
 	}
-	util.getCurrentTimeZone = getCurrentTimeZone;
 
 	/**
 	 * Returns the app considered as default for current user.
@@ -802,7 +843,6 @@ define(function(require) {
 			.defaultTo(_.head(validApps))
 			.value();
 	}
-	util.getCurrentUserDefaultApp = getCurrentUserDefaultApp;
 
 	/**
 	 * @private
@@ -824,7 +864,6 @@ define(function(require) {
 			}
 		};
 	}
-	util.dataFlags = getDataFlagsManager();
 
 	/**
 	 * @param  {'monthly'|Number} [range=7]
@@ -850,7 +889,6 @@ define(function(require) {
 			to: now.toDate()
 		};
 	}
-	util.getDefaultRangeDates = getDefaultRangeDates;
 
 	function getFormatPhoneNumber(input) {
 		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
@@ -919,7 +957,6 @@ define(function(require) {
 
 		return formattedData;
 	}
-	util.getFormatPhoneNumber = getFormatPhoneNumber;
 
 	/**
 	 * Prepends MoDB prefix to a value when it does not already starts with it.
@@ -933,7 +970,6 @@ define(function(require) {
 
 		return _.startsWith(id, prefix) ? id : prefix + id;
 	}
-	util.getModbID = getModbID;
 
 	/**
 	 * Determine the date format from a specific or current user's settings
@@ -1059,7 +1095,6 @@ define(function(require) {
 
 		return (previousIterationNumber) ? previousIterationNumber + increment : lowestNumber;
 	}
-	util.getNextExtension = getNextExtension;
 
 	/**
 	 * Returns a list of features available for a Kazoo phone number.
@@ -1078,7 +1113,6 @@ define(function(require) {
 		});
 		return _.get(number, pathToFeatures, []);
 	}
-	util.getNumberFeatures = getNumberFeatures;
 
 	/**
 	 * To keep the structure of the help settings consistent, we built this helper so devs don't
@@ -1118,10 +1152,6 @@ define(function(require) {
 			destroy: applier(unset)
 		};
 	}
-	util.uiFlags = {
-		account: getUiFlagsManager('account'),
-		user: getUiFlagsManager('user')
-	};
 
 	/**
 	 * Returns map of URL parameters, with the option to return the value of a specific parameter
@@ -1232,7 +1262,6 @@ define(function(require) {
 
 		return getUrlParams(window.location);
 	}
-	util.getUrlVars = getUrlVars;
 
 	/**
 	 * Returns the full name of a specific user or, if missing, of the currently logged in user.
@@ -1268,7 +1297,6 @@ define(function(require) {
 			}
 		});
 	}
-	util.getUserFullName = getUserFullName;
 
 	/**
 	 * Returns the initials (two characters) of a specific user or, if missing, of the currently
@@ -1302,7 +1330,6 @@ define(function(require) {
 
 		return (user.first_name || '').charAt(0) + (user.last_name || '').charAt(0);
 	}
-	util.getUserInitials = getUserInitials;
 
 	/**
 	 * Returns Monster-UI version number.
@@ -1311,7 +1338,6 @@ define(function(require) {
 	function getVersion() {
 		return monster.config.developerFlags.build.version;
 	}
-	util.getVersion = getVersion;
 
 	/**
 	 * Converts a Gregorian timestamp into a Date instance
@@ -1327,7 +1353,6 @@ define(function(require) {
 		}
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
-	util.gregorianToDate = gregorianToDate;
 
 	/**
 	 * Returns a globally unique identifier.
@@ -1342,7 +1367,6 @@ define(function(require) {
 
 		return result;
 	}
-	util.guid = guid;
 
 	/**
 	 * Returns whether a user has admin privileges.
@@ -1357,7 +1381,6 @@ define(function(require) {
 			{ priv_level: 'admin' }
 		);
 	}
-	util.isAdmin = isAdmin;
 
 	/**
 	 * Returns whether a value can be converted into JSON.
@@ -1372,7 +1395,6 @@ define(function(require) {
 		}
 		return true;
 	}
-	util.isJSON = isJSON;
 
 	/**
 	 * Returns whether or not a user is logged in
@@ -1381,7 +1403,6 @@ define(function(require) {
 	function isLoggedIn() {
 		return _.get(monster, 'apps.auth.appFlags.isAuthentified', false);
 	}
-	util.isLoggedIn = isLoggedIn;
 
 	/**
 	 * Returns whether current account is masquerading.
@@ -1400,7 +1421,6 @@ define(function(require) {
 			))
 			.value();
 	}
-	util.isMasquerading = isMasquerading;
 
 	/**
 	 * Determine if a specific number feature is enabled on the current account
@@ -1424,7 +1444,6 @@ define(function(require) {
 				true
 			);
 	}
-	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 
 	/**
 	 * Returns whether or not the account provided is a reseller or not.
@@ -1435,7 +1454,6 @@ define(function(require) {
 		var account = pAccount || _.get(monster, 'apps.auth.originalAccount', {});
 		return _.get(account, 'is_reseller', false);
 	}
-	util.isReseller = isReseller;
 
 	/**
 	 * Returns whether an account is superduper admin.
@@ -1450,7 +1468,6 @@ define(function(require) {
 			{ superduper_admin: true }
 		);
 	}
-	util.isSuperDuper = isSuperDuper;
 
 	/**
 	 * Returns whether an account is in trial period.
@@ -1465,7 +1482,6 @@ define(function(require) {
 			'trial_time_left'
 		);
 	}
-	util.isTrial = isTrial;
 
 	/**
 	 * Returns whether a user is allowed to access an app.
@@ -1504,7 +1520,6 @@ define(function(require) {
 
 		return checkForPermission(user);
 	}
-	util.isUserPermittedApp = isUserPermittedApp;
 
 	/**
 	 * Returns whether whitelabelling is configured for current domain.
@@ -1517,7 +1532,6 @@ define(function(require) {
 			.isEmpty()
 			.value();
 	}
-	util.isWhitelabeling = isWhitelabeling;
 
 	/**
 	 * Returns object representation of decoded JWT.
@@ -1537,7 +1551,6 @@ define(function(require) {
 
 		return object;
 	}
-	util.jwt_decode = jwt_decode;
 
 	/**
 	 * Returns list of formatted app links defined on whitelabel document.
@@ -1585,7 +1598,6 @@ define(function(require) {
 			.reject(hasInvalidProps)
 			.value();
 	}
-	util.listAppLinks = listAppLinks;
 
 	/**
 	 * Function used to replace displayed phone numbers by "fake" numbers.
@@ -1685,7 +1697,6 @@ define(function(require) {
 			printLogs();
 		}
 	}
-	util.protectSensitivePhoneNumbers = protectSensitivePhoneNumbers;
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
@@ -1736,7 +1747,6 @@ define(function(require) {
 				.join('')
 				.value();
 	}
-	util.randomString = randomString;
 
 	/**
 	 * Reloads current URL or SSO logout one if configured.
@@ -1753,7 +1763,6 @@ define(function(require) {
 			window.location = window.location.pathname;
 		}
 	}
-	util.reload = reload;
 
 	/**
 	 * Unset authentication related cookies.
@@ -1762,7 +1771,6 @@ define(function(require) {
 		monster.cookies.remove('monster-auth');
 		monster.cookies.remove('monster-sso-auth');
 	}
-	util.resetAuthCookies = resetAuthCookies;
 
 	/**
 	 * Triggers logout metchanism.
@@ -1776,7 +1784,6 @@ define(function(require) {
 
 		reload();
 	}
-	util.logoutAndReload = logoutAndReload;
 
 	/**
 	 * @param  {String} time Time in hh:mmA format
@@ -1796,7 +1803,6 @@ define(function(require) {
 
 		return (hours * 3600 + minutes * 60).toString();
 	}
-	util.timeToSeconds = timeToSeconds;
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
@@ -1834,7 +1840,6 @@ define(function(require) {
 			.tz(tz)
 			.format(format);
 	}
-	util.toFriendlyDate = toFriendlyDate;
 
 	/**
 	 * Looks for `path`'s value' in `obj`, otherwise use human readable format of `path`.
@@ -1845,7 +1850,6 @@ define(function(require) {
 	function tryI18n(obj, path) {
 		return _.get(obj, path, formatVariableToDisplay(path));
 	}
-	util.tryI18n = tryI18n;
 
 	/**
 	 * Normalize phone number by using E.164 format
@@ -1861,7 +1865,6 @@ define(function(require) {
 			? _.get(phoneNumber, 'e164Number')
 			: _.replace(input, /[^0-9+]/g, '');
 	}
-	util.unformatPhoneNumber = unformatPhoneNumber;
 
 	/**
 	 * Converts a Unix timestamp into a Date instance
@@ -1894,7 +1897,6 @@ define(function(require) {
 		}
 		return new Date(timestamp);
 	}
-	util.unixToDate = unixToDate;
 
 	/**
 	 * Updates img relative paths to absolute paths if needed.
@@ -1933,7 +1935,4 @@ define(function(require) {
 
 		return result;
 	}
-	util.updateImagePath = updateImagePath;
-
-	return util;
 });
