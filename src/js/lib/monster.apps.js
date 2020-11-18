@@ -29,24 +29,24 @@ define(function() {
 			app.uiFlags = {
 				user: {
 					set: function(flagName, value, user) {
-						return monster.util.uiFlags.user.set(app.name, flagName, value, user);
+						return monster.util.uiFlags.user.set(user, app.name, flagName, value);
 					},
 					get: function(flagName, user) {
-						return monster.util.uiFlags.user.get(app.name, flagName, user);
+						return monster.util.uiFlags.user.get(user, app.name, flagName);
 					},
 					destroy: function(flagName, user) {
-						return monster.util.uiFlags.user.destroy(app.name, flagName, user);
+						return monster.util.uiFlags.user.destroy(user, app.name, flagName);
 					}
 				},
 				account: {
 					set: function(flagName, value, account) {
-						return monster.util.uiFlags.account.set(app.name, flagName, value, account);
+						return monster.util.uiFlags.account.set(account, app.name, flagName, value);
 					},
 					get: function(flagName, account) {
-						return monster.util.uiFlags.account.get(app.name, flagName, account);
+						return monster.util.uiFlags.account.get(account, app.name, flagName);
 					},
 					destroy: function(flagName, account) {
-						return monster.util.uiFlags.account.destroy(app.name, flagName, account);
+						return monster.util.uiFlags.account.destroy(account, app.name, flagName);
 					}
 				}
 			};
