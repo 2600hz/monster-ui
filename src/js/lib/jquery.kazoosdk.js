@@ -94,6 +94,10 @@
 				'listByInteraction': { verb: 'GET', url: 'accounts/{accountId}/cdrs/interaction' },
 				'listLegs': { verb: 'GET', url: 'accounts/{accountId}/cdrs/legs/{callId}' }
 			},
+			cdrPushOnebill: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/cdr_push_onebill' },
+				'post': { verb: 'POST', url: 'accounts/{accountId}/cdr_push_onebill' }
+			},
 			channel: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/channels' },
 				'action': { verb: 'PUT', url: 'accounts/{accountId}/channels/{callId}', removeMetadataAPI: true }
