@@ -178,6 +178,16 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
+						$this = $(this);
+
+						if ($this.hasClass('disabled')) {
+							return;
+						}
+
+						//disable button after it's clicked
+						$this
+							.addClass('disabled');
+
 						self.navigationWizardComplete({
 							eventType: 'done'
 						});
@@ -541,6 +551,11 @@ define(function(require) {
 				});
 
 			if (!result.valid) {
+				//If it fails for any reason then re-enable the button
+				wizardArgs
+					.container
+						.find('#done')
+						.removeClass('disabled');
 				return;
 			}
 
