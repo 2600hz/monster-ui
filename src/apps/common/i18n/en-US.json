@@ -1045,7 +1045,15 @@
 		"emptyParticipants": "There are currently no participants active in this conference",
 		"notStarted": "Not Started",
 		"refreshWebsocket": "The connection with the WebSocket restarted, refreshing the data...",
-
+		"toastr": {
+			"error": {
+				"participantInvite": "An error occurred while inviting participants"
+			},
+			"info": {
+				"participantInvite": "{{name}}  is unreachable"
+			}
+		},
+		"unknownEndpointName": "Participant",
 		"addEndpointDialog": {
 			"users": "Users",
 			"devices": "Devices",

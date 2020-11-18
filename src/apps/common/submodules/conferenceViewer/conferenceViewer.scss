@@ -7,22 +7,25 @@
 	font-size: 12px;
 }
 
-.view-conference-wrapper .conference-name {
-	display: inline-block;
-	float: left;
-	font-size: 24px;
-	line-height: 36px;
+.view-conference-wrapper .view-header-wrapper .view-header {
+	display: flex;
+	flex-wrap: wrap;
+
+	.actions {
+		display: flex;
+	}
 }
 
-.view-conference-wrapper .other-actions {
-	display: inline-block;
-	float: left;
-	margin-left: 18px;
+.view-conference-wrapper .conference-name {
+	margin-right: 10px;
+	font-size: 24px;
+	line-height: 36px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .view-conference-wrapper .admin-actions {
-	display: inline-block;
-	float: left;
 	margin-left: 10px;
 	margin-bottom: 0;
 }
