@@ -558,6 +558,10 @@
 				'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
 				'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
 				'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}' }
+			},
+			onebillIntegration: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/cdr_push_onebill' },
+				'post': { verb: 'POST', url: 'accounts/{accountId}/cdr_push_onebill' }
 			}
 		},
 		authTokens = {};
