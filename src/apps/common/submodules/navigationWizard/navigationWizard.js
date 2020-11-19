@@ -207,24 +207,19 @@ define(function(require) {
 					});
 
 			$template
-				.find('#done')
-					.on('click', function(event) {
-						event.preventDefault();
+				.on('click', '#done:not(.disabled)', function(event) {
+					event.preventDefault();
 
-						$this = $(this);
+					$this = $(this);
 
-						if ($this.hasClass('disabled')) {
-							return;
-						}
+					//disable button after it's clicked
+					$this
+						.addClass('disabled');
 
-						//disable button after it's clicked
-						$this
-							.addClass('disabled');
-
-						self.navigationWizardComplete({
-							eventType: 'done'
-						});
+					self.navigationWizardComplete({
+						eventType: 'done'
 					});
+				});
 
 			$template
 				.find('#save_app, #navigation_wizard_save')
