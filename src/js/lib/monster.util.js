@@ -163,33 +163,25 @@ define(function(require) {
 	}
 
 	/**
-	 * Formats a string into a string representation of a MAC address, using colons as separator.
-	 * @param  {String} url
-	 * @return {String}
-	 *
-	 * Commenting this as we don't want to add this just yet. We have issues with this code because
-	 * versions from apps != versions in VERSION.
-	 *
-	 * If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change,
-	 * which means we wouldn't change the query sting used to get assets from any app, even
-	 * monster-ui-voip...
-	 *
-	 * This only gets incremented when master build runs, whereas we need it to be changed when an
-	 * app is built as well...
-	 *
-	 * Leaving this here for now, might have to just remove and forget about it eventually :/
+	 * Appends app version to a url.
+	 * @param  {Object} app Representation of an app.
+	 * @param  {String} url URL to append version to.
+	 * @return {String}     URL with version.
 	 */
-	function cacheUrl(url) {
-		return url;
+	function cacheUrl(app, url) {
+		var isNonEmptyString = _.overEvery(
+			_.isString,
+			_.negate(_.isEmpty)
+		);
+		var bustValue = _.find([
+			_.get(app, 'data.version'),
+			_.toString(new Date().getTime())
+		], isNonEmptyString);
+		var bustName = 'v';
+		var bustParameter = _.join([bustName, bustValue], '=');
+		var delimiter = _.includes(url, '?') ? '&' : '?';
 
-		// var prepend = url.indexOf('?') >= 0 ? '&' : '?';
-		// var isDev = monster.config.developerFlags.build.type === 'development';
-		// var devCacheString = (new Date()).getTime();
-		// var prodCacheString = getVersion();
-		// var cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString);
-		// var finalString = url + cacheString;
-
-		// return finalString;
+		return url + delimiter + bustParameter;
 	}
 
 	/**

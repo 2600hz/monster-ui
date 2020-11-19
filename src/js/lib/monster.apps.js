@@ -462,7 +462,7 @@ define(function() {
 				addCss = function(fileName) {
 					fileName = app.appPath + '/style/' + fileName + '.css';
 
-					monster.css(fileName);
+					monster.css(app, fileName);
 				};
 
 			// If the app wasn't already loaded by our build (it minifies and concatenate some apps)
@@ -723,7 +723,7 @@ define(function() {
 				language = language.replace(/-.*/, _.toUpper),
 				loadFile = function loadFile(app, language, callback) {
 					$.ajax({
-						url: monster.util.cacheUrl(app.appPath + '/i18n/' + language + '.json'),
+						url: monster.util.cacheUrl(app, app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
 						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
