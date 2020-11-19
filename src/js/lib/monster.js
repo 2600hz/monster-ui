@@ -799,17 +799,17 @@ define(function(require) {
 	}
 
 	/**
-	 * Returns whether the build was optimized for a production environment.
-	 * @return {Boolean} Whether the build was optimized for a production environment.
+	 * Returns whether the running build is for a development environment.
+	 * @return {Boolean} Whether the running build is for a development environment.
 	 */
-	function isEnvironmentProd() {
-		return _
+	function isDev() {
+		return !_
 			.chain(monster)
 			.get('config.developerFlags.build.type')
 			.isEqual('production')
 			.value();
 	}
-	monster.isEnvironmentProd = isEnvironmentProd;
+	monster.isDev = isDev;
 
 	function isArrayOfHttpUrls(input) {
 		var isHttpUrl = function(string) {
