@@ -398,9 +398,7 @@ define(function(require) {
 					$addButton.addClass('disabled');
 					break;
 				case 'unlock':
-					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
-					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
-					$addButton.removeClass('disabled');
+					self.conferenceViewerUnlockAction();
 					break;
 				default:
 					break;
@@ -417,6 +415,15 @@ define(function(require) {
 					})
 				});
 			}
+		},
+
+		conferenceViewerUnlockAction: function() {
+			var container = $('.view-conference-wrapper'),
+				$addButton = container.find('.conference-action[data-action="add"]');
+
+			container.find('.conference-action[data-action="unlock"]').addClass('hidden');
+			container.find('.conference-action[data-action="lock"]').removeClass('hidden');
+			$addButton.removeClass('disabled');
 		},
 
 		conferenceViewerStartConference: function(duration, container) {
@@ -500,6 +507,7 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'conference.action',
+				bypassProgressIndicator: true,
 				data: {
 					accountId: self.accountId,
 					conferenceId: conferenceId,
@@ -509,7 +517,10 @@ define(function(require) {
 					}
 				},
 				success: function(data) {
-					callback && callback(data.data);
+					callback && callback(null, data.data);
+				},
+				error: function(parsedError) {
+					callback && callback(parsedError);
 				}
 			});
 		},
@@ -531,10 +542,28 @@ define(function(require) {
 		},
 
 		conferenceViewerAddParticipantsDialog: function(conference) {
-			var self = this;
+			var self = this,
+				getEndpointName = function(endpoint) {
+					var userFullName;
+					try {
+						userFullName = monster.util.getUserFullName(endpoint);
+					} catch (error) {
+						userFullName = self.i18n.active().conferenceViewer.unknownEndpointName;
+					}
+					return _
+						.chain(endpoint)
+						.get('name')
+						.defaultTo(userFullName)
+						.value();
+				};
 
 			self.conferenceViewerGetAddEndpointsData(function(data) {
 				var formattedData = self.conferenceViewerFormatAddParticipants(data),
+					endpointsPerId = _
+						.chain([data.devices, data.users])
+						.flatten()
+						.keyBy('id')
+						.value(),
 					template = $(self.getTemplate({ name: 'addEndpointDialog', submodule: 'conferenceViewer', data: formattedData }));
 
 				monster.ui.chosen(template.find('#select_endpoints'), {
@@ -544,13 +573,46 @@ define(function(require) {
 				template.find('#add').on('click', function(e) {
 					e.preventDefault();
 
-					var data = {
-						endpoints: template.find('#select_endpoints').val(),
-						caller_id_name: conference.name
-					};
+					var selectedEndpointIds = template.find('#select_endpoints').val(),
+						data = {
+							endpoints: selectedEndpointIds,
+							caller_id_name: conference.name
+						};
 
-					self.conferenceViewerAddParticipantsData(conference.id, data, function() {
-						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toast immediately instead of in the callback for now.
+					self.conferenceViewerAddParticipantsData(conference.id, data, function(err, response) {
+						if (err) {
+							monster.ui.toast({
+								type: 'error',
+								message: self.i18n.active().conferenceViewer.toastr.error.participantInvite
+							});
+							return;
+						}
+						var unreachableEndpointsNames = _
+							.chain(response)
+							.get('endpoint_responses', [])
+							.filter({ status: 'error' })
+							.map(function(metadata) {
+								var endpointId = _.get(metadata, 'endpoint_id');
+
+								return _
+									.chain(endpointsPerId)
+									.get(endpointId)
+									.thru(getEndpointName)
+									.value();
+							})
+							.value();
+
+						_.forEach(unreachableEndpointsNames, function(name) {
+							monster.ui.toast({
+								type: 'info',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().conferenceViewer.toastr.info.participantInvite,
+									data: {
+										name: name
+									}
+								})
+							});
+						});
 					});
 
 					monster.ui.toast({
@@ -603,6 +665,7 @@ define(function(require) {
 
 			if (moderatorsCount + participantsCount === 0) {
 				self.conferenceViewerStopConference();
+				self.conferenceViewerUnlockAction();
 				container.find('.admin-actions button').addClass('disabled');
 			}
 
