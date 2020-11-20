@@ -100,7 +100,7 @@ define(function(require) {
 								message: template
 							});
 
-							popup.dialog('destroy').remove();
+							popup.dialog('close');
 
 							callbacks.success && callbacks.success(data);
 						},
@@ -112,7 +112,7 @@ define(function(require) {
 
 				popup_html.find('.cancel-link').on('click', function(e) {
 					e.preventDefault();
-					popup.dialog('destroy').remove();
+					popup.dialog('close');
 				});
 
 				popup = monster.ui.dialog(popup_html, {
@@ -131,7 +131,7 @@ define(function(require) {
 				resource: 'numbers.update',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(phoneNumber),
+					phoneNumber: phoneNumber,
 					data: data
 				},
 				success: function(_data, status) {

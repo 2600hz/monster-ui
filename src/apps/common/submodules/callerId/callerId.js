@@ -138,7 +138,7 @@ define(function(require) {
 						})
 					});
 
-					popup.dialog('destroy').remove();
+					popup.dialog('close');
 
 					args.hasOwnProperty('success') && args.success(data);
 				});
@@ -146,7 +146,7 @@ define(function(require) {
 
 			popup_html.find('.cancel-link').on('click', function(e) {
 				e.preventDefault();
-				popup.dialog('destroy').remove();
+				popup.dialog('close');
 			});
 
 			popup = monster.ui.dialog(popup_html, {
@@ -166,8 +166,6 @@ define(function(require) {
 		 */
 		callerIdUpdateNumber: function(args) {
 			var self = this;
-
-			args.data.phoneNumber = encodeURIComponent(args.data.phoneNumber);
 
 			// The back-end doesn't let us set features anymore, they return
 			// the field based on the key set on that document.
@@ -196,8 +194,6 @@ define(function(require) {
 		 */
 		callerIdGetNumber: function(args) {
 			var self = this;
-
-			args.data.phoneNumber = encodeURIComponent(args.data.phoneNumber);
 
 			self.callApi({
 				resource: 'numbers.get',

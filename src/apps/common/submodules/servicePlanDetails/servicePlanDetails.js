@@ -349,10 +349,12 @@ define(function(require) {
 					formattedData.overrides[plan][category][key] = formattedData.overrides[plan][category][key] || {};
 
 					if (category === 'ui_apps') {
+						var app = monster.util.getAppStoreMetadata(key);
+
 						formattedData.overrides[plan][category][key] = {
 							enabled: true,
-							app_id: monster.appsStore[key].id,
-							name: monster.appsStore[key].i18n['en-US'].label,
+							app_id: app.id,
+							name: app.label,
 							account_id: monster.apps.auth.originalAccount.id
 						};
 					}

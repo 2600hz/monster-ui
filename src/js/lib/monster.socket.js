@@ -36,24 +36,32 @@ define(function(require) {
 	function Listener(metadata) {
 		this.accountId = metadata.accountId;
 		this.source = metadata.source;
-		this.listener = metadata.listener;
+		this.callback = metadata.callback;
 	}
 	Listener.prototype = {
 		dispatch: function dispatch(data) {
-			if (!_.isFunction(this.listener)) {
+			if (!_.isFunction(this.callback)) {
 				return;
 			}
-			this.listener(data);
+			this.callback(data);
 		},
 
 		isEqual: function isEqual(metadata) {
 			var accountId = metadata.accountId;
 			var source = metadata.source;
-			var listener = metadata.listener;
+			var callback = metadata.callback;
+			var checks = [this.source === source];
 
-			return this.source === source
-				&& (!accountId || this.accountId === accountId)
-				&& (!listener || this.listener === listener);
+			if (!_.isUndefined(accountId)) {
+				checks.push(this.accountId === accountId);
+			}
+			if (!_.isUndefined(callback)) {
+				checks.push(
+					this.callback === callback || this.callback.toString() === callback.toString()
+				);
+			}
+
+			return _.every(checks);
 		}
 	};
 
@@ -318,11 +326,10 @@ define(function(require) {
 		 * Closes the connection.
 		 */
 		close: function close() {
-			if (this.isClosed()) {
-				this.logger.log('already closed');
-			} else {
-				this.logger.log('attempting to ' + (this.shouldClose ? 'disconnect' : 'close') + '...');
-			}
+			this.logger.log(this.isClosed()
+				? 'already closed'
+				: 'attempting to ' + (this.shouldClose ? 'disconnect' : 'close') + '...'
+			);
 			try {
 				this.ws.close();
 			} catch (e) {
@@ -335,7 +342,7 @@ define(function(require) {
 		 * @param  {string} params.accountId
 		 * @param  {string} params.binding
 		 * @param  {string} params.source
-		 * @param  {Function} params.listener
+		 * @param  {Function} params.callback
 		 * @return {Function} Callback to unsubscribe this listener specifically.
 		 */
 		bind: function bind(params) {
@@ -368,7 +375,11 @@ define(function(require) {
 				}
 			], function(err, reply) {
 				if (!err) {
-					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+					wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, [
+						'accountId',
+						'source',
+						'callback'
+					])));
 					return;
 				}
 				if (!isAuthError(reply)) {
@@ -383,7 +394,7 @@ define(function(require) {
 						wsc.bind(params);
 					},
 					error: function() {
-						wsc.loggin.warn('failed to reauthenticate, logging out');
+						wsc.logger.warn('failed to reauthenticate, logging out');
 						monster.util.logoutAndReload();
 					}
 				});
@@ -409,13 +420,17 @@ define(function(require) {
 		 * @param  {string} param.accountId
 		 * @param  {string} param.binding
 		 * @param  {string} param.source
-		 * @param  {Function} [param.listener]
+		 * @param  {Function} [param.callback]
 		 */
 		unbind: function unbind(params) {
 			var wsc = this;
 			var binding = params.binding;
 
-			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
+			this.bindings.unsubscribe(binding, _.merge({}, _.pick(params, [
+				'accountId',
+				'source',
+				'callback'
+			])));
 
 			monster.waterfall([
 				function maybeUnsubscribe(callback) {
@@ -436,8 +451,6 @@ define(function(require) {
 					return;
 				}
 				wsc.logger.warn('failed to unsubscribe from ' + params.binding, data);
-				wsc.bindings.subscribe(binding, _.merge({}, _.pick(params, 'accountId', 'source', 'listener')));
-				wsc.unbind(params);
 			});
 		},
 
@@ -617,11 +630,13 @@ define(function(require) {
 		getInfo: function getInfo() {
 			var uri = _.get(monster, 'config.api.socket');
 
-			return {
+			return _.merge({
 				isConfigured: _.isString(uri) && /^ws{1,2}:\/\//i.test(uri),
 				isConnected: !_.isUndefined(client) && client.isOpen(),
 				uri: uri
-			};
+			}, !monster.isEnvironmentProd() && {
+				client: client
+			});
 		},
 
 		connect: function connect() {
@@ -647,7 +662,7 @@ define(function(require) {
 		 * @param  {String} params.accountId
 		 * @param  {String} params.binding
 		 * @param  {String} params.source
-		 * @param  {String} params.listener
+		 * @param  {String} params.callback
 		 * @return {Function}
 		 * @return {Function} Callback to unbind listener
 		 */
@@ -656,7 +671,12 @@ define(function(require) {
 				return;
 			}
 
-			return client.bind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+			return client.bind(_.merge({}, _.pick(params, [
+				'accountId',
+				'binding',
+				'source',
+				'callback'
+			])));
 		},
 
 		/**
@@ -664,14 +684,19 @@ define(function(require) {
 		 * @param  {String} [params.accountId]
 		 * @param  {String} params.binding
 		 * @param  {String} params.source
-		 * @param  {String} [params.listener]
+		 * @param  {String} [params.callback]
 		 */
 		unbind: function unbind(params) {
 			if (_.isUndefined(client)) {
 				return;
 			}
 
-			client.unbind(_.merge({}, _.pick(params, 'accountId', 'binding', 'source', 'listener')));
+			client.unbind(_.merge({}, _.pick(params, [
+				'accountId',
+				'binding',
+				'source',
+				'callback'
+			])));
 		}
 	};
 });

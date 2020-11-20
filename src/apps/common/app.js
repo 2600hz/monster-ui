@@ -10,6 +10,7 @@ define(function(require) {
 		'carrierSelector',
 		'chooseModel',
 		'conferenceViewer',
+		'csvUploader',
 		'deleteSmartUser',
 		'dragableUploads',
 		'e911',

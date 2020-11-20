@@ -1,0 +1,96 @@
+<div id="step_carrier_selection" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.carrierSelection.singleLosingCarrier as |carrierSelectionSingleI18n|}}
+	<div class="step-title">
+		{{carrierSelectionSingleI18n.title}}
+	</div>
+	<div class="step-body">
+		<form id="form_carrier_selection">
+			<div class="step-section">
+				<div class="section-title">
+					{{replaceVar carrierSelectionSingleI18n.numbersToPort.title @root.numbersToPort.count}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-3">
+							<div class="input-box iconography-input-left">
+								<input type="text" id="numbers_to_port_search_numbers" placeholder="{{carrierSelectionSingleI18n.numbersToPort.placeholders.searchNumbers}}">
+								{{telicon "search" class="iconography"}}
+							</div>
+						</div>
+					</div>
+					<div class="flex-row-container number-list">
+					{{#each @root.numbersToPort.numbers}}
+						<div data-e164="{{this}}" class="flex-item-6 number-item">
+							{{formatPhoneNumber this}}
+						</div>
+					{{/each}}
+					</div>
+				</div>
+			</div>
+			<div class="step-section">
+				<div class="section-title">
+					{{carrierSelectionSingleI18n.designateWinningCarrier.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container flex-align-bottom">
+						<div class="flex-item-3">
+							<label class="form-field">
+								{{carrierSelectionSingleI18n.designateWinningCarrier.labels.losingCarrier}}
+								<div class="input-box iconography-input-left">
+									<input name="designateWinningCarrier.losingCarrier" class="input-block-level" type="text" value="{{@root.data.designateWinningCarrier.losingCarrier}}" disabled>
+									{{telicon "lock" class="iconography"}}
+								</div>
+							</label>
+						</div>
+						<div class="flex-item flex-initial">
+							{{telicon "arrow-right--circle" class="field-middle-icon"}}
+						</div>
+						<div class="flex-item-3">
+							<label class="form-field">
+								{{carrierSelectionSingleI18n.designateWinningCarrier.labels.winningCarrier}}
+								<span class="help-tip" title="{{carrierSelectionSingleI18n.designateWinningCarrier.help.winningCarrier}}" data-toggle="tooltip">
+									{{telicon "question--circle" class="iconography-small iconography-help"}}
+								</span>
+								<select name="designateWinningCarrier.winningCarrier" class="input-block-level">
+								{{#select @root.data.designateWinningCarrier.winningCarrier}}
+									<option value="">
+										{{carrierSelectionSingleI18n.designateWinningCarrier.placeholders.winningCarrier}}
+									</option>
+									{{#each @root.winningCarrierList}}
+										<option value="{{value}}">{{label}}</option>
+									{{/each}}
+								{{/select}}
+								</select>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="step-section">
+				<div class="section-title">
+					{{carrierSelectionSingleI18n.requiredDocuments.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-2">
+							{{carrierSelectionSingleI18n.requiredDocuments.description}}
+						</div>
+					</div>
+					<div class="flex-row-container document-list">
+					{{#each @root.requiredDocuments as |document|}}
+						<div class="flex-item-1 flex-row-container document-item">
+							<div class="flex-item flex-initial document-icon">
+								{{telicon "file"}}
+							</div>
+							<div class="flex-item flex-fit">
+								{{tryI18n @root.i18n.commonApp.portWizard.documents document.key}}
+							</div>
+						</div>
+					{{/each}}
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+{{/with}}
+</div>

@@ -57,6 +57,11 @@ define(function(require) {
 		},
 
 		appFlags: {
+			/**
+			 * Whether myaccount should be rendered
+			 * @type {Boolean}
+			 */
+			showMyAccount: false,
 			common: {
 				outboundPrivacy: [
 					'inherit',
@@ -113,83 +118,66 @@ define(function(require) {
 		},
 
 		getDefaultRestrictions: function() {
-			return {
-				account: {
-					show_tab: true
-				},
-				balance: {
-					show_credit: true,
-					show_header: true,
-					show_minutes: true,
-					show_tab: true
-				},
-				billing: {
-					show_tab: true
-				},
-				inbound: {
-					show_tab: true
-				},
-				outbound: {
-					show_tab: true
-				},
-				twoway: {
-					show_tab: true
-				},
-				service_plan: {
-					show_tab: true
-				},
-				transactions: {
-					show_tab: true
-				},
-				user: {
-					show_tab: true
-				},
-				errorTracker: {
-					show_tab: true
-				}
+			var restrictions = {
+				account: ['show_tab'],
+				balance: ['show_credit', 'show_header', 'show_minutes', 'show_tab'],
+				billing: ['show_tab'],
+				errorTracker: ['show_tab'],
+				inbound: ['show_tab'],
+				outbound: ['show_tab'],
+				service_plan: ['show_tab'],
+				transactions: ['show_tab'],
+				twoway: ['show_tab'],
+				user: ['show_tab']
 			};
+			return _
+				.chain(restrictions)
+				.keys()
+				.map(function(tabId) {
+					return {
+						tabId: tabId,
+						toggles: _
+							.chain(restrictions[tabId])
+							.map(function(toggle) {
+								return {
+									toggle: toggle,
+									isEnabled: !(monster.apps.auth.currentUser.priv_level === 'user' && !_.includes(['errorTracker', 'user'], tabId))
+								};
+							})
+							.keyBy('toggle')
+							.mapValues('isEnabled')
+							.value()
+					};
+				})
+				.keyBy('tabId')
+				.mapValues('toggles')
+				.value();
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} [args.restrictions]
+		 * @param  {Function} args.callback
+		 */
 		_UIRestrictionsCompatibility: function(args) {
 			var self = this,
-				showMyaccount = false;
+				defaultRestrictions = self.getDefaultRestrictions(),
+				validTabIds = _.keys(defaultRestrictions),
+				restrictions = _
+					.chain({})
+					.merge(
+						defaultRestrictions,
+						_.get(args, 'restrictions.myaccount', {})
+					)
+					// Remove legacy properties no longer used
+					.omitBy(function(toggles, tabId) {
+						return !_.includes(validTabIds, tabId);
+					})
+					.value();
 
-			if (args.hasOwnProperty('restrictions') && typeof args.restrictions !== 'undefined' && args.restrictions.hasOwnProperty('myaccount')) {
-				args.restrictions = $.extend(true, {}, self.getDefaultRestrictions(), args.restrictions.myaccount);// = args.restrictions.myaccount;
-			} else {
-				args.restrictions = self.getDefaultRestrictions();
-			}
-			if (monster.apps.auth.currentUser.priv_level === 'user') {
-				_.each(args.restrictions, function(restriction, tab) {
-					if (tab !== 'user' && tab !== 'errorTracker') {
-						restriction.show_tab = false;
-					}
-				});
-			}
+			self.appFlags.showMyAccount = _.some(restrictions, _.partial(_.get, _, 'show_tab', false));
 
-			if (!args.restrictions.hasOwnProperty('user')) {
-				args.restrictions = $.extend(args.restrictions, {
-					account: {
-						show_tab: true
-					},
-					billing: {
-						show_tab: true
-					},
-					user: {
-						show_tab: true
-					}
-				});
-
-				delete args.restrictions.profile;
-			}
-
-			_.each(args.restrictions, function(value, key) {
-				if (value.show_tab) {
-					showMyaccount = true;
-				}
-			});
-
-			args.callback(args.restrictions, showMyaccount);
+			args.callback(restrictions, self.appFlags.showMyAccount);
 		},
 
 		formatUiRestrictions: function(restrictions, callback) {
@@ -246,10 +234,17 @@ define(function(require) {
 		},
 
 		render: function() {
-			var self = this;
+			var self = this,
+				resolveCurrencyCode = function resolveCurrencyCode() {
+					var fontAwesomeSupported = ['eur', 'gbp', 'ils', 'inr', 'jpy', 'krw', 'usd', 'rub', 'try'],
+						currencyCode = _.toLower(monster.config.currencyCode);
+
+					return _.find(fontAwesomeSupported, _.partial(_.isEqual, currencyCode));
+				};
 
 			self.formatUiRestrictions(monster.apps.auth.originalAccount.ui_restrictions, function(uiRestrictions) {
 				var dataTemplate = {
+						currencyCode: resolveCurrencyCode(),
 						restrictions: uiRestrictions
 					},
 					myaccountHtml = $(self.getTemplate({
@@ -321,7 +316,7 @@ define(function(require) {
 				callback: function(uiRestrictions, showMyaccount) {
 					var navLinks = $('#main_topbar_nav'),
 						dataTemplate = {
-							name: args && args.name || monster.util.getUserFullName(),
+							name: (args && args.name) || monster.util.getUserFullName(),
 							showMyaccount: showMyaccount,
 							initials: monster.util.getUserInitials(),
 							account: monster.apps.auth.currentAccount.name,
@@ -618,7 +613,7 @@ define(function(require) {
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough
 		hasToShowWalkthrough: function(callback) {
 			var self = this,
-				response = self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
+				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
 
 			if (typeof callback === 'function') {
 				callback(response);

@@ -95,7 +95,7 @@ define(function(require) {
 									message: template
 								});
 
-								popup.dialog('destroy').remove();
+								popup.dialog('close');
 
 								callbacks.success && callbacks.success(data);
 							},
@@ -134,7 +134,7 @@ define(function(require) {
 							message: template
 						});
 
-						popup.dialog('destroy').remove();
+						popup.dialog('close');
 
 						callbacks.success && callbacks.success(data);
 					},
@@ -162,7 +162,7 @@ define(function(require) {
 				resource: 'numbers.update',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(phoneNumber),
+					phoneNumber: phoneNumber,
 					data: data
 				},
 				success: function(_data, status) {

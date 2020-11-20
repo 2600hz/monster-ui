@@ -12,35 +12,44 @@
 						{{ i18n.mediaSelect.uploadNewMedia }}
 					</a>
 				</li>
+				{{#if enableTextspeechTab}}
+					<li class="navbar-menu-item">
+						<a href="javascript:void(0);" class="navbar-menu-item-link" data-tab="text_to_speech">
+							{{ i18n.mediaSelect.textToSpeech.tab }}
+						</a>
+					</li>
+				{{/if}}
 			</ul>
 		</nav>
 
 		<div class="monster-tab-content" data-tab="use_existing">
-			<div class="control-group">
-				<label class="control-label" for="{{ name }}">{{ label }}</label>
-				<div class="controls">
-					<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
-						{{#select selectedOption}}
-							{{#each options}}
-								<option value="{{id}}">{{name}}</option>
-							{{/each}}
-						{{/select}}
-					</select>
-				</div>
-			</div>
-
-			<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
-				<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
-				<div class="input controls">
-					<input type="url" required class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+			<form id="select_media_form">
+				<div class="control-group">
+					<label class="control-label" for="{{ name }}">{{ label }}</label>
+					<div class="controls">
+						<select name="{{ name }}" class="media-dropdown{{#if selectClass}} {{selectClass}}{{/if}}">
+							{{#select mediaId}}
+								{{#each options}}
+									<option value="{{id}}">{{name}}</option>
+								{{/each}}
+							{{/select}}
+						</select>
+					</div>
 				</div>
 
-				<div class="shoutcast-warning">
-					{{#monsterPanelText i18n.warning 'warning' 'fill-width'}}
-						{{ i18n.mediaSelect.shoutcastURLWarning }}
-					{{/monsterPanelText}}
+				<div class="control-group clearfix shoutcast-div{{#unless isShoutcast}} hidden{{/unless}}">
+					<label class="control-label" for="extra.shoutcastUrl">{{ i18n.mediaSelect.shoutcastURL }}</label>
+					<div class="input controls">
+						<input type="url" required class="shoutcast-url-input {{shoutcastURLInputClass}}" name="extra.shoutcastUrl" value="{{shoutcastValue}}" rel="popover" data-content="{{ i18n.mediaSelect.shoutcastURLHelp }}"/>
+					</div>
+
+					<div class="shoutcast-warning">
+						{{#monsterPanelText i18n.warning 'warning' 'fill-width'}}
+							{{ i18n.mediaSelect.shoutcastURLWarning }}
+						{{/monsterPanelText}}
+					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 
 		<div class="monster-tab-content" data-tab="upload_new">
@@ -57,6 +66,13 @@
 				</div>
 			{{/if}}
 			</div>
+		</div>
+
+		<div class="monster-tab-content monster-tab-content-tts" data-tab="text_to_speech">
+			{{#monsterText}}
+				{{{ ttsInfo }}}
+			{{/monsterText}}
+			<textarea rows="5" placeholder="{{ i18n.mediaSelect.textToSpeech.placeholder }}" class="custom-greeting-text">{{selectedMedia.tts.text}}</textarea>
 		</div>
 	</div>
 </div>

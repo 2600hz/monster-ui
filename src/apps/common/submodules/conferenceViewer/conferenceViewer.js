@@ -147,7 +147,7 @@ define(function(require) {
 			var self = this;
 
 			self.subscribeWebSocket({
-				binding: 'conference.event.' + conferenceId + '.*',
+				binding: 'conference.event.*.' + conferenceId + '.*',
 				requiredElement: template,
 				callback: function(event) {
 					self.conferenceViewerOnParticipantAction(event);
@@ -246,67 +246,70 @@ define(function(require) {
 
 		conferenceViewerFormatData: function(data, args) {
 			var self = this,
-				formattedData = {
-					backButton: args.backButton,
-					conference: {
-						id: data.conference.id,
-						name: data.conference.name,
-						duration: data.conference._read_only.duration,
-						isLocked: data.conference._read_only.is_locked,
-						participants: [],
-						moderators: []
-					}
-				};
+				isModerator = _.flow(
+					_.partial(_.ary(_.get, 2), _, 'is_moderator'),
+					_.partial(_.isEqual, true)
+				),
+				users = self.conferenceViewerFormatUsers(data.participants),
+				moderators = _.filter(users, isModerator),
+				participants = _.reject(users, isModerator);
 
-			data.participants = self.conferenceViewerFormatUsers(data.participants);
-
-			_.each(data.participants, function(participant) {
-				participant.is_moderator ? formattedData.conference.moderators.push(participant) : formattedData.conference.participants.push(participant);
-			});
-
-			formattedData.conference.disabledActions = formattedData.conference.participants.length + formattedData.conference.moderators.length === 0;
-
-			return formattedData;
+			return {
+				backButton: args.backButton,
+				conference: _.merge({
+					duration: data.conference._read_only.duration,
+					isLocked: data.conference._read_only.is_locked,
+					participants: participants,
+					moderators: moderators
+				}, _.pick(data.conference, [
+					'id',
+					'name'
+				]))
+			};
 		},
 
-		conferenceViewerFormatParticipant: function(oldParticipant) {
+		conferenceViewerFormatParticipant: function(participant) {
 			var self = this,
-				mapUsers = self.appFlags.conferenceViewer.mapUsers,
-				ownerId,
-				participant = $.extend(true, {}, oldParticipant);
+				ownerId = _
+					.chain([
+						'channel.custom_channel_vars.owner_id',
+						'custom_channel_vars.owner_id'
+					])
+					.map(_.partial(_.ary(_.get, 2), participant))
+					.find(_.negate(_.isUndefined))
+					.value(),
+				user = _.get(self.appFlags.conferenceViewer.mapUsers, ownerId);
 
-			if (participant.channel && participant.channel.custom_channel_vars && participant.channel.custom_channel_vars.owner_id) {
-				ownerId = participant.channel.custom_channel_vars.owner_id;
-			} else if (participant.custom_channel_vars && participant.custom_channel_vars.owner_id) {
-				ownerId = participant.custom_channel_vars.owner_id;
-			}
-
-			if (mapUsers.hasOwnProperty(ownerId)) {
-				participant.displayName = mapUsers[ownerId].first_name + ' ' + mapUsers[ownerId].last_name;
-				participant.initials = mapUsers[ownerId].first_name.charAt(0) + mapUsers[ownerId].last_name.charAt(0);
-				participant.backgroundColor = randomColor();
-			} else {
-				participant.displayName = participant.caller_id_name;
-				participant.initials = '?';
-				participant.backgroundColor = randomColor({ hue: 'monochrome', luminosity: 'light' });
-			}
-
-			for (var key in participant.conference_channel_vars) {
-				participant[key] = participant.conference_channel_vars[key];
-			}
-
-			return participant;
+			return _.merge(_.isUndefined(user) ? {
+				backgroundColor: randomColor({
+					hue: 'monochrome',
+					luminosity: 'light'
+				}),
+				displayName: participant.caller_id_name,
+				initials: '?'
+			} : {
+				backgroundColor: randomColor(),
+				displayName: monster.util.getUserFullName(user),
+				initials: _
+					.chain(['first_name', 'last_name'])
+					.map(_.flow(
+						_.partial(_.ary(_.get, 2), user),
+						_.head
+					))
+					.join('')
+					.toUpper()
+					.value()
+			}, _.pick(participant, [
+				'caller_id_number',
+				'duration',
+				'participant_id'
+			]), participant.conference_channel_vars);
 		},
 
 		conferenceViewerFormatUsers: function(participants) {
-			var self = this,
-				formattedData = [];
+			var self = this;
 
-			_.each(participants, function(participant) {
-				formattedData.push(self.conferenceViewerFormatParticipant(participant));
-			});
-
-			return formattedData;
+			return _.map(participants, _.bind(self.conferenceViewerFormatParticipant, self));
 		},
 
 		conferenceViewerFormatUser: function(participant) {
@@ -346,6 +349,7 @@ define(function(require) {
 				action = data.event,
 				container = $('.view-conference-wrapper'),
 				toasterActions = ['mute-member', 'unmute-member', 'deaf-member', 'undeaf-member', 'del-member', 'lock', 'unlock'],
+				$addButton = container.find('.conference-action[data-action="add"]'),
 				$userDiv = container.find('.conference-user-wrapper[data-id="' + data.participant_id + '"]'),
 				userName = $userDiv.data('name');
 
@@ -391,10 +395,10 @@ define(function(require) {
 				case 'lock':
 					container.find('.conference-action[data-action="lock"]').addClass('hidden');
 					container.find('.conference-action[data-action="unlock"]').removeClass('hidden');
+					$addButton.addClass('disabled');
 					break;
 				case 'unlock':
-					container.find('.conference-action[data-action="unlock"]').addClass('hidden');
-					container.find('.conference-action[data-action="lock"]').removeClass('hidden');
+					self.conferenceViewerUnlockAction();
 					break;
 				default:
 					break;
@@ -411,6 +415,15 @@ define(function(require) {
 					})
 				});
 			}
+		},
+
+		conferenceViewerUnlockAction: function() {
+			var container = $('.view-conference-wrapper'),
+				$addButton = container.find('.conference-action[data-action="add"]');
+
+			container.find('.conference-action[data-action="unlock"]').addClass('hidden');
+			container.find('.conference-action[data-action="lock"]').removeClass('hidden');
+			$addButton.removeClass('disabled');
 		},
 
 		conferenceViewerStartConference: function(duration, container) {
@@ -494,6 +507,7 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'conference.action',
+				bypassProgressIndicator: true,
 				data: {
 					accountId: self.accountId,
 					conferenceId: conferenceId,
@@ -503,7 +517,10 @@ define(function(require) {
 					}
 				},
 				success: function(data) {
-					callback && callback(data.data);
+					callback && callback(null, data.data);
+				},
+				error: function(parsedError) {
+					callback && callback(parsedError);
 				}
 			});
 		},
@@ -525,10 +542,28 @@ define(function(require) {
 		},
 
 		conferenceViewerAddParticipantsDialog: function(conference) {
-			var self = this;
+			var self = this,
+				getEndpointName = function(endpoint) {
+					var userFullName;
+					try {
+						userFullName = monster.util.getUserFullName(endpoint);
+					} catch (error) {
+						userFullName = self.i18n.active().conferenceViewer.unknownEndpointName;
+					}
+					return _
+						.chain(endpoint)
+						.get('name')
+						.defaultTo(userFullName)
+						.value();
+				};
 
 			self.conferenceViewerGetAddEndpointsData(function(data) {
 				var formattedData = self.conferenceViewerFormatAddParticipants(data),
+					endpointsPerId = _
+						.chain([data.devices, data.users])
+						.flatten()
+						.keyBy('id')
+						.value(),
 					template = $(self.getTemplate({ name: 'addEndpointDialog', submodule: 'conferenceViewer', data: formattedData }));
 
 				monster.ui.chosen(template.find('#select_endpoints'), {
@@ -538,13 +573,46 @@ define(function(require) {
 				template.find('#add').on('click', function(e) {
 					e.preventDefault();
 
-					var data = {
-						endpoints: template.find('#select_endpoints').val(),
-						caller_id_name: conference.name
-					};
+					var selectedEndpointIds = template.find('#select_endpoints').val(),
+						data = {
+							endpoints: selectedEndpointIds,
+							caller_id_name: conference.name
+						};
 
-					self.conferenceViewerAddParticipantsData(conference.id, data, function() {
-						// The API takes 50s to complete because it waits for the calls to finish, so for a better UX, we display the toast immediately instead of in the callback for now.
+					self.conferenceViewerAddParticipantsData(conference.id, data, function(err, response) {
+						if (err) {
+							monster.ui.toast({
+								type: 'error',
+								message: self.i18n.active().conferenceViewer.toastr.error.participantInvite
+							});
+							return;
+						}
+						var unreachableEndpointsNames = _
+							.chain(response)
+							.get('endpoint_responses', [])
+							.filter({ status: 'error' })
+							.map(function(metadata) {
+								var endpointId = _.get(metadata, 'endpoint_id');
+
+								return _
+									.chain(endpointsPerId)
+									.get(endpointId)
+									.thru(getEndpointName)
+									.value();
+							})
+							.value();
+
+						_.forEach(unreachableEndpointsNames, function(name) {
+							monster.ui.toast({
+								type: 'info',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().conferenceViewer.toastr.info.participantInvite,
+									data: {
+										name: name
+									}
+								})
+							});
+						});
 					});
 
 					monster.ui.toast({
@@ -597,6 +665,7 @@ define(function(require) {
 
 			if (moderatorsCount + participantsCount === 0) {
 				self.conferenceViewerStopConference();
+				self.conferenceViewerUnlockAction();
 				container.find('.admin-actions button').addClass('disabled');
 			}
 

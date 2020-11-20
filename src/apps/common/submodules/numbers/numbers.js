@@ -179,11 +179,8 @@ define(function(require) {
 				listType = dataNumbers.viewType && dataNumbers.viewType === 'manager' ? 'full' : 'partial',
 				listSearchedAccounts = [ self.accountId ],
 				showLinks = function() {
-					if (parent.find('.number-box.selected').size() > 0) {
-						parent.find('#trigger_links').show();
-					} else {
-						parent.find('#trigger_links').hide();
-					}
+					var methodToUse = parent.find('.number-box.selected').size() > 0 ? 'addClass' : 'removeClass';
+					parent.find('#trigger_links')[methodToUse]('active');
 				},
 				displayNumberList = function(accountId, callback, forceRefresh) {
 					var alreadySearched = _.indexOf(listSearchedAccounts, accountId) >= 0,
@@ -539,13 +536,13 @@ define(function(require) {
 							}
 
 							if (requestData.numbers.length === 0) {
-								dialogTemplate.parent().parent().remove();
+								popup.dialog('close');
 							}
 						}
 					});
 
 					dialogTemplate.on('click', '.cancel-link', function() {
-						popup.remove();
+						popup.dialog('close');
 					});
 
 					dialogTemplate.on('click', '#delete_action', function() {
@@ -564,7 +561,7 @@ define(function(require) {
 								}
 							});
 
-							popup.remove();
+							popup.dialog('close');
 
 							self.numbersShowDeletedNumbers(data);
 
@@ -623,12 +620,11 @@ define(function(require) {
 					requestData = {
 						numbers: listNumbers,
 						accountId: destinationAccountId
-					};
-
-				monster.ui.dialog(dialogTemplate, {
-					width: '540px',
-					title: self.i18n.active().numbers.moveNumbersConfirmationTitle
-				});
+					},
+					popup = monster.ui.dialog(dialogTemplate, {
+						width: '540px',
+						title: self.i18n.active().numbers.moveNumbersConfirmationTitle
+					});
 
 				dialogTemplate.on('click', '.remove-number', function() {
 					for (var number in requestData.numbers) {
@@ -648,16 +644,13 @@ define(function(require) {
 						}
 
 						if (requestData.numbers.length === 0) {
-							dialogTemplate.parent().parent().remove();
+							popup.dialog('close');
 						}
 					}
 				});
 
 				dialogTemplate.on('click', '.cancel-link', function() {
-					dialogTemplate
-						.parent()
-						.parent()
-						.remove();
+					popup.dialog('close');
 				});
 
 				dialogTemplate.on('click', '#move_action', function() {
@@ -708,7 +701,7 @@ define(function(require) {
 										submodule: 'numbers'
 									});
 
-								dialogTemplate.parent().parent().remove();
+								popup.dialog('close');
 
 								monster.ui.toast({
 									type: 'success',
@@ -835,7 +828,7 @@ define(function(require) {
 				data: {
 					accountId: accountId,
 					generateError: false,
-					phoneNumber: encodeURIComponent(number)
+					phoneNumber: number
 				},
 				success: function(data) {
 					callback && callback(data.data);
@@ -875,7 +868,7 @@ define(function(require) {
 			addRecapTemplate.find('.results-wrapper').append(monster.ui.results(formattedData));
 
 			addRecapTemplate.find('#continue').on('click', function() {
-				popup.remove();
+				popup.dialog('close');
 			});
 
 			var popup = monster.ui.dialog(addRecapTemplate, {
@@ -992,7 +985,7 @@ define(function(require) {
 				});
 
 				dialogTemplate.on('click', '.cancel-link', function() {
-					popup.remove();
+					popup.dialog('close');
 				});
 
 				dialogTemplate.on('click', '#add_numbers', function(ev) {
@@ -1062,7 +1055,7 @@ define(function(require) {
 			deleteRecapTemplate.find('.results-wrapper').append(monster.ui.results(formattedData));
 
 			deleteRecapTemplate.find('#continue').on('click', function() {
-				popup.remove();
+				popup.dialog('close');
 			});
 
 			var popup = monster.ui.dialog(deleteRecapTemplate, {
@@ -1134,7 +1127,7 @@ define(function(require) {
 				resource: 'numbers.identify',
 				data: {
 					accountId: self.accountId,
-					phoneNumber: encodeURIComponent(phoneNumber),
+					phoneNumber: phoneNumber,
 					generateError: false
 				},
 				success: function(_data, status) {
@@ -1185,7 +1178,7 @@ define(function(require) {
 				resource: 'numbers.create',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(number)
+					phoneNumber: number
 				},
 				success: function(data) {
 					success && success(data.data);
@@ -1234,7 +1227,7 @@ define(function(require) {
 				resource: 'numbers.activate',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(number)
+					phoneNumber: number
 				},
 				success: function(data) {
 					success && success(data.data);
@@ -1527,7 +1520,7 @@ define(function(require) {
 				resource: 'numbers.get',
 				data: {
 					accountId: accountId,
-					phoneNumber: encodeURIComponent(phoneNumber)
+					phoneNumber: phoneNumber
 				},
 				success: function(_data, status) {
 					success && success(_data.data);

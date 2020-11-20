@@ -5,7 +5,20 @@ define(function(require) {
 		crossroads = require('crossroads'),
 		hasher = require('hasher');
 
-	var loadApp = function(appName, query) {
+	function handleInvalidAppLoad(availableApps) {
+		var activeApp = monster.apps.getActiveApp(),
+			newHash = isAppLoadable(activeApp, availableApps) ? 'apps/' + activeApp : '';
+
+		routing.updateHash(newHash);
+
+		monster.pub('apploader.show', {
+			callback: monster.ui.toast.bind(monster.ui, {
+				message: monster.apps.core.i18n.active().unableToAccessApp
+			})
+		});
+	}
+
+	var loadApp = function(appName, query, availableApps) {
 		var isAccountIDMasqueradable = function(id) {
 			return /^[0-9a-f]{32}$/i.test(id) && (monster.apps.auth.currentAccount.id !== id);
 		};
@@ -30,7 +43,7 @@ define(function(require) {
 			if (
 				appName !== 'appstore'
 				&& monster.util.isMasquerading()
-				&& monster.appsStore[appName].masqueradable !== true
+				&& !monster.util.getAppStoreMetadata(appName).masqueradable
 			) {
 				monster.ui.toast({
 					type: 'error',
@@ -41,7 +54,10 @@ define(function(require) {
 			monster.pub('apploader.hide');
 			monster.pub('myaccount.hide');
 
-			monster.apps.load(appName, function(loadedApp) {
+			monster.apps.load(appName, function(err, loadedApp) {
+				if (err) {
+					return handleInvalidAppLoad(availableApps);
+				}
 				monster.pub('core.alerts.refresh');
 				monster.pub('core.showAppName', appName);
 				$('#monster_content').empty();
@@ -92,35 +108,14 @@ define(function(require) {
 				if (!monster.util.isLoggedIn()) {
 					return;
 				}
-				monster.pub('apploader.getAppList', {
-					scope: 'user',
-					forceFetch: true,
-					accountId: _.get(monster.apps.auth, [
-						monster.util.isMasquerading() ? 'originalAccount' : 'currentAccount',
-						'id'
-					]),
-					success: function(availableApps) {
-						// try loading the requested app
-						if (isAppLoadable(appName, availableApps)) {
-							loadApp(appName, query);
-						} else {
-							var activeApp = monster.apps.getActiveApp();
+				var availableApps = monster.util.listAppStoreMetadata('user');
 
-							routing.updateHash(
-								isAppLoadable(activeApp, availableApps)
-									? 'apps/' + activeApp
-									: ''
-							);
-
-							monster.pub('apploader.show', {
-								callback: monster.ui.toast.bind(monster.ui, {
-									message: monster.apps.core.i18n.active().unableToAccessApp
-								})
-							});
-						}
-					},
-					error: monster.util.logoutAndReload.bind(monster.util)
-				});
+				// try loading the requested app
+				if (isAppLoadable(appName, availableApps)) {
+					loadApp(appName, query, availableApps);
+				} else {
+					handleInvalidAppLoad(availableApps);
+				}
 			});
 		},
 
