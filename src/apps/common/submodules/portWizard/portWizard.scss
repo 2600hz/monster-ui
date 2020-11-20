@@ -1,5 +1,14 @@
 @import '../../../../css/partials/base';
 
+#navigation_wizard_wrapper.port-wizard {
+	@import 'partials/_common.scss';
+	@import 'partials/_step-nameAndNumbers.scss';
+	@import 'partials/_step-carrierSelection.scss';
+	@import 'partials/_step-ownershipConfirmation.scss';
+	@import 'partials/_step-dateAndNotifications.scss';
+	@import 'partials/_step-review.scss';
+}
+
 #port_wizard {
 	background-color: $background-primary-color;
 	padding: 40px 20px;

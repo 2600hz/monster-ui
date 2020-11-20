@@ -94,6 +94,10 @@
 				'listByInteraction': { verb: 'GET', url: 'accounts/{accountId}/cdrs/interaction' },
 				'listLegs': { verb: 'GET', url: 'accounts/{accountId}/cdrs/legs/{callId}' }
 			},
+			cdrPushOnebill: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/cdr_push_onebill' },
+				'post': { verb: 'POST', url: 'accounts/{accountId}/cdr_push_onebill' }
+			},
 			channel: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/channels' },
 				'action': { verb: 'PUT', url: 'accounts/{accountId}/channels/{callId}', removeMetadataAPI: true }
@@ -408,6 +412,10 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/resource_templates/{resourceId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/resource_templates' }
 			},
+			schemas: {
+				'list': { verb: 'GET', url: 'schemas' },
+				'get': { verb: 'GET', url: 'schemas/{schemaId}' }
+			},
 			security: {
 				'listModules': { verb: 'GET', url: 'security' },
 				'get': { verb: 'GET', url: 'accounts/{accountId}/security' },
@@ -471,6 +479,7 @@
 				'get': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/temporal_rules' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
+				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/temporal_rules/{ruleId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/temporal_rules' }
 			},

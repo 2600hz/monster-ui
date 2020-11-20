@@ -1332,7 +1332,12 @@ define(function(require) {
 			});
 
 			$.validator.addMethod('phoneNumber', function(value, element) {
-				return this.optional(element) || monster.util.getFormatPhoneNumber(value).isValid;
+				return this.optional(element) || _
+					.chain([value])
+					.flatten()
+					.map(monster.util.getFormatPhoneNumber)
+					.every('isValid')
+					.value();
 			}, localization.customRules.phoneNumber);
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {
@@ -1912,7 +1917,7 @@ define(function(require) {
 			var self = this,
 				is12hMode = _.get(monster, 'apps.auth.currentUser.ui_flags.twelve_hours_mode', false),
 				defaultOptions = {
-					timeFormat: is12hMode ? 'g:ia' : 'G:i',
+					timeFormat: is12hMode ? 'g:i A' : 'G:i',
 					lang: monster.apps.core.i18n.active().timepicker
 				},
 				options = $.extend(true, {}, defaultOptions, pOptions);
@@ -2886,20 +2891,6 @@ define(function(require) {
 				finalOptions = $.extend(true, defaults, options || {});
 
 			self.handleDisplayFootable(container, finalOptions);
-		},
-
-		formatIconApp: function(app) {
-			if (app && app.hasOwnProperty('name')) {
-				if (monster.appsStore.hasOwnProperty(app.name)) {
-					if (monster.appsStore[app.name].phase === 'beta') {
-						app.extraCssClass = 'beta-overlay-icon';
-					} else if (monster.appsStore[app.name].phase === 'alpha') {
-						app.extraCssClass = 'alpha-overlay-icon';
-					}
-				}
-			}
-
-			return app;
 		},
 
 		// Takes a file in parameter, and then outputs the PDF preview of that file in an iframe that's added to the container

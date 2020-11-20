@@ -1,5 +1,7 @@
 @import "../../../../css/partials/base";
 
+$color-lima: #2ED022;
+
 $media-size-small: "(max-width : 736px)";
 $media-size-medium: "(max-width : 980px)";
 
@@ -23,6 +25,45 @@ $media-size-medium: "(max-width : 980px)";
 
 	background-color: $white;
 
+	.iconography {
+		&-small {
+			margin-top: -3px;	// To not to alter container's height
+			font-size: 14px;
+			width: 14px;
+			height: 14px;
+		}
+
+		&-medium {
+			font-size: 1rem;
+			width: 1rem;
+			height: 1rem;
+		}
+
+		&-large {
+			font-size: 1.25rem;
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+
+		&-xlarge {
+			font-size: 2.5rem;
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+
+		&-help {
+			color: $manatee;
+
+			&:hover {
+				color: $shark2;
+			}
+		}
+
+		&-button-left {
+			margin-right: 0.5rem;
+		}
+	}
+
 	.flex-main-container {
 		display: flex;
 		min-height: calc(100vh - 204px);
@@ -43,8 +84,8 @@ $media-size-medium: "(max-width : 980px)";
 			margin: 23px 0 0 24px;;
 		}
 
-		.actions .monster-button:not(:last-child) {
-			margin-right: 14px;
+		.actions .monster-button {
+			min-width: 74px;
 		}
 	}
 
@@ -81,7 +122,7 @@ $media-size-medium: "(max-width : 980px)";
 			}
 
 			.fa-check-circle {
-				color: #2ED022;
+				color: $color-lima;
 				right: 22px;
 			}
 
@@ -162,10 +203,15 @@ $media-size-medium: "(max-width : 980px)";
 		border-bottom: 1px solid $input-border-color;
 		border-left: 1px solid $input-border-color;
 		flex-grow: 1;
+		min-height: calc(100vh - 204px);
+
+		.monster-loading-view.no-background {
+			margin-top: 0;
+		}
 	}
 
 	.footer {
-		margin: 0 25px 0 280px;
+		margin-left: 280px;
 		border-left: 1px solid $input-border-color;
 		height: 70px;
 
@@ -179,25 +225,16 @@ $media-size-medium: "(max-width : 980px)";
 		}
 	}
 
-	.actions .back {
-		margin-right: 15px;
-	}
+	.actions {
+		margin: 0.75rem 1.5rem 0.75rem 0;
 
-	.monster-button {
-		border-radius: 2px 2px 2px 2px;
-		font-size: 14px;
-	}
-
-	#cancel {
-		min-width: 74px;
-		margin: 13px 24px 0 0;
-	}
-
-	#cancel,
-	.back {
-		background: linear-gradient(-180deg, $white 0%, $athens-gray 100%);
-		border: 1px solid $french-gray2;
-		color: $midgray2;
+		.monster-button {
+			background: linear-gradient(-180deg, $white 0%, $athens-gray 100%);
+			border: 1px solid $french-gray2;
+			color: $midgray2;
+			min-width: 74px;
+			margin-left: 0.75rem;
+		}
 	}
 
 	#next {
@@ -218,8 +255,17 @@ $media-size-medium: "(max-width : 980px)";
 	}
 
 	#done {
-		background: #2ED022;
+		background: $color-lima;
 		color: #071F05;
+	}
+
+	#navigation_wizard_save .iconography-button-left {
+		color: $color-lima;
+	}
+
+	.monster-button {
+		border-radius: 2px;
+		font-size: 14px;
 	}
 
 	@media print {
@@ -245,34 +291,8 @@ $media-size-medium: "(max-width : 980px)";
 	/*********************** WIZARD STEPS ***********************/
 	/************************************************************/
 	.wizard-step {
+		color: $woodsmoke;
 		padding: 2rem 1.5rem;
-
-		.iconography-small {
-			margin-top: -3px;	// To not to alter container's height
-			font-size: 14px;
-			width: 14px;
-			height: 14px;
-		}
-
-		.iconography-medium {
-			font-size: 1rem;
-			width: 1rem;
-			height: 1rem;
-		}
-
-		.iconography-large {
-			font-size: 1.25rem;
-			width: 1.25rem;
-			height: 1.25rem;
-		}
-
-		.iconography-help {
-			color: $manatee;
-
-			&:hover {
-				color: $shark2;
-			}
-		}
 
 		.input-hidden {
 			display: none;
@@ -305,15 +325,45 @@ $media-size-medium: "(max-width : 980px)";
 			color: $danger-color;
 		}
 
+		.text-block {
+			margin-bottom: 1rem;
+		}
+
 		.monster-button {
 			background: linear-gradient(-180deg, $foreground-primary-color 0%, $athens-gray 100%);
 
 			&:hover {
 				background: linear-gradient(-180deg, $athens-gray 0%, $white-lilac 100%);
 			}
+
+			&.step-action {
+				min-width: 2.375rem;	// To override monster-button's default min-width
+				height: 2.375rem;
+				margin-left: 0.75rem;
+				padding: 0.5rem;
+			}
+		}
+
+		.remove-item-button {
+			width: 38px;
+			height: 38px;
+			padding: 0;
+			margin-left: 0.5rem;
+			color: $midgray2;
+
+			.iconography-medium {
+				margin-left: -6px;
+				margin-top: -3px;
+			}
+
+			&:hover:not([disabled]) {
+				color: $danger-color;
+			}
 		}
 
 		.btn-group {
+			height: 38px;
+
 			.monster-button {
 				border-radius: 0;
 
@@ -373,6 +423,14 @@ $media-size-medium: "(max-width : 980px)";
 			padding: 0.5rem;
 		}
 
+		.step-section {
+			margin-top: 1rem;
+
+			.section-title {
+				margin-top: 0;
+			}
+		}
+
 		.section-title {
 			margin-top: 1rem;
 			margin-bottom: 1.5rem;
@@ -382,6 +440,14 @@ $media-size-medium: "(max-width : 980px)";
 			font-size: 1rem;
 			font-weight: 600;
 			color: $woodsmoke;
+
+			&.section-title-numbered {
+				counter-increment: section_title_counter;
+
+				&:before {
+					content: counter(section_title_counter) ".\0000a0";
+				}
+			}
 
 			.help-tip {
 				color: $midgray2;
@@ -401,25 +467,52 @@ $media-size-medium: "(max-width : 980px)";
 			}
 		}
 
+		.section-subtitle {
+			margin-top: 0.5rem;
+			font-weight: 600;
+		}
+
 		.flex-container {
 			display: flex;
 
+			&.flex-justify-end {
+				justify-content: flex-end;
+			}
+
 			.flex-initial {
-				display: block;
 				flex: 0 0 initial;
+
+				&:not(.flex-container):not(.flex-row-container) {
+					display: block;
+				}
 			}
 
 			.flex-fit {
 				display: block;
 				flex: 1;
+
+				&:not(.flex-container):not(.flex-row-container) {
+					display: block;
+				}
 			}
 		}
 
 		.flex-row-container {
-			display: flex;
+			@extend .flex-container;
+
 			flex-wrap: wrap;
 			margin-left: -0.75rem;
 			margin-right: -0.75rem;
+
+			&.flex-align-top {
+				// Align items to top, to not stretch to the row's height
+				align-items: flex-start;
+			}
+
+			&.flex-align-bottom {
+				// Align items to bottom, to not stretch to the row's height
+				align-items: flex-end;
+			}
 
 			[class^="flex-item"],
 			[class*=" flex-item"] {
@@ -440,6 +533,10 @@ $media-size-medium: "(max-width : 980px)";
 				width: 33.3333%;
 			}
 
+			.flex-item-3-2 {
+				width: 66.6667%;
+			}
+
 			.flex-item-4 {
 				width: 25%;
 			}
@@ -448,21 +545,29 @@ $media-size-medium: "(max-width : 980px)";
 				width: 75%;
 			}
 
+			.flex-item-5 {
+				width: 20%;
+			}
+
+			.flex-item-6 {
+				width: 16.6666%;
+			}
+
 			@include media-medium-or-print {
 				.flex-item-2 {
 					width: 100%;
 				}
 
-				.flex-item-3 {
+				.flex-item-3, .flex-item-4 {
 					width: 50%;
 				}
 
-				.flex-item-4 {
-					width: 50%;
-				}
-
-				.flex-item-4-3 {
+				.flex-item-3-2, .flex-item-4-3 {
 					width: 100%;
+				}
+
+				.flex-item-5 {
+					width: 33.3333%;
 				}
 			}
 
@@ -470,13 +575,20 @@ $media-size-medium: "(max-width : 980px)";
 				.flex-item-3 {
 					width: 100%;
 				}
+
+				.flex-item-5 {
+					width: 50%;
+				}
 			}
 		}
 
 		.step-body {
+			counter-reset: section_title_counter;
+
 			label {
-				&:not(.monster-checkbox-large):not(.monster-switch):not(.monster-button) {
-					margin-bottom: 8px;
+				// Keep all the pseudo-classes together, or they will be interpreted as descendants if any whitespace is between them
+				&:not(.monster-checkbox):not(.monster-checkbox-large):not(.monster-switch):not(.monster-button):not(.label-button):not(.field-foot-notice):not(.form-field):not(.monster-invalid) {
+					margin-bottom: 0.5rem;
 					line-height: 14px;
 				}
 
@@ -484,11 +596,54 @@ $media-size-medium: "(max-width : 980px)";
 					padding-right: 1rem;
 					margin-right: 1.25rem;
 				}
+
+				&.label-button {
+					align-self: center;
+					margin-right: 1rem;
+					margin-bottom: 0;
+				}
+
+				&.field-foot-notice {
+					margin-top: 0.25rem;
+					margin-bottom: 0;
+					line-height: 1.25rem;
+					font-size: 0.75rem;
+					color: $midgray2;
+				}
+
+				&.form-field {
+					margin-bottom: 0;
+					line-height: 14px;
+
+					> input,
+					> select,
+					> textarea,
+					> .chosen-container,
+					> .file-selector,
+					> .input-box {
+						margin-top: 0.5rem;
+					}
+
+					> select {
+						display: block;
+						width: 100%;
+					}
+				}
 			}
 
 			input, select {
+				box-sizing: border-box;
 				margin-bottom: 0;
+				min-height: 38px;
 				height: 38px;
+			}
+
+			textarea {
+				display: block;
+				box-sizing: border-box;
+				width: 100%;
+				margin-bottom: 0;
+				padding: 0.75rem;
 			}
 
 			.chosen-container.chosen-container-single {
@@ -517,6 +672,46 @@ $media-size-medium: "(max-width : 980px)";
 					margin-right: 0.75rem;
 					width: 18px;
 					max-height: 20px;
+				}
+			}
+
+			.file-selector {
+				display: flex;
+				position: relative;	// To display error messages properly
+
+				input {
+					&[type="text"] {
+						display: block;
+						flex: 1;
+						width: auto;
+						min-width: 80px;
+						padding-left: 0.75rem;
+						padding-right: 0.75rem;
+						border-right: none;
+						border-top-right-radius: 0;
+						border-bottom-right-radius: 0;
+						cursor: pointer;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+					&[type="file"] {
+						// If display: none is used, Safari might disable this input
+						display: block;
+						width: 0;
+						height: 0;
+					}
+				}
+
+				button {
+					flex: initial;
+					border-top-left-radius: 0;
+					border-bottom-left-radius: 0;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+				}
+
+				.monster-invalid {
+					top: 38px;
 				}
 			}
 
@@ -557,5 +752,74 @@ $media-size-medium: "(max-width : 980px)";
 				}
 			}
 		}
+
+		&.wizard-step-review {
+			[class^="field-value-"],
+			[class*=" field-value-"] {
+				color: $woodsmoke;
+				font-weight: 600;
+
+				.iconography-medium {
+					margin-right: 0.5rem;
+				}
+			}
+
+			.field-label-horizontal,
+			.field-value-horizontal,
+			.section-subtitle {
+				padding-bottom: 1rem;
+				line-height: 1.25rem;
+			}
+
+			.field-label-horizontal {
+				color: $woodsmoke;
+				letter-spacing: 0px;
+			}
+
+			.section-body {
+				padding-bottom: 0.75rem;
+			}
+
+			@include media-medium-or-print {
+				.field-value-horizontal:not(.field-value-multiple) {
+					width: 50%;
+				}
+			}
+
+			@media print {
+				padding: 0;
+
+				.edit-step,
+				.monster-button {
+					display: none;
+				}
+
+				.print-nobreak {
+					page-break-inside: avoid;
+				}
+
+				// Some elements that use display:flex might be truncated on page breaks in Firefox.
+				// This class sets them to display:block to avoid that behavior on print.
+				// See https://stackoverflow.com/a/45440750/806975
+				.print-block {
+					display: block;
+				}
+			}
+		}
+	}
+}
+
+/*****************************************************************/
+/**************** WIZARD INSIDE FULL-SCREEN MODAL ****************/
+/****************************************************************/
+
+.modal-full-screen-wrapper .modal-content #navigation_wizard_wrapper {
+	.header .actions {
+		margin-right: 2rem;
+	}
+
+	.right-content {
+		// TODO: Use flexbox to prevent using viewport units and specific calculations
+		min-height: calc(100vh - 137px);
 	}
 }
