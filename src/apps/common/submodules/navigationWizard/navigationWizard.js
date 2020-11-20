@@ -172,16 +172,20 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the done/complete button
 			template
-				.find('#done')
-					.on('click', function(event) {
-						event.preventDefault();
+				.on('click', '#done:not(.disabled)', function(event) {
+					event.preventDefault();
 
-						self.navigationWizardComplete({
-							eventType: 'done'
-						});
+					$this = $(this);
+
+					//disable button after it's clicked
+					$this
+						.addClass('disabled');
+
+					self.navigationWizardComplete({
+						eventType: 'done'
 					});
+				});
 
 			template
 				.find('#save_app')
@@ -541,6 +545,11 @@ define(function(require) {
 				});
 
 			if (!result.valid) {
+				//If it fails for any reason then re-enable the button
+				wizardArgs
+					.container
+						.find('#done')
+						.removeClass('disabled');
 				return;
 			}
 
