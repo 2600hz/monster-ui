@@ -102,7 +102,7 @@ define(function(require) {
 						});
 					},
 					medias: function(cb) {
-						if (_.has(args, 'options') && args.options.length.length > 0) {
+						if (_.has(args, 'options') && args.options.length > 0) {
 							cb(null, args.options);
 							return;
 						}
