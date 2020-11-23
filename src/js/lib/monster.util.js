@@ -36,6 +36,7 @@ define(function(require) {
 		getCurrencySymbol: getCurrencySymbol,
 		getCurrentTimeZone: getCurrentTimeZone,
 		getCurrentUserDefaultApp: getCurrentUserDefaultApp,
+		getDefaultNumbersFormat: getDefaultNumbersFormat,
 		getDefaultRangeDates: getDefaultRangeDates,
 		getFormatPhoneNumber: getFormatPhoneNumber,
 		getModbID: getModbID,
@@ -863,6 +864,16 @@ define(function(require) {
 				return object;
 			}
 		};
+	}
+
+	/**
+	 * Returns numbers formatting strategy for the original account.
+	 * @return {String} Numbers formatting strategy.
+	 */
+	function getDefaultNumbersFormat() {
+		var account = _.get(monster.apps, 'auth.originalAccount', {});
+
+		return _.get(account, 'ui_flags.numbers_format', 'international');
 	}
 
 	/**

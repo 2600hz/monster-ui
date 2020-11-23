@@ -441,7 +441,7 @@ define(function(require) {
 				_.has(args, 'callbacks.accept') && args.callbacks.accept(selectedAppIds);
 			});
 
-			$template.find('.cancel-link').on('click', function(e) {
+			$template.find('.cancel').on('click', function(e) {
 				e.preventDefault();
 
 				$popup.dialog('close').remove();
