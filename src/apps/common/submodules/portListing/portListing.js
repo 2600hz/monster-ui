@@ -545,6 +545,22 @@ define(function(require) {
 							tab: tab
 						});
 					});
+
+			template
+				.find('.port-wizard')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						monster.pub('common.portWizard.render', {
+							container: self.portListingGet('container'),
+							data: {
+								accountId: self.portListingGet('accountId')
+							},
+							globalCallback: function() {
+								self.portListingGlobalCallback();
+							}
+						});
+					});
 		},
 
 		/**
