@@ -347,6 +347,7 @@
 				'listLastSubmitted': { verb: 'GET', url: 'accounts/{accountId}/port_requests/last_submitted' },
 				'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
 				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' },
+				'portabilityLookup': { verb: 'POST', url: 'accounts/{accountId}/port_requests/lnp_lookup' },
 				'listPortAuthority': { verb: 'GET', url: 'port_requests' }
 			},
 			presence: {
