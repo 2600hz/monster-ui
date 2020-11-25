@@ -362,7 +362,7 @@ define(function(require) {
 						self.newPassword(results.user);
 					}
 
-					monster.util.autoLogout();
+					monster.util.scheduleAutoLogout();
 					$('#main_topbar_signout').show();
 
 					results.user.account_name = results.account.name;

@@ -8,7 +8,7 @@ define(function(require) {
 	require('moment-timezone');
 
 	return {
-		autoLogout: autoLogout,
+		scheduleAutoLogout: scheduleAutoLogout,
 		cacheUrl: cacheUrl,
 		canAddExternalNumbers: canAddExternalNumbers,
 		canImpersonate: canImpersonate,
@@ -80,34 +80,32 @@ define(function(require) {
 	};
 
 	/**
-	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
-	 * Shows a warning popup `alertBeforeLogout` minutes before logging out (defaults to 2).
+	 * Automatically logout authenticated user after `wait` minutes (defaults to 30).
+	 * Shows a warning popup `minutesBeforeAlert` minutes before logging out (defaults to 2).
 	 * If the user moves his cursor, the timer resets.
 	 */
-	function autoLogout() {
-		var minutesUntilLogout = monster.config.whitelabel.logoutTimer;
-		var shouldScheduleAutoLogout = minutesUntilLogout > 0;
+	function scheduleAutoLogout(minutesBeforeLogout) {
+		var shouldScheduleAutoLogout = minutesBeforeLogout > 0;
 
 		if (!shouldScheduleAutoLogout) {
 			return;
 		}
 		var i18n = monster.apps.core.i18n.active();
-		var minutesUntilAlert = minutesUntilLogout - 2;
-		var minutesToMilliseconds = _.partial(_.multiply, 60000);
-		var delayBeforeLogout = minutesToMilliseconds(minutesUntilLogout);
-		var delayBeforeAlert = minutesToMilliseconds(minutesUntilAlert);
+		var minutesBeforeAlert = 2;
+		var minToMilSec = _.partial(_.multiply, 60000);
+		var delayBeforeLogout = minToMilSec(minutesBeforeLogout);
+		var delayBeforeAlert = minToMilSec(minutesBeforeLogout - minutesBeforeAlert);
+		var hasAlert = minutesBeforeLogout > minutesBeforeAlert;
 		var wasAlertTriggered = false;
 		var alertDialog;
 		var timerAlert;
 		var timerLogout;
-		var openAlertDialog = function() {
+		var displayAlertDialog = function() {
 			wasAlertTriggered = true;
 
 			alertDialog = monster.ui.alert(i18n.alertLogout);
 		};
-		var logout = function()	{
-			monster.pub('auth.logout');
-		};
+		var logout = _.partial(monster.pub, 'auth.logout');
 		var resetTimer = function() {
 			clearTimeout(timerAlert);
 			clearTimeout(timerLogout);
@@ -115,15 +113,18 @@ define(function(require) {
 			if (wasAlertTriggered) {
 				wasAlertTriggered = false;
 
-				alertDialog.dialog('close').remove();
+				alertDialog.dialog('close');
 			}
 
-			timerAlert = setTimeout(openAlertDialog, delayBeforeAlert);
+			if (hasAlert) {
+				timerAlert = setTimeout(displayAlertDialog, delayBeforeAlert);
+			}
 			timerLogout = setTimeout(logout, delayBeforeLogout);
 		};
+		var resetTimerThrottled = _.throttle(resetTimer, delayBeforeLogout);
 
-		document.addEventListener('keydown', resetTimer);
-		document.addEventListener('mousemove', resetTimer);
+		document.addEventListener('keydown', resetTimerThrottled);
+		document.addEventListener('mousemove', resetTimerThrottled);
 
 		resetTimer();
 	}
