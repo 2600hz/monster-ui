@@ -1332,12 +1332,7 @@ define(function(require) {
 			});
 
 			$.validator.addMethod('phoneNumber', function(value, element) {
-				return this.optional(element) || _
-					.chain([value])
-					.flatten()
-					.map(monster.util.getFormatPhoneNumber)
-					.every('isValid')
-					.value();
+				return this.optional(element) || monster.util.getFormatPhoneNumber(value).isValid;
 			}, localization.customRules.phoneNumber);
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {
