@@ -635,32 +635,28 @@ define(function() {
 						callback(error);
 					}
 				},
+				normalizeUrl = function(url) {
+					if (!_.isString(url)) {
+						return;
+					}
+					return _.endsWith(url, '/') ? url : url + '/';
+				},
+				getUrl = function(obj, pathToUrl, defaultValue) {
+					return _
+						.chain(obj)
+						.get(pathToUrl, defaultValue)
+						.thru(normalizeUrl)
+						.value();
+				},
 				app = monster.util.getAppStoreMetadata(name),
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
-				externalUrl = options.sourceUrl || false,
-				apiUrl = monster.config.api.default;
+				externalUrl = getUrl(app, 'source_url', options.sourceUrl),
+				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				apiUrl = getUrl(app, 'api_url', monster.config.api.default);
 
-			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
-			if (app) {
-				if (app && 'source_url' in app) {
-					externalUrl = app.source_url;
-
-					if (externalUrl.substr(externalUrl.length - 1) !== '/') {
-						externalUrl += '/';
-					}
-				}
-
-				if (app && app.hasOwnProperty('api_url')) {
-					apiUrl = app.api_url;
-					if (apiUrl.substr(apiUrl.length - 1) !== '/') {
-						apiUrl += '/';
-					}
-				}
-			}
-
-			if (externalUrl) {
+			if (hasExternalUrlConfigured) {
 				appPath = externalUrl;
 
 				requirePaths[customKey] = externalUrl + '/app';
