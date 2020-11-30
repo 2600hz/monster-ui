@@ -4,7 +4,7 @@ import rjs from 'requirejs';
 import del from 'del';
 import vinylPaths from 'vinyl-paths';
 import { require, tmp } from '../paths.js';
-import { env, getProApps, getAppsToInclude } from '../helpers/helpers.js';
+import { env, getProApps, getAppsToInclude, mode } from '../helpers/helpers.js';
 import { cleanTmp } from './clean-move.js';
 
 const standardFilesToExclude = [
@@ -90,55 +90,57 @@ const libsToExcludeFromApp = [
 	'wysiwyg'
 ];
 
-const getConfigRequire = () => ({
-	dir: require, // direction
-	appDir: tmp, // origin
-	baseUrl:'.',
-	mainConfigFile: join(tmp, 'js', 'main.js'),
-	fileExclusionRegExp: /^doc*|.*\.md|^\..*|^monster-ui\.build\.js$/,
-	findNestedDependencies:true,
-	preserveLicenseComments:false,
-	removeCombined:true,
-	/**
-	 * Prevent optimization because we don't want to minify config.js and there
-	 * is no way to single it out, we should optimize with gulp later.
-	 * @type {String}
-	 */
-	optimize: 'none',
-	modules: env.hasOwnProperty('app')
-		? [
-			{
-				name: join('js', 'main'),
-				exclude: standardFilesToExclude
-			},
-			{
-				name: join('apps', env.app, 'app'),
-				exclude: libsToExcludeFromApp,
-				include: env.hasOwnProperty('pro')
-					? [join('apps', env.app, 'submodules', 'pro',  'pro')]
-					: []
-			}
-		]
-		: [
-			{
-				name: join('js', 'main'),
-				exclude: [
-					...standardFilesToExclude,
-					...libsToExcludeFromWhole
-				],
-				include: getAppsToInclude().reduce((acc, item) => [
-					...acc,
-					join('apps', item, 'app'),
-					...(getProApps().includes(item)
-						? [join('apps', item, 'submodules', 'pro', 'pro')]
-						: [])
-				], [])
-			}
-		]
-});
+const modulesPerMode = {
+	app: [
+		{
+			name: join('js', 'main'),
+			exclude: standardFilesToExclude
+		},
+		{
+			name: join('apps', (env.app || ''), 'app'),
+			exclude: libsToExcludeFromApp,
+			include: env.hasOwnProperty('pro')
+				? [join('apps', (env.app || ''), 'submodules', 'pro',  'pro')]
+				: []
+		}
+	],
+	whole: [
+		{
+			name: join('js', 'main'),
+			exclude: [
+				...standardFilesToExclude,
+				...libsToExcludeFromWhole
+			],
+			include: getAppsToInclude().reduce((acc, item) => [
+				...acc,
+				join('apps', item, 'app'),
+				...(getProApps().includes(item)
+					? [join('apps', item, 'submodules', 'pro', 'pro')]
+					: [])
+			], [])
+		}
+	]
+};
+const modules = modulesPerMode[mode];
 
 const buildRequire = done => {
-	rjs.optimize(getConfigRequire(), function(buildResponse){
+	rjs.optimize({
+		dir: require, // direction
+		appDir: tmp, // origin
+		baseUrl:'.',
+		mainConfigFile: join(tmp, 'js', 'main.js'),
+		fileExclusionRegExp: /^doc*|.*\.md|^\..*|^monster-ui\.build\.js$/,
+		findNestedDependencies:true,
+		preserveLicenseComments:false,
+		removeCombined:true,
+		/**
+		 * Prevent optimization because we don't want to minify config.js and
+		 * there is no way to single it out, we should optimize with gulp later.
+		 * @type {String}
+		 */
+		optimize: 'none',
+		modules: modules
+	}, function() {
 		done();
 	}, done);
 };
@@ -155,11 +157,6 @@ const cleanRequire = () => gulp
 	.pipe(vinylPaths(del));
 
 /**
- * buildRequire
- * cleanTmp
- * moveRequire
- * cleanRequire
- *
  * For `whole`: from dist, run the optimizer and output it into dist
  *
  * For `app`: require whole directory, skipping all the optimizing of the core
@@ -167,7 +164,6 @@ const cleanRequire = () => gulp
  */
 export default gulp.series(
 	buildRequire,
-	cleanTmp,
 	moveRequire,
 	cleanRequire
 );

@@ -10,14 +10,25 @@ const config = {
 		lint: [
 			join(src, 'apps', env.app || '', 'app.js'),
 			join(src, 'apps', env.app || '', 'submodules', '*', '*.js')
-		]
+		],
+		minify: {
+			src: join(app, 'app.js'),
+			dest: app
+		}
 	},
 	whole: {
 		lint: [
 			join(src, '**', '*.js'),
 			'!' + join(src, 'js', 'vendor', '**', '*.js'),
 			'!' + join(src, 'js', 'lib', 'kazoo', 'dependencies', '**', '*.js')
-		]
+		],
+		minify: {
+			src: [
+				join(tmp, 'js', 'main.js'),
+				join(tmp, 'js', 'templates.js')
+			],
+			dest: join(tmp, 'js')
+		}
 	}
 };
 const context = config[mode];
@@ -30,21 +41,14 @@ const handleUglifyError = error => {
  * Minifies js/main.js, we don't use the optimizer from requirejs as we don't
  * want to minify config.js
  */
-export const minifyJs = () => gulp
-	.src([
-		join(tmp, 'js', 'main.js'),
-		join(tmp, 'js', 'templates.js')
-	])
-	.pipe(uglify().on('error', handleUglifyError))
-	.pipe(gulp.dest(join(tmp, 'js')));
+export function minifyJs() {
+	const { src, dest } = context.minify;
 
-/**
- * Minifies app.js
- */
-export const minifyJsApp = () => gulp
-	.src(join(app, 'app.js'))
-	.pipe(uglify().on('error', handleUglifyError))
-	.pipe(gulp.dest(app));
+	return gulp
+		.src(src)
+		.pipe(uglify().on('error', handleUglifyError))
+		.pipe(gulp.dest(dest));
+}
 
 /**
  * Show linting error

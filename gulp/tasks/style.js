@@ -4,50 +4,69 @@ import sass from 'gulp-sass';
 import concatCss from 'gulp-concat-css';
 import cleanCss from 'gulp-clean-css';
 import { app, tmp } from '../paths.js';
-import { getAppsToInclude } from '../helpers/helpers.js';
+import { getAppsToInclude, mode } from '../helpers/helpers.js';
 
-const concatName = 'style.css';
-const cssDest = join(tmp, 'css');
-const concatCssPaths = getAppsToInclude().reduce((acc, item) => [
-	...acc,
-	join(tmp, 'apps', item, 'style', '*.css')
-], [
-	join(tmp, 'css', 'style.css')
-]);
+const config = {
+	app: {
+		compile: {
+			src: join(app, '**', '*.scss'),
+			dest: app
+		},
+		concat: {
+			src: join(app, 'style', '*.css'),
+			dest: join(app, 'style'),
+			output: 'app.css'
+		},
+		minify: {
+			src: join(app, 'style', 'app.css'),
+			dest: join(app, 'style')
+		}
+	},
+	whole: {
+		compile: {
+			src: join(tmp, '**', '*.scss'),
+			dest: tmp
+		},
+		concat: {
+			src: getAppsToInclude().reduce((acc, item) => [
+				...acc,
+				join(tmp, 'apps', item, 'style', '*.css')
+			], [
+				join(tmp, 'css', 'style.css')
+			]),
+			dest: join(tmp, 'css'),
+			output: 'style.css'
+		},
+		minify: {
+			src: join(tmp, 'css', 'style.css'),
+			dest: join(tmp, 'css')
+		}
+	}
+};
+const context = config[mode];
 
-const concatAllCss = () => gulp
-	.src(concatCssPaths)
-	.pipe(concatCss(concatName))
-	.pipe(gulp.dest(cssDest));
+const concatStyles = () => gulp
+	.src(context.concat.src)
+	.pipe(concatCss(context.concat.output))
+	.pipe(gulp.dest(context.concat.dest));
 
-const minifyCss = () => gulp
-	.src(join(cssDest, concatName))
+const minifyStyles = () => gulp
+	.src(context.minify.src)
 	.pipe(cleanCss())
-	.pipe(gulp.dest(cssDest));
+	.pipe(gulp.dest(context.minify.dest));
 
 /**
- * concatAllCss
- * minifyCss
- *
  * Takes all the apps provided up top and concatenate and minify them
  */
-export const css = gulp.series(
-	concatAllCss,
-	minifyCss
+export const minifyCss = gulp.series(
+	concatStyles,
+	minifyStyles
 );
-
-/**
- * Uglifies app.css
- */
-export const minifyCssApp = () => gulp
-	.src(join(app, 'style', 'app.css'))
-	.pipe(cleanCss())
-	.pipe(gulp.dest(join(app, 'style')));
 
 /**
  * Compiles all .scss files into .css and moves them to dist folder
  */
 export const compileSass = () => gulp
-	.src(join(tmp, '**', '*.scss'))
+	.src(context.compile.src)
 	.pipe(sass().on('error', sass.logError))
-	.pipe(gulp.dest(tmp));
+	.pipe(gulp.dest(context.compile.dest));

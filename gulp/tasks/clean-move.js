@@ -22,8 +22,8 @@ const moveBuiltFilesToDist = () => gulp
 	.src([
 		join(tmp, '**', '*'),
 		'!' + join(tmp, '**', '*.scss'),
-		'!' + join(tmp, 'apps', '*', 'tests'),	// Exclude tests folder from apps
-		'!' + join(tmp, 'apps', '*', 'tests', '**', '**')	// Exclude tests folder contents
+		'!' + join(tmp, 'apps', '*', 'tests'),
+		'!' + join(tmp, 'apps', '*', 'tests', '**', '*')
 	])
 	.pipe(gulp.dest(dist));
 
@@ -36,40 +36,23 @@ const moveSrcFilesToTmp = () => gulp
 	.pipe(gulp.dest(tmp));
 
 
-export const cleanTmp = () => gulp
+const cleanTmp = () => gulp
 	.src(tmp, {
 		allowEmpty: true,
 		read: false
 	})
 	.pipe(vinylPaths(del));
 
-/**
- * cleanTmp
- * moveFilesToTmp
- *
- * Moves all files to tmp folder
- */
 export const moveFilesToTmp = gulp.series(
 	cleanTmp,
 	moveSrcFilesToTmp
 );
 
-/**
- * cleanDistDev
- * moveDistDev
- */
 export const moveDistDev = gulp.series(
 	cleanDistDev,
 	moveDistFilesToDev
 );
 
-/**
- * cleanDist
- * moveBuiltFilesDist
- * cleanTmp
- *
- * Moves tmp to dist and removes tmp after that
- */
 export const cleanFolders = gulp.series(
 	cleanDist,
 	moveBuiltFilesToDist,
