@@ -643,7 +643,7 @@ define(function() {
 				apiUrl = monster.config.api.default;
 
 			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
-			if (!app) {
+			if (app) {
 				if (app && 'source_url' in app) {
 					externalUrl = app.source_url;
 
