@@ -822,6 +822,24 @@ define(function(require) {
 			.value();
 	}
 
+	function normalizeUrlPathEnding(url) {
+		if (!_.isString(url)) {
+			return;
+		}
+		var isPathToFile = _
+			.chain(url)
+			.split('/')
+			.last()
+			.includes('.')
+			.value();
+
+		if (isPathToFile) {
+			return url;
+		}
+		return _.endsWith(url, '/') ? url : url + '/';
+	}
+	monster.normalizeUrlPathEnding = normalizeUrlPathEnding;
+
 	/**
 	 * Set the language on application startup.
 	 *
