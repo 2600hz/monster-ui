@@ -635,17 +635,11 @@ define(function() {
 						callback(error);
 					}
 				},
-				normalizeUrl = function(url) {
-					if (!_.isString(url)) {
-						return;
-					}
-					return _.endsWith(url, '/') ? url : url + '/';
-				},
 				getUrl = function(obj, pathToUrl, defaultValue) {
 					return _
 						.chain(obj)
 						.get(pathToUrl, defaultValue)
-						.thru(normalizeUrl)
+						.thru(monster.normalizeUrlPathEnding)
 						.value();
 				},
 				app = monster.util.getAppStoreMetadata(name),

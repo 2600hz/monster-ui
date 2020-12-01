@@ -1518,12 +1518,11 @@ define(function(require) {
 				metadata = monster.util.getAppStoreMetadata(app.name),
 				callback = args.callback || function() {};
 
-			if (metadata && metadata.api_url) {
-				app.apiUrl = metadata.api_url;
-				if (app.apiUrl.substr(app.apiUrl.length - 1) !== '/') {
-					app.apiUrl += '/';
-				}
-			}
+			app.apiUrl = _
+				.chain(metadata)
+				.get('api_url', app.apiUrl)
+				.thru(monster.normalizeUrlPathEnding)
+				.value();
 
 			// If isMasqueradable flag is set in the code itself, use it, otherwise check if it's set in the DB, otherwise defaults to true
 			app.isMasqueradable = _.find([
