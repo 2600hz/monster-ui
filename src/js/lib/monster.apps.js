@@ -565,11 +565,13 @@ define(function() {
 					_.get(metadata, 'api_url'),
 					monster.config.api.default
 				]),
-				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, callback) {
+				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, version, callback) {
 					require([moduleId], function(app) {
 						_.extend(app, {
 							appPath: pathToDirectory,
-							data: {}
+							data: {
+								version: version
+							}
 						}, monster.apps[name], {
 							apiUrl: apiUrl,
 							// we don't want the name to be set by the js, instead we take the name supplied in the app.json
@@ -636,8 +638,32 @@ define(function() {
 						callback(err, app);
 					});
 				},
+				loadVersion = _.partial(function(name, pathToFolder, callback) {
+					var success = _.partial(_.ary(callback, 2), null),
+						successWithDynamicVersion = _.partial(success, _.toString(new Date().getTime()));
+
+					if (monster.isDev()) {
+						return successWithDynamicVersion();
+					}
+					var preloadedApps = _.get(monster, 'config.developerFlags.build.preloadedApps', []),
+						successWithFrameworkVersion = _.partial(success, monster.util.getVersion());
+
+					if (_.includes(preloadedApps, name)) {
+						return successWithFrameworkVersion();
+					}
+					$.ajax({
+						url: pathToFolder + '/VERSION',
+						success: _.flow(
+							monster.parseVersionFile,
+							_.partial(_.get, _, 'version'),
+							success
+						),
+						error: successWithDynamicVersion
+					});
+				}, name, pathConfig.directory),
 				loadApp = function loadApp(callback) {
 					monster.waterfall([
+						loadVersion,
 						requireApp,
 						maybeRetrieveBuildConfig,
 						applyConfig,
