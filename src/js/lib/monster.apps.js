@@ -529,7 +529,11 @@ define(function() {
 				// add an active property method to the i18n array within the app.
 				_.extend(app.i18n, {
 					active: function() {
-						var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
+						var loadedLanguages = _.keys(app.data.i18n),
+							language = _.find([
+								monster.config.whitelabel.language,
+								monster.defaultLanguage
+							], _.partial(_.includes, loadedLanguages));
 
 						return app.data.i18n[language];
 					}
