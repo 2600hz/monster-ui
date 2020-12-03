@@ -592,26 +592,18 @@ define(function() {
 						error: _.partial(callback, null, app, {})
 					});
 				},
-				loadApp = function loadApp(callback) {
-					monster.waterfall([
-						requireApp,
-						maybeRetrieveBuildConfig
-					], function applyConfig(err, app, config) {
-						if (err) {
-							return callback(err);
-						}
-						app.buildConfig = config;
+				applyConfig = function(app, config, callback) {
+					app.buildConfig = config;
 
-						if (app.buildConfig.version === 'pro') {
-							if (!app.hasOwnProperty('subModules')) {
-								app.subModules = [];
-							}
-
-							app.subModules.push('pro');
+					if (app.buildConfig.version === 'pro') {
+						if (!app.hasOwnProperty('subModules')) {
+							app.subModules = [];
 						}
 
-						callback(null, app);
-					});
+						app.subModules.push('pro');
+					}
+
+					callback(null, app);
 				},
 				requireSubModule = function(app, subModule, callback) {
 					var pathSubModule = app.appPath + '/submodules/',
@@ -644,6 +636,15 @@ define(function() {
 						callback(err, app);
 					});
 				},
+				loadApp = function loadApp(callback) {
+					monster.waterfall([
+						requireApp,
+						maybeRetrieveBuildConfig,
+						applyConfig,
+						loadSubModules,
+						_.bind(self.monsterizeApp, self)
+					], callback);
+				},
 				initializeApp = function initializeApp(app, callback) {
 					try {
 						app.load(_.partial(callback, null));
@@ -660,8 +661,6 @@ define(function() {
 
 			monster.waterfall([
 				loadApp,
-				loadSubModules,
-				_.bind(self.monsterizeApp, self),
 				_.bind(self.loadDependencies, self),
 				initializeApp
 			], mainCallback);
