@@ -652,7 +652,7 @@ define(function(require) {
 			return (number < 10 ? '0' : '') + number;
 		};
 		var getString = function(quantity, keys) {
-			return i18n.frendlyTimer[quantity === 1 ? keys[0] : keys[1]];
+			return i18n.friendlyTimer[quantity === 1 ? keys[0] : keys[1]];
 		};
 		var displayTime = '';
 
