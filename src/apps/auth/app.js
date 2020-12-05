@@ -359,7 +359,7 @@ define(function(require) {
 					monster.util.logoutAndReload();
 				} else {
 					if (results.user.hasOwnProperty('require_password_update') && results.user.require_password_update) {
-						self.newPassword(results.user);
+						self.newPassword();
 					}
 
 					monster.util.autoLogout();
@@ -1130,57 +1130,75 @@ define(function(require) {
 			monster.util.logoutAndReload();
 		},
 
-		newPassword: function(userData) {
+		newPassword: function() {
 			var self = this,
-				template = $(self.getTemplate({
+				$template = $(self.getTemplate({
 					name: 'dialogPasswordUpdate'
 				})),
-				form = template.find('#form_password_update'),
-				popup = monster.ui.dialog(template, {
+				$form = $template.find('#form_password_update'),
+				passwordRules = {
+					required: true,
+					minlength: 6
+				},
+				getI18n = _.partial(monster.util.tryI18n, self.i18n.active().passwordUpdate),
+				$popup = monster.ui.dialog($template, {
 					isPersistent: true,
-					title: self.i18n.active().passwordUpdate.title
-				});
+					title: getI18n('title')
+				}),
+				isFormInvalid = _.bind(_.negate(monster.ui.valid), monster.ui, $form),
+				getNewPassword = _.flow(
+					_.bind(monster.ui.getFormData, monster.ui, $form.get(0)),
+					_.partial(_.get, _, 'new_password')
+				),
+				closePopup = _.bind($popup.dialog, $popup, 'close');
 
-			monster.ui.validate(form);
-
-			template.find('.update-password').on('click', function() {
-				if (monster.ui.valid(form)) {
-					var formData = monster.ui.getFormData('form_password_update');
-
-					if (formData.new_password === formData.new_password_confirmation) {
-						var newUserData = {
-								password: formData.new_password,
-								require_password_update: false
-							},
-							data = $.extend(true, {}, userData, newUserData);
-
-						self.callApi({
-							resource: 'user.update',
-							data: {
-								accountId: self.accountId,
-								userId: self.userId,
-								data: data
-							},
-							success: function(data, status) {
-								popup.dialog('close').remove();
-								monster.ui.toast({
-									type: 'success',
-									message: self.i18n.active().passwordUpdate.toastr.success.update
-								});
-							}
-						});
-					} else {
-						monster.ui.toast({
-							type: 'error',
-							message: self.i18n.active().passwordUpdate.toastr.error.password
-						});
-					}
+			monster.ui.validate($form, {
+				rules: {
+					new_password: passwordRules,
+					new_password_confirmation: _.merge({
+						equalTo: '#new_password'
+					}, passwordRules)
 				}
 			});
 
-			template.find('.cancel-link').on('click', function() {
-				popup.dialog('close').remove();
+			$template.find('.update-password').on('click', function() {
+				if (isFormInvalid()) {
+					return;
+				}
+				var $button = $(this);
+
+				$button.prop('disabled', 'disabled');
+
+				self.callApi({
+					resource: 'user.patch',
+					data: {
+						accountId: self.accountId,
+						userId: self.userId,
+						data: {
+							password: getNewPassword(),
+							require_password_update: false
+						}
+					},
+					success: function(data, status) {
+						closePopup();
+
+						monster.ui.toast({
+							type: 'success',
+							message: getI18n('toastr.success.update')
+						});
+					},
+					error: function() {
+						$button.prop('disabled', false);
+
+						monster.ui.toast({
+							type: 'error',
+							message: getI18n('toastr.error.update')
+						});
+					}
+				});
 			});
+
+			$template.find('.cancel-link').on('click', closePopup);
 		},
 
 		checkRecoveryId: function(recoveryId, callback) {
