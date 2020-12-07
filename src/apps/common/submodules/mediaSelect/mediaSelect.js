@@ -165,6 +165,12 @@ define(function(require) {
 						.map(pickIdAndNameProps)
 						.value();
 				},
+				isSilence = _.partial(_.isEqual, 'silence_stream://300000'),
+				isShoutcast = _.overEvery(
+					_.partial(_.includes, _, '://'),
+					_.negate(isSilence)
+				),
+				isSelectedOptionShoutcast = _.partial(isShoutcast, _.get(args, 'selectedOption')),
 				defaultData = {
 					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
 					noneLabel: self.i18n.active().mediaSelect.noneLabel,
@@ -180,16 +186,15 @@ define(function(require) {
 					mediaId: args.selectedOption,
 					selectedMedia: null
 				},
-				formattedData = $.extend(true, {}, defaultData, args),
-				isShoutcast = formattedData.selectedOption && formattedData.selectedOption.indexOf('://') >= 0 && formattedData.selectedOption !== 'silence_stream://300000';
+				formattedData = $.extend(true, {}, defaultData, args);
 
 			formattedData.options = _.concat(
 				getDefaultEntities(args),
 				args.options
 			);
 
-			if (isShoutcast) {
-				formattedData.isShoutcast = isShoutcast;
+			if (isSelectedOptionShoutcast()) {
+				formattedData.isShoutcast = true;
 				formattedData.shoutcastValue = formattedData.selectedOption;
 				formattedData.selectedOption = 'shoutcast';
 			};
