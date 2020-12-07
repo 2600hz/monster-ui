@@ -175,12 +175,7 @@ define(function(require) {
 				options.push(optionShoutcast);
 			}
 
-			formattedData.options = _(options)
-				.concat(args.options)
-				.filter(function(opt) {
-					return opt.media_source !== 'tts';
-				})
-				.value();
+			formattedData.options = _.concat(options, args.options);
 
 			if (isShoutcast) {
 				formattedData.isShoutcast = isShoutcast;
