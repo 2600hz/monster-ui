@@ -129,6 +129,42 @@ define(function(require) {
 
 		mediaSelectFormatData: function(args) {
 			var self = this,
+				getDefaultEntities = function(args) {
+					var orderedDefaultEntityTypes = [
+							'none',
+							'silence',
+							'shoutcast'
+						],
+						defaultEntitiesPerType = {
+							none: {
+								id: 'none',
+								name: self.i18n.active().mediaSelect.noneLabel,
+								shouldRender: _.get(args, 'hasNone', true)
+							},
+							silence: {
+								id: 'silence_stream://300000',
+								name: self.i18n.active().mediaSelect.silence,
+								shouldRender: _.get(args, 'hasSilence', true)
+							},
+							shoutcast: {
+								id: 'shoutcast',
+								name: self.i18n.active().mediaSelect.shoutcastURL,
+								shouldRender: _.get(args, 'hasShoutcast', true)
+							}
+						},
+						getDefaultEntity = _.partial(_.get, defaultEntitiesPerType),
+						pickIdAndNameProps = _.partial(_.pick, _, [
+							'id',
+							'name'
+						]);
+
+					return _
+						.chain(orderedDefaultEntityTypes)
+						.map(getDefaultEntity)
+						.reject({ shouldRender: false })
+						.map(pickIdAndNameProps)
+						.value();
+				},
 				defaultData = {
 					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
 					noneLabel: self.i18n.active().mediaSelect.noneLabel,
@@ -138,9 +174,6 @@ define(function(require) {
 					name: 'mediaId',
 					uploadLabel: self.i18n.active().upload,
 					label: args.hasOwnProperty('label') ? args.label : self.i18n.active().mediaSelect.defaultLabel,
-					hasNone: true,
-					hasShoutcast: true,
-					hasSilence: true,
 					isShoutcast: false,
 					shoutcastURLInputClass: '',
 					tts: args.tts,
@@ -148,34 +181,12 @@ define(function(require) {
 					selectedMedia: null
 				},
 				formattedData = $.extend(true, {}, defaultData, args),
-				optionShoutcast = {
-					id: 'shoutcast',
-					name: self.i18n.active().mediaSelect.shoutcastURL
-				},
-				optionNone = {
-					id: 'none',
-					name: formattedData.noneLabel
-				},
-				optionSilence = {
-					id: 'silence_stream://300000',
-					name: self.i18n.active().mediaSelect.silence
-				},
-				isShoutcast = formattedData.selectedOption && formattedData.selectedOption.indexOf('://') >= 0 && formattedData.selectedOption !== 'silence_stream://300000',
-				options = [];
+				isShoutcast = formattedData.selectedOption && formattedData.selectedOption.indexOf('://') >= 0 && formattedData.selectedOption !== 'silence_stream://300000';
 
-			if (formattedData.hasNone) {
-				options.push(optionNone);
-			}
-
-			if (formattedData.hasSilence) {
-				options.push(optionSilence);
-			}
-
-			if (formattedData.hasShoutcast) {
-				options.push(optionShoutcast);
-			}
-
-			formattedData.options = _.concat(options, args.options);
+			formattedData.options = _.concat(
+				getDefaultEntities(args),
+				args.options
+			);
 
 			if (isShoutcast) {
 				formattedData.isShoutcast = isShoutcast;
