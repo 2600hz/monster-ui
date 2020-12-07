@@ -165,6 +165,11 @@ define(function(require) {
 						.map(pickIdAndNameProps)
 						.value();
 				},
+				getMediaEntities = function(entities) {
+					return entities.sort(function(a, b) {
+						return a.name.localeCompare(b.name, monster.config.whitelabel.language);
+					});
+				},
 				isSilence = _.partial(_.isEqual, 'silence_stream://300000'),
 				isShoutcast = _.overEvery(
 					_.partial(_.includes, _, '://'),
@@ -190,7 +195,7 @@ define(function(require) {
 
 			formattedData.options = _.concat(
 				getDefaultEntities(args),
-				args.options
+				getMediaEntities(args.options)
 			);
 
 			if (isSelectedOptionShoutcast()) {
