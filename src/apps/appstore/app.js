@@ -139,10 +139,18 @@ define(function(require) {
 		renderApps: function(parent, appstoreData) {
 			var self = this,
 				appList = appstoreData.apps,
+				isAppInstalled = function(app) {
+					return _.get(app, 'allowed_users', 'specific') !== 'specific'
+						|| !_.isEmpty(_.get(app, 'users', []));
+				},
 				template = $(self.getTemplate({
 					name: 'appList',
 					data: {
-						apps: appList
+						apps: _.map(appList, function(app) {
+							return _.merge({
+								isInstalled: isAppInstalled(app)
+							}, app);
+						})
 					}
 				}));
 
