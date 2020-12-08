@@ -9,8 +9,6 @@ define(function(require) {
 
 		name: 'appstore',
 
-		isMasqueradable: false,
-
 		css: [ 'app' ],
 
 		i18n: {
