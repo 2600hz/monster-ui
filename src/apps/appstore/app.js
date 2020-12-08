@@ -108,23 +108,16 @@ define(function(require) {
 		},
 
 		loadData: function(callback) {
-			var self = this,
-				isAppInstalled = function(app) {
-					return _.get(app, 'allowed_users', 'specific') !== 'specific'
-						|| !_.isEmpty(_.get(app, 'users', []));
-				};
+			var self = this;
 
 			monster.parallel({
 				apps: function(next) {
-					next(null, _.map(monster.util.listAppStoreMetadata(), function(app) {
-						return _.assign({}, app, {
-							tags: _
-								.chain(app)
-								.get('tags', [])
-								.concat(isAppInstalled(app) ? ['installed'] : [])
-								.value()
-						});
-					}));
+					monster.pub('apploader.getAppList', {
+						accountId: self.accountId,
+						scope: 'all',
+						success: _.partial(next, null),
+						error: next
+					});
 				},
 				users: function(next) {
 					self.callApi({
@@ -172,7 +165,7 @@ define(function(require) {
 
 		showAppPopup: function(appId, appstoreData) {
 			var self = this,
-				metadata = monster.util.getAppStoreMetadata(appId),
+				metadata = _.find(appstoreData.apps, { id: appId }),
 				userList = $.extend(true, [], appstoreData.users),
 				app = _.merge({
 					extra: _.merge({
