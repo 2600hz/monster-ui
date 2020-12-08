@@ -232,7 +232,7 @@ define(function(require) {
 						}));
 			}
 
-			self.bindPopupEvents(template, app, isActive);
+			self.bindPopupEvents(template, app, isActive, appstoreData.apps);
 
 			rightContainer.find('.selected-users-number').html(selectedUsersLength);
 			rightContainer.find('.total-users-number').html(users.length);
@@ -242,7 +242,7 @@ define(function(require) {
 			template.find('#screenshot_carousel').carousel();
 		},
 
-		bindPopupEvents: function(parent, app, isActive) {
+		bindPopupEvents: function(parent, app, isActive, apps) {
 			var self = this,
 				userList = parent.find('.user-list'),
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
@@ -256,6 +256,16 @@ define(function(require) {
 							data: appInstallInfo
 						},
 						success: function(data, status) {
+							var storedApp = _.find(apps, { id: app.id });
+
+							if (_.includes(apiResource, 'delete')) {
+								_.forEach(['allowed_users', 'users'], _.partial(_.unset, storedApp));
+							} else {
+								_.assign(storedApp, _.pick(data.data, [
+									'allowed_users',
+									'users'
+								]));
+							}
 							successCallback && successCallback();
 						},
 						error: function(_data, status) {
