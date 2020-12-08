@@ -193,16 +193,6 @@ define(function() {
 												response: data.data,
 												callback: next
 											});
-										},
-										function(next) {
-											if (!_.has(params.data.data, 'password')) {
-												return next(null);
-											}
-											monster.pub('auth.currentUser.updated.password', {
-												password: _.get(params.data.data, 'password'),
-												user: data.data,
-												callback: next
-											});
 										}
 									], function() {
 										params.success && params.success(data, status);
