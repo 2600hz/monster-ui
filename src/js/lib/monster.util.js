@@ -42,6 +42,7 @@ define(function(require) {
 		getModbID: getModbID,
 		getNextExtension: getNextExtension,
 		getNumberFeatures: getNumberFeatures,
+		getRealmSuffix: getRealmSuffix,
 		getUrlVars: getUrlVars,
 		getUserFullName: getUserFullName,
 		getUserInitials: getUserInitials,
@@ -78,6 +79,22 @@ define(function(require) {
 		unixToDate: unixToDate,
 		updateImagePath: updateImagePath
 	};
+
+	/**
+	 * Returns the realm suffix of the logged in account's whitelabel document.
+	 * @return {String|Undefined}
+	 */
+	function getRealmSuffix() {
+		var realmSuffix = _.get(monster.config.whitelabel, 'realm_suffix');
+		var isNonEmptyString = _.overEvery(
+			_.isString,
+			_.negate(_.isEmpty)
+		);
+
+		return _.find([
+			realmSuffix
+		], isNonEmptyString);
+	}
 
 	/**
 	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
