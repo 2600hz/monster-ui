@@ -27,6 +27,7 @@ define(function(require) {
 		formatPrice: formatPrice,
 		formatVariableToDisplay: formatVariableToDisplay,
 		friendlyTimer: friendlyTimer,
+		generateAccountRealm: generateAccountRealm,
 		getAppIconPath: getAppIconPath,
 		getAppStoreMetadata: getAppStoreMetadata,
 		getAuthToken: getAuthToken,
@@ -79,6 +80,22 @@ define(function(require) {
 		unixToDate: unixToDate,
 		updateImagePath: updateImagePath
 	};
+
+	/**
+	 * Returns a randomly generated realm based on the logged in account's whitelabel document.
+	 * @return {String|Undefined}
+	 */
+	function generateAccountRealm() {
+		var realmSuffix = getRealmSuffix();
+		var isRealmSuffixNotConfigured = _.isUndefined(realmSuffix);
+
+		if (isRealmSuffixNotConfigured) {
+			return undefined;
+		}
+		return _.toLower(
+			randomString(7) + '.' + realmSuffix
+		);
+	}
 
 	/**
 	 * Returns the realm suffix of the logged in account's whitelabel document.
