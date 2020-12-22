@@ -249,6 +249,9 @@ define(function(require) {
 
 				monster.ui.validate(mediaForm, {
 					rules: {
+						'extra.shoutcastUrl': {
+							required: true
+						},
 						'mediaId': {
 							required: true,
 							regex: /^(?!none$)/
