@@ -127,8 +127,7 @@ define(function(require) {
 				monster.ui.validate(mediaForm, {
 					rules: {
 						'extra.shoutcastUrl': {
-							required: true,
-							url: true
+							required: true
 						},
 						'mediaId': {
 							required: true,
