@@ -116,6 +116,30 @@ define(function(require) {
 					data: formattedData,
 					submodule: 'mediaSelect'
 				}));
+
+				var mediaForm = template.find('#select_media_form');
+
+				monster.ui.charsRemaining(template.find('.custom-greeting-text'), {
+					size: 350,
+					customClass: 'chars-remaining-counter'
+				});
+
+				monster.ui.validate(mediaForm, {
+					rules: {
+						'extra.shoutcastUrl': {
+							required: true,
+							url: true
+						},
+						'mediaId': {
+							required: true,
+							regex: /^(?!none$)/
+						}
+					},
+					messages: {
+						mediaId: self.i18n.active().mediaSelect.invalidMedia
+					}
+				});
+
 				self.mediaSelectBindTabsTemplate(template);
 			}
 
