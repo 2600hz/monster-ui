@@ -324,12 +324,13 @@ define(function(require) {
 
 			//Clicking on the menu item
 			$template
-				.on('click', '.visited, .completed', function() {
-					var stepId = $(this).data('id');
-					self.navigationWizardGoToStep({
-						stepId: stepId
+				.find('.nav')
+					.on('click', '.visited, .completed', function() {
+						var stepId = $(this).data('id');
+						self.navigationWizardGoToStep({
+							stepId: stepId
+						});
 					});
-				});
 		},
 
 		/**
