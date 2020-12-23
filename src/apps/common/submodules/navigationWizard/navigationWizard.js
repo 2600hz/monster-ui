@@ -550,11 +550,11 @@ define(function(require) {
 				});
 
 			if (!result.valid) {
-				//If it fails for any reason then re-enable the button
+				//If validation fails for any reason then re-enable the button
 				wizardArgs
 					.container
 						.find('#done')
-						.removeClass('disabled');
+						.prop('disabled', false);
 				return;
 			}
 
