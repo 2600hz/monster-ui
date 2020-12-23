@@ -175,16 +175,10 @@ define(function(require) {
 			template
 				.find('#done')
 					.on('click', function(event) {
-						var $this = $(this);
-
 						event.preventDefault();
 
-						if ($this.prop('disabled')) {
-							return;
-						}
-
 						// Disable button after it's clicked
-						$this.prop('disabled', true);
+						$(this).prop('disabled', true);
 
 						self.navigationWizardComplete({
 							eventType: 'done'
