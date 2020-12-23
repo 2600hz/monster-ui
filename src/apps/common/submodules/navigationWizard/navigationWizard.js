@@ -173,19 +173,17 @@ define(function(require) {
 					});
 
 			template
-				.on('click', '#done:not(.disabled)', function(event) {
-					event.preventDefault();
+				.find('#done')
+					.on('click', function(event) {
+						event.preventDefault();
 
-					$this = $(this);
+						// Disable button after it's clicked
+						$(this).prop('disabled', true);
 
-					//disable button after it's clicked
-					$this
-						.addClass('disabled');
-
-					self.navigationWizardComplete({
-						eventType: 'done'
+						self.navigationWizardComplete({
+							eventType: 'done'
+						});
 					});
-				});
 
 			template
 				.find('#save_app')
@@ -268,12 +266,13 @@ define(function(require) {
 
 			//Clicking on the menu item
 			template
-				.on('click', '.visited, .completed', function() {
-					var stepId = $(this).data('id');
-					self.navigationWizardGoToStep({
-						stepId: stepId
+				.find('.nav')
+					.on('click', '.visited, .completed', function() {
+						var stepId = $(this).data('id');
+						self.navigationWizardGoToStep({
+							stepId: stepId
+						});
 					});
-				});
 		},
 
 		/**
@@ -545,11 +544,11 @@ define(function(require) {
 				});
 
 			if (!result.valid) {
-				//If it fails for any reason then re-enable the button
+				//If validation fails for any reason then re-enable the button
 				wizardArgs
 					.container
 						.find('#done')
-						.removeClass('disabled');
+						.prop('disabled', false);
 				return;
 			}
 
