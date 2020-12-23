@@ -307,20 +307,20 @@ define(function(require) {
 					});
 
 			$template
-					.find('#navigation_wizard_delete')
-						.on('click', function(event) {
-							event.preventDefault();
+				.find('#navigation_wizard_delete')
+					.on('click', function(event) {
+						event.preventDefault();
 
-							var deleteFunctionRef = wizardArgs.delete,
-								deleteFunction = _.isFunction(deleteFunctionRef)
-									? deleteFunctionRef
-									: thisArg[deleteFunctionRef],
-								deleteCallback = function(callbackArgs) {
-									return callbackArgs.exit && self.navigationWizardUnbindEvents();
-								};
+						var deleteFunctionRef = wizardArgs.delete,
+							deleteFunction = _.isFunction(deleteFunctionRef)
+								? deleteFunctionRef
+								: thisArg[deleteFunctionRef],
+							deleteCallback = function(callbackArgs) {
+								return callbackArgs.exit && self.navigationWizardUnbindEvents();
+							};
 
-							_.bind(deleteFunction, thisArg)(wizardArgs, deleteCallback);
-						});
+						_.bind(deleteFunction, thisArg)(wizardArgs, deleteCallback);
+					});
 
 			//Clicking on the menu item
 			$template
