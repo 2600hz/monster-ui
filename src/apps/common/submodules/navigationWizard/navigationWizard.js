@@ -173,19 +173,23 @@ define(function(require) {
 					});
 
 			template
-				.on('click', '#done:not(.disabled)', function(event) {
-					event.preventDefault();
+				.find('#done')
+					.on('click', function(event) {
+						var $this = $(this);
 
-					$this = $(this);
+						event.preventDefault();
 
-					//disable button after it's clicked
-					$this
-						.addClass('disabled');
+						if ($this.prop('disabled')) {
+							return;
+						}
 
-					self.navigationWizardComplete({
-						eventType: 'done'
+						// Disable button after it's clicked
+						$this.prop('disabled', true);
+
+						self.navigationWizardComplete({
+							eventType: 'done'
+						});
 					});
-				});
 
 			template
 				.find('#save_app')
