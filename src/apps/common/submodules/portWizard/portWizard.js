@@ -686,7 +686,7 @@ define(function(require) {
 					'bill.name': {
 						required: true,
 						minlength: 1,
-						maxlength: 128
+						maxlength: 25
 					},
 					'bill.street_number': {
 						required: true,
