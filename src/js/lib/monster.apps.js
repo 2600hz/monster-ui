@@ -193,16 +193,6 @@ define(function() {
 												response: data.data,
 												callback: next
 											});
-										},
-										function(next) {
-											if (!_.has(params.data.data, 'password')) {
-												return next(null);
-											}
-											monster.pub('auth.currentUser.updated.password', {
-												password: _.get(params.data.data, 'password'),
-												user: data.data,
-												callback: next
-											});
 										}
 									], function() {
 										params.success && params.success(data, status);
@@ -529,7 +519,11 @@ define(function() {
 				// add an active property method to the i18n array within the app.
 				_.extend(app.i18n, {
 					active: function() {
-						var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
+						var loadedLanguages = _.keys(app.data.i18n),
+							language = _.find([
+								monster.config.whitelabel.language,
+								monster.defaultLanguage
+							], _.partial(_.includes, loadedLanguages));
 
 						return app.data.i18n[language];
 					}
@@ -635,32 +629,22 @@ define(function() {
 						callback(error);
 					}
 				},
+				getUrl = function(obj, pathToUrl, defaultValue) {
+					return _
+						.chain(obj)
+						.get(pathToUrl, defaultValue)
+						.thru(monster.normalizeUrlPathEnding)
+						.value();
+				},
 				app = monster.util.getAppStoreMetadata(name),
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
-				externalUrl = options.sourceUrl || false,
-				apiUrl = monster.config.api.default;
+				externalUrl = getUrl(app, 'source_url', options.sourceUrl),
+				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				apiUrl = getUrl(app, 'api_url', monster.config.api.default);
 
-			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
-			if (!app) {
-				if (app && 'source_url' in app) {
-					externalUrl = app.source_url;
-
-					if (externalUrl.substr(externalUrl.length - 1) !== '/') {
-						externalUrl += '/';
-					}
-				}
-
-				if (app && app.hasOwnProperty('api_url')) {
-					apiUrl = app.api_url;
-					if (apiUrl.substr(apiUrl.length - 1) !== '/') {
-						apiUrl += '/';
-					}
-				}
-			}
-
-			if (externalUrl) {
+			if (hasExternalUrlConfigured) {
 				appPath = externalUrl;
 
 				requirePaths[customKey] = externalUrl + '/app';

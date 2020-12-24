@@ -1299,7 +1299,7 @@ define(function(require) {
 			addSimpleRule('ipv4', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i);
 			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\s?[AP]M))$/i);
 			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
-			addSimpleRule('realm', /^[0-9A-Z.-]+$/i);
+			addSimpleRule('realm', /^[0-9a-z.-]+$/);
 			addSimpleRule('hexadecimal', /^[0-9A-F]+$/i);
 			addSimpleRule('protocol', /:\/\//i);
 

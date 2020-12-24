@@ -27,6 +27,7 @@ define(function(require) {
 		formatPrice: formatPrice,
 		formatVariableToDisplay: formatVariableToDisplay,
 		friendlyTimer: friendlyTimer,
+		generateAccountRealm: generateAccountRealm,
 		getAppIconPath: getAppIconPath,
 		getAppStoreMetadata: getAppStoreMetadata,
 		getAuthToken: getAuthToken,
@@ -42,6 +43,7 @@ define(function(require) {
 		getModbID: getModbID,
 		getNextExtension: getNextExtension,
 		getNumberFeatures: getNumberFeatures,
+		getRealmSuffix: getRealmSuffix,
 		getUrlVars: getUrlVars,
 		getUserFullName: getUserFullName,
 		getUserInitials: getUserInitials,
@@ -78,6 +80,38 @@ define(function(require) {
 		unixToDate: unixToDate,
 		updateImagePath: updateImagePath
 	};
+
+	/**
+	 * Returns a randomly generated realm based on the logged in account's whitelabel document.
+	 * @return {String|Undefined}
+	 */
+	function generateAccountRealm() {
+		var realmSuffix = getRealmSuffix();
+		var isRealmSuffixNotConfigured = _.isUndefined(realmSuffix);
+
+		if (isRealmSuffixNotConfigured) {
+			return undefined;
+		}
+		return _.toLower(
+			randomString(7) + '.' + realmSuffix
+		);
+	}
+
+	/**
+	 * Returns the realm suffix of the logged in account's whitelabel document.
+	 * @return {String|Undefined}
+	 */
+	function getRealmSuffix() {
+		var realmSuffix = _.get(monster.config.whitelabel, 'realm_suffix');
+		var isNonEmptyString = _.overEvery(
+			_.isString,
+			_.negate(_.isEmpty)
+		);
+
+		return _.find([
+			realmSuffix
+		], isNonEmptyString);
+	}
 
 	/**
 	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
@@ -652,7 +686,7 @@ define(function(require) {
 			return (number < 10 ? '0' : '') + number;
 		};
 		var getString = function(quantity, keys) {
-			return i18n.frendlyTimer[quantity === 1 ? keys[0] : keys[1]];
+			return i18n.friendlyTimer[quantity === 1 ? keys[0] : keys[1]];
 		};
 		var displayTime = '';
 
