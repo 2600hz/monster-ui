@@ -395,10 +395,16 @@ define(function(require) {
 
 			parent.find('#appstore_popup_save').on('click', function() {
 				var $button = $(this),
+					toObjectWithProp = function(prop) {
+						return function(value) {
+							return _.set({}, prop, value);
+						};
+					},
 					isEnabled = parent.find('#app_switch').is(':checked'),
 					allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
-					selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users || [],
-					areNoSelectedUsers = allowedUsers === 'specific' && _.isEmpty(selectedUsers);
+					isUsersSpecific = allowedUsers === 'specific',
+					selectedUserIds = isUsersSpecific ? monster.ui.getFormData('app_popup_user_list_form').users : [],
+					areNoSelectedUsers = isUsersSpecific && _.isEmpty(selectedUserIds);
 
 				if (isEnabled && areNoSelectedUsers) {
 					return monster.ui.alert(self.i18n.active().alerts.noUserSelected);
@@ -408,7 +414,7 @@ define(function(require) {
 
 				updateAppInstallInfo(isEnabled ? {
 					allowed_users: allowedUsers,
-					users: allowedUsers === 'specific' ? _.map(selectedUsers, _.partial(_.set, {}, 'id')) : []
+					users: _.map(selectedUserIds, toObjectWithProp('id'))
 				} : {}, function() {
 					parent.closest(':ui-dialog').dialog('close');
 					$('#appstore_container .app-element[data-id="' + app.id + '"]').toggleClass('installed', isEnabled);
