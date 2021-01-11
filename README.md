@@ -75,6 +75,32 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 ./serve.sh no-update
 ```
 
+## Running the tests
+
+### Selenium IDE tests
+
+A [Selenium IDE][selenium-ide] test project may be included within each app directory, under a folder named `tests`.
+
+To run the test cases contained in these project, you have two options: run it via the Selenium IDE browser extension, or via the command line runner.
+
+#### Run tests via the Selenium IDE
+
+For this option the Selenium IDE extension should be [installed][selenium-ide_install] in a supported web browser.
+
+Upon launching the IDE you will be presented with a dialog where you can choose the option **Open an existing project**, to search and open the test project file in your computer.
+
+Then you can [play the tests cases back in the IDE][selenium-ide_play] by selecting the test or suite you'd like to play and clicking the play button in the menu bar above the test editor. This will play the tests in a browser window.
+
+#### Run tests via the command line runner
+
+For this option you need to install the [Selenium IDE command-line runner][selenium-ide_cli], and the driver for the browser of your choice.
+
+Once everything is installed, the tests can be run by calling `selenium-side-runner` from the command-line followed by the path to the project file.
+
+```sh
+$ selenium-side-runner path/to/testProject.side
+```
+
 ## Documentation
 
 You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/ui/).
@@ -100,3 +126,8 @@ See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/
 ## License
 
 This project is licensed under the Mozilla Public License - see the [LICENSE](LICENSE) file for details.
+
+[selenium-ide]: https://www.seleniumhq.org/selenium-ide/
+[selenium-ide_cli]: https://www.seleniumhq.org/selenium-ide/docs/en/introduction/command-line-runner/
+[selenium-ide_install]: https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/#installation
+[selenium-ide_play]: https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/#in-browser

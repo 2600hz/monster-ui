@@ -1,0 +1,24 @@
+#step_carrier_selection.wizard-step {
+	.iconography-xlarge {
+		margin-top: 0.25rem;
+		margin-right: 1rem;
+	}
+
+	.carrier-name {
+		font-weight: 600;
+	}
+
+	.field-middle-icon {
+		margin-bottom: 0.75rem;
+		color: $midgray2;
+	}
+
+	.document-list .document-item {
+		padding-bottom: 1.25rem;
+
+		.flex-item {
+			vertical-align: middle;
+			padding-bottom: 0;
+		}
+	}
+}
