@@ -211,6 +211,9 @@ define(function(require) {
 					.on('click', function(event) {
 						event.preventDefault();
 
+						// Disable button after it's clicked
+						$(this).prop('disabled', true);
+
 						self.navigationWizardComplete({
 							eventType: 'done'
 						});
@@ -320,7 +323,6 @@ define(function(require) {
 					self.navigationWizardGoToStep({
 						stepId: stepId
 					});
-				});
 		},
 
 		/**
@@ -602,6 +604,11 @@ define(function(require) {
 				};
 
 			if (!result.valid) {
+				//If validation fails for any reason then re-enable the button
+				wizardArgs
+					.container
+						.find('#done')
+						.prop('disabled', false);
 				return;
 			}
 

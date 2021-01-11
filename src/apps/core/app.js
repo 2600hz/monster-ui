@@ -103,7 +103,9 @@ define(function(require) {
 
 			container.append(mainTemplate);
 
-			self.loadAuth(); // do this here because subsequent apps are dependent upon core layout
+			monster.waterfall([
+				_.bind(self.loadIncludes, self)
+			], _.bind(self.loadAuth, self));
 		},
 
 		loadSVG: function() {
@@ -140,6 +142,20 @@ define(function(require) {
 			monster.webphone.init();
 		},
 
+		loadIncludes: function(callback) {
+			var requireUrl = function(url, next) {
+					require([url], next, _.partial(_.ary(next, 1), null));
+				},
+				requireUrlFactory = function(url) {
+					return _.partial(requireUrl, url);
+				};
+
+			monster.series(_.map(
+				monster.config.whitelabel.includes,
+				requireUrlFactory
+			), callback);
+		},
+
 		loadAuth: function() {
 			var self = this;
 
@@ -154,37 +170,29 @@ define(function(require) {
 		 */
 		showAppName: function(pName) {
 			var self = this,
+				apps = monster.util.listAppStoreMetadata('user'),
 				name = _.isString(pName) ? pName : monster.apps.getActiveApp(),
 				$navbar = $('.core-topbar'),
 				$current = $navbar.find('#main_topbar_current_app'),
+				app = _
+					.chain([{
+						name: 'myaccount',
+						label: self.i18n.active().controlCenter,
+						icon: monster.util.getAppIconPath({ name: 'myaccount' })
+					}])
+					.concat(apps)
+					.find({ name: name })
+					.value(),
 				$new = name !== 'appstore' ? $(self.getTemplate({
 					name: 'current-app',
-					data: _
-						.chain(monster.apps.auth.installedApps)
-						.concat([{
-							name: 'myaccount',
-							label: self.i18n.active().controlCenter
-						}])
-						.filter({ name: name })
-						.map(function(app) {
-							return _
-								.chain({
-									icon: monster.util.getAppIconPath(app)
-								})
-								.merge(app)
-								.thru(monster.ui.formatIconApp)
-								.value();
-						})
-						.find({ name: name })
-						.value()
+					data: app
 				})) : '';
 
-			$current.fadeOut(100, function() {
-				$current
-					.empty()
-					.append($new)
-					.fadeIn(100);
-			});
+			$current
+				.hide()
+				.empty()
+				.append($new)
+				.fadeIn(200);
 		},
 
 		isActiveAppPlugin: function isActiveAppPlugin(callback) {

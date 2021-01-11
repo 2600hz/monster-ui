@@ -75,7 +75,6 @@ define(function(require) {
 		 * @param  {String} [args.accountId=self.accountId]  ID of the account from which to get
 		 *                                                   the app list
 		 * @param  {('all'|'account'|'user')} [args.scope='all']  App list scope
-		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
 		 *                                            using the cached one
 		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
 		 *                                             displayed. This is applied on top of the
@@ -91,7 +90,6 @@ define(function(require) {
 			var self = this,
 				accountId = _.get(args, 'accountId', self.accountId),
 				scope = _.get(args, 'scope', 'all'),
-				forceFetch = _.get(args, 'forceFetch', false),
 				availableApps = _.get(args, 'availableApps'),
 				excludedApps = _.get(args, 'excludedApps'),
 				selectedAppIds = _.get(args, 'selectedAppIds', []),
@@ -157,7 +155,6 @@ define(function(require) {
 			monster.pub('apploader.getAppList', {
 				accountId: accountId,
 				scope: scope,
-				forceFetch: forceFetch || accountId !== self.accountId,
 				success: function(appList) {
 					var $template;
 
@@ -209,7 +206,6 @@ define(function(require) {
 		 * @param  {String} [args.accountId=self.accountId]  ID of the account from which to get
 		 *                                                   the app list
 		 * @param  {('all'|'account'|'user')} [args.scope='all'] App list scope
-		 * @param  {Boolean} [args.forceFetch=false]  Force to fetch app data from API instead of
 		 *                                            using the cached one
 		 * @param  {String[]} [args.availableApps=[]]  List of IDs for the specific apps to be
 		 *                                              displayed. This is applied on top of the
@@ -235,7 +231,6 @@ define(function(require) {
 					.pick([
 						'accountId',
 						'scope',
-						'forceFetch',
 						'availableApps',
 						'excludedApps',
 						'selectedAppIds'
@@ -446,7 +441,7 @@ define(function(require) {
 				_.has(args, 'callbacks.accept') && args.callbacks.accept(selectedAppIds);
 			});
 
-			$template.find('.cancel-link').on('click', function(e) {
+			$template.find('.cancel').on('click', function(e) {
 				e.preventDefault();
 
 				$popup.dialog('close').remove();
