@@ -1,0 +1,71 @@
+<div id="step_name_and_numbers" class="wizard-step container-fluid">
+{{#with i18n.commonApp.portWizard.steps.nameAndNumbers as |nameAndNumbersI18n|}}
+	<div class="step-title">
+		{{nameAndNumbersI18n.title}}
+	</div>
+	<div class="step-body">
+		<form id="form_name_and_numbers">
+			<div class="step-section">
+				<div class="section-body flex-row-container">
+					<div class="flex-item-3">
+						<label for="port_request_name">
+							{{nameAndNumbersI18n.portRequestName.labels.name}}
+						</label>
+						<input class="input-block-level" type="text" name="portRequestName" id="port_request_name" placeholder="{{nameAndNumbersI18n.portRequestName.labels.name}}" value="{{@root.data.portRequestName}}">
+					</div>
+				</div>
+			</div>
+			<div class="step-section">
+				<div class="section-title">
+					{{nameAndNumbersI18n.numbersToPort.title}}
+				</div>
+				<div class="section-body">
+					<div class="flex-row-container">
+						<div class="flex-item-2">
+							{{nameAndNumbersI18n.numbersToPort.description}}
+						</div>
+					</div>
+					<div class="flex-row-container">
+						<div class="flex-item-2 flex-container">
+							<div class="flex-initial flex-container">
+								<label class="label-button">
+									{{nameAndNumbersI18n.numbersToPort.labels.numberType}}
+								</label>
+							</div>
+							<div id="numbers_to_port_type" class="flex-fit btn-group">
+								<input type="radio" name="numbersToPort.type" id="numbers_to_port_type_local" class="radio-button input-hidden" value="local"{{#compare @root.data.numbersToPort.type "===" "local"}} checked{{/compare}}/>
+								<label for="numbers_to_port_type_local" class="monster-button monster-button-fit">
+									{{nameAndNumbersI18n.numbersToPort.labels.types.local}}
+								</label>
+								<input type="radio" name="numbersToPort.type" id="numbers_to_port_type_toll_free" class="radio-button input-hidden" value="tollFree"{{#compare @root.data.numbersToPort.type "!==" "local"}} checked{{/compare}}/>
+								<label for="numbers_to_port_type_toll_free" class="monster-button monster-button-fit">
+									{{nameAndNumbersI18n.numbersToPort.labels.types.tollFree}}
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="flex-row-container">
+						<div class="flex-item-3-2">
+							<textarea name="numbersToPort.numbers" id="numbers_to_port_numbers">
+								{{@root.data.numbersToPort.numbers}}
+							</textarea>
+							<label class="field-foot-notice">
+								{{{nameAndNumbersI18n.numbersToPort.notices.numbers}}}
+							</label>
+						</div>
+						<div class="numbers-file-upload flex-item-3">
+							<label for="numbers_to_port_file">
+								{{nameAndNumbersI18n.numbersToPort.labels.file}}
+							</label>
+							<input type="file" name="numbersToPort.file" id="numbers_to_port_file" accept=".csv" multiple />
+							<label class="field-foot-notice">
+								{{{nameAndNumbersI18n.numbersToPort.notices.numbers}}}
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+{{/with}}
+</div>
