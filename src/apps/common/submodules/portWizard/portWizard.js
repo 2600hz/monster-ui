@@ -1971,7 +1971,7 @@ define(function(require) {
 					'accountOwnership.billName': {
 						required: true,
 						minlength: 1,
-						maxlength: 128
+						maxlength: 25
 					},
 					'serviceAddress.streetNumber': {
 						required: true,
