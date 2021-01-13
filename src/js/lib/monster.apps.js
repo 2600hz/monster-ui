@@ -636,13 +636,13 @@ define(function() {
 						.thru(monster.normalizeUrlPathEnding)
 						.value();
 				},
-				app = monster.util.getAppStoreMetadata(name),
+				metadata = monster.util.getAppStoreMetadata(name),
 				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
-				externalUrl = getUrl(app, 'source_url', options.sourceUrl),
+				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
-				apiUrl = getUrl(app, 'api_url', monster.config.api.default);
+				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default);
 
 			if (hasExternalUrlConfigured) {
 				appPath = externalUrl;
