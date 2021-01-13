@@ -640,9 +640,14 @@ define(function() {
 				customKey = 'app-' + name,
 				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
-				appPath = hasExternalUrlConfigured ? externalUrl : 'apps/' + name,
 				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default),
-				path = hasExternalUrlConfigured ? customKey : appPath + '/app';
+				pathConfig = hasExternalUrlConfigured ? {
+					directory: externalUrl,
+					module: customKey
+				} : {
+					directory: 'apps/' + name,
+					module: 'apps/' + name + '/app'
+				};
 
 			if (hasExternalUrlConfigured) {
 				require.config(
@@ -651,7 +656,7 @@ define(function() {
 			}
 
 			monster.waterfall([
-				_.partial(loadApp, path, appPath, apiUrl),
+				_.partial(loadApp, pathConfig.module, pathConfig.directory, apiUrl),
 				loadSubModules,
 				_.bind(self.monsterizeApp, self),
 				_.bind(self.loadDependencies, self),
