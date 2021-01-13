@@ -642,7 +642,8 @@ define(function() {
 				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
 				appPath = hasExternalUrlConfigured ? externalUrl : 'apps/' + name,
-				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default);
+				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default),
+				path = hasExternalUrlConfigured ? customKey : appPath + '/app';
 
 			if (hasExternalUrlConfigured) {
 				requirePaths[customKey] = externalUrl + '/app';
@@ -651,8 +652,6 @@ define(function() {
 					paths: requirePaths
 				});
 			}
-
-			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
 			monster.waterfall([
 				_.partial(loadApp, path, appPath, apiUrl),
