@@ -561,10 +561,10 @@ define(function() {
 					module: 'apps/' + name + '/app'
 				},
 				apiUrl = getNormalizedUrl(metadata, 'api_url', monster.config.api.default),
-				requireApp = _.partial(function(options, name, path, appPath, apiUrl, callback) {
-					require([path], function(app) {
+				requireApp = _.partial(function(moduleId, pathToDirectory, name, options, apiUrl, callback) {
+					require([moduleId], function(app) {
 						_.extend(app, {
-							appPath: appPath,
+							appPath: pathToDirectory,
 							data: {}
 						}, monster.apps[name], {
 							apiUrl: _.get(options, 'apiUrl', apiUrl),
@@ -574,7 +574,7 @@ define(function() {
 
 						callback(null, app);
 					}, _.partial(callback, true));
-				}, options, name, pathConfig.module, pathConfig.directory, apiUrl),
+				}, pathConfig.module, pathConfig.directory, name, options, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
 					if (!app.hasConfigFile) {
 						return callback(null, app, {});
