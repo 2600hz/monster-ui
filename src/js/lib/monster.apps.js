@@ -637,16 +637,14 @@ define(function() {
 						.value();
 				},
 				metadata = monster.util.getAppStoreMetadata(name),
-				appPath = 'apps/' + name,
 				customKey = 'app-' + name,
 				requirePaths = {},
 				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				appPath = hasExternalUrlConfigured ? externalUrl : 'apps/' + name,
 				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default);
 
 			if (hasExternalUrlConfigured) {
-				appPath = externalUrl;
-
 				requirePaths[customKey] = externalUrl + '/app';
 
 				require.config({
