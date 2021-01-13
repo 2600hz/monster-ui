@@ -560,21 +560,21 @@ define(function() {
 					directory: 'apps/' + name,
 					module: 'apps/' + name + '/app'
 				},
-				apiUrl = getNormalizedUrl(metadata, 'api_url', monster.config.api.default),
-				requireApp = _.partial(function(moduleId, pathToDirectory, name, options, apiUrl, callback) {
+				apiUrl = _.get(options, 'apiUrl', getNormalizedUrl(metadata, 'api_url', monster.config.api.default)),
+				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, callback) {
 					require([moduleId], function(app) {
 						_.extend(app, {
 							appPath: pathToDirectory,
 							data: {}
 						}, monster.apps[name], {
-							apiUrl: _.get(options, 'apiUrl', apiUrl),
+							apiUrl: apiUrl,
 							// we don't want the name to be set by the js, instead we take the name supplied in the app.json
 							name: name
 						});
 
 						callback(null, app);
 					}, _.partial(callback, true));
-				}, pathConfig.module, pathConfig.directory, name, options, apiUrl),
+				}, pathConfig.module, pathConfig.directory, name, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
 					if (!app.hasConfigFile) {
 						return callback(null, app, {});
