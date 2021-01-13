@@ -543,7 +543,7 @@ define(function() {
 		_loadApp: function(name, mainCallback, pOptions) {
 			var self = this,
 				options = pOptions || {},
-				getUrl = function(obj, pathToUrl, defaultValue) {
+				getNormalizedUrl = function(obj, pathToUrl, defaultValue) {
 					return _
 						.chain(obj)
 						.get(pathToUrl, defaultValue)
@@ -551,7 +551,7 @@ define(function() {
 						.value();
 				},
 				metadata = monster.util.getAppStoreMetadata(name),
-				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
+				externalUrl = getNormalizedUrl(metadata, 'source_url', options.sourceUrl),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
 				pathConfig = hasExternalUrlConfigured ? {
 					directory: externalUrl,
@@ -560,7 +560,7 @@ define(function() {
 					directory: 'apps/' + name,
 					module: 'apps/' + name + '/app'
 				},
-				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default),
+				apiUrl = getNormalizedUrl(metadata, 'api_url', monster.config.api.default),
 				requireApp = _.partial(function(options, name, path, appPath, apiUrl, callback) {
 					require([path], function(app) {
 						_.extend(app, {
