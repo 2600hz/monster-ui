@@ -577,7 +577,7 @@ define(function() {
 						});
 
 						callback(null, app);
-					}, _.partial(callback, true));
+					}, callback);
 				}, pathConfig.module, pathConfig.directory, name, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
 					if (!app.hasConfigFile) {
@@ -630,7 +630,7 @@ define(function() {
 						});
 
 						callback(null);
-					}, _.partial(callback, true));
+					}, callback);
 				},
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
