@@ -543,6 +543,24 @@ define(function() {
 		_loadApp: function(name, mainCallback, pOptions) {
 			var self = this,
 				options = pOptions || {},
+				getUrl = function(obj, pathToUrl, defaultValue) {
+					return _
+						.chain(obj)
+						.get(pathToUrl, defaultValue)
+						.thru(monster.normalizeUrlPathEnding)
+						.value();
+				},
+				metadata = monster.util.getAppStoreMetadata(name),
+				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
+				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				pathConfig = hasExternalUrlConfigured ? {
+					directory: externalUrl,
+					module: 'app-' + name
+				} : {
+					directory: 'apps/' + name,
+					module: 'apps/' + name + '/app'
+				},
+				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default),
 				requireApp = _.partial(function(options, name, path, appPath, apiUrl, callback) {
 					require([path], function(app) {
 						_.extend(app, {
@@ -556,7 +574,7 @@ define(function() {
 
 						callback(null, app);
 					}, _.partial(callback, true));
-				}, options, name),
+				}, options, name, pathConfig.module, pathConfig.directory, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
 					if (!app.hasConfigFile) {
 						return callback(null, app, {});
@@ -570,9 +588,9 @@ define(function() {
 						error: _.partial(callback, null, app, {})
 					});
 				},
-				loadApp = function loadApp(path, appPath, apiUrl, callback) {
+				loadApp = function loadApp(callback) {
 					monster.waterfall([
-						_.partial(requireApp, path, appPath, apiUrl),
+						requireApp,
 						maybeRetrieveBuildConfig
 					], function applyConfig(err, app, config) {
 						if (err) {
@@ -628,24 +646,6 @@ define(function() {
 					} catch (error) {
 						callback(error);
 					}
-				},
-				getUrl = function(obj, pathToUrl, defaultValue) {
-					return _
-						.chain(obj)
-						.get(pathToUrl, defaultValue)
-						.thru(monster.normalizeUrlPathEnding)
-						.value();
-				},
-				metadata = monster.util.getAppStoreMetadata(name),
-				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
-				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
-				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default),
-				pathConfig = hasExternalUrlConfigured ? {
-					directory: externalUrl,
-					module: 'app-' + name
-				} : {
-					directory: 'apps/' + name,
-					module: 'apps/' + name + '/app'
 				};
 
 			if (hasExternalUrlConfigured) {
@@ -655,7 +655,7 @@ define(function() {
 			}
 
 			monster.waterfall([
-				_.partial(loadApp, pathConfig.module, pathConfig.directory, apiUrl),
+				loadApp,
 				loadSubModules,
 				_.bind(self.monsterizeApp, self),
 				_.bind(self.loadDependencies, self),
