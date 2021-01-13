@@ -637,13 +637,12 @@ define(function() {
 						.value();
 				},
 				metadata = monster.util.getAppStoreMetadata(name),
-				customKey = 'app-' + name,
 				externalUrl = getUrl(metadata, 'source_url', options.sourceUrl),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
 				apiUrl = getUrl(metadata, 'api_url', monster.config.api.default),
 				pathConfig = hasExternalUrlConfigured ? {
 					directory: externalUrl,
-					module: customKey
+					module: 'app-' + name
 				} : {
 					directory: 'apps/' + name,
 					module: 'apps/' + name + '/app'
@@ -651,7 +650,7 @@ define(function() {
 
 			if (hasExternalUrlConfigured) {
 				require.config(
-					_.set({}, ['paths', customKey], externalUrl + '/app')
+					_.set({}, ['paths', pathConfig.module], pathConfig.directory + '/app')
 				);
 			}
 
