@@ -9,16 +9,6 @@ define(function(require) {
 
 	var portWizard = {
 
-		// Defines API requests not included in the SDK
-		requests: {
-			'phonebook.lookupNumbers': {
-				apiRoot: monster.config.api.phonebook,
-				url: 'lnp/lookup',
-				verb: 'POST',
-				generateError: false
-			}
-		},
-
 		// Define the events available for other apps
 		subscribe: {
 			'common.portWizard.render': 'portWizardRender'
@@ -1971,7 +1961,7 @@ define(function(require) {
 					'accountOwnership.billName': {
 						required: true,
 						minlength: 1,
-						maxlength: 128
+						maxlength: 25
 					},
 					'serviceAddress.streetNumber': {
 						required: true,
@@ -3354,17 +3344,19 @@ define(function(require) {
 		portWizardRequestPhoneNumbersLookup: function(args) {
 			var self = this;
 
-			monster.request({
-				resource: 'phonebook.lookupNumbers',
+			self.callApi({
+				resource: 'port.portabilityLookup',
 				data: {
+					accountId: self.accountId,
+					generateError: false,
 					data: {
 						numbers: args.numbers
 					}
 				},
-				success: function(data) {
+				success: function(data, status) {
 					args.success(data.data);
 				},
-				error: function(data, error) {
+				error: function(parsedError, error, globalHandler) {
 					args.error({
 						isPhonebookUnavailable: _.includes([0, 500], error.status)
 					});

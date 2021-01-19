@@ -29,24 +29,24 @@ define(function() {
 			app.uiFlags = {
 				user: {
 					set: function(flagName, value, user) {
-						return monster.util.uiFlags.user.set(app.name, flagName, value, user);
+						return monster.util.uiFlags.user.set(user, app.name, flagName, value);
 					},
 					get: function(flagName, user) {
-						return monster.util.uiFlags.user.get(app.name, flagName, user);
+						return monster.util.uiFlags.user.get(user, app.name, flagName);
 					},
 					destroy: function(flagName, user) {
-						return monster.util.uiFlags.user.destroy(app.name, flagName, user);
+						return monster.util.uiFlags.user.destroy(user, app.name, flagName);
 					}
 				},
 				account: {
 					set: function(flagName, value, account) {
-						return monster.util.uiFlags.account.set(app.name, flagName, value, account);
+						return monster.util.uiFlags.account.set(account, app.name, flagName, value);
 					},
 					get: function(flagName, account) {
-						return monster.util.uiFlags.account.get(app.name, flagName, account);
+						return monster.util.uiFlags.account.get(account, app.name, flagName);
 					},
 					destroy: function(flagName, account) {
-						return monster.util.uiFlags.account.destroy(app.name, flagName, account);
+						return monster.util.uiFlags.account.destroy(account, app.name, flagName);
 					}
 				}
 			};
@@ -191,16 +191,6 @@ define(function() {
 										function(next) {
 											monster.pub('auth.currentUser.updated', {
 												response: data.data,
-												callback: next
-											});
-										},
-										function(next) {
-											if (!_.has(params.data.data, 'password')) {
-												return next(null);
-											}
-											monster.pub('auth.currentUser.updated.password', {
-												password: _.get(params.data.data, 'password'),
-												user: data.data,
 												callback: next
 											});
 										}
@@ -529,7 +519,11 @@ define(function() {
 				// add an active property method to the i18n array within the app.
 				_.extend(app.i18n, {
 					active: function() {
-						var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
+						var loadedLanguages = _.keys(app.data.i18n),
+							language = _.find([
+								monster.config.whitelabel.language,
+								monster.defaultLanguage
+							], _.partial(_.includes, loadedLanguages));
 
 						return app.data.i18n[language];
 					}
@@ -549,20 +543,42 @@ define(function() {
 		_loadApp: function(name, mainCallback, pOptions) {
 			var self = this,
 				options = pOptions || {},
-				requireApp = _.partial(function(options, name, path, appPath, apiUrl, callback) {
-					require([path], function(app) {
+				getValidUrl = _.flow(
+					_.partial(_.map, _, monster.normalizeUrlPathEnding),
+					_.partial(_.find, _, _.isString)
+				),
+				metadata = monster.util.getAppStoreMetadata(name),
+				externalUrl = getValidUrl([
+					_.get(metadata, 'source_url'),
+					_.get(options, 'sourceUrl')
+				]),
+				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				pathConfig = hasExternalUrlConfigured ? {
+					directory: externalUrl,
+					module: 'app-' + name
+				} : {
+					directory: 'apps/' + name,
+					module: 'apps/' + name + '/app'
+				},
+				apiUrl = getValidUrl([
+					_.get(options, 'apiUrl'),
+					_.get(metadata, 'api_url'),
+					monster.config.api.default
+				]),
+				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, callback) {
+					require([moduleId], function(app) {
 						_.extend(app, {
-							appPath: appPath,
+							appPath: pathToDirectory,
 							data: {}
 						}, monster.apps[name], {
-							apiUrl: _.get(options, 'apiUrl', apiUrl),
+							apiUrl: apiUrl,
 							// we don't want the name to be set by the js, instead we take the name supplied in the app.json
 							name: name
 						});
 
 						callback(null, app);
-					}, _.partial(callback, true));
-				}, options, name),
+					}, callback);
+				}, pathConfig.module, pathConfig.directory, name, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
 					if (!app.hasConfigFile) {
 						return callback(null, app, {});
@@ -576,9 +592,9 @@ define(function() {
 						error: _.partial(callback, null, app, {})
 					});
 				},
-				loadApp = function loadApp(path, appPath, apiUrl, callback) {
+				loadApp = function loadApp(callback) {
 					monster.waterfall([
-						_.partial(requireApp, path, appPath, apiUrl),
+						requireApp,
 						maybeRetrieveBuildConfig
 					], function applyConfig(err, app, config) {
 						if (err) {
@@ -614,7 +630,7 @@ define(function() {
 						});
 
 						callback(null);
-					}, _.partial(callback, true));
+					}, callback);
 				},
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
@@ -634,46 +650,16 @@ define(function() {
 					} catch (error) {
 						callback(error);
 					}
-				},
-				app = monster.util.getAppStoreMetadata(name),
-				appPath = 'apps/' + name,
-				customKey = 'app-' + name,
-				requirePaths = {},
-				externalUrl = options.sourceUrl || false,
-				apiUrl = monster.config.api.default;
+				};
 
-			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
-			if (!app) {
-				if (app && 'source_url' in app) {
-					externalUrl = app.source_url;
-
-					if (externalUrl.substr(externalUrl.length - 1) !== '/') {
-						externalUrl += '/';
-					}
-				}
-
-				if (app && app.hasOwnProperty('api_url')) {
-					apiUrl = app.api_url;
-					if (apiUrl.substr(apiUrl.length - 1) !== '/') {
-						apiUrl += '/';
-					}
-				}
+			if (hasExternalUrlConfigured) {
+				require.config(
+					_.set({}, ['paths', pathConfig.module], pathConfig.directory + '/app')
+				);
 			}
-
-			if (externalUrl) {
-				appPath = externalUrl;
-
-				requirePaths[customKey] = externalUrl + '/app';
-
-				require.config({
-					paths: requirePaths
-				});
-			}
-
-			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
 			monster.waterfall([
-				_.partial(loadApp, path, appPath, apiUrl),
+				loadApp,
 				loadSubModules,
 				_.bind(self.monsterizeApp, self),
 				_.bind(self.loadDependencies, self),
