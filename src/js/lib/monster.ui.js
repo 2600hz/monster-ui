@@ -1299,7 +1299,7 @@ define(function(require) {
 			addSimpleRule('ipv4', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i);
 			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\s?[AP]M))$/i);
 			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
-			addSimpleRule('realm', /^[0-9A-Z.-]+$/i);
+			addSimpleRule('realm', /^[0-9a-z.-]+$/);
 			addSimpleRule('hexadecimal', /^[0-9A-F]+$/i);
 			addSimpleRule('protocol', /:\/\//i);
 
@@ -1332,7 +1332,12 @@ define(function(require) {
 			});
 
 			$.validator.addMethod('phoneNumber', function(value, element) {
-				return this.optional(element) || monster.util.getFormatPhoneNumber(value).isValid;
+				return this.optional(element) || _
+					.chain([value])
+					.flatten()
+					.map(monster.util.getFormatPhoneNumber)
+					.every('isValid')
+					.value();
 			}, localization.customRules.phoneNumber);
 
 			$.validator.addMethod('lowerThan', function(value, element, param) {
@@ -1912,7 +1917,7 @@ define(function(require) {
 			var self = this,
 				is12hMode = _.get(monster, 'apps.auth.currentUser.ui_flags.twelve_hours_mode', false),
 				defaultOptions = {
-					timeFormat: is12hMode ? 'g:ia' : 'G:i',
+					timeFormat: is12hMode ? 'g:i A' : 'G:i',
 					lang: monster.apps.core.i18n.active().timepicker
 				},
 				options = $.extend(true, {}, defaultOptions, pOptions);
@@ -2886,20 +2891,6 @@ define(function(require) {
 				finalOptions = $.extend(true, defaults, options || {});
 
 			self.handleDisplayFootable(container, finalOptions);
-		},
-
-		formatIconApp: function(app) {
-			if (app && app.hasOwnProperty('name')) {
-				if (monster.appsStore.hasOwnProperty(app.name)) {
-					if (monster.appsStore[app.name].phase === 'beta') {
-						app.extraCssClass = 'beta-overlay-icon';
-					} else if (monster.appsStore[app.name].phase === 'alpha') {
-						app.extraCssClass = 'alpha-overlay-icon';
-					}
-				}
-			}
-
-			return app;
 		},
 
 		// Takes a file in parameter, and then outputs the PDF preview of that file in an iframe that's added to the container

@@ -29,24 +29,24 @@ define(function() {
 			app.uiFlags = {
 				user: {
 					set: function(flagName, value, user) {
-						return monster.util.uiFlags.user.set(app.name, flagName, value, user);
+						return monster.util.uiFlags.user.set(user, app.name, flagName, value);
 					},
 					get: function(flagName, user) {
-						return monster.util.uiFlags.user.get(app.name, flagName, user);
+						return monster.util.uiFlags.user.get(user, app.name, flagName);
 					},
 					destroy: function(flagName, user) {
-						return monster.util.uiFlags.user.destroy(app.name, flagName, user);
+						return monster.util.uiFlags.user.destroy(user, app.name, flagName);
 					}
 				},
 				account: {
 					set: function(flagName, value, account) {
-						return monster.util.uiFlags.account.set(app.name, flagName, value, account);
+						return monster.util.uiFlags.account.set(account, app.name, flagName, value);
 					},
 					get: function(flagName, account) {
-						return monster.util.uiFlags.account.get(app.name, flagName, account);
+						return monster.util.uiFlags.account.get(account, app.name, flagName);
 					},
 					destroy: function(flagName, account) {
-						return monster.util.uiFlags.account.destroy(app.name, flagName, account);
+						return monster.util.uiFlags.account.destroy(account, app.name, flagName);
 					}
 				}
 			};
@@ -76,7 +76,7 @@ define(function() {
 				var unsubscribe = monster.socket.bind({
 					binding: params.binding,
 					accountId: accountId,
-					listener: params.callback,
+					callback: params.callback,
 					source: app.name
 				});
 
@@ -181,27 +181,22 @@ define(function() {
 								}
 							};
 							break;
+
 						case 'user.update':
 						case 'user.patch':
 							// If we're updating the user we're logged in with
 							if (params.data.userId === monster.apps.auth.userId) {
 								successCallback = function(data, status) {
-									monster.apps.auth.currentUser = data.data;
-									monster.pub('auth.currentUserUpdated', data.data);
-
-									if (params.data.data.hasOwnProperty('password')) {
-										monster.pub('auth.currentUserUpdatedPassword', { user: data.data, password: params.data.data.password });
-									}
-
-									var cookieData = monster.cookies.getJson('monster-auth');
-
-									// If the language stored in the cookie is not the same as the one we have in the updated data, we update the cookie.
-									if (cookieData.language !== data.data.language) {
-										cookieData.language = data.data.language;
-										monster.cookies.set('monster-auth', cookieData);
-									}
-
-									params.success && params.success(data, status);
+									monster.parallel([
+										function(next) {
+											monster.pub('auth.currentUser.updated', {
+												response: data.data,
+												callback: next
+											});
+										}
+									], function() {
+										params.success && params.success(data, status);
+									});
 								};
 							}
 							break;
@@ -321,6 +316,46 @@ define(function() {
 								};
 							}
 							break;
+
+						case 'appsStore.list':
+							if (params.data.accountId === _.get(monster.apps.auth, monster.util.isMasquerading() ? 'originalAccount.id' : 'accountId')) {
+								successCallback = function(data, status) {
+									monster.pub('auth.currentAppsStore.fetched', {
+										response: data.data,
+										callback: function() {
+											params.success && params.success(data, status);
+										}
+									});
+								};
+							}
+							break;
+
+						case 'appsStore.add':
+						case 'appsStore.update':
+							if (params.data.accountId === _.get(monster.apps.auth, monster.util.isMasquerading() ? 'originalAccount.id' : 'accountId')) {
+								successCallback = function(data, status) {
+									monster.pub('auth.currentAppsStore.updated', {
+										request: params.data,
+										callback: function() {
+											params.success && params.success(data, status);
+										}
+									});
+								};
+							}
+							break;
+
+						case 'appsStore.delete':
+							if (params.data.accountId === _.get(monster.apps.auth, monster.util.isMasquerading() ? 'originalAccount.id' : 'accountId')) {
+								successCallback = function(data, status) {
+									monster.pub('auth.currentAppsStore.deleted', {
+										request: params.data,
+										callback: function() {
+											params.success && params.success(data, status);
+										}
+									});
+								};
+							}
+							break;
 					}
 
 					if (cancelCall) {
@@ -379,19 +414,6 @@ define(function() {
 		loadDependencies: function(app, globalCallback) {
 			var self = this,
 				currentUser = _.get(monster, 'apps.auth.currentUser', {}),
-				isExtensionPermitted = function isExtensionPermitted(extensionName, user) {
-					var extension = _.get(monster, ['appsStore', extensionName], {}),
-						level = extension.allowed_users,
-						users = _
-							.chain(extension)
-							.get('users', [])
-							.map('id')
-							.value();
-
-					return (level === 'all')
-						|| (level === 'admins' && user.priv_level === 'admin')
-						|| (level === 'specific' && _.includes(users, user.id));
-				},
 				dependencies = _
 					.chain(app)
 					.get('externalScripts', [])
@@ -404,18 +426,20 @@ define(function() {
 						};
 					})
 					.value(),
+				isAppAlreadyLoaded = _.partial(_.has, monster.apps),
+				isUserPermittedApp = _.partial(monster.util.isUserPermittedApp, currentUser),
+				shouldLoadApp = _.overSome(
+					isAppAlreadyLoaded,
+					_.flow(
+						monster.util.getAppStoreMetadata,
+						_.negate(isUserPermittedApp)
+					)
+				),
 				extensions = _
-					.chain(monster)
-					.get(['appsStore', app.name, 'extensions'], [])
-					.reject(function(extension) {
-						var isNotInAppStore = !_.has(monster, ['appsStore', extension]),
-							isAlreadyLoaded = _.has(monster, ['apps', extension]),
-							isNotPermittedForLoggedInUser = !isExtensionPermitted(extension, currentUser);
-
-						return isNotInAppStore
-							|| isAlreadyLoaded
-							|| isNotPermittedForLoggedInUser;
-					})
+					.chain(app.name)
+					.thru(monster.util.getAppStoreMetadata)
+					.get('extensions', [])
+					.reject(shouldLoadApp)
 					.map(function(extension) {
 						return function(callback) {
 							self._loadApp(extension, callback);
@@ -495,7 +519,11 @@ define(function() {
 				// add an active property method to the i18n array within the app.
 				_.extend(app.i18n, {
 					active: function() {
-						var language = app.i18n.hasOwnProperty(monster.config.whitelabel.language) ? monster.config.whitelabel.language : monster.defaultLanguage;
+						var loadedLanguages = _.keys(app.data.i18n),
+							language = _.find([
+								monster.config.whitelabel.language,
+								monster.defaultLanguage
+							], _.partial(_.includes, loadedLanguages));
 
 						return app.data.i18n[language];
 					}
@@ -512,21 +540,45 @@ define(function() {
 		 * @param  {String}   [options.sourceUrl]
 		 * @param  {String}   [options.apiUrl]
 		 */
-		_loadApp: function(name, mainCallback, options) {
+		_loadApp: function(name, mainCallback, pOptions) {
 			var self = this,
-				requireApp = function requireApp(path, appPath, apiUrl, options, callback) {
-					require([path], function(app) {
-						_.extend(app, { appPath: appPath, data: {} }, monster.apps[name], { apiUrl: apiUrl });
-
-						app.name = name; // we don't want the name to be set by the js, instead we take the name supplied in the app.json
-
-						if (options && 'apiUrl' in options) {
-							app.apiUrl = options.apiUrl;
-						}
+				options = pOptions || {},
+				getValidUrl = _.flow(
+					_.partial(_.map, _, monster.normalizeUrlPathEnding),
+					_.partial(_.find, _, _.isString)
+				),
+				metadata = monster.util.getAppStoreMetadata(name),
+				externalUrl = getValidUrl([
+					_.get(metadata, 'source_url'),
+					_.get(options, 'sourceUrl')
+				]),
+				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				pathConfig = hasExternalUrlConfigured ? {
+					directory: externalUrl,
+					module: 'app-' + name
+				} : {
+					directory: 'apps/' + name,
+					module: 'apps/' + name + '/app'
+				},
+				apiUrl = getValidUrl([
+					_.get(options, 'apiUrl'),
+					_.get(metadata, 'api_url'),
+					monster.config.api.default
+				]),
+				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, callback) {
+					require([moduleId], function(app) {
+						_.extend(app, {
+							appPath: pathToDirectory,
+							data: {}
+						}, monster.apps[name], {
+							apiUrl: apiUrl,
+							// we don't want the name to be set by the js, instead we take the name supplied in the app.json
+							name: name
+						});
 
 						callback(null, app);
-					}, _.partial(callback, true));
-				},
+					}, callback);
+				}, pathConfig.module, pathConfig.directory, name, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
 					if (!app.hasConfigFile) {
 						return callback(null, app, {});
@@ -540,9 +592,9 @@ define(function() {
 						error: _.partial(callback, null, app, {})
 					});
 				},
-				loadApp = function loadApp(path, appPath, apiUrl, options, callback) {
+				loadApp = function loadApp(callback) {
 					monster.waterfall([
-						_.partial(requireApp, path, appPath, apiUrl, options),
+						requireApp,
 						maybeRetrieveBuildConfig
 					], function applyConfig(err, app, config) {
 						if (err) {
@@ -578,7 +630,7 @@ define(function() {
 						});
 
 						callback(null);
-					}, _.partial(callback, true));
+					}, callback);
 				},
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
@@ -598,50 +650,16 @@ define(function() {
 					} catch (error) {
 						callback(error);
 					}
-				},
-				appPath = 'apps/' + name,
-				customKey = 'app-' + name,
-				requirePaths = {},
-				options = options || {},
-				externalUrl = options.sourceUrl || false,
-				apiUrl = monster.config.api.default;
+				};
 
-			/* If source_url is defined for an app, we'll load the templates, i18n and js from this url instead of localhost */
-			if ('auth' in monster.apps && 'installedApps' in monster.apps.auth) {
-				var storedApp = _.find(monster.apps.auth.installedApps, function(installedApp) {
-					return name === installedApp.name;
-				});
-
-				if (storedApp && 'source_url' in storedApp) {
-					externalUrl = storedApp.source_url;
-
-					if (externalUrl.substr(externalUrl.length - 1) !== '/') {
-						externalUrl += '/';
-					}
-				}
-
-				if (storedApp && storedApp.hasOwnProperty('api_url')) {
-					apiUrl = storedApp.api_url;
-					if (apiUrl.substr(apiUrl.length - 1) !== '/') {
-						apiUrl += '/';
-					}
-				}
+			if (hasExternalUrlConfigured) {
+				require.config(
+					_.set({}, ['paths', pathConfig.module], pathConfig.directory + '/app')
+				);
 			}
-
-			if (externalUrl) {
-				appPath = externalUrl;
-
-				requirePaths[customKey] = externalUrl + '/app';
-
-				require.config({
-					paths: requirePaths
-				});
-			}
-
-			var path = customKey in requirePaths ? customKey : appPath + '/app';
 
 			monster.waterfall([
-				_.partial(loadApp, path, appPath, apiUrl, options),
+				loadApp,
 				loadSubModules,
 				_.bind(self.monsterizeApp, self),
 				_.bind(self.loadDependencies, self),

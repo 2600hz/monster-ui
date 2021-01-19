@@ -1,0 +1,21 @@
+#step_name_and_numbers.wizard-step {
+	#numbers_to_port_numbers {
+		min-height: 16rem;
+
+		&.monster-invalid {
+			background: #ffece9;
+
+			+ label.monster-invalid {
+				position: static;
+
+				+ label.field-foot-notice {
+					color: $error-color;
+				}
+			}
+		}
+	}
+
+	.numbers-file-upload .field-foot-notice {
+		line-height: 1rem;
+	}
+}

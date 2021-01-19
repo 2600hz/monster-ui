@@ -21,8 +21,6 @@ require.config({
 		'form2object': 'js/vendor/form2object',
 		'handlebars': 'js/vendor/handlebars-v4.4.1',
 		'hasher': 'js/vendor/hasher.min',
-		'hotjar': 'js/vendor/hotjar',
-		'hotjarTriggers': 'js/vendor/hotjarTriggers',
 		'hotkeys': 'js/vendor/jquery.hotkeys.min',
 		'image-select': 'js/vendor/ImageSelect.jquery',
 		'introJs': 'js/vendor/intro.min',
@@ -31,6 +29,7 @@ require.config({
 		'jqueryui': 'js/vendor/jquery-ui-1.10.3.custom.min',
 		'jsoneditor': 'js/vendor/jsoneditor/jsoneditor-8.6.8.min',
 		'jstz': 'js/vendor/jstz.min',
+		'jszip': 'js/vendor/jszip.min',
 		'kazoo': 'js/lib/kazoo/kazoo',
 		'kazoosdk': 'js/lib/jquery.kazoosdk',
 		'libphonenumber': 'js/vendor/libphonenumber-js.min',
@@ -108,8 +107,7 @@ require.config({
 			exports: 'renderjson'
 		},
 		'touch-punch': ['jqueryui'],
-		vfs_fonts: ['pdfmake'],
-		'hotjarTriggers': ['hotjar']
+		vfs_fonts: ['pdfmake']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
 });

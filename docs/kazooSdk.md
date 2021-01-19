@@ -129,6 +129,7 @@ kazooSdk.auth.userAuth({
 * [Media](#media)
 * [Menu](#menu)
 * [Numbers](#numbers)
+* [Parked Calls](#parked-calls)
 * [Port](#port)
 * [Resource Templates](#resource-templates)
 * [Service Plan](#service-plan)
@@ -1224,6 +1225,19 @@ kazooSdk.auth.userAuth({
 | Request Content Type: | application/json |
 | Response Content Type: | json |
 | Mandatory _settings_: | `accountId`, `city` |
+| Optional _settings_: | See the list of [General API settings](#general-api-settings). |
+
+
+###### Parked Calls
+
+|||
+|---|---|
+| Method: | __parkedCalls.list(__*settings*__)__ |
+| Request Type: | GET |
+| Request URL: | {apiRoot}/accounts/{accountId}/parked_calls |
+| Request Content Type: | application/json |
+| Response Content Type: | json |
+| Mandatory _settings_: | `accountId` |
 | Optional _settings_: | See the list of [General API settings](#general-api-settings). |
 
 ###### Port

@@ -26,17 +26,34 @@ define(function(require) {
 		/**
 		 * Renders the navigation wizard component
 		 * @param  {Object} args
-		 * @param  {Boolean} [args.askForConfirmationBeforeExit=false]  Whether or not to ask the user for
-		 *                                                               confirmation when leaving the wizard,
-		 *                                                               due to cancellation or page unload
-		 * @param  {String} args.cancel  Name of the function to be invoked when the cancel wizard
-		 *                               button is clicked. It must be defined as a property of
-		 *                               thisArg.
+		 * @param  {Boolean} [args.askForConfirmationBeforeExit=false]  Whether or not to ask the
+		 *                                                              user for confirmation when
+		 *                                                              leaving the wizard, due to
+		 *                                                              cancellation or page unload
+		 * @param  {Object[]} [args.buttonProps]  Initial button properties
+		 * @param  {String} [args.buttonProps[].button]  Button name
+		 * @param  {Boolean} [args.buttonProps[].enabled]  Whether to enable or disable the button
+		 * @param  {Boolean} [args.buttonProps[].display]  Whether to display or hide the button
+		 * @param  {jQuery|String|Element} [args.buttonProps[].content]  Button new content
+		 * @param  {(Function|String)} args.cancel  Reference or name of the function to be invoked
+		 *                                          when the cancel wizard button is clicked. If
+		 *                                          the name is provided, the function must be
+		 *                                          defined as a property of thisArg.
 		 * @param  {jQuery} args.container  Element that will contain the wizard
+		 * @param  {String} [args.controlId]  ID to be set to the wizard control
+		 * @param  {String} [args.cssClass]  CSS class to be assigned to the wizard control
+		 * @param  {Number} [args.currentStep]  Current wizard step to be displayed after render
 		 * @param  {Object} [args.data]  Initial data
-		 * @param  {String} args.done  Name of the function to be invoked when completing the
-		 *                             wizard. It must be defined as a property of thisArg.
+		 * @param  {(Function|String)} [args.delete]  Reference or name of the function to delete the
+		 *                                            document that is being edited in the wizard.
+		 * @param  {(Function|String)} args.done  Reference or name of the function to be invoked
+		 *                                        when completing the wizard. If the name is
+		 *                                        provided, the function must be defined as a
+		 *                                        property of thisArg.
 		 * @param  {String} [args.doneButton]  Text to be displayed in the wizard done button
+		 * @param  {Function} [args.save]  Function to save a draft of the current document
+		 * @param  {Function} [args.saveEnabled=false]  Whether or not to allow to save a draft of
+		 *                                              the current document
 		 * @param  {Object[]} args.steps  List of steps with their configuration parameters
 		 * @param  {String} args.steps[].description  Step description, to be displayed in the menu
 		 * @param  {String} args.steps[].label  Step label, to be displayed in the left menu
@@ -47,7 +64,7 @@ define(function(require) {
 		 *                                         favor of this one to render the step.
 		 * @param  {Function} args.steps[].render.callback  Function to build the step template
 		 *                                                  asynchronously.
-		 * @param  {Object} [args.steps[].render.options]  Options to be passed to the loading template.
+		 * @param  {Object} [args.steps[].render.options]  Options to be passed to the loading template
 		 * @param  {String} args.steps[].util  Name of the function to validate and process the
 		 *                                     step data. It must be defined as a property of
 		 *                                     thisArg.
@@ -63,21 +80,34 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				stepsCompleted = _.get(args, 'stepsCompleted', []),
+				templateDataDefaults = {
+					saveEnabled: _.get(args, 'saveEnabled', false),
+					deleteEnabled: !!args.delete,
+					cancelEnabled: !!args.cancel
+				},
+				templateDataArgs = _.pick(args, [
+					'controlId',
+					'cssClass',
+					'deleteButton',
+					'doneButton',
+					'title',
+					'steps'
+				]),
+				// Use assign instead of merge because only a shallow copy is needed
+				templateData = _.assign(templateDataDefaults, templateDataArgs),
 				layout = $(self.getTemplate({
 					name: 'layout',
-					data: {
-						title: args.title,
-						steps: args.steps,
-						doneButton: _.get(args, 'doneButton', '')
-					},
+					data: templateData,
 					submodule: 'navigationWizard'
 				})),
 				buttonSelectors = {
 					back: '.back',
 					cancel: '#cancel',
 					clear: '#clear',
+					'delete': '#navigation_wizard_delete',
 					done: '#done',
-					next: '#next'
+					next: '#next',
+					save: '#navigation_wizard_save'
 				},
 				navigationWizardFlagsDefaults = {
 					askForConfirmationBeforeExit: false,
@@ -87,7 +117,7 @@ define(function(require) {
 							enabled: true
 						};
 					}),
-					currentStep: 0,
+					currentStep: _.get(args, 'currentStep', 0),
 					validateOnStepChange: false,
 					statuses: [
 						'selected',
@@ -100,7 +130,8 @@ define(function(require) {
 					{},
 					navigationWizardFlagsDefaults,
 					_.pick(args, 'askForConfirmationBeforeExit', 'currentStep', 'validateOnStepChange')
-				);
+				),
+				buttonProps = _.get(args, 'buttonProps', []);
 
 			if (!container) {
 				throw new Error('A container must be provided.');
@@ -132,6 +163,8 @@ define(function(require) {
 				.empty()
 				.append(layout);
 
+			self.navigationWizardSetButtonProperties(buttonProps);
+
 			self.navigationWizardGenerateTemplate();
 		},
 
@@ -142,13 +175,14 @@ define(function(require) {
 			var self = this,
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
-				template = wizardArgs.template,
+				$template = wizardArgs.template,
 				thisArg = wizardArgs.thisArg;
 
 			self.navigationWizardSetSelected({
 				stepId: navigationWizardFlags.currentStep
 			});
 
+			// Ask for confirmation before window exit
 			if (navigationWizardFlags.askForConfirmationBeforeExit) {
 				$(window).on('beforeunload.navigationWizard.unbindBeforeLogout', function(e) {
 					if (!_.isEmpty($('#navigation_wizard_wrapper'))) {
@@ -160,8 +194,8 @@ define(function(require) {
 				});
 			}
 
-			//Clicking the next button
-			template
+			//Clicking on the action buttons
+			$template
 				.find('#next')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -172,19 +206,21 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the done/complete button
-			template
+			$template
 				.find('#done')
 					.on('click', function(event) {
 						event.preventDefault();
+
+						// Disable button after it's clicked
+						$(this).prop('disabled', true);
 
 						self.navigationWizardComplete({
 							eventType: 'done'
 						});
 					});
 
-			template
-				.find('#save_app')
+			$template
+				.find('#save_app, #navigation_wizard_save')
 					.on('click', function(event) {
 						event.preventDefault();
 
@@ -193,8 +229,7 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the back button
-			template
+			$template
 				.find('.back')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -205,8 +240,7 @@ define(function(require) {
 						});
 					});
 
-			//Clicking the cancel button
-			template
+			$template
 				.find('#cancel')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -232,14 +266,18 @@ define(function(require) {
 								return;
 							}
 
-							thisArg[wizardArgs.cancel](wizardArgs);
+							var cancelFunctionRef = wizardArgs.cancel,
+								cancelFunction = _.isFunction(cancelFunctionRef)
+									? cancelFunctionRef
+									: thisArg[cancelFunctionRef];	// Support function name, for backward compatibility
+
+							_.bind(cancelFunction, thisArg)(wizardArgs);
 
 							self.navigationWizardUnbindEvents();
 						});
 					});
 
-			//Clicking the clear link
-			template
+			$template
 				.find('#clear')
 					.on('click', function(event) {
 						event.preventDefault();
@@ -262,14 +300,31 @@ define(function(require) {
 						self.navigationWizardGenerateTemplate();
 					});
 
-			//Clicking on the menu item
-			template
-				.on('click', '.visited, .completed', function() {
-					var stepId = $(this).data('id');
-					self.navigationWizardGoToStep({
-						stepId: stepId
+			$template
+				.find('#navigation_wizard_delete')
+					.on('click', function(event) {
+						event.preventDefault();
+
+						var deleteFunctionRef = wizardArgs.delete,
+							deleteFunction = _.isFunction(deleteFunctionRef)
+								? deleteFunctionRef
+								: thisArg[deleteFunctionRef],
+							deleteCallback = function(callbackArgs) {
+								return callbackArgs.exit && self.navigationWizardUnbindEvents();
+							};
+
+						_.bind(deleteFunction, thisArg)(wizardArgs, deleteCallback);
 					});
-				});
+
+			//Clicking on the menu item
+			$template
+				.find('.nav')
+					.on('click', '.visited, .completed', function() {
+						var stepId = $(this).data('id');
+						self.navigationWizardGoToStep({
+							stepId: stepId
+						});
+					});
 		},
 
 		/**
@@ -440,17 +495,16 @@ define(function(require) {
 
 		/**
 		 * Executes the method to validate and process the current step data
-		 * @param  {Object} args
-		 * @param  {('back'|'done'|'goto'|'next'|'save')} args.eventType  Type of event that
-		 *                                                                triggered the execution
-		 *                                                                of the util method
-		 * @param  {Boolean} args.completeStep  Indicates whether or not the current step will be
-		 *                                      completed
+		 * @param  {Object} eventArgs
+		 * @param  {('back'|'done'|'goto'|'next'|'save')} eventArgs.eventType  Type of event that
+		 *                                                                     triggered the execution
+		 *                                                                     of the util method
+		 * @param  {Boolean} eventArgs.completeStep  Indicates whether or not the current step will be
+		 *                                           completed
+		 * @param  {Number} eventArgs.nextStepId  ID of the next step to be loaded, if any
 		 */
-		navigationWizardUtilForTemplate: function(args) {
+		navigationWizardUtilForTemplate: function(eventArgs) {
 			var self = this,
-				eventType = args.eventType,
-				completeStep = args.completeStep,
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
 				thisArg = wizardArgs.thisArg,
@@ -458,10 +512,7 @@ define(function(require) {
 				currentStep = navigationWizardFlags.currentStep,
 				util = steps[currentStep].util;
 
-			return thisArg[util](wizardArgs.template, wizardArgs, {
-				eventType: eventType,
-				completeStep: completeStep
-			});
+			return thisArg[util](wizardArgs.template, wizardArgs, eventArgs);
 		},
 
 		/**
@@ -495,7 +546,8 @@ define(function(require) {
 			if (validateCurrentStep) {
 				result = self.navigationWizardUtilForTemplate({
 					eventType: eventType,
-					completeStep: completeCurrentStep
+					completeStep: completeCurrentStep,
+					nextStepId: stepId
 				});
 
 				if (!result.valid) {
@@ -508,21 +560,15 @@ define(function(require) {
 				isCompleted: _.get(result, 'valid', !validateCurrentStep) && completeCurrentStep
 			});
 
-			// Merge results data
-			if (_.has(result, 'data')) {
-				_.merge(wizardArgs, {
-					data: result.data
-				});
-			} else if (_.has(result, 'args')) {
-				_.merge(wizardArgs, result.args);
-			}
+			// Merge result
+			self.navigationWizardMergeResult(result);
 
 			// Merge new args
 			_.merge(wizardArgs, newArgs);
 
-			// Set new template and menu items to reflect that
+			// Set new template and menu items
 			self.navigationWizardSetSelected({
-				stepId: stepId
+				stepId: _.get(result, 'goToStepId', -1) >= 0 ? result.goToStepId : stepId
 			});
 			self.navigationWizardGenerateTemplate();
 		},
@@ -534,19 +580,65 @@ define(function(require) {
 		 */
 		navigationWizardComplete: function(args) {
 			var self = this,
-				wizardArgs = self.appFlags.navigationWizard.wizardArgs,
+				navigationWizardFlags = self.appFlags.navigationWizard,
+				wizardArgs = navigationWizardFlags.wizardArgs,
+				wizardThisArg = wizardArgs.thisArg,
+				eventType = args.eventType,
+				doCompleteStep = eventType === 'done',
+				currentStep = navigationWizardFlags.currentStep,
+				lastCompletedStep = _.get(navigationWizardFlags, 'lastCompletedStep', -1),
 				result = self.navigationWizardUtilForTemplate({
-					eventType: args.eventType,
-					completeStep: true
-				});
+					eventType: eventType,
+					completeStep: doCompleteStep
+				}),
+				completeFunctionRef = eventType === 'save'
+					? _.get(wizardArgs, 'save', wizardArgs.done)	// If save function is not provided, default to done function
+					: wizardArgs.done,
+				completeFunction = _.isFunction(completeFunctionRef)
+					? completeFunctionRef
+					: wizardThisArg[completeFunctionRef],	// Support function name, for backward compatibility
+				eventArgs = {
+					eventType: eventType,
+					currentStepId: currentStep,
+					lastCompletedStepId: doCompleteStep && result.valid && currentStep > lastCompletedStep
+						? currentStep
+						: lastCompletedStep
+				};
 
 			if (!result.valid) {
+				//If validation fails for any reason then re-enable the button
+				wizardArgs
+					.container
+						.find('#done')
+						.prop('disabled', false);
 				return;
 			}
 
-			wizardArgs.thisArg[wizardArgs.done](wizardArgs);
+			self.navigationWizardMergeResult(result);
+
+			_.bind(completeFunction, wizardThisArg)(wizardArgs, eventArgs);
 
 			self.navigationWizardUnbindEvents();
+		},
+
+		/**
+		 * Merge validation result data into the current wizard arguments
+		 * @param  {Object} result
+		 * @param  {Object} [result.data]  Wizard data to merge
+		 * @param  {Object} [result.args]  Wizard args to merge
+		 */
+		navigationWizardMergeResult: function(result) {
+			var self = this,
+				wizardArgs = self.appFlags.navigationWizard.wizardArgs;
+
+			// Merge results data
+			if (_.has(result, 'data')) {
+				_.merge(wizardArgs, {
+					data: result.data
+				});
+			} else if (_.has(result, 'args')) {
+				_.merge(wizardArgs, result.args);
+			}
 		},
 
 		/**
@@ -559,13 +651,20 @@ define(function(require) {
 			var self = this,
 				navigationWizardFlags = self.appFlags.navigationWizard,
 				wizardArgs = navigationWizardFlags.wizardArgs,
+				wizardSteps = wizardArgs.steps,
 				$wizardTemplate = wizardArgs.template,
 				$wizardFooterActions = $wizardTemplate.find('.footer .actions'),
 				thisArg = wizardArgs.thisArg,
 				$container = wizardArgs.container,
 				stepId = navigationWizardFlags.currentStep,
 				renderStepTemplate = args.callback,
-				loadTemplateOptions = _.get(args, 'options', {}),
+				loadTemplateOptions = _
+					.chain(args)
+					.get('options', {})
+					.merge({
+						hasBackground: false
+					})
+					.value(),
 				enableFooterActions = function(enable) {
 					var $buttons = _
 							.chain(navigationWizardFlags.buttons)
@@ -617,6 +716,8 @@ define(function(require) {
 					afterRenderCallback = results.callback,
 					status = _.get(results, 'status', null),
 					insertTemplateCallback = function() {
+						var followingStepIds;
+
 						if (_.isFunction(afterRenderCallback)) {
 							afterRenderCallback();
 						}
@@ -630,6 +731,26 @@ define(function(require) {
 						self.navigationWizardSetStepStatuses({
 							stepId: stepId,
 							statuses: [ 'selected', status ]
+						});
+
+						if (status !== 'invalid' || navigationWizardFlags.lastCompletedStep < stepId) {
+							return;
+						}
+
+						if (stepId === 0) {
+							delete navigationWizardFlags.lastCompletedStep;
+						} else {
+							navigationWizardFlags.lastCompletedStep = stepId - 1;
+						}
+
+						// Un-complete following steps
+						followingStepIds = _.range(stepId + 1, wizardSteps.length);
+
+						_.each(followingStepIds, function(followingStepId) {
+							self.navigationWizardSetStepStatuses({
+								stepId: followingStepId,
+								statuses: []
+							});
 						});
 					};
 

@@ -317,8 +317,8 @@ define(function(require) {
 
 					return _.merge({
 						isAgent: isAgent,
-						canComment: isUpdateable,
 						canUpdate: isAgent && isUpdateable,
+						canRequireAction: isUpdateable,
 						lastSubmitted: _.isUndefined(lastSubmitted)
 							? undefined
 							: {
@@ -543,22 +543,6 @@ define(function(require) {
 							toDate: toDate,
 							type: type,
 							tab: tab
-						});
-					});
-
-			template
-				.find('.port-wizard')
-					.on('click', function(event) {
-						event.preventDefault();
-
-						monster.pub('common.portWizard.render', {
-							container: self.portListingGet('container'),
-							data: {
-								accountId: self.portListingGet('accountId')
-							},
-							globalCallback: function() {
-								self.portListingGlobalCallback();
-							}
 						});
 					});
 		},

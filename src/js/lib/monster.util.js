@@ -1,849 +1,358 @@
 define(function(require) {
-	var $ = require('jquery'),
-		_ = require('lodash'),
-		monster = require('monster'),
-		libphonenumber = require('libphonenumber'),
-		moment = require('moment');
+	var $ = require('jquery');
+	var _ = require('lodash');
+	var monster = require('monster');
+	var libphonenumber = require('libphonenumber');
+	var moment = require('moment');
 
 	require('moment-timezone');
-	//momentTimezone = require('moment-timezone');
 
-	var util = {
-
-		/**
-		 * Format bytes to display its decimal multiple
-		 * @param  {Number} bytes   Number in bytes to format
-		 * @param  {Number} pDigits Number of digits after decimal point
-		 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
-		 * @return {Object}         Object containing the formatted data about the initial bytes value
-		 */
-		formatBytes: function(bytes, pDigits) {
-			var base = 1000,
-				sizes = monster.apps.core.i18n.active().unitsMultiple.byte,
-				exponent = Math.floor(Math.log(bytes) / Math.log(base)),
-				value = bytes / Math.pow(base, exponent),
-				digits = pDigits || (exponent > 2 ? 1 : 0);
-
-			if (bytes === 0) {
-				return {
-					value: 0,
-					unit: sizes[0]
-				};
-			} else {
-				return {
-					value: value.toFixed(digits),
-					unit: sizes[exponent]
-				};
-			}
-		},
-
-		parseDateString: function(dateString, dateFormat) {
-			var self = this,
-				regex = new RegExp(/(\d+)[/-](\d+)[/-](\d+)/),
-				dateFormats = {
-					'mdy': '$1/$2/$3',
-					'dmy': '$2/$1/$3',
-					'ymd': '$2/$3/$1'
-				},
-				format = (dateFormat in dateFormats) ? dateFormat : null;
-
-			if (!format) {
-				var user = monster.apps.auth.currentUser;
-				format = user && user.ui_flags && user.ui_flags.date_format ? user.ui_flags.date_format : 'mdy';
-			}
-
-			return new Date(dateString.replace(regex, dateFormats[format]));
-		},
-
-		dateToGregorian: function(date) {
-			var formattedResponse;
-
-			// This checks that the parameter is an object and not null, or if it's a UNIX time
-			if (typeof date === 'object' && date) {
-				formattedResponse = parseInt((date.getTime() / 1000) + 62167219200);
-			} else if (typeof date === 'number' && date) {
-				formattedResponse = date + 62167219200;
-			}
-
-			return formattedResponse;
-		},
-
-		getModbID: function(id, timestamp) {
-			var jsDate = gregorianToDate(timestamp),
-				UTCYear = jsDate.getUTCFullYear() + '',
-				UTCMonth = jsDate.getUTCMonth() + 1,
-				formattedUTCMonth = UTCMonth < 10 ? '0' + UTCMonth : UTCMonth + '',
-				modbDBprefix = UTCYear + formattedUTCMonth + '-',
-				modbString;
-
-			// Verify that the ID we got is not already a MODB ID
-			if (id.substr(0, 7) !== modbDBprefix) {
-				modbString = UTCYear + formattedUTCMonth + '-' + id;
-			} else {
-				modbString = id;
-			}
-
-			return modbString;
-		},
-
-		dateToUnix: function(date) {
-			var formattedResponse;
-
-			// This checks that the parameter is an object and not null
-			if (typeof date === 'object' && date) {
-				formattedResponse = parseInt(date.getTime() / 1000);
-			}
-
-			return formattedResponse;
-		},
-
-		getDefaultNumbersFormat: function() {
-			var self = this,
-				account = monster.apps.auth.originalAccount || {},
-				format = 'international'; // default
-
-			if (account && account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty('numbers_format')) {
-				format = account.ui_flags.numbers_format;
-			}
-
-			return format;
-		},
-
-		cmp: function(a, b) {
-			return (a > b) ? 1 : (a < b) ? -1 : 0;
-		},
-
-		/**
-		 * @desc add or remove business days to the current date or to a specific date
-		 * @param numberOfDays - mandatory integer representing the number of business days to add
-		 * @param from - optional JavaScript Date Object
-		 */
-		getBusinessDate: function(numberOfDays, pFrom) {
-			var self = this,
-				from = pFrom && pFrom instanceof Date ? pFrom : new Date(),
-				weeks = Math.floor(numberOfDays / 5),
-				days = ((numberOfDays % 5) + 5) % 5,
-				dayOfTheWeek = from.getDay();
-
-			if (dayOfTheWeek === 6 && days > -1) {
-				if (days === 0) {
-					days -= 2;
-					dayOfTheWeek += 2;
-				}
-
-				days++;
-				dayOfTheWeek -= 6;
-			}
-
-			if (dayOfTheWeek === 0 && days < 1) {
-				if (days === 0) {
-					days += 2;
-					dayOfTheWeek -= 2;
-				}
-
-				days--;
-				dayOfTheWeek += 6;
-			}
-
-			if (dayOfTheWeek + days > 5) {
-				days += 2;
-			}
-
-			if (dayOfTheWeek + days < 1) {
-				days -= 2;
-			}
-
-			return new Date(from.setDate(from.getDate() + weeks * 7 + days));
-		},
-
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isSuperDuper: function(pAccount) {
-			var self = this,
-				isSuperDuper = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('superduper_admin')) {
-				isSuperDuper = account.superduper_admin;
-			}
-
-			return isSuperDuper;
-		},
-
-		// We only let super duper admins impersonate users from subaccounts. If you're not a super duper admin, or if you're using the account you logged in with, you shouldn't have access to impersonating.
-		canImpersonate: function(accountId) {
-			var self = this,
-				isDifferentAccount = monster.apps.auth.originalAccount.id !== accountId;
-
-			return monster.util.isSuperDuper() && isDifferentAccount;
-		},
-
-		// Function returning if an account is in trial or not
-		isTrial: function(pAccount) {
-			var self = this,
-				isTrial = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('trial_time_left')) {
-				isTrial = true;
-			}
-
-			return isTrial;
-		},
-
-		// Function returning if an account can add external numbers or not
-		canAddExternalNumbers: function(pAccount) {
-			var self = this,
-				hasRights = false,
-				account = pAccount || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') ? monster.apps.auth.originalAccount : {});
-
-			if (account.hasOwnProperty('wnm_allow_additions') && account.wnm_allow_additions) {
-				hasRights = true;
-			}
-
-			return hasRights;
-		},
-
-		// Function returning if a user is an admin or not
-		isAdmin: function(pUser) {
-			var self = this,
-				user = pUser || (monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('currentUser') ? monster.apps.auth.currentUser : {});
-
-			return user.priv_level === 'admin';
-		},
-
-		// Function returning if an account is a superduper admin, uses original account by default, but can take an account document in parameter
-		isWhitelabeling: function() {
-			return monster.config.whitelabel.hasOwnProperty('domain') && monster.config.whitelabel.domain.length > 0;
-		},
-
-		// Function returning a Boolean indicating whether the current user is masquerading a sub-account or not.
-		isMasquerading: function() {
-			var self = this,
-				isMasquerading = false;
-
-			if (monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth') && monster.apps.auth.hasOwnProperty('originalAccount') && monster.apps.auth.hasOwnProperty('currentAccount')) {
-				isMasquerading = monster.apps.auth.originalAccount.id !== monster.apps.auth.currentAccount.id;
-			}
-
-			return isMasquerading;
-		},
-
-		/****************** Helpers not documented because people shouldn't need to use them *******************/
-
-		// Takes seconds and transforms it into a timer
-		friendlyTimer: function(pSeconds, pMode) {
-			var mode = pMode || 'normal',
-				seconds = Math.floor(pSeconds),
-				minutes = Math.floor(seconds / 60) % 60,
-				hours = Math.floor(seconds / 3600) % 24,
-				days = Math.floor(seconds / 86400),
-				remainingSeconds = seconds % 60,
-				i18n = monster.apps.core.i18n.active(),
-				format2Digits = function(number) {
-					if (typeof number === 'string') {
-						number = parseInt(number);
-					}
-					return (number < 10 ? '0' : '') + number;
-				},
-				displayTime = '';
-
-			if (mode === 'verbose') {
-				displayTime = ''.concat(hours, ' ', i18n.friendlyTimer.hours, ', ', minutes, ' ', i18n.friendlyTimer.minutesAnd, ' ', remainingSeconds, ' ', i18n.friendlyTimer.seconds);
-			} else if (mode === 'shortVerbose') {
-				if (hours > 0) {
-					var stringHour = hours === 1 ? i18n.friendlyTimer.hour : i18n.friendlyTimer.hours;
-					displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
-				}
-
-				if (minutes > 0) {
-					var stringMinutes = minutes === 1 ? i18n.friendlyTimer.minute : i18n.friendlyTimer.minutes;
-					displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
-				}
-
-				if (remainingSeconds > 0) {
-					var stringSeconds = remainingSeconds === 1 ? i18n.friendlyTimer.second : i18n.friendlyTimer.seconds;
-					displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
-				}
-			} else {
-				displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
-
-				if (hours || days) {
-					displayTime = format2Digits(hours) + ':' + displayTime;
-				}
-
-				if (days) {
-					displayTime = format2Digits(days) + ':' + displayTime;
-				}
-			}
-
-			return seconds >= 0 ? displayTime : '00:00:00';
-		},
-
-		/*
-			This function will automatically logout the user after %wait% minutes (defaults to 30).
-			This function will show a warning popup %alertBeforeLogout% minutes before logging out (defaults to 2). If the user moves his cursor, the timer will reset.
-		*/
-		autoLogout: function() {
-			if (!monster.config.whitelabel.hasOwnProperty('logoutTimer') || monster.config.whitelabel.logoutTimer > 0) {
-				var i18n = monster.apps.core.i18n.active(),
-					timerAlert,
-					timerLogout,
-					wait = monster.config.whitelabel.logoutTimer || 30,
-					alertBeforeLogout = 2,
-					alertTriggered = false,
-					alertDialog,
-					logout = function()	{
-						monster.pub('auth.logout');
-					},
-					resetTimer = function() {
-						clearTimeout(timerAlert);
-						clearTimeout(timerLogout);
-
-						if (alertTriggered) {
-							alertTriggered = false;
-
-							alertDialog.dialog('close').remove();
-						}
-
-						timerAlert = setTimeout(function() {
-							alertTriggered = true;
-
-							alertDialog = monster.ui.alert(i18n.alertLogout);
-						}, 60000 * (wait - alertBeforeLogout));
-
-						timerLogout = setTimeout(function() {
-							logout();
-						}, 60000 * wait);
-					};
-
-				document.onkeypress = resetTimer;
-				document.onmousemove = resetTimer;
-
-				resetTimer();
-			}
-		},
-
-		checkVersion: function(obj, callback) {
-			var self = this,
-				i18n = monster.apps.core.i18n.active();
-
-			if (obj.hasOwnProperty('ui_metadata') && obj.ui_metadata.hasOwnProperty('ui')) {
-				if (obj.ui_metadata.ui !== 'monster-ui') {
-					monster.ui.confirm(i18n.olderVersion, callback);
-				} else {
-					callback && callback();
-				}
-			} else {
-				callback && callback();
-			}
-		},
-
-		accountArrayToTree: function(accountArray, rootAccountId) {
-			var result = {};
-
-			$.each(accountArray, function(k, v) {
-				if (v.id === rootAccountId) {
-					if (!result[v.id]) { result[v.id] = {}; }
-					result[v.id].name = v.name;
-					result[v.id].realm = v.realm;
-				} else {
-					var parents = v.tree.slice(v.tree.indexOf(rootAccountId)),
-						currentAcc;
-
-					for (var i = 0; i < parents.length; i++) {
-						if (!currentAcc) {
-							if (!result[parents[i]]) { result[parents[i]] = {}; }
-
-							currentAcc = result[parents[i]];
-						} else {
-							if (!currentAcc.children) { currentAcc.children = {}; }
-							if (!currentAcc.children[parents[i]]) { currentAcc.children[parents[i]] = {}; }
-
-							currentAcc = currentAcc.children[parents[i]];
-						}
-					}
-
-					if (!currentAcc.children) { currentAcc.children = {}; }
-					if (!currentAcc.children[v.id]) { currentAcc.children[v.id] = {}; }
-
-					currentAcc.children[v.id].name = v.name;
-					currentAcc.children[v.id].realm = v.realm;
-				}
-			});
-
-			return result;
-		},
-
-		getDefaultRangeDates: function(pRange) {
-			var self = this,
-				range = pRange || 7,
-				dates = {
-					from: '',
-					to: ''
-				};
-
-			var fromDefault = new Date(),
-				toDefault = new Date();
-
-			if (range === 'monthly') {
-				fromDefault.setMonth(fromDefault.getMonth() - 1);
-			} else {
-				fromDefault.setDate(fromDefault.getDate() - range);
-			}
-			fromDefault.setDate(fromDefault.getDate() + 1);
-
-			dates.from = fromDefault;
-			dates.to = toDefault;
-
-			return dates;
-		},
-
-		getTZDate: function(date, tz) {
-			return new Date(moment.tz(date, tz).unix() * 1000);
-		},
-
-		formatDateDigits: function(digit) {
-			return digit < 10 ? '0' + digit : '' + digit;
-		},
-
-		dateToBeginningOfGregorianDay: function(date, pTimezone) {
-			var self = this,
-				timezone = pTimezone || moment.tz.guess(),
-				// we do month + 1 because jsDate returns 0 for January ... 11 for December
-				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 000000', timezone).unix();
-
-			return self.dateToGregorian(newDate);
-		},
-
-		dateToEndOfGregorianDay: function(date, pTimezone) {
-			var self = this,
-				timezone = pTimezone || moment.tz.guess(),
-				// we do month + 1 because jsDate returns 0 for January ... 11 for December
-				newDate = moment.tz('' + date.getFullYear() + self.formatDateDigits(date.getMonth() + 1) + self.formatDateDigits(date.getDate()) + ' 235959', timezone).unix();
-
-			return self.dateToGregorian(newDate);
-		},
-
-		// expects time string if format 9:00AM or 09:00AM. This is used by Main Number custom hours, and its validation.
-		timeToSeconds: function(time) {
-			var suffix = time.substring(time.length - 2).toLowerCase(),
-				timeArr = time.split(':'),
-				hours = parseInt(timeArr[0], 10),
-				minutes = parseInt(timeArr[1], 10);
-
-			if (suffix === 'pm' && hours < 12) {
-				hours += 12;
-			} else if (suffix === 'am' && hours === 12) {
-				hours = 0;
-			}
-
-			return (hours * 3600 + minutes * 60).toString();
-		},
-
-		resetAuthCookies: function() {
-			monster.cookies.remove('monster-auth');
-			monster.cookies.remove('monster-sso-auth');
-		},
-
-		logoutAndReload: function() {
-			var self = this;
-
-			// Unbind window events before logout, via namespace (useful for events like
-			// 'beforeunload', which may block the logout action)
-			$(window).off('.unbindBeforeLogout');
-
-			self.resetAuthCookies();
-
-			self.reload();
-		},
-
-		reload: function() {
-			var self = this;
-
-			if (monster.config.whitelabel.hasOwnProperty('sso')) {
-				var sso = monster.config.whitelabel.sso;
-				/* this didn't work
-					$.cookie(sso.cookie.name, null, {domain : sso.cookie.domain ,path:'/'});
-				*/
-
-				window.location = sso.logout;
-			} else {
-				window.location = window.location.pathname;
-			}
-		},
-
-		// To keep the structure of the help settings consistent, we built this helper so devs don't have to know the exact structure
-		// internal function used by different apps to set their own help flags.
+	return {
+		autoLogout: autoLogout,
+		cacheUrl: cacheUrl,
+		canAddExternalNumbers: canAddExternalNumbers,
+		canImpersonate: canImpersonate,
+		checkVersion: checkVersion,
+		cmp: cmp,
+		dataFlags: getDataFlagsManager(),
+		dateToBeginningOfGregorianDay: dateToBeginningOfGregorianDay,
+		dateToEndOfGregorianDay: dateToEndOfGregorianDay,
+		dateToGregorian: dateToGregorian,
+		dateToUnix: dateToUnix,
+		findCallflowNode: findCallflowNode,
+		formatBytes: formatBytes,
+		formatMacAddress: formatMacAddress,
+		formatNumber: formatNumber,
+		formatPhoneNumber: formatPhoneNumber,
+		formatPrice: formatPrice,
+		formatVariableToDisplay: formatVariableToDisplay,
+		friendlyTimer: friendlyTimer,
+		generateAccountRealm: generateAccountRealm,
+		getAppIconPath: getAppIconPath,
+		getAppStoreMetadata: getAppStoreMetadata,
+		getAuthToken: getAuthToken,
+		getBookkeepers: getBookkeepers,
+		getBusinessDate: getBusinessDate,
+		getCapability: getCapability,
+		getCurrencySymbol: getCurrencySymbol,
+		getCurrentTimeZone: getCurrentTimeZone,
+		getCurrentUserDefaultApp: getCurrentUserDefaultApp,
+		getDefaultNumbersFormat: getDefaultNumbersFormat,
+		getDefaultRangeDates: getDefaultRangeDates,
+		getFormatPhoneNumber: getFormatPhoneNumber,
+		getModbID: getModbID,
+		getNextExtension: getNextExtension,
+		getNumberFeatures: getNumberFeatures,
+		getRealmSuffix: getRealmSuffix,
+		getUrlVars: getUrlVars,
+		getUserFullName: getUserFullName,
+		getUserInitials: getUserInitials,
+		getVersion: getVersion,
+		gregorianToDate: gregorianToDate,
+		guid: guid,
+		isAdmin: isAdmin,
+		isJSON: isJSON,
+		isLoggedIn: isLoggedIn,
+		isMasquerading: isMasquerading,
+		isNumberFeatureEnabled: isNumberFeatureEnabled,
+		isReseller: isReseller,
+		isSuperDuper: isSuperDuper,
+		isTrial: isTrial,
+		isUserPermittedApp: isUserPermittedApp,
+		isWhitelabeling: isWhitelabeling,
+		jwt_decode: jwt_decode,
+		listAppsMetadata: listAppsMetadata,
+		listAppStoreMetadata: listAppStoreMetadata,
+		listAppLinks: listAppLinks,
+		protectSensitivePhoneNumbers: protectSensitivePhoneNumbers,
+		randomString: randomString,
+		reload: reload,
+		resetAuthCookies: resetAuthCookies,
+		logoutAndReload: logoutAndReload,
+		timeToSeconds: timeToSeconds,
+		toFriendlyDate: toFriendlyDate,
+		tryI18n: tryI18n,
 		uiFlags: {
-			user: {
-				get: function(appName, flagName, pUser) {
-					var user = pUser || monster.apps.auth.currentUser,
-						value;
-
-					if (user.hasOwnProperty('ui_help') && user.ui_help.hasOwnProperty(appName) && user.ui_help[appName].hasOwnProperty(flagName)) {
-						value = user.ui_help[appName][flagName];
-					}
-
-					return value;
-				},
-				set: function(appName, flagName, value, pUser) {
-					var user = pUser || monster.apps.auth.currentUser;
-
-					user.ui_help = user.ui_help || {};
-					user.ui_help[appName] = user.ui_help[appName] || {};
-					user.ui_help[appName][flagName] = value;
-
-					return user;
-				},
-				destroy: function(appName, flagName, pUser) {
-					var user = pUser || monster.apps.auth.currentUser;
-
-					user.ui_help = user.ui_help || {};
-					user.ui_help[appName] = user.ui_help[appName] || {};
-					delete user.ui_help[appName][flagName];
-
-					if (_.isEmpty(user.ui_help[appName])) {
-						delete user.ui_help[appName];
-					}
-
-					return user;
-				}
-			},
-
-			account: {
-				get: function(appName, flagName, pAccount) {
-					var account = pAccount || monster.apps.auth.currentAccount,
-						value;
-
-					if (account.hasOwnProperty('ui_flags') && account.ui_flags.hasOwnProperty(appName) && account.ui_flags[appName].hasOwnProperty(flagName)) {
-						value = account.ui_flags[appName][flagName];
-					}
-
-					return value;
-				},
-				set: function(appName, flagName, value, pAccount) {
-					var account = pAccount || monster.apps.auth.currentAccount;
-
-					account.ui_flags = account.ui_flags || {};
-					account.ui_flags[appName] = account.ui_flags[appName] || {};
-					account.ui_flags[appName][flagName] = value;
-
-					return account;
-				},
-				destroy: function(appName, flagName, pAccount) {
-					var account = pAccount || monster.apps.auth.currentAccount;
-
-					account.ui_flags = account.ui_flags || {};
-					account.ui_flags[appName] = account.ui_flags[appName] || {};
-					delete account.ui_flags[appName][flagName];
-
-					if (_.isEmpty(account.ui_flags[appName])) {
-						delete account.ui_flags[appName];
-					}
-
-					return account;
-				}
-			}
+			account: getUiFlagsManager('account'),
+			user: getUiFlagsManager('user')
 		},
-
-		// takes a HTML element, and update img relative paths to complete paths if they need to be updated
-		// without this, img with relative path would  be displayed from the domain name of the browser, which we want to avoid since we're loading sources from external URLs for some apps
-		updateImagePath: function(markup, app) {
-			var $markup = $(markup),
-				listImg = $markup.find('img'),
-				result = '';
-
-			// For each image, check if the path is correct based on the appPath, and if not change it
-			for (var i = 0; i < listImg.length; i++) {
-				var	currentSrc = listImg[i].src;
-
-				// If it's an image belonging to an app, and the current path doesn't contain the right appPath
-				if (currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
-					// We replace it by the app path and append the path of the image (we strip the name of the app, since it's already part of the appPath)
-					var newPath = app.appPath + currentSrc.substring(currentSrc.indexOf(app.name) + app.name.length, currentSrc.length);
-
-					listImg[i].src = newPath;
-				}
-			}
-
-			for (var j = 0; j < $markup.length; j++) {
-				result += $markup[j].outerHTML;
-			}
-
-			return result;
-		},
-
-		/* Helper function that takes an array of number in parameter, sorts it, and returns the first number not in the array, greater than the minVal */
-		getNextExtension: function(listNumbers) {
-			var orderedArray = listNumbers,
-				previousIterationNumber,
-				minNumber = 1000,
-				lowestNumber = minNumber,
-				increment = 1;
-
-			orderedArray.sort(function(a, b) {
-				var parsedA = parseInt(a),
-					parsedB = parseInt(b);
-
-				if (isNaN(parsedA)) {
-					return -1;
-				} else if (isNaN(parsedB)) {
-					return 1;
-				} else {
-					return parsedA > parsedB ? 1 : -1;
-				}
-			});
-
-			_.each(orderedArray, function(number) {
-				var currentNumber = parseInt(number);
-
-				// First we make sure it's a valid number, if not we move on to the next number
-				if (!isNaN(currentNumber)) {
-					// If we went through this loop already, previousIterationNumber will be set to the number of the previous iteration
-					if (typeof previousIterationNumber !== 'undefined') {
-						// If there's a gap for a number between the last number and the current number, we check if it's a valid possible number (ie, greater than minNumber)
-						// And If yes, we return it, if not we just continue
-						if (currentNumber - previousIterationNumber !== increment && previousIterationNumber >= minNumber) {
-							return previousIterationNumber + increment;
-						}
-					// else, it's the first iteration, we initialize the minValue to the first number in the ordered array
-					// only if it's greater than 1000, because we don't want to recommend lower numbers
-					} else if (currentNumber > minNumber) {
-						lowestNumber = currentNumber;
-					}
-					// We store current as the previous number for the next iteration
-					previousIterationNumber = currentNumber;
-				}
-			});
-
-			return (previousIterationNumber) ? previousIterationNumber + increment : lowestNumber;
-		},
-
-		findCallflowNode: function(callflow, module, data) {
-			var self = this,
-				result = [],
-				matchNode = function(node) {
-					if (node.module === module) {
-						if (!data || _.isEqual(data, node.data)) {
-							result.push(node);
-						}
-					}
-					_.each(node.children, function(child) {
-						matchNode(child);
-					});
-				};
-
-			matchNode(callflow.flow);
-
-			return result.length > 1 ? result : result[0];
-		},
-
-		// Check if the object is parsable or not
-		isJSON: function(obj) {
-			var self = this;
-
-			try {
-				JSON.stringify(obj);
-			} catch (e) {
-				return false;
-			}
-
-			return true;
-		},
-
-		// Monster helper used to get the path to the icon of an app
-		// Some app have their icons loaded locally, whereas some new apps won't have them
-		getAppIconPath: function(app) {
-			var self = this,
-				response,
-				authApp = monster.apps.auth,
-				localIcons = ['accounts', 'auth-security', 'blacklists', 'branding', 'callflows', 'callqueues', 'call-recording', 'carriers',
-					'cluster', 'conferences', 'csv-onboarding', 'debug', 'developer', 'dialplans', 'duo', 'fax', 'integration-aws', 'integration-google-drive',
-					'migration', 'mobile', 'myaccount', 'numbers', 'operator', 'operator-pro', 'pbxs', 'pivot', 'port', 'provisioner', 'reporting', 'reseller_reporting',
-					'service-plan-override', 'tasks', 'taxation', 'userportal', 'voicemails', 'voip', 'webhooks', 'websockets'];
-
-			if (localIcons.indexOf(app.name) >= 0) {
-				response = 'css/assets/appIcons/' + app.name + '.png';
-			} else {
-				response = authApp.apiUrl + 'accounts/' + authApp.accountId + '/apps_store/' + app.id + '/icon?auth_token=' + self.getAuthToken();
-			}
-
-			return response;
-		},
-
-		guid: function() {
-			var result = '';
-
-			for (var i = 0; i < 4; i++) {
-				result += (Math.random().toString(16) + '000000000').substr(2, 8);
-			}
-
-			return result;
-		},
-
-		getAuthToken: function(pConnectionName) {
-			var self = this,
-				authToken;
-
-			if (monster && monster.hasOwnProperty('apps') && monster.apps.hasOwnProperty('auth')) {
-				authToken = monster.apps.auth.getAuthTokenByConnection(pConnectionName);
-			}
-
-			return authToken;
-		},
-
-		getVersion: function() {
-			return monster.config.developerFlags.build.version;
-		},
-
-		cacheUrl: function(url) {
-			var self = this;
-
-			return url;
-
-			/* Commenting this as we don't want to add this just yet. We have issues with this code because versions from apps != versions in VERSION
-			   If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change, which means we wouldn't change the query sting used to get assets from any app, even monster-ui-voip...
-			   This only gets incremented when master build runs, whereas we need it to be changed when an app is built as well...
-			   Leaving this here for now, might have to just remove and forget about it eventually :/
-
-				var self = this,
-				prepend = url.indexOf('?') >= 0 ? '&' : '?',
-				isDev = monster.config.developerFlags.build.type === 'development',
-				devCacheString = (new Date()).getTime(),
-				prodCacheString = monster.util.getVersion(),
-				cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString),
-				finalString = url + cacheString;
-
-			return finalString;*/
-		},
-
-		dataFlags: {
-			get: function(flagName, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				return object.markers.monster[flagName];
-			},
-
-			add: function(flags, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				$.extend(true, object.markers.monster, flags);
-
-				return object;
-			},
-
-			destroy: function(flagName, object) {
-				object.markers = object.markers || {};
-				object.markers.monster = object.markers.monster || {};
-
-				delete object.markers.monster[flagName];
-
-				return object;
-			}
-		},
-
-		jwt_decode: function(Token) {
-			var base64Url = Token.split('.')[1],
-				base64 = base64Url.replace('-', '+').replace('_', '/');
-
-			return JSON.parse(window.atob(base64));
-		},
-
-		tryI18n: function(obj, key) {
-			return obj.hasOwnProperty(key) ? obj[key] : monster.util.formatVariableToDisplay(key);
-		},
-
-		// Functions used to replace displayed phone numbers by other "fake" numbers. Can be useful to generate marketing documents or screenshots with lots of data without showing sensitive information
-		protectSensitivePhoneNumbers: function() {
-			var self,
-				numbers = {},
-				logs = [],
-				printLogs = function() {
-					var str = '';
-
-					_.each(logs, function(item, index) {
-						str += index + ' - replace ' + item.oldValue + ' by ' + item.newValue + '\n';
-					});
-
-					console.log(str);
-				},
-				randomNumber = function(format) {
-					return (Math.floor(Math.random() * 9 * format) + 1 * format);
-				},
-				randomPhoneNumber = function() {
-					return '+1 555 ' + randomNumber(100) + ' ' + randomNumber(1000);
-				},
-				randomExtension = function() {
-					return '10' + randomNumber(10);
-				},
-				replacePhoneNumbers = function(element) {
-					var text = element.innerText,
-						regex = /(\+?[()\- \d]{10,})/g,
-						match = regex.exec(text);
-
-					while (match != null) {
-						var key = match[0],
-							formattedKey = monster.util.formatPhoneNumber(key);
-
-						if (!numbers.hasOwnProperty(formattedKey)) {
-							numbers[formattedKey] = randomPhoneNumber();
-						}
-
-						if (formattedKey !== key) {
-							replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
-						} else {
-							replaceHTML(element, key, numbers[key]);
-						}
-
-						match = regex.exec(text);
-					}
-				},
-				replaceExtensions = function(element) {
-					var text = element.innerText,
-						regex = /(\d{4,7})/g,
-						match = regex.exec(text);
-
-					while (match != null) {
-						var key = match[0];
-
-						if (!numbers.hasOwnProperty(key)) {
-							numbers[key] = randomExtension();
-						}
-
-						replaceHTML(element, key, numbers[key]);
-
-						match = regex.exec(text);
-					}
-				},
-				replaceHTML = function(element, oldValue, newValue) {
-					// First we need to escape the old value, since we're creating a regex out of it, we can't have special regex characters like the "+" that are often present in phone numbers
-					var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'),
-						// Then we create a regex, because we want to replace all the occurences in the innerHTML, not just the first one
-						regexOldValue = new RegExp(escapedOldvalue, 'g');
-
-					// Replace all occurences of old value by the new value
-					element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
-
-					logs.push({ oldValue: oldValue, newValue: newValue });
-				},
-				replaceBoth = function(element) {
-					replaceExtensions(element);
-					replacePhoneNumbers(element);
-				};
-
-			document.querySelectorAll('.number-div,.monster-phone-number-value,.phone-number').forEach(replacePhoneNumbers);
-			document.querySelectorAll('.extension').forEach(replaceExtensions);
-			document.querySelectorAll('span,.number,.sub-cell,.element-title, .multi-line-div').forEach(replaceBoth);
-
-			printLogs();
-		}
+		unformatPhoneNumber: unformatPhoneNumber,
+		unixToDate: unixToDate,
+		updateImagePath: updateImagePath
 	};
 
 	/**
-	 * Formats a string into a string representation of a MAC address, using
-	 * colons as separator.
+	 * Returns a randomly generated realm based on the logged in account's whitelabel document.
+	 * @return {String|Undefined}
+	 */
+	function generateAccountRealm() {
+		var realmSuffix = getRealmSuffix();
+		var isRealmSuffixNotConfigured = _.isUndefined(realmSuffix);
+
+		if (isRealmSuffixNotConfigured) {
+			return undefined;
+		}
+		return _.toLower(
+			randomString(7) + '.' + realmSuffix
+		);
+	}
+
+	/**
+	 * Returns the realm suffix of the logged in account's whitelabel document.
+	 * @return {String|Undefined}
+	 */
+	function getRealmSuffix() {
+		var realmSuffix = _.get(monster.config.whitelabel, 'realm_suffix');
+		var isNonEmptyString = _.overEvery(
+			_.isString,
+			_.negate(_.isEmpty)
+		);
+
+		return _.find([
+			realmSuffix
+		], isNonEmptyString);
+	}
+
+	/**
+	 * Automatically logout authenticated user afet `wait` minutes (defaults to 30).
+	 * Shows a warning popup `alertBeforeLogout` minutes before logging out (defaults to 2).
+	 * If the user moves his cursor, the timer resets.
+	 */
+	function autoLogout() {
+		var minutesUntilLogout = monster.config.whitelabel.logoutTimer;
+		var shouldScheduleAutoLogout = minutesUntilLogout > 0;
+
+		if (!shouldScheduleAutoLogout) {
+			return;
+		}
+		var i18n = monster.apps.core.i18n.active();
+		var minutesUntilAlert = minutesUntilLogout - 2;
+		var minutesToMilliseconds = _.partial(_.multiply, 60000);
+		var delayBeforeLogout = minutesToMilliseconds(minutesUntilLogout);
+		var delayBeforeAlert = minutesToMilliseconds(minutesUntilAlert);
+		var wasAlertTriggered = false;
+		var alertDialog;
+		var timerAlert;
+		var timerLogout;
+		var openAlertDialog = function() {
+			wasAlertTriggered = true;
+
+			alertDialog = monster.ui.alert(i18n.alertLogout);
+		};
+		var logout = function()	{
+			monster.pub('auth.logout');
+		};
+		var resetTimer = function() {
+			clearTimeout(timerAlert);
+			clearTimeout(timerLogout);
+
+			if (wasAlertTriggered) {
+				wasAlertTriggered = false;
+
+				alertDialog.dialog('close').remove();
+			}
+
+			timerAlert = setTimeout(openAlertDialog, delayBeforeAlert);
+			timerLogout = setTimeout(logout, delayBeforeLogout);
+		};
+
+		document.addEventListener('keydown', resetTimer);
+		document.addEventListener('mousemove', resetTimer);
+
+		resetTimer();
+	}
+
+	/**
+	 * Formats a string into a string representation of a MAC address, using colons as separator.
+	 * @param  {String} url
+	 * @return {String}
+	 *
+	 * Commenting this as we don't want to add this just yet. We have issues with this code because
+	 * versions from apps != versions in VERSION.
+	 *
+	 * If we were to use this, and just updated monster-ui-voip, the VERSION file wouldn't change,
+	 * which means we wouldn't change the query sting used to get assets from any app, even
+	 * monster-ui-voip...
+	 *
+	 * This only gets incremented when master build runs, whereas we need it to be changed when an
+	 * app is built as well...
+	 *
+	 * Leaving this here for now, might have to just remove and forget about it eventually :/
+	 */
+	function cacheUrl(url) {
+		return url;
+
+		// var prepend = url.indexOf('?') >= 0 ? '&' : '?';
+		// var isDev = monster.config.developerFlags.build.type === 'development';
+		// var devCacheString = (new Date()).getTime();
+		// var prodCacheString = getVersion();
+		// var cacheString = prepend + '_=' + (isDev ? devCacheString : prodCacheString);
+		// var finalString = url + cacheString;
+
+		// return finalString;
+	}
+
+	/**
+	 * Returns whether an account is allowed to add external phone numbers.
+	 * @param  {Object} [account] Account document to check against.
+	 * @return {Boolean}          Whether `account` is allowed to add external phone numbers.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function canAddExternalNumbers(account) {
+		return _.isMatch(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			{ wnm_allow_additions: true }
+		);
+	}
+
+	/**
+	 * Returns whether `accountId` has the ability to impersonate sub-account users.
+	 * @param  {String} accountId Account ID to check against.
+	 * @return {Boolean}           Whether `accountId` has the ability to impersonate.
+	 */
+	function canImpersonate(accountId) {
+		return isSuperDuper() && monster.apps.auth.originalAccount.id !== accountId;
+	}
+
+	/**
+	 * Prompts for user confirmation when `object` has non Monster-UI metadata.
+	 * @param  {Object} object    Object to check.
+	 * @param  {Function} [callback] Calback to execute on confirmation.
+	 */
+	function checkVersion(object, pCallback) {
+		var callback = pCallback || function() {};
+		var i18n = monster.apps.core.i18n.active();
+		var wasModifiedByDifferentUi = _.flow(
+			_.partial(_.get, _, 'ui_metadata.ui'),
+			_.overEvery(
+				_.negate(_.isUndefined),
+				_.partial(_.negate(_.isEqual), 'monster-ui')
+			)
+		);
+
+		if (!wasModifiedByDifferentUi(object)) {
+			return callback();
+		}
+		monster.ui.confirm(i18n.olderVersion, callback);
+	}
+
+	/**
+	 * Compare function for `Array#sort`.
+	 * @param  {*} a
+	 * @param  {*} b
+	 * @return {Number}
+	 */
+	function cmp(a, b) {
+		return a > b ? 1
+			: a < b ? -1
+			: 0;
+	}
+
+	/**
+	 * @param  {Date} date      Date to convert to gregorian.
+	 * @param  {String} [timezone] Timezone to set date in.
+	 * @return {Number}           Gregorian timestamp to beginning of day.
+	 */
+	function dateToBeginningOfGregorianDay(date, pTimezone) {
+		var dateToStartOfDay = moment(date).format('YYYYMMDD 000000');
+		var timezone = pTimezone || moment.tz.guess();
+		var unixTimestamp = moment.tz(dateToStartOfDay, timezone).unix();
+		return dateToGregorian(unixTimestamp);
+	}
+
+	/**
+	 * @param  {Date} date      Date to convert to gregorian.
+	 * @param  {String} [timezone] Timezone to set date in.
+	 * @return {Number}           Gregorian timestamp to end of day.
+	 */
+	function dateToEndOfGregorianDay(date, pTimezone) {
+		var dateToEndOfDay = moment(date).format('YYYYMMDD 235959');
+		var timezone = pTimezone || moment.tz.guess();
+		var unixTimestamp = moment.tz(dateToEndOfDay, timezone).unix();
+		return dateToGregorian(unixTimestamp);
+	}
+
+	/**
+	 * @param  {Date|Number} date Date or UNIX timestanp
+	 * @return {Number}      Gregorian timestamp.
+	 */
+	function dateToGregorian(date) {
+		var unixToGregorian = function(timestamp) {
+			return _.isNumber(timestamp) ? _.add(timestamp, 62167219200) : undefined;
+		};
+		var dateToGregorian = _.flow(
+			dateToUnix,
+			unixToGregorian
+		);
+
+		return _.isDate(date) ? dateToGregorian(date)
+			: _.isNumber(date) ? unixToGregorian(date)
+			: undefined;
+	}
+
+	/**
+	 * @param  {Date} date
+	 * @return {Number}      UNIX timestamp.
+	 */
+	function dateToUnix(date) {
+		return _.isDate(date) ? _.floor(date.getTime() / 1000) : undefined;
+	}
+
+	/**
+	 * Collects callflow nodes matching `module` and `data`.
+	 * @param  {Object} callflow Callfow object to scan.
+	 * @param  {String} module   Node module to look for.
+	 * @param  {Object} [data]   Node metadata to match.
+	 * @return {Object|Object[]}          Nodes matching `module`/`data`.
+	 */
+	function findCallflowNode(callflow, module, data) {
+		var result = [];
+		var matchNode = function(node) {
+			if (node.module === module) {
+				if (!data || _.isEqual(data, node.data)) {
+					result.push(node);
+				}
+			}
+			_.each(node.children, function(child) {
+				matchNode(child);
+			});
+		};
+
+		matchNode(callflow.flow);
+
+		return result.length > 1 ? result : result[0];
+	}
+
+	/**
+	 * Parses bytes value into human readable value/unit pair.
+	 * @param  {Number} bytes   Value in bytes to format
+	 * @param  {Number} [digits] Digits after decimal point
+	 *                          default: 0 if multiple is < GB, 1 if multiple is >= GB
+	 * @return {Object}         Formatted data about `bytes`.
+	 */
+	function formatBytes(bytes, pDigits) {
+		var base = 1000;
+		var sizes = monster.apps.core.i18n.active().unitsMultiple.byte;
+		var exponent = Math.floor(Math.log(bytes) / Math.log(base));
+		var value = bytes / Math.pow(base, exponent);
+		var digits = pDigits || (exponent > 2 ? 1 : 0);
+
+		if (bytes === 0) {
+			return {
+				value: 0,
+				unit: sizes[0]
+			};
+		} else {
+			return {
+				value: value.toFixed(digits),
+				unit: sizes[exponent]
+			};
+		}
+	}
+
+	/**
+	 * Formats a string into a string representation of a MAC address, using colons as separator.
 	 * @param  {String} macAddress   String to format as MAC address.
 	 * @return {String}              String representation of a MAC address.
 	 */
@@ -860,7 +369,6 @@ define(function(require) {
 			? matches.slice(0, 6).join(':')
 			: '';
 	}
-	util.formatMacAddress = formatMacAddress;
 
 	/**
 	 * Wrapper over Intl.NumberFormat constructor's format function
@@ -903,15 +411,14 @@ define(function(require) {
 		});
 		return formatter.format(number);
 	}
-	util.formatNumber = formatNumber;
 
 	/**
 	 * Phone number formatting according to user preferences.
 	 * @param  {Number|String} phoneNumber Input to format as phone number
 	 * @return {String}                    Input formatted as phone number
 	 *
-	 * Warning: this method is used to format entities other than phone
-	 * numbers (e.g. extensions) so keep that in mind if you plan to update it.
+	 * Warning: this method is used to format entities other than phone numbers (e.g. extensions)
+	 * so keep that in mind if you plan to update it.
 	 */
 	function formatPhoneNumber(input) {
 		var phoneNumber = getFormatPhoneNumber(input);
@@ -919,22 +426,19 @@ define(function(require) {
 			? _.get(phoneNumber, 'userFormat')
 			: _.toString(input);
 	}
-	util.formatPhoneNumber = formatPhoneNumber;
 
 	/**
 	 * Decimal and currency formatting for prices
 	 * @deprecated
 	 * @param  {Object}  args
-	 * @param  {Number}  args.price        Price to format (number or string
-	 *                                     representation of a number).
-	 * @param  {Number}  args.digits       Number of digits to appear after the
-	 *                                     decimal point.
+	 * @param  {Number}  args.price        Price to format (number or string representation of a
+	 *                                     number).
+	 * @param  {Number}  args.digits       Number of digits to appear after the decimal point.
 	 * @param  {Boolean} args.withCurrency Hide/show currency symbol.
 	 * @return {String}                    String representation of `price`.
 	 *
-	 * If `digits` is not specified, integers will have no digits and floating
-	 * numbers with at least one significant number after the decimal point
-	 * will have two digits.
+	 * If `digits` is not specified, integers will have no digits and floating numbers with at least
+	 * one significant number after the decimal point will have two digits.
 	 */
 	function formatPrice(args) {
 		if (
@@ -963,13 +467,11 @@ define(function(require) {
 
 		return formatter.format(price);
 	}
-	util.formatPrice = formatPrice;
 
 	/**
 	 * Takes a string and replace all the "_" from it with a " ".
 	 * Also capitalizes first word.
-	 * Useful to display hardcoded data from the database that hasn't make it to
-	 * the i18n files.
+	 * Useful to display hardcoded data from the database that hasn't make it to the i18n files.
 	 * @param  {*} variable Value to format.
 	 * @return {String} Formatted string representation of the value.
 	 */
@@ -981,7 +483,251 @@ define(function(require) {
 			.replace(/\w\S*/g, _.capitalize)
 			.value();
 	}
-	util.formatVariableToDisplay = formatVariableToDisplay;
+
+	/**
+	 * Returns an app's icon path/URL.
+	 * @param  {Object} app
+	 * @param  {String} app.name
+	 * @param  {String} app.id
+	 * @return {String}
+	 *
+	 * Some app have their icons loaded locally, whereas some new apps won't have them.
+	 */
+	function getAppIconPath(app) {
+		var authApp = monster.apps.auth;
+		var localIcons = [
+			'accounts',
+			'auth-security',
+			'blacklists',
+			'branding',
+			'callflows',
+			'callqueues',
+			'call-recording',
+			'carriers',
+			'cluster',
+			'conferences',
+			'csv-onboarding',
+			'debug',
+			'developer',
+			'dialplans',
+			'duo',
+			'fax',
+			'integration-aws',
+			'integration-google-drive',
+			'migration',
+			'mobile',
+			'myaccount',
+			'numbers',
+			'operator',
+			'operator-pro',
+			'pbxs',
+			'pivot',
+			'port',
+			'provisioner',
+			'reporting',
+			'reseller_reporting',
+			'service-plan-override',
+			'tasks',
+			'taxation',
+			'userportal',
+			'voicemails',
+			'voip',
+			'webhooks',
+			'websockets'
+		];
+
+		if (_.includes(localIcons, app.name)) {
+			return 'css/assets/appIcons/' + app.name + '.png';
+		} else {
+			return _.join([
+				authApp.apiUrl,
+				'accounts/',
+				authApp.accountId,
+				'/apps_store/',
+				app.id,
+				'/icon?auth_token=',
+				getAuthToken()
+			], '');
+		}
+	}
+
+	/**
+	 * @param  {Object[]} apps List of apps to get app metadata from.
+	 * @param  {String} input Either an app id or name to look for in `apps`.
+	 * @return {Object} Formatted app metadata.
+	 */
+	function getAppMetadata(apps, input) {
+		var app = _.find(apps, _.overSome(
+			_.flow(
+				_.partial(_.get, _, 'id'),
+				_.partial(_.isEqual, input)
+			),
+			_.flow(
+				_.partial(_.get, _, 'name'),
+				_.partial(_.isEqual, input)
+			)
+		));
+
+		if (_.isUndefined(app)) {
+			return undefined;
+		}
+
+		var iconMetadata = _.merge({
+			icon: getAppIconPath(app)
+		}, _.includes(['alpha', 'beta'], app.phase) && {
+			extraCssClass: app.phase + '-overlay-icon'
+		});
+		var locale = _.find([
+			monster.config.whitelabel.language,
+			monster.defaultLanguage,
+			_.head(_.keys(app.i18n))
+		], _.partial(_.has, app.i18n));
+		var activeI18n = _.get(app.i18n, locale);
+
+		return _.merge({}, _.omit(app, 'i18n'), activeI18n, iconMetadata);
+	}
+
+	/**
+	 * @param  {String} input Either an app id or name to look for in the apps store.
+	 * @return {Object} Formatted app metadata.
+	 */
+	function getAppStoreMetadata(input) {
+		return getAppMetadata(
+			_.get(monster.apps, 'auth.appsStore', []),
+			input
+		);
+	}
+
+	/**
+	 * @param  {Object[]} apps List of apps to filter by `scope`.
+	 * @param  {'all'|'account'|'user'} scope Scope to filter `apps` against.
+	 * @return {Object[]} List of `apps` filtered for a `scope`.
+	 */
+	function listAppsMetadata(apps, scope) {
+		var filterForAccount = _.partial(_.filter, _, _.flow(
+			_.partial(_.ary(_.get, 2), _, 'allowed_users'),
+			_.overEvery(
+				_.isString,
+				_.partial(_.negate(_.isEqual), 'specific')
+			)
+		));
+		var isCurrentUserPermittedApp = _.partial(
+			isUserPermittedApp,
+			_.get(monster.apps, 'auth.currentUser')
+		);
+		var filterForCurrentUser = _.partial(_.filter, _, isCurrentUserPermittedApp);
+		var getFilterForScope = function(pScope) {
+			var filtersPerScope = {
+				undefined: _.identity,
+				all: _.identity,
+				account: filterForAccount,
+				user: filterForCurrentUser
+			};
+			var scope = _
+				.chain(filtersPerScope)
+				.keys()
+				.find(_.partial(_.isEqual, pScope))
+				.value();
+
+			return _.get(filtersPerScope, scope);
+		};
+		var formatMetadata = _.flow(
+			_.partial(_.ary(_.get, 2), _, 'id'),
+			_.partial(getAppMetadata, apps)
+		);
+
+		return _
+			.chain(apps)
+			.thru(getFilterForScope(scope))
+			.map(formatMetadata)
+			.value();
+	}
+
+	/**
+	 * @param  {String} scope
+	 * @return {Object[]}
+	 */
+	function listAppStoreMetadata(scope) {
+		return listAppsMetadata(
+			_.get(monster.apps, 'auth.appsStore', []),
+			scope
+		);
+	}
+
+	/**
+	 * Returns auth token for `connectionName`.
+	 * @param  {String} [connectionName]
+	 * @return {String}                 Auth token for `connectionName`.
+	 */
+	function getAuthToken(connectionName) {
+		return isLoggedIn()
+			? monster.apps.auth.getAuthTokenByConnection(connectionName)
+			: undefined;
+	}
+
+	/**
+	 * Parses an amount of seconds and returns a time representation such as [DD:]HH:MM:SS.
+	 * @param  {Number} seconds Amount of seconds to format.
+	 * @param  {'verbose'|'shortVerbose'} [mode] Formatting type of time representation.
+	 * @return {String} Time representation of `seconds`.
+	 */
+	function friendlyTimer(seconds, pMode) {
+		var mode = pMode || 'normal';
+		var seconds = Math.floor(seconds);
+		var minutes = Math.floor(seconds / 60) % 60;
+		var hours = Math.floor(seconds / 3600) % 24;
+		var days = Math.floor(seconds / 86400);
+		var remainingSeconds = seconds % 60;
+		var i18n = monster.apps.core.i18n.active();
+		var format2Digits = function(number) {
+			if (typeof number === 'string') {
+				number = parseInt(number);
+			}
+			return (number < 10 ? '0' : '') + number;
+		};
+		var getString = function(quantity, keys) {
+			return i18n.friendlyTimer[quantity === 1 ? keys[0] : keys[1]];
+		};
+		var displayTime = '';
+
+		if (mode === 'verbose') {
+			displayTime = _.join([
+				hours,
+				i18n.friendlyTimer.hours + ',',
+				minutes,
+				i18n.friendlyTimer.minutesAnd,
+				remainingSeconds,
+				i18n.friendlyTimer.seconds
+			], ' ');
+		} else if (mode === 'shortVerbose') {
+			if (hours > 0) {
+				var stringHour = getString(hours, ['hour', 'hours']);
+				displayTime = displayTime.concat(hours, ' ', stringHour, ' ');
+			}
+
+			if (minutes > 0) {
+				var stringMinutes = getString(minutes, ['minute', 'minutes']);
+				displayTime = displayTime.concat(minutes, ' ', stringMinutes, ' ');
+			}
+
+			if (remainingSeconds > 0) {
+				var stringSeconds = getString(remainingSeconds, ['second', 'seconds']);
+				displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
+			}
+		} else {
+			displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
+
+			if (hours || days) {
+				displayTime = format2Digits(hours) + ':' + displayTime;
+			}
+
+			if (days) {
+				displayTime = format2Digits(days) + ':' + displayTime;
+			}
+		}
+
+		return seconds >= 0 ? displayTime : '00:00:00';
+	}
 
 	/**
 	 * Returns a list of bookkeepers available for Monster UI
@@ -1017,7 +763,49 @@ define(function(require) {
 				.value()
 		]);
 	}
-	util.getBookkeepers = getBookkeepers;
+
+	/**
+	 * Adds/removes business days to/from the current date or a specific date.
+	 * @param  {Number} numberOfDays Number of business days to add/remove.
+	 * @param  {Date} [from]        Specific date to calculate from.
+	 * @return {Date}              Adjusted date.
+	 */
+	function getBusinessDate(numberOfDays, pFrom) {
+		var from = _.isDate(pFrom) ? pFrom : new Date();
+		var weeks = Math.floor(numberOfDays / 5);
+		var days = ((numberOfDays % 5) + 5) % 5;
+		var dayOfTheWeek = from.getDay();
+
+		if (dayOfTheWeek === 6 && days > -1) {
+			if (days === 0) {
+				days -= 2;
+				dayOfTheWeek += 2;
+			}
+
+			days++;
+			dayOfTheWeek -= 6;
+		}
+
+		if (dayOfTheWeek === 0 && days < 1) {
+			if (days === 0) {
+				days += 2;
+				dayOfTheWeek -= 2;
+			}
+
+			days--;
+			dayOfTheWeek += 6;
+		}
+
+		if (dayOfTheWeek + days > 5) {
+			days += 2;
+		}
+
+		if (dayOfTheWeek + days < 1) {
+			days -= 2;
+		}
+
+		return new Date(from.setDate(from.getDate() + weeks * 7 + days));
+	}
 
 	/**
 	 * Returns capability information about a resource/feature.
@@ -1040,7 +828,6 @@ define(function(require) {
 			defaultValue: _.get(node, 'default')
 		} : {});
 	}
-	util.getCapability = getCapability;
 
 	/**
 	 * Return the symbol of the currency used through the UI
@@ -1055,25 +842,104 @@ define(function(require) {
 
 		return formatter.format(base).replace('NaN', '').trim();
 	}
-	util.getCurrencySymbol = getCurrencySymbol;
 
 	/**
 	 * Returns the timezone of the currently authenticated session
 	 * @return {String}  Current time zone identifier.
 	 *
-	 * By default, the time zone of the logged in user will be returned. If that
-	 * time zone is not set, then the account time zone will be used. If not set,
-	 * the browser’s time zone will be used as a last resort.
+	 * By default, the time zone of the logged in user will be returned. If that time zone is not
+	 * set, then the account time zone will be used. If not set, the browser’s time zone will be
+	 * used as a last resort.
 	 */
 	function getCurrentTimeZone() {
 		return _.get(monster, 'apps.auth.currentUser.timezone')
 			|| _.get(monster, 'apps.auth.currentAccount.timezone')
 			|| moment.tz.guess();
 	}
-	util.getCurrentTimeZone = getCurrentTimeZone;
+
+	/**
+	 * Returns the app considered as default for current user.
+	 * @return {Object|Undefined} Current user's default app.
+	 *
+	 * When user document does not have an `appList`, defaults to using the first user accessible
+	 * app from app store.
+	 * When user does not have access to any app, returns `undefined`.
+	 */
+	function getCurrentUserDefaultApp() {
+		var user = _.get(monster.apps, 'auth.currentUser', {});
+		var validApps = listAppStoreMetadata('user');
+		var validAppIds = _.map(validApps, 'id');
+
+		return _
+			.chain(user)
+			.get('appList', [])
+			.find(_.partial(_.includes, validAppIds))
+			.thru(getAppStoreMetadata)
+			.defaultTo(_.head(validApps))
+			.value();
+	}
+
+	/**
+	 * @private
+	 * @return {Object} Data flags manager module.
+	 */
+	function getDataFlagsManager() {
+		var getPath = _.partial(_.concat, ['markers', 'monster']);
+		return {
+			get: function(name, object) {
+				return _.get(object, getPath(name));
+			},
+			add: function(flags, object) {
+				_.set(object, getPath(), flags);
+				return object;
+			},
+			destroy: function(name, object) {
+				_.unset(object, getPath(name));
+				return object;
+			}
+		};
+	}
+
+	/**
+	 * Returns numbers formatting strategy for the original account.
+	 * @return {String} Numbers formatting strategy.
+	 */
+	function getDefaultNumbersFormat() {
+		var account = _.get(monster.apps, 'auth.originalAccount', {});
+
+		return _.get(account, 'ui_flags.numbers_format', 'international');
+	}
+
+	/**
+	 * @param  {'monthly'|Number} [range=7]
+	 * @return {Object}
+	 */
+	function getDefaultRangeDates(pRange) {
+		var range = pRange || 7;
+		var now = moment();
+		var params = range === 'monthly' ? {
+			quantity: 1,
+			period: 'month'
+		} : {
+			quantity: range,
+			period: 'days'
+		};
+
+		return {
+			from: now
+				.clone()
+				.subtract(params.quantity, params.period)
+				.add(1, 'days')
+				.toDate(),
+			to: now.toDate()
+		};
+	}
 
 	function getFormatPhoneNumber(input) {
-		var phoneNumber = libphonenumber.parsePhoneNumberFromString(_.toString(input), monster.config.whitelabel.countryCode);
+		var phoneNumber = libphonenumber.parsePhoneNumberFromString(
+			_.toString(input),
+			monster.config.whitelabel.countryCode
+		);
 		var user = _.get(monster, 'apps.auth.currentUser', {});
 		var account = _.get(monster, 'apps.auth.originalAccount', {});
 		var formattedData = {
@@ -1082,20 +948,20 @@ define(function(require) {
 			userFormat: input // Setting it as a default, in case the number is not valid
 		};
 		var getUserFormatFromEntity = function(entity, data) {
-			var response = '';
+			var isException = _.flow(
+				_.partial(_.get, _, 'ui_flags.numbers_format_exceptions', []),
+				_.partial(_.includes, _, _.get(data, 'country.code'))
+			);
+			var rawFormat = entity.ui_flags.numbers_format;
+			var format = rawFormat !== 'international_with_exceptions' ? rawFormat
+				: isException(entity) ? 'national'
+				: 'international';
+			var formatter = _.get({
+				national: _.partial(_.get, _, 'nationalFormat'),
+				international: _.partial(_.get, _, 'internationalFormat')
+			}, format);
 
-			if (entity.ui_flags.numbers_format === 'national') {
-				response = data.nationalFormat;
-			} else if (entity.ui_flags.numbers_format === 'international') {
-				response = data.internationalFormat;
-			} else if (entity.ui_flags.numbers_format === 'international_with_exceptions') {
-				if (_.includes(_.get(entity, 'ui_flags.numbers_format_exceptions', []), data.country.code)) {
-					response = data.nationalFormat;
-				} else {
-					response = data.internationalFormat;
-				}
-			}
-			return response;
+			return formatter(data);
 		};
 
 		if (
@@ -1136,7 +1002,19 @@ define(function(require) {
 
 		return formattedData;
 	}
-	util.getFormatPhoneNumber = getFormatPhoneNumber;
+
+	/**
+	 * Prepends MoDB prefix to a value when it does not already starts with it.
+	 * @param  {String} id        Value to be prepended.
+	 * @param  {Number} gregorian Gregorian timestamp.
+	 * @return {String}           MoDB identifier.
+	 */
+	function getModbID(id, gregorian) {
+		var date = gregorianToDate(gregorian);
+		var prefix = moment(date).utc().format('YYYYMM-');
+
+		return _.startsWith(id, prefix) ? id : prefix + id;
+	}
 
 	/**
 	 * Determine the date format from a specific or current user's settings
@@ -1207,6 +1085,48 @@ define(function(require) {
 	}
 
 	/**
+	 * Finds the smallest number not in `list`, greater or equal to 1000.
+	 * @param  {String[]} list Values treated as existing numbers.
+	 * @return {Number}      Next number.
+	 */
+	function getNextExtension(list) {
+		var minNumber = 1000;
+		var isLessThan = function(a, b) {
+			return _.every([
+				_.every([a, b], _.isNumber),
+				a < b
+			]);
+		};
+		var isNonConsecutive = function(number, index, list) {
+			var next = list[index + 1];
+			var upperBound = _.isUndefined(next) ? Infinity : next;
+			var candidate = number + 1;
+
+			return isLessThan(candidate, upperBound);
+		};
+		var findFirstNonConsecutiveNumber = _.partial(_.find, _, isNonConsecutive);
+		var getNextNumber = _.flow(
+			_.sortBy,
+			_.sortedUniq,
+			findFirstNonConsecutiveNumber,
+			_.partial(_.add, 1)
+		);
+		var isInvalidNumber = _.overSome(
+			_.isNaN,
+			_.negate(_.isFinite),
+			_.partial(isLessThan, _, minNumber)
+		);
+		var sanitized = _
+			.chain(list)
+			.map(_.ary(_.parseInt, 1))
+			.reject(isInvalidNumber)
+			.value();
+		var isMinNumberUnused = _.isEmpty(sanitized) || !_.includes(sanitized, minNumber);
+
+		return isMinNumberUnused ? minNumber : getNextNumber(sanitized);
+	}
+
+	/**
 	 * Returns a list of features available for a Kazoo phone number.
 	 * @param  {Object} number  Phone number object, which contains the features details
 	 * @return {String[]}       Number's available features
@@ -1223,7 +1143,45 @@ define(function(require) {
 		});
 		return _.get(number, pathToFeatures, []);
 	}
-	util.getNumberFeatures = getNumberFeatures;
+
+	/**
+	 * To keep the structure of the help settings consistent, we built this helper so devs don't
+	 * have to know the exact structure internal function used by different apps to set their own
+	 * help flags.
+	 * @private
+	 * @param  {'account'|'user'} context Context to use.
+	 * @return {Object} UI flags manager module.
+	 */
+	function getUiFlagsManager(context) {
+		var appliersPerContext = {
+			account: function(func) {
+				return function(object, app, flag, value) {
+					var path = ['ui_flags', app, flag];
+					return func(object || monster.apps.auth.currentAccount, path, value);
+				};
+			},
+			user: function(func) {
+				return function(object, app, flag, value) {
+					var path = ['ui_help', app, flag];
+					return func(object || monster.apps.auth.currentUser, path, value);
+				};
+			}
+		};
+		var applier = _.get(appliersPerContext, context);
+		var unset = function(object, path) {
+			_.unset(object, path);
+			if (_.isEmpty(_.get(object, _.slice(path, -1), ''))) {
+				_.unset(object, _.slice(path, -1));
+			}
+			return object;
+		};
+
+		return {
+			get: applier(_.get),
+			set: applier(_.set),
+			destroy: applier(unset)
+		};
+	}
 
 	/**
 	 * Returns map of URL parameters, with the option to return the value of a specific parameter
@@ -1334,18 +1292,17 @@ define(function(require) {
 
 		return getUrlParams(window.location);
 	}
-	util.getUrlVars = getUrlVars;
 
 	/**
-	 * Returns the full name of a specific user or, if missing, of the currently
-	 * logged in user.
-	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * Returns the full name of a specific user or, if missing, of the currently logged in user.
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and
+	 *                                    last_name
 	 * @param  {String} pUser.first_name  User's first name
 	 * @param  {String} pUser.last_name   User's last name
 	 * @return {String}                   User's full name
 	 */
 	function getUserFullName(pUser) {
-		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+		if (_.isUndefined(pUser) && !isLoggedIn()) {
 			throw new Error('There is no logged in user');
 		}
 		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
@@ -1370,20 +1327,20 @@ define(function(require) {
 			}
 		});
 	}
-	util.getUserFullName = getUserFullName;
 
 	/**
-	 * Returns the initials (two characters) of a specific user or,
-	 * if missing, of the currently logged in user.
+	 * Returns the initials (two characters) of a specific user or, if missing, of the currently
+	 * logged in user.
 	 *
-	 * @param  {Object} [pUser]           User object, that contains at least first_name and last_name
+	 * @param  {Object} [pUser]           User object, that contains at least first_name and
+	 *                                    last_name
 	 * @param  {String} pUser.first_name  User's first name
 	 * @param  {String} pUser.last_name   User's last name
 	 *
 	 * @return {String}                   User's initials
 	 */
 	function getUserInitials(pUser) {
-		if (_.isUndefined(pUser) && !monster.util.isLoggedIn()) {
+		if (_.isUndefined(pUser) && !isLoggedIn()) {
 			throw new Error('There is no logged in user');
 		}
 		if (!_.isUndefined(pUser) && !_.isPlainObject(pUser)) {
@@ -1403,7 +1360,14 @@ define(function(require) {
 
 		return (user.first_name || '').charAt(0) + (user.last_name || '').charAt(0);
 	}
-	util.getUserInitials = getUserInitials;
+
+	/**
+	 * Returns Monster-UI version number.
+	 * @return {String} Monster-UI version number.
+	 */
+	function getVersion() {
+		return monster.config.developerFlags.build.version;
+	}
 
 	/**
 	 * Converts a Gregorian timestamp into a Date instance
@@ -1419,7 +1383,48 @@ define(function(require) {
 		}
 		return new Date((_.floor(timestamp) - 62167219200) * 1000);
 	}
-	util.gregorianToDate = gregorianToDate;
+
+	/**
+	 * Returns a globally unique identifier.
+	 * @return {String} Identifier.
+	 */
+	function guid() {
+		var result = '';
+
+		for (var i = 0; i < 4; i++) {
+			result += (Math.random().toString(16) + '000000000').substr(2, 8);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns whether a user has admin privileges.
+	 * @param  {Object}  [user] User document to check against.
+	 * @return {Boolean}      Whether `user` has admin privileges.
+	 *
+	 * When no `user` is provided, check against current user.
+	 */
+	function isAdmin(user) {
+		return _.isMatch(
+			user || _.get(monster.apps, 'auth.currentUser', {}),
+			{ priv_level: 'admin' }
+		);
+	}
+
+	/**
+	 * Returns whether a value can be converted into JSON.
+	 * @param  {*}  value Value to check.
+	 * @return {Boolean}     Whether `value` can be converted into JSON.
+	 */
+	function isJSON(value) {
+		try {
+			JSON.stringify(value);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Returns whether or not a user is logged in
@@ -1428,7 +1433,24 @@ define(function(require) {
 	function isLoggedIn() {
 		return _.get(monster, 'apps.auth.appFlags.isAuthentified', false);
 	}
-	util.isLoggedIn = isLoggedIn;
+
+	/**
+	 * Returns whether current account is masquerading.
+	 * @return {Boolean} Whether current account is masquerading.
+	 */
+	function isMasquerading() {
+		return _
+			.chain([
+				'auth.originalAccount.id',
+				'auth.accountId'
+			])
+			.map(_.partial(_.ary(_.get, 2), monster.apps))
+			.thru(_.overEvery(
+				_.partial(_.every, _, _.isString),
+				_.spread(_.negate(_.isEqual))
+			))
+			.value();
+	}
 
 	/**
 	 * Determine if a specific number feature is enabled on the current account
@@ -1436,9 +1458,9 @@ define(function(require) {
 	 * @param  {Object}  pAccount Account object to check from (optional)
 	 * @return {Boolean}          Indicate whether or not the feature is enabled
 	 *
-	 * The check is made against a flag in the account document but it can be
-	 * overridden by a flag in `config.js/whitelabel.disableNumbersFeatures`. If
-	 * none of those flags are set, it will return `true` by default.
+	 * The check is made against a flag in the account document but it can be overridden by a flag
+	 * in `config.js/whitelabel.disableNumbersFeatures`. If none of those flags are set, it will
+	 * return `true` by default.
 	 */
 	function isNumberFeatureEnabled(feature, pAccount) {
 		return monster.config.whitelabel.disableNumbersFeatures
@@ -1452,7 +1474,6 @@ define(function(require) {
 				true
 			);
 	}
-	util.isNumberFeatureEnabled = isNumberFeatureEnabled;
 
 	/**
 	 * Returns whether or not the account provided is a reseller or not.
@@ -1463,7 +1484,249 @@ define(function(require) {
 		var account = pAccount || _.get(monster, 'apps.auth.originalAccount', {});
 		return _.get(account, 'is_reseller', false);
 	}
-	util.isReseller = isReseller;
+
+	/**
+	 * Returns whether an account is superduper admin.
+	 * @param  {Object}  [account] Account document to check against.
+	 * @return {Boolean}         Whether `account` is superduper admin.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function isSuperDuper(account) {
+		return _.isMatch(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			{ superduper_admin: true }
+		);
+	}
+
+	/**
+	 * Returns whether an account is in trial period.
+	 * @param  {Object}  [account] Account document to check against.
+	 * @return {Boolean}         Whether `account` is on Trial.
+	 *
+	 * When no `account` is provided, check against original account.
+	 */
+	function isTrial(account) {
+		return _.has(
+			account || _.get(monster.apps, 'auth.originalAccount', {}),
+			'trial_time_left'
+		);
+	}
+
+	/**
+	 * Returns whether a user is allowed to access an app.
+	 * @param  {Object}  user User document to check against.
+	 * @param  {Object}  app  App metadata to check for.
+	 * @return {Boolean}      Whether `user` has access to `app`.
+	 */
+	function isUserPermittedApp(user, app) {
+		var allowedIds = _
+			.chain(app)
+			.get('users', [])
+			.map('id')
+			.value();
+		var checksPerPermission = {
+			all: function() {
+				return true;
+			},
+			admins: _.flow(
+				_.partial(_.get, _, 'priv_level'),
+				_.partial(_.isEqual, 'admin')
+			),
+			specific: _.flow(
+				_.partial(_.get, _, 'id'),
+				_.partial(_.includes, allowedIds)
+			),
+			undefined: function() {
+				return false;
+			}
+		};
+		var permission = _
+			.chain(checksPerPermission)
+			.keys()
+			.find(_.partial(_.isEqual, _.get(app, 'allowed_users')))
+			.value();
+		var checkForPermission = _.get(checksPerPermission, permission);
+
+		return checkForPermission(user);
+	}
+
+	/**
+	 * Returns whether whitelabelling is configured for current domain.
+	 * @return {Boolean} Whether whitelabelling is configured for current domain.
+	 */
+	function isWhitelabeling() {
+		return !_
+			.chain(monster.config.whitelabel)
+			.get('domain')
+			.isEmpty()
+			.value();
+	}
+
+	/**
+	 * Returns object representation of decoded JWT.
+	 * @param  {String} token     JWT to decode.
+	 * @return {Object|Undefined} Object representation of decoded `token`.
+	 */
+	function jwt_decode(token) {
+		var base64Url = token.split('.')[1];
+		var base64 = base64Url.replace('-', '+').replace('_', '/');
+		var object;
+
+		try {
+			object = JSON.parse(atob(base64));
+		} catch (error) {
+			object = undefined;
+		}
+
+		return object;
+	}
+
+	/**
+	 * Returns list of formatted app links defined on whitelabel document.
+	 * @return {Object[]} List of formatted app links.
+	 */
+	function listAppLinks() {
+		var getOneKey = _.flow(
+			_.keys,
+			_.head
+		);
+		var formatLink = _.partial(function(locales, metadata, url) {
+			var locale = _
+					.chain(locales)
+					.find(_.partial(_.has, metadata.i18n))
+					.defaultTo(getOneKey(metadata.i18n))
+					.value(),
+				i18n = _.get(metadata.i18n, locale, {});
+
+			return _.merge({
+				id: url
+			}, _.pick(metadata, [
+				'icon'
+			]), _.pick(i18n, [
+				'label',
+				'description'
+			]));
+		}, [
+			monster.config.whitelabel.language,
+			monster.defaultLanguage
+		]);
+		var hasInvalidProps = _.partial(function(props, link) {
+			return _.some(props, _.flow(
+				_.partial(_.get, link),
+				_.negate(_.isString)
+			));
+		}, [
+			'id',
+			'icon',
+			'label'
+		]);
+
+		return _
+			.chain(monster.config.whitelabel.appLinks)
+			.map(formatLink)
+			.reject(hasInvalidProps)
+			.value();
+	}
+
+	/**
+	 * Function used to replace displayed phone numbers by "fake" numbers.
+	 * Can be useful to generate marketing documents or screenshots with lots of data without
+	 * showing sensitive information.
+	 */
+	function protectSensitivePhoneNumbers() {
+		var numbers = {};
+		var logs = [];
+		var printLogs = function() {
+			var str = '';
+
+			_.each(logs, function(item, index) {
+				str += index + ' - replace ' + item.oldValue + ' by ' + item.newValue + '\n';
+			});
+
+			console.log(str);
+		};
+		var randomNumber = function(format) {
+			return (Math.floor(Math.random() * 9 * format) + 1 * format);
+		};
+		var randomPhoneNumber = function() {
+			return '+1 555 ' + randomNumber(100) + ' ' + randomNumber(1000);
+		};
+		var randomExtension = function() {
+			return '10' + randomNumber(10);
+		};
+		var replacePhoneNumbers = function(element) {
+			var text = element.innerText;
+			var regex = /(\+?[()\- \d]{10,})/g;
+			var match = regex.exec(text);
+
+			while (match != null) {
+				var key = match[0];
+				var formattedKey = formatPhoneNumber(key);
+
+				if (!numbers.hasOwnProperty(formattedKey)) {
+					numbers[formattedKey] = randomPhoneNumber();
+				}
+
+				if (formattedKey !== key) {
+					replaceHTML(element, key, unformatPhoneNumber(numbers[formattedKey]));
+				} else {
+					replaceHTML(element, key, numbers[key]);
+				}
+
+				match = regex.exec(text);
+			}
+		};
+		var replaceExtensions = function(element) {
+			var text = element.innerText;
+			var regex = /(\d{4,7})/g;
+			var match = regex.exec(text);
+
+			while (match != null) {
+				var key = match[0];
+
+				if (!numbers.hasOwnProperty(key)) {
+					numbers[key] = randomExtension();
+				}
+
+				replaceHTML(element, key, numbers[key]);
+
+				match = regex.exec(text);
+			}
+		};
+		var replaceHTML = function(element, oldValue, newValue) {
+			// First we need to escape the old value, since we're creating a regex out of it, we
+			// can't have special regex characters like the "+" that are often present in phone
+			// numbers
+			var escapedOldvalue = oldValue.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+			// Then we create a regex, because we want to replace all the occurences in the
+			// innerHTML, not just the first one
+			var regexOldValue = new RegExp(escapedOldvalue, 'g');
+
+			// Replace all occurences of old value by the new value
+			element.innerHTML = element.innerHTML.replace(regexOldValue, newValue);
+
+			logs.push({ oldValue: oldValue, newValue: newValue });
+		};
+		var replaceBoth = function(element) {
+			replaceExtensions(element);
+			replacePhoneNumbers(element);
+		};
+
+		document
+			.querySelectorAll('.number-div,.monster-phone-number-value,.phone-number')
+			.forEach(replacePhoneNumbers);
+		document
+			.querySelectorAll('.extension')
+			.forEach(replaceExtensions);
+		document
+			.querySelectorAll('span,.number,.sub-cell,.element-title, .multi-line-div')
+			.forEach(replaceBoth);
+
+		if (!monster.isEnvironmentProd()) {
+			printLogs();
+		}
+	}
 
 	/**
 	 * Generates a string of `length` random characters chosen from either a
@@ -1514,7 +1777,62 @@ define(function(require) {
 				.join('')
 				.value();
 	}
-	util.randomString = randomString;
+
+	/**
+	 * Reloads current URL or SSO logout one if configured.
+	 */
+	function reload() {
+		if (monster.config.whitelabel.hasOwnProperty('sso')) {
+			var sso = monster.config.whitelabel.sso;
+			/* this didn't work
+				$.cookie(sso.cookie.name, null, {domain : sso.cookie.domain ,path:'/'});
+			*/
+
+			window.location = sso.logout;
+		} else {
+			window.location = window.location.pathname;
+		}
+	}
+
+	/**
+	 * Unset authentication related cookies.
+	 */
+	function resetAuthCookies() {
+		monster.cookies.remove('monster-auth');
+		monster.cookies.remove('monster-sso-auth');
+	}
+
+	/**
+	 * Triggers logout metchanism.
+	 */
+	function logoutAndReload() {
+		// Unbind window events before logout, via namespace (useful for events like 'beforeunload',
+		// which may block the logout action)
+		$(window).off('.unbindBeforeLogout');
+
+		resetAuthCookies();
+
+		reload();
+	}
+
+	/**
+	 * @param  {String} time Time in hh:mmA format
+	 * @return {String}      Amount of seconds in `time`.
+	 */
+	function timeToSeconds(time) {
+		var suffix = time.substring(time.length - 2).toLowerCase();
+		var timeArr = time.split(':');
+		var hours = parseInt(timeArr[0], 10);
+		var minutes = parseInt(timeArr[1], 10);
+
+		if (suffix === 'pm' && hours < 12) {
+			hours += 12;
+		} else if (suffix === 'am' && hours === 12) {
+			hours = 0;
+		}
+
+		return (hours * 3600 + minutes * 60).toString();
+	}
 
 	/**
 	 * Formats a Gregorian/Unix timestamp or Date instances into a String
@@ -1522,19 +1840,17 @@ define(function(require) {
 	 * @param  {Date|String} pDate   Representation of the date to format.
 	 * @param  {String} pFormat      Tokens to format the date with.
 	 * @param  {Object} pUser        Specific user to use for formatting.
-	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in
-	 *                                gregorian format.
+	 * @param  {Boolean} pIsGregorian Indicate whether or not the date is in gregorian format.
 	 * @param  {String} pTz           Timezone to format the date with.
 	 * @return {String}              Representation of the formatted date.
 	 *
-	 * If pDate is undefined then return an empty string. Useful for form which
-	 * use toFriendlyDate for some fields with an undefined value. Otherwise it
-	 * would display NaN/NaN/NaN in Firefox for example.
+	 * If pDate is undefined then return an empty string. Useful for form which use toFriendlyDate
+	 * for some fields with an undefined value. Otherwise it would display NaN/NaN/NaN in Firefox
+	 * for example.
 	 *
-	 * By default, the timezone of the specified or logged in user will be used
-	 * to format the date. If that timezone is not set, then the account
-	 * timezone will be used. If not set, the browser’s timezone will be used as
-	 * a last resort.
+	 * By default, the timezone of the specified or logged in user will be used to format the date.
+	 * If that timezone is not set, then the account timezone will be used. If not set, the
+	 * browser’s timezone will be used as a last resort.
 	 */
 	function toFriendlyDate(pDate, pFormat, pUser, pIsGregorian, pTz) {
 		if (_.isUndefined(pDate)) {
@@ -1554,7 +1870,16 @@ define(function(require) {
 			.tz(tz)
 			.format(format);
 	}
-	util.toFriendlyDate = toFriendlyDate;
+
+	/**
+	 * Looks for `path`'s value' in `obj`, otherwise use human readable format of `path`.
+	 * @param  {Object} obj Object to search.
+	 * @param  {String} path Path to resolve.
+	 * @return {String}     Value at `path` or humanl readable `path`.
+	 */
+	function tryI18n(obj, path) {
+		return _.get(obj, path, formatVariableToDisplay(path));
+	}
 
 	/**
 	 * Normalize phone number by using E.164 format
@@ -1570,19 +1895,18 @@ define(function(require) {
 			? _.get(phoneNumber, 'e164Number')
 			: _.replace(input, /[^0-9+]/g, '');
 	}
-	util.unformatPhoneNumber = unformatPhoneNumber;
 
 	/**
 	 * Converts a Unix timestamp into a Date instance
 	 * @param  {Number} pTimestamp Unix timestamp
 	 * @return {Date}           Converted Date instance
 	 *
-	 * Sometimes Unix times are defined with more precision, such as with the
-	 * /legs API which returns channel created time in microseconds, so we need
-	 * need to remove this extra precision to use the Date constructor.
+	 * Sometimes Unix times are defined with more precision, such as with the /legs API which
+	 * returns channel created time in microseconds, so we need need to remove this extra precision
+	 * to use the Date constructor.
 	 *
-	 * If we only get the "seconds" precision, we need to multiply it by 1000 to
-	 * get milliseconds in order to use the Date constructor.
+	 * If we only get the "seconds" precision, we need to multiply it by 1000 to get milliseconds in
+	 * order to use the Date constructor.
 	 */
 	function unixToDate(pTimestamp) {
 		var max = 9999999999999;
@@ -1603,7 +1927,42 @@ define(function(require) {
 		}
 		return new Date(timestamp);
 	}
-	util.unixToDate = unixToDate;
 
-	return util;
+	/**
+	 * Updates img relative paths to absolute paths if needed.
+	 * @param  {HTMLElement} markup
+	 * @param  {Object} app
+	 * @return {String}
+	 *
+	 * Without this, img with relative path would be displayed from the domain name of the browser,
+	 * which we want to avoid since we're loading sources from external URLs for some apps.
+	 */
+	function updateImagePath(markup, app) {
+		var $markup = $(markup);
+		var listImg = $markup.find('img');
+		var result = '';
+
+		// For each image, check if the path is correct based on the appPath, and if not change it
+		for (var i = 0; i < listImg.length; i++) {
+			var	currentSrc = listImg[i].src;
+
+			// If it's an image belonging to an app, and the current path doesn't contain the right
+			// appPath
+			if (currentSrc.indexOf(app.name) >= 0 && currentSrc.indexOf(app.appPath) < 0) {
+				// We replace it by the app path and append the path of the image (we strip the name
+				// of the app, since it's already part of the appPath)
+				var newPath = app.appPath + currentSrc.substring(
+					currentSrc.indexOf(app.name) + app.name.length, currentSrc.length
+				);
+
+				listImg[i].src = newPath;
+			}
+		}
+
+		for (var j = 0; j < $markup.length; j++) {
+			result += $markup[j].outerHTML;
+		}
+
+		return result;
+	}
 });

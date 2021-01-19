@@ -53,7 +53,7 @@
 				"update": "Your password was successfully updated"
 			},
 			"error": {
-				"password": "Password typed don't match. Please retype your new password"
+				"password": "Your password wasn't updated, please try again."
 			}
 		}
 	},

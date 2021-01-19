@@ -1,5 +1,5 @@
 <div class="view-conference-wrapper" data-id="{{ conference.id }}">
-	<div class="view-header clearfix">
+	<div class="view-header-wrapper clearfix">
 		{{#if backButton}}
 			<div class="back-link-wrapper">
 				<a id="back_button" class="monster-link" href="javascript:void(0);">
@@ -8,37 +8,39 @@
 				</a>
 			</div>
 		{{/if}}
-		<div class="conference-name">
-			{{ conference.name }} (<span class="conference-duration main-conference-timer"></span>)
-		</div>
-
-		<div class="other-actions">
-			<button type="button" data-action="add" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.add }}">
-				<i class="fa fa-plus"></i>
-			</button>
-		</div>
-
-		<div class="admin-actions">
-			<button type="button" data-action="lock" class="{{#if conference.isLocked}}hidden {{/if}}conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.lock }}">
-				<i class="fa fa-lock"></i>
-			</button>
-
-			<button type="button" data-action="unlock" class="{{#unless conference.isLocked}}hidden {{/unless}}conference-action monster-button-primary monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.unlock }}">
-				<i class="fa fa-unlock-alt"></i>
-			</button>
-
-			<div class="btn-group">
-				<button type="button" data-action="mute" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.mute }}">
-					<i class="fa fa-microphone-slash"></i>
-				</button>
-				<button type="button" data-action="unmute" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.unmute }}">
-					<i class="fa fa-microphone"></i>
-				</button>
+		<div class="view-header">
+			<div class="conference-name">
+				{{ conference.name }} (<span class="conference-duration main-conference-timer"></span>)
 			</div>
 
-			<button data-action="kick" class="conference-action monster-button-danger monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.hangup }}">
-				<i class="icon-telicon-hangup"></i>
-			</button>
+			<div class="actions">
+				<button type="button" data-action="add" class="{{#if conference.isLocked}}disabled {{/if}}conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.add }}">
+					<i class="fa fa-plus"></i>
+				</button>
+
+				<div class="admin-actions">
+					<button type="button" data-action="lock" class="{{#if conference.isLocked}}hidden {{/if}}conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.lock }}">
+						<i class="fa fa-lock"></i>
+					</button>
+
+					<button type="button" data-action="unlock" class="{{#unless conference.isLocked}}hidden {{/unless}}conference-action monster-button-primary monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.unlock }}">
+						<i class="fa fa-unlock-alt"></i>
+					</button>
+
+					<div class="btn-group">
+						<button type="button" data-action="mute" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.mute }}">
+							<i class="fa fa-microphone-slash"></i>
+						</button>
+						<button type="button" data-action="unmute" class="conference-action monster-button-neutral monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.unmute }}">
+							<i class="fa fa-microphone"></i>
+						</button>
+					</div>
+
+					<button data-action="kick" class="conference-action monster-button-danger monster-button-fit" data-toggle="tooltip" data-placement="top" data-original-title="{{ i18n.conferenceViewer.actionBar.tooltips.hangup }}">
+						<i class="icon-telicon-hangup"></i>
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 

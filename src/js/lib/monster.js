@@ -46,7 +46,7 @@ define(function(require) {
 		'whitelabel.hideAppStore': [_.isBoolean, false],
 		'whitelabel.hideBuyNumbers': [_.isBoolean, false],
 		'whitelabel.hideNewAccountCreation': [_.isBoolean, false],
-		'whitelabel.includes': [_.isArray, []],
+		'whitelabel.includes': [isArrayOfHttpUrls, []],
 		'whitelabel.language': [_.isString, defaultLanguage, supportedLanguages],
 		'whitelabel.logoutTimer': [_.isNumber, 15],
 		'whitelabel.preventDIDFormatting': [_.isBoolean, false],
@@ -803,6 +803,42 @@ define(function(require) {
 			.value();
 	}
 	monster.isEnvironmentProd = isEnvironmentProd;
+
+	function isArrayOfHttpUrls(input) {
+		var isHttpUrl = function(string) {
+			var url;
+			try {
+				url = new URL(string);
+			} catch (error) {
+				return false;
+			}
+			return /^(?:http)s?:/.test(url.protocol);
+		};
+
+		return _
+			.chain([input])
+			.flatten()
+			.every(isHttpUrl)
+			.value();
+	}
+
+	function normalizeUrlPathEnding(url) {
+		if (!_.isString(url)) {
+			return;
+		}
+		var isPathToFile = _
+			.chain(url)
+			.split('/')
+			.last()
+			.includes('.')
+			.value();
+
+		if (isPathToFile) {
+			return url;
+		}
+		return _.endsWith(url, '/') ? url : url + '/';
+	}
+	monster.normalizeUrlPathEnding = normalizeUrlPathEnding;
 
 	/**
 	 * Set the language on application startup.

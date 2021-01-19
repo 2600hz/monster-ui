@@ -19,6 +19,7 @@
 
 			.app-selector-menu {
 				margin-bottom: 70px;
+				min-height: calc(100vh - 11.125rem);
 			}
 		}
 	}
@@ -34,8 +35,10 @@
 		background-color: $athens-gray;
 		border-top: 1px solid $french-gray2;
 
-		button {
+		.monster-button {
 			margin-left: 10px;
+			font-size: 14px;
+			transition: all 0.2s;
 		}
 	}
 }
