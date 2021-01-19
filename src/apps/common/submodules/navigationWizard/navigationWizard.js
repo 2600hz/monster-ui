@@ -207,19 +207,17 @@ define(function(require) {
 					});
 
 			$template
-				.on('click', '#done:not(.disabled)', function(event) {
-					event.preventDefault();
+				.find('#done')
+					.on('click', function(event) {
+						event.preventDefault();
 
-					$this = $(this);
+						// Disable button after it's clicked
+						$(this).prop('disabled', true);
 
-					//disable button after it's clicked
-					$this
-						.addClass('disabled');
-
-					self.navigationWizardComplete({
-						eventType: 'done'
+						self.navigationWizardComplete({
+							eventType: 'done'
+						});
 					});
-				});
 
 			$template
 				.find('#save_app, #navigation_wizard_save')
@@ -303,29 +301,30 @@ define(function(require) {
 					});
 
 			$template
-					.find('#navigation_wizard_delete')
-						.on('click', function(event) {
-							event.preventDefault();
+				.find('#navigation_wizard_delete')
+					.on('click', function(event) {
+						event.preventDefault();
 
-							var deleteFunctionRef = wizardArgs.delete,
-								deleteFunction = _.isFunction(deleteFunctionRef)
-									? deleteFunctionRef
-									: thisArg[deleteFunctionRef],
-								deleteCallback = function(callbackArgs) {
-									return callbackArgs.exit && self.navigationWizardUnbindEvents();
-								};
+						var deleteFunctionRef = wizardArgs.delete,
+							deleteFunction = _.isFunction(deleteFunctionRef)
+								? deleteFunctionRef
+								: thisArg[deleteFunctionRef],
+							deleteCallback = function(callbackArgs) {
+								return callbackArgs.exit && self.navigationWizardUnbindEvents();
+							};
 
-							_.bind(deleteFunction, thisArg)(wizardArgs, deleteCallback);
-						});
+						_.bind(deleteFunction, thisArg)(wizardArgs, deleteCallback);
+					});
 
 			//Clicking on the menu item
 			$template
-				.on('click', '.visited, .completed', function() {
-					var stepId = $(this).data('id');
-					self.navigationWizardGoToStep({
-						stepId: stepId
+				.find('.nav')
+					.on('click', '.visited, .completed', function() {
+						var stepId = $(this).data('id');
+						self.navigationWizardGoToStep({
+							stepId: stepId
+						});
 					});
-				});
 		},
 
 		/**
@@ -607,11 +606,11 @@ define(function(require) {
 				};
 
 			if (!result.valid) {
-				//If it fails for any reason then re-enable the button
+				//If validation fails for any reason then re-enable the button
 				wizardArgs
 					.container
 						.find('#done')
-						.removeClass('disabled');
+						.prop('disabled', false);
 				return;
 			}
 
