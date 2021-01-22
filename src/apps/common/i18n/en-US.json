@@ -636,6 +636,29 @@
 		"__version": "4.1",
 		"numbersCarrierModule": {
 			"custom": "Custom"
+		},
+		"updateCallerIdDialog": {
+			"title": {
+				"emergency": "Account Emergency Caller-ID",
+				"external": "Account External Caller-ID"
+			},
+			"headerAddNumber": {
+				"emergency": "You've just turned E911 on one of your main number, please select which number you would like to use for your Account Emergency Caller-ID."
+			},
+			"headerRemoveNumber": {
+				"emergency": "You've disabled E911 on the number that was used for your Emergency Caller-ID, please select a new number to use as this Account Emergency Caller-ID."
+			},
+			"headerChooseNumber": {
+				"emergency": "You've not set the emergency number for the account yet, please select which number you would like to use for your Account Emergency Caller-ID.",
+				"external": "You've not set the external number for the account yet, please select a new number to use as this Account External Caller-ID."
+			},
+			"success": {
+				"emergency": "You successfully updated the E911 on the account to be {{ number }}.",
+				"external": "You successfully updated the external caller ID on the account to be {{ number }}."
+			},
+			"current": {
+				"emergency": "Current one"
+			}
 		}
 	},
 

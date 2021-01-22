@@ -1,0 +1,30 @@
+<div class="e911-change-wrapper">
+	<div class="header">
+		{{#compare action "===" "choose"}}
+			{{ tryI18n i18n.numbers.updateCallerIdDialog.headerChooseNumber callerIdType }}
+		{{else}}
+			{{#compare action "===" "add"}}
+				{{ tryI18n i18n.numbers.updateCallerIdDialog.headerAddNumber callerIdType }}
+			{{else}}
+				{{ tryI18n i18n.numbers.updateCallerIdDialog.headerRemoveNumber callerIdType }}
+			{{/compare}}
+		{{/compare}}
+	</div>
+
+	<div class="list-choices">
+		{{#if oldNumber}}
+			<div class="choice active" data-number="{{oldNumber}}">{{ formatPhoneNumber oldNumber }} <span class="current">({{ tryI18n i18n.strategy.updateCallerIdDialog.current callerIdType }})</span></div>
+		{{/if}}
+
+		{{#each newNumbers}}
+			<div class="choice{{#unless ../oldNumber}}{{#if @first}} active{{/if}}{{/unless}}" data-number="{{this}}">{{ formatPhoneNumber this }}</div>
+		{{/each}}
+	</div>
+
+	<div class="actions clearfix">
+		<div class="pull-right">
+			<a class="cancel-link monster-link blue" href="javascript:void(0);">{{ i18n.cancel }}</a>
+			<button type="button" class="monster-button monster-button-success save">{{ i18n.save }}</button>
+		</div>
+	</div>
+</div>

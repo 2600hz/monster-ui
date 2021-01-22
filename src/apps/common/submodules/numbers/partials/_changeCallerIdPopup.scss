@@ -1,0 +1,34 @@
+.e911-change-wrapper {
+	padding: 15px;
+	width: 400px;
+
+	.cancel-link {
+		margin-right: 5px;
+	}
+
+	.list-choices {
+		margin-bottom: 20px;
+		margin-top: 20px;
+
+		.choice {
+			background: #EEE;
+			padding: 20px;
+			border: 1px solid #CCC;
+			margin-bottom: 5px;
+
+			&:hover {
+				background: #FFF;
+				cursor: pointer;
+			}
+
+			&.active {
+				background: #FFF;
+				border: 1px solid #22a5ff;
+			}
+		}
+	}
+
+	.actions {
+		margin-top: 10px;
+	}
+}
