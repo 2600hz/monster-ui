@@ -23,7 +23,21 @@ define(function(require) {
 		*/
 
 		numbersDisplayFeaturesMenu: function(arrayNumbers, parent) {
-			var self = this;
+			var self = this,
+				afterFeatureUpdate = function afterFeatureUpdate(args) {
+					var numberId = args.numberId,
+						numberFeatures = args.features,
+						element = args.element;
+
+					monster.ui.highlight(element);
+					monster.ui.paintNumberFeaturesIcon(numberFeatures, element.find('.features'));
+
+					self.numbersCheckIfUpdateEmergencyCallerID({
+						templateNumbers: arrayNumbers,
+						features: numberFeatures,
+						number: numberId
+					});
+				};
 
 			_.each(arrayNumbers, function(number) {
 				if (number.state === 'port_in' || number.used_by === 'mobile') {
@@ -35,8 +49,11 @@ define(function(require) {
 						target: numberDiv.find('.number-options'),
 						numberData: number,
 						afterUpdate: function(features) {
-							monster.ui.highlight(numberDiv);
-							monster.ui.paintNumberFeaturesIcon(features, numberDiv.find('.features'));
+							afterFeatureUpdate({
+								numberId: number.phoneNumber,
+								features: features,
+								element: numberDiv.find('.features')
+							});
 						}
 					};
 
@@ -91,7 +108,267 @@ define(function(require) {
 			});
 		},
 
-		//_util
+		// Request
+
+		/**
+		 * Check if it is necessary to update the emergency caller ID for the account
+		 * @param  {Object}   args
+		 * @param  {Object[]} args.templateNumbers      Template numbers
+		 * @param  {String[]} args.features             Number features
+		 * @param  {String}   args.number               Number ID
+		 * @param  {Object}   [args.callbacks]          Function callbacks
+		 * @param  {Function} [args.callbacks.success]  Successs callback
+		 */
+		numbersCheckIfUpdateEmergencyCallerID: function(args) {
+			var self = this,
+				templateNumbers = args.templateNumbers,
+				features = args.features,
+				number = args.number;
+
+			// Update data we have about features for main numbers
+			_.each(templateNumbers, function(dataLoop) {
+				if (dataLoop.phoneNumber === number) {
+					dataLoop.features = features;
+				}
+			});
+
+			monster.waterfall([
+				function(callback) {
+					var currAcc = monster.apps.auth.currentAccount,
+						currentE911CallerId = _.get(currAcc, 'caller_id.emergency.number'),
+						hasE911Feature = _.includes(features || [], 'e911');
+
+					if (hasE911Feature && _.isEmpty(currentE911CallerId)) {
+						callback('OK', number);
+					} else {
+						callback(null, currentE911CallerId, hasE911Feature);
+					}
+				},
+				function(currentE911CallerId, hasE911Feature, callback) {
+					var e911ChoicesArgs,
+						e911Numbers = [];
+
+					if (hasE911Feature) {
+						if (currentE911CallerId !== number) {
+							e911ChoicesArgs = {
+								action: 'add',
+								oldNumber: currentE911CallerId,
+								newNumbers: [ number ]
+							};
+						}
+					} else {
+						if (!number || currentE911CallerId === number) {
+							e911Numbers = _.chain(templateNumbers)
+								.filter(function(number) {
+									return _.includes(number.number.features, 'e911');
+								}).map('number.id').value();
+
+							if (e911Numbers.length > 1) {
+								e911ChoicesArgs = {
+									action: number ? 'remove' : 'choose',
+									newNumbers: e911Numbers
+								};
+							}
+						}
+					}
+
+					if (_.isUndefined(e911ChoicesArgs)) {
+						callback('OK', _.head(e911Numbers));
+					} else {
+						callback(null, e911ChoicesArgs);
+					}
+				},
+				function(e911ChoicesArgs, callback) {
+					self.numbersShowNumberChoices(_.merge({
+						callerIdType: 'emergency',
+						save: function(number) {
+							callback(null, number);
+						},
+						cancel: function() {
+							callback('OK');
+						}
+					}, e911ChoicesArgs));
+				}
+			], function(err, number) {
+				if ((err && err !== 'OK') || !number) {
+					return;
+				}
+
+				self.numbersChangeCallerId({
+					callerIdType: 'emergency',
+					number: number,
+					success: function() {
+						monster.ui.toast({
+							type: 'success',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().numbers.updateCallerIdDialog.success.emergency,
+								data: {
+									number: monster.util.formatPhoneNumber(number)
+								}
+							})
+						});
+
+						_.has(args, 'callbacks.success') && args.callbacks.success();
+					}
+				});
+			});
+		},
+
+		/**
+		 * Show phone number choices
+		 * @param  {Object}   args
+		 * @param  {('emergency'|'external')}   args.callerIdType       Caller ID type: emergency, external
+		 * @param  {('choose'|'add'|'remove')}  [args.action='choose']  Action being done: Choose, add or remove a number
+		 * @param  {String}   [args.oldNumber]  Old number
+		 * @param  {String[]} args.newNumbers   New numbers
+		 * @param  {Function} [args.save]       Save callback
+		 * @param  {Function} [args.cancel]     Cancel callback
+		 */
+		numbersShowNumberChoices: function(args) {
+			var self = this,
+				callerIdType = args.callerIdType,
+				oldNumber = args.oldNumber,
+				template = $(self.getTemplate({
+					name: 'changeCallerIdPopup',
+					data: {
+						action: _.get(args, 'action', 'choose'),
+						oldNumber: oldNumber,
+						newNumbers: args.newNumbers,
+						callerIdType: callerIdType
+					},
+					submodule: 'numbers'
+				})),
+				$options = template.find('.choice');
+
+			$options.on('click', function() {
+				$options.removeClass('active');
+
+				$(this).addClass('active');
+			});
+
+			template.find('.save').on('click', function() {
+				var number = template.find('.active').data('number');
+
+				if (number === oldNumber) {
+					_.has(args, 'cancel') && args.cancel();
+				} else {
+					_.has(args, 'save') && args.save(number);
+				}
+
+				popup.dialog('close');
+			});
+
+			template.find('.cancel-link').on('click', function() {
+				popup.dialog('close');
+
+				_.has(args, 'cancel') && args.cancel();
+			});
+
+			var popup = monster.ui.dialog(template, {
+				title: self.i18n.active().numbers.updateCallerIdDialog.title[callerIdType]
+			});
+		},
+
+		/**
+		 * Changes a caller ID for the current account
+		 * @param  {Object}   args
+		 * @param  {('emergency'|'external')}  args.callerIdType  Caller ID type: emergency, external
+		 * @param  {String}   args.number     Number to be set for emergency calls
+		 * @param  {Function} [args.success]  Success callback
+		 * @param  {Function} [args.error]    Error callback
+		 */
+		numbersChangeCallerId: function(args) {
+			var self = this,
+				callerIdType = args.callerIdType,
+				number = args.number;
+
+			monster.waterfall([
+				function(callback) {
+					self.numbersGetAccount({
+						success: function(data) {
+							callback(null, data);
+						},
+						error: function(parsedError) {
+							callback(parsedError);
+						}
+					});
+				},
+				function(data, callback) {
+					data.caller_id = data.caller_id || {};
+					data.caller_id[callerIdType] = data.caller_id[callerIdType] || {};
+					data.caller_id[callerIdType].number = number;
+
+					self.numbersUpdateAccount({
+						data: data,
+						success: function() {
+							callback(null);
+						},
+						error: function(parsedError) {
+							callback(parsedError);
+						}
+					});
+				}
+			], function(err) {
+				if (err) {
+					_.has(args, 'error') && args.error(err);
+				} else {
+					_.has(args, 'success') && args.success(number);
+				}
+			});
+		},
+
+		/**
+		 * Updates an account
+		 * @param  {Object}   args
+		 * @param  {Object}   args.data       Account data
+		 * @param  {String}   args.data.id    Account ID
+		 * @param  {Function} [args.success]  Success callback
+		 * @param  {Function} [args.error]    Error callback
+		 */
+		numbersUpdateAccount: function(args) {
+			var self = this,
+				data = args.data;
+
+			self.callApi({
+				resource: 'account.update',
+				data: {
+					accountId: data.id,
+					data: data
+				},
+				success: function(data) {
+					_.has(args, 'success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					_.has(args, 'error') && args.error(parsedError);
+				}
+			});
+		},
+
+		/**
+		 * Request the current account information
+		 * @param  {Object}   args
+		 * @param  {Function} [args.success]  Success callback
+		 * @param  {Fucntion} [args.error]    Error callback
+		 */
+		numbersGetAccount: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'account.get',
+				data: {
+					accountId: self.accountId
+				},
+				success: function(data, status) {
+					_.has(args, 'success') && args.success(data.data);
+				},
+				error: function(data, status) {
+					_.has(args, 'error') && args.error();
+				}
+			});
+		},
+
+		// Utils
+
 		numbersFormatNumber: function(value) {
 			var self = this;
 
