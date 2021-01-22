@@ -10,6 +10,10 @@ define(function(require) {
 
 		/**
 		 * @param  {Object} args
+		 * @param  {String[]} args.header Expected header
+		 * @param  {Function} args.row.sanitizer Sanitizes row input
+		 * @param  {Function} args.row.validator Validates row input
+		 * @param  {Function} [args.row.extractor} Extracts row as object
 		 * @param  {String} [args.title] Popup title
 		 * @param  {Blob} [args.file] CSV template file
 		 * @param  {String} [args.filename] CSV template filename
@@ -42,6 +46,8 @@ define(function(require) {
 				template: $template,
 				popup: $popup
 			}, _.pick(args, [
+				'header',
+				'row',
 				'file',
 				'onSuccess',
 				'onClose'
@@ -58,18 +64,89 @@ define(function(require) {
 					var prasedFile = Papa.parse(files[0].file);
 
 					if (!_.isEmpty(prasedFile.errors)) {
-						return errorHandler(_.head(prasedFile.errors));
+						return errorHandler(
+							_.get(
+								_.head(prasedFile.errors),
+								'message',
+								self.i18n.active().csvUploader.invalidFile
+							)
+						);
 					}
-					csvData = prasedFile.data;
+					var expectedHeader = args.header,
+						potentialHeader = _
+							.chain(prasedFile.data)
+							.head()
+							.map(_.toLower)
+							.value(),
+						hasHeader = _.isEqual(
+							_.sortBy(potentialHeader),
+							_.sortBy(expectedHeader)
+						),
+						header = hasHeader ? potentialHeader : expectedHeader,
+						entries = hasHeader ? _.tail(prasedFile.data) : prasedFile.data,
+						extractObjects = function(entry) {
+							return _.reduce(header, function(acc, prop, index) {
+								return _.merge(
+									_.set({}, prop, entry[index]),
+									acc
+								);
+							}, {});
+						},
+						sanitized = _
+							.chain(entries)
+							.reject(_.partial(_.every, _, _.isEmpty))
+							.map(_.flow(
+								args.row.extractor || extractObjects,
+								args.row.sanitizer))
+							.value(),
+						invalidRows = _
+							.chain(sanitized)
+							.map(function(row, index) {
+								return {
+									row: row,
+									index: index
+								};
+							})
+							.reject(_.flow(
+								_.partial(_.get, _, 'row'),
+								args.row.validator
+							))
+							.value(),
+						firstFiveInvalidRowLines = _
+							.chain(invalidRows)
+							.map(_.flow(
+								_.partial(_.get, _, 'index'),
+								_.partial(_.add, 1)
+							))
+							.slice(0, 5)
+							.value(),
+						invalidRowLines = _
+							.chain([
+								firstFiveInvalidRowLines,
+								invalidRows.length > 5 ? self.i18n.active().csvUploader.andMore : []
+							])
+							.flatten()
+							.join(', ')
+							.value();
+
+					if (!_.isEmpty(invalidRows)) {
+						return errorHandler(self.getTemplate({
+							name: '!' + self.i18n.active().csvUploader.invalidRows,
+							data: {
+								list: invalidRowLines
+							}
+						}));
+					}
+					csvData = sanitized;
 
 					validator.resetForm();
 					$form.find('input[name="file_input"]').removeClass('monster-invalid');
 					$submitButton.prop('disabled', false);
 				},
-				errorHandler = function(error) {
+				errorHandler = function(message) {
 					$submitButton.prop('disabled', 'disabled');
 					validator.showErrors({
-						file_input: _.get(error, 'message', self.i18n.active().csvUploader.invalidFile)
+						file_input: message
 					});
 				},
 				csvData;
