@@ -147,15 +147,23 @@
 
 #apploader .app-description {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
 	height: 110px;
 }
 
 #apploader .app-description h4 {
 	display: flex;
 	align-items: center;
-	overflow: hidden;
+	max-width: 100%;
 	max-height: 20px;
+
+	.title {
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 
 	i {
 		display: none;
@@ -229,6 +237,8 @@
 }
 
 #apploader .app-list {
+	display: flex;
+	flex-wrap: wrap;
 	margin-bottom: 35px;
 }
 

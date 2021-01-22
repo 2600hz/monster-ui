@@ -24,25 +24,23 @@
 			</div>
 		</div>
 		<div class="app-description">
-			<div class="vertical-align">
-			{{#if defaultApp}}
-				<h4>
-					<div class="title">
-						{{defaultApp.label}}
-					</div>
-					<i class="fa fa-external-link"></i>
-				</h4>
-				<p>{{defaultApp.description}}</p>
-			{{else}}
-				<h4>
-					<div class="title">
-						{{i18n.appDescription.title}}
-					</div>
-					<i class="fa fa-external-link"></i>
-				</h4>
-				<p>{{i18n.appDescription.label}}</p>
-			{{/if}}
-			</div>
+		{{#if defaultApp}}
+			<h4>
+				<div class="title">
+					{{defaultApp.label}}
+				</div>
+				<i class="fa fa-external-link"></i>
+			</h4>
+			<p>{{defaultApp.description}}</p>
+		{{else}}
+			<h4>
+				<div class="title">
+					{{i18n.appDescription.title}}
+				</div>
+				<i class="fa fa-external-link"></i>
+			</h4>
+			<p>{{i18n.appDescription.label}}</p>
+		{{/if}}
 		</div>
 	{{#if allowAppstore}}
 		<div class="app-store">
