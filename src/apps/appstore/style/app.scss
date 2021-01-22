@@ -172,6 +172,9 @@
 	font-weight: bold;
 	height: 30px;
 	line-height: 30px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 #appstore_container .right-content .app-list-container .app-element-right .app-description {
@@ -198,6 +201,16 @@
 #appstore_popup_container .left-container {
 	float: left;
 	width: 350px;
+
+	.title-container {
+		display: flex;
+
+		.title {
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
 }
 
 #appstore_popup_container .right-container {
