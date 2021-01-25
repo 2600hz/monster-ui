@@ -338,6 +338,8 @@
 		"chooseFile": "Choose File",
 		"defaultFilename": "template.csv",
 		"invalidFile": "Only .csv files accepted",
+		"invalidRows": "Invalid entry at row(s) {{list}}",
+		"andMore": "and more",
 		"downloadTemplate": "Download CSV Template",
 		"import": "Import"
 	},
