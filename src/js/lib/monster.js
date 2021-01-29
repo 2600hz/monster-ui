@@ -475,7 +475,17 @@ define(function(require) {
 		},
 
 		loadBuildConfig: function(callback) {
-			var self = this;
+			var self = this,
+				getVersion = _.flow(
+					monster.parseVersionFile,
+					_.partial(_.get, _, 'version'),
+					_.partial(_.defaultTo, _, null)
+				),
+				getBuildConfig = _.partial(_.pick, _, [
+					'type',
+					'preloadedApps',
+					'proApps'
+				]);
 
 			monster.parallel({
 				version: function(next) {
@@ -483,8 +493,7 @@ define(function(require) {
 						url: 'VERSION',
 						cache: false,
 						success: _.flow(
-							_.partial(_.replace, _, /\n.*/g, ''),
-							_.trim,
+							getVersion,
 							_.partial(next, null)
 						),
 						error: _.partial(next, null, null)
@@ -495,13 +504,17 @@ define(function(require) {
 						url: 'build-config.json',
 						dataType: 'json',
 						cache: false,
-						success: _.partial(next, null),
+						success: _.flow(
+							getBuildConfig,
+							_.partial(next, null)
+						),
 						error: _.partial(next, null, {})
 					});
 				}
 			}, function(err, results) {
-				monster.config.developerFlags.build = results.buildFile;
-				monster.config.developerFlags.build.version = results.version;
+				monster.config.developerFlags.build = _.merge({}, results.buildFile, {
+					version: results.version
+				});
 
 				callback && callback(monster.config.developerFlags.build);
 			});
@@ -833,6 +846,36 @@ define(function(require) {
 		return _.endsWith(url, '/') ? url : url + '/';
 	}
 	monster.normalizeUrlPathEnding = normalizeUrlPathEnding;
+
+	/**
+	 * @param  {String} file String representation of VERSION file.
+	 * @return {Object|Undefined}
+	 */
+	function parseVersionFile(file) {
+		if (!_.isString(file)) {
+			return;
+		}
+		var values = _
+			.chain(file)
+			.split(/\n/gm)
+			.map(_.trim)
+			.reject(_.isEmpty)
+			.value();
+
+		return _
+			.chain([
+				'version',
+				'tag',
+				'hash',
+				'date',
+				'source'
+			])
+			.zip(values)
+			.keyBy(_.head)
+			.mapValues(_.last)
+			.value();
+	}
+	monster.parseVersionFile = parseVersionFile;
 
 	/**
 	 * Set the language on application startup.
