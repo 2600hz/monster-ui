@@ -474,42 +474,36 @@ define(function(require) {
 			next && next();
 		},
 
-		loadBuildConfig: function(globalCallback) {
+		loadBuildConfig: function(callback) {
 			var self = this;
 
 			monster.parallel({
-				version: function(callback) {
+				version: function(next) {
 					$.ajax({
 						url: 'VERSION',
 						cache: false,
-						success: function(version) {
-							version = version.replace(/\n.*/g, '').trim();
-
-							callback(null, version);
-						},
-						error: function() {
-							callback(null, null);
-						}
+						success: _.flow(
+							_.partial(_.replace, _, /\n.*/g, ''),
+							_.trim,
+							_.partial(next, null)
+						),
+						error: _.partial(next, null, null)
 					});
 				},
-				buildFile: function(callback) {
+				buildFile: function(next) {
 					$.ajax({
 						url: 'build-config.json',
 						dataType: 'json',
 						cache: false,
-						success: function(config) {
-							callback(null, config);
-						},
-						error: function() {
-							callback(null, {});
-						}
+						success: _.partial(next, null),
+						error: _.partial(next, null, {})
 					});
 				}
 			}, function(err, results) {
 				monster.config.developerFlags.build = results.buildFile;
 				monster.config.developerFlags.build.version = results.version;
 
-				globalCallback && globalCallback(monster.config.developerFlags.build);
+				callback && callback(monster.config.developerFlags.build);
 			});
 		},
 
