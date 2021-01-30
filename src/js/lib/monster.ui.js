@@ -1281,93 +1281,90 @@ define(function(require) {
 
 		initCustomValidation: function() {
 			var localization = monster.apps.core.i18n.active().validation,
-				addSimpleRule = function(name, regex) {
-					$.validator.addMethod(name, function(value, element) {
-						return this.optional(element) || regex.test(value);
-					}, localization.customRules[name]);
+				regexRules = {
+					mac: /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i,
+					ipv4: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i,
+					time12h: /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\s?[AP]M))$/i,
+					time24h: /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i,
+					realm: /^[0-9a-z.-]+$/,
+					hexadecimal: /^[0-9A-F]+$/i,
+					protocol: /:\/\//i
 				},
-				defaultMessages = {};
+				complexRules = {
+					checkList: function(value, element, listToCheck) {
+						if (_.isArray(listToCheck)) {
+							return listToCheck.indexOf(value) < 0;
+						} else if (_.isObject(listToCheck)) {
+							return !(value in listToCheck);
+						} else {
+							return true;
+						}
+					},
+					greaterDate: function(value, element, param) {
+						var target = _.isString(param) ? $(param) : param;
+						if (this.settings.onfocusout) {
+							target.unbind('.validate-greaterDate').bind('blur.validate-greaterDate', function() {
+								$(element).valid();
+							});
+						}
 
-			// Initializing default messages
-			_.each(localization.defaultRules, function(val, key) {
-				defaultMessages[key] = $.validator.format(val);
+						return parseInt(monster.util.timeToSeconds(value)) > parseInt(monster.util.timeToSeconds(target.val()));
+					},
+					greaterThan: function(value, element, param) {
+						var $compElement = param instanceof jQuery ? param : $(param),
+							compValue = $compElement.val(),
+							isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+							isValid = _.toNumber(value) >= _.toNumber(compValue);
+
+						return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
+					},
+					lowerThan: function(value, element, param) {
+						var $compElement = param instanceof jQuery ? param : $(param),
+							compValue = $compElement.val(),
+							isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
+							isValid = _.toNumber(value) <= _.toNumber(compValue);
+
+						return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
+					},
+					notEqualTo: function(value, element, param) {
+						var $compElements = param instanceof jQuery ? param : $(param),
+							$compElementsToCheck = $compElements.filter(':visible').not(element),
+							$equalElements = $compElementsToCheck.filter(function() {
+								return $(this).val() === value;
+							}),
+							isValid = $equalElements.length === 0;
+
+						return this.optional(element) || isValid;
+					},
+					phoneNumber: function(value, element) {
+						return this.optional(element) || _
+							.chain([value])
+							.flatten()
+							.map(monster.util.getFormatPhoneNumber)
+							.every('isValid')
+							.value();
+					},
+					regex: function(value, element, regexpr) {
+						var method = getRegexRuleMethod(regexpr);
+
+						return method(value, element);
+					}
+				},
+				customRules = _.merge({}, regexRules, complexRules),
+				getRegexRuleMethod = function(regex) {
+					return function(value, element) {
+						return this.optional(element) || regex.test(value);
+					};
+				};
+
+			$.extend($.validator.messages, _.mapValues(localization.defaultRules, _.unary($.validator.format)));
+
+			_.forEach(customRules, function(rule, name) {
+				var method = _.isRegExp(rule) ? getRegexRuleMethod(rule) : rule,
+					message = _.get(localization.customRules, name);
+
+				$.validator.addMethod(name, method, message);
 			});
-			$.extend($.validator.messages, defaultMessages);
-
-			// Adding simple custom rules
-			addSimpleRule('mac', /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i);
-			addSimpleRule('ipv4', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i);
-			addSimpleRule('time12h', /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\s?[AP]M))$/i);
-			addSimpleRule('time24h', /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i);
-			addSimpleRule('realm', /^[0-9a-z.-]+$/);
-			addSimpleRule('hexadecimal', /^[0-9A-F]+$/i);
-			addSimpleRule('protocol', /:\/\//i);
-
-			// Adding advanced custom rules
-			$.validator.addMethod('greaterDate', function(value, element, param) {
-				var target = _.isString(param) ? $(param) : param;
-				if (this.settings.onfocusout) {
-					target.unbind('.validate-greaterDate').bind('blur.validate-greaterDate', function() {
-						$(element).valid();
-					});
-				}
-
-				return parseInt(monster.util.timeToSeconds(value)) > parseInt(monster.util.timeToSeconds(target.val()));
-			}, localization.customRules.greaterDate);
-
-			// Adding advanced custom rules
-			$.validator.addMethod('checkList', function(value, element, listToCheck) {
-				if (_.isArray(listToCheck)) {
-					return listToCheck.indexOf(value) < 0;
-				} else if (_.isObject(listToCheck)) {
-					return !(value in listToCheck);
-				} else {
-					return true;
-				}
-			}, localization.customRules.checkList);
-
-			// Adding advanced custom rules
-			$.validator.addMethod('regex', function(value, element, regexpr) {
-				return regexpr.test(value);
-			});
-
-			$.validator.addMethod('phoneNumber', function(value, element) {
-				return this.optional(element) || _
-					.chain([value])
-					.flatten()
-					.map(monster.util.getFormatPhoneNumber)
-					.every('isValid')
-					.value();
-			}, localization.customRules.phoneNumber);
-
-			$.validator.addMethod('lowerThan', function(value, element, param) {
-				var $compElement = param instanceof jQuery ? param : $(param),
-					compValue = $compElement.val(),
-					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
-					isValid = _.toNumber(value) <= _.toNumber(compValue);
-
-				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
-			}, localization.customRules.lowerThan);
-
-			$.validator.addMethod('greaterThan', function(value, element, param) {
-				var $compElement = param instanceof jQuery ? param : $(param),
-					compValue = $compElement.val(),
-					isLinkedFieldEmptyOrHidden = _.isEmpty(compValue) || !$compElement.is(':visible'),
-					isValid = _.toNumber(value) >= _.toNumber(compValue);
-
-				return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
-			}, localization.customRules.greaterThan);
-
-			$.validator.addMethod('notEqualTo', function(value, element, param) {
-				var $compElements = param instanceof jQuery ? param : $(param),
-					$compElementsToCheck = $compElements.filter(':visible').not(element),
-					$equalElements = $compElementsToCheck.filter(function() {
-						return $(this).val() === value;
-					}),
-					isValid = $equalElements.length === 0;
-
-				return this.optional(element) || isValid;
-			}, localization.customRules.notEqualTo);
 
 			this.customValidationInitialized = true;
 		},
