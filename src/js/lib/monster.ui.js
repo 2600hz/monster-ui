@@ -1344,6 +1344,27 @@ define(function(require) {
 							.every('isValid')
 							.value();
 					},
+					protocols: {
+						method: function(value, element, protocols) {
+							var pattern = '^(' + _.join(protocols, '|') + ')://',
+								regex = new RegExp(pattern, 'i'),
+								method = getRegexRuleMethod(regex);
+
+							return method(value, element);
+						},
+						message: function(protocols) {
+							return self.getTemplate({
+								name: '!' + localization.customRules.protocols,
+								data: {
+									suite: _
+										.chain(protocols)
+										.map(_.toUpper)
+										.join(', ')
+										.value()
+								}
+							});
+						}
+					},
 					regex: function(value, element, regexpr) {
 						var method = getRegexRuleMethod(regexpr);
 
@@ -1355,13 +1376,22 @@ define(function(require) {
 					return function(value, element) {
 						return this.optional(element) || regex.test(value);
 					};
+				},
+				getComplexRuleMethod = function(rule) {
+					return _.find([
+						rule,
+						_.get(rule, 'method')
+					], _.isFunction);
 				};
 
 			$.extend($.validator.messages, _.mapValues(localization.defaultRules, _.unary($.validator.format)));
 
 			_.forEach(customRules, function(rule, name) {
-				var method = _.isRegExp(rule) ? getRegexRuleMethod(rule) : rule,
-					message = _.get(localization.customRules, name);
+				var method = _.isRegExp(rule) ? getRegexRuleMethod(rule) : getComplexRuleMethod(rule),
+					message = _.find([
+						_.get(rule, 'message'),
+						_.get(localization.customRules, name)
+					], _.negate(_.isUndefined));
 
 				$.validator.addMethod(name, method, message);
 			});

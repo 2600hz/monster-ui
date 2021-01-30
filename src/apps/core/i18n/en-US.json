@@ -176,6 +176,7 @@
 			"__comment": "UI-2654: add protocol rule",
 			"__version": "v4.1",
 			"protocol": "Please include the \"://\" characters.",
+			"protocols": "Only supports: {{suite}}",
 			"notEqualTo": "The value should be unique."
 		},
 		"required": "Required."
