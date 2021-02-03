@@ -1281,7 +1281,7 @@ define(function(require) {
 
 		initCustomValidation: function() {
 			var localization = monster.apps.core.i18n.active().validation,
-				regexRules = {
+				regexBasedRules = {
 					mac: /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i,
 					ipv4: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i,
 					time12h: /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\s?[AP]M))$/i,
@@ -1348,7 +1348,7 @@ define(function(require) {
 						method: function(value, element, protocols) {
 							var pattern = '^(' + _.join(protocols, '|') + ')://',
 								regex = new RegExp(pattern, 'i'),
-								method = getRegexRuleMethod(regex);
+								method = getRegexBasedRuleMethod(regex);
 
 							return method(value, element);
 						},
@@ -1366,13 +1366,12 @@ define(function(require) {
 						}
 					},
 					regex: function(value, element, regexpr) {
-						var method = getRegexRuleMethod(regexpr);
+						var method = getRegexBasedRuleMethod(regexpr);
 
 						return method(value, element);
 					}
 				},
-				customRules = _.merge({}, regexRules, complexRules),
-				getRegexRuleMethod = function(regex) {
+				getRegexBasedRuleMethod = function(regex) {
 					return function(value, element) {
 						return this.optional(element) || regex.test(value);
 					};
@@ -1382,18 +1381,26 @@ define(function(require) {
 						rule,
 						_.get(rule, 'method')
 					], _.isFunction);
-				};
+				},
+				rules = _
+					.chain({})
+					.merge(regexBasedRules, complexRules)
+					.mapValues(function(rule, name) {
+						return {
+							name: name,
+							method: _.isRegExp(rule) ? getRegexBasedRuleMethod(rule) : getComplexRuleMethod(rule),
+							message: _.find([
+								_.get(rule, 'message'),
+								_.get(localization.customRules, name)
+							], _.negate(_.isUndefined))
+						};
+					})
+					.value();
 
 			$.extend($.validator.messages, _.mapValues(localization.defaultRules, _.unary($.validator.format)));
 
-			_.forEach(customRules, function(rule, name) {
-				var method = _.isRegExp(rule) ? getRegexRuleMethod(rule) : getComplexRuleMethod(rule),
-					message = _.find([
-						_.get(rule, 'message'),
-						_.get(localization.customRules, name)
-					], _.negate(_.isUndefined));
-
-				$.validator.addMethod(name, method, message);
+			_.forEach(rules, function(rule) {
+				$.validator.addMethod(rule.name, rule.method, rule.message);
 			});
 
 			this.customValidationInitialized = true;
