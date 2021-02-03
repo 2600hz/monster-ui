@@ -22,7 +22,6 @@ define(function(require) {
 				twitter: 'fa fa-twitter',
 				linkedin: 'fa fa-linkedin-square',
 				github: 'fa fa-github',
-				google: 'fa fa-google-plus',
 				youtube: 'fa fa-youtube'
 			},
 			kazooConnectionName: 'kazooAPI',
