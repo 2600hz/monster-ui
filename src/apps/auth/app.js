@@ -746,22 +746,38 @@ define(function(require) {
 				accountName = '',
 				realm = '',
 				cookieLogin = monster.cookies.getJson('monster-login') || {},
+				isUrlPropSet = _.flow(
+					_.partial(_.get, _, 'url'),
+					_.overEvery(
+						_.isString,
+						_.negate(_.isEmpty)
+					)
+				),
+				isSupportedSocial = _.flow(
+					_.partial(_.ary(_.get, 2), _, 'iconClass'),
+					_.negate(_.isUndefined)
+				),
 				templateData = {
 					username: cookieLogin.login || '',
 					requestAccountName: (realm || accountName) ? false : true,
 					accountName: cookieLogin.accountName || '',
 					rememberMe: cookieLogin.login || cookieLogin.accountName ? true : false,
 					showRegister: monster.config.hide_registration || false,
-					social: _.isEmpty(monster.config.whitelabel.social)
-						? []
-						: _.transform(monster.config.whitelabel.social, function(array, value, key) {
-							if (value.hasOwnProperty('url') && value.url !== '' && self.appFlags.socialIcons.hasOwnProperty(key)) {
-								array.push({
-									url: value.url,
-									iconClass: self.appFlags.socialIcons[key]
-								});
-							}
-						}, []),
+					social: _
+						.chain(monster.config.whitelabel)
+						.get('social', {})
+						.map(function(data, id) {
+							return _.merge({
+								iconClass: _.get(self.appFlags.socialIcons, id)
+							}, _.pick(data, [
+								'url'
+							]));
+						})
+						.filter(_.overEvery(
+							isUrlPropSet,
+							isSupportedSocial
+						))
+						.value(),
 					hidePasswordRecovery: monster.config.whitelabel.hidePasswordRecovery || false
 				},
 				template = $(self.getTemplate({
