@@ -854,6 +854,7 @@ define(function(require) {
 					return _.bind(monster.routing.goTo, monster.routing, 'apps/' + app.name);
 				},
 				appsToBind = {
+					userportal: 'shift+u',
 					voip: 'shift+v',
 					accounts: 'shift+a',
 					callflows: 'shift+c',
