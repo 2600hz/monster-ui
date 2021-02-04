@@ -23,7 +23,7 @@ nav:
       - 'docs/appContext/callApi().md'
     - 'monster':
       - 'docs/monster/getTemplate().md'
-      - 'docs/monster/isEnvironmentProd().md'
+      - 'docs/monster/isDev().md'
       - 'docs/monster/parallel().md'
       - 'docs/monster/pub().md'
       - 'docs/monster/request().md'

@@ -122,7 +122,7 @@ define(function(require) {
 			var self = this;
 
 			_.each(monster.config.whitelabel.additionalCss, function(path) {
-				monster.css('css/' + path);
+				monster.css(self, 'css/' + path);
 			});
 		},
 

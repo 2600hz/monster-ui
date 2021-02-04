@@ -267,8 +267,8 @@ define(function(require) {
 			}
 		},
 
-		css: function(href) {
-			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(href) }).appendTo('head');
+		css: function(app, href) {
+			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(app, href) }).appendTo('head');
 		},
 
 		domain: function() {
@@ -474,42 +474,49 @@ define(function(require) {
 			next && next();
 		},
 
-		loadBuildConfig: function(globalCallback) {
-			var self = this;
+		loadBuildConfig: function(callback) {
+			var self = this,
+				getVersion = _.flow(
+					monster.parseVersionFile,
+					_.partial(_.get, _, 'version'),
+					_.partial(_.defaultTo, _, null)
+				),
+				getBuildConfig = _.partial(_.pick, _, [
+					'type',
+					'preloadedApps',
+					'proApps'
+				]);
 
 			monster.parallel({
-				version: function(callback) {
+				version: function(next) {
 					$.ajax({
 						url: 'VERSION',
 						cache: false,
-						success: function(version) {
-							version = version.replace(/\n.*/g, '').trim();
-
-							callback(null, version);
-						},
-						error: function() {
-							callback(null, null);
-						}
+						success: _.flow(
+							getVersion,
+							_.partial(next, null)
+						),
+						error: _.partial(next, null, null)
 					});
 				},
-				buildFile: function(callback) {
+				buildFile: function(next) {
 					$.ajax({
 						url: 'build-config.json',
 						dataType: 'json',
 						cache: false,
-						success: function(config) {
-							callback(null, config);
-						},
-						error: function() {
-							callback(null, {});
-						}
+						success: _.flow(
+							getBuildConfig,
+							_.partial(next, null)
+						),
+						error: _.partial(next, null, {})
 					});
 				}
 			}, function(err, results) {
-				monster.config.developerFlags.build = results.buildFile;
-				monster.config.developerFlags.build.version = results.version;
+				monster.config.developerFlags.build = _.merge({}, results.buildFile, {
+					version: results.version
+				});
 
-				globalCallback && globalCallback(monster.config.developerFlags.build);
+				callback && callback(monster.config.developerFlags.build);
 			});
 		},
 
@@ -792,17 +799,17 @@ define(function(require) {
 	}
 
 	/**
-	 * Returns whether the build was optimized for a production environment.
-	 * @return {Boolean} Whether the build was optimized for a production environment.
+	 * Returns whether the running build is for a development environment.
+	 * @return {Boolean} Whether the running build is for a development environment.
 	 */
-	function isEnvironmentProd() {
-		return _
+	function isDev() {
+		return !_
 			.chain(monster)
 			.get('config.developerFlags.build.type')
 			.isEqual('production')
 			.value();
 	}
-	monster.isEnvironmentProd = isEnvironmentProd;
+	monster.isDev = isDev;
 
 	function isArrayOfHttpUrls(input) {
 		var isHttpUrl = function(string) {
@@ -839,6 +846,36 @@ define(function(require) {
 		return _.endsWith(url, '/') ? url : url + '/';
 	}
 	monster.normalizeUrlPathEnding = normalizeUrlPathEnding;
+
+	/**
+	 * @param  {String} file String representation of VERSION file.
+	 * @return {Object|Undefined}
+	 */
+	function parseVersionFile(file) {
+		if (!_.isString(file)) {
+			return;
+		}
+		var values = _
+			.chain(file)
+			.split(/\n/gm)
+			.map(_.trim)
+			.reject(_.isEmpty)
+			.value();
+
+		return _
+			.chain([
+				'version',
+				'tag',
+				'hash',
+				'date',
+				'source'
+			])
+			.zip(values)
+			.keyBy(_.head)
+			.mapValues(_.last)
+			.value();
+	}
+	monster.parseVersionFile = parseVersionFile;
 
 	/**
 	 * Set the language on application startup.
