@@ -462,7 +462,7 @@ define(function() {
 				addCss = function(fileName) {
 					fileName = app.appPath + '/style/' + fileName + '.css';
 
-					monster.css(fileName);
+					monster.css(app, fileName);
 				};
 
 			// If the app wasn't already loaded by our build (it minifies and concatenate some apps)
@@ -565,11 +565,13 @@ define(function() {
 					_.get(metadata, 'api_url'),
 					monster.config.api.default
 				]),
-				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, callback) {
+				requireApp = _.partial(function(moduleId, pathToDirectory, name, apiUrl, version, callback) {
 					require([moduleId], function(app) {
 						_.extend(app, {
 							appPath: pathToDirectory,
-							data: {}
+							data: {
+								version: version
+							}
 						}, monster.apps[name], {
 							apiUrl: apiUrl,
 							// we don't want the name to be set by the js, instead we take the name supplied in the app.json
@@ -592,26 +594,18 @@ define(function() {
 						error: _.partial(callback, null, app, {})
 					});
 				},
-				loadApp = function loadApp(callback) {
-					monster.waterfall([
-						requireApp,
-						maybeRetrieveBuildConfig
-					], function applyConfig(err, app, config) {
-						if (err) {
-							return callback(err);
-						}
-						app.buildConfig = config;
+				applyConfig = function(app, config, callback) {
+					app.buildConfig = config;
 
-						if (app.buildConfig.version === 'pro') {
-							if (!app.hasOwnProperty('subModules')) {
-								app.subModules = [];
-							}
-
-							app.subModules.push('pro');
+					if (app.buildConfig.version === 'pro') {
+						if (!app.hasOwnProperty('subModules')) {
+							app.subModules = [];
 						}
 
-						callback(null, app);
-					});
+						app.subModules.push('pro');
+					}
+
+					callback(null, app);
 				},
 				requireSubModule = function(app, subModule, callback) {
 					var pathSubModule = app.appPath + '/submodules/',
@@ -644,6 +638,39 @@ define(function() {
 						callback(err, app);
 					});
 				},
+				loadVersion = _.partial(function(name, pathToFolder, callback) {
+					var success = _.partial(_.ary(callback, 2), null),
+						successWithDynamicVersion = _.partial(success, _.toString(new Date().getTime()));
+
+					if (monster.isDev()) {
+						return successWithDynamicVersion();
+					}
+					var preloadedApps = _.get(monster, 'config.developerFlags.build.preloadedApps', []),
+						successWithFrameworkVersion = _.partial(success, monster.util.getVersion());
+
+					if (_.includes(preloadedApps, name)) {
+						return successWithFrameworkVersion();
+					}
+					$.ajax({
+						url: pathToFolder + '/VERSION',
+						success: _.flow(
+							monster.parseVersionFile,
+							_.partial(_.get, _, 'version'),
+							success
+						),
+						error: successWithDynamicVersion
+					});
+				}, name, pathConfig.directory),
+				loadApp = function loadApp(callback) {
+					monster.waterfall([
+						loadVersion,
+						requireApp,
+						maybeRetrieveBuildConfig,
+						applyConfig,
+						loadSubModules,
+						_.bind(self.monsterizeApp, self)
+					], callback);
+				},
 				initializeApp = function initializeApp(app, callback) {
 					try {
 						app.load(_.partial(callback, null));
@@ -660,8 +687,6 @@ define(function() {
 
 			monster.waterfall([
 				loadApp,
-				loadSubModules,
-				_.bind(self.monsterizeApp, self),
 				_.bind(self.loadDependencies, self),
 				initializeApp
 			], mainCallback);
@@ -724,7 +749,7 @@ define(function() {
 				language = language.replace(/-.*/, _.toUpper),
 				loadFile = function loadFile(app, language, callback) {
 					$.ajax({
-						url: monster.util.cacheUrl(app.appPath + '/i18n/' + language + '.json'),
+						url: monster.util.cacheUrl(app, app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
 						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
