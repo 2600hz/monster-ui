@@ -696,100 +696,99 @@ define(function(require) {
 
 		initializeShortcuts: function(apps) {
 			var self = this,
-				shortcuts = [
-					{
-						category: 'general',
-						key: '?',
-						title: self.i18n.active().globalShortcuts.keys['?'].title,
-						callback: function() {
-							self.showShortcutsPopup();
-						}
-					},
-					{
-						category: 'general',
-						key: '@',
-						title: self.i18n.active().globalShortcuts.keys['@'].title,
-						callback: function() {
-							monster.pub('myaccount.renderDropdown');
-						}
-					},
-					{
-						adminOnly: true,
-						category: 'general',
-						key: 'a',
-						title: self.i18n.active().globalShortcuts.keys.a.title,
-						callback: function() {
-							self.toggleAccountToggle();
-						}
-					},
-					{
-						adminOnly: true,
-						category: 'general',
-						key: 'shift+m',
-						title: self.i18n.active().globalShortcuts.keys['shift+m'].title,
-						callback: function() {
-							self.restoreMasquerading({
-								callback: function() {
-									var currentApp = monster.apps.getActiveApp();
-									if (currentApp in monster.apps) {
-										monster.apps[currentApp].render();
+				isEnabled = _.partial(_.get, _, 'isEnabled', true),
+				shortcuts = _
+					.chain([
+						{
+							isEnabled: !monster.config.whitelabel.useDropdownApploader,
+							category: 'general',
+							key: '#',
+							title: self.i18n.active().globalShortcuts.keys['#'].title,
+							callback: function() {
+								monster.pub('apploader.toggle');
+							}
+						},
+						{
+							category: 'general',
+							key: '?',
+							title: self.i18n.active().globalShortcuts.keys['?'].title,
+							callback: function() {
+								self.showShortcutsPopup();
+							}
+						},
+						{
+							category: 'general',
+							key: '@',
+							title: self.i18n.active().globalShortcuts.keys['@'].title,
+							callback: function() {
+								monster.pub('myaccount.renderDropdown');
+							}
+						},
+						{
+							adminOnly: true,
+							category: 'general',
+							key: 'a',
+							title: self.i18n.active().globalShortcuts.keys.a.title,
+							callback: function() {
+								self.toggleAccountToggle();
+							}
+						},
+						{
+							adminOnly: true,
+							category: 'general',
+							key: 'shift+m',
+							title: self.i18n.active().globalShortcuts.keys['shift+m'].title,
+							callback: function() {
+								self.restoreMasquerading({
+									callback: function() {
+										var currentApp = monster.apps.getActiveApp();
+										if (currentApp in monster.apps) {
+											monster.apps[currentApp].render();
+										}
+										self.hideAccountToggle();
 									}
-									self.hideAccountToggle();
-								}
-							});
+								});
+							}
+						},
+						{
+							adminOnly: true,
+							category: 'general',
+							key: 'shift+s',
+							title: self.i18n.active().globalShortcuts.keys['shift+s'].title,
+							callback: function() {
+								monster.util.protectSensitivePhoneNumbers();
+							}
+						},
+						{
+							category: 'general',
+							key: 'd',
+							title: self.i18n.active().globalShortcuts.keys.d.title,
+							callback: function() {
+								self.showDebugPopup();
+							}
+						},
+						{
+							category: 'general',
+							key: 'r',
+							title: self.i18n.active().globalShortcuts.keys.r.title,
+							callback: function() {
+								monster.routing.goTo('apps/' + monster.apps.getActiveApp());
+							}
+						},
+						{
+							category: 'general',
+							key: 'shift+l',
+							title: self.i18n.active().globalShortcuts.keys['shift+l'].title,
+							callback: function() {
+								monster.pub('auth.logout');
+							}
 						}
-					},
-					{
-						adminOnly: true,
-						category: 'general',
-						key: 'shift+s',
-						title: self.i18n.active().globalShortcuts.keys['shift+s'].title,
-						callback: function() {
-							monster.util.protectSensitivePhoneNumbers();
-						}
-					},
-					{
-						category: 'general',
-						key: 'd',
-						title: self.i18n.active().globalShortcuts.keys.d.title,
-						callback: function() {
-							self.showDebugPopup();
-						}
-					},
-					{
-						category: 'general',
-						key: 'r',
-						title: self.i18n.active().globalShortcuts.keys.r.title,
-						callback: function() {
-							monster.routing.goTo('apps/' + monster.apps.getActiveApp());
-						}
-					},
-					{
-						category: 'general',
-						key: 'shift+l',
-						title: self.i18n.active().globalShortcuts.keys['shift+l'].title,
-						callback: function() {
-							monster.pub('auth.logout');
-						}
-					}
-				];
+					])
+					.filter(isEnabled)
+					.concat(self.getGoToAppsShortcuts(apps))
+					.value();
 
-			if (!monster.config.whitelabel.hasOwnProperty('useDropdownApploader') || monster.config.whitelabel.useDropdownApploader === false) {
-				shortcuts.push({
-					category: 'general',
-					key: '#',
-					title: self.i18n.active().globalShortcuts.keys['#'].title,
-					callback: function() {
-						monster.pub('apploader.toggle');
-					}
-				});
-			}
-
-			_.each(shortcuts, function(shortcut) {
-				monster.ui.addShortcut(shortcut);
-			});
-
-			self.addShortcutsGoToApps(apps);
+			_.forEach(shortcuts, _.bind(monster.ui.addShortcut, monster.ui));
 		},
 
 		showDebugPopup: function() {
@@ -849,10 +848,13 @@ define(function(require) {
 			}
 		},
 
-		addShortcutsGoToApps: function(apps) {
+		getGoToAppsShortcuts: function(apps) {
 			var self = this,
-				shortcut,
+				getCallback = function(app) {
+					return _.bind(monster.routing.goTo, monster.routing, 'apps/' + app.name);
+				},
 				appsToBind = {
+					userportal: 'shift+u',
 					voip: 'shift+v',
 					accounts: 'shift+a',
 					callflows: 'shift+c',
@@ -860,22 +862,21 @@ define(function(require) {
 					provisioner: 'shift+p'
 				};
 
-			_.each(apps, function(app) {
-				shortcut = {};
-
-				if (appsToBind.hasOwnProperty(app.name)) {
-					shortcut = {
-						key: appsToBind[app.name],
-						callback: function() {
-							monster.routing.goTo('apps/' + app.name);
-						},
+			return _
+				.chain(apps)
+				.filter(_.flow(
+					_.partial(_.get, _, 'name'),
+					_.partial(_.has, appsToBind)
+				))
+				.map(function(app) {
+					return {
 						category: 'apps',
-						title: app.label
+						key: appsToBind[app.name],
+						title: app.label,
+						callback: getCallback(app)
 					};
-
-					monster.ui.addShortcut(shortcut);
-				}
-			});
+				})
+				.value();
 		},
 
 		/**
