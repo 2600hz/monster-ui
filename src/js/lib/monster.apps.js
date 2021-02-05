@@ -418,6 +418,30 @@ define(function() {
 				}
 			);
 
+			app.setStore = _.get(
+				app,
+				'setStore',
+				/**
+				 * Store setter
+				 * @param {Array|String} [path]
+				 * @param {*} [value]
+				 * @return {*} Modified value at `path`.
+				 */
+				function setStore(path, value) {
+					var hasValue = _.toArray(arguments).length === 2,
+						store = ['data', 'store'],
+						resolvedPath = hasValue
+							? _.flatten([store, _.isString(path) ? path.split('.') : path])
+							: store;
+					_.set(
+						app,
+						resolvedPath,
+						hasValue ? value : path
+					);
+					return app.getStore(resolvedPath);
+				}
+			);
+
 			self._addAppI18n(app, function(err) {
 				if (err) {
 					return callback(err);
