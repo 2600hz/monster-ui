@@ -162,7 +162,7 @@ define(function(require) {
 
 	function Logger(id) {
 		this.id = id;
-		this.shouldPrint = !monster.isEnvironmentProd();
+		this.shouldPrint = monster.isDev();
 	}
 	Logger.prototype = {
 		print: function print(content, method) {
