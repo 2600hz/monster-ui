@@ -397,6 +397,27 @@ define(function() {
 				return monster.util.getAuthToken(connectionName);
 			};
 
+			app.getStore = _.get(
+				app,
+				'getStore',
+				/**
+				 * Store getter
+				 * @param  {Array|String} [path]
+				 * @param  {*} [defaultValue]
+				 * @return {*}
+				 */
+				function getStore(path, defaultValue) {
+					var store = ['data', 'store'];
+					return _.get(
+						app,
+						_.isUndefined(path)
+							? store
+							: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+						defaultValue
+					);
+				}
+			);
+
 			self._addAppI18n(app, function(err) {
 				if (err) {
 					return callback(err);
