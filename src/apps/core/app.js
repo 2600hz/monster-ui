@@ -3,17 +3,11 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var appSubmodules = [
-		'alerts',
-		'socket'
-	];
-
-	require(_.map(appSubmodules, function(name) {
-		return './submodules/' + name + '/' + name;
-	}));
-
 	var app = {
-		subModules: appSubmodules,
+		subModules: [
+			'alerts',
+			'socket'
+		],
 
 		i18n: {
 			'de-DE': { customCss: false },

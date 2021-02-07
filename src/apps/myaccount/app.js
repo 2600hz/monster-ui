@@ -3,23 +3,17 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var appSubmodules = [
-		'account',
-		'balance',
-		'billing',
-		'errorTracker',
-		'servicePlan',
-		'transactions',
-		'trunks',
-		'user'
-	];
-
-	require(_.map(appSubmodules, function(name) {
-		return './submodules/' + name + '/' + name;
-	}));
-
 	var app = {
-		subModules: appSubmodules,
+		subModules: [
+			'account',
+			'balance',
+			'billing',
+			'errorTracker',
+			'servicePlan',
+			'transactions',
+			'trunks',
+			'user'
+		],
 
 		i18n: {
 			'de-DE': { customCss: false },
