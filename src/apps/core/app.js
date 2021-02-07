@@ -13,11 +13,7 @@ define(function(require) {
 	}));
 
 	var app = {
-		name: 'core',
-
 		subModules: appSubmodules,
-
-		css: [ 'app' ],
 
 		i18n: {
 			'de-DE': { customCss: false },
@@ -25,8 +21,6 @@ define(function(require) {
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
 		},
-
-		requests: {},
 
 		subscribe: {
 			'core.isActiveAppPlugin': 'isActiveAppPlugin',

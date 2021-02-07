@@ -19,11 +19,7 @@ define(function(require) {
 	}));
 
 	var app = {
-		name: 'myaccount',
-
 		subModules: appSubmodules,
-
-		css: [ 'app' ],
 
 		i18n: {
 			'de-DE': { customCss: false },
@@ -74,23 +70,6 @@ define(function(require) {
 		},
 
 		mainContainer: '#myaccount',
-
-		load: function(callback) {
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(_callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: _callback
-			});
-		},
 
 		onAppLoaderClosed: function onAppLoaderClosed() {
 			var self = this;
