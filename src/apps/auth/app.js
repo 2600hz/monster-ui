@@ -50,6 +50,8 @@ define(function(require) {
 		},
 
 		subscribe: {
+			'callApi.currentAccount.updated': 'handleCurrentAccountUpdate',
+			'callApi.originalAccount.updated': 'handleOriginalAccountUpdate',
 			'auth.currentAppsStore.fetched': 'handleCurrentAppsStoreList',
 			'auth.currentAppsStore.updated': 'handleCurrentAppsStoreUpdate',
 			'auth.currentAppsStore.deleted': 'handleCurrentAppsStoreDelete',
@@ -1742,6 +1744,18 @@ define(function(require) {
 			}
 
 			callback(null);
+		},
+
+		handleCurrentAccountUpdate: function(updatedAccount) {
+			var self = this;
+			self.currentAccount = updatedAccount;
+			monster.pub('auth.currentAccount.updated', self.currentAccount);
+		},
+
+		handleOriginalAccountUpdate: function(updatedAccount) {
+			var self = this;
+			self.originalAccount = updatedAccount;
+			monster.pub('auth.originalAccount.updated', self.originalAccount);
 		},
 
 		/**
