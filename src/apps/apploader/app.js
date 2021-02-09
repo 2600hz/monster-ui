@@ -342,10 +342,9 @@ define(function(require) {
 			});
 
 			parent.find('#close_app').on('click', function() {
+				self._hide(parent);
 				self.appListUpdate(parent, appList, function(newAppList) {
 					appList = newAppList;
-
-					self._hide(parent);
 				});
 			});
 
@@ -357,10 +356,9 @@ define(function(require) {
 						target.blur();
 						target.focus();
 					} else {
+						self._hide(parent);
 						self.appListUpdate(parent, appList, function(newAppList) {
 							appList = newAppList;
-
-							self._hide(parent);
 						});
 					}
 				}
@@ -530,6 +528,7 @@ define(function(require) {
 
 			self.callApi({
 				resource: 'user.patch',
+				bypassProgressIndicator: true,
 				data: {
 					accountId: self.accountId,
 					userId: self.userId,
