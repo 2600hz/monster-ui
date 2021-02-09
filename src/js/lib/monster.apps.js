@@ -310,12 +310,8 @@ define(function() {
 						case 'appsStore.list':
 							if (params.data.accountId === _.get(monster.apps.auth, monster.util.isMasquerading() ? 'originalAccount.id' : 'accountId')) {
 								successCallback = function(data, status) {
-									monster.pub('auth.currentAppsStore.fetched', {
-										response: data.data,
-										callback: function() {
-											params.success && params.success(data, status);
-										}
-									});
+									monster.pub('callApi.currentAppsStore.fetched', data.data);
+									params.success && params.success(data, status);
 								};
 							}
 							break;
@@ -324,12 +320,8 @@ define(function() {
 						case 'appsStore.update':
 							if (params.data.accountId === _.get(monster.apps.auth, monster.util.isMasquerading() ? 'originalAccount.id' : 'accountId')) {
 								successCallback = function(data, status) {
-									monster.pub('auth.currentAppsStore.updated', {
-										request: params.data,
-										callback: function() {
-											params.success && params.success(data, status);
-										}
-									});
+									monster.pub('callApi.currentAppsStore.updated', data.data);
+									params.success && params.success(data, status);
 								};
 							}
 							break;
@@ -337,12 +329,8 @@ define(function() {
 						case 'appsStore.delete':
 							if (params.data.accountId === _.get(monster.apps.auth, monster.util.isMasquerading() ? 'originalAccount.id' : 'accountId')) {
 								successCallback = function(data, status) {
-									monster.pub('auth.currentAppsStore.deleted', {
-										request: params.data,
-										callback: function() {
-											params.success && params.success(data, status);
-										}
-									});
+									monster.pub('callApi.currentAppsStore.deleted', data.data);
+									params.success && params.success(data, status);
 								};
 							}
 							break;

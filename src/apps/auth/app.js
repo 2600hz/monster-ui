@@ -53,9 +53,12 @@ define(function(require) {
 			'callApi.currentAccount.updated': 'handleCurrentAccountUpdate',
 			'callApi.originalAccount.updated': 'handleOriginalAccountUpdate',
 			'callApi.currentUser.updated': 'handleCurrentUserUpdate',
-			'auth.currentAppsStore.fetched': 'handleCurrentAppsStoreList',
-			'auth.currentAppsStore.updated': 'handleCurrentAppsStoreUpdate',
-			'auth.currentAppsStore.deleted': 'handleCurrentAppsStoreDelete',
+			'callApi.currentAppsStore.fetched': 'handleCurrentAppsStoreList',
+			'callApi.currentAppsStore.updated': 'handleCurrentAppsStoreUpdate',
+			'callApi.currentAppsStore.deleted': 'handleCurrentAppsStoreDelete',
+			'auth.currentAppsStore.fetched': 'maybeUpdateCurrentUserAppList',
+			'auth.currentAppsStore.updated': 'maybeUpdateCurrentUserAppList',
+			'auth.currentAppsStore.deleted': 'maybeUpdateCurrentUserAppList',
 			'auth.logout': '_logout',
 			'auth.clickLogout': '_clickLogout',
 			'auth.initApp': '_initApp',
@@ -1607,9 +1610,9 @@ define(function(require) {
 			});
 		},
 
-		maybeUpdateCurrentUserAppList: function(callback) {
+		maybeUpdateCurrentUserAppList: function() {
 			if (!_.has(monster.apps, 'auth.currentUser')) {
-				return callback(null);
+				return;
 			}
 			var self = this,
 				appIdsList = _.map(monster.util.listAppStoreMetadata('user'), 'id'),
@@ -1642,7 +1645,7 @@ define(function(require) {
 					.value();
 
 			if (_.isEqual(currentActionIdsList, normalizedUserActionIdsList)) {
-				return callback(null);
+				return;
 			}
 			self.callApi({
 				resource: 'user.patch',
@@ -1652,16 +1655,12 @@ define(function(require) {
 					data: {
 						appList: normalizedUserActionIdsList
 					}
-				},
-				success: _.partial(callback, null),
-				error: _.partial(callback, null)
+				}
 			});
 		},
 
-		handleCurrentAppsStoreList: function(args) {
+		handleCurrentAppsStoreList: function(appsStore) {
 			var self = this,
-				appsStore = _.get(args, 'response', {}),
-				callback = _.get(args, 'callback', function() {}),
 				resolveExtensions = function(apps) {
 					_.forEach(apps, function(app) {
 						if (
@@ -1691,40 +1690,36 @@ define(function(require) {
 
 			self.appsStore = resolveExtensions(appsStore);
 
-			self.maybeUpdateCurrentUserAppList(callback);
+			monster.pub('auth.currentAppsStore.fetched', self.appsStore);
 		},
 
-		handleCurrentAppsStoreUpdate: function(args) {
+		handleCurrentAppsStoreUpdate: function(updatedApp) {
 			var self = this,
-				data = _.get(args, 'request', {}),
-				callback = _.get(args, 'callback', function() {}),
 				app = _
 					.chain(self)
 					.get('appsStore', [])
-					.find({ id: data.appId })
+					.find({ id: updatedApp.appId })
 					.value();
 
-			_.assign(app, _.pick(data.data, [
+			_.assign(app, _.pick(updatedApp, [
 				'allowed_users',
 				'users'
 			]));
 
-			self.maybeUpdateCurrentUserAppList(callback);
+			monster.pub('auth.currentAppsStore.updated', app);
 		},
 
-		handleCurrentAppsStoreDelete: function(args) {
+		handleCurrentAppsStoreDelete: function(deletedApp) {
 			var self = this,
-				data = _.get(args, 'request', {}),
-				callback = _.get(args, 'callback', function() {}),
 				app = _
 					.chain(self)
 					.get('appsStore', [])
-					.find({ id: data.appId })
+					.find({ id: deletedApp.appId })
 					.value();
 
 			_.forEach(['allowed_users', 'users'], _.partial(_.unset, app));
 
-			self.maybeUpdateCurrentUserAppList(callback);
+			monster.pub('auth.currentAppsStore.deleted', app);
 		},
 
 		handleCurrentUserUpdate: function(updatedUser) {
