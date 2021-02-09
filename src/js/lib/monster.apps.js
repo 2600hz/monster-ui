@@ -185,16 +185,8 @@ define(function() {
 							// If we're updating the user we're logged in with
 							if (params.data.userId === monster.apps.auth.userId) {
 								successCallback = function(data, status) {
-									monster.parallel([
-										function(next) {
-											monster.pub('auth.currentUser.updated', {
-												response: data.data,
-												callback: next
-											});
-										}
-									], function() {
-										params.success && params.success(data, status);
-									});
+									monster.pub('callApi.currentUser.updated', data.data);
+									params.success && params.success(data, status);
 								};
 							}
 							break;

@@ -52,10 +52,10 @@ define(function(require) {
 		subscribe: {
 			'callApi.currentAccount.updated': 'handleCurrentAccountUpdate',
 			'callApi.originalAccount.updated': 'handleOriginalAccountUpdate',
+			'callApi.currentUser.updated': 'handleCurrentUserUpdate',
 			'auth.currentAppsStore.fetched': 'handleCurrentAppsStoreList',
 			'auth.currentAppsStore.updated': 'handleCurrentAppsStoreUpdate',
 			'auth.currentAppsStore.deleted': 'handleCurrentAppsStoreDelete',
-			'auth.currentUser.updated': 'handleCurrentUserUpdate',
 			'auth.logout': '_logout',
 			'auth.clickLogout': '_clickLogout',
 			'auth.initApp': '_initApp',
@@ -1727,10 +1727,8 @@ define(function(require) {
 			self.maybeUpdateCurrentUserAppList(callback);
 		},
 
-		handleCurrentUserUpdate: function(args) {
+		handleCurrentUserUpdate: function(updatedUser) {
 			var self = this,
-				updatedUser = _.get(args, 'response', {}),
-				callback = _.get(args, 'callback', function() {}),
 				cookieData = monster.cookies.getJson('monster-auth');
 
 			self.currentUser = updatedUser;
@@ -1743,7 +1741,7 @@ define(function(require) {
 				])));
 			}
 
-			callback(null);
+			monster.pub('auth.currentUser.updated', self.currentUser);
 		},
 
 		handleCurrentAccountUpdate: function(updatedAccount) {
