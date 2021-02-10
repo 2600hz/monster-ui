@@ -138,7 +138,7 @@ define(function(require) {
 						defaultEntitiesPerType = {
 							none: {
 								id: 'none',
-								name: self.i18n.active().mediaSelect.noneLabel,
+								name: _.get(args, 'noneLabel', self.i18n.active().mediaSelect.noneLabel),
 								shouldRender: _.get(args, 'hasNone', true)
 							},
 							silence: {
