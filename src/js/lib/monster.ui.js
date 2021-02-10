@@ -1348,7 +1348,7 @@ define(function(require) {
 							return method(value, element);
 						},
 						message: function(protocols) {
-							return self.getTemplate({
+							return monster.apps.core.getTemplate({
 								name: '!' + localization.customRules.protocols,
 								data: {
 									suite: _
