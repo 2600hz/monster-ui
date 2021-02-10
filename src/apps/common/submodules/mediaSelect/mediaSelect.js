@@ -178,7 +178,6 @@ define(function(require) {
 				isSelectedOptionShoutcast = _.partial(isShoutcast, _.get(args, 'selectedOption')),
 				defaultData = {
 					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
-					noneLabel: self.i18n.active().mediaSelect.noneLabel,
 					selectedOption: false,
 					uploadButton: true,
 					options: [],
