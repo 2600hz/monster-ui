@@ -138,7 +138,7 @@ define(function(require) {
 						defaultEntitiesPerType = {
 							none: {
 								id: 'none',
-								name: self.i18n.active().mediaSelect.noneLabel,
+								name: _.get(args, 'noneLabel', self.i18n.active().mediaSelect.noneLabel),
 								shouldRender: _.get(args, 'hasNone', true)
 							},
 							silence: {
@@ -178,7 +178,6 @@ define(function(require) {
 				isSelectedOptionShoutcast = _.partial(isShoutcast, _.get(args, 'selectedOption')),
 				defaultData = {
 					showMediaUploadDisclosure: monster.config.whitelabel.showMediaUploadDisclosure,
-					noneLabel: self.i18n.active().mediaSelect.noneLabel,
 					selectedOption: false,
 					uploadButton: true,
 					options: [],
