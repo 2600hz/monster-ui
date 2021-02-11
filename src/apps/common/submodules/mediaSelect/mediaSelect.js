@@ -102,9 +102,8 @@ define(function(require) {
 						});
 					},
 					medias: function(cb) {
-						if (_.has(args, 'options') && args.options.length > 0) {
-							cb(null, args.options);
-							return;
+						if (_.isArray(args.options)) {
+							return cb(null, args.options);
 						}
 
 						self.callApi({
