@@ -61,6 +61,7 @@ define(function(require) {
 				monster.pub('core.alerts.refresh');
 				monster.pub('core.showAppName', appName);
 				$('#monster_content').empty();
+				delete loadedApp.data.store;
 
 				loadedApp.render($('#monster_content'));
 			});
