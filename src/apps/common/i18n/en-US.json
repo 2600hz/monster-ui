@@ -428,6 +428,9 @@
 		},
 		"editField": {
 			"plan": {
+				"name": {
+					"label": "Name"
+				},
 				"prorate": {
 					"additions": "Prorate Additions",
 					"removals": "Prorate Removals"

@@ -180,6 +180,15 @@
 		</div>
 	</div>
 
+	<div class="field-container control-group" data-type="name"{{#ifInArray 'name' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<label for="name" class="control-label">
+			{{i18n.servicePlanItemEditor.editField.plan.name.label}}
+		</label>
+		<div class="controls">
+			<input type="text" class="span2" id="name" name="name" value="{{name}}">
+		</div>
+	</div>
+
 	<div class="field-container control-group" data-type="step"{{#ifInArray 'step' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
 		<label for="step" class="control-label">
 			{{i18n.servicePlanItemEditor.editField.plan.step.label}}
