@@ -146,7 +146,7 @@
 			"remote": "Please fix this field.",
 			"email": {
 				"one": "Please enter a valid email address.",
-				"list": "Please enter valid space separated email addresses."
+				"other": "Please enter valid space separated email addresses."
 			},
 			"url": "Please enter a valid URL.",
 			"date": "Please enter a valid date.",
@@ -163,7 +163,7 @@
 			"min": "Please enter a value greater than or equal to {0}."
 		},
 		"customRules": {
-			"list": "Please enter valid space separated items.",
+			"listOf": "Please enter valid space separated items.",
 			"lowerThan": "Should be lower than maximum",
 			"greaterThan": "Should be greater than minimum",
 			"phoneNumber": "Please enter a valid phone number",
