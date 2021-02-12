@@ -1337,9 +1337,9 @@ define(function(require) {
 									localization.defaultRules,
 									localization.customRules
 								])
-								.map(_.partial(_.ary(_.get, 2), _, [ruleId, 'list']))
+								.map(_.partial(_.ary(_.get, 2), _, [ruleId, 'other']))
 								.find(_.isString)
-								.defaultTo(localization.customRules.list)
+								.defaultTo(localization.customRules.listOf)
 								.value();
 						}
 					},

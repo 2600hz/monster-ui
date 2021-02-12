@@ -52,13 +52,7 @@ define(function(require) {
 			monster.ui.validate(popupHtml, {
 				rules: {
 					notification_contact_emails: {
-						normalizer: _.trim,
-						regex: /^(?:([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4})(?: ?))*$/
-					}
-				},
-				messages: {
-					notification_contact_emails: {
-						regex: self.i18n.active().e911.email.error
+						listOf: 'email'
 					}
 				}
 			});
