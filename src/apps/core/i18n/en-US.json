@@ -144,7 +144,10 @@
 		"defaultRules": {
 			"required": "This field is required.",
 			"remote": "Please fix this field.",
-			"email": "Please enter a valid email address.",
+			"email": {
+				"one": "Please enter a valid email address.",
+				"list": "Please enter valid space separated email addresses."
+			},
 			"url": "Please enter a valid URL.",
 			"date": "Please enter a valid date.",
 			"dateISO": "Please enter a valid date (ISO).",
@@ -160,6 +163,7 @@
 			"min": "Please enter a value greater than or equal to {0}."
 		},
 		"customRules": {
+			"list": "Please enter valid space separated items.",
 			"lowerThan": "Should be lower than maximum",
 			"greaterThan": "Should be greater than minimum",
 			"phoneNumber": "Please enter a valid phone number",
