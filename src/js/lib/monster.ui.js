@@ -1318,6 +1318,31 @@ define(function(require) {
 
 						return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 					},
+					listOf: {
+						method: function(value, element, ruleId) {
+							var separator = ' ',
+								ruleValidator = _.get($.validator.methods, ruleId, _.stubFalse),
+								isValid = _.bind(ruleValidator, this, _, element);
+
+							return _
+								.chain(value)
+								.trim()
+								.split(separator)
+								.every(isValid)
+								.value();
+						},
+						message: function(ruleId) {
+							return _
+								.chain([
+									localization.defaultRules,
+									localization.customRules
+								])
+								.map(_.partial(_.ary(_.get, 2), _, [ruleId, 'list']))
+								.find(_.isString)
+								.defaultTo(localization.customRules.list)
+								.value();
+						}
+					},
 					lowerThan: function(value, element, param) {
 						var $compElement = param instanceof jQuery ? param : $(param),
 							compValue = $compElement.val(),
