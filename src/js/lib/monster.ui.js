@@ -1348,7 +1348,7 @@ define(function(require) {
 						method: function(value, element, protocols) {
 							var pattern = '^(' + _.join(protocols, '|') + ')://',
 								regex = new RegExp(pattern, 'i'),
-								method = getRegexBasedRuleMethod(regex, this);
+								method = _.bind(getRegexBasedRuleMethod(regex), this);
 
 							return method(value, element);
 						},
@@ -1366,14 +1366,14 @@ define(function(require) {
 						}
 					},
 					regex: function(value, element, regexpr) {
-						var method = getRegexBasedRuleMethod(regexpr, this);
+						var method = _.bind(getRegexBasedRuleMethod(regexpr), this);
 
 						return method(value, element);
 					}
 				},
-				getRegexBasedRuleMethod = function(regex, context) {
+				getRegexBasedRuleMethod = function(regex) {
 					return function(value, element) {
-						return context.optional(element) || regex.test(value);
+						return this.optional(element) || regex.test(value);
 					};
 				},
 				getComplexRuleMethod = function(rule) {
