@@ -7,6 +7,7 @@ define(function() {
 					'as',
 					'cascade',
 					'maximum',
+					'name',
 					'minimum',
 					'rate',
 					'prorate.additions',
