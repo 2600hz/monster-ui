@@ -451,9 +451,15 @@ define(function(require) {
 					name: 'updateStatus-scheduled',
 					submodule: 'portListing'
 				})),
-				defaultDate = portRequest.hasOwnProperty('scheduled_at')
-					? monster.util.gregorianToDate(portRequest.scheduled_at)
-					: moment().toDate(),
+				defaultDate = _
+					.chain([
+						monster.util.dataFlags.get('fake_scheduled_at', portRequest),
+						_.get(portRequest, 'scheduled_at')
+					])
+					.find(_.isInteger)
+					.thru(monster.util.gregorianToDate)
+					.defaultTo(moment().toDate())
+					.value(),
 				$timezoneSelect = template.find('#scheduled_timezone');
 
 			monster.ui.datepicker(template.find('#scheduled_date')).datepicker('setDate', defaultDate);
