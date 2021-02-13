@@ -889,6 +889,10 @@ define(function(require) {
 										.format('YYYY-MM-DD HH:mm')
 								};
 
+								monster.util.dataFlags.add({
+									fake_scheduled_at: monster.util.dateToGregorian(pickedMoment.toDate())
+								}, patchRequestData.data);
+
 								patchRequestData.data.winning_carrier = formData.winning_carrier;
 								patchRequestData.data.reference_number = formData.reference_number;
 							} else if (state === 'pending') {
