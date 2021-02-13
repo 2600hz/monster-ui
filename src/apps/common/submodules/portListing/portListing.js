@@ -881,8 +881,12 @@ define(function(require) {
 										.second(pickedSeconds);
 
 								patchRequestData.data.schedule_on = {
-									date_time: moment(pickedDate).add(pickedSeconds, 'seconds').format('YYYY-MM-DD HH:mm'),
-									timezone: timezone
+									timezone: 'EST5EDT',
+									date_time: pickedMoment
+										.tz('EST5EDT')
+										.hour(11)
+										.minute(30)
+										.format('YYYY-MM-DD HH:mm')
 								};
 
 								patchRequestData.data.winning_carrier = formData.winning_carrier;
