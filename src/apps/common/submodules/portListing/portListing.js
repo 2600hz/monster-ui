@@ -875,7 +875,10 @@ define(function(require) {
 							if (state === 'scheduled') {
 								var pickedDate = dialog.find('#scheduled_date').datepicker('getDate'),
 									pickedSeconds = dialog.find('#scheduled_time').timepicker('getSecondsFromMidnight'),
-									timezone = dialog.find('#scheduled_timezone').val();
+									timezone = dialog.find('#scheduled_timezone').val(),
+									pickedMoment = moment
+										.tz(pickedDate, timezone)
+										.second(pickedSeconds);
 
 								patchRequestData.data.schedule_on = {
 									date_time: moment(pickedDate).add(pickedSeconds, 'seconds').format('YYYY-MM-DD HH:mm'),
