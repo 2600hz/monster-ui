@@ -13,10 +13,8 @@ Key | Description | Type | Default | Required
 `timestamp` | Gregorian timestamp representing a date. | `Number` | | `true`
 
 ### Return value
-A `Date` instance.
-
-### Errors
-* `'timestamp' is not a valid Number`: `timestamp` is `NaN` or of a type other than `Number`
+* A `Date` instance.
+* `undefined` when `timestamp` is `NaN` or of a type other than `Number`
 
 ## Description
 The `monster.util.gregorianToDate()` method converts a Gregorian timestamp into a `Date` instance.

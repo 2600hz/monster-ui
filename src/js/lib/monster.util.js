@@ -1370,10 +1370,18 @@ define(function(require) {
 		var timestamp = _.isString(pTimestamp)
 			? _.parseInt(pTimestamp)
 			: pTimestamp;
+
 		if (_.isNaN(timestamp) || !_.isNumber(timestamp)) {
-			throw new Error('`timestamp` is not a valid Number');
+			return;
 		}
-		return new Date((_.floor(timestamp) - 62167219200) * 1000);
+		return new Date(
+			_
+				.chain(timestamp)
+				.floor()
+				.subtract(62167219200)
+				.multiply(1000)
+				.value()
+		);
 	}
 
 	/**
