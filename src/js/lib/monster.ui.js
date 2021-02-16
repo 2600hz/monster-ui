@@ -1280,7 +1280,20 @@ define(function(require) {
 		customValidationInitialized: false,
 
 		initCustomValidation: function() {
-			var localization = monster.apps.core.i18n.active().validation,
+			var validationI18n = monster.apps.core.i18n.active().validation,
+				getRuleI18n = _.partial(function(i18n, ruleId) {
+					return _
+						.chain([
+							'customRules',
+							'defaultRules'
+						])
+						.map(_.flow(
+							_.partial(_.ary(_.concat, 2), _, ruleId),
+							_.partial(_.get, i18n)
+						))
+						.find(_.negate(_.isUndefined))
+						.value();
+				}, validationI18n),
 				regexBasedRules = {
 					mac: /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i,
 					ipv4: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i,
@@ -1331,17 +1344,10 @@ define(function(require) {
 								.every(isValid)
 								.value();
 						},
-						message: function(ruleId) {
-							return _
-								.chain([
-									localization.defaultRules,
-									localization.customRules
-								])
-								.map(_.partial(_.ary(_.get, 2), _, [ruleId, 'other']))
-								.find(_.isString)
-								.defaultTo(localization.customRules.listOf)
-								.value();
-						}
+						message: _.flow(
+							getRuleI18n,
+							_.partial(_.get, _, 'other', getRuleI18n('listOf'))
+						)
 					},
 					lowerThan: function(value, element, param) {
 						var $compElement = param instanceof jQuery ? param : $(param),
@@ -1374,7 +1380,7 @@ define(function(require) {
 						},
 						message: function(protocols) {
 							return monster.apps.core.getTemplate({
-								name: '!' + localization.customRules.protocols,
+								name: '!' + getRuleI18n('protocols'),
 								data: {
 									suite: _
 										.chain(protocols)
@@ -1411,13 +1417,13 @@ define(function(require) {
 							method: _.isRegExp(rule) ? getRegexBasedRuleMethod(rule) : getComplexRuleMethod(rule),
 							message: _.find([
 								_.get(rule, 'message'),
-								_.get(localization.customRules, name)
+								getRuleI18n(name)
 							], _.negate(_.isUndefined))
 						};
 					})
 					.value();
 
-			$.extend($.validator.messages, _.mapValues(localization.defaultRules, _.unary($.validator.format)));
+			$.extend($.validator.messages, _.mapValues(validationI18n.defaultRules, _.unary($.validator.format)));
 
 			_.forEach(rules, function(rule) {
 				$.validator.addMethod(rule.name, rule.method, rule.message);
