@@ -1281,6 +1281,7 @@ define(function(require) {
 
 		initCustomValidation: function() {
 			var validationI18n = monster.apps.core.i18n.active().validation,
+				defaultRulesI18n = _.get(validationI18n, 'defaultRules'),
 				getRuleI18n = _.partial(function(i18n, ruleId) {
 					return _
 						.chain([
@@ -1301,6 +1302,13 @@ define(function(require) {
 						.get(plural)
 						.value();
 				},
+				getRuleMessageForOne = _.flow(
+					_.over([
+						_.partial(getRuleMessageForPlural, 'one'),
+						getRuleI18n
+					]),
+					_.partial(_.find, _, _.isString)
+				),
 				regexBasedRules = {
 					mac: /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i,
 					ipv4: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i,
@@ -1353,7 +1361,7 @@ define(function(require) {
 						},
 						message: _.flow(
 							_.partial(getRuleMessageForPlural, 'other'),
-							_.partial(_.defaultTo, getRuleI18n('listOf'))
+							_.partial(_.defaultTo, getRuleMessageForOne('listOf'))
 						)
 					},
 					lowerThan: function(value, element, param) {
@@ -1387,7 +1395,7 @@ define(function(require) {
 						},
 						message: function(protocols) {
 							return monster.apps.core.getTemplate({
-								name: '!' + getRuleI18n('protocols'),
+								name: '!' + getRuleMessageForOne('protocols'),
 								data: {
 									suite: _
 										.chain(protocols)
@@ -1424,13 +1432,16 @@ define(function(require) {
 							method: _.isRegExp(rule) ? getRegexBasedRuleMethod(rule) : getComplexRuleMethod(rule),
 							message: _.find([
 								_.get(rule, 'message'),
-								getRuleI18n(name)
+								getRuleMessageForOne(name)
 							], _.negate(_.isUndefined))
 						};
 					})
 					.value();
 
-			$.extend($.validator.messages, _.mapValues(validationI18n.defaultRules, _.unary($.validator.format)));
+			$.extend($.validator.messages, _.mapKeys(defaultRulesI18n, _.flow(
+				getRuleMessageForOne,
+				$.validator.format
+			)));
 
 			_.forEach(rules, function(rule) {
 				$.validator.addMethod(rule.name, rule.method, rule.message);
