@@ -1294,6 +1294,13 @@ define(function(require) {
 						.find(_.negate(_.isUndefined))
 						.value();
 				}, validationI18n),
+				getRuleMessageForPlural = function(plural, ruleId) {
+					return _
+						.chain(ruleId)
+						.thru(getRuleI18n)
+						.get(plural)
+						.value();
+				},
 				regexBasedRules = {
 					mac: /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i,
 					ipv4: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i,
@@ -1345,8 +1352,8 @@ define(function(require) {
 								.value();
 						},
 						message: _.flow(
-							getRuleI18n,
-							_.partial(_.get, _, 'other', getRuleI18n('listOf'))
+							_.partial(getRuleMessageForPlural, 'other'),
+							_.partial(_.defaultTo, getRuleI18n('listOf'))
 						)
 					},
 					lowerThan: function(value, element, param) {
