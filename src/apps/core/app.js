@@ -802,14 +802,16 @@ define(function(require) {
 					account: acc,
 					authToken: self.getAuthToken(),
 					apiUrl: self.apiUrl,
-					version: monster.util.getVersion(),
+					version: {
+						monster: monster.util.getVersion(),
+						kazoo: monster.config.developerFlags.kazooVersion
+					},
 					hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
 					socket: _.pick(socketInfo, [
 						'isConfigured',
 						'isConnected',
 						'uri'
-					]),
-					kazooVersion: monster.config.developerFlags.kazooVersion
+					])
 				},
 				template = $(self.getTemplate({
 					name: 'dialog-accountInfo',

@@ -54,14 +54,16 @@
 			</tr>
 		{{/if}}
 
+	{{#with version}}
 		<tr>
-			<td>{{ i18n.debugAccountDialog.monsterVersion }}</td>
-			<td>{{ version }}</td>
+			<td>{{ @root.i18n.debugAccountDialog.versioning.monster }}</td>
+			<td>{{ monster }}</td>
 		</tr>
 
 		<tr>
-			<td>{{ i18n.debugAccountDialog.kazooVersion }}</td>
-			<td>{{ kazooVersion }}</td>
+			<td>{{ @root.i18n.debugAccountDialog.versioning.kazoo }}</td>
+			<td>{{ kazoo }}</td>
 		</tr>
+	{{/with}}
 	</table>
 </div>
