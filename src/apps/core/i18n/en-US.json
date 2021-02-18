@@ -699,6 +699,10 @@
 		"authToken": "Auth Token",
 		"apiUrl": "API URL",
 		"versioning": {
+			"app": {
+				"label": "UI App Version",
+				"pattern": "{{app}}@{{version}}"
+			},
 			"monster": "UI Core Version",
 			"kazoo": "Back-End Version"
 		},

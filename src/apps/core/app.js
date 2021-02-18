@@ -798,14 +798,23 @@ define(function(require) {
 			var self = this,
 				acc = monster.apps.auth.currentAccount,
 				socketInfo = monster.socket.getInfo(),
+				activeApp = monster.apps.getActiveApp(),
 				dataTemplate = {
 					account: acc,
 					authToken: self.getAuthToken(),
 					apiUrl: self.apiUrl,
-					version: {
-						monster: monster.util.getVersion(),
+					version: _.merge({
 						kazoo: monster.config.developerFlags.kazooVersion
-					},
+					}, !monster.isDev() && {
+						app: self.getTemplate({
+							name: '!' + self.i18n.active().debugAccountDialog.versioning.app.pattern,
+							data: {
+								app: activeApp,
+								version: _.get(monster.apps, [activeApp, 'data', 'version'])
+							}
+						}),
+						monster: monster.util.getVersion()
+					}),
 					hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
 					socket: _.pick(socketInfo, [
 						'isConfigured',

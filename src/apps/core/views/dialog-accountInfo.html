@@ -55,10 +55,17 @@
 		{{/if}}
 
 	{{#with version}}
+		{{#if monster}}
 		<tr>
 			<td>{{ @root.i18n.debugAccountDialog.versioning.monster }}</td>
 			<td>{{ monster }}</td>
 		</tr>
+
+		<tr>
+			<td>{{ @root.i18n.debugAccountDialog.versioning.app.label }}</td>
+			<td>{{ app }}</td>
+		</tr>
+		{{/if}}
 
 		<tr>
 			<td>{{ @root.i18n.debugAccountDialog.versioning.kazoo }}</td>
