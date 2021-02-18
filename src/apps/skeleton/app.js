@@ -1,16 +1,10 @@
 define(function(require) {
 	var $ = require('jquery'),
-		_ = require('lodash'),
 		monster = require('monster');
 
-	var app = {
-		i18n: {
-			'en-US': { customCss: false },
-			'fr-FR': { customCss: false }
-		},
-
+	return {
 		// Entry Point of the app
-		render: function(container) {
+		render: function() {
 			var self = this;
 
 			monster.ui.generateAppLayout(self, {
@@ -18,7 +12,7 @@ define(function(require) {
 					{
 						tabs: [
 							{
-								callback: self.renderWelcome
+								callback: self.welcomeRender
 							}
 						]
 					}
@@ -26,26 +20,15 @@ define(function(require) {
 			});
 		},
 
-		renderWelcome: function(pArgs) {
-			var self = this,
-				args = pArgs || {},
-				parent = args.container || $('#skeleton_app_container .app-content-wrapper'),
-				template = $(self.getTemplate({
-					name: 'layout',
-					data: {
-						user: monster.apps.auth.currentUser
-					}
-				}));
+		welcomeRender: function(args) {
+			var $template = $(self.getTemplate({
+				name: 'layout',
+				data: {
+					user: monster.apps.auth.currentUser
+				}
+			}));
 
-			parent
-				.fadeOut(function() {
-					$(this)
-						.empty()
-						.append(template)
-						.fadeIn();
-				});
+			monster.ui.insertTemplate(args.container, $template);
 		}
 	};
-
-	return app;
 });

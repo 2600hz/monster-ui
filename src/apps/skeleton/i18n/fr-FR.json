@@ -1,6 +1,0 @@
-{
-	"skeleton": {
-		"description": "Vous pouvez changer le template HTML situé dans /apps/skeleton/views/layout.html. Le Javascript nécessaire à cette application se situe dans /apps/skeleton/app.js.",
-		"welcome": "Bienvenue {{variable}} dans notre exemple d'application!"
-	}
-}
