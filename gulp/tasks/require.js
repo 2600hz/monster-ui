@@ -78,7 +78,7 @@ const libsToExcludeFromApp = [
 	'renderjson',
 	'signals',
 	'simplemde',
-	'sugar',
+	'sugar-date',
 	'templates',
 	'tether',
 	'timepicker',
