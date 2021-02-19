@@ -333,7 +333,6 @@
 	"e911": {
 		"email": {
 			"label": "Email Address(es)",
-			"error": "Invalid space separated address(es)",
 			"placeholder": "Space separated"
 		},
 		"addressLine1": "Address Line 1",

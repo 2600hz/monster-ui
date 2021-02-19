@@ -1280,7 +1280,35 @@ define(function(require) {
 		customValidationInitialized: false,
 
 		initCustomValidation: function() {
-			var localization = monster.apps.core.i18n.active().validation,
+			var validationI18n = monster.apps.core.i18n.active().validation,
+				defaultRulesI18n = _.get(validationI18n, 'defaultRules'),
+				getRuleI18n = _.partial(function(i18n, ruleId) {
+					return _
+						.chain([
+							'customRules',
+							'defaultRules'
+						])
+						.map(_.flow(
+							_.partial(_.ary(_.concat, 2), _, ruleId),
+							_.partial(_.get, i18n)
+						))
+						.find(_.negate(_.isUndefined))
+						.value();
+				}, validationI18n),
+				getRuleMessageForPlural = function(plural, ruleId) {
+					return _
+						.chain(ruleId)
+						.thru(getRuleI18n)
+						.get(plural)
+						.value();
+				},
+				getRuleMessageForOne = _.flow(
+					_.over([
+						_.partial(getRuleMessageForPlural, 'one'),
+						getRuleI18n
+					]),
+					_.partial(_.find, _, _.isString)
+				),
 				regexBasedRules = {
 					mac: /^(?:[0-9A-F]{2}(:|-))(?:[0-9A-F]{2}\1){4}[0-9A-F]{2}$/i,
 					ipv4: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i,
@@ -1318,6 +1346,24 @@ define(function(require) {
 
 						return this.optional(element) || isLinkedFieldEmptyOrHidden || isValid;
 					},
+					listOf: {
+						method: function(value, element, ruleId) {
+							var separator = ' ',
+								ruleValidator = _.get($.validator.methods, ruleId, _.stubFalse),
+								isValid = _.bind(ruleValidator, this, _, element);
+
+							return _
+								.chain(value)
+								.trim()
+								.split(separator)
+								.every(isValid)
+								.value();
+						},
+						message: _.flow(
+							_.partial(getRuleMessageForPlural, 'other'),
+							_.partial(_.defaultTo, getRuleMessageForOne('listOf'))
+						)
+					},
 					lowerThan: function(value, element, param) {
 						var $compElement = param instanceof jQuery ? param : $(param),
 							compValue = $compElement.val(),
@@ -1349,7 +1395,7 @@ define(function(require) {
 						},
 						message: function(protocols) {
 							return monster.apps.core.getTemplate({
-								name: '!' + localization.customRules.protocols,
+								name: '!' + getRuleMessageForOne('protocols'),
 								data: {
 									suite: _
 										.chain(protocols)
@@ -1386,13 +1432,16 @@ define(function(require) {
 							method: _.isRegExp(rule) ? getRegexBasedRuleMethod(rule) : getComplexRuleMethod(rule),
 							message: _.find([
 								_.get(rule, 'message'),
-								_.get(localization.customRules, name)
+								getRuleMessageForOne(name)
 							], _.negate(_.isUndefined))
 						};
 					})
 					.value();
 
-			$.extend($.validator.messages, _.mapValues(localization.defaultRules, _.unary($.validator.format)));
+			$.extend($.validator.messages, _.mapKeys(defaultRulesI18n, _.flow(
+				getRuleMessageForOne,
+				$.validator.format
+			)));
 
 			_.forEach(rules, function(rule) {
 				$.validator.addMethod(rule.name, rule.method, rule.message);
