@@ -2919,6 +2919,7 @@ define(function(require) {
 						enabled: true,
 						size: 10,
 						limit: 0,
+						availablePageSizes: [ 10, 25, 50, 100 ],
 						countFormat: monster.apps.core.i18n.active().footable.format
 					}
 				},
