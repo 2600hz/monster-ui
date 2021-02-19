@@ -13,19 +13,6 @@
 			</td>
 		</tr>
 
-		<tr>
-			<td>{{ i18n.debugAccountDialog.authToken }}</td>
-			<td>
-				<span class="to-copy">{{ authToken }}</span>
-				<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
-			</td>
-		</tr>
-
-		<tr>
-			<td>{{ i18n.debugAccountDialog.kazooVersion }}</td>
-			<td>{{ kazooVersion }}</td>
-		</tr>
-
 		{{#unless hideURLs}}
 			<tr>
 				<td>{{ i18n.debugAccountDialog.apiUrl }}</td>
@@ -35,6 +22,14 @@
 				</td>
 			</tr>
 		{{/unless}}
+
+		<tr>
+			<td>{{ i18n.debugAccountDialog.authToken }}</td>
+			<td>
+				<span class="to-copy">{{ authToken }}</span>
+				<a href="javascript:void(0);" class="copy-clipboard" data-original-title="{{ i18n.debugAccountDialog.copyToClipboard }}" data-placement="top" data-toggle="tooltip"><i class="fa fa-clipboard"></i></a>
+			</td>
+		</tr>
 
 		{{#if socket.isConfigured}}
 			<tr>
@@ -59,9 +54,23 @@
 			</tr>
 		{{/if}}
 
+	{{#with version}}
+		{{#if monster}}
 		<tr>
-			<td>{{ i18n.debugAccountDialog.monsterVersion }}</td>
-			<td>{{ version }}</td>
+			<td>{{ @root.i18n.debugAccountDialog.versioning.monster }}</td>
+			<td>{{ monster }}</td>
 		</tr>
+
+		<tr>
+			<td>{{ @root.i18n.debugAccountDialog.versioning.app.label }}</td>
+			<td>{{ app }}</td>
+		</tr>
+		{{/if}}
+
+		<tr>
+			<td>{{ @root.i18n.debugAccountDialog.versioning.kazoo }}</td>
+			<td>{{ kazoo }}</td>
+		</tr>
+	{{/with}}
 	</table>
 </div>
