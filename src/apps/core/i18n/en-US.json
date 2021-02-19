@@ -702,7 +702,14 @@
 		"accountId": "Account ID",
 		"authToken": "Auth Token",
 		"apiUrl": "API URL",
-		"monsterVersion": "UI Core Version",
+		"versioning": {
+			"app": {
+				"label": "UI App Version",
+				"pattern": "{{app}}@{{version}}"
+			},
+			"monster": "UI Core Version",
+			"kazoo": "Back-End Version"
+		},
 		"__comment": "UI-2941: Adding debug info to debug popup",
 		"__version": "4.2",
 		"webSocket": {
@@ -710,7 +717,6 @@
 			"connected": "Connected",
 			"disconnected": "Disconnected"
 		},
-		"kazooVersion": "Back-End Version",
 		"copyToClipboard": "Copy to Clipboard"
 	},
 
