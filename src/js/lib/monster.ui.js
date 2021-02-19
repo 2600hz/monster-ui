@@ -2821,7 +2821,7 @@ define(function(require) {
 				},
 				addPageSizeComponent = function(container, table, pPageSize, pAvailablePageSizes) {
 					var pageSize = pPageSize || finalOptions.paging.size || 10,
-						availablePageSizes = pAvailablePageSizes || [ 10, 25, 50, 100 ],
+						availablePageSizes = pAvailablePageSizes || finalOptions.paging.availablePageSizes,
 						footableInstance;
 
 					if (availablePageSizes.indexOf(parseInt(pageSize)) < 0) {
@@ -2833,14 +2833,21 @@ define(function(require) {
 
 					// If we gave a selector with many table, we need to add the component to each table, so we need to loop thru each table included in the jquery selector
 					$.each(table, function(k, singleTable) {
-						var $singleTable = $(singleTable);
+						var $singleTable = $(singleTable),
+							$tablePaging = $singleTable.find('.footable-paging td');
 
-						$singleTable.find('.footable-paging td').append($(monster.template(monster.apps.core, 'monster-table-pageSize', { pageSize: pageSize, availablePageSizes: availablePageSizes })));
+						if ($tablePaging.length === 0) {
+							$singleTable.find('tfoot').append($(monster.template(monster.apps.core, 'monster-table-paging', { cols: $singleTable.find('tbody > tr:first > td').length })));
+							$tablePaging = $singleTable.find('.footable-paging td');
+						}
+
+						$tablePaging.append($(monster.template(monster.apps.core, 'monster-table-pageSize', { pageSize: pageSize, availablePageSizes: availablePageSizes })));
 
 						$singleTable.find('.footable-paging td .table-page-size select').on('change', function() {
 							pageSize = parseInt($(this).val());
 							footableInstance = footable.get('#' + $singleTable.attr('id'));
 
+							$singleTable.find('tfoot').empty();
 							footableInstance.pageSize(pageSize);
 							addPageSizeComponent(container, $singleTable, pageSize, availablePageSizes);
 
