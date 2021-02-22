@@ -780,42 +780,53 @@ define(function(require) {
 		},
 
 		showDebugPopup: function() {
+			if ($('.debug-dialog').length) {
+				return;
+			}
 			var self = this,
 				acc = monster.apps.auth.currentAccount,
-				socketInfo = monster.socket.getInfo();
+				socketInfo = monster.socket.getInfo(),
+				activeApp = monster.apps.getActiveApp(),
+				dataTemplate = {
+					account: acc,
+					authToken: self.getAuthToken(),
+					apiUrl: self.apiUrl,
+					version: _.merge({
+						kazoo: monster.config.developerFlags.kazooVersion
+					}, !monster.isDev() && {
+						app: self.getTemplate({
+							name: '!' + self.i18n.active().debugAccountDialog.versioning.app.pattern,
+							data: {
+								app: activeApp,
+								version: _.get(monster.apps, [activeApp, 'data', 'version'])
+							}
+						}),
+						monster: monster.util.getVersion()
+					}),
+					hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
+					socket: _.pick(socketInfo, [
+						'isConfigured',
+						'isConnected',
+						'uri'
+					])
+				},
+				template = $(self.getTemplate({
+					name: 'dialog-accountInfo',
+					data: dataTemplate
+				}));
 
-			if (!$('.debug-dialog').length) {
-				var dataTemplate = {
-						account: acc,
-						authToken: self.getAuthToken(),
-						apiUrl: self.apiUrl,
-						version: monster.util.getVersion(),
-						hideURLs: monster.util.isWhitelabeling() && !monster.util.isSuperDuper(),
-						socket: _.pick(socketInfo, [
-							'isConfigured',
-							'isConnected',
-							'uri'
-						]),
-						kazooVersion: monster.config.developerFlags.kazooVersion
-					},
-					template = $(self.getTemplate({
-						name: 'dialog-accountInfo',
-						data: dataTemplate
-					}));
-
-				template.find('.copy-clipboard').each(function() {
-					var $this = $(this);
-					monster.ui.clipboard($this, function() {
-						return $this.siblings('.to-copy').html();
-					});
+			template.find('.copy-clipboard').each(function() {
+				var $this = $(this);
+				monster.ui.clipboard($this, function() {
+					return $this.siblings('.to-copy').html();
 				});
+			});
 
-				monster.ui.tooltips(template);
+			monster.ui.tooltips(template);
 
-				monster.ui.dialog(template, {
-					title: self.i18n.active().debugAccountDialog.title
-				});
-			}
+			monster.ui.dialog(template, {
+				title: self.i18n.active().debugAccountDialog.title
+			});
 		},
 
 		showShortcutsPopup: function() {
