@@ -62,6 +62,7 @@ require.config({
 		'renderjson': 'js/vendor/renderjson',
 		'signals': 'js/vendor/signals.min',
 		'simplemde': 'js/vendor/simplemde.min',
+		'sugar-date': 'js/vendor/sugar-custom.min',
 		'templates': 'js/templates',
 		'tether': 'js/vendor/tether.min',
 		'timepicker': 'js/vendor/jquery.timepicker.min',
