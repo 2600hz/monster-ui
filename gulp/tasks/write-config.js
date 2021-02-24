@@ -52,6 +52,7 @@ export const writeConfigDev = () => {
 			: 'standard'
 	};
 	writeFile(fileName, content);
+	writeBulkAppsConfig();
 	return gulp.src(fileName);
 };
 

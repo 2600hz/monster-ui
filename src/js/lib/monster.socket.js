@@ -634,7 +634,7 @@ define(function(require) {
 				isConfigured: _.isString(uri) && /^ws{1,2}:\/\//i.test(uri),
 				isConnected: !_.isUndefined(client) && client.isOpen(),
 				uri: uri
-			}, !monster.isEnvironmentProd() && {
+			}, monster.isDev() && {
 				client: client
 			});
 		},
