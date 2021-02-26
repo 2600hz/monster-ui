@@ -2837,7 +2837,15 @@ define(function(require) {
 							$tablePaging = $singleTable.find('.footable-paging td');
 
 						if ($tablePaging.length === 0) {
-							$singleTable.find('tfoot').append($(monster.template(monster.apps.core, 'monster-table-paging', { cols: $singleTable.find('tbody > tr:first > td').length })));
+							$singleTable.find('tfoot').append(
+								$(monster.template(
+									monster.apps.core, 'monster-table-paging',
+									{
+										cols: $singleTable.find('tbody > tr:first > td').length,
+										rowCount: footable.get($singleTable).rows.all.length
+									}
+								))
+							);
 							$tablePaging = $singleTable.find('.footable-paging td');
 						}
 
