@@ -4,32 +4,8 @@ define(function(require) {
 		monster = require('monster');
 
 	var app = {
-		name: 'demo',
-
-		css: [ 'app' ],
-
 		i18n: {
 			'en-US': { customCss: false }
-		},
-
-		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
-		load: function(callback) {
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		// Method used by the Monster-UI Framework, shouldn't be touched unless you're doing some advanced kind of stuff!
-		initApp: function(callback) {
-			var self = this;
-
-			// Used to init the auth token and account id of this app
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
 		},
 
 		// Entry Point of the app
