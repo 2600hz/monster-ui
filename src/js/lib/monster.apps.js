@@ -663,16 +663,19 @@ define(function() {
 					}, callback);
 				}, pathConfig.module, pathConfig.directory, name, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
+					var callbackForConfig = _.partial(_.ary(callback, 3), null, app),
+						callbackWithoutConfig = _.partial(callbackForConfig, {});
+
 					if (!app.hasConfigFile) {
-						return callback(null, app, {});
+						return callbackWithoutConfig();
 					}
 					$.ajax({
 						url: app.appPath + '/app-build-config.json',
 						dataType: 'json',
 						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
-						success: _.partial(callback, null, app),
-						error: _.partial(callback, null, app, {})
+						success: callbackForConfig,
+						error: callbackWithoutConfig
 					});
 				},
 				applyConfig = function(app, config, callback) {
