@@ -569,14 +569,19 @@ define(function(require) {
 		}, _.includes(['alpha', 'beta'], app.phase) && {
 			extraCssClass: app.phase + '-overlay-icon'
 		});
+		var supportedLocales = _.keys(app.i18n);
 		var locale = _.find([
 			monster.config.whitelabel.language,
 			monster.defaultLanguage,
-			_.head(_.keys(app.i18n))
+			_.head(supportedLocales)
 		], _.partial(_.has, app.i18n));
 		var activeI18n = _.get(app.i18n, locale);
 
-		return _.merge({}, _.omit(app, 'i18n'), activeI18n, iconMetadata);
+		return _.merge({
+			supportedLocales: supportedLocales
+		}, _.omit(app, [
+			'i18n'
+		]), activeI18n, iconMetadata);
 	}
 
 	/**
