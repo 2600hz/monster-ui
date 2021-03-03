@@ -3,27 +3,17 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster');
 
-	var appSubmodules = [
-		'account',
-		'balance',
-		'billing',
-		'errorTracker',
-		'servicePlan',
-		'transactions',
-		'trunks',
-		'user'
-	];
-
-	require(_.map(appSubmodules, function(name) {
-		return './submodules/' + name + '/' + name;
-	}));
-
 	var app = {
-		name: 'myaccount',
-
-		subModules: appSubmodules,
-
-		css: [ 'app' ],
+		subModules: [
+			'account',
+			'balance',
+			'billing',
+			'errorTracker',
+			'servicePlan',
+			'transactions',
+			'trunks',
+			'user'
+		],
 
 		i18n: {
 			'de-DE': { customCss: false },
@@ -74,25 +64,6 @@ define(function(require) {
 		},
 
 		mainContainer: '#myaccount',
-
-		load: function(callback) {
-			var self = this;
-
-			self.initApp(function() {
-				self.render();
-
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(_callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: _callback
-			});
-		},
 
 		onAppLoaderClosed: function onAppLoaderClosed() {
 			var self = this;

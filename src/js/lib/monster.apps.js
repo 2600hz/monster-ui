@@ -3,6 +3,11 @@ define(function() {
 		_ = require('lodash'),
 		monster = require('monster');
 
+	var baseApps = [
+		'auth',
+		'core'
+	];
+
 	var apps = {
 		// Global var used to show the loading gif
 		uploadProgress: {
@@ -13,6 +18,37 @@ define(function() {
 
 		monsterizeApp: function(app, callback) {
 			var self = this;
+
+			app.css = _
+				.chain([
+					'app',
+					_.isArray(app.css) ? app.css : []
+				])
+				.flatten()
+				.uniq()
+				.value();
+			app.i18n = _
+				.chain({})
+				.set(monster.defaultLanguage, {
+					customCss: false
+				})
+				.merge(_.isPlainObject(app.i18n) ? app.i18n : {})
+				.value();
+
+			if (!_.includes(baseApps, app.name)) {
+				app.initApp = _.flow(
+					_.partial(_.set, { app: app }, 'callback'),
+					_.partial(monster.pub, 'auth.initApp')
+				);
+				app.load = function(callback) {
+					app.initApp(function() {
+						if (app.name === 'myaccount') {
+							app.render();
+						}
+						callback && callback(app);
+					});
+				};
+			}
 
 			_.each(app.requests, function(request, id) {
 				monster._defineRequest(id, request, app);
@@ -627,16 +663,19 @@ define(function() {
 					}, callback);
 				}, pathConfig.module, pathConfig.directory, name, apiUrl),
 				maybeRetrieveBuildConfig = function maybeRetrieveBuildConfig(app, callback) {
+					var callbackForConfig = _.partial(_.ary(callback, 3), null, app),
+						callbackWithoutConfig = _.partial(callbackForConfig, {});
+
 					if (!app.hasConfigFile) {
-						return callback(null, app, {});
+						return callbackWithoutConfig();
 					}
 					$.ajax({
 						url: app.appPath + '/app-build-config.json',
 						dataType: 'json',
 						beforeSend: _.partial(monster.pub, 'monster.requestStart'),
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
-						success: _.partial(callback, null, app),
-						error: _.partial(callback, null, app, {})
+						success: callbackForConfig,
+						error: callbackWithoutConfig
 					});
 				},
 				applyConfig = function(app, config, callback) {

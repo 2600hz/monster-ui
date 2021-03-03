@@ -4,11 +4,6 @@ define(function(require) {
 		monster = require('monster');
 
 	var app = {
-
-		name: 'auth',
-
-		css: [ 'app' ],
-
 		i18n: {
 			'de-DE': { customCss: false },
 			'en-US': { customCss: false },
