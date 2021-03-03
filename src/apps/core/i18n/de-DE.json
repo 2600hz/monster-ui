@@ -750,11 +750,7 @@
 	"__version": "v4.0",
 	"tablePageSize": {
 		"show": "Anzeigen",
-		"entries": "Einträge",
-		"ten": "10",
-		"twentyFive": "25",
-		"fifty": "50",
-		"hundred": "100"
+		"entries": "Einträge"
 	},
 
 	"__comment": "UI-2596: Hinzufügen von ISO-Ländern zur Internationalisierung",
