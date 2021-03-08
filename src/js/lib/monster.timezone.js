@@ -658,21 +658,32 @@ define(function(require) {
 
 		populateDropdown: function(dropdown, _selected, extraOptions) {
 			var self = this,
-				selected = _selected || self.getLocaleTimezone();
+				selected = _selected || self.getLocaleTimezone(),
+				getOptionTag = _.partial(function(selected, args) {
+					var value = args.value;
+
+					return $('<option>', {
+						value: value,
+						selected: selected === value,
+						text: args.text
+					});
+				}, selected);
 
 			$.each(self.list, function(i, data) {
 				var humanReadableLabel = data.replace(/_/g, ' ');
 
-				if (selected === data) {
-					dropdown.append('<option value="' + data + '" selected>' + humanReadableLabel + '</option>');
-				} else {
-					dropdown.append('<option value="' + data + '">' + humanReadableLabel + '</option>');
-				}
+				dropdown.append(getOptionTag({
+					value: data,
+					text: humanReadableLabel
+				}));
 			});
 
 			if (extraOptions) {
 				_.each(extraOptions, function(name, value) {
-					dropdown.prepend('<option value="' + value + '"' + (selected === value ? 'selected' : '') + '>' + name + '</option>');
+					dropdown.prepend(getOptionTag({
+						value: value,
+						text: name
+					}));
 				});
 			}
 		},
