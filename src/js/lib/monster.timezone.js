@@ -661,10 +661,12 @@ define(function(require) {
 				selected = _selected || self.getLocaleTimezone();
 
 			$.each(self.list, function(i, data) {
+				var humanReadableLabel = data.replace(/_/g, ' ');
+
 				if (selected === data) {
-					dropdown.append('<option value="' + data + '" selected>' + data + '</option>');
+					dropdown.append('<option value="' + data + '" selected>' + humanReadableLabel + '</option>');
 				} else {
-					dropdown.append('<option value="' + data + '">' + data + '</option>');
+					dropdown.append('<option value="' + data + '">' + humanReadableLabel + '</option>');
 				}
 			});
 
