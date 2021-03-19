@@ -2640,8 +2640,8 @@ define(function(require) {
 			self.onNavbarTabClick(thisArg, $tab, oArgs);
 		},
 
-		mask: function(target, type) {
-			var validations = {
+		mask: function(target, type, options) {
+			var config = _.get({
 				phoneNumber: {
 					mask: 'AZZZZZZZZZZZZZZZZ',
 					options: {
@@ -2667,6 +2667,17 @@ define(function(require) {
 						}
 					}
 				},
+				ipv4: {
+					mask: '0ZZ.0ZZ.0ZZ.0ZZ',
+					options: {
+						translation: {
+							'Z': {
+								pattern: /[0-9]/,
+								optional: true
+							}
+						}
+					}
+				},
 				extension: {
 					mask: 'ZZZZZZZZZZZZZZZZ',
 					options: {
@@ -2678,15 +2689,12 @@ define(function(require) {
 						}
 					}
 				}
-			};
+			}, type, {
+				mask: type,
+				options: options
+			});
 
-			if (validations.hasOwnProperty(type)) {
-				var data = validations[type];
-
-				target.mask(data.mask, data.options);
-			} else {
-				console.warn('monster.ui.mask: parameter type\'s value "' + type + '" not a valid option');
-			}
+			target.mask(config.mask, config.options);
 		},
 
 		keyboardShortcuts: {},
