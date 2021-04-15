@@ -912,7 +912,13 @@ define(function(require) {
 	function getDefaultNumbersFormat() {
 		var account = _.get(monster.apps, 'auth.originalAccount', {});
 
-		return _.get(account, 'ui_flags.numbers_format', 'international');
+		return _.find([
+			_.get(account, 'ui_flags.numbers_format'),
+			'international'
+		], _.overEvery(
+			_.isString,
+			_.negate(_.isEmpty)
+		));
 	}
 
 	/**
@@ -992,7 +998,7 @@ define(function(require) {
 					userFormat: getUserFormatFromEntity(user, formattedData),
 					userFormatType: _.get(user, 'ui_flags.numbers_format')
 				});
-			} else if (_.has(account, 'ui_flags.numbers_format')) {
+			} else if (_.get(account, 'ui_flags.numbers_format', '') !== '') {
 				_.merge(formattedData, {
 					userFormat: getUserFormatFromEntity(account, formattedData),
 					userFormatType: _.get(account, 'ui_flags.numbers_format')
