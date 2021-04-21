@@ -268,27 +268,38 @@ define(function() {
 		servicePlanItemEditorFormat: function(category, key) {
 			var self = this,
 				currentItem = self.servicePlanItemEditorGetStore('applied'),
-				planItem = self.servicePlanItemEditorGetStore('edited'),
+				servicePlan = self.servicePlanItemEditorGetStore('edited'),
 				getQuantityExtra = function() {
-					var defaultQuantityCategory = _
-							.chain(self.servicePlanItemEditorGetStore('quantityOptions'))
+					var quantityOptions = self.servicePlanItemEditorGetStore('quantityOptions'),
+						existingCategories = _.map(quantityOptions, 'id'),
+						defaultQuantityCategory = _
+							.chain(quantityOptions)
 							.map('id')
 							.head()
 							.value(),
-						selectedCategory = _.get(planItem, 'quantity.category', defaultQuantityCategory),
-						selectedItem = _.get(planItem, 'quantity.name', _
-							.chain(self.servicePlanItemEditorGetStore('quantityOptions'))
+						planCategory = _.get(servicePlan, 'quantity.category', defaultQuantityCategory),
+						selectCategory = _.includes(existingCategories, planCategory) ? planCategory : '',
+						defaultQuantityItem = _
+							.chain(quantityOptions)
 							.find({ id: defaultQuantityCategory })
 							.get('items')
 							.head()
 							.get('id')
-							.value()
-						);
+							.value(),
+						planItem = _.get(servicePlan, 'quantity.name', defaultQuantityItem),
+						selectItem = _
+							.chain(quantityOptions)
+							.find({ id: selectCategory })
+							.get('items')
+							.map('id')
+							.includes(planItem)
+							.value() ? planItem : '';
 
 					return {
 						category: {
-							selected: selectedCategory,
-							options: _.map(self.servicePlanItemEditorGetStore('quantityOptions'), function(data) {
+							selected: selectCategory,
+							value: planCategory,
+							options: _.map(quantityOptions, function(data) {
 								return {
 									id: data.id,
 									label: data.label
@@ -296,8 +307,17 @@ define(function() {
 							})
 						},
 						name: {
-							selected: selectedItem,
-							options: self.servicePlanItemEditorGetStore('quantityOptions')
+							selected: selectItem,
+							value: planItem,
+							options: _.map(quantityOptions, function(options) {
+								return _.merge({
+									isNew: selectCategory === options.id && !_
+										.chain(options.items)
+										.map('id')
+										.includes(selectItem)
+										.value()
+								}, options);
+							})
 						}
 					};
 				},
@@ -331,7 +351,7 @@ define(function() {
 					exceptions: [],
 					as: '_none',
 					allOptions: self.servicePlanItemEditorGetStore('editable')
-				} : {}, planItem);
+				} : {}, servicePlan);
 
 			if (_.isUndefined(currentItem)) {
 				formattedItem.extra.activationCharge.margin = self.servicePlanItemEditorUtilFormatPrice(formattedItem.activation_charge);
