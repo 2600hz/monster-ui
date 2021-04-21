@@ -535,6 +535,7 @@ define(function() {
 
 		servicePlanItemEditorNormalize: function(template, category, key) {
 			var self = this,
+				selectedFields = template.find('#selector').val(),
 				formattedItem = monster.ui.getFormData('plan_field_form'),
 				typeCheckers = {
 					number: _.toNumber,
@@ -569,6 +570,23 @@ define(function() {
 
 					return node;
 				};
+
+			if (_.includes(selectedFields, 'quantity')) {
+				var selectedCategory = template.find('#quantity_category').val(),
+					$subControl = template.find('.sub-control[data-category="' + selectedCategory + '"]'),
+					selectedItem = $subControl.find('#quantity_name').val(),
+					newItem = _.snakeCase($subControl.find('#new_quantity_name').val()),
+					item = selectedItem || newItem,
+					newCategory = _.snakeCase(template.find('#new_quantity_category').val()),
+					category = selectedCategory || newCategory;
+
+				_.set(formattedItem, 'quantity', {
+					category: category,
+					name: item
+				});
+			} else {
+				_.unset(formattedItem, 'quantity');
+			}
 
 			template.find('.rate-container .rate-row').each(function() {
 				var $this = $(this),
