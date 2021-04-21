@@ -225,9 +225,11 @@
 				{{#with extra.quantity.category}}
 					<select name="quantity.category" id="quantity_category">
 					{{#select selected}}
+						{{#isSuperDuper}}
 							<option value="">
 								{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.category}}
 							</option>
+						{{/isSuperDuper}}
 						{{#each options}}
 							<option value="{{id}}">
 								{{label}}
@@ -243,9 +245,11 @@
 					{{#each options}}
 						<div class="sub-control" data-category="{{id}}"{{#compare id "!==" @root.extra.quantity.category.selected}} style="display: none;"{{/compare}}>
 							<select name="quantity.name.{{id}}" id="quantity_name">
+							{{#isSuperDuper}}
 								<option value="">
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
 								</option>
+							{{/isSuperDuper}}
 							{{#select ../selected}}
 								{{#each items}}
 									<option value="{{id}}">
