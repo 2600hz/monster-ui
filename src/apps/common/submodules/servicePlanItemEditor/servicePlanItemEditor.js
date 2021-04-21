@@ -439,6 +439,41 @@ define(function() {
 			});
 		},
 
+		servicePlanItemEditorQuantityFieldsBindEvents: function($form, $template) {
+			var $categorySelect = $template.find('#quantity_category'),
+				$nameSelect = $template.find('#quantity_name');
+
+			$categorySelect.on('change', function toggleNameControl() {
+				var category = $(this).val(),
+					$subControl = $template.find('.sub-control[data-category="' + category + '"]'),
+					selectedName = $subControl.find('#quantity_name').val(),
+					$nameInput = $subControl.find('#new_quantity_name');
+
+				$template.find('.sub-control').hide();
+
+				$nameInput.val('');
+				$nameInput[_.isEmpty(selectedName) ? 'show' : 'hide']();
+				$subControl.show();
+
+				monster.ui.valid($form);
+			});
+			$categorySelect.on('change', function toggleNewCategoryInput() {
+				var category = $(this).val();
+
+				$template.find('#new_quantity_category').val('')[_.isEmpty(category) ? 'show' : 'hide']();
+				monster.ui.valid($form);
+			});
+
+			$nameSelect.on('change', function toggleNewNameInput() {
+				var $select = $(this),
+					$input = $select.parent().find('#new_quantity_name'),
+					item = $select.val();
+
+				$input.val('')[_.isEmpty(item) ? 'show' : 'hide']();
+				monster.ui.valid($form);
+			});
+		},
+
 		servicePlanItemEditorRateRowFormat: function(pRate, quantity) {
 			var self = this,
 				rate = typeof pRate !== 'undefined' ? pRate : 0,
