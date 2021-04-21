@@ -904,7 +904,13 @@ define(function(require) {
 	function getDefaultNumbersFormat() {
 		var account = _.get(monster.apps, 'auth.originalAccount', {});
 
-		return _.get(account, 'ui_flags.numbers_format', 'international');
+		return _.find([
+			_.get(account, 'ui_flags.numbers_format'),
+			'international'
+		], _.overEvery(
+			_.isString,
+			_.negate(_.isEmpty)
+		));
 	}
 
 	/**
@@ -937,21 +943,21 @@ define(function(require) {
 			_.toString(input),
 			monster.config.whitelabel.countryCode
 		);
-		var user = _.get(monster, 'apps.auth.currentUser', {});
-		var account = _.get(monster, 'apps.auth.originalAccount', {});
+		var userFlags = _.get(monster, 'apps.auth.currentUser.ui_flags', {});
+		var accountFlags = _.get(monster, 'apps.auth.originalAccount.ui_flags', {});
 		var formattedData = {
 			isValid: false,
 			originalNumber: input,
 			userFormat: input // Setting it as a default, in case the number is not valid
 		};
-		var getUserFormatFromEntity = function(entity, data) {
+		var getUserFormatFromFlags = function(flags, data) {
 			var isException = _.flow(
-				_.partial(_.get, _, 'ui_flags.numbers_format_exceptions', []),
+				_.partial(_.get, _, 'numbers_format_exceptions', []),
 				_.partial(_.includes, _, _.get(data, 'country.code'))
 			);
-			var rawFormat = entity.ui_flags.numbers_format;
+			var rawFormat = flags.numbers_format;
 			var format = rawFormat !== 'international_with_exceptions' ? rawFormat
-				: isException(entity) ? 'national'
+				: isException(flags) ? 'national'
 				: 'international';
 			var formatter = _.get({
 				national: _.partial(_.get, _, 'nationalFormat'),
@@ -979,15 +985,15 @@ define(function(require) {
 				numberType: phoneNumber.getType()
 			});
 
-			if (_.get(user, 'ui_flags.numbers_format', 'inherit') !== 'inherit') {
+			if (_.get(userFlags, 'numbers_format', 'inherit') !== 'inherit') {
 				_.merge(formattedData, {
-					userFormat: getUserFormatFromEntity(user, formattedData),
-					userFormatType: _.get(user, 'ui_flags.numbers_format')
+					userFormat: getUserFormatFromFlags(userFlags, formattedData),
+					userFormatType: _.get(userFlags, 'numbers_format')
 				});
-			} else if (_.has(account, 'ui_flags.numbers_format')) {
+			} else if (_.get(accountFlags, 'numbers_format', '') !== '') {
 				_.merge(formattedData, {
-					userFormat: getUserFormatFromEntity(account, formattedData),
-					userFormatType: _.get(account, 'ui_flags.numbers_format')
+					userFormat: getUserFormatFromFlags(accountFlags, formattedData),
+					userFormatType: _.get(accountFlags, 'numbers_format')
 				});
 			} else {
 				_.merge(formattedData, {
