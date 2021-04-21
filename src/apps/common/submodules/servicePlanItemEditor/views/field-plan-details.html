@@ -222,28 +222,31 @@
 			</label>
 			<div class="controls" style="display: flex;">
 				<div class="span5">
+				{{#with extra.quantity.category}}
 					<select name="quantity.category" id="quantity_category">
-					{{#select extra.quantity.category.selected}}
+					{{#select selected}}
 							<option value="">
-								{{i18n.servicePlanItemEditor.editField.plan.quantity.new.category}}
+								{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.category}}
 							</option>
-						{{#each extra.quantity.category.options}}
+						{{#each options}}
 							<option value="{{id}}">
 								{{label}}
 							</option>
 						{{/each}}
 					{{/select}}
 					</select>
-					<input type="text" name="quantity.category" class="span12" id="new_quantity_category" style="display: none;" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.category}}">
+					<input type="text" name="quantity.category" class="span12" id="new_quantity_category"{{#if selected}} style="display: none;"{{else}} value="{{value}}"{{/if}} placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.category}}">
+				{{/with}}
 				</div>
 				<div class="span5">
-					{{#each extra.quantity.name.options}}
+				{{#with extra.quantity.name}}
+					{{#each options}}
 						<div class="sub-control" data-category="{{id}}"{{#compare id "!==" @root.extra.quantity.category.selected}} style="display: none;"{{/compare}}>
 							<select name="quantity.name.{{id}}" id="quantity_name">
 								<option value="">
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
 								</option>
-							{{#select @root.extra.quantity.name.selected}}
+							{{#select ../selected}}
 								{{#each items}}
 									<option value="{{id}}">
 										{{label}}
@@ -251,17 +254,18 @@
 								{{/each}}
 							{{/select}}
 							</select>
-							<input type="text" name="quantity.name.{{id}}" class="span12" id="new_quantity_name" style="display: none;" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+							<input type="text" name="quantity.name.{{id}}" class="span12" id="new_quantity_name"{{#if isNew}} value="{{../value}}"{{else}} style="display: none;"{{/if}} placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
 						</div>
 					{{/each}}
-						<div class="sub-control" data-category="" style="display: none;">
+						<div class="sub-control" data-category=""{{#if @root.extra.quantity.category.selected}} style="display: none;"{{/if}}>
 							<select name="" id="quantity_name">
 								<option value="">
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
 								</option>
 							</select>
-							<input type="text" name="quantity.newName" class="span12" id="new_quantity_name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+							<input type="text" name="quantity.newName" class="span12" value="{{value}}" id="new_quantity_name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
 						</div>
+				{{/with}}
 				</div>
 			</div>
 		</div>
