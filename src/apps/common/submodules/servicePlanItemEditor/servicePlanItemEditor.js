@@ -6,6 +6,7 @@ define(function() {
 					'activation_charge',
 					'as',
 					'cascade',
+					'quantity',
 					'maximum',
 					'name',
 					'minimum',
@@ -129,6 +130,7 @@ define(function() {
 				category: _.get(args, 'category'),
 				key: _.get(args, 'key'),
 				schema: _.get(args, ['editable', key], {}),
+				quantityOptions: _.get(args, 'quantity.options', []),
 				applied: _
 					.chain(args)
 					.get('applied', {})
@@ -228,10 +230,18 @@ define(function() {
 					monster.ui.chosen($template.find('#exceptions'), {
 						width: '100%'
 					});
+					monster.ui.chosen($template.find('#quantity_category'), {
+						width: '100%'
+					});
+					monster.ui.chosen($template.find('#quantity_name'), {
+						width: '100%'
+					});
 
 					self.servicePlanItemEditorHelperComputeRateMargins($template);
 
 					self.servicePlanItemEditorRatesRowBindEvents($template);
+
+					self.servicePlanItemEditorQuantityFieldsBindEvents($container, $template);
 
 					self.servicePlanItemEditorBindEvents($container, category, key);
 
@@ -259,6 +269,38 @@ define(function() {
 			var self = this,
 				currentItem = self.servicePlanItemEditorGetStore('applied'),
 				planItem = self.servicePlanItemEditorGetStore('edited'),
+				getQuantityExtra = function() {
+					var defaultQuantityCategory = _
+							.chain(self.servicePlanItemEditorGetStore('quantityOptions'))
+							.map('id')
+							.head()
+							.value(),
+						selectedCategory = _.get(planItem, 'quantity.category', defaultQuantityCategory),
+						selectedItem = _.get(planItem, 'quantity.name', _
+							.chain(self.servicePlanItemEditorGetStore('quantityOptions'))
+							.find({ id: defaultQuantityCategory })
+							.get('items')
+							.head()
+							.get('id')
+							.value()
+						);
+
+					return {
+						category: {
+							selected: selectedCategory,
+							options: _.map(self.servicePlanItemEditorGetStore('quantityOptions'), function(data) {
+								return {
+									id: data.id,
+									label: data.label
+								};
+							})
+						},
+						name: {
+							selected: selectedItem,
+							options: self.servicePlanItemEditorGetStore('quantityOptions')
+						}
+					};
+				},
 				formattedItem = _.merge({
 					selectedFields: self.servicePlanItemEditorFieldsComputeSelectedFields(),
 					category: category,
@@ -275,6 +317,7 @@ define(function() {
 					},
 					step: 1,
 					extra: {
+						quantity: getQuantityExtra(),
 						currencySymbol: monster.util.getCurrencySymbol(),
 						activationCharge: {
 							yourValue: 0,
@@ -335,7 +378,18 @@ define(function() {
 			monster.ui.tooltips(template);
 
 			monster.ui.validate(template, {
-				rules: {
+				rules: _.merge({
+					'quantity.newName': {
+						required: true
+					},
+					'quantity.category': {
+						required: true,
+						checkList: _.map(self.servicePlanItemEditorGetStore('quantityOptions'), _.flow(
+							_.partial(_.get, _, 'id'),
+							_.snakeCase
+						)),
+						normalizer: _.snakeCase
+					},
 					minimum: {
 						lowerThan: '#monthly_maximum',
 						digits: true,
@@ -354,7 +408,16 @@ define(function() {
 						digits: true,
 						min: 1
 					}
-				}
+				}, _.transform(self.servicePlanItemEditorGetStore('quantityOptions'), function(obj, data) {
+					obj['quantity.name.' + data.id] = {
+						required: true,
+						checkList: _.map(data.items, _.flow(
+							_.partial(_.get, _, 'id'),
+							_.snakeCase
+						)),
+						normalizer: _.snakeCase
+					};
+				}, {}))
 			});
 
 			template.find('.js-cancel').on('click', function() {
