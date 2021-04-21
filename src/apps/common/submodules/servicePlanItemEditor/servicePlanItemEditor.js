@@ -6,6 +6,7 @@ define(function() {
 					'activation_charge',
 					'as',
 					'cascade',
+					'quantity',
 					'maximum',
 					'name',
 					'minimum',
@@ -129,6 +130,7 @@ define(function() {
 				category: _.get(args, 'category'),
 				key: _.get(args, 'key'),
 				schema: _.get(args, ['editable', key], {}),
+				quantityOptions: _.get(args, 'quantity.options', []),
 				applied: _
 					.chain(args)
 					.get('applied', {})
@@ -228,10 +230,18 @@ define(function() {
 					monster.ui.chosen($template.find('#exceptions'), {
 						width: '100%'
 					});
+					monster.ui.chosen($template.find('#quantity_category'), {
+						width: '100%'
+					});
+					monster.ui.chosen($template.find('.quantity-name'), {
+						width: '100%'
+					});
 
 					self.servicePlanItemEditorHelperComputeRateMargins($template);
 
 					self.servicePlanItemEditorRatesRowBindEvents($template);
+
+					self.servicePlanItemEditorQuantityFieldsBindEvents($container, $template);
 
 					self.servicePlanItemEditorBindEvents($container, category, key);
 
@@ -258,7 +268,59 @@ define(function() {
 		servicePlanItemEditorFormat: function(category, key) {
 			var self = this,
 				currentItem = self.servicePlanItemEditorGetStore('applied'),
-				planItem = self.servicePlanItemEditorGetStore('edited'),
+				servicePlan = self.servicePlanItemEditorGetStore('edited'),
+				getQuantityExtra = function() {
+					var quantityOptions = self.servicePlanItemEditorGetStore('quantityOptions'),
+						existingCategories = _.map(quantityOptions, 'id'),
+						defaultQuantityCategory = _
+							.chain(quantityOptions)
+							.map('id')
+							.head()
+							.value(),
+						planCategory = _.get(servicePlan, 'quantity.category', defaultQuantityCategory),
+						selectCategory = _.includes(existingCategories, planCategory) ? planCategory : '',
+						defaultQuantityItem = _
+							.chain(quantityOptions)
+							.find({ id: defaultQuantityCategory })
+							.get('items')
+							.head()
+							.get('id')
+							.value(),
+						planItem = _.get(servicePlan, 'quantity.name', defaultQuantityItem),
+						selectItem = _
+							.chain(quantityOptions)
+							.find({ id: selectCategory })
+							.get('items')
+							.map('id')
+							.includes(planItem)
+							.value() ? planItem : '';
+
+					return {
+						category: {
+							selected: selectCategory,
+							value: planCategory,
+							options: _.map(quantityOptions, function(data) {
+								return {
+									id: data.id,
+									label: data.label
+								};
+							})
+						},
+						name: {
+							selected: selectItem,
+							value: planItem,
+							options: _.map(quantityOptions, function(options) {
+								return _.merge({
+									isNew: selectCategory === options.id && !_
+										.chain(options.items)
+										.map('id')
+										.includes(selectItem)
+										.value()
+								}, options);
+							})
+						}
+					};
+				},
 				formattedItem = _.merge({
 					selectedFields: self.servicePlanItemEditorFieldsComputeSelectedFields(),
 					category: category,
@@ -275,6 +337,7 @@ define(function() {
 					},
 					step: 1,
 					extra: {
+						quantity: getQuantityExtra(),
 						currencySymbol: monster.util.getCurrencySymbol(),
 						activationCharge: {
 							yourValue: 0,
@@ -288,7 +351,7 @@ define(function() {
 					exceptions: [],
 					as: '_none',
 					allOptions: self.servicePlanItemEditorGetStore('editable')
-				} : {}, planItem);
+				} : {}, servicePlan);
 
 			if (_.isUndefined(currentItem)) {
 				formattedItem.extra.activationCharge.margin = self.servicePlanItemEditorUtilFormatPrice(formattedItem.activation_charge);
@@ -335,7 +398,19 @@ define(function() {
 			monster.ui.tooltips(template);
 
 			monster.ui.validate(template, {
-				rules: {
+				ignore: ':hidden',
+				rules: _.merge({
+					'quantity.newName': {
+						required: true
+					},
+					'quantity.category': {
+						required: true,
+						checkList: _.map(self.servicePlanItemEditorGetStore('quantityOptions'), _.flow(
+							_.partial(_.get, _, 'id'),
+							_.snakeCase
+						)),
+						normalizer: _.snakeCase
+					},
 					minimum: {
 						lowerThan: '#monthly_maximum',
 						digits: true,
@@ -354,7 +429,16 @@ define(function() {
 						digits: true,
 						min: 1
 					}
-				}
+				}, _.transform(self.servicePlanItemEditorGetStore('quantityOptions'), function(obj, data) {
+					obj['quantity.name.' + data.id] = {
+						required: true,
+						checkList: _.map(data.items, _.flow(
+							_.partial(_.get, _, 'id'),
+							_.snakeCase
+						)),
+						normalizer: _.snakeCase
+					};
+				}, {}))
 			});
 
 			template.find('.js-cancel').on('click', function() {
@@ -373,6 +457,41 @@ define(function() {
 				template.parents('.ui-dialog-content').dialog('close');
 
 				self.servicePlanItemEditorGetStore('callback')(formattedItem);
+			});
+		},
+
+		servicePlanItemEditorQuantityFieldsBindEvents: function($form, $template) {
+			var $categorySelect = $template.find('#quantity_category'),
+				$nameSelect = $template.find('.quantity-name');
+
+			$categorySelect.on('change', function toggleNameControl() {
+				var category = $(this).val(),
+					$subControl = $template.find('.sub-control[data-category="' + category + '"]'),
+					selectedName = $subControl.find('.quantity-name').val(),
+					$nameInput = $subControl.find('.new-quantity-name');
+
+				$template.find('.sub-control').hide();
+
+				$nameInput.val('');
+				$nameInput[_.isEmpty(selectedName) ? 'show' : 'hide']();
+				$subControl.show();
+
+				monster.ui.valid($form);
+			});
+			$categorySelect.on('change', function toggleNewCategoryInput() {
+				var category = $(this).val();
+
+				$template.find('#new_quantity_category').val('')[_.isEmpty(category) ? 'show' : 'hide']();
+				monster.ui.valid($form);
+			});
+
+			$nameSelect.on('change', function toggleNewNameInput() {
+				var $select = $(this),
+					$input = $select.parent().find('.new-quantity-name'),
+					item = $select.val();
+
+				$input.val('')[_.isEmpty(item) ? 'show' : 'hide']();
+				monster.ui.valid($form);
 			});
 		},
 
@@ -437,6 +556,7 @@ define(function() {
 
 		servicePlanItemEditorNormalize: function(template, category, key) {
 			var self = this,
+				selectedFields = template.find('#selector').val(),
 				formattedItem = monster.ui.getFormData('plan_field_form'),
 				typeCheckers = {
 					number: _.toNumber,
@@ -471,6 +591,23 @@ define(function() {
 
 					return node;
 				};
+
+			if (_.includes(selectedFields, 'quantity')) {
+				var selectedCategory = template.find('#quantity_category').val(),
+					$subControl = template.find('.sub-control[data-category="' + selectedCategory + '"]'),
+					selectedItem = $subControl.find('.quantity-name').val(),
+					newItem = _.snakeCase($subControl.find('.new-quantity-name').val()),
+					item = selectedItem || newItem,
+					newCategory = _.snakeCase(template.find('#new_quantity_category').val()),
+					category = selectedCategory || newCategory;
+
+				_.set(formattedItem, 'quantity', {
+					category: category,
+					name: item
+				});
+			} else {
+				_.unset(formattedItem, 'quantity');
+			}
 
 			template.find('.rate-container .rate-row').each(function() {
 				var $this = $(this),
