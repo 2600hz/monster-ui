@@ -244,7 +244,7 @@
 				{{#with extra.quantity.name}}
 					{{#each options}}
 						<div class="sub-control" data-category="{{id}}"{{#compare id "!==" @root.extra.quantity.category.selected}} style="display: none;"{{/compare}}>
-							<select name="quantity.name.{{id}}" id="quantity_name">
+							<select name="quantity.name.{{id}}" class="quantity-name">
 							{{#isSuperDuper}}
 								<option value="">
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
@@ -258,7 +258,7 @@
 								{{/each}}
 							{{/select}}
 							</select>
-							<input type="text" name="quantity.name.{{id}}" class="span12" id="new_quantity_name"{{#if isNew}} value="{{../value}}"{{else}} style="display: none;"{{/if}} placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+							<input type="text" name="quantity.name.{{id}}" class="span12" class="new-quantity-name"{{#if isNew}} value="{{../value}}"{{else}} style="display: none;"{{/if}} placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
 						</div>
 					{{/each}}
 						<div class="sub-control" data-category=""{{#if @root.extra.quantity.category.selected}} style="display: none;"{{/if}}>
@@ -267,7 +267,7 @@
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
 								</option>
 							</select>
-							<input type="text" name="quantity.newName" class="span12" value="{{value}}" id="new_quantity_name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+							<input type="text" name="quantity.newName" class="span12" value="{{value}}" class="new-quantity-name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
 						</div>
 				{{/with}}
 				</div>

@@ -233,7 +233,7 @@ define(function() {
 					monster.ui.chosen($template.find('#quantity_category'), {
 						width: '100%'
 					});
-					monster.ui.chosen($template.find('#quantity_name'), {
+					monster.ui.chosen($template.find('.quantity-name'), {
 						width: '100%'
 					});
 
@@ -398,6 +398,7 @@ define(function() {
 			monster.ui.tooltips(template);
 
 			monster.ui.validate(template, {
+				ignore: ':hidden',
 				rules: _.merge({
 					'quantity.newName': {
 						required: true
@@ -461,13 +462,13 @@ define(function() {
 
 		servicePlanItemEditorQuantityFieldsBindEvents: function($form, $template) {
 			var $categorySelect = $template.find('#quantity_category'),
-				$nameSelect = $template.find('#quantity_name');
+				$nameSelect = $template.find('.quantity-name');
 
 			$categorySelect.on('change', function toggleNameControl() {
 				var category = $(this).val(),
 					$subControl = $template.find('.sub-control[data-category="' + category + '"]'),
-					selectedName = $subControl.find('#quantity_name').val(),
-					$nameInput = $subControl.find('#new_quantity_name');
+					selectedName = $subControl.find('.quantity-name').val(),
+					$nameInput = $subControl.find('.new-quantity-name');
 
 				$template.find('.sub-control').hide();
 
@@ -486,7 +487,7 @@ define(function() {
 
 			$nameSelect.on('change', function toggleNewNameInput() {
 				var $select = $(this),
-					$input = $select.parent().find('#new_quantity_name'),
+					$input = $select.parent().find('.new-quantity-name'),
 					item = $select.val();
 
 				$input.val('')[_.isEmpty(item) ? 'show' : 'hide']();
@@ -594,8 +595,8 @@ define(function() {
 			if (_.includes(selectedFields, 'quantity')) {
 				var selectedCategory = template.find('#quantity_category').val(),
 					$subControl = template.find('.sub-control[data-category="' + selectedCategory + '"]'),
-					selectedItem = $subControl.find('#quantity_name').val(),
-					newItem = _.snakeCase($subControl.find('#new_quantity_name').val()),
+					selectedItem = $subControl.find('.quantity-name').val(),
+					newItem = _.snakeCase($subControl.find('.new-quantity-name').val()),
 					item = selectedItem || newItem,
 					newCategory = _.snakeCase(template.find('#new_quantity_category').val()),
 					category = selectedCategory || newCategory;
