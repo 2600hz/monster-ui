@@ -74,6 +74,40 @@
 }
 
 /************************************************************/
+/********************** ALERT/INFO DIALOG *******************/
+/************************************************************/
+
+.monster-alert {
+	font-size: 14px;
+}
+
+.monster-alert .ui-dialog-titlebar {
+	padding: 24px !important;
+}
+
+.monster-alert .ui-dialog-titlebar .ui-dialog-title {
+	font-size: 18px !important;
+	line-height: 18px;
+	text-align: left !important;
+	color: $woodsmoke;
+}
+
+.monster-alert .ui-dialog-titlebar .ui-dialog-title .fa {
+	font-size: 2rem;
+	margin-right: 1rem;
+}
+
+.monster-alert .ui-dialog-title .fa, .monster-alert .ui-dialog-title .title {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.monster-alert .ui-dialog-content {
+	padding: 0 24px 32px;
+	color: $woodsmoke;
+}
+
+/************************************************************/
 /********************** CHARGES DIALOG **********************/
 /************************************************************/
 .monster-charges .alert-dialog {
