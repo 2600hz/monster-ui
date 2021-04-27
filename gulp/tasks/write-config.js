@@ -61,11 +61,18 @@ export const writeConfigDev = () => {
  */
 export const writeConfigApp = () => {
 	const fileName = join(app, 'app-build-config.json');
+	const metadata = join(app, 'metadata', 'app.json');
 	const content = {
 		version: env.pro
 			? 'pro'
 			: 'standard'
 	};
+	if (env.pro) {
+		const metadataContent = {
+			name: env.app + '-pro'
+		};
+		writeFile(metadata, metadataContent);
+	}
 	writeFile(fileName, content);
 	return gulp.src(fileName);
 };
