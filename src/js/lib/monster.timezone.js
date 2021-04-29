@@ -1,8 +1,10 @@
 define(function(require) {
 	var $ = require('jquery');
 	var _ = require('lodash');
-	var jstz = require('jstz');
+	var moment = require('moment');
 	var monster = require('monster');
+
+	require('moment-timezone');
 
 	var list = [
 		'Africa/Abidjan',
@@ -701,7 +703,7 @@ define(function(require) {
 	}
 
 	function getLocaleTimezone() {
-		return jstz.determine_timezone().name();
+		return moment.tz.guess();
 	}
 
 	function formatTimezone(timezone) {
