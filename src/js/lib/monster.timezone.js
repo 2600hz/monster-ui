@@ -705,6 +705,10 @@ define(function(require) {
 	}
 
 	function formatTimezone(timezone) {
-		return timezone.replace(/(.+)\/([^/]+)/, '$2 ($1)').replace('_', ' ');
+		return _
+			.chain(timezone)
+			.replace(/(.+)\/([^/]+)/, '$2 ($1)')
+			.replace(/_/g, ' ')
+			.value();
 	}
 });
