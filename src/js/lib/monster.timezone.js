@@ -653,35 +653,51 @@ define(function(require) {
 		return _.get(getCountries(), countryCode, countryCode);
 	}
 
-	function populateDropdown(dropdown, _selected, extraOptions) {
+	function populateDropdown(dropdown, _selected, _extraOptions) {
 		var selected = _selected || getLocaleTimezone();
 		var getOptionTag = _.partial(function(selected, args) {
-			var value = args.value;
-
-			return $('<option>', {
-				value: value,
-				selected: selected === value,
-				text: args.text
-			});
+			return $('<option>', _.merge({
+				selected: selected === args.value
+			}, _.pick(args, [
+				'text',
+				'value'
+			])));
 		}, selected);
+		var getLoweredTextProp = _.flow(
+			_.partial(_.get, _, 'text'),
+			_.toLower
+		);
+		var extraOptions = _
+			.chain(_extraOptions)
+			.map(function(name, value) {
+				return {
+					text: name,
+					value: value
+				};
+			})
+			.sortBy(getLoweredTextProp)
+			.value();
+		var timezones = _
+			.chain(list)
+			.map(function(value) {
+				return {
+					text: formatTimezone(value),
+					value: value
+				};
+			})
+			.sortBy(getLoweredTextProp)
+			.value();
+		var optionTags = _
+			.chain([
+				extraOptions,
+				timezones
+			])
+			.flatten()
+			.map(getOptionTag)
+			.value();
+		var appendToDropdown = _.bind(_.unary(dropdown.append), dropdown);
 
-		$.each(list, function(i, data) {
-			var humanReadableLabel = data.replace(/_/g, ' ');
-
-			dropdown.append(getOptionTag({
-				value: data,
-				text: humanReadableLabel
-			}));
-		});
-
-		if (extraOptions) {
-			_.each(extraOptions, function(name, value) {
-				dropdown.prepend(getOptionTag({
-					value: value,
-					text: name
-				}));
-			});
-		}
+		optionTags.forEach(appendToDropdown);
 	}
 
 	function getLocaleTimezone() {
