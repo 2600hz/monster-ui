@@ -406,6 +406,7 @@
 			"markup_rate": "Rate"
 		},
 		"fieldSelector": {
+			"quantity": "Quantifier",
 			"label": "Fields to configure",
 			"activationCharge": "Activation Charge",
 			"as": "Charge As",
@@ -428,6 +429,17 @@
 		},
 		"editField": {
 			"plan": {
+				"quantity": {
+					"label": "Quantifier",
+					"placeholder": {
+						"category": "Category Name",
+						"item": "Item Name"
+					},
+					"new": {
+						"category": "New Category",
+						"item": "New Item"
+					}
+				},
 				"name": {
 					"label": "Name"
 				},
