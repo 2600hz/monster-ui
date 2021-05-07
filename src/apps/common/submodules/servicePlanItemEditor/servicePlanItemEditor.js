@@ -448,6 +448,18 @@ define(function() {
 				}, {}))
 			});
 
+			template.on('chosen:showing_dropdown', '.js-dialog-chosen', function() {
+				$(this).parent().animate({
+					marginBottom: $(this).data('chosen').dropdown.height()
+				}, 200);
+			});
+
+			template.on('chosen:hiding_dropdown', '.js-dialog-chosen', function() {
+				$(this).parent().animate({
+					marginBottom: 0
+				}, 200);
+			});
+
 			template.find('.js-cancel').on('click', function() {
 				template.parents('.ui-dialog-content').dialog('close');
 			});
