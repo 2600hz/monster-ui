@@ -309,6 +309,13 @@ define(function() {
 						name: {
 							selected: selectItem,
 							value: planItem,
+							isNew: _
+								.chain(quantityOptions)
+								.find({ id: selectCategory })
+								.get('items')
+								.map('id')
+								.includes(planItem)
+								.value(),
 							options: _.map(quantityOptions, function(options) {
 								return _.merge({
 									isNew: selectCategory === options.id && !_
@@ -487,7 +494,7 @@ define(function() {
 
 			$nameSelect.on('change', function toggleNewNameInput() {
 				var $select = $(this),
-					$input = $select.parent().find('.new-quantity-name'),
+					$input = $select.parent().find('input'),
 					item = $select.val();
 
 				$input.val('')[_.isEmpty(item) ? 'show' : 'hide']();
