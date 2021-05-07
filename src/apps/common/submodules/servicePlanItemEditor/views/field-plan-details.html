@@ -267,7 +267,7 @@
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
 								</option>
 							</select>
-							<input type="text" name="quantity.newName" class="span12" value="{{value}}" class="new-quantity-name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+							<input type="text" name="quantity.newName" class="span12"{{#unless isNew}} value="{{value}}"{{/unless}} class="new-quantity-name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
 						</div>
 				{{/with}}
 				</div>
