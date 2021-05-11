@@ -69,17 +69,22 @@ define(function() {
 				category = _.get(args, 'category'),
 				key = _.get(args, 'key'),
 				initTemplate = function() {
-					var editableFields = self.appFlags.servicePlanItemEditor.editableFields,
-						selectedFields = self.servicePlanItemEditorFieldsComputeSelectedFields(),
+					var mandatoryFields = self.servicePlanItemEditorGetStore('mandatoryFields'),
+						selectableFields = _.difference(
+							self.appFlags.servicePlanItemEditor.editableFields,
+							key === '_all' ? [] : ['as', 'exceptions'],
+							mandatoryFields
+						),
+						selectedFields = _.difference(
+							self.servicePlanItemEditorFieldsComputeSelectedFields(),
+							mandatoryFields
+						),
 						$template = $(self.getTemplate({
 							name: 'layout',
 							data: {
 								selected: selectedFields,
 								options: _
-									.chain(editableFields)
-									.reject(function(field) {
-										return _.includes(['as', 'exceptions'], field) && key !== '_all';
-									})
+									.chain(selectableFields)
 									.map(function(field) {
 										return {
 											value: field,
@@ -89,6 +94,10 @@ define(function() {
 											)
 										};
 									})
+									.sortBy(_.flow(
+										_.partial(_.get, _, 'label'),
+										_.toLower
+									))
 									.value()
 							},
 							submodule: 'servicePlanItemEditor'
@@ -126,6 +135,7 @@ define(function() {
 				};
 
 			self.servicePlanItemEditorSetStore(_.merge({
+				mandatoryFields: _.get(args, 'mandatoryFields', []),
 				callback: args.callback,
 				category: _.get(args, 'category'),
 				key: _.get(args, 'key'),
@@ -329,7 +339,14 @@ define(function() {
 					};
 				},
 				formattedItem = _.merge({
-					selectedFields: self.servicePlanItemEditorFieldsComputeSelectedFields(),
+					selectedFields: _
+						.chain([
+							self.servicePlanItemEditorFieldsComputeSelectedFields(),
+							self.servicePlanItemEditorGetStore('mandatoryFields')
+						])
+						.flatten()
+						.uniq()
+						.value(),
 					category: category,
 					key: key,
 					friendlyName: self.servicePlanItemEditorFormatName(category, key),
