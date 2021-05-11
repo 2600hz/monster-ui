@@ -6,6 +6,7 @@ define(function() {
 					'activation_charge',
 					'as',
 					'cascade',
+					'exceptions',
 					'quantity',
 					'maximum',
 					'name',
@@ -346,6 +347,9 @@ define(function() {
 						])
 						.flatten()
 						.uniq()
+						.difference(
+							key === '_all' ? [] : ['as', 'exceptions']
+						)
 						.value(),
 					category: category,
 					key: key,

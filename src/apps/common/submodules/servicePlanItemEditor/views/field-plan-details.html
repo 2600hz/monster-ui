@@ -98,9 +98,8 @@
 		</div>
 	</div>
 
-{{#compare key "===" "_all"}}
-	<div class="field-container row-fluid" data-type="as"{{#ifInArray 'as' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
-		<div class="control-group span6">
+	<div class="row-fluid">
+		<div class="field-container control-group span6" data-type="as"{{#ifInArray 'as' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
 			<label for="as" class="control-label">
 				{{i18n.servicePlanItemEditor.editField.plan.chargeAs.label}}
 			</label>
@@ -116,8 +115,7 @@
 				</select>
 			</div>
 		</div>
-
-		<div class="control-group span6">
+		<div class="field-container control-group span6" data-type="exceptions"{{#ifInArray 'exceptions' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
 			<label for="exceptions" class="control-label">
 				{{i18n.servicePlanItemEditor.editField.plan.exceptions.label}}
 			</label>
@@ -134,7 +132,6 @@
 			</div>
 		</div>
 	</div>
-{{/compare}}
 
 	<div class="row-fluid">
 		<div class="field-container control-group span6" data-type="maximum"{{#ifInArray 'maximum' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
