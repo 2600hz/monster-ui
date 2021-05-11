@@ -105,7 +105,7 @@
 				{{i18n.servicePlanItemEditor.editField.plan.chargeAs.label}}
 			</label>
 			<div class="controls">
-				<select name="as" id="as">
+				<select name="as" id="as" class="js-dialog-chosen">
 				{{#select @root.as}}
 					{{#each @root.allOptions}}
 						<option value="{{value}}">
@@ -122,7 +122,7 @@
 				{{i18n.servicePlanItemEditor.editField.plan.exceptions.label}}
 			</label>
 			<div class="controls">
-				<select multiple name="exceptions" id="exceptions">
+				<select multiple name="exceptions" id="exceptions" class="js-dialog-chosen">
 				{{#select @root.exceptions}}
 					{{#each @root.allOptions}}
 						<option value="{{value}}">
@@ -223,7 +223,7 @@
 			<div class="controls" style="display: flex;">
 				<div class="span5">
 				{{#with extra.quantity.category}}
-					<select name="quantity.category" id="quantity_category">
+					<select name="quantity.category" id="quantity_category" class="js-dialog-chosen">
 					{{#select selected}}
 						{{#isSuperDuper}}
 							<option value="">
@@ -244,7 +244,7 @@
 				{{#with extra.quantity.name}}
 					{{#each options}}
 						<div class="sub-control" data-category="{{id}}"{{#compare id "!==" @root.extra.quantity.category.selected}} style="display: none;"{{/compare}}>
-							<select name="quantity.name.{{id}}" class="quantity-name">
+							<select name="quantity.name.{{id}}" class="quantity-name js-dialog-chosen">
 							{{#isSuperDuper}}
 								<option value="">
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
@@ -267,7 +267,7 @@
 									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
 								</option>
 							</select>
-							<input type="text" name="quantity.newName" class="span12" value="{{value}}" class="new-quantity-name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+							<input type="text" name="quantity.newName" class="span12"{{#unless isNew}} value="{{value}}"{{/unless}} class="new-quantity-name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
 						</div>
 				{{/with}}
 				</div>

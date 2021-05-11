@@ -3666,17 +3666,13 @@ define(function(require) {
 					event.preventDefault();
 
 					var formData = monster.ui.getFormData('key_value_selector_form'),
-						category = normalizer(
-							_.isEmpty(formData.newCategoryId) ? formData.categoryId : formData.newCategoryId
-						),
+						category = _.isEmpty(formData.newCategoryId) ? formData.categoryId : normalizer(formData.newCategoryId),
 						isCategoryNew = !_.includes(categories, category),
 						newItemInputValue = _.get(formData, [
 							'newItemId',
 							isCategoryNew ? '' : category
 						]),
-						item = normalizer(
-							_.isEmpty(formData.itemId) ? newItemInputValue : formData.itemId
-						);
+						item = _.isEmpty(formData.itemId) ? normalizer(newItemInputValue) : formData.itemId;
 
 					onSelect && onSelect(category, item);
 
