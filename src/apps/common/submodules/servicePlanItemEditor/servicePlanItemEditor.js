@@ -69,17 +69,22 @@ define(function() {
 				category = _.get(args, 'category'),
 				key = _.get(args, 'key'),
 				initTemplate = function() {
-					var editableFields = self.appFlags.servicePlanItemEditor.editableFields,
-						selectedFields = self.servicePlanItemEditorFieldsComputeSelectedFields(),
+					var mandatoryFields = self.servicePlanItemEditorGetStore('mandatoryFields'),
+						selectableFields = _.difference(
+							self.appFlags.servicePlanItemEditor.editableFields,
+							key === '_all' ? [] : ['as', 'exceptions'],
+							mandatoryFields
+						),
+						selectedFields = _.difference(
+							self.servicePlanItemEditorFieldsComputeSelectedFields(),
+							mandatoryFields
+						),
 						$template = $(self.getTemplate({
 							name: 'layout',
 							data: {
 								selected: selectedFields,
 								options: _
-									.chain(editableFields)
-									.reject(function(field) {
-										return _.includes(['as', 'exceptions'], field) && key !== '_all';
-									})
+									.chain(selectableFields)
 									.map(function(field) {
 										return {
 											value: field,
@@ -89,6 +94,10 @@ define(function() {
 											)
 										};
 									})
+									.sortBy(_.flow(
+										_.partial(_.get, _, 'label'),
+										_.toLower
+									))
 									.value()
 							},
 							submodule: 'servicePlanItemEditor'
@@ -126,6 +135,7 @@ define(function() {
 				};
 
 			self.servicePlanItemEditorSetStore(_.merge({
+				mandatoryFields: _.get(args, 'mandatoryFields', []),
 				callback: args.callback,
 				category: _.get(args, 'category'),
 				key: _.get(args, 'key'),
@@ -309,6 +319,13 @@ define(function() {
 						name: {
 							selected: selectItem,
 							value: planItem,
+							isNew: _
+								.chain(quantityOptions)
+								.find({ id: selectCategory })
+								.get('items')
+								.map('id')
+								.includes(planItem)
+								.value(),
 							options: _.map(quantityOptions, function(options) {
 								return _.merge({
 									isNew: selectCategory === options.id && !_
@@ -322,7 +339,14 @@ define(function() {
 					};
 				},
 				formattedItem = _.merge({
-					selectedFields: self.servicePlanItemEditorFieldsComputeSelectedFields(),
+					selectedFields: _
+						.chain([
+							self.servicePlanItemEditorFieldsComputeSelectedFields(),
+							self.servicePlanItemEditorGetStore('mandatoryFields')
+						])
+						.flatten()
+						.uniq()
+						.value(),
 					category: category,
 					key: key,
 					friendlyName: self.servicePlanItemEditorFormatName(category, key),
@@ -441,6 +465,18 @@ define(function() {
 				}, {}))
 			});
 
+			template.on('chosen:showing_dropdown', '.js-dialog-chosen', function() {
+				$(this).parent().animate({
+					marginBottom: $(this).data('chosen').dropdown.height()
+				}, 200);
+			});
+
+			template.on('chosen:hiding_dropdown', '.js-dialog-chosen', function() {
+				$(this).parent().animate({
+					marginBottom: 0
+				}, 200);
+			});
+
 			template.find('.js-cancel').on('click', function() {
 				template.parents('.ui-dialog-content').dialog('close');
 			});
@@ -487,7 +523,7 @@ define(function() {
 
 			$nameSelect.on('change', function toggleNewNameInput() {
 				var $select = $(this),
-					$input = $select.parent().find('.new-quantity-name'),
+					$input = $select.parent().find('input'),
 					item = $select.val();
 
 				$input.val('')[_.isEmpty(item) ? 'show' : 'hide']();
