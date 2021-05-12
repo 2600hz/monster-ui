@@ -2,20 +2,26 @@ define(function() {
 	return {
 		appFlags: {
 			servicePlanItemEditor: {
-				editableFields: [
-					'activation_charge',
-					'as',
-					'cascade',
-					'exceptions',
-					'quantity',
-					'maximum',
-					'name',
-					'minimum',
-					'rate',
-					'prorate.additions',
-					'prorate.removals',
-					'step'
-				]
+				editableFields: {
+					common: [
+						'activation_charge',
+						'cascade',
+						'quantity',
+						'maximum',
+						'name',
+						'minimum',
+						'rate',
+						'prorate.additions',
+						'prorate.removals',
+						'step'
+					],
+					itemSpecific: {
+						_all: [
+							'as',
+							'exceptions'
+						]
+					}
+				}
 			}
 		},
 
@@ -71,9 +77,9 @@ define(function() {
 				key = _.get(args, 'key'),
 				initTemplate = function() {
 					var mandatoryFields = self.servicePlanItemEditorGetStore('mandatoryFields'),
+						editableFields = self.servicePlanItemEditorGetEditableFields(key),
 						selectableFields = _.difference(
-							self.appFlags.servicePlanItemEditor.editableFields,
-							key === '_all' ? [] : ['as', 'exceptions'],
+							editableFields,
 							mandatoryFields
 						),
 						selectedFields = _.difference(
@@ -185,6 +191,16 @@ define(function() {
 			});
 		},
 
+		servicePlanItemEditorGetEditableFields: function(key) {
+			var self = this,
+				editableFields = self.appFlags.servicePlanItemEditor.editableFields;
+
+			return _.flatten([
+				editableFields.common,
+				_.get(editableFields.itemSpecific, key, [])
+			]);
+		},
+
 		servicePlanItemEditorCleanUp: function(plan) {
 			var formattedPlan = _.cloneDeep(plan);
 
@@ -200,11 +216,10 @@ define(function() {
 		servicePlanItemEditorFieldsComputeSelectedFields: function() {
 			var self = this,
 				planItem = self.servicePlanItemEditorGetStore('edited'),
-				editableFields = self.appFlags.servicePlanItemEditor.editableFields;
+				key = self.servicePlanItemEditorGetStore('key'),
+				editableFields = self.servicePlanItemEditorGetEditableFields(key);
 
-			return _.filter(editableFields, function(path) {
-				return _.has(planItem, path);
-			});
+			return _.filter(editableFields, _.partial(_.has, planItem));
 		},
 
 		servicePlanItemEditorUtilFormatPrice: function(pPrice) {
@@ -339,17 +354,18 @@ define(function() {
 						}
 					};
 				},
+				mandatoryFields = _.intersection(
+					self.servicePlanItemEditorGetEditableFields(key),
+					self.servicePlanItemEditorGetStore('mandatoryFields')
+				),
 				formattedItem = _.merge({
 					selectedFields: _
 						.chain([
 							self.servicePlanItemEditorFieldsComputeSelectedFields(),
-							self.servicePlanItemEditorGetStore('mandatoryFields')
+							mandatoryFields
 						])
 						.flatten()
 						.uniq()
-						.difference(
-							key === '_all' ? [] : ['as', 'exceptions']
-						)
 						.value(),
 					category: category,
 					key: key,
