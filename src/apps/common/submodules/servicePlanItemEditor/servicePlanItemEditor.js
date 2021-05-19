@@ -2,19 +2,26 @@ define(function() {
 	return {
 		appFlags: {
 			servicePlanItemEditor: {
-				editableFields: [
-					'activation_charge',
-					'as',
-					'cascade',
-					'quantity',
-					'maximum',
-					'name',
-					'minimum',
-					'rate',
-					'prorate.additions',
-					'prorate.removals',
-					'step'
-				]
+				editableFields: {
+					common: [
+						'activation_charge',
+						'cascade',
+						'quantity',
+						'maximum',
+						'name',
+						'minimum',
+						'rate',
+						'prorate.additions',
+						'prorate.removals',
+						'step'
+					],
+					itemSpecific: {
+						_all: [
+							'as',
+							'exceptions'
+						]
+					}
+				}
 			}
 		},
 
@@ -70,9 +77,9 @@ define(function() {
 				key = _.get(args, 'key'),
 				initTemplate = function() {
 					var mandatoryFields = self.servicePlanItemEditorGetStore('mandatoryFields'),
+						editableFields = self.servicePlanItemEditorGetEditableFields(key),
 						selectableFields = _.difference(
-							self.appFlags.servicePlanItemEditor.editableFields,
-							key === '_all' ? [] : ['as', 'exceptions'],
+							editableFields,
 							mandatoryFields
 						),
 						selectedFields = _.difference(
@@ -184,6 +191,16 @@ define(function() {
 			});
 		},
 
+		servicePlanItemEditorGetEditableFields: function(key) {
+			var self = this,
+				editableFields = self.appFlags.servicePlanItemEditor.editableFields;
+
+			return _.flatten([
+				editableFields.common,
+				_.get(editableFields.itemSpecific, key, [])
+			]);
+		},
+
 		servicePlanItemEditorCleanUp: function(plan) {
 			var formattedPlan = _.cloneDeep(plan);
 
@@ -199,11 +216,10 @@ define(function() {
 		servicePlanItemEditorFieldsComputeSelectedFields: function() {
 			var self = this,
 				planItem = self.servicePlanItemEditorGetStore('edited'),
-				editableFields = self.appFlags.servicePlanItemEditor.editableFields;
+				key = self.servicePlanItemEditorGetStore('key'),
+				editableFields = self.servicePlanItemEditorGetEditableFields(key);
 
-			return _.filter(editableFields, function(path) {
-				return _.has(planItem, path);
-			});
+			return _.filter(editableFields, _.partial(_.has, planItem));
 		},
 
 		servicePlanItemEditorUtilFormatPrice: function(pPrice) {
@@ -251,6 +267,8 @@ define(function() {
 
 					self.servicePlanItemEditorRatesRowBindEvents($template);
 
+					self.servicePlanItemEditorAsFieldBindEvents($container, $template);
+
 					self.servicePlanItemEditorQuantityFieldsBindEvents($container, $template);
 
 					self.servicePlanItemEditorBindEvents($container, category, key);
@@ -279,6 +297,17 @@ define(function() {
 			var self = this,
 				currentItem = self.servicePlanItemEditorGetStore('applied'),
 				servicePlan = self.servicePlanItemEditorGetStore('edited'),
+				getAsExtra = function() {
+					var existingOptions = _.map(self.servicePlanItemEditorGetStore('editable'), 'value'),
+						defaultOption = _.head(existingOptions),
+						planAs = _.get(servicePlan, 'as', defaultOption);
+
+					return {
+						selected: _.includes(existingOptions, planAs) ? planAs : '',
+						value: _.startCase(planAs),
+						options: self.servicePlanItemEditorGetStore('editable')
+					};
+				},
 				getQuantityExtra = function() {
 					var quantityOptions = self.servicePlanItemEditorGetStore('quantityOptions'),
 						existingCategories = _.map(quantityOptions, 'id'),
@@ -338,11 +367,15 @@ define(function() {
 						}
 					};
 				},
+				mandatoryFields = _.intersection(
+					self.servicePlanItemEditorGetEditableFields(key),
+					self.servicePlanItemEditorGetStore('mandatoryFields')
+				),
 				formattedItem = _.merge({
 					selectedFields: _
 						.chain([
 							self.servicePlanItemEditorFieldsComputeSelectedFields(),
-							self.servicePlanItemEditorGetStore('mandatoryFields')
+							mandatoryFields
 						])
 						.flatten()
 						.uniq()
@@ -361,6 +394,7 @@ define(function() {
 					},
 					step: 1,
 					extra: {
+						as: getAsExtra(),
 						quantity: getQuantityExtra(),
 						currencySymbol: monster.util.getCurrencySymbol(),
 						activationCharge: {
@@ -373,7 +407,6 @@ define(function() {
 					}
 				}, key === '_all' ? {
 					exceptions: [],
-					as: '_none',
 					allOptions: self.servicePlanItemEditorGetStore('editable')
 				} : {}, servicePlan);
 
@@ -424,6 +457,19 @@ define(function() {
 			monster.ui.validate(template, {
 				ignore: ':hidden',
 				rules: _.merge({
+					'extra.as': {
+						required: true,
+						checkList: _
+							.chain(self.servicePlanItemEditorGetStore('quantityOptions'))
+							.find({ id: category })
+							.get('items')
+							.map(_.flow(
+								_.partial(_.get, _, 'id'),
+								_.snakeCase
+							))
+							.value(),
+						normalizer: _.snakeCase
+					},
 					'quantity.newName': {
 						required: true
 					},
@@ -493,6 +539,15 @@ define(function() {
 				template.parents('.ui-dialog-content').dialog('close');
 
 				self.servicePlanItemEditorGetStore('callback')(formattedItem);
+			});
+		},
+
+		servicePlanItemEditorAsFieldBindEvents: function($form, $template) {
+			$template.find('#as').on('change', function toggleNewItemInput() {
+				var item = $(this).val();
+
+				$template.find('#new_as').val('')[_.isEmpty(item) ? 'show' : 'hide']();
+				monster.ui.valid($form);
 			});
 		},
 
@@ -645,6 +700,16 @@ define(function() {
 				_.unset(formattedItem, 'quantity');
 			}
 
+			if (_.has(formattedItem, 'as')) {
+				var selectedItem = template.find('#as').val(),
+					newItem = _.snakeCase(template.find('#new_as').val()),
+					item = selectedItem || newItem;
+
+				_.set(formattedItem, 'as', item);
+			} else {
+				_.unset(formattedItem, 'as');
+			}
+
 			template.find('.rate-container .rate-row').each(function() {
 				var $this = $(this),
 					rate = $this.find('.customer-rate-cell input').val();
@@ -673,6 +738,8 @@ define(function() {
 					formattedItem.enabled = true;
 				}
 			}
+
+			_.unset(formattedItem, 'extra');
 
 			return enforceTypes(formattedItem, self.servicePlanItemEditorGetStore('schema'));
 		},
