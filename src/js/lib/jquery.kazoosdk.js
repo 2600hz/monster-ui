@@ -134,7 +134,7 @@
 				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration' },
 				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration' },
 				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
-				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers'},
+				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers' },
 				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/triggers' },
 				'updateTrigger': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
 				'patchTrigger': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
