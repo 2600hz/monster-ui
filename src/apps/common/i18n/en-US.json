@@ -192,6 +192,7 @@
 		"successDelete": "You successfully deleted {{count}} phone number(s) from your account(s)",
 		"successMove": "You successfully moved {{count}} phone number(s) to the following account: {{ accountName }}",
 		"noSpareNumber": "There are no spare numbers in this account.",
+		"noExternalNumber": "There are no caller ID numbers in this account.",
 		"noUsedNumber": "There are no numbers used in any application for this account.",
 		"spareNumbers": "Spare Numbers",
 		"usedNumbers": "Numbers in use",
