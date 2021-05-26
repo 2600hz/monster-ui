@@ -1,4 +1,29 @@
 {
+	"commonApp": {
+		"cidNumber": {
+			"add": {
+				"title": "Add Caller ID Number",
+				"text": "All Caller ID Numbers must be validated to comply with Stir/Shaken requirements. Once you sumit a caller ID number, we'll call you to enter a verification code.",
+				"label": "Caller ID Number",
+				"errorVerify": "Couldn't verify number",
+				"buttons": {
+					"send": "Send Verification Code",
+					"verify": "Verify Without Code"
+				}
+			},
+			"verify": {
+				"title": "Verify Your Phone Number",
+				"text": "Please verify your phone number by entering the authorization code sent to {{variable}}.",
+				"help1": "It may take a minute to receive your code.",
+				"help2": "Haven't received it?",
+				"resend": "Resend a new code",
+				"sent": "Sent ({{duration}})",
+				"verifying": "Verifying",
+				"invalidPin": "Invalid Pin Number",
+				"numberVerified": "Phone number verified"
+			}
+		}
+	},
 	"csvUploader": {
 		"defaultTitle": "Import CSV File",
 		"uploadCsv": "Upload your CSV file to import",

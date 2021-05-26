@@ -1,0 +1,36 @@
+<div class="cid-number-common-control-container">
+	<form id="form_add_cid_number">
+		<p class="text">
+			{{i18n.commonApp.cidNumber.add.text}}
+		</p>
+		<div class="control-group">
+			<label for="phone_number" class="control-label">
+				{{i18n.commonApp.cidNumber.add.label}}
+			</label>
+			<div class="controls">
+				<span>
+					<input type="text" id="phone_number" name="phoneNumber">
+				</span>
+			{{#isSuperDuper}}
+				<div class="btn-group dropup">
+			{{/isSuperDuper}}
+					<button class="monster-button-primary js-submit span2" data-action="send">
+						{{i18n.commonApp.cidNumber.add.buttons.send}}
+					</button>
+			{{#isSuperDuper}}
+					<button type="button" class="monster-button-primary dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu pull-right">
+						<li>
+							<a class="js-submit" data-action="verify">
+								{{i18n.commonApp.cidNumber.add.buttons.verify}}
+							</a>
+						</li>
+					</ul>
+				</div>
+			{{/isSuperDuper}}
+			</div>
+		</div>
+	</form>
+</div>
