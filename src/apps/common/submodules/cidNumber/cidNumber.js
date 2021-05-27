@@ -1,21 +1,21 @@
 define(function(require) {
 	return {
 		subscribe: {
-			'common.cidNumber.renderSelector': 'cidNumberRenderSeletor',
 			'common.cidNumber.renderAdd': 'cidNumberRenderAdd',
-			'common.cidNumber.renderVerify': 'cidNumberRenderVerify'
+			'common.cidNumber.renderVerify': 'cidNumberRenderVerify',
+			'common.cidNumber.forceVerify': 'cidNumberForceVerify'
 		},
 
 		/**
 		 * Prompts number creation dialog.
 		 * @param  {Object} args
 		 * @param  {Object} args.accountId
-		 * @param  {Object} args.onAdded
+		 * @param  {Object} args.onVerified
 		 */
 		cidNumberRenderAdd: function(args) {
 			var self = this,
 				accountId = _.get(args, 'accountId', self.accountId),
-				onAdded = _.get(args, 'onAdded', function() {}),
+				onVerified = _.get(args, 'onVerified', function() {}),
 				$template = $(self.getTemplate({
 					name: 'add',
 					submodule: 'cidNumber'
@@ -27,7 +27,7 @@ define(function(require) {
 			self.cidNumberBindAddEvents($template, {
 				accountId: accountId,
 				closePopup: _.bind(popup.dialog, popup, 'close'),
-				onAdded: onAdded
+				onVerified: onVerified
 			});
 		},
 
@@ -75,21 +75,13 @@ define(function(require) {
 							phoneNumber: data.number
 						},
 						callbacksPerAction = {
-							send: _.bind(self.cidNumberRequestTriggerVerify, self, {
-								data: {
-									acountId: args.accountId,
-									numberId: data.id
-								},
-								success: function() {
-									self.cidNumberRenderVerify(_.merge({
-										onVerified: args.onAdded
-									}, _.pick(args, [
-										'accountId'
-									]), numberMetadata));
-									args.closePopup();
-								},
-								error: onRequestErrorWithId
-							}),
+							send: function() {
+								self.cidNumberRenderVerify(_.merge(_.pick(args, [
+									'accountId',
+									'onVerified'
+								]), numberMetadata));
+								args.closePopup();
+							},
 							verify: _.bind(self.cidNumberRequestSubmitPin, self, {
 								data: {
 									acountId: args.accountId,
@@ -98,7 +90,7 @@ define(function(require) {
 								success: function(data) {
 									args.closePopup();
 
-									self.cidNumberGlobalCallback(numberMetadata, args.onAdded);
+									self.cidNumberGlobalCallback(numberMetadata, args.onVerified);
 								},
 								error: onRequestErrorWithId
 							})
@@ -164,9 +156,11 @@ define(function(require) {
 		 * @param  {Object} args.numberId
 		 * @param  {Object} args.phoneNumber
 		 * @param  {Object} args.onVerified
+		 * @param  {Object} [args.deleteUnverifiedOnClose=true]
 		 */
 		cidNumberRenderVerify: function(args) {
 			var self = this,
+				deleteUnverifiedOnClose = _.get(args, 'deleteUnverifiedOnClose', true),
 				formattedPhoneNumber = _
 					.chain(args.phoneNumber)
 					.thru(monster.util.getFormatPhoneNumber)
@@ -182,7 +176,10 @@ define(function(require) {
 				popup = monster.ui.dialog($template, {
 					title: self.i18n.active().commonApp.cidNumber.verify.title,
 					onClose: function() {
-						if (self.appFlags.cidNumber.isVerified) {
+						if (
+							self.appFlags.cidNumber.isVerified
+							|| !deleteUnverifiedOnClose
+						) {
 							return;
 						}
 						self.cidNumberRequestDelete({
@@ -193,6 +190,13 @@ define(function(require) {
 						});
 					}
 				});
+
+			self.cidNumberRequestTriggerVerify({
+				data: {
+					acountId: args.accountId,
+					numberId: args.numberId
+				}
+			});
 
 			_.set(self, 'appFlags.cidNumber.isVerified', false);
 
@@ -293,7 +297,7 @@ define(function(require) {
 						args.closePopup();
 
 						self.cidNumberGlobalCallback(_.pick(args, [
-							'accountId',
+							'numberId',
 							'phoneNumber'
 						]), args.onVerified);
 					},
@@ -357,6 +361,52 @@ define(function(require) {
 			});
 		},
 
+		/**
+		 * @param  {Object} args
+		 * @param  {String} args.accountId
+		 * @param  {String} args.numberId
+		 * @param  {Function} [args.onVerified]
+		 */
+		cidNumberForceVerify: function(args) {
+			var self = this;
+
+			self.cidNumberRequestSubmitPin({
+				data: _.merge({
+					generateError: false
+				}, _.pick(args, [
+					'accountId',
+					'numberId'
+				])),
+				success: function(data) {
+					self.cidNumberGlobalCallback({
+						numberId: data.id,
+						phoneNumber: data.number
+					}, args.onVerified);
+				},
+				error: function() {
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().commonApp.cidNumber.add.errorVerify
+					});
+				}
+			});
+		},
+
+		cidNumberRequestList: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'externalNumbers.list',
+				data: {
+					accountId: self.accountId
+				},
+				success: _.flow(
+					_.partial(_.get, _, 'data'),
+					args.success
+				)
+			});
+		},
+
 		cidNumberRequestAdd: function(args) {
 			var self = this;
 
@@ -392,7 +442,9 @@ define(function(require) {
 		},
 
 		cidNumberRequestTriggerVerify: function(args) {
-			var self = this;
+			var self = this,
+				success = _.get(args, ' success', function() {}),
+				error = _.get(args, ' error', function() {});
 
 			self.callApi({
 				resource: 'externalNumbers.verify',
@@ -405,9 +457,9 @@ define(function(require) {
 				}, args.data),
 				success: _.flow(
 					_.partial(_.get, _, 'data'),
-					args.success
+					success
 				),
-				error: args.error
+				error: error
 			});
 		},
 
@@ -417,7 +469,6 @@ define(function(require) {
 			self.callApi({
 				resource: 'externalNumbers.submitPin',
 				data: _.merge({
-					removeMetadataAPI: true,
 					generateError: false,
 					accountId: self.accountId
 				}, args.data),

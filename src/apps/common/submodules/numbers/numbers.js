@@ -1015,7 +1015,7 @@ define(function(require) {
 
 				monster.pub('common.cidNumber.renderAdd', {
 					accountId: accountId,
-					onAdded: function(numberMetadata) {
+					onVerified: function(numberMetadata) {
 						var accountNode = _.find(dataNumbers.listAccounts, {
 							id: accountId
 						});
@@ -1051,6 +1051,72 @@ define(function(require) {
 				});
 
 				deleteNumbers(selectedNumbersMetadata);
+			});
+
+			container.on('click', '.verify', function(event) {
+				event.preventDefault();
+
+				var $numberBox = $(this).parents('.number-box'),
+					$accountSection = $numberBox.parents('.account-section'),
+					accountId = $accountSection.data('id'),
+					numberMetadata = {
+						accountId: accountId,
+						numberId: $numberBox.data('id'),
+						phoneNumber: $numberBox.data('number')
+					};
+
+				monster.pub('common.cidNumber.renderVerify', _.merge({
+					deleteUnverifiedOnClose: false,
+					onVerified: function(metadata) {
+						var accountNode = _.find(dataNumbers.listAccounts, {
+							id: accountId
+						});
+
+						_.set(accountNode, 'externalNumbers', _
+							.chain(accountNode.externalNumbers)
+							.reject({
+								id: metadata.id
+							})
+							.concat(metadata)
+							.value()
+						);
+						self.numbersRenderExternal({
+							parent: parent,
+							dataNumbers: dataNumbers
+						});
+					}
+				}, numberMetadata));
+			});
+
+			container.on('click', '.force-verify', function(event) {
+				event.preventDefault();
+
+				var $numberBox = $(this).parents('.number-box'),
+					$accountSection = $numberBox.parents('.account-section'),
+					accountId = $accountSection.data('id');
+
+				monster.pub('common.cidNumber.forceVerify', {
+					accountId: accountId,
+					numberId: $numberBox.data('id'),
+					onVerified: function(metadata) {
+						var accountNode = _.find(dataNumbers.listAccounts, {
+							id: accountId
+						});
+
+						_.set(accountNode, 'externalNumbers', _
+							.chain(accountNode.externalNumbers)
+							.reject(_.pick(metadata, [
+								'id'
+							]))
+							.concat(metadata)
+							.value()
+						);
+						self.numbersRenderExternal({
+							parent: parent,
+							dataNumbers: dataNumbers
+						});
+					}
+				});
 			});
 
 			container.on('click', '.delete', function(event) {
@@ -1365,6 +1431,8 @@ define(function(require) {
 					])),
 					submodule: 'numbers'
 				}));
+
+			monster.ui.tooltips(template);
 
 			args.parent
 				.find('.list-numbers[data-type="external"]')
