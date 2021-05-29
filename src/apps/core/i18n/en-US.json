@@ -1,4 +1,8 @@
 {
+	"cidNumberSelector": {
+		"none": "None",
+		"addNew": "Add New Caller ID"
+	},
 	"keyValueSelector": {
 		"title": "Select a pair of category/item",
 		"legends": {

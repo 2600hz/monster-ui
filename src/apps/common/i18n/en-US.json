@@ -1,6 +1,10 @@
 {
 	"commonApp": {
 		"cidNumber": {
+			"selector": {
+				"none": "None",
+				"addNumber": "Add New Caller ID"
+			},
 			"add": {
 				"title": "Add Caller ID Number",
 				"text": "All Caller ID Numbers must be validated to comply with Stir/Shaken requirements. Once you sumit a caller ID number, we'll call you to enter a verification code.",
