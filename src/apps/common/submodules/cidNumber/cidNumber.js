@@ -443,8 +443,8 @@ define(function(require) {
 
 		cidNumberRequestTriggerVerify: function(args) {
 			var self = this,
-				success = _.get(args, ' success', function() {}),
-				error = _.get(args, ' error', function() {});
+				success = _.get(args, 'success', function() {}),
+				error = _.get(args, 'error', function() {});
 
 			self.callApi({
 				resource: 'externalNumbers.verify',
