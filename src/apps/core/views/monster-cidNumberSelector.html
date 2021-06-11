@@ -1,0 +1,11 @@
+<div class="monster-cid-number-selector-wrapper">
+	<select name="{{selectName}}">
+	{{#select selected}}
+		{{#each options}}
+			<option value="{{value}}">
+				{{text}}
+			</option>
+		{{/each}}
+	{{/select}}
+	</select>
+</div>
