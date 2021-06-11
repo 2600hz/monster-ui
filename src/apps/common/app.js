@@ -8,6 +8,7 @@ define(function(require) {
 			'callerId',
 			'carrierSelector',
 			'chooseModel',
+			'cidNumber',
 			'conferenceViewer',
 			'csvUploader',
 			'deleteSmartUser',

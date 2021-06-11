@@ -1,0 +1,19 @@
+<div class="cid-number-selector-wrapper">
+	<select name="{{selectName}}">
+	{{#select selected}}
+		{{#if allowNone}}
+			<option value="">
+				{{coalesce noneLabel i18n.commonApp.cidNumber.selector.none}}
+			</option>
+		{{/if}}
+		<option value="add_new">
+			{{i18n.commonApp.cidNumber.selector.addNumber}}
+		</option>
+		{{#each options as |option|}}
+			<option value="{{option}}">
+				{{formatPhoneNumber option}}
+			</option>
+		{{/each}}
+	{{/select}}
+	</select>
+</div>

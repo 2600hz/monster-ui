@@ -6,6 +6,8 @@
 }
 
 #numbers_container .top-box {
+	display: flex;
+
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
@@ -22,6 +24,7 @@
 }
 
 #numbers_container .top-box > .half-box {
+	flex-grow: 1;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
@@ -33,7 +36,6 @@
 	height: 80px;
 	line-height: 65px;
 	padding: 5px 0px 5px 25px;
-	width: 50%;
 }
 
 #numbers_container .top-box > .half-box:hover {
@@ -114,6 +116,10 @@
 .dialog-spare-container .numbers .number-box .phone-number*/ {
 	display: inline-block;
 	width: 150px;
+
+	& > i:not(:first-child) {
+		margin-left: 10px;
+	}
 }
 
 #numbers_container .account-section .numbers-wrapper .number-box .locality/*,
@@ -343,7 +349,7 @@
 
 .dialog-spare-container .grid-numbers .numbers .number-box.no-data:hover {
 	cursor: default;
-	background: inherit; 
+	background: inherit;
 }
 
 .dialog-spare-container .grid-numbers .empty-search-row {

@@ -1,0 +1,46 @@
+<div class="cid-number-common-control-container">
+	<form id="form_verify_pin">
+		<p class="text">
+			{{replaceVar i18n.commonApp.cidNumber.verify.text phoneNumber}}
+		</p>
+		<div class="control-group">
+			<span class="input-wrapper">
+				<input type="text" class="pin" name="pin[]">
+				<input type="text" class="pin" name="pin[]">
+				<input type="text" class="pin" name="pin[]">
+				<input type="text" class="pin" name="pin[]">
+			</span>
+			<div class="notifications">
+				<span class="error">
+					{{i18n.commonApp.cidNumber.verify.invalidPin}}
+				</span>
+				<span class="verifying">
+					<span>
+						<i class="fa fa-spinner fa-pulse"></i>
+					</span>
+					<span>
+						{{i18n.commonApp.cidNumber.verify.verifying}}
+					</span>
+				</span>
+			</div>
+		</div>
+		<div class="form-actions">
+			<div class="help">
+				<span>
+					{{i18n.commonApp.cidNumber.verify.help1}}
+				</span>
+				<span>
+					{{i18n.commonApp.cidNumber.verify.help2}}
+					<a class="js-resend">
+						{{i18n.commonApp.cidNumber.verify.resend}}
+					</a>
+				</span>
+			</div>
+			<div class="actions">
+				<button type="button" class="monster-button-ghost cancel">
+					{{i18n.cancel}}
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
