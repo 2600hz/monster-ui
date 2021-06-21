@@ -11,25 +11,28 @@
 				<span>
 					<input type="text" id="phone_number" name="phoneNumber">
 				</span>
-			{{#isSuperDuper}}
 				<div class="btn-group dropup">
-			{{/isSuperDuper}}
 					<button class="monster-button-primary js-submit span2" data-action="send">
 						{{i18n.commonApp.cidNumber.add.buttons.send}}
 					</button>
-			{{#isSuperDuper}}
 					<button type="button" class="monster-button-primary dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu pull-right">
 						<li>
+							<a class="js-submit" data-action="save">
+								{{i18n.commonApp.cidNumber.add.buttons.save}}
+							</a>
+						</li>
+					{{#isSuperDuper}}
+						<li>
 							<a class="js-submit" data-action="verify">
 								{{i18n.commonApp.cidNumber.add.buttons.verify}}
 							</a>
 						</li>
+					{{/isSuperDuper}}
 					</ul>
 				</div>
-			{{/isSuperDuper}}
 			</div>
 		</div>
 	</form>
