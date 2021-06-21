@@ -1008,6 +1008,30 @@ define(function(require) {
 					});
 				};
 
+			container.on('click', '#add', function(event) {
+				event.preventDefault();
+
+				monster.pub('common.cidNumber.renderAdd', {
+					accountId: self.accountId,
+					onVerified: function(numberMetadata) {
+						var accountNode = _.find(dataNumbers.listAccounts, {
+							id: self.accountId
+						});
+
+						_.set(accountNode, 'externalNumbers', _
+							.chain(accountNode)
+							.get('externalNumbers', [])
+							.concat(numberMetadata)
+							.value()
+						);
+						self.numbersRenderExternal({
+							parent: parent,
+							dataNumbers: dataNumbers
+						});
+					}
+				});
+			});
+
 			container.on('click', '.add', function(event) {
 				event.preventDefault();
 
