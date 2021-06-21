@@ -11,6 +11,7 @@
 				"label": "Caller ID Number",
 				"errorVerify": "Couldn't verify number",
 				"buttons": {
+					"save": "Save and Verify Later",
 					"send": "Send Verification Code",
 					"verify": "Verify Without Code"
 				}
