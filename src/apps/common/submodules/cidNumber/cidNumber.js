@@ -286,7 +286,7 @@ define(function(require) {
 				self.cidNumberRequestSubmitPin({
 					data: _.merge({
 						data: {
-							pin: pin
+							code: pin
 						}
 					}, _.pick(args, [
 						'accountId',
