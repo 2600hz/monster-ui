@@ -134,7 +134,7 @@
 				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration' },
 				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration' },
 				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
-				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers' },
+				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers'},
 				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/triggers' },
 				'updateTrigger': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
 				'patchTrigger': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
@@ -178,14 +178,6 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/directories/{directoryId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/directories/{directoryId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
-			},
-			externalNumbers: {
-				get: { verb: 'GET', url: 'accounts/{accountId}/external_numbers/{numberId}' },
-				create: { verb: 'PUT', url: 'accounts/{accountId}/external_numbers' },
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/external_numbers/{numberId}' },
-				list: { verb: 'GET', url: 'accounts/{accountId}/external_numbers' },
-				verify: { verb: 'PUT', url: 'accounts/{accountId}/external_numbers/{numberId}/verify' },
-				submitPin: { verb: 'POST', url: 'accounts/{accountId}/external_numbers/{numberId}/verify' }
 			},
 			faxbox: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },

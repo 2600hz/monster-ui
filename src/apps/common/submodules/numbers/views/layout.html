@@ -10,19 +10,11 @@
 			<span class="count"> {{ countUsedNumbers }} </span>
 			<i class="help-popover fa fa-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpUsedNumbers }}"></i>
 		</div>
-		<div id="box_external_numbers" class="half-box {{#compare viewType '!==' 'pbx'}}pull-right{{else}}pull-left{{/compare}}" data-type="external">
-			<span class="title"> {{ i18n.numbers.externalNumbers }} </span>
-			<span class="count"> {{ countExternalNumbers }} </span>
-			<i class="help-popover fa fa-question" data-toggle="tooltip" data-placement="bottom" data-original-title="{{ i18n.numbers.helpExternalNumbers }}"></i>
-		</div>
 	</div>
 
 	<div class="list-numbers clearfix" data-type="spare">
 	</div>
 
 	<div class="list-numbers clearfix" data-type="used">
-	</div>
-
-	<div class="list-numbers clearfix" data-type="external">
 	</div>
 </div>
