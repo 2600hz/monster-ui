@@ -35,21 +35,19 @@ const writeFrameworkConfig = buildType => {
 	return configFilePath;
 };
 
-const writeBulkAppsConfig = () => {
-	let fileName;
-	let content;
-	console.log(getProApps());
+const writeAppConfig = appName => {
+	const configFilePath = join(tmp, 'apps', appName, 'app-build-config.json');
+	const config = {
+		version: isProApp(appName) ? 'pro' : 'standard'
+	};
 
-	listAllApps().forEach(item => {
-		fileName = join(tmp, 'apps', item, 'app-build-config.json');
-		content = {
-			version: isProApp(item)
-				? 'pro'
-				: 'standard'
-		};
-		writeFile(fileName, content);
-	});
+	writeFile(configFilePath, config);
+
+	return configFilePath;
 };
+
+const writeBulkAppsConfig = () => listAllApps()
+	.forEach(writeAppConfig);
 
 /**
  * Writes a config file for monster to know which apps have been minified so it
@@ -71,12 +69,6 @@ export const writeConfigDev = () => {
  * Add flags if needed, like pro/lite version
  */
 export const writeConfigApp = () => {
-	const fileName = join(app, 'app-build-config.json');
-	const content = {
-		version: isProApp(env.app)
-			? 'pro'
-			: 'standard'
-	};
-	writeFile(fileName, content);
-	return gulp.src(fileName);
+	const configFilePath = writeAppConfig(env.app);
+	return gulp.src(configFilePath);
 };
