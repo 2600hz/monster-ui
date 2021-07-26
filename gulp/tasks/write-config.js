@@ -14,6 +14,10 @@ const writeFile = (fileName, content) => {
 	fs.writeFileSync(fileName, json);
 };
 
+const readFile = filePath => JSON.parse(
+		fs.readFileSync(filePath)
+	);
+
 const isProApp = appName => getProApps()
 	.includes(appName);
 
@@ -46,8 +50,44 @@ const writeAppConfig = appName => {
 	return configFilePath;
 };
 
+const writeAppMetadata = appName => {
+	const metadataFolderPath = join(tmp, 'apps', appName, 'metadata');
+	const metadataFilePath = join(metadataFolderPath, 'app.json');
+	const metadataProFilePath = join(metadataFolderPath, 'app-pro.json');
+	let metadata;
+
+	if (!isProApp(appName)) {
+		return;
+	}
+	try {
+		fs.renameSync(
+			metadataProFilePath,
+			metadataFilePath
+		);
+	} catch (error) {
+	}
+
+	try {
+		metadata = readFile(metadataFilePath);
+	} catch (error) {
+		metadata = {
+			name: appName
+		};
+	}
+
+	if (metadata.name.slice(-4) !== '-pro') {
+		metadata.name += '-pro';
+		writeFile(metadataFilePath, metadata);
+	}
+};
+
+const writeAppFiles = appName => ([
+		writeAppConfig(appName),
+		writeAppMetadata(appName)
+	]);
+
 const writeBulkAppsConfig = () => listAllApps()
-	.forEach(writeAppConfig);
+	.forEach(writeAppFiles);
 
 /**
  * Writes a config file for monster to know which apps have been minified so it
@@ -69,6 +109,6 @@ export const writeConfigDev = () => {
  * Add flags if needed, like pro/lite version
  */
 export const writeConfigApp = () => {
-	const configFilePath = writeAppConfig(env.app);
+	const [configFilePath] = writeAppFiles(env.app);
 	return gulp.src(configFilePath);
 };
