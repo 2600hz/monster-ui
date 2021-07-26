@@ -14,6 +14,24 @@ const writeFile = (fileName, content) => {
 	fs.writeFileSync(fileName, json);
 };
 
+const writeFrameworkConfig = buildType => {
+	const configFilePath = join(tmp, 'build-config.json');
+	const configsPerBuildType = {
+		dev: {
+			type: 'development'
+		},
+		prod: {
+			type: 'production',
+			preloadApps: getAppsToInclude()
+		}
+	};
+	const config = configsPerBuildType[buildType];
+
+	writeFile(configFilePath, config);
+
+	return configFilePath;
+};
+
 const writeBulkAppsConfig = () => {
 	let fileName;
 	let content;
@@ -34,26 +52,15 @@ const writeBulkAppsConfig = () => {
  * doesn't reload the assets
  */
 export const writeConfigProd = () => {
-	const mainFileName = join(tmp, 'build-config.json');
-	const content = {
-		type: 'production',
-		preloadApps: getAppsToInclude()
-	};
-	writeFile(mainFileName, content);
+	const configFilePath = writeFrameworkConfig('prod');
 	writeBulkAppsConfig();
-	return gulp.src(mainFileName);
+	return gulp.src(configFilePath);
 };
 
 export const writeConfigDev = () => {
-	const fileName = join(tmp, 'build-config.json');
-	const content = {
-		version: env.pro
-			? 'pro'
-			: 'standard'
-	};
-	writeFile(fileName, content);
+	const configFilePath = writeFrameworkConfig('dev');
 	writeBulkAppsConfig();
-	return gulp.src(fileName);
+	return gulp.src(configFilePath);
 };
 
 /**
