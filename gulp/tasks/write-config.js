@@ -14,6 +14,9 @@ const writeFile = (fileName, content) => {
 	fs.writeFileSync(fileName, json);
 };
 
+const isProApp = appName => getProApps()
+	.includes(appName);
+
 const writeFrameworkConfig = buildType => {
 	const configFilePath = join(tmp, 'build-config.json');
 	const configsPerBuildType = {
@@ -35,11 +38,12 @@ const writeFrameworkConfig = buildType => {
 const writeBulkAppsConfig = () => {
 	let fileName;
 	let content;
+	console.log(getProApps());
 
 	listAllApps().forEach(item => {
 		fileName = join(tmp, 'apps', item, 'app-build-config.json');
 		content = {
-			version: getProApps().includes(item)
+			version: isProApp(item)
 				? 'pro'
 				: 'standard'
 		};
@@ -69,7 +73,7 @@ export const writeConfigDev = () => {
 export const writeConfigApp = () => {
 	const fileName = join(app, 'app-build-config.json');
 	const content = {
-		version: env.pro
+		version: isProApp(env.app)
 			? 'pro'
 			: 'standard'
 	};

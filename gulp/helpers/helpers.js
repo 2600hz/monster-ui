@@ -18,8 +18,9 @@ export const listAllApps = () => getDirectories(join(src, 'apps'));
 export const getAppsToInclude = () => listAllApps()
 	.filter(app => !getAppsToExclude().includes(app));
 
-export const getProApps = () => env.pro && env.pro.length
-	? env.pro.split(',')
-	: [];
-
 export const mode = env.app && env.app.length ? 'app' : 'whole';
+
+export const getProApps = () => ({
+		app: env.pro === true ? [env.app] : [],
+		whole: env.pro && env.pro.length ? env.pro.split(',') : []
+	}[mode]);
