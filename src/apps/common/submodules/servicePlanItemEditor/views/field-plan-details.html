@@ -98,31 +98,35 @@
 		</div>
 	</div>
 
-{{#compare key "===" "_all"}}
-	<div class="field-container row-fluid" data-type="as"{{#ifInArray 'as' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
-		<div class="control-group span6">
+	<div class="row-fluid">
+		<div class="field-container control-group span6" data-type="as"{{#ifInArray 'as' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
 			<label for="as" class="control-label">
 				{{i18n.servicePlanItemEditor.editField.plan.chargeAs.label}}
 			</label>
-			<div class="controls">
-				<select name="as" id="as">
-				{{#select @root.as}}
-					{{#each @root.allOptions}}
+			<div class="controls sub-input">
+			{{#with extra.as}}
+				<select name="as" id="as" class="js-dialog-chosen">
+					<option value="">
+						{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
+					</option>
+				{{#select selected}}
+					{{#each options}}
 						<option value="{{value}}">
 							{{label}}
 						</option>
 					{{/each}}
 				{{/select}}
 				</select>
+				<input type="text" name="extra.as" id="new_as"{{#if selected}} style="display: none;"{{else}} value="{{value}}"{{/if}}>
+			{{/with}}
 			</div>
 		</div>
-
-		<div class="control-group span6">
+		<div class="field-container control-group span6" data-type="exceptions"{{#ifInArray 'exceptions' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
 			<label for="exceptions" class="control-label">
 				{{i18n.servicePlanItemEditor.editField.plan.exceptions.label}}
 			</label>
 			<div class="controls">
-				<select multiple name="exceptions" id="exceptions">
+				<select multiple name="exceptions" id="exceptions" class="js-dialog-chosen">
 				{{#select @root.exceptions}}
 					{{#each @root.allOptions}}
 						<option value="{{value}}">
@@ -134,7 +138,6 @@
 			</div>
 		</div>
 	</div>
-{{/compare}}
 
 	<div class="row-fluid">
 		<div class="field-container control-group span6" data-type="maximum"{{#ifInArray 'maximum' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
@@ -212,6 +215,66 @@
 			<p>{{i18n.servicePlanItemEditor.editField.plan.cascade.help2}}</p>
 			<p>{{i18n.servicePlanItemEditor.editField.plan.cascade.help3}}</p>
 		</div>
+		</div>
+	</div>
+
+	<div class="field-container row-fluid" data-type="quantity"{{#ifInArray 'quantity' selectedFields}}{{else}} style="display:none;"{{/ifInArray}}>
+		<div class="control-group">
+			<label for="quantity_category" class="control-label">
+				{{i18n.servicePlanItemEditor.editField.plan.quantity.label}}
+			</label>
+			<div class="controls" style="display: flex;">
+				<div class="span5 sub-input">
+				{{#with extra.quantity.category}}
+					<select name="quantity.category" id="quantity_category" class="js-dialog-chosen">
+					{{#select selected}}
+						{{#isSuperDuper}}
+							<option value="">
+								{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.category}}
+							</option>
+						{{/isSuperDuper}}
+						{{#each options}}
+							<option value="{{id}}">
+								{{label}}
+							</option>
+						{{/each}}
+					{{/select}}
+					</select>
+					<input type="text" name="quantity.category" class="span12" id="new_quantity_category"{{#if selected}} style="display: none;"{{else}} value="{{value}}"{{/if}} placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.category}}">
+				{{/with}}
+				</div>
+				<div class="span5">
+				{{#with extra.quantity.name}}
+					{{#each options}}
+						<div class="sub-control sub-input" data-category="{{id}}"{{#compare id "!==" @root.extra.quantity.category.selected}} style="display: none;"{{/compare}}>
+							<select name="quantity.name.{{id}}" class="quantity-name js-dialog-chosen">
+							{{#isSuperDuper}}
+								<option value="">
+									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
+								</option>
+							{{/isSuperDuper}}
+							{{#select ../selected}}
+								{{#each items}}
+									<option value="{{id}}">
+										{{label}}
+									</option>
+								{{/each}}
+							{{/select}}
+							</select>
+							<input type="text" name="quantity.name.{{id}}" class="span12" class="new-quantity-name"{{#if isNew}} value="{{../value}}"{{else}} style="display: none;"{{/if}} placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+						</div>
+					{{/each}}
+						<div class="sub-control sub-input" data-category=""{{#if @root.extra.quantity.category.selected}} style="display: none;"{{/if}}>
+							<select name="" id="quantity_name">
+								<option value="">
+									{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.new.item}}
+								</option>
+							</select>
+							<input type="text" name="quantity.newName" class="span12"{{#unless isNew}} value="{{value}}"{{/unless}} class="new-quantity-name" placeholder="{{@root.i18n.servicePlanItemEditor.editField.plan.quantity.placeholder.item}}">
+						</div>
+				{{/with}}
+				</div>
+			</div>
 		</div>
 	</div>
 </fieldset>

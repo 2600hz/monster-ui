@@ -3448,6 +3448,219 @@ define(function(require) {
 	};
 
 	/**
+	 * @param  {Object} args
+	 * @param  {Object[]} [args.choices]
+	 * @param  {Object} [args.existing]
+	 * @param  {Boolean} [args.isEditable=false]
+	 * @param  {Object} [args.i18n]
+	 * @param  {Function} [args.normalizer]
+	 * @param  {Function} [args.onSelect]
+	 */
+	function keyValueSelector(pArgs) {
+		var self = monster.apps.core,
+			args = _.merge({
+				choices: [],
+				existing: {},
+				isEditable: false,
+				i18n: {
+					title: self.i18n.active().keyValueSelector.title
+				},
+				normalizer: _.snakeCase
+			}, pArgs),
+			choices = args.choices,
+			existing = args.existing,
+			isEditable = _.isEmpty(choices) ? true : args.isEditable,
+			i18n = args.i18n,
+			normalizer = args.normalizer,
+			onSelect = args.onSelect,
+			$template = $(self.getTemplate({
+				name: 'monster-keyValueSelector',
+				data: {
+					i18nCustom: _.get(args, 'i18n', {}),
+					choices: choices,
+					isEditable: isEditable
+				}
+			})),
+			$container = monster.ui.dialog($template, _.merge({
+				autoScroll: false
+			}, _.pick(i18n, [
+				'title'
+			]))),
+			$form = $container.find('#key_value_selector_form'),
+			itemsPerCategory = _.mergeWith(
+				_
+					.chain(existing)
+					.mapKeys(function(v, category) {
+						return normalizer(category);
+					})
+					.mapValues(_.partial(_.map, _, normalizer))
+					.value(),
+				_
+					.chain(choices)
+					.keyBy(_.flow(
+						_.partial(_.get, _, 'id'),
+						normalizer
+					))
+					.mapValues(_.flow(
+						_.partial(_.get, _, 'items'),
+						_.partial(_.map, _, _.flow(
+							_.partial(_.get, _, 'id'),
+							normalizer
+						))
+					))
+					.value(),
+				function(obj, src) {
+					return _.every([obj, src], _.isArray) ? _
+						.chain(obj)
+						.concat(src)
+						.uniq()
+						.value() : undefined;
+				}
+			),
+			categories = _.keys(itemsPerCategory),
+			$newCategoryInput = $container.find('input[name="newCategoryId"]'),
+			$newItemInput = $container.find('input[name^="newItemId."]'),
+			$selectButton = $container.find('.js-select'),
+			ruleCommon = {
+				normalizer: _.unary(normalizer)
+			};
+
+		monster.ui.validate($form, {
+			rules: _.merge({
+				newCategoryId: _.merge({
+					checkList: categories
+				}, ruleCommon)
+			}, _.transform(itemsPerCategory, function(obj, items, category) {
+				obj['newItemId.' + category] = _.merge({
+					checkList: items
+				}, ruleCommon);
+			}, {}))
+		});
+
+		$container
+			.find('input[name="categoryId"]')
+				.on('change', function(event) {
+					event.preventDefault();
+
+					var selectedCategoryId = $(this).val();
+
+					$container.find('.sub-category-wrapper').hide();
+					$newItemInput.hide();
+					$selectButton.prop('disabled', 'disabled');
+					$container.find('input[name="itemId"]').prop('checked', false);
+
+					if (_.isEmpty(selectedCategoryId)) {
+						$newCategoryInput.slideDown(100, function() {
+							$(this).focus();
+						});
+					} else {
+						$newCategoryInput
+							.slideUp(100)
+							.val('');
+						$newItemInput.val('');
+						$container
+							.find('.sub-category-wrapper[data-category="' + selectedCategoryId + '"]')
+								.slideDown(100);
+					}
+				});
+
+		$container
+			.find('input[name="newCategoryId"]')
+				.on('keyup input', _.debounce(function(event) {
+					event.preventDefault();
+
+					var newCategoryId = _
+							.chain(monster.ui.getFormData('key_value_selector_form'))
+							.get('newCategoryId')
+							.thru(normalizer)
+							.value(),
+						$emptyCategoryWrapper = $container.find('.sub-category-wrapper[data-category=""]');
+
+					if (_.isEmpty(newCategoryId) || _.includes(categories, newCategoryId)) {
+						$container.find('.sub-category-wrapper').hide();
+						$newItemInput.val('');
+					} else if (!$emptyCategoryWrapper.is(':visible')) {
+						$emptyCategoryWrapper.slideDown(100, function() {
+							$emptyCategoryWrapper.find('input[name="itemId"]').click();
+						});
+					}
+					monster.ui.valid($form);
+				}, 250));
+
+		$container
+			.find('input[name="itemId"]')
+				.on('change', function(event) {
+					event.preventDefault();
+
+					var selectedItemId = $(this).val();
+
+					$selectButton.prop('disabled', _.isEmpty(selectedItemId) ? 'disabled' : false);
+
+					if (_.isEmpty(selectedItemId)) {
+						$newItemInput.slideDown(100, function() {
+							$(this).focus();
+						});
+					} else {
+						$newItemInput
+							.slideUp(100)
+							.val('');
+					}
+				});
+
+		$container
+			.find('input[name^="newItemId."]')
+				.on('keyup input', function(event) {
+					event.preventDefault();
+
+					var formData = monster.ui.getFormData('key_value_selector_form'),
+						newCategoryId = normalizer(
+							_.isEmpty(formData.categoryId) ? $newCategoryInput.val() : formData.categoryId
+						),
+						newItemId = normalizer($(this).val()),
+						alreadyExists = _.includes(categories, newCategoryId) && _
+							.chain(itemsPerCategory)
+							.get(newCategoryId)
+							.includes(newItemId)
+							.value();
+
+					if (_.isEmpty(newItemId) || alreadyExists) {
+						$selectButton.prop('disabled', 'disabled');
+					} else if (!_.isEmpty(newItemId) && !alreadyExists) {
+						$selectButton.prop('disabled', false);
+					}
+					monster.ui.valid($form);
+				});
+
+		$container
+			.find('.js-cancel')
+				.on('click', function(event) {
+					event.preventDefault();
+
+					$container.dialog('close');
+				});
+
+		$container
+			.find('#key_value_selector_form')
+				.on('submit', function(event) {
+					event.preventDefault();
+
+					var formData = monster.ui.getFormData('key_value_selector_form'),
+						category = _.isEmpty(formData.newCategoryId) ? formData.categoryId : normalizer(formData.newCategoryId),
+						isCategoryNew = !_.includes(categories, category),
+						newItemInputValue = _.get(formData, [
+							'newItemId',
+							isCategoryNew ? '' : category
+						]),
+						item = _.isEmpty(formData.itemId) ? normalizer(newItemInputValue) : formData.itemId;
+
+					onSelect && onSelect(category, item);
+
+					$container.dialog('close');
+				});
+	}
+	ui.keyValueSelector = keyValueSelector;
+
+	/**
 	 * Chosen plugin wrapper used to apply the same default options
 	 * @param  {jQuery} $target  <select> element to invoke chosen on
 	 * @param  {Object} pOptions Options for widget
@@ -3733,7 +3946,6 @@ define(function(require) {
 		return _.get(container, 'jsoneditor', null);
 	}
 	ui.getJsoneditor = getJsoneditor;
-
 
 	/**
 	 * Cleanly insert a template in a container by animating it and showing a

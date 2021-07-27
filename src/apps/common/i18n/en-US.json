@@ -75,11 +75,12 @@
 			"markup_rate": "Rate"
 		},
 		"fieldSelector": {
+			"exceptions": "Exclude",
+			"quantity": "Quantifier",
 			"label": "Fields to configure",
 			"activationCharge": "Activation Charge",
 			"as": "Charge As",
 			"cascade": "Aggregate Counts",
-			"exceptions": "Exceptions",
 			"maximum": "Monthly Maximum",
 			"minimum": "Monthly Minimum",
 			"rate": "Rates",
@@ -97,6 +98,17 @@
 		},
 		"editField": {
 			"plan": {
+				"quantity": {
+					"label": "Quantifier",
+					"placeholder": {
+						"category": "Category Name",
+						"item": "Item Name"
+					},
+					"new": {
+						"category": "New Category",
+						"item": "New Item"
+					}
+				},
 				"name": {
 					"label": "Name"
 				},
