@@ -1,0 +1,105 @@
+<div class="actions-wrapper">
+	<div class="form-inline">
+		<label>
+			{{ i18n.numbers.numbers }}
+		</label>
+
+		<span id="trigger_links">
+			<a href="#" id="delete_external_numbers" class="action-number">
+				<i class="fa fa-times monster-red"></i>
+				<span class="action-text">
+					{{ i18n.numbers.deleteNumbers }}
+				</span>
+			</a>
+		</span>
+
+		{{#compare viewType '===' 'pbx'}}
+			<a href="javascript:void(0);" id="add" class="action-number">
+				<i class="fa fa-plus monster-primary-color"></i>
+				<span class="action-text">
+					{{ @root.i18n.numbers.addExternal.label }}
+				</span>
+			</a>
+		{{/compare}}
+	</div>
+</div>
+
+<div class="accounts-numbers">
+	{{#each listAccounts}}
+		<div class="account-section {{ open }}" data-id="{{ id }}" data-name="{{ name }}">
+			{{#compare ../viewType '!==' 'pbx'}}
+				<div class="account-header">
+					<div class="right-links pull-right">
+						<a class="add" href="javascript:void(0);">
+							<i class="fa fa-plus"></i>
+							<span class="action-text">
+								{{ @root.i18n.numbers.addExternal.label }}
+							</span>
+						</a>
+					</div>
+					<div class="left-part">
+						<input type="checkbox"></input>
+					</div>
+					<div class="expandable" data-type="external">
+						{{ name }}
+						<span class="count">({{ countExternalNumbers }})</span>
+					</div>
+				</div>
+			{{/compare}}
+
+			<div class="numbers-wrapper">
+				{{#each externalNumbers}}
+					<div class="number-box" data-id="{{id}}" data-number="{{number}}">
+						<div class="number-options pull-right">
+							<div class="navbar">
+								<ul class="nav pull-right">
+									<li class="dropdown">
+										<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+											<i class="fa fa-cog"></i>
+										</a>
+										<ul class="dropdown-menu">
+										{{#unless verified}}
+											<li>
+												<a class="verify" href="javascript:void(0);">
+													<i class="fa fa-phone"></i>
+													{{@root.i18n.numbers.verify}}
+												</a>
+											</li>
+											{{#isSuperDuper}}
+											<li>
+												<a class="force-verify" href="javascript:void(0);">
+													<i class="fa fa-check"></i>
+													{{@root.i18n.numbers.forceVerify}}
+												</a>
+											</li>
+											{{/isSuperDuper}}
+											<li class="divider"></li>
+										{{/unless}}
+											<li>
+												<a class="delete" href="javascript:void(0);">
+													<i class="fa fa-times"></i>
+													{{@root.i18n.delete}}
+												</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<input type="checkbox">
+						<div class="phone-number monster-phone-number">
+							{{#monsterNumberWrapper number}}{{/monsterNumberWrapper}}
+						{{#if verified}}
+							<i class="fa fa-check-circle monster-green" data-toggle="tooltip" title="{{@root.i18n.numbers.verified}}"></i>
+						{{/if}}
+						</div>
+					</div>
+				{{else}}
+					<div class="number-box no-data">
+						{{ @root.i18n.numbers.noExternalNumber }}
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	{{/each}}
+</div>

@@ -1,0 +1,155 @@
+.cid-number-common-control-container {
+	#form_add_cid_number {
+		max-width: 500px;
+		margin: 0;
+		padding: 20px 15px;
+
+		p {
+			margin-bottom: 20px;
+		}
+
+		.control-group {
+			margin: 0;
+		}
+
+		.btn-group {
+			& > button:first-child {
+				font-size: 15px;
+			}
+
+			.dropdown-menu {
+				width: 100%;
+
+				&::before,
+				&::after {
+					display: none;
+				}
+			}
+		}
+
+		.controls {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			input {
+				margin: 0;
+				height: 28px;
+			}
+		}
+	}
+
+	#form_verify_pin {
+		width: 650px;
+		margin: 0;
+		padding: 20px 0 0;
+
+		p {
+			margin-bottom: 30px;
+			padding: 0 15px;
+		}
+
+		.control-group {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-bottom: 20px;
+			padding: 0 15px;
+
+			.input-wrapper {
+				input {
+					$bg-color: #F3F6F9;
+					$bg-color-darker: #EBEDF3;
+					$color: #3F4254;
+
+					-webkit-transition: none;
+					transition: none;
+					width: 3rem;
+					height: 3rem;
+					font-size: 1.5rem;
+					text-align: center;
+					background-color: $bg-color;
+					border-color: $bg-color;
+					color: $color;
+					margin: .5rem;
+					border-radius: .25rem;
+					padding: 0;
+					box-sizing: border-box;
+					transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+					&:active,
+					&:focus {
+						outline: 0;
+						background-color: $bg-color-darker;
+						border-color: $primary-color;
+						color: $color;
+						transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+					}
+				}
+			}
+
+			.notifications {
+				margin-top: 10px;
+				height: 10px;
+
+				.error {
+					display: none;
+					color: $danger-color;
+				}
+
+				.verifying {
+					display: none;
+					flex-direction: row;
+					justify-content: center;
+					color: $success-color;
+
+					i {
+						color: $success-color;
+						margin-right: 5px;
+					}
+				}
+
+				&.error .error {
+					display: block;
+				}
+
+				&.verifying .verifying {
+					display: flex;
+				}
+			}
+		}
+
+		.form-actions {
+			display: flex;
+			justify-content: space-between;
+			margin: 0;
+
+			&:before,
+			&:after {
+				display: none;
+			}
+
+			.help {
+				display: flex;
+				flex-direction: column;
+
+				a {
+					margin-left: 4px;
+					color: $primary-color;
+					cursor: pointer;
+					text-decoration: underline;
+
+					&:hover {
+						text-decoration: none;
+					}
+
+					&.sent {
+						color: $success-color;
+						text-decoration: none;
+						cursor: default;
+					}
+				}
+			}
+		}
+	}
+}

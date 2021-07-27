@@ -2,19 +2,26 @@ define(function() {
 	return {
 		appFlags: {
 			servicePlanItemEditor: {
-				editableFields: [
-					'activation_charge',
-					'as',
-					'cascade',
-					'quantity',
-					'maximum',
-					'name',
-					'minimum',
-					'rate',
-					'prorate.additions',
-					'prorate.removals',
-					'step'
-				]
+				editableFields: {
+					common: [
+						'activation_charge',
+						'cascade',
+						'quantity',
+						'maximum',
+						'name',
+						'minimum',
+						'rate',
+						'prorate.additions',
+						'prorate.removals',
+						'step'
+					],
+					itemSpecific: {
+						_all: [
+							'as',
+							'exceptions'
+						]
+					}
+				}
 			}
 		},
 
@@ -69,17 +76,22 @@ define(function() {
 				category = _.get(args, 'category'),
 				key = _.get(args, 'key'),
 				initTemplate = function() {
-					var editableFields = self.appFlags.servicePlanItemEditor.editableFields,
-						selectedFields = self.servicePlanItemEditorFieldsComputeSelectedFields(),
+					var mandatoryFields = self.servicePlanItemEditorGetStore('mandatoryFields'),
+						editableFields = self.servicePlanItemEditorGetEditableFields(key),
+						selectableFields = _.difference(
+							editableFields,
+							mandatoryFields
+						),
+						selectedFields = _.difference(
+							self.servicePlanItemEditorFieldsComputeSelectedFields(),
+							mandatoryFields
+						),
 						$template = $(self.getTemplate({
 							name: 'layout',
 							data: {
 								selected: selectedFields,
 								options: _
-									.chain(editableFields)
-									.reject(function(field) {
-										return _.includes(['as', 'exceptions'], field) && key !== '_all';
-									})
+									.chain(selectableFields)
 									.map(function(field) {
 										return {
 											value: field,
@@ -89,6 +101,10 @@ define(function() {
 											)
 										};
 									})
+									.sortBy(_.flow(
+										_.partial(_.get, _, 'label'),
+										_.toLower
+									))
 									.value()
 							},
 							submodule: 'servicePlanItemEditor'
@@ -126,6 +142,7 @@ define(function() {
 				};
 
 			self.servicePlanItemEditorSetStore(_.merge({
+				mandatoryFields: _.get(args, 'mandatoryFields', []),
 				callback: args.callback,
 				category: _.get(args, 'category'),
 				key: _.get(args, 'key'),
@@ -174,6 +191,16 @@ define(function() {
 			});
 		},
 
+		servicePlanItemEditorGetEditableFields: function(key) {
+			var self = this,
+				editableFields = self.appFlags.servicePlanItemEditor.editableFields;
+
+			return _.flatten([
+				editableFields.common,
+				_.get(editableFields.itemSpecific, key, [])
+			]);
+		},
+
 		servicePlanItemEditorCleanUp: function(plan) {
 			var formattedPlan = _.cloneDeep(plan);
 
@@ -189,11 +216,10 @@ define(function() {
 		servicePlanItemEditorFieldsComputeSelectedFields: function() {
 			var self = this,
 				planItem = self.servicePlanItemEditorGetStore('edited'),
-				editableFields = self.appFlags.servicePlanItemEditor.editableFields;
+				key = self.servicePlanItemEditorGetStore('key'),
+				editableFields = self.servicePlanItemEditorGetEditableFields(key);
 
-			return _.filter(editableFields, function(path) {
-				return _.has(planItem, path);
-			});
+			return _.filter(editableFields, _.partial(_.has, planItem));
 		},
 
 		servicePlanItemEditorUtilFormatPrice: function(pPrice) {
@@ -241,6 +267,8 @@ define(function() {
 
 					self.servicePlanItemEditorRatesRowBindEvents($template);
 
+					self.servicePlanItemEditorAsFieldBindEvents($container, $template);
+
 					self.servicePlanItemEditorQuantityFieldsBindEvents($container, $template);
 
 					self.servicePlanItemEditorBindEvents($container, category, key);
@@ -269,6 +297,17 @@ define(function() {
 			var self = this,
 				currentItem = self.servicePlanItemEditorGetStore('applied'),
 				servicePlan = self.servicePlanItemEditorGetStore('edited'),
+				getAsExtra = function() {
+					var existingOptions = _.map(self.servicePlanItemEditorGetStore('editable'), 'value'),
+						defaultOption = _.head(existingOptions),
+						planAs = _.get(servicePlan, 'as', defaultOption);
+
+					return {
+						selected: _.includes(existingOptions, planAs) ? planAs : '',
+						value: _.startCase(planAs),
+						options: self.servicePlanItemEditorGetStore('editable')
+					};
+				},
 				getQuantityExtra = function() {
 					var quantityOptions = self.servicePlanItemEditorGetStore('quantityOptions'),
 						existingCategories = _.map(quantityOptions, 'id'),
@@ -309,6 +348,13 @@ define(function() {
 						name: {
 							selected: selectItem,
 							value: planItem,
+							isNew: _
+								.chain(quantityOptions)
+								.find({ id: selectCategory })
+								.get('items')
+								.map('id')
+								.includes(planItem)
+								.value(),
 							options: _.map(quantityOptions, function(options) {
 								return _.merge({
 									isNew: selectCategory === options.id && !_
@@ -321,8 +367,19 @@ define(function() {
 						}
 					};
 				},
+				mandatoryFields = _.intersection(
+					self.servicePlanItemEditorGetEditableFields(key),
+					self.servicePlanItemEditorGetStore('mandatoryFields')
+				),
 				formattedItem = _.merge({
-					selectedFields: self.servicePlanItemEditorFieldsComputeSelectedFields(),
+					selectedFields: _
+						.chain([
+							self.servicePlanItemEditorFieldsComputeSelectedFields(),
+							mandatoryFields
+						])
+						.flatten()
+						.uniq()
+						.value(),
 					category: category,
 					key: key,
 					friendlyName: self.servicePlanItemEditorFormatName(category, key),
@@ -337,6 +394,7 @@ define(function() {
 					},
 					step: 1,
 					extra: {
+						as: getAsExtra(),
 						quantity: getQuantityExtra(),
 						currencySymbol: monster.util.getCurrencySymbol(),
 						activationCharge: {
@@ -349,7 +407,6 @@ define(function() {
 					}
 				}, key === '_all' ? {
 					exceptions: [],
-					as: '_none',
 					allOptions: self.servicePlanItemEditorGetStore('editable')
 				} : {}, servicePlan);
 
@@ -400,6 +457,19 @@ define(function() {
 			monster.ui.validate(template, {
 				ignore: ':hidden',
 				rules: _.merge({
+					'extra.as': {
+						required: true,
+						checkList: _
+							.chain(self.servicePlanItemEditorGetStore('quantityOptions'))
+							.find({ id: category })
+							.get('items')
+							.map(_.flow(
+								_.partial(_.get, _, 'id'),
+								_.snakeCase
+							))
+							.value(),
+						normalizer: _.snakeCase
+					},
 					'quantity.newName': {
 						required: true
 					},
@@ -441,6 +511,18 @@ define(function() {
 				}, {}))
 			});
 
+			template.on('chosen:showing_dropdown', '.js-dialog-chosen', function() {
+				$(this).parent().animate({
+					marginBottom: $(this).data('chosen').dropdown.height()
+				}, 200);
+			});
+
+			template.on('chosen:hiding_dropdown', '.js-dialog-chosen', function() {
+				$(this).parent().animate({
+					marginBottom: 0
+				}, 200);
+			});
+
 			template.find('.js-cancel').on('click', function() {
 				template.parents('.ui-dialog-content').dialog('close');
 			});
@@ -457,6 +539,15 @@ define(function() {
 				template.parents('.ui-dialog-content').dialog('close');
 
 				self.servicePlanItemEditorGetStore('callback')(formattedItem);
+			});
+		},
+
+		servicePlanItemEditorAsFieldBindEvents: function($form, $template) {
+			$template.find('#as').on('change', function toggleNewItemInput() {
+				var item = $(this).val();
+
+				$template.find('#new_as').val('')[_.isEmpty(item) ? 'show' : 'hide']();
+				monster.ui.valid($form);
 			});
 		},
 
@@ -487,7 +578,7 @@ define(function() {
 
 			$nameSelect.on('change', function toggleNewNameInput() {
 				var $select = $(this),
-					$input = $select.parent().find('.new-quantity-name'),
+					$input = $select.parent().find('input'),
 					item = $select.val();
 
 				$input.val('')[_.isEmpty(item) ? 'show' : 'hide']();
@@ -609,6 +700,16 @@ define(function() {
 				_.unset(formattedItem, 'quantity');
 			}
 
+			if (_.has(formattedItem, 'as')) {
+				var selectedItem = template.find('#as').val(),
+					newItem = _.snakeCase(template.find('#new_as').val()),
+					item = selectedItem || newItem;
+
+				_.set(formattedItem, 'as', item);
+			} else {
+				_.unset(formattedItem, 'as');
+			}
+
 			template.find('.rate-container .rate-row').each(function() {
 				var $this = $(this),
 					rate = $this.find('.customer-rate-cell input').val();
@@ -637,6 +738,8 @@ define(function() {
 					formattedItem.enabled = true;
 				}
 			}
+
+			_.unset(formattedItem, 'extra');
 
 			return enforceTypes(formattedItem, self.servicePlanItemEditorGetStore('schema'));
 		},

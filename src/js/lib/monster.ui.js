@@ -471,6 +471,22 @@ define(function(require) {
 	}
 
 	var ui = {
+		charsRemaining: charsRemaining,
+		chosen: chosen,
+		cidNumberSelector: cidNumberSelector,
+		countrySelector: countrySelector,
+		disableAutoFill: disableAutoFill,
+		getFormData: getFormData,
+		getSvgIconTemplate: getSvgIconTemplate,
+		getJsoneditor: getJsoneditor,
+		insertTemplate: insertTemplate,
+		jsoneditor: jsoneditor,
+		keyValueEditor: keyValueEditor,
+		keyValueSelector: keyValueSelector,
+		monthpicker: monthpicker,
+		numberPicker: numberPicker,
+		toast: toast,
+
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
 		// for the options, and this tool will take care of the standard configuration, with no need to provide the "step", "min" or "max" options.
 		slider: function(target, pOptions) {
@@ -3469,6 +3485,137 @@ define(function(require) {
 	};
 
 	/**
+	 * @param  {jQuery} $target
+	 * @param  {Object} args
+	 * @param  {Object[]} args.cidNumbers
+	 * @param  {Object[]} [args.phoneNumbers]
+	 * @param  {String} [args.accountId]
+	 * @param  {Boolean} [args.allowNone=true]
+	 * @param  {Boolean} [args.allowAdd=true]
+	 * @param  {String} [args.noneLabel]
+	 * @param  {String} [args.selectName]
+	 * @param  {String} [args.selected]
+	 * @param  {String} [args.chosen]
+	 */
+	function cidNumberSelector($target, args) {
+		var self = monster.apps.core;
+		var getOptionData = _.flow(
+			_.partial(_.get, _, 'number'),
+			function(number) {
+				return {
+					value: number,
+					text: monster.util.formatPhoneNumber(number)
+				};
+			}
+		);
+		var cidNumbers = _
+			.chain(args)
+			.get('cidNumbers', [])
+			.filter('verified')
+			.map(getOptionData)
+			.value();
+		var phoneNumbers = _
+			.chain(args)
+			.get('phoneNumbers', [])
+			.map(getOptionData)
+			.value();
+		var numberOptions = _
+			.chain([
+				cidNumbers,
+				phoneNumbers
+			])
+			.flatten()
+			.sortBy('text')
+			.value();
+		var allowNone = _.get(args, 'allowNone', true);
+		var allowAdd = _.get(args, 'allowAdd', true);
+		var forceNone = allowNone || _.isEmpty(numberOptions);
+		var defaultOptions = _.flatten([
+			forceNone ? [{
+				value: '',
+				text: _.get(args, 'noneLabel', self.i18n.active().cidNumberSelector.none)
+			}] : [],
+			allowAdd ? [{
+				value: 'add_new',
+				text: self.i18n.active().cidNumberSelector.addNew
+			}] : []
+		]);
+		var options = _.flatten([
+			defaultOptions,
+			numberOptions
+		]);
+		var selectedPhoneNumber = _.find([
+			args.selected
+		], _.overEvery(
+			_.isString,
+			_.partial(_.includes, _.map(numberOptions, 'value'))
+		));
+		var firstPhoneNumber = _
+			.chain(numberOptions)
+			.head()
+			.get('value')
+			.value();
+		var $template = $(self.getTemplate({
+			name: 'monster-cidNumberSelector',
+			data: _.merge({
+				selected: _.find([
+					selectedPhoneNumber,
+					allowNone && '',
+					firstPhoneNumber,
+					''
+				], _.isString),
+				options: options
+			}, _.pick(args, [
+				'selectName'
+			]))
+		}));
+		var $selector = $template.find('select');
+
+		chosen($selector, _.get(args, 'chosen'));
+
+		$selector.on('change', function onAddNewSelect(event) {
+			event.preventDefault();
+
+			var value = $(this).val();
+
+			if (value !== 'add_new') {
+				return;
+			}
+			var $noneOption = $selector.find('option[value=""]');
+			var defaultOptionValues = _.map(defaultOptions, 'value');
+			var $firstNumberOption = $selector
+				.find('option')
+				.filter(function() {
+					return !_.includes(defaultOptionValues, $(this).val());
+				})
+				.first();
+			var $defaultOption = forceNone && $noneOption.length ? $noneOption
+				: $firstNumberOption.length ? $firstNumberOption
+				: $noneOption;
+
+			$defaultOption.prop('selected', true);
+			$selector.trigger('chosen:updated');
+
+			monster.pub('common.cidNumber.renderAdd', {
+				accountId: _.get(args, 'accountId', monster.apps.auth.currentAccount.id),
+				onVerified: function(numberMetadata) {
+					$selector.append($('<option>', _.merge({
+						selected: true
+					}, getOptionData(numberMetadata))));
+
+					if (!allowNone) {
+						$selector.find('option[value=""]').remove();
+					}
+
+					$selector.trigger('chosen:updated');
+				}
+			});
+		});
+
+		$target.append($template);
+	}
+
+	/**
 	 * @param  {Object} args
 	 * @param  {Object[]} [args.choices]
 	 * @param  {Object} [args.existing]
@@ -3666,24 +3813,19 @@ define(function(require) {
 					event.preventDefault();
 
 					var formData = monster.ui.getFormData('key_value_selector_form'),
-						category = normalizer(
-							_.isEmpty(formData.newCategoryId) ? formData.categoryId : formData.newCategoryId
-						),
+						category = _.isEmpty(formData.newCategoryId) ? formData.categoryId : normalizer(formData.newCategoryId),
 						isCategoryNew = !_.includes(categories, category),
 						newItemInputValue = _.get(formData, [
 							'newItemId',
 							isCategoryNew ? '' : category
 						]),
-						item = normalizer(
-							_.isEmpty(formData.itemId) ? newItemInputValue : formData.itemId
-						);
+						item = _.isEmpty(formData.itemId) ? normalizer(newItemInputValue) : formData.itemId;
 
 					onSelect && onSelect(category, item);
 
 					$container.dialog('close');
 				});
 	}
-	ui.keyValueSelector = keyValueSelector;
 
 	/**
 	 * Chosen plugin wrapper used to apply the same default options
@@ -3747,7 +3889,6 @@ define(function(require) {
 
 		return instance;
 	}
-	ui.chosen = chosen;
 
 	/**
 	 * Transforms a select field into a searchable list of countries.
@@ -3798,7 +3939,6 @@ define(function(require) {
 
 		return chosenInstance;
 	}
-	ui.countrySelector = countrySelector;
 
 	/**
 	 * Temporarily obfuscates form fields `name` attributes to disable browsers/password managers
@@ -3815,7 +3955,6 @@ define(function(require) {
 		}
 		$target.disableAutoFill(options);
 	}
-	ui.disableAutoFill = disableAutoFill;
 
 	/**
 	 * Gets a template to render the option items for a `select` list of the countries
@@ -3871,7 +4010,6 @@ define(function(require) {
 
 		return formData;
 	}
-	ui.getFormData = getFormData;
 
 	/**
 	 * Gets a template to render `select` list of the languages that are supported by Monster UI
@@ -3954,7 +4092,6 @@ define(function(require) {
 			attributes: attributes
 		});
 	}
-	ui.getSvgIconTemplate = getSvgIconTemplate;
 
 	/**
 	 * Get the jsoneditor instance from the container as long as exists
@@ -3970,7 +4107,6 @@ define(function(require) {
 
 		return _.get(container, 'jsoneditor', null);
 	}
-	ui.getJsoneditor = getJsoneditor;
 
 	/**
 	 * Cleanly insert a template in a container by animating it and showing a
@@ -4013,7 +4149,6 @@ define(function(require) {
 			template(appendTemplate);
 		}
 	}
-	ui.insertTemplate = insertTemplate;
 
 	/**
 	 * Create a new instance of jsoneditor
@@ -4038,7 +4173,6 @@ define(function(require) {
 
 		return editor;
 	}
-	ui.jsoneditor = jsoneditor;
 
 	/**
 	 * Generates a key-value pair editor
@@ -4112,7 +4246,6 @@ define(function(require) {
 		$target.append($editorTemplate);
 		return $editorTemplate;
 	}
-	ui.keyValueEditor = keyValueEditor;
 
 	/**
 	 * Merges HTML attributes, mapped as JSON objects
@@ -4180,7 +4313,6 @@ define(function(require) {
 			}, monster.apps.core.i18n.active().monthPicker)
 		});
 	}
-	ui.monthpicker = monthpicker;
 
 	/**
 	 * Transforms a field into a number picker, using the jQuery UI Spinner widget
@@ -4228,8 +4360,7 @@ define(function(require) {
 			}
 		});
 		return $target.spinner(options);
-	};
-	ui.numberPicker = numberPicker;
+	}
 
 	/**
 	 * Wrapper for toast notification library
@@ -4252,7 +4383,6 @@ define(function(require) {
 			throw new Error('`' + type + '`' + ' is not a toast type, should be one of `success`, `error`, `warning` or `info`.');
 		}
 	}
-	ui.toast = toast;
 
 	/**
 	 * Helper to display characters remaining inline
@@ -4302,7 +4432,6 @@ define(function(require) {
 			checkLength(event);
 		});
 	}
-	ui.charsRemaining = charsRemaining;
 
 	initialize();
 

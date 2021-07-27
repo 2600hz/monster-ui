@@ -11,6 +11,7 @@ require.config({
 		'config': 'js/config',
 		'cookies': 'js/vendor/js.cookie',
 		'crossroads': 'js/vendor/crossroads.min',
+		'date-holidays': 'js/vendor/date-holidays.min',
 		'ddslick': 'js/vendor/jquery.ddslick.min',
 		'disableAutoFill': 'js/vendor/jquery.disableAutoFill',
 		'drop': 'js/vendor/drop',
