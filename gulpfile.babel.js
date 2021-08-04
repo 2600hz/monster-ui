@@ -5,11 +5,7 @@ import writeVersion from './gulp/tasks/write-version.js';
 import { lint, minifyJs } from './gulp/tasks/javascript.js';
 import { templates } from './gulp/tasks/templates.js';
 import { compileSass, minifyCss } from './gulp/tasks/style.js';
-import {
-	writeConfigProd,
-	writeConfigDev,
-	writeConfigApp
-} from './gulp/tasks/write-config.js';
+import { writeConfig } from './gulp/tasks/write-config.js';
 import {
 	cleanFolders,
 	moveDistDev,
@@ -31,12 +27,14 @@ const build = gulp.series(
 	)
 );
 
+const writeConfigFiles = gulp.parallel(
+	writeConfig,
+	writeVersion
+);
+
 const buildProd = gulp.series(
 	build,
-	gulp.parallel(
-		writeConfigProd,
-		writeVersion
-	),
+	writeConfigFiles,
 	cleanFolders
 );
 
@@ -44,15 +42,14 @@ const buildDev = gulp.series(
 	moveFilesToTmp,
 	gulp.parallel(
 		compileSass,
-		writeConfigDev,
-		writeVersion
+		writeConfigFiles
 	),
 	cleanFolders
 );
 
 const buildApp = gulp.series(
 	build,
-	writeConfigApp,
+	writeConfig,
 	cleanFolders
 );
 

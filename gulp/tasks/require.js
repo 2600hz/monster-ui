@@ -111,13 +111,14 @@ const modulesPerMode = {
 				...standardFilesToExclude,
 				...libsToExcludeFromWhole
 			],
-			include: getAppsToInclude().reduce((acc, item) => [
-				...acc,
-				join('apps', item, 'app'),
-				...(getProApps().includes(item)
-					? [join('apps', item, 'submodules', 'pro', 'pro')]
-					: [])
-			], [])
+			include: getAppsToInclude().flatMap(
+				app => [
+					join('apps', app, 'app'),
+					...(getProApps().includes(app)
+						? [join('apps', app, 'submodules', 'pro', 'pro')]
+						: [])
+				]
+			)
 		}
 	]
 };

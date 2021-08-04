@@ -6,7 +6,9 @@ import {
 	env,
 	getAppsToInclude,
 	getProApps,
-	listAllApps
+	isProdBuild,
+	listAllApps,
+	mode
 } from '../helpers/helpers.js';
 
 const writeFile = (fileName, content) => {
@@ -86,29 +88,17 @@ const writeAppFiles = appName => ([
 		writeAppMetadata(appName)
 	]);
 
-const writeBulkAppsConfig = () => listAllApps()
-	.forEach(writeAppFiles);
+export const writeConfig = () => {
+	const configWritterPerMode = {
+		app: () => writeAppFiles(env.app)[0],
+		/**
+		 * Writes a config file for monster to know which apps have been
+		 * minified so it doesn't reload the assets.
+		 */
+		whole: () => writeFrameworkConfig(isProdBuild ? 'prod' : 'dev')
+	};
+	const configWritter = configWritterPerMode[mode];
+	const configFilePath = configWritter();
 
-/**
- * Writes a config file for monster to know which apps have been minified so it
- * doesn't reload the assets
- */
-export const writeConfigProd = () => {
-	const configFilePath = writeFrameworkConfig('prod');
-	writeBulkAppsConfig();
-	return gulp.src(configFilePath);
-};
-
-export const writeConfigDev = () => {
-	const configFilePath = writeFrameworkConfig('dev');
-	writeBulkAppsConfig();
-	return gulp.src(configFilePath);
-};
-
-/**
- * Add flags if needed, like pro/lite version
- */
-export const writeConfigApp = () => {
-	const [configFilePath] = writeAppFiles(env.app);
 	return gulp.src(configFilePath);
 };

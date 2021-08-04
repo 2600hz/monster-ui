@@ -1,4 +1,4 @@
-import { env, mode } from '../helpers/helpers.js';
+import { env, getAppsToExclude, mode } from '../helpers/helpers.js';
 import { join } from 'upath';
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
@@ -19,7 +19,10 @@ const config = {
 	whole: {
 		lint: [
 			join(src, '**', '*.js'),
-			'!' + join(src, 'js', 'vendor', '**', '*.js'),
+			...getAppsToExclude().map(
+				app => '!' + join(src, 'apps', app, '**', '*.js')
+			),
+			'!' + join(src, '**', 'vendor', '**', '*.js'),
 			'!' + join(src, 'js', 'lib', 'kazoo', 'dependencies', '**', '*.js')
 		],
 		minify: {

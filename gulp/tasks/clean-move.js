@@ -1,3 +1,9 @@
+import {
+	env,
+	getAppsToExclude,
+	isProdBuild,
+	mode
+} from '../helpers/helpers.js';
 import { join } from 'upath';
 import gulp from 'gulp';
 import del from 'del';
@@ -32,9 +38,18 @@ const moveDistFilesToDev = () => gulp
 	.pipe(gulp.dest(distDev));
 
 const moveSrcFilesToTmp = () => gulp
-	.src(join(src, '**', '*'))
+	.src([
+		join(src, '**', '*'),
+		...(isProdBuild ? getAppsToExclude(
+			mode === 'app' && env.app
+		).flatMap(
+			app => [
+				'!' + join(src, 'apps', app),
+				'!' + join(src, 'apps', app, '**', '*')
+			]
+		) : [])
+	])
 	.pipe(gulp.dest(tmp));
-
 
 const cleanTmp = () => gulp
 	.src(tmp, {

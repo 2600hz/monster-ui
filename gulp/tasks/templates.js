@@ -30,10 +30,12 @@ const config = {
 	},
 	whole: {
 		compile: {
-			src: getAppsToInclude().reduce((acc, item) => acc.concat([
-				join(tmp, 'apps', item, 'views', '*.html'),
-				join(tmp, 'apps', item, 'submodules', '*', 'views', '*.html')
-			]), []),
+			src: getAppsToInclude().flatMap(
+				app => [
+					join(tmp, 'apps', app, 'views', '*.html'),
+					join(tmp, 'apps', app, 'submodules', '*', 'views', '*.html'),
+				]
+			),
 			output: 'templates-compiled.js',
 			dest: join(tmp, 'js')
 		},

@@ -4,7 +4,7 @@ import sass from 'gulp-sass';
 import concatCss from 'gulp-concat-css';
 import cleanCss from 'gulp-clean-css';
 import { app, tmp } from '../paths.js';
-import { getAppsToInclude, mode } from '../helpers/helpers.js';
+import { getAppsToExclude, isProdBuild, mode } from '../helpers/helpers.js';
 
 const config = {
 	app: {
@@ -14,8 +14,8 @@ const config = {
 		},
 		concat: {
 			src: join(app, 'style', '*.css'),
-			dest: join(app, 'style'),
-			output: 'app.css'
+			output: 'app.css',
+			dest: join(app, 'style')
 		},
 		minify: {
 			src: join(app, 'style', 'app.css'),
@@ -24,18 +24,23 @@ const config = {
 	},
 	whole: {
 		compile: {
-			src: join(tmp, '**', '*.scss'),
+			src: [
+				join(tmp, '**', '*.scss'),
+				...(isProdBuild ? getAppsToExclude().map(
+					app => '!' + join(tmp, 'apps', app, '**', '*.scss')
+				) : [])
+			],
 			dest: tmp
 		},
 		concat: {
-			src: getAppsToInclude().reduce((acc, item) => [
-				...acc,
-				join(tmp, 'apps', item, 'style', '*.css')
-			], [
-				join(tmp, 'css', 'style.css')
-			]),
-			dest: join(tmp, 'css'),
-			output: 'style.css'
+			src: [
+				join(tmp, 'css', 'style.css'),
+				...(isProdBuild ? getAppsToExclude().map(
+					app => '!' + join(tmp, 'apps', app, 'style', '*.css')
+				) : [])
+			],
+			output: 'style.css',
+			dest: join(tmp, 'css')
 		},
 		minify: {
 			src: join(tmp, 'css', 'style.css'),
