@@ -3461,8 +3461,7 @@ define(function(require) {
 	 * @param  {Object[]} args.cidNumbers
 	 * @param  {Object[]} [args.phoneNumbers]
 	 * @param  {String} [args.accountId]
-	 * @param  {Boolean} [args.allowNone=true]
-	 * @param  {Boolean} [args.allowAdd=true]
+	 * @param  {String} [args.allowNone=true]
 	 * @param  {String} [args.noneLabel]
 	 * @param  {String} [args.selectName]
 	 * @param  {String} [args.selected]
@@ -3499,17 +3498,16 @@ define(function(require) {
 			.sortBy('text')
 			.value();
 		var allowNone = _.get(args, 'allowNone', true);
-		var allowAdd = _.get(args, 'allowAdd', true);
 		var forceNone = allowNone || _.isEmpty(numberOptions);
 		var defaultOptions = _.flatten([
 			forceNone ? [{
 				value: '',
 				text: _.get(args, 'noneLabel', self.i18n.active().cidNumberSelector.none)
 			}] : [],
-			allowAdd ? [{
+			[{
 				value: 'add_new',
 				text: self.i18n.active().cidNumberSelector.addNew
-			}] : []
+			}]
 		]);
 		var options = _.flatten([
 			defaultOptions,
@@ -3519,7 +3517,7 @@ define(function(require) {
 			args.selected
 		], _.overEvery(
 			_.isString,
-			_.partial(_.includes, _.map(numberOptions, 'value'))
+			_.negate(_.isEmpty)
 		));
 		var firstPhoneNumber = _
 			.chain(numberOptions)
