@@ -34,20 +34,15 @@ define(function(require) {
 		cidNumberGlobalCallback: function(metadata, callback) {
 			var self = this;
 
-			if (!_.get(metadata, 'verified', true)) {
-				monster.ui.toast({
-					type: 'success',
-					message: self.i18n.active().commonApp.cidNumber.verify.numberVerified
-				});
-			}
-			callback && callback(_.merge({
+			monster.ui.toast({
+				type: 'success',
+				message: self.i18n.active().commonApp.cidNumber.verify.numberVerified
+			});
+			callback && callback({
 				verified: true,
 				id: metadata.numberId,
 				number: metadata.phoneNumber
-			}, _.omit(metadata, [
-				'numberId',
-				'phoneNumber'
-			])));
+			});
 		},
 
 		cidNumberBindAddEvents: function($template, args) {
@@ -80,13 +75,6 @@ define(function(require) {
 							phoneNumber: data.number
 						},
 						callbacksPerAction = {
-							save: function() {
-								args.closePopup();
-
-								self.cidNumberGlobalCallback(_.merge({
-									verified: false
-								}, numberMetadata), args.onVerified);
-							},
 							send: function() {
 								self.cidNumberRenderVerify(_.merge(_.pick(args, [
 									'accountId',
@@ -298,7 +286,7 @@ define(function(require) {
 				self.cidNumberRequestSubmitPin({
 					data: _.merge({
 						data: {
-							code: pin
+							pin: pin
 						}
 					}, _.pick(args, [
 						'accountId',
