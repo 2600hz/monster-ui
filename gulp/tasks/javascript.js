@@ -1,9 +1,10 @@
+import fsCache from 'gulp-fs-cache';
 import { env, getAppsToExclude, mode } from '../helpers/helpers.js';
 import { join } from 'upath';
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
-import { app, src, tmp } from '../paths.js';
+import { app, cache, src, tmp } from '../paths.js';
 
 const config = {
 	app: {
@@ -46,10 +47,15 @@ const handleUglifyError = error => {
  */
 export function minifyJs() {
 	const { src, dest } = context.minify;
+	const cacheStream = fsCache(
+		join(cache, 'minifyJs', mode)
+	);
 
 	return gulp
 		.src(src)
+		.pipe(cacheStream)
 		.pipe(uglify().on('error', handleUglifyError))
+		.pipe(cacheStream.restore)
 		.pipe(gulp.dest(dest));
 }
 

@@ -1,9 +1,10 @@
+import fsCache from 'gulp-fs-cache';
 import { join } from 'upath';
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import concatCss from 'gulp-concat-css';
 import cleanCss from 'gulp-clean-css';
-import { app, tmp } from '../paths.js';
+import { app, cache, tmp } from '../paths.js';
 import { getAppsToExclude, isProdBuild, mode } from '../helpers/helpers.js';
 
 const config = {
@@ -55,10 +56,19 @@ const concatStyles = () => gulp
 	.pipe(concatCss(context.concat.output))
 	.pipe(gulp.dest(context.concat.dest));
 
-const minifyStyles = () => gulp
-	.src(context.minify.src)
-	.pipe(cleanCss())
-	.pipe(gulp.dest(context.minify.dest));
+const minifyStyles = () => {
+	const { src, dist } = context.minify;
+	const cacheStream = fsCache(
+		join(cache, 'minifyCss', mode)
+	);
+
+	return gulp
+		.src(context.minify.src)
+		.pipe(cacheStream)
+		.pipe(cleanCss())
+		.pipe(cacheStream.restore)
+		.pipe(gulp.dest(context.minify.dest));
+};
 
 /**
  * Takes all the apps provided up top and concatenate and minify them
