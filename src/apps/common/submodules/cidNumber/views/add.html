@@ -12,9 +12,10 @@
 					<input type="text" id="phone_number" name="phoneNumber">
 				</span>
 				<div class="btn-group dropup">
-					<button class="monster-button-primary js-submit span2" data-action="send">
+					<button class="monster-button-primary js-submit{{#if showBypassActions}} span2{{/if}}" data-action="send">
 						{{i18n.commonApp.cidNumber.add.buttons.send}}
 					</button>
+				{{#if showBypassActions}}
 					<button type="button" class="monster-button-primary dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>
@@ -32,6 +33,7 @@
 						</li>
 					{{/isSuperDuper}}
 					</ul>
+				{{/if}}
 				</div>
 			</div>
 		</div>
