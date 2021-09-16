@@ -7,7 +7,7 @@
 			},
 			"add": {
 				"title": "Add Caller ID Number",
-				"text": "All Caller ID Numbers must be validated to comply with Stir/Shaken requirements. Once you sumit a caller ID number, we'll call you to enter a verification code.",
+				"text": "All Caller ID Numbers must be validated to comply with STIR/SHAKEN requirements. Once you submit a caller ID number, we'll call you to enter a verification code.",
 				"label": "Caller ID Number",
 				"errorVerify": "Couldn't verify number",
 				"buttons": {
