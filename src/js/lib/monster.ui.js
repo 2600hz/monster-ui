@@ -3490,6 +3490,7 @@ define(function(require) {
 	 * @param  {Object[]} args.cidNumbers
 	 * @param  {Object[]} [args.phoneNumbers]
 	 * @param  {String} [args.accountId]
+	 * @param  {Boolean} [args.allowVerifyLater=false]
 	 * @param  {Boolean} [args.allowNone=true]
 	 * @param  {Boolean} [args.allowAdd=true]
 	 * @param  {String} [args.noneLabel]
@@ -3596,8 +3597,9 @@ define(function(require) {
 			$defaultOption.prop('selected', true);
 			$selector.trigger('chosen:updated');
 
-			monster.pub('common.cidNumber.renderAdd', {
-				accountId: _.get(args, 'accountId', monster.apps.auth.currentAccount.id),
+			monster.pub('common.cidNumber.renderAdd', _.merge({
+				allowVerifyLater: false,
+				accountId: monster.apps.auth.currentAccount.id,
 				onVerified: function(numberMetadata) {
 					$selector.append($('<option>', _.merge({
 						selected: true
@@ -3609,7 +3611,10 @@ define(function(require) {
 
 					$selector.trigger('chosen:updated');
 				}
-			});
+			}, _.pick(args, [
+				'accountId',
+				'allowVerifyLater'
+			])));
 		});
 
 		$target.append($template);
