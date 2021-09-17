@@ -1,6 +1,7 @@
 ---
 name: monster-ui-core
 base_branch: 'origin/5.0'
+exposure: private
 metapackage:
   - name: meta-monster-ui
     type: required
