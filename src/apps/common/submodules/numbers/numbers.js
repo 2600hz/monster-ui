@@ -1446,14 +1446,17 @@ define(function(require) {
 									.chain(account.externalNumbers)
 									.reject('verified')
 									.sortBy('number')
-									.value();
-
-							return _.merge({
-								externalNumbers: _.flatten([
+									.value(),
+								all = _.flatten([
 									verified,
 									unverified
-								])
+								]);
+
+							return _.merge({
+								countExternalNumbers: _.size(all),
+								externalNumbers: all
 							}, _.omit(account, [
+								'countExternalNumbers',
 								'externalNumbers'
 							]));
 						})
