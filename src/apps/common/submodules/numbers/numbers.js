@@ -915,8 +915,13 @@ define(function(require) {
 					});
 
 					dialogTemplate.on('click', '#delete_action', function() {
-						monster.parallel(async.reflectAll(
-							_.reduce(selectedNumbersMetadata, function(requests, metadata) {
+						monster.parallel(async.reflectAll(_
+							.chain(selectedNumbersMetadata)
+							.filter(_.flow(
+								_.partial(_.get, _, 'number'),
+								_.partial(_.includes, _, numbersToDelete)
+							))
+							.reduce(function(requests, metadata) {
 								_.set(requests, _.join([
 									metadata.accountId,
 									metadata.id
@@ -934,6 +939,7 @@ define(function(require) {
 
 								return requests;
 							}, {})
+							.value()
 						), function(err, results) {
 							var formattedResults = _.map(results, function(data, id) {
 								var ids = _.split(id, ','),
