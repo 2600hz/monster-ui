@@ -866,6 +866,7 @@ define(function(require) {
 						numbersToDelete = _.map(selectedNumbersMetadata, 'number'),
 						dataTemplate = {
 							remove: true,
+							numberCount: _.size(numbersToDelete),
 							accountList: _.map(selectedAccountsMetadata, function(data) {
 								return _.merge({
 									numbers: _
