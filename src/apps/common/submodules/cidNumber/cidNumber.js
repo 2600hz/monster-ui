@@ -40,9 +40,10 @@ define(function(require) {
 		},
 
 		cidNumberGlobalCallback: function(metadata, callback) {
-			var self = this;
+			var self = this,
+				isVerified = _.get(metadata, 'verified', true);
 
-			if (!_.get(metadata, 'verified', true)) {
+			if (isVerified) {
 				monster.ui.toast({
 					type: 'success',
 					message: self.i18n.active().commonApp.cidNumber.verify.numberVerified
