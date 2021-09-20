@@ -866,6 +866,7 @@ define(function(require) {
 						numbersToDelete = _.map(selectedNumbersMetadata, 'number'),
 						dataTemplate = {
 							remove: true,
+							numberCount: _.size(numbersToDelete),
 							accountList: _.map(selectedAccountsMetadata, function(data) {
 								return _.merge({
 									numbers: _
@@ -914,8 +915,13 @@ define(function(require) {
 					});
 
 					dialogTemplate.on('click', '#delete_action', function() {
-						monster.parallel(async.reflectAll(
-							_.reduce(selectedNumbersMetadata, function(requests, metadata) {
+						monster.parallel(async.reflectAll(_
+							.chain(selectedNumbersMetadata)
+							.filter(_.flow(
+								_.partial(_.get, _, 'number'),
+								_.partial(_.includes, _, numbersToDelete)
+							))
+							.reduce(function(requests, metadata) {
 								_.set(requests, _.join([
 									metadata.accountId,
 									metadata.id
@@ -933,6 +939,7 @@ define(function(require) {
 
 								return requests;
 							}, {})
+							.value()
 						), function(err, results) {
 							var formattedResults = _.map(results, function(data, id) {
 								var ids = _.split(id, ','),
@@ -1439,14 +1446,17 @@ define(function(require) {
 									.chain(account.externalNumbers)
 									.reject('verified')
 									.sortBy('number')
-									.value();
-
-							return _.merge({
-								externalNumbers: _.flatten([
+									.value(),
+								all = _.flatten([
 									verified,
 									unverified
-								])
+								]);
+
+							return _.merge({
+								countExternalNumbers: _.size(all),
+								externalNumbers: all
 							}, _.omit(account, [
+								'countExternalNumbers',
 								'externalNumbers'
 							]));
 						})
