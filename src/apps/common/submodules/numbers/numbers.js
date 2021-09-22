@@ -919,7 +919,7 @@ define(function(require) {
 							.chain(selectedNumbersMetadata)
 							.filter(_.flow(
 								_.partial(_.get, _, 'number'),
-								_.partial(_.includes, _, numbersToDelete)
+								_.partial(_.includes, numbersToDelete)
 							))
 							.reduce(function(requests, metadata) {
 								_.set(requests, _.join([
