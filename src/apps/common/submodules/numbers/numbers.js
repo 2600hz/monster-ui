@@ -888,25 +888,24 @@ define(function(require) {
 						});
 
 					dialogTemplate.on('click', '.remove-number', function() {
-						for (var number in numbersToDelete) {
-							if ($(this).parent().data('number') === numbersToDelete[number]) {
-								var tbody = $(this).parent().parent().parent(),
-									childCount = tbody[0].childElementCount,
-									numbersCount = dialogTemplate.find('h4').find('.monster-blue');
+						var number = $(this).parent().data('number');
 
-								numbersToDelete.splice(number, 1);
-								$(this).parent().parent().remove();
+						if (_.includes(numbersToDelete, number)) {
+							var tbody = $(this).parent().parent().parent(),
+								childCount = tbody[0].childElementCount,
+								numbersCount = dialogTemplate.find('h4').find('span');
 
-								if (childCount === 1) {
-									tbody[0].previousElementSibling.remove();
-									tbody.remove();
-								}
-								numbersCount.text(numbersCount.text() - 1);
+							_.remove(numbersToDelete, _.partial(_.isEqual, number));
+							$(this).parent().parent().remove();
+
+							if (childCount === 1) {
+								tbody[0].previousElementSibling.remove();
+								tbody.remove();
 							}
-
-							if (numbersToDelete.length === 0) {
-								popup.dialog('close');
-							}
+							numbersCount.text(numbersCount.text() - 1);
+						}
+						if (_.isEmpty(numbersToDelete)) {
+							popup.dialog('close');
 						}
 					});
 
