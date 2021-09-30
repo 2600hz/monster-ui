@@ -24,6 +24,7 @@ define(function(require) {
 				$template = $(self.getTemplate({
 					name: 'add',
 					data: {
+						allowVerifyLater: allowVerifyLater,
 						showBypassActions: allowVerifyLater || monster.util.isSuperDuper()
 					},
 					submodule: 'cidNumber'

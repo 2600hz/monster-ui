@@ -20,11 +20,13 @@
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu pull-right">
+					{{#if allowVerifyLater}}
 						<li>
 							<a class="js-submit" data-action="save">
 								{{i18n.commonApp.cidNumber.add.buttons.save}}
 							</a>
 						</li>
+					{{/if}}
 					{{#isSuperDuper}}
 						<li>
 							<a class="js-submit" data-action="verify">
