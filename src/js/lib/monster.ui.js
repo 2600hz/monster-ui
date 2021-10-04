@@ -3461,6 +3461,7 @@ define(function(require) {
 	 * @param  {Object[]} args.cidNumbers
 	 * @param  {Object[]} [args.phoneNumbers]
 	 * @param  {String} [args.accountId]
+	 * @param  {Function} [args.onAdded]
 	 * @param  {Boolean} [args.allowVerifyLater=false]
 	 * @param  {Boolean} [args.allowNone=true]
 	 * @param  {Boolean} [args.allowAdd=true]
@@ -3542,6 +3543,10 @@ define(function(require) {
 			]))
 		}));
 		var $selector = $template.find('select');
+		var onAdded = _.find([
+			args.onAdded,
+			function() {}
+		], _.isFunction);
 
 		chosen($selector, _.get(args, 'chosen'));
 
@@ -3565,22 +3570,26 @@ define(function(require) {
 				: $firstNumberOption.length ? $firstNumberOption
 				: $noneOption;
 
-			$defaultOption.prop('selected', true);
-			$selector.trigger('chosen:updated');
+			$selector
+				.val($defaultOption.val())
+				.trigger('chosen:updated');
 
 			monster.pub('common.cidNumber.renderAdd', _.merge({
 				allowVerifyLater: false,
 				accountId: monster.apps.auth.currentAccount.id,
 				onVerified: function(numberMetadata) {
-					$selector.append($('<option>', _.merge({
-						selected: true
-					}, getOptionData(numberMetadata))));
+					var optionData = getOptionData(numberMetadata);
 
 					if (!allowNone) {
 						$selector.find('option[value=""]').remove();
 					}
 
-					$selector.trigger('chosen:updated');
+					$selector
+						.append($('<option>', optionData))
+						.val(optionData.value)
+						.trigger('chosen:updated change');
+
+					onAdded(numberMetadata);
 				}
 			}, _.pick(args, [
 				'accountId',
