@@ -21,12 +21,13 @@ define(function(require) {
 		},
 
 		welcomeRender: function(args) {
-			var $template = $(self.getTemplate({
-				name: 'layout',
-				data: {
-					user: monster.apps.auth.currentUser
-				}
-			}));
+			var self = this,
+				$template = $(self.getTemplate({
+					name: 'layout',
+					data: {
+						user: monster.apps.auth.currentUser
+					}
+				}));
 
 			monster.ui.insertTemplate(args.container, $template);
 		}
