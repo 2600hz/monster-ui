@@ -155,7 +155,7 @@ require([
 		monster.socket = socket;
 		monster.timezone = timezone;
 		monster.ua = ua;
-		monster.ui = ui;
+		monster.ui = ui.init();
 		monster.util = util;
 		monster.webphone = webphone;
 
