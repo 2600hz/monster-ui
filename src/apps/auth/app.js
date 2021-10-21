@@ -265,45 +265,68 @@ define(function(require) {
 			var self = this,
 				updateLayout = pUpdateLayout === false ? false : true;
 
-			self.accountId = data.data.account_id;
+			monster.waterfall([
+				function getCidCapabilityStatus(next) {
+					self.callApi({
+						resource: 'externalNumbers.list',
+						data: {
+							accountId: self.accountId,
+							generateError: false
+						},
+						success: _.partial(_.ary(next, 2), null, true),
+						error: _.partial(_.ary(next, 2), null, false)
+					});
+				}
+			], function(err, cidCapabilityStatus) {
+				self.accountId = data.data.account_id;
 
-			// We removed the auth token as we no longer want it to be static, we need to use a function to get a dynamic value (if it's stored in a cookie, we need to check every time)
-			// Down the road we should probably remove userId, accountId etc from the self here.
-			self.userId = data.data.owner_id;
-			self.isReseller = data.data.is_reseller;
-			self.resellerId = data.data.reseller_id;
+				// We removed the auth token as we no longer want it to be static, we need to use a function to get a dynamic value (if it's stored in a cookie, we need to check every time)
+				// Down the road we should probably remove userId, accountId etc from the self here.
+				self.userId = data.data.owner_id;
+				self.isReseller = data.data.is_reseller;
+				self.resellerId = data.data.reseller_id;
 
-			self.appFlags.isAuthentified = true;
+				self.appFlags.isAuthentified = true;
 
-			_.set(self.appFlags, 'capabilities', _.get(data.data, 'capabilities', {}));
+				self.appFlags.connections[self.appFlags.kazooConnectionName] = {
+					accountId: data.data.account_id,
+					authToken: data.auth_token,
+					userId: data.data.owner_id
+				};
 
-			self.appFlags.connections[self.appFlags.kazooConnectionName] = {
-				accountId: data.data.account_id,
-				authToken: data.auth_token,
-				userId: data.data.owner_id
-			};
+				_.set(self.appFlags, 'capabilities', _.merge({},
+					_.get(data.data, 'capabilities', {}),
+					{
+						caller_id: {
+							external_numbers: {
+								available: cidCapabilityStatus
+							}
+						}
+					}
+				));
 
-			// We store the language so we can load the right language before having to query anything in our back-end. (no need to query account, user etc)
-			var cookieAuth = {
-				language: data.data.language,
-				authToken: data.auth_token,
-				accountId: data.data.account_id
-			};
+				// We store the language so we can load the right language before having to query anything in our back-end. (no need to query account, user etc)
+				var cookieAuth = {
+					language: data.data.language,
+					authToken: data.auth_token,
+					accountId: data.data.account_id
+				};
 
-			if (data.hasOwnProperty('loginData')) {
-				cookieAuth.credentials = data.loginData.credentials;
-				cookieAuth.accountName = data.loginData.account_name;
-			}
+				if (data.hasOwnProperty('loginData')) {
+					cookieAuth.credentials = data.loginData.credentials;
+					cookieAuth.accountName = data.loginData.account_name;
+				}
 
-			monster.cookies.set('monster-auth', cookieAuth);
+				monster.cookies.set('monster-auth', cookieAuth);
 
-			// In the case of the retry login, we don't want to re-update the UI, we just want to re-update the flags set above, that's why we added this parameter.
-			if (updateLayout) {
-				$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
-				self.appFlags.mainContainer.empty();
+				// In the case of the retry login, we don't want to re-update the UI, we just want to re-update the flags set above, that's why we added this parameter.
+				if (updateLayout) {
+					$('.core-footer').append(self.appFlags.mainContainer.find('.powered-by-block .powered-by'));
+					self.appFlags.mainContainer.empty();
 
-				self.afterLoggedIn(data.data);
-			}
+					self.afterLoggedIn(data.data);
+				}
+			});
 		},
 
 		//Events handler
