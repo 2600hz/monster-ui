@@ -3530,7 +3530,8 @@ define(function(require) {
 			.sortBy('text')
 			.value();
 		var allowNone = _.get(args, 'allowNone', true);
-		var allowAdd = _.get(args, 'allowAdd', true);
+		var canAddExternalCidNumbers = monster.util.getCapability('caller_id.external_numbers').isEnabled;
+		var allowAdd = canAddExternalCidNumbers && _.get(args, 'allowAdd', true);
 		var forceNone = allowNone || _.isEmpty(numberOptions);
 		var defaultOptions = _.flatten([
 			forceNone ? [{
