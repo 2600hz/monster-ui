@@ -123,6 +123,7 @@ define(function(require) {
 						: false,
 					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
+					canAddExternalCids: monster.util.getCapability('caller_id.external_numbers').isEnabled,
 					canAddExternalNumbers: monster.util.canAddExternalNumbers(),
 					listAccounts: []
 				};
@@ -1722,6 +1723,9 @@ define(function(require) {
 					}, pListType);
 				},
 				externalNumbers: function(callback) {
+					if (!monster.util.getCapability('caller_id.external_numbers').isEnabled) {
+						return callback(null, []);
+					}
 					self.callApi({
 						resource: 'externalNumbers.list',
 						data: {
