@@ -270,7 +270,7 @@ define(function(require) {
 					self.callApi({
 						resource: 'externalNumbers.list',
 						data: {
-							accountId: self.accountId,
+							accountId: data.data.account_id,
 							generateError: false
 						},
 						success: _.partial(_.ary(next, 2), null, true),
