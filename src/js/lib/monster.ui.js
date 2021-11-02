@@ -3580,13 +3580,14 @@ define(function(require) {
 				accountId: monster.apps.auth.currentAccount.id,
 				onVerified: function(numberMetadata) {
 					var optionData = getOptionData(numberMetadata);
+					var $option = $('<option>', optionData);
 
 					if (!allowNone) {
 						$selector.find('option[value=""]').remove();
 					}
 
 					$selector
-						.append($('<option>', optionData))
+						.append($option)
 						.val(optionData.value)
 						.trigger('chosen:updated change');
 
