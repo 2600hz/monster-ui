@@ -3581,6 +3581,10 @@ define(function(require) {
 				onVerified: function(numberMetadata) {
 					var optionData = getOptionData(numberMetadata);
 					var $option = $('<option>', optionData);
+					var changeEvents = [
+						'chosen:updated',
+						'change'
+					];
 
 					if (!allowNone) {
 						$selector.find('option[value=""]').remove();
@@ -3588,8 +3592,11 @@ define(function(require) {
 
 					$selector
 						.append($option)
-						.val(optionData.value)
-						.trigger('chosen:updated change');
+						.val(optionData.value);
+
+					changeEvents.forEach(
+						$selector.trigger.bind($selector)
+					);
 
 					onAdded(numberMetadata);
 				}
