@@ -3609,15 +3609,23 @@ define(function(require) {
 				accountId: monster.apps.auth.currentAccount.id,
 				onVerified: function(numberMetadata) {
 					var optionData = getOptionData(numberMetadata);
+					var $option = $('<option>', optionData);
+					var changeEvents = [
+						'chosen:updated',
+						'change'
+					];
 
 					if (!allowNone) {
 						$selector.find('option[value=""]').remove();
 					}
 
 					$selector
-						.append($('<option>', optionData))
-						.val(optionData.value)
-						.trigger('chosen:updated change');
+						.append($option)
+						.val(optionData.value);
+
+					changeEvents.forEach(
+						$selector.trigger.bind($selector)
+					);
 
 					onAdded(numberMetadata);
 				}
