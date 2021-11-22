@@ -4,6 +4,7 @@ import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import eslint from 'gulp-eslint';
 import { app, src, tmp } from '../paths.js';
+import babel from 'gulp-babel';
 
 const config = {
 	app: {
@@ -53,3 +54,20 @@ export const lint = () => gulp
 	.src(context.lint)
 	.pipe(eslint())
 	.pipe(eslint.format());
+
+/**
+ * Compile *.js files in /apps/** and /js/lib to ES5 with Babel
+ */
+export const compileJs = () => gulp
+	.src([
+		join(tmp, 'apps', '**', '*.js'),
+		join(tmp, 'js', 'lib', '**', '*.js')
+	], { base: tmp })
+	.pipe(babel({
+		babelrc: false,
+		compact: true,
+		ignore: ['**/node_modules'],
+		plugins: ['babel-plugin-transform-object-rest-spread'],
+		presets: ['env']
+	}))
+	.pipe(gulp.dest(tmp));

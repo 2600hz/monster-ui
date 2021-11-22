@@ -2,7 +2,7 @@ import { serve, watch } from './gulp/tasks/server.js';
 import gulp from 'gulp';
 import require from './gulp/tasks/require.js';
 import writeVersion from './gulp/tasks/write-version.js';
-import { lint, minifyJs, minifyJsApp } from './gulp/tasks/javascript.js';
+import { lint, minifyJs, minifyJsApp, compileJs } from './gulp/tasks/javascript.js';
 import { templates, templatesApp } from './gulp/tasks/templates.js';
 import { compileSass, css, minifyCssApp } from './gulp/tasks/style.js';
 import {
@@ -20,6 +20,7 @@ const buildProd = gulp.series(
 	moveFilesToTmp,
 	compileSass,
 	templates,
+	compileJs,
 	require,
 	minifyJs,
 	css,
@@ -40,6 +41,7 @@ const buildApp = gulp.series(
 	moveFilesToTmp,
 	compileSass,
 	templatesApp,
+	compileJs,
 	require,
 	minifyJsApp,
 	minifyCssApp,
