@@ -14,6 +14,13 @@
 				<span class="link">{{labels.spare}}</span>
 			</div>
 			{{/unless}}
+			{{#unless noCallerId}}
+			<div class="number-selector-element" data-action="external">
+				<span class="link">
+					{{labels.external}}
+				</span>
+			</div>
+			{{/unless}}
 			{{#unless noBuy}}
 			<div class="number-selector-element" data-action="buy">
 				<span class="link">{{labels.buy}}</span>
