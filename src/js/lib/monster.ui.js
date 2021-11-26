@@ -4112,18 +4112,32 @@ define(function(require) {
 	function insertTemplate($container, template, pOptions) {
 		var coreApp = monster.apps.core,
 			options = _.merge({
+				loadingTemplate: 'default',
 				hasBackground: true,
 				title: coreApp.i18n.active().insertTemplate.title,
 				text: coreApp.i18n.active().insertTemplate.text,
 				duration: 250
 			}, pOptions),
-			loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', _.pick(options, [
-				'hasBackground',
-				'cssClass',
-				'cssId',
-				'title',
-				'text'
-			])),
+			templateGettersPerType = {
+				spinner: function() {
+					return monster.template(coreApp, 'monster-insertTemplate-spinner');
+				},
+				'default': function(options) {
+					return monster.template(coreApp, 'monster-insertTemplate', _.pick(options, [
+						'hasBackground',
+						'cssClass',
+						'cssId',
+						'title',
+						'text'
+					]));
+				}
+			},
+			templateType = _.find([
+				options.loadingTemplate,
+				'default'
+			], _.partial(_.has, templateGettersPerType)),
+			templateGetter = _.get(templateGettersPerType, templateType),
+			loadingTemplate = templateGetter(options),
 			appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
 				$container
 					.stop()

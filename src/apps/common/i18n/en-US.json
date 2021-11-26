@@ -620,6 +620,7 @@
 		"emptyValue": "- Select a number -",
 		"removeLink": "Remove",
 		"spareLink": "Select a spare number",
+		"externalLink": "Select a caller ID",
 		"buyLink": "Buy a new number",
 		"__comment": "UI-2334: adding extension selector to common control",
 		"__version": "v4.0",
