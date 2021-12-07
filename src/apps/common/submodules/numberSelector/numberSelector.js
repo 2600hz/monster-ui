@@ -30,7 +30,8 @@ define(function(require) {
 				noBuy = _.isBoolean(args.noBuy) ? args.noBuy : false,
 				noExtension = _.isBoolean(args.noExtension) ? args.noExtension : false,
 				noSpare = _.isBoolean(args.noSpare) ? args.noSpare : false,
-				noCallerId = _.isBoolean(args.noCallerId) ? args.noCallerId : true,
+				noCallerIdFromArg = _.isBoolean(args.noCallerId) ? args.noCallerId : true,
+				noCallerId = monster.util.getCapability('caller_id.external_numbers').isEnabled ? false : noCallerIdFromArg,
 				container = args.container,
 				labels = $.extend({
 					empty: self.i18n.active().numberSelector.emptyValue,
