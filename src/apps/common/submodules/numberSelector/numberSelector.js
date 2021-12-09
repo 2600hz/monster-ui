@@ -111,6 +111,7 @@ define(function(require) {
 						},
 						success: _.flow(
 							_.partial(_.get, _, 'data'),
+							_.partial(_.filter, _, 'verified'),
 							_.partial(_.map, _, 'number'),
 							_.partial(next, null)
 						),
