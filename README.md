@@ -8,7 +8,7 @@ The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
 ### Prerequisites
 
-* [node](https://nodejs.org/en/download/) >= 10 & [npm](https://docs.npmjs.com/getting-started/installing-node)
+* [node](https://nodejs.org/en/download/) >= 12 & [npm](https://docs.npmjs.com/getting-started/installing-node)
 * [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 4.0.0
 
 ### Install
