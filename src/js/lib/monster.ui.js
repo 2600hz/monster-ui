@@ -3490,6 +3490,8 @@ define(function(require) {
 	 * @param  {Object[]} args.cidNumbers
 	 * @param  {Object[]} [args.phoneNumbers]
 	 * @param  {String} [args.accountId]
+	 * @param  {Function} [args.onAdded]
+	 * @param  {Boolean} [args.allowVerifyLater=false]
 	 * @param  {Boolean} [args.allowNone=true]
 	 * @param  {Boolean} [args.allowAdd=true]
 	 * @param  {String} [args.noneLabel]
@@ -3528,7 +3530,8 @@ define(function(require) {
 			.sortBy('text')
 			.value();
 		var allowNone = _.get(args, 'allowNone', true);
-		var allowAdd = _.get(args, 'allowAdd', true);
+		var canAddExternalCidNumbers = monster.util.getCapability('caller_id.external_numbers').isEnabled;
+		var allowAdd = canAddExternalCidNumbers && _.get(args, 'allowAdd', true);
 		var forceNone = allowNone || _.isEmpty(numberOptions);
 		var defaultOptions = _.flatten([
 			forceNone ? [{
@@ -3570,6 +3573,10 @@ define(function(require) {
 			]))
 		}));
 		var $selector = $template.find('select');
+		var onAdded = _.find([
+			args.onAdded,
+			function() {}
+		], _.isFunction);
 
 		chosen($selector, _.get(args, 'chosen'));
 
@@ -3593,23 +3600,39 @@ define(function(require) {
 				: $firstNumberOption.length ? $firstNumberOption
 				: $noneOption;
 
-			$defaultOption.prop('selected', true);
-			$selector.trigger('chosen:updated');
+			$selector
+				.val($defaultOption.val())
+				.trigger('chosen:updated');
 
-			monster.pub('common.cidNumber.renderAdd', {
-				accountId: _.get(args, 'accountId', monster.apps.auth.currentAccount.id),
+			monster.pub('common.cidNumber.renderAdd', _.merge({
+				allowVerifyLater: false,
+				accountId: monster.apps.auth.currentAccount.id,
 				onVerified: function(numberMetadata) {
-					$selector.append($('<option>', _.merge({
-						selected: true
-					}, getOptionData(numberMetadata))));
+					var optionData = getOptionData(numberMetadata);
+					var $option = $('<option>', optionData);
+					var changeEvents = [
+						'chosen:updated',
+						'change'
+					];
 
 					if (!allowNone) {
 						$selector.find('option[value=""]').remove();
 					}
 
-					$selector.trigger('chosen:updated');
+					$selector
+						.append($option)
+						.val(optionData.value);
+
+					changeEvents.forEach(
+						$selector.trigger.bind($selector)
+					);
+
+					onAdded(numberMetadata);
 				}
-			});
+			}, _.pick(args, [
+				'accountId',
+				'allowVerifyLater'
+			])));
 		});
 
 		$target.append($template);
@@ -4118,18 +4141,32 @@ define(function(require) {
 	function insertTemplate($container, template, pOptions) {
 		var coreApp = monster.apps.core,
 			options = _.merge({
+				loadingTemplate: 'default',
 				hasBackground: true,
 				title: coreApp.i18n.active().insertTemplate.title,
 				text: coreApp.i18n.active().insertTemplate.text,
 				duration: 250
 			}, pOptions),
-			loadingTemplate = monster.template(coreApp, 'monster-insertTemplate', _.pick(options, [
-				'hasBackground',
-				'cssClass',
-				'cssId',
-				'title',
-				'text'
-			])),
+			templateGettersPerType = {
+				spinner: function() {
+					return monster.template(coreApp, 'monster-insertTemplate-spinner');
+				},
+				'default': function(options) {
+					return monster.template(coreApp, 'monster-insertTemplate', _.pick(options, [
+						'hasBackground',
+						'cssClass',
+						'cssId',
+						'title',
+						'text'
+					]));
+				}
+			},
+			templateType = _.find([
+				options.loadingTemplate,
+				'default'
+			], _.partial(_.has, templateGettersPerType)),
+			templateGetter = _.get(templateGettersPerType, templateType),
+			loadingTemplate = templateGetter(options),
 			appendTemplate = function(template, insertTemplateCallback, fadeInCallback) {
 				$container
 					.stop()

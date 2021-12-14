@@ -7,7 +7,7 @@
 			},
 			"add": {
 				"title": "Add Caller ID Number",
-				"text": "All Caller ID Numbers must be validated to comply with Stir/Shaken requirements. Once you sumit a caller ID number, we'll call you to enter a verification code.",
+				"text": "All Caller ID Numbers must be validated to comply with STIR/SHAKEN requirements. Once you submit a caller ID number, we'll call you to enter a verification code.",
 				"label": "Caller ID Number",
 				"errorVerify": "Couldn't verify number",
 				"buttons": {
@@ -561,6 +561,7 @@
 		"usedNumbers": "Numbers in use",
 		"helpSpareNumbers": "This shows the list of numbers not used anywhere in this account. You can assign those numbers to your sub-accounts or delete these numbers from your account.",
 		"helpUsedNumbers": "This list displays where your numbers are used. You can also see the list of numbers used by your sub-accounts.",
+		"helpExternalNumbers": "In order to use a number outside of this PBX for caller ID, it must first be added as a verified number.",
 		"callflow": "Smart PBX",
 		"trunkstore": "Trunking",
 		"notUsedNumber": "{{number}}: This number is not used but belongs to {{accountName}}. (Switch to Spare Numbers view to see this number)",
@@ -948,6 +949,7 @@
 		"emptyValue": "- Select a number -",
 		"removeLink": "Remove",
 		"spareLink": "Select a spare number",
+		"externalLink": "Select a caller ID",
 		"buyLink": "Buy a new number",
 		"__comment": "UI-2334: adding extension selector to common control",
 		"__version": "v4.0",

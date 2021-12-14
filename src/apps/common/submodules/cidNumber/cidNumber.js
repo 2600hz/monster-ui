@@ -9,15 +9,24 @@ define(function(require) {
 		/**
 		 * Prompts number creation dialog.
 		 * @param  {Object} args
-		 * @param  {Object} args.accountId
-		 * @param  {Object} args.onVerified
+		 * @param  {String} args.accountId
+		 * @param  {Function} args.onVerified
+		 * @param  {Boolean} [args.allowVerifyLater=true]
 		 */
 		cidNumberRenderAdd: function(args) {
 			var self = this,
 				accountId = _.get(args, 'accountId', self.accountId),
+				allowVerifyLater = _.find([
+					args.allowVerifyLater,
+					true
+				], _.isBoolean),
 				onVerified = _.get(args, 'onVerified', function() {}),
 				$template = $(self.getTemplate({
 					name: 'add',
+					data: {
+						allowVerifyLater: allowVerifyLater,
+						showBypassActions: allowVerifyLater || monster.util.isSuperDuper()
+					},
 					submodule: 'cidNumber'
 				})),
 				popup = monster.ui.dialog($template, {
@@ -32,9 +41,10 @@ define(function(require) {
 		},
 
 		cidNumberGlobalCallback: function(metadata, callback) {
-			var self = this;
+			var self = this,
+				isVerified = _.get(metadata, 'verified', true);
 
-			if (!_.get(metadata, 'verified', true)) {
+			if (isVerified) {
 				monster.ui.toast({
 					type: 'success',
 					message: self.i18n.active().commonApp.cidNumber.verify.numberVerified
@@ -128,6 +138,10 @@ define(function(require) {
 
 			$form.find('.js-submit').on('click', function(event) {
 				event.preventDefault();
+
+				if (!monster.ui.valid($form)) {
+					return;
+				}
 
 				var $button = $(this),
 					action = $button.data('action'),

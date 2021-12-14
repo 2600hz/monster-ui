@@ -39,7 +39,7 @@ jobs:
 
   build_centos7:
     docker:
-      - image: offical2600hz/monster-ui-packager:1.0-centos-7
+      - image: 2600hz/node-packager:lts-centos-7
         user: circleci
     shell: /bin/bash --login
     working_directory: /home/circleci/2600hz/monster-ui
@@ -61,7 +61,9 @@ jobs:
           key: dependency-cache-centos-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies from package.json
-          command: npm install
+          command: |
+            npm install
+            npm rebuild node-sass
       - run:
           name: Run a production build
           command: gulp build-prod

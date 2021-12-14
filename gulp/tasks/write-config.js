@@ -14,58 +14,101 @@ const writeFile = (fileName, content) => {
 	fs.writeFileSync(fileName, json);
 };
 
-const writeBulkAppsConfig = () => {
-	let fileName;
-	let content;
+const readFile = filePath => JSON.parse(
+		fs.readFileSync(filePath)
+	);
 
-	listAllApps().forEach(item => {
-		fileName = join(tmp, 'apps', item, 'app-build-config.json');
-		content = {
-			version: getProApps().includes(item)
-				? 'pro'
-				: 'standard'
-		};
-		writeFile(fileName, content);
-	});
+const isProApp = appName => getProApps()
+	.includes(appName);
+
+const writeFrameworkConfig = buildType => {
+	const configFilePath = join(tmp, 'build-config.json');
+	const configsPerBuildType = {
+		dev: {
+			type: 'development'
+		},
+		prod: {
+			type: 'production',
+			preloadApps: getAppsToInclude()
+		}
+	};
+	const config = configsPerBuildType[buildType];
+
+	writeFile(configFilePath, config);
+
+	return configFilePath;
 };
+
+const writeAppConfig = appName => {
+	const configFilePath = join(tmp, 'apps', appName, 'app-build-config.json');
+	const config = {
+		version: isProApp(appName) ? 'pro' : 'standard'
+	};
+
+	writeFile(configFilePath, config);
+
+	return configFilePath;
+};
+
+const writeAppMetadata = appName => {
+	const metadataFolderPath = join(tmp, 'apps', appName, 'metadata');
+	const metadataFilePath = join(metadataFolderPath, 'app.json');
+	const metadataProFilePath = join(metadataFolderPath, 'app-pro.json');
+	let metadata;
+
+	if (!isProApp(appName)) {
+		return;
+	}
+	try {
+		fs.renameSync(
+			metadataProFilePath,
+			metadataFilePath
+		);
+	} catch (error) {
+	}
+
+	try {
+		metadata = readFile(metadataFilePath);
+	} catch (error) {
+		metadata = {
+			name: appName
+		};
+	}
+
+	if (metadata.name.slice(-4) !== '-pro') {
+		metadata.name += '-pro';
+		writeFile(metadataFilePath, metadata);
+	}
+};
+
+const writeAppFiles = appName => ([
+		writeAppConfig(appName),
+		writeAppMetadata(appName)
+	]);
+
+const writeBulkAppsConfig = () => listAllApps()
+	.forEach(writeAppFiles);
 
 /**
  * Writes a config file for monster to know which apps have been minified so it
  * doesn't reload the assets
  */
 export const writeConfigProd = () => {
-	const mainFileName = join(tmp, 'build-config.json');
-	const content = {
-		type: 'production',
-		preloadApps: getAppsToInclude()
-	};
-	writeFile(mainFileName, content);
+	const configFilePath = writeFrameworkConfig('prod');
 	writeBulkAppsConfig();
-	return gulp.src(mainFileName);
+	return gulp.src(configFilePath);
 };
 
 export const writeConfigDev = () => {
-	const fileName = join(tmp, 'build-config.json');
-	const content = {
-		version: env.pro
-			? 'pro'
-			: 'standard'
-	};
-	writeFile(fileName, content);
+	const configFilePath = writeFrameworkConfig('dev');
 	writeBulkAppsConfig();
-	return gulp.src(fileName);
+	return gulp.src(configFilePath);
 };
 
 /**
  * Add flags if needed, like pro/lite version
  */
 export const writeConfigApp = () => {
-	const fileName = join(app, 'app-build-config.json');
-	const content = {
-		version: env.pro
-			? 'pro'
-			: 'standard'
-	};
-	writeFile(fileName, content);
-	return gulp.src(fileName);
+	const [configFilePath] = writeAppFiles(env.app);
+	return gulp.src(configFilePath);
 };
