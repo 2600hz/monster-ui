@@ -30,7 +30,8 @@ define(function(require) {
 				noBuy = _.isBoolean(args.noBuy) ? args.noBuy : false,
 				noExtension = _.isBoolean(args.noExtension) ? args.noExtension : false,
 				noSpare = _.isBoolean(args.noSpare) ? args.noSpare : false,
-				noCallerId = _.isBoolean(args.noCallerId) ? args.noCallerId : true,
+				noCallerIdFromArg = _.isBoolean(args.noCallerId) ? args.noCallerId : true,
+				noCallerId = noCallerIdFromArg || !monster.util.getCapability('caller_id.external_numbers').isEnabled,
 				container = args.container,
 				labels = $.extend({
 					empty: self.i18n.active().numberSelector.emptyValue,
@@ -110,6 +111,7 @@ define(function(require) {
 						},
 						success: _.flow(
 							_.partial(_.get, _, 'data'),
+							_.partial(_.filter, _, 'verified'),
 							_.partial(_.map, _, 'number'),
 							_.partial(next, null)
 						),
