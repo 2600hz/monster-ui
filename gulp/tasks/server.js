@@ -3,8 +3,8 @@ import { create } from 'browser-sync';
 import { join, normalize, relative, resolve } from 'upath';
 import del from 'del';
 import cache from 'gulp-cached';
-import sass from 'gulp-sass';
 import { src, dist } from '../paths.js';
+import { sass } from '../helpers/helpers.js';
 
 const server = create();
 

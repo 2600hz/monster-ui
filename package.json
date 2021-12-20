@@ -16,7 +16,6 @@
     "url": "https://github.com/2600hz/monster-ui/issues"
   },
   "homepage": "https://github.com/2600hz/monster-ui#readme",
-  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
@@ -38,9 +37,10 @@
     "gulp-eslint": "^5.0.0",
     "gulp-handlebars": "^5.0.2",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^4.1.0",
+    "gulp-sass": "^5.0.0",
     "gulp-uglify": "^2.1.2",
     "gulp-wrap": "^0.14.0",
+    "node-sass": "^7.0.0",
     "requirejs": "^2.3.5",
     "semver": "^5.7.0",
     "upath": "^1.1.2",

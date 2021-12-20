@@ -31,7 +31,7 @@ define(function(require) {
 				noExtension = _.isBoolean(args.noExtension) ? args.noExtension : false,
 				noSpare = _.isBoolean(args.noSpare) ? args.noSpare : false,
 				noCallerIdFromArg = _.isBoolean(args.noCallerId) ? args.noCallerId : true,
-				noCallerId = monster.util.getCapability('caller_id.external_numbers').isEnabled ? false : noCallerIdFromArg,
+				noCallerId = noCallerIdFromArg || !monster.util.getCapability('caller_id.external_numbers').isEnabled,
 				container = args.container,
 				labels = $.extend({
 					empty: self.i18n.active().numberSelector.emptyValue,
@@ -111,6 +111,7 @@ define(function(require) {
 						},
 						success: _.flow(
 							_.partial(_.get, _, 'data'),
+							_.partial(_.filter, _, 'verified'),
 							_.partial(_.map, _, 'number'),
 							_.partial(next, null)
 						),
