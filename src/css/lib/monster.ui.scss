@@ -33,6 +33,16 @@
 	color: #909099;
 }
 
+.monster-loading-view.spinner {
+	text-align: center;
+
+	.monster-loading-spinner {
+		font-size: 25px;
+		width: 25px;
+		height: 25px;
+	}
+}
+
 /************************************************************/
 /******************* ALERT/CONFIRM DIALOG *******************/
 /************************************************************/
