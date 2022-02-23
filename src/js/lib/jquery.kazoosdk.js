@@ -53,7 +53,12 @@
 				'add': { verb: 'PUT', 'url': 'accounts/{accountId}/apps_store/{appId}' },
 				'delete': { verb: 'DELETE', 'url': 'accounts/{accountId}/apps_store/{appId}' },
 				'getBlacklist': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/blacklist' },
-				'updateBlacklist': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/blacklist' }
+				'updateBlacklist': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/blacklist' },
+				'updateIcon': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/{appId}/override/icon' },
+				'getOverride': { verb: 'GET', 'url': 'accounts/{accountId}/apps_store/{appId}/override' },
+				'createOverride': { verb: 'PUT', 'url': 'accounts/{accountId}/apps_store/{appId}/override' },
+				'updateOverride': { verb: 'POST', 'url': 'accounts/{accountId}/apps_store/{appId}/override' },
+				'deleteOverride': { verb: 'DELETE', 'url': 'accounts/{accountId}/apps_store/{appId}/override' }
 			},
 			auth: {
 				'get': { verb: 'GET', url: 'auth/tokeninfo?token={token}', removeHeaders: ['X-Auth-Token'] },
