@@ -1,0 +1,20 @@
+<div id="market-content">
+	<div class="market-header">
+		<img alt="marketplace illustration" src="apps/appstore/style/static/images/explore_marketplace.png" />
+	</div>
+	<div class="market-welcome">
+		<div class="market-body">
+			<div class="market-title">
+				<h2>
+					{{ i18n.marketplace.welcome.title }}{{#if i18n.marketplace.welcome.title_finally }}<span style="color: rgb(39, 31, 224); display: block">
+						{{ i18n.marketplace.welcome.title_finally }}
+					</span>{{/if}}
+				</h2>
+			</div>
+			<p class="lead">{{ i18n.marketplace.welcome.encouragement }}</p>
+			<div class="actions">
+				<button id="market_enable_connector_btn" type="button" class="monster-button monster-button-primary">{{ i18n.marketplace.welcome.enable }}</button>
+			</div>
+		</div>
+	</div>
+</div>

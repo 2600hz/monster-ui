@@ -34,14 +34,18 @@
 				</div>
 			</div>
 		</div>
+		{{#if shouldShowMarket }}
+		<div class="marketplace">
+			<div class="launch-market">
+				<div class="title">
+					Marketplace Connector
+				</div>
+			</div>
+		</div>
+		{{/if}}
 	</div>
 
 	<div class="right-content">
-		<div class="content">
-			<div class="search-bar clearfix">
-				<input type="text" class="search-query input-medium pull-right" placeholder="{{i18n.search}}">
-			</div>
-			<div class="app-list-container"></div>
-		</div>
+		<div class="right-container"></div>
 	</div>
 </div>

@@ -13,19 +13,36 @@ define(function(require) {
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
 		},
+		requests: {
+			'marketplace.get': {
+				apiRoot: monster.config.api.default,
+				// generateError: false,
+				url: 'apps_store/marketplace',
+				verb: 'GET'
+			},
+			'marketplace.action': {
+				apiRoot: monster.config.api.default,
+				url: 'apps_store/marketplace',
+				verb: 'PATCH'
+			}
+		},
 
 		render: function(container) {
 			var self = this,
+				shouldShowMarket = monster.util.isSuperDuper() && !monster.util.isMasquerading(),
 				template = $(self.getTemplate({
-					name: 'app'
+					name: 'app',
+					data: {
+						shouldShowMarket: shouldShowMarket
+					}
 				})),
 				parent = container || $('#monster_content');
 
 			if (!monster.config.whitelabel.hasOwnProperty('hideAppStore') || monster.config.whitelabel.hideAppStore === false) {
 				self.loadData(function(err, appstoreData) {
-					self.renderApps(template, appstoreData);
-					self.bindEvents(template, appstoreData);
-				});
+					self.renderAppList(template, appstoreData);
+					self.bindEvents(template, appstoreData, shouldShowMarket);
+				}, shouldShowMarket);
 
 				parent
 					.empty()
@@ -38,9 +55,12 @@ define(function(require) {
 			}
 		},
 
-		bindEvents: function(parent, appstoreData) {
+		appstoreData: null,
+
+		bindEvents: function(parent, appstoreData, shouldShowMarket) {
 			var self = this,
-				searchInput = parent.find('.search-bar input.search-query');
+				searchInput = parent.find('.search-bar input.search-query'),
+				appListContent = null;
 
 			setTimeout(function() { searchInput.focus(); });
 
@@ -51,6 +71,16 @@ define(function(require) {
 				parent.find('.app-filter').removeClass('active');
 				$this.addClass('active');
 
+				if (appListContent) {
+					parent.find('.left-menu .marketplace .launch-market').removeClass('active');
+					parent
+						.find('.right-container')
+						.empty()
+						.append(appListContent)
+						.find('> *')
+						.fadeIn();
+					appListContent = null;
+				}
 				parent.find('.app-list').isotope({
 					filter: '.app-element' + (filter ? '.' + filter : '')
 				});
@@ -58,7 +88,7 @@ define(function(require) {
 				searchInput.val('').focus();
 			});
 
-			parent.find('.app-list-container').on('click', '.app-element', function(e) {
+			parent.find('.right-container .app-list').on('click', '.app-element', function(e) {
 				self.showAppPopup($(this).data('id'), appstoreData);
 			});
 
@@ -75,9 +105,25 @@ define(function(require) {
 					filter: '.app-element' + filter
 				});
 			});
+
+			if (shouldShowMarket) {
+				parent.find('.left-menu .marketplace').on('click', '.launch-market', function(e) {
+					var $this = $(this);
+
+					parent.find('.app-filter').removeClass('active');
+					$this.addClass('active');
+
+					appListContent = parent
+						.find('.right-container > *')
+						.fadeOut(function() {
+							$(this).detach();
+						});
+					self.showMarketplaceConnector(parent);
+				});
+			}
 		},
 
-		loadData: function(callback) {
+		loadData: function(callback, shouldShowMarket) {
 			var self = this;
 
 			monster.parallel({
@@ -102,11 +148,43 @@ define(function(require) {
 							next(null, data.data);
 						}
 					});
+				},
+				marketplace: function(next) {
+					// use this fake to test ui without calling API
+					//
+					// let fake = {
+					// 	cluster_id: 'lolololololol',
+					// 	enabled: false,
+					// 	app_exchange_url: 'http://localhost:8080/',
+					// 	marketplace_url: 'http://localhost:3030',
+					// 	is_linked: false,
+					// 	_read_only: {}
+					// };
+					// next(null, fake);
+
+					if (shouldShowMarket) {
+						monster.request({
+							resource: 'marketplace.get',
+							success: function(response) {
+								next(null, response.data);
+							},
+							error: function() {
+								next();
+							}
+						});
+					} else {
+						next();
+					}
 				}
-			}, callback);
+			}, function(err, data) {
+				if (!err) {
+					self.appstoreData = data;
+				}
+				callback(err, data);
+			});
 		},
 
-		renderApps: function(parent, appstoreData) {
+		renderAppList: function(parent, appstoreData) {
 			var self = this,
 				appList = appstoreData.apps,
 				isAppInstalled = function(app) {
@@ -125,7 +203,7 @@ define(function(require) {
 				}));
 
 			parent
-				.find('.app-list-container')
+				.find('.right-container')
 					.empty()
 					.append(template);
 
@@ -393,8 +471,292 @@ define(function(require) {
 					$('#appstore_container .app-filter.active').click();
 				});
 			});
-		}
+		},
 
+		showMarketplaceConnector: function(parent) {
+			const self = this;
+			const marketConfig = self.appstoreData.marketplace || {};
+			const enabled = marketConfig.enabled;
+			const is_linked = marketConfig.is_linked;
+
+			if (enabled && is_linked) {
+				self.renderMarketSettings(parent);
+			} else if (marketConfig.enabled) {
+				self.renderMarketLink(parent);
+			} else {
+				self.renderMarketWelcome(parent);
+			}
+		},
+
+		renderMarketLink: function(parent) {
+			const self = this;
+			const marketConfig = self.appstoreData.marketplace;
+			const template = $(self.getTemplate({
+				name: 'marketClusterLink',
+				data: {
+					config: marketConfig
+				}
+			}));
+			const linkForm = template.find('#cluster_link_form');
+
+			parent
+				.find('.right-container')
+				.fadeOut(function() {
+					$(this)
+						.empty()
+						.append(template)
+						.fadeIn();
+					monster.ui.validate(linkForm);
+					self.bindMarketLinkEvents(parent, template);
+				});
+		},
+
+		bindMarketLinkEvents: function(parent, template) {
+			const self = this;
+			const linkForm = template.find('#cluster_link_form');
+			const maybeSetApiUrl = function() {
+				if (!self.appstoreData.marketplace.api_url && monster.config.api.default) {
+					self.updateMarketConnector({
+						action: 'api_url',
+						api_url: monster.config.api.default
+					});
+				}
+			};
+
+			parent.find('.market-link #save').on('click', function(e) {
+				e.preventDefault();
+
+				const saveThis = $(this);
+
+				saveThis.prop({ disabled: true });
+
+				if (monster.ui.valid(linkForm)) {
+					const formData = monster.ui.getFormData('cluster_link_form');
+
+					maybeSetApiUrl();
+					self.updateMarketConnector(
+						{ action: 'link', access_code: formData.access_code },
+						function() {
+							self.showMarketplaceConnector(
+								parent
+							);
+						},
+						function() {
+							saveThis.prop({ 'disabled': false });
+						});
+				} else {
+					saveThis.prop({ disabled: false });
+				}
+			});
+		},
+
+		renderMarketSettings: function(parent) {
+			const self = this;
+			const marketConfig = self.appstoreData.marketplace;
+			const template = $(self.getTemplate({
+				name: 'marketConnectorSettings',
+				data: {
+					config: marketConfig
+				}
+			}));
+			const linkForm = template.find('#cluster_link_form');
+
+			parent
+				.find('.right-container')
+				.fadeOut(function() {
+					$(this)
+						.empty()
+						.append(template)
+						.fadeIn();
+
+					monster.ui.validate(linkForm);
+					self.bindMarketSettingsEvents(parent, template);
+				});
+		},
+
+		bindMarketSettingsEvents: function(parent, template) {
+			const self = this;
+			const configForm = template.find('#configuration_form');
+
+			const marketAction = function(payload, varName, formThis) {
+				self.updateMarketConnector(
+					payload,
+					function() {
+						monster.ui.toast({
+							type: 'success',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().marketplace.edition.successUpdate,
+								data: {
+									variable: varName
+								}
+							})
+						});
+						self.showMarketplaceConnector(
+							parent
+						);
+					},
+					function() {
+						formThis.prop({ 'disabled': false });
+					});
+			};
+
+			$('.market-settings #save').on('click', function(e) {
+				e.preventDefault();
+				const saveThis = $(this);
+				saveThis.prop({ disabled: true });
+
+				if (monster.ui.valid(configForm)) {
+					const formData = monster.ui.getFormData('configuration_form');
+					marketAction({ action: 'api_url', api_url: formData.api_url }, 'api_url', saveThis);
+				} else {
+					saveThis.prop({ disabled: false });
+				}
+			});
+
+			$('.market-settings #disable').on('click', function(e) {
+				e.preventDefault();
+				const saveThis = $(this);
+
+				self.confirmDisableDialog(function() {
+					saveThis.prop({ disabled: true });
+					marketAction({ action: 'disable' }, 'enabled', saveThis);
+				});
+			});
+
+			$('.market-settings #disconnect').on('click', function(e) {
+				e.preventDefault();
+				const saveThis = $(this);
+
+				self.confirmDisconnectDialog(function() {
+					saveThis.prop({ disabled: true });
+					marketAction({ action: 'unlink' }, 'unlink', saveThis);
+				});
+			});
+		},
+
+		confirmDisableDialog: function(callbackSuccess) {
+			const self = this;
+			const content = self.i18n.active().marketplace.dangerDisableDialog.content;
+			monster.ui.confirm(
+				content,
+				function() {
+					callbackSuccess && callbackSuccess();
+				}
+			);
+		},
+
+		confirmDisconnectDialog: function(callbackSuccess) {
+			const self = this;
+			const actionKey = self.i18n.active().marketplace.dangerDisconnectDialog.actionKey;
+			const confirmPopup = monster.ui.confirm(
+				$(self.getTemplate({
+					name: 'dangerConfirmDialog',
+					data: {
+						clusterId: self.appstoreData.marketplace.cluster_id
+					}
+				})),
+				function() {
+					callbackSuccess && callbackSuccess();
+				},
+				null,
+				{
+					title: self.i18n.active().marketplace.dangerDisconnectDialog.title,
+					confirmButtonText: self.i18n.active().marketplace.dangerDisconnectDialog.action_btn,
+					htmlContent: true
+				}
+			);
+
+			confirmPopup.find('#confirm_button').prop('disabled', true);
+
+			confirmPopup.find('#action_input').on('keyup', function() {
+				if ($(this).val() === actionKey) {
+					confirmPopup.find('#confirm_button').prop('disabled', false);
+				} else {
+					confirmPopup.find('#confirm_button').prop('disabled', true);
+				}
+			});
+		},
+
+		renderMarketWelcome: function(parent, appstoreData) {
+			const self = this;
+			const template = $(self.getTemplate({
+				name: 'marketWelcome'
+			}));
+
+			parent
+				.find('.right-container')
+				.fadeOut(function() {
+					$(this)
+						.empty()
+						.append(template)
+						.fadeIn();
+					self.bindMarketWelcomeEvents(parent);
+				});
+		},
+
+		bindMarketWelcomeEvents: function(parent) {
+			const self = this;
+			const maybeSetApiUrl = function() {
+				if (!self.appstoreData.marketplace.api_url && monster.config.api.default) {
+					self.updateMarketConnector({
+						action: 'api_url',
+						api_url: monster.config.api.default
+					});
+				}
+			};
+
+			parent.find('#market_enable_connector_btn').on('click', function(e) {
+				e.preventDefault();
+
+				maybeSetApiUrl();
+				self.updateMarketConnector(
+					{ action: 'enable' },
+					function() {
+						self.showMarketplaceConnector(
+							parent
+						);
+					});
+			});
+		},
+
+		updateMarketConnector: function(payload, onSuccess, onError) {
+			const self = this;
+
+			// use this to test ui without calling API
+			//
+			// if (payload.action === 'enable') {
+			// 	self.appstoreData.marketplace.enabled = true;
+			// } else if (payload.action === 'disable') {
+			// 	self.appstoreData.marketplace.enabled = false;
+			// } else if (payload.action === 'link') {
+			// 	self.appstoreData.marketplace.is_linked = true;
+			// } else if (payload.action === 'unlink') {
+			// 	self.appstoreData.marketplace.is_linked = false;
+			// } else if (payload.action === 'api_url') {
+			// 	self.appstoreData.marketplace.api_url = payload.api_url;
+			// } else if (payload.action === 'revoke_token') {
+			// 	self.appstoreData.marketplace.is_linked = false;
+			// }
+			// onSuccess && onSuccess();
+
+			monster.request({
+				resource: 'marketplace.action',
+				data: {
+					data: payload
+				},
+				success: function(response) {
+					if (response && response.data) {
+						self.appstoreData.marketplace = response.data;
+						onSuccess && onSuccess();
+					} else {
+						onError();
+					}
+				},
+				error: function() {
+					onError && onError();
+				}
+			});
+		}
 	};
 
 	return app;

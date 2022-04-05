@@ -1,0 +1,72 @@
+<div id="market-content">
+	<div class="market-settings">
+		<form class="form form-horizontal form-inline" id="configuration_form">
+			<div class="header-form">
+				<div class="title">{{ i18n.marketplace.edition.title }}</div>
+				<div class="subtitle">{{ i18n.marketplace.edition.subtitle }}</div>
+			</div>
+			<div class="content">
+				<div class="clearfix">
+					<div class="content-block">
+						<div class="content-title">{{ i18n.marketplace.edition.settings_section }}</div>
+						<div class="content-data">
+							<div class="help-block clearfix">
+								<i class="fa fa-question-circle"></i>
+								{{ i18n.marketplace.edition.help_more }} <a href="{{ config.marketplace_url }}/help-center" target="_blank">{{ i18n.marketplace.edition.help_more_link }} <i class="fa fa-external-link"></i></a>.
+							</div>
+							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.api_url }}</label>
+								<div class="controls">
+									<input required="" type="text" name="api_url" value="{{ config.api_url }}">
+									<span class="help-block">{{ i18n.marketplace.edition.help_api_url }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="control-actions clearfix">
+					<button class="monster-button-success" id="save">{{ i18n.save }}</button>
+				</div>
+			</div>
+		</form>
+		<div class="danger-content">
+			<div class="content">
+				<div class="clearfix">
+					<div class="content-block">
+						<div class="content-title monster-red">{{ i18n.marketplace.edition.danger_section }}</div>
+						<div class="content-data">
+							<div class="row-wrap bt-red">
+								<div class="row-fluid">
+									<div class="span8">
+										<div class="danger-title">{{ i18n.marketplace.edition.danger_disable }}</div>
+										<div class="help-block">
+											<div>{{{ i18n.marketplace.edition.help_danger_disable }}}</div>
+											<div class="text-warning">{{ i18n.marketplace.edition.help_warn_danger_disable }}</div>
+										</div>
+									</div>
+									<div class="span4">
+										<button class="monster-button market-disable" id="disable"><i class="fa fa-toggle-off"></i>{{ i18n.marketplace.edition.danger_disable }}</button>
+									</div>
+								</div>
+							</div>
+							<div class="row-wrap clearfix">
+								<div class="row-fluid">
+									<div class="span8">
+										<div class="danger-title">{{ i18n.marketplace.edition.danger_disconnect }}</div>
+										<div class="help-block">
+											<div>{{ i18n.marketplace.edition.help_danger_disconnect }}</div>
+											<div class="text-warning">{{ i18n.marketplace.edition.help_warn_danger_disconnect }}</div>
+										</div>
+									</div>
+									<div class="span4">
+										<button class="monster-button market-disconnect" id="disconnect"><i class="fa fa-unlink"></i>{{ i18n.marketplace.edition.danger_disconnect }}</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
