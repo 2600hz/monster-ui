@@ -47,6 +47,7 @@
 			"link_cluster": "Link your cluster"
 		},
 		"edition": {
+			"cluster_id": "Cluster ID",
 			"api_url": "Crossbar API Url",
 			"danger_disable": "Disable Marketplace Connector",
 			"danger_disconnect": "Disconnect your cluster",

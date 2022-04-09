@@ -15,6 +15,12 @@
 								{{ i18n.marketplace.edition.help_more }} <a href="{{ config.marketplace_url }}/help-center" target="_blank">{{ i18n.marketplace.edition.help_more_link }} <i class="fa fa-external-link"></i></a>.
 							</div>
 							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.cluster_id }}</label>
+								<div class="controls">
+									<span class="well well-small">{{ config.cluster_id }}</span>
+								</div>
+							</div>
+							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.api_url }}</label>
 								<div class="controls">
 									<input required="" type="text" name="api_url" value="{{ config.api_url }}">
