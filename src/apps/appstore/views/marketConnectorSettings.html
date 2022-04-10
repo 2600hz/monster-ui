@@ -1,10 +1,15 @@
 <div id="market-content">
 	<div class="market-settings">
-		<form class="form form-horizontal form-inline" id="configuration_form">
-			<div class="header-form">
-				<div class="title">{{ i18n.marketplace.edition.title }}</div>
-				<div class="subtitle">{{ i18n.marketplace.edition.subtitle }}</div>
+		<div class="header-form">
+			<div class="pull-right go-to-market">
+				<a href="{{ config.marketplace_url }}" class="monster-button-small">
+					<i class="fa fa-shopping-bag"></i> Go to 2600Hz Marketplace
+				</a>
 			</div>
+			<div class="title">{{ i18n.marketplace.edition.title }}</div>
+			<div class="subtitle">{{ i18n.marketplace.edition.subtitle }}</div>
+		</div>
+		<form class="form form-horizontal form-inline" id="configuration_form">
 			<div class="content">
 				<div class="clearfix">
 					<div class="content-block">
