@@ -22,6 +22,18 @@
 						<textarea required name="access_code" rows="4"></textarea>
 					</div>
 				</div>
+				<div class="control-group">
+					<label class="control-label">{{ i18n.marketplace.linkage.form_cluster_name }}</label>
+					<div class="controls">
+						<input required="" type="text" name="cluster_name">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{{ i18n.marketplace.linkage.form_cluster_id }}</label>
+					<div class="controls">
+						<div class="plain-text">{{ config.cluster_id }}</div>
+					</div>
+				</div>
 				<div class="control-group control-actions clearfix">
 					<div class="pull-right">
 						<button id="save" type="submit" class="monster-button monster-button-success">

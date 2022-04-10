@@ -535,7 +535,11 @@ define(function(require) {
 
 					maybeSetApiUrl();
 					self.updateMarketConnector(
-						{ action: 'link', access_code: formData.access_code },
+						{
+							action: 'link',
+							access_code: formData.access_code,
+							name: formData.cluster_name
+						},
 						function() {
 							self.showMarketplaceConnector(
 								parent

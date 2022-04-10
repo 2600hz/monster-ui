@@ -45,6 +45,8 @@
 			"step_copy_code": "Copy the newly generated Access Code",
 			"step_paste_code": "Paste the Access Token below",
 			"form_access_code": "Access Code:",
+			"form_cluster_name": "Name your Cluster:",
+			"form_cluster_id": "Cluster ID:",
 			"link_cluster": "Link your cluster"
 		},
 		"edition": {
