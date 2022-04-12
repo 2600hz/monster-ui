@@ -1,10 +1,11 @@
 ---
 name: monster-ui-core
-base_branch: origin/master
+base_branch: 'origin/5.1'
+exposure: private
 metapackage:
   - name: meta-monster-ui
     type: required
-    branch: master
+    branch: '5.1'
     package: monster-ui-core
 base_core: 
 template: monster-ui-core.spec.tmpl
