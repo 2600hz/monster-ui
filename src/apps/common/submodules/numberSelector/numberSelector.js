@@ -38,6 +38,7 @@ define(function(require) {
 					remove: self.i18n.active().numberSelector.removeLink,
 					spare: self.i18n.active().numberSelector.spareLink,
 					external: self.i18n.active().numberSelector.externalLink,
+					phoneNumbers: self.i18n.active().numberSelector.phoneNumbers,
 					buy: self.i18n.active().numberSelector.buyLink,
 					extension: self.i18n.active().numberSelector.extensionLink,
 					hideNumber: false
@@ -218,6 +219,19 @@ define(function(require) {
 						monster.pub('common.monsterListing.render', {
 							dataList: _
 								.chain(args.numbers.external)
+								.keyBy()
+								.mapValues(function() {
+									return {};
+								})
+								.value(),
+							dataType: 'numbers',
+							singleSelect: true,
+							okCallback: addNumberCallback
+						});
+						break;
+					case 'phoneNumbers':
+						monster.pub('common.monsterListing.render', {
+							dataList: _.chain(args.numbers.phoneNumbers)
 								.keyBy()
 								.mapValues(function() {
 									return {};

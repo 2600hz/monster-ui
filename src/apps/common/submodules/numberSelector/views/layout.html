@@ -21,6 +21,13 @@
 				</span>
 			</div>
 			{{/unless}}
+			{{#unless noCallerId}}
+			<div class="number-selector-element" data-action="phoneNumbers">
+				<span class="link">
+					{{labels.phoneNumbers}}
+				</span>
+			</div>
+			{{/unless}}
 			{{#unless noBuy}}
 			<div class="number-selector-element" data-action="buy">
 				<span class="link">{{labels.buy}}</span>
