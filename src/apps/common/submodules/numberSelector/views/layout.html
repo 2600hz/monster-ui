@@ -21,6 +21,13 @@
 				</span>
 			</div>
 			{{/unless}}
+			{{#unless noAssigned}}
+			<div class="number-selector-element" data-action="assigned">
+				<span class="link">
+					{{labels.assignedLink}}
+				</span>
+			</div>
+			{{/unless}}
 			{{#unless noBuy}}
 			<div class="number-selector-element" data-action="buy">
 				<span class="link">{{labels.buy}}</span>
