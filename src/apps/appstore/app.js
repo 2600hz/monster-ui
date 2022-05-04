@@ -15,8 +15,6 @@ define(function(require) {
 		},
 		requests: {
 			'marketplace.get': {
-				apiRoot: monster.config.api.default,
-				// generateError: false,
 				url: 'apps_store/marketplace',
 				verb: 'GET'
 			},
@@ -162,19 +160,18 @@ define(function(require) {
 					// };
 					// next(null, fake);
 
-					if (shouldShowMarket) {
-						monster.request({
-							resource: 'marketplace.get',
-							success: function(response) {
-								next(null, response.data);
-							},
-							error: function() {
-								next();
-							}
-						});
-					} else {
-						next();
+					if (!shouldShowMarket) {
+					   return next();
 					}
+					monster.request({
+						resource: 'marketplace.get',
+						success: function(response) {
+							next(null, response.data);
+						},
+						error: function() {
+							next();
+						}
+					});
 				}
 			}, function(err, data) {
 				if (!err) {
