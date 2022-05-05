@@ -111,6 +111,8 @@ define(function(require) {
 
 				if (appListContent) {
 					parent.find('.left-menu .marketplace .launch-market').removeClass('active');
+					// Can't use monster.ui.insertTemplate because of the way
+					// we detach and fadeOut using `> *` selector.
 					parent
 						.find('.right-container')
 						.empty()
@@ -539,24 +541,18 @@ define(function(require) {
 					config: marketConfig
 				}
 			}));
-			const linkForm = template.find('#cluster_link_form');
 
-			parent
-				.find('.right-container')
-				.fadeOut(function() {
-					$(this)
-						.empty()
-						.append(template)
-						.fadeIn();
-					monster.ui.validate(linkForm);
-					self.bindMarketLinkEvents(parent, template);
-				});
+			monster.ui.insertTemplate(parent.find('.right-container'), template);
+			self.bindMarketLinkEvents(parent, template);
 		},
 
 		bindMarketLinkEvents: function(parent, template) {
 			const self = this;
 			const appstoreData = self.getStore('appstoreData');
 			const linkForm = template.find('#cluster_link_form');
+
+			monster.ui.validate(linkForm);
+
 			const maybeSetApiUrl = function() {
 				if (!appstoreData.marketplace.api_url && monster.config.api.default) {
 					self.updateMarketConnector({
@@ -607,24 +603,16 @@ define(function(require) {
 					config: marketConfig
 				}
 			}));
-			const linkForm = template.find('#cluster_link_form');
 
-			parent
-				.find('.right-container')
-				.fadeOut(function() {
-					$(this)
-						.empty()
-						.append(template)
-						.fadeIn();
-
-					monster.ui.validate(linkForm);
-					self.bindMarketSettingsEvents(parent, template);
-				});
+			monster.ui.insertTemplate(parent.find('.right-container'), template);
+			self.bindMarketSettingsEvents(parent, template);
 		},
 
 		bindMarketSettingsEvents: function(parent, template) {
 			const self = this;
 			const configForm = template.find('#configuration_form');
+
+			monster.ui.validate(configForm);
 
 			const marketAction = function(payload, varName, formThis) {
 				self.updateMarketConnector(
@@ -732,15 +720,8 @@ define(function(require) {
 				name: 'marketWelcome'
 			}));
 
-			parent
-				.find('.right-container')
-				.fadeOut(function() {
-					$(this)
-						.empty()
-						.append(template)
-						.fadeIn();
-					self.bindMarketWelcomeEvents(parent);
-				});
+			monster.ui.insertTemplate(parent.find('.right-container'), template);
+			self.bindMarketWelcomeEvents(parent, template);
 		},
 
 		bindMarketWelcomeEvents: function(parent) {
