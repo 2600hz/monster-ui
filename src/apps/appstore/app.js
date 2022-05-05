@@ -662,7 +662,7 @@ define(function(require) {
 				null,
 				{
 					title: self.i18n.active().marketplace.dangerDisconnectDialog.title,
-					confirmButtonText: self.i18n.active().marketplace.dangerDisconnectDialog.action_btn,
+					confirmButtonText: self.i18n.active().marketplace.dangerDisconnectDialog.actionBtn,
 					htmlContent: true
 				}
 			);

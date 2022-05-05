@@ -9,35 +9,35 @@
 			</div>
 			<p class="lead">{{ i18n.marketplace.linkage.lead }}</p>
 			<ol>
-				<li>{{ i18n.marketplace.linkage.step_singin }} <a href="{{ config.marketplace_url }}" target="_blank">{{ i18n.marketplace.linkage.step_singin }} <i class="fa fa-external-link"></i></a></li>
-				<li>{{ i18n.marketplace.linkage.step_goto }} <a href="{{ config.marketplace_url}}/settings/account/manage-cluster" target="_blank">{{ i18n.marketplace.linkage.step_goto_link }} <i class="fa fa-external-link"></i></a></li>
-				<li>{{{ i18n.marketplace.linkage.step_generate_code }}}</li>
-				<li>{{ i18n.marketplace.linkage.step_copy_code }}</li>
-				<li>{{ i18n.marketplace.linkage.step_paste_code }}</li>
+				<li>{{ i18n.marketplace.linkage.stepSingin }} <a href="{{ config.marketplace_url }}" target="_blank">{{ i18n.marketplace.linkage.stepSingin }} <i class="fa fa-external-link"></i></a></li>
+				<li>{{ i18n.marketplace.linkage.stepGoto }} <a href="{{ config.marketplace_url}}/settings/account/manage-cluster" target="_blank">{{ i18n.marketplace.linkage.stepGotoLink }} <i class="fa fa-external-link"></i></a></li>
+				<li>{{{ i18n.marketplace.linkage.stepGenerateCode }}}</li>
+				<li>{{ i18n.marketplace.linkage.stepCopyCode }}</li>
+				<li>{{ i18n.marketplace.linkage.stepPasteCode }}</li>
 			</ol>
 			<form id="cluster_link_form" class="form-horizontal form-inline">
 				<div class="control-group">
-					<label class="control-label">{{ i18n.marketplace.linkage.form_access_code }}</label>
+					<label class="control-label">{{ i18n.marketplace.linkage.formAccessCode }}</label>
 					<div class="controls">
 						<textarea required name="access_code" rows="4"></textarea>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label">{{ i18n.marketplace.linkage.form_cluster_name }}</label>
+					<label class="control-label">{{ i18n.marketplace.linkage.formClusterName }}</label>
 					<div class="controls">
 						<input required="" type="text" name="cluster_name">
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label">{{ i18n.marketplace.linkage.form_cluster_id }}</label>
+					<label class="control-label">{{ i18n.marketplace.linkage.formClusterId }}</label>
 					<div class="controls">
-						<div class="plain-text">{{ config.cluster_id }}</div>
+						<div class="plain-text">{{ config.clusterId }}</div>
 					</div>
 				</div>
 				<div class="control-group control-actions clearfix">
 					<div class="pull-right">
 						<button id="save" type="submit" class="monster-button monster-button-success">
-							{{ i18n.marketplace.linkage.link_cluster }}
+							{{ i18n.marketplace.linkage.linkCluster }}
 						</button>
 					</div>
 				</div>
