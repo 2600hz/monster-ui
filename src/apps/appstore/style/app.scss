@@ -237,7 +237,7 @@
 	}
 
 	a .fa.fa-external-link {
-		color: #2297FF;
+		color: $primary-color;
 	}
 
 	.form-horizontal .plain-text {
@@ -251,6 +251,10 @@
 
 	.market-title {
 		margin-bottom: 20px 0 30px;
+		.title_finally {
+			color: #271FE0;
+			display: block;
+		}
 	}
 	.market-body {
 		.actions {
@@ -269,7 +273,9 @@
 			padding: 30px 0 0;
 
 			textarea {
-				width: 450px;
+				max-width: 450px;
+				width: 100%;
+				box-sizing: border-box;
 			}
 			.control-actions {
 				padding-top: 20px;
@@ -349,14 +355,8 @@
 
 	.danger-content {
 		.content-data {
-			// border: 1px solid #e0e0e9; // #ff3d24;
-			// border-radius: 4px;
-
 			.row-wrap {
 				padding: 20px 0;
-			}
-			.bt-red {
-				// border-bottom: 1px solid #e0e0e9; //#ff3d24;
 			}
 			.danger-title {
 				margin-bottom: 10px;
@@ -368,11 +368,11 @@
 		}
 
 		button {
-			color: #ff3d24;
-			border-color: #ff3d24;
+			color: $danger-color;
+			border-color: $danger-color;
 			width: 100%;
 			i.fa {
-				color: #ff3d24;
+				color: $danger-color;
 				margin-right: 10px;
 			}
 		}
