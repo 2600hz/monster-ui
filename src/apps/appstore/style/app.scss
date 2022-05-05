@@ -73,47 +73,47 @@
 	border-bottom: none;
 }
 
-#appstore_container .left-menu .marketplace .launch-market {
-	margin: 15px auto;
-	padding: 15px 10px;
+#appstore_container .left-menu .marketplace {
+	.launch-market {
+		margin: 15px auto;
+		padding: 15px 10px;
 
-	background: rgb(71, 193, 191);
-	border-radius: 4px;
-	color: white;
+		background: #47C1BF;
+		border-radius: 4px;
+		color: white;
 
-	cursor: pointer;
-	font-size: 16px;
-	height: 36px;
-	line-height: 36px;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+		cursor: pointer;
+		font-size: 16px;
+		height: 36px;
+		line-height: 36px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.launch-market:hover {
+		background: #2F8A89;
+		border-radius: 4px;
+	}
+	.launch-market.active {
+		background: #2F8A89;
+		border-radius: 4px;
+	}
+
+	.title {
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+
+		i {
+			margin: 0 8px 0 4px;
+			font-size: 16px;
+			// color: #2F8A89;
+			color: white;
+		}
+	}
 }
-
-#appstore_container .left-menu .marketplace .launch-market:hover {
-	background: rgb(47, 138, 137);
-	border-radius: 4px;
-}
-
-#appstore_container .left-menu .marketplace .launch-market.active {
-	background: rgb(47, 138, 137);
-	border-radius: 4px;
-}
-
-#appstore_container .left-menu .marketplace .title {
-	display: inline-block;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-#appstore_container .left-menu .marketplace .title i {
-	margin: 0 8px 0 4px;
-	font-size: 16px;
-	// color: rgb(47, 138, 137);;
-	color: white;
-}
-
 
 /********** RIGHT **********/
 
@@ -245,7 +245,7 @@
 	}
 }
 
-#appstore_container #market-content .market-welcome {
+#market-content .market-welcome {
 	text-align: center;
 	font-size: 18px;
 
@@ -259,7 +259,7 @@
 	}
 }
 
-#appstore_container #market-content .market-link {
+#market-content .market-link {
 	.market-body {
 		a .fa.fa-external-link {
 			color: #2297FF;
@@ -278,7 +278,7 @@
 	}
 }
 
-#appstore_container #market-content .market-settings {
+#market-content .market-settings {
 	.market-body {
 		form {
 			margin: 0;
@@ -289,97 +289,94 @@
 			}
 		}
 	}
-}
 
-#market-content .market-settings .header-form {
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
-	background-color: #22a5ff;
-	color: #fff;
-	height: 65px;
-	padding: 20px 20px 0;
+	.header-form {
+		border-top-left-radius: 2px;
+		border-top-right-radius: 2px;
+		background-color: #22a5ff;
+		color: #fff;
+		height: 65px;
+		padding: 20px 20px 0;
 
-	.logo-header {
-		vertical-align: top;
-		margin-right: 25px;
-		width: 100px;
-		height: 37px;
+		.logo-header {
+			vertical-align: top;
+			margin-right: 25px;
+			width: 100px;
+			height: 37px;
+		}
+
+		.title {
+			font-size: 24px;
+			margin-bottom: 7px;
+		}
 	}
 
-	.title {
-		font-size: 24px;
-		margin-bottom: 7px;
-	}
-}
-
-#market-content .market-settings form {
-	margin: 0;
-	.control-label {
+	.go-to-market {
 		text-align: left;
+		padding-top: 10px;
 	}
-}
-
-#market-content .market-settings .content {
-	padding: 20px;
 
 	form {
 		margin: 0;
-	}
-	.help-block {
-		margin-bottom: 25px;
-
-		i.fa-question-circle {
-			margin-right: 10px;
+		.control-label {
+			text-align: left;
 		}
 	}
 
-	.content-title {
-		border-bottom: 1px solid #c0c0c9;
-		color: #22a5ff;
-		font-size: 18px;
-		font-weight: 500;
-		margin-bottom: 25px;
-		padding-bottom: 10px;
-	}
-	.control-actions button {
-		// margin-left: 15px;
-	}
-}
+	.content {
+		padding: 20px;
 
-#market-content .market-settings .danger-content {
-	.content-data {
-		// border: 1px solid #e0e0e9; // #ff3d24;
-		// border-radius: 4px;
-
-		.row-wrap {
-			padding: 20px 0;
-		}
-		.bt-red {
-			// border-bottom: 1px solid #e0e0e9; //#ff3d24;
-		}
-		.danger-title {
-			margin-bottom: 10px;
-			font-size: 16px;
+		form {
+			margin: 0;
 		}
 		.help-block {
-			margin-bottom: 0;
+			margin-bottom: 25px;
+
+			i.fa-question-circle {
+				margin-right: 10px;
+			}
+		}
+
+		.content-title {
+			border-bottom: 1px solid #c0c0c9;
+			color: #22a5ff;
+			font-size: 18px;
+			font-weight: 500;
+			margin-bottom: 25px;
+			padding-bottom: 10px;
 		}
 	}
 
-	button {
-		color: #ff3d24;
-		border-color: #ff3d24;
-		width: 100%;
-		i.fa {
+	.danger-content {
+		.content-data {
+			// border: 1px solid #e0e0e9; // #ff3d24;
+			// border-radius: 4px;
+
+			.row-wrap {
+				padding: 20px 0;
+			}
+			.bt-red {
+				// border-bottom: 1px solid #e0e0e9; //#ff3d24;
+			}
+			.danger-title {
+				margin-bottom: 10px;
+				font-size: 16px;
+			}
+			.help-block {
+				margin-bottom: 0;
+			}
+		}
+
+		button {
 			color: #ff3d24;
-			margin-right: 10px;
+			border-color: #ff3d24;
+			width: 100%;
+			i.fa {
+				color: #ff3d24;
+				margin-right: 10px;
+			}
 		}
 	}
-}
-
-#market-content .market-settings .go-to-market {
-	text-align: left;
-	padding-top: 10px;
 }
 
 /************ Danger Confirmation Dialog ***************/
