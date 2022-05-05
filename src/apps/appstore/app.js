@@ -548,19 +548,9 @@ define(function(require) {
 
 		bindMarketLinkEvents: function(parent, template) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
 			const linkForm = template.find('#cluster_link_form');
 
 			monster.ui.validate(linkForm);
-
-			const maybeSetApiUrl = function() {
-				if (!appstoreData.marketplace.api_url && monster.config.api.default) {
-					self.updateMarketConnector({
-						action: 'api_url',
-						api_url: monster.config.api.default
-					});
-				}
-			};
 
 			parent.find('.market-link #save').on('click', function(e) {
 				e.preventDefault();
@@ -572,7 +562,7 @@ define(function(require) {
 				if (monster.ui.valid(linkForm)) {
 					const formData = monster.ui.getFormData('cluster_link_form');
 
-					maybeSetApiUrl();
+					self.maybeSetApiUrl();
 					self.updateMarketConnector(
 						{
 							action: 'link',
@@ -726,20 +716,11 @@ define(function(require) {
 
 		bindMarketWelcomeEvents: function(parent) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
-			const maybeSetApiUrl = function() {
-				if (!appstoreData.marketplace.api_url && monster.config.api.default) {
-					self.updateMarketConnector({
-						action: 'api_url',
-						api_url: monster.config.api.default
-					});
-				}
-			};
 
 			parent.find('#market_enable_connector_btn').on('click', function(e) {
 				e.preventDefault();
 
-				maybeSetApiUrl();
+				this.maybeSetApiUrl();
 				self.updateMarketConnector(
 					{ action: 'enable' },
 					function() {
@@ -788,6 +769,17 @@ define(function(require) {
 					onError && onError();
 				}
 			});
+		},
+		maybeSetApiUrl: function() {
+			const self = this;
+			const appstoreData = self.getStore('appstoreData');
+
+			if (!appstoreData.marketplace.api_url && monster.config.api.default) {
+				self.updateMarketConnector({
+					action: 'api_url',
+					api_url: monster.config.api.default
+				});
+			}
 		}
 	};
 
