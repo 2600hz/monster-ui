@@ -25,22 +25,63 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Store getter
+		 * @param  {Array|String} [path]
+		 * @param  {*} [defaultValue]
+		 * @return {*}
+		 */
+		getStore: function(path, defaultValue) {
+			var self = this,
+				store = ['_store'];
+			return _.get(
+				self,
+				_.isUndefined(path)
+					? store
+					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
+				defaultValue
+			);
+		},
+
+		/**
+		 * Store setter
+		 * @param  {Array|String|*} path|value
+		 * @param  {*} [value]
+		 */
+		setStore: function(path, value) {
+			var self = this,
+				hasValue = _.toArray(arguments).length === 2,
+				store = ['_store'];
+			_.set(
+				self,
+				hasValue
+					? _.flatten([store, _.isString(path) ? path.split('.') : path])
+					: store,
+				hasValue ? value : path
+			);
+		},
+
 		render: function(container) {
 			var self = this,
-				shouldShowMarket = monster.util.isSuperDuper() && !monster.util.isMasquerading(),
-				template = $(self.getTemplate({
-					name: 'app',
-					data: {
-						shouldShowMarket: shouldShowMarket
-					}
-				})),
 				parent = container || $('#monster_content');
 
+			self.setStore({
+				shouldShowMarket: monster.util.isSuperDuper() && !monster.util.isMasquerading(),
+				appstoreData: null
+			});
+
+			const template = $(self.getTemplate({
+				name: 'app',
+				data: {
+					shouldShowMarket: self.getStore('shouldShowMarket')
+				}
+			}));
+
 			if (!monster.config.whitelabel.hasOwnProperty('hideAppStore') || monster.config.whitelabel.hideAppStore === false) {
-				self.loadData(function(err, appstoreData) {
-					self.renderAppList(template, appstoreData);
-					self.bindEvents(template, appstoreData, shouldShowMarket);
-				}, shouldShowMarket);
+				self.loadData(function(err) {
+					self.renderAppList(template);
+					self.bindEvents(template);
+				});
 
 				parent
 					.empty()
@@ -53,10 +94,9 @@ define(function(require) {
 			}
 		},
 
-		appstoreData: null,
-
-		bindEvents: function(parent, appstoreData, shouldShowMarket) {
+		bindEvents: function(parent) {
 			var self = this,
+				shouldShowMarket = self.getStore('shouldShowMarket'),
 				searchInput = parent.find('.search-bar input.search-query'),
 				appListContent = null;
 
@@ -87,7 +127,7 @@ define(function(require) {
 			});
 
 			parent.find('.right-container .app-list').on('click', '.app-element', function(e) {
-				self.showAppPopup($(this).data('id'), appstoreData);
+				self.showAppPopup($(this).data('id'));
 			});
 
 			searchInput.on('keyup', function(e) {
@@ -121,8 +161,9 @@ define(function(require) {
 			}
 		},
 
-		loadData: function(callback, shouldShowMarket) {
-			var self = this;
+		loadData: function(callback) {
+			var self = this,
+				shouldShowMarket = self.getStore('shouldShowMarket');
 
 			monster.parallel({
 				apps: function(next) {
@@ -161,7 +202,7 @@ define(function(require) {
 					// next(null, fake);
 
 					if (!shouldShowMarket) {
-					   return next();
+						return next();
 					}
 					monster.request({
 						resource: 'marketplace.get',
@@ -175,14 +216,15 @@ define(function(require) {
 				}
 			}, function(err, data) {
 				if (!err) {
-					self.appstoreData = data;
+					self.setStore('appstoreData', data);
 				}
-				callback(err, data);
+				callback(err);
 			});
 		},
 
-		renderAppList: function(parent, appstoreData) {
+		renderAppList: function(parent) {
 			var self = this,
+				appstoreData = self.getStore('appstoreData'),
 				appList = appstoreData.apps,
 				isAppInstalled = function(app) {
 					return _.get(app, 'allowed_users', 'specific') !== 'specific'
@@ -216,8 +258,9 @@ define(function(require) {
 					});
 		},
 
-		showAppPopup: function(appId, appstoreData) {
+		showAppPopup: function(appId) {
 			var self = this,
+				appstoreData = self.getStore('appstoreData'),
 				metadata = _.find(appstoreData.apps, { id: appId }),
 				userList = $.extend(true, [], appstoreData.users),
 				app = _.merge({
@@ -472,13 +515,14 @@ define(function(require) {
 
 		showMarketplaceConnector: function(parent) {
 			const self = this;
-			const marketConfig = self.appstoreData.marketplace || {};
+			const appstoreData = self.getStore('appstoreData');
+			const marketConfig = appstoreData.marketplace || {};
 			const enabled = marketConfig.enabled;
 			const is_linked = marketConfig.is_linked;
 
 			if (enabled && is_linked) {
 				self.renderMarketSettings(parent);
-			} else if (marketConfig.enabled) {
+			} else if (enabled) {
 				self.renderMarketLink(parent);
 			} else {
 				self.renderMarketWelcome(parent);
@@ -487,7 +531,8 @@ define(function(require) {
 
 		renderMarketLink: function(parent) {
 			const self = this;
-			const marketConfig = self.appstoreData.marketplace;
+			const appstoreData = self.getStore('appstoreData');
+			const marketConfig = appstoreData.marketplace;
 			const template = $(self.getTemplate({
 				name: 'marketClusterLink',
 				data: {
@@ -510,9 +555,10 @@ define(function(require) {
 
 		bindMarketLinkEvents: function(parent, template) {
 			const self = this;
+			const appstoreData = self.getStore('appstoreData');
 			const linkForm = template.find('#cluster_link_form');
 			const maybeSetApiUrl = function() {
-				if (!self.appstoreData.marketplace.api_url && monster.config.api.default) {
+				if (!appstoreData.marketplace.api_url && monster.config.api.default) {
 					self.updateMarketConnector({
 						action: 'api_url',
 						api_url: monster.config.api.default
@@ -553,7 +599,8 @@ define(function(require) {
 
 		renderMarketSettings: function(parent) {
 			const self = this;
-			const marketConfig = self.appstoreData.marketplace;
+			const appstoreData = self.getStore('appstoreData');
+			const marketConfig = appstoreData.marketplace;
 			const template = $(self.getTemplate({
 				name: 'marketConnectorSettings',
 				data: {
@@ -648,12 +695,13 @@ define(function(require) {
 
 		confirmDisconnectDialog: function(callbackSuccess) {
 			const self = this;
+			const appstoreData = self.getStore('appstoreData');
 			const actionKey = self.i18n.active().marketplace.dangerDisconnectDialog.actionKey;
 			const confirmPopup = monster.ui.confirm(
 				$(self.getTemplate({
 					name: 'dangerConfirmDialog',
 					data: {
-						clusterId: self.appstoreData.marketplace.cluster_id
+						clusterId: appstoreData.marketplace.cluster_id
 					}
 				})),
 				function() {
@@ -678,7 +726,7 @@ define(function(require) {
 			});
 		},
 
-		renderMarketWelcome: function(parent, appstoreData) {
+		renderMarketWelcome: function(parent) {
 			const self = this;
 			const template = $(self.getTemplate({
 				name: 'marketWelcome'
@@ -697,8 +745,9 @@ define(function(require) {
 
 		bindMarketWelcomeEvents: function(parent) {
 			const self = this;
+			const appstoreData = self.getStore('appstoreData');
 			const maybeSetApiUrl = function() {
-				if (!self.appstoreData.marketplace.api_url && monster.config.api.default) {
+				if (!appstoreData.marketplace.api_url && monster.config.api.default) {
 					self.updateMarketConnector({
 						action: 'api_url',
 						api_url: monster.config.api.default
@@ -722,21 +771,22 @@ define(function(require) {
 
 		updateMarketConnector: function(payload, onSuccess, onError) {
 			const self = this;
+			const appstoreData = self.getStore('appstoreData');
 
 			// use this to test ui without calling API
 			//
 			// if (payload.action === 'enable') {
-			// 	self.appstoreData.marketplace.enabled = true;
+			// 	appstoreData.marketplace.enabled = true;
 			// } else if (payload.action === 'disable') {
-			// 	self.appstoreData.marketplace.enabled = false;
+			// 	appstoreData.marketplace.enabled = false;
 			// } else if (payload.action === 'link') {
-			// 	self.appstoreData.marketplace.is_linked = true;
+			// 	appstoreData.marketplace.is_linked = true;
 			// } else if (payload.action === 'unlink') {
-			// 	self.appstoreData.marketplace.is_linked = false;
+			// 	appstoreData.marketplace.is_linked = false;
 			// } else if (payload.action === 'api_url') {
-			// 	self.appstoreData.marketplace.api_url = payload.api_url;
+			// 	appstoreData.marketplace.api_url = payload.api_url;
 			// } else if (payload.action === 'revoke_token') {
-			// 	self.appstoreData.marketplace.is_linked = false;
+			// 	appstoreData.marketplace.is_linked = false;
 			// }
 			// onSuccess && onSuccess();
 
@@ -747,7 +797,7 @@ define(function(require) {
 				},
 				success: function(response) {
 					if (response && response.data) {
-						self.appstoreData.marketplace = response.data;
+						appstoreData.marketplace = response.data;
 						onSuccess && onSuccess();
 					} else {
 						onError();
