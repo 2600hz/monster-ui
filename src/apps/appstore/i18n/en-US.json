@@ -27,6 +27,7 @@
 		"specific": "Specific users"
 	},
 	"marketplace": {
+		"title": "Marketplace Connector",
 		"openToMarket": "Go to 2600Hz Marketplace",
 		"welcome": {
 			"title": "A new way to make Kazoo awesome is",
@@ -50,6 +51,7 @@
 			"linkCluster": "Link your cluster"
 		},
 		"edition": {
+			"subtitle": "Appex Client Configuration",
 			"clusterId": "Cluster ID",
 			"apiUrl": "Crossbar API URL",
 			"dangerDisable": "Disable Marketplace Connector",
@@ -63,8 +65,6 @@
 			"helpWarnDangerDisable": "Your service might be disrupted if the Marketplace Connector is not running!",
 			"helpWarnDangerDisconnect": "Once you delete this Cluster connection, there is no going back. Your service will be disrupted!",
 			"settingsSection": "Settings",
-			"subtitle": "Appex Client Configuration",
-			"title": "Marketplace Connector",
 			"successUpdate": "You successfully saved changes to configuration!"
 		},
 		"dangerDisconnectDialog": {
