@@ -27,10 +27,10 @@
 		"specific": "Specific users"
 	},
 	"marketplace": {
-		"open_to_market": "Go to 2600Hz Marketplace",
+		"openToMarket": "Go to 2600Hz Marketplace",
 		"welcome": {
 			"title": "A new way to make Kazoo awesome is",
-			"title_finally": "Finally here",
+			"titleFinally": "Finally here",
 			"encouragement": "The 2600Hz marketplace helps you get the most of Kazoo. In addition, we are working hard to offer the best experience to discover and install applications in your cluster.",
 			"enable": "Enable Marketplace Connector"
 		},
