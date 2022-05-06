@@ -25,42 +25,6 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * Store getter
-		 * @param  {Array|String} [path]
-		 * @param  {*} [defaultValue]
-		 * @return {*}
-		 */
-		getStore: function(path, defaultValue) {
-			var self = this,
-				store = ['_store'];
-			return _.get(
-				self,
-				_.isUndefined(path)
-					? store
-					: _.flatten([store, _.isString(path) ? path.split('.') : path]),
-				defaultValue
-			);
-		},
-
-		/**
-		 * Store setter
-		 * @param  {Array|String|*} path|value
-		 * @param  {*} [value]
-		 */
-		setStore: function(path, value) {
-			var self = this,
-				hasValue = _.toArray(arguments).length === 2,
-				store = ['_store'];
-			_.set(
-				self,
-				hasValue
-					? _.flatten([store, _.isString(path) ? path.split('.') : path])
-					: store,
-				hasValue ? value : path
-			);
-		},
-
 		render: function(container) {
 			var self = this,
 				parent = container || $('#monster_content');
