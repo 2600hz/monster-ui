@@ -60,11 +60,8 @@ define(function(require) {
 
 		bindEvents: function(parent, appstoreData) {
 			var self = this,
-				searchInput = parent.find('.search-bar input.search-query'),
 				shouldShowMarket = self.getStore('shouldShowMarket'),
-				appListContent = null;
-
-			setTimeout(function() { searchInput.focus(); });
+				marketplaceActive = false;
 
 			parent.find('.app-filter').on('click', function(e) {
 				var $this = $(this),
@@ -73,57 +70,27 @@ define(function(require) {
 				parent.find('.app-filter').removeClass('active');
 				$this.addClass('active');
 
-				if (appListContent) {
+				if (marketplaceActive) {
 					parent.find('.left-menu .marketplace .launch-market').removeClass('active');
-					// Can't use monster.ui.insertTemplate because of the way
-					// we detach and fadeOut using `> *` selector.
-					parent
-						.find('.right-container')
-						.empty()
-						.append(appListContent)
-						.find('> *')
-						.fadeIn();
-					appListContent = null;
+					self.renderAppList(parent, appstoreData);
+					marketplaceActive = false;
 				}
+
 				parent.find('.app-list').isotope({
 					filter: '.app-element' + (filter ? '.' + filter : '')
 				});
 
-				searchInput.val('').focus();
-			});
-
-			parent.find('.right-container .app-list').on('click', '.app-element', function(e) {
-				self.showAppPopup($(this).data('id'), appstoreData);
-			});
-
-			searchInput.on('keyup', function(e) {
-				var value = $(this).val(),
-					selectedFilter = parent.find('.app-filter.active').data('filter'),
-					filter = '.app-element' + (selectedFilter ? '.' + selectedFilter : '');
-
-				if (value) {
-					filter += '[data-name*="' + value + '"]';
-				}
-
-				parent.find('.app-list').isotope({
-					filter: '.app-element' + filter
-				});
+				parent.find('.search-bar input.search-query').val('').focus();
 			});
 
 			if (shouldShowMarket) {
-				console.log('parent:', parent);
 				parent.find('.left-menu .marketplace').on('click', '.launch-market', function(e) {
 					var $this = $(this);
-
-					parent.find('.app-filter').removeClass('active');
-					$this.addClass('active');
-
-					appListContent = parent
-						.find('.right-container > *')
-						.fadeOut(function() {
-							$(this).detach();
-						});
 					self.loadMarketConfig(function() {
+						parent.find('.app-filter').removeClass('active');
+						$this.addClass('active');
+
+						marketplaceActive = true;
 						self.showMarketplaceConnector(parent);
 					});
 				});
@@ -177,10 +144,8 @@ define(function(require) {
 					}
 				}));
 
-			parent
-				.find('.right-container')
-					.empty()
-					.append(template);
+			monster.ui.insertTemplate(parent.find('.right-container'), template);
+			self.bindAppListEvents(parent, template, appstoreData);
 
 			parent
 				.find('.app-list')
@@ -192,6 +157,31 @@ define(function(require) {
 						},
 						sortBy: 'name'
 					});
+		},
+
+		bindAppListEvents: function(parent, appListTemplate, appstoreData) {
+			var self = this,
+				searchInput = appListTemplate.find('.search-bar input.search-query');
+
+			appListTemplate.find('.app-list').on('click', '.app-element', function(e) {
+				self.showAppPopup($(this).data('id'), appstoreData);
+			});
+
+			searchInput.val('').focus();
+
+			searchInput.on('keyup', function(e) {
+				var value = $(this).val(),
+					selectedFilter = parent.find('.app-filter.active').data('filter'),
+					filter = '.app-element' + (selectedFilter ? '.' + selectedFilter : '');
+
+				if (value) {
+					filter += '[data-name*="' + value + '"]';
+				}
+
+				appListTemplate.find('.app-list').isotope({
+					filter: '.app-element' + filter
+				});
+			});
 		},
 
 		showAppPopup: function(appId, appstoreData) {
