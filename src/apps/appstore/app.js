@@ -684,7 +684,7 @@ define(function(require) {
 			parent.find('#market_enable_connector_btn').on('click', function(e) {
 				e.preventDefault();
 
-				this.maybeSetApiUrl();
+				self.maybeSetApiUrl();
 				self.updateMarketConnector(
 					{ action: 'enable' },
 					function() {
