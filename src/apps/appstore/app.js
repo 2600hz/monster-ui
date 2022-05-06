@@ -183,8 +183,8 @@ define(function(require) {
 			}, function(err, data) {
 				if (!err) {
 					self.setStore('appstoreData', data);
+					return callback(err);
 				}
-				callback(err);
 			});
 		},
 
