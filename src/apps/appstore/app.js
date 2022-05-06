@@ -31,7 +31,7 @@ define(function(require) {
 
 			self.setStore({
 				shouldShowMarket: monster.util.isSuperDuper() && !monster.util.isMasquerading(),
-				appstoreData: null
+				marketConfig: null
 			});
 
 			const template = $(self.getTemplate({
@@ -42,9 +42,9 @@ define(function(require) {
 			}));
 
 			if (!monster.config.whitelabel.hasOwnProperty('hideAppStore') || monster.config.whitelabel.hideAppStore === false) {
-				self.loadData(function(err) {
-					self.renderAppList(template);
-					self.bindEvents(template);
+				self.loadData(function(err, appstoreData) {
+					self.renderAppList(template, appstoreData);
+					self.bindEvents(template, appstoreData);
 				});
 
 				parent
@@ -58,10 +58,10 @@ define(function(require) {
 			}
 		},
 
-		bindEvents: function(parent) {
+		bindEvents: function(parent, appstoreData) {
 			var self = this,
-				shouldShowMarket = self.getStore('shouldShowMarket'),
 				searchInput = parent.find('.search-bar input.search-query'),
+				shouldShowMarket = self.getStore('shouldShowMarket'),
 				appListContent = null;
 
 			setTimeout(function() { searchInput.focus(); });
@@ -93,7 +93,7 @@ define(function(require) {
 			});
 
 			parent.find('.right-container .app-list').on('click', '.app-element', function(e) {
-				self.showAppPopup($(this).data('id'));
+				self.showAppPopup($(this).data('id'), appstoreData);
 			});
 
 			searchInput.on('keyup', function(e) {
@@ -111,6 +111,7 @@ define(function(require) {
 			});
 
 			if (shouldShowMarket) {
+				console.log('parent:', parent);
 				parent.find('.left-menu .marketplace').on('click', '.launch-market', function(e) {
 					var $this = $(this);
 
@@ -122,14 +123,15 @@ define(function(require) {
 						.fadeOut(function() {
 							$(this).detach();
 						});
-					self.showMarketplaceConnector(parent);
+					self.loadMarketConfig(function() {
+						self.showMarketplaceConnector(parent);
+					});
 				});
 			}
 		},
 
 		loadData: function(callback) {
-			var self = this,
-				shouldShowMarket = self.getStore('shouldShowMarket');
+			var self = this;
 
 			monster.parallel({
 				apps: function(next) {
@@ -153,44 +155,12 @@ define(function(require) {
 							next(null, data.data);
 						}
 					});
-				},
-				marketplace: function(next) {
-					// use this fake to test ui without calling API
-					//
-					// let fake = {
-					// 	cluster_id: 'lolololololol',
-					// 	enabled: false,
-					// 	app_exchange_url: 'http://localhost:8080/',
-					// 	marketplace_url: 'http://localhost:3030',
-					// 	is_linked: false,
-					// 	_read_only: {}
-					// };
-					// next(null, fake);
-
-					if (!shouldShowMarket) {
-						return next();
-					}
-					monster.request({
-						resource: 'marketplace.get',
-						success: function(response) {
-							next(null, response.data);
-						},
-						error: function() {
-							next();
-						}
-					});
 				}
-			}, function(err, data) {
-				if (!err) {
-					self.setStore('appstoreData', data);
-					return callback(err);
-				}
-			});
+			}, callback);
 		},
 
-		renderAppList: function(parent) {
+		renderAppList: function(parent, appstoreData) {
 			var self = this,
-				appstoreData = self.getStore('appstoreData'),
 				appList = appstoreData.apps,
 				isAppInstalled = function(app) {
 					return _.get(app, 'allowed_users', 'specific') !== 'specific'
@@ -224,9 +194,8 @@ define(function(require) {
 					});
 		},
 
-		showAppPopup: function(appId) {
+		showAppPopup: function(appId, appstoreData) {
 			var self = this,
-				appstoreData = self.getStore('appstoreData'),
 				metadata = _.find(appstoreData.apps, { id: appId }),
 				userList = $.extend(true, [], appstoreData.users),
 				app = _.merge({
@@ -481,8 +450,7 @@ define(function(require) {
 
 		showMarketplaceConnector: function(parent) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
-			const marketConfig = appstoreData.marketplace || {};
+			const marketConfig = self.getStore('marketConfig');
 			const enabled = marketConfig.enabled;
 			const is_linked = marketConfig.is_linked;
 
@@ -497,8 +465,7 @@ define(function(require) {
 
 		renderMarketLink: function(parent) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
-			const marketConfig = appstoreData.marketplace;
+			const marketConfig = self.getStore('marketConfig');
 			const template = $(self.getTemplate({
 				name: 'marketClusterLink',
 				data: {
@@ -549,8 +516,7 @@ define(function(require) {
 
 		renderMarketSettings: function(parent) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
-			const marketConfig = appstoreData.marketplace;
+			const marketConfig = self.getStore('marketConfig');
 			const template = $(self.getTemplate({
 				name: 'marketConnectorSettings',
 				data: {
@@ -637,13 +603,13 @@ define(function(require) {
 
 		confirmDisconnectDialog: function(callbackSuccess) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
+			const marketConfig = self.getStore('marketConfig');
 			const actionKey = self.i18n.active().marketplace.dangerDisconnectDialog.actionKey;
 			const confirmPopup = monster.ui.confirm(
 				$(self.getTemplate({
 					name: 'dangerConfirmDialog',
 					data: {
-						clusterId: appstoreData.marketplace.cluster_id
+						clusterId: marketConfig.cluster_id
 					}
 				})),
 				function() {
@@ -695,25 +661,54 @@ define(function(require) {
 			});
 		},
 
+		loadMarketConfig: function(onSuccess, onError) {
+			const self = this;
+
+			// use this fake to test ui without calling API
+			//
+			// let fake = {
+			// 	cluster_id: 'lolololololol',
+			// 	enabled: false,
+			// 	app_exchange_url: 'http://localhost:8080/',
+			// 	marketplace_url: 'http://localhost:3030',
+			// 	is_linked: false,
+			// 	_read_only: {}
+			// };
+			// self.setStore('marketConfig', fake);
+
+			monster.request({
+				resource: 'marketplace.get',
+				success: function(response) {
+					if (response && response.data) {
+						self.setStore('marketConfig', response.data);
+						onSuccess && onSuccess();
+					} else {
+						onError();
+					}
+				},
+				error: function(err) {
+					onError && onError(err);
+				}
+			});
+		},
 		updateMarketConnector: function(payload, onSuccess, onError) {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
 
 			// use this to test ui without calling API
 			//
+			// const marketConfig = self.getStore('marketConfig') || {};
 			// if (payload.action === 'enable') {
-			// 	appstoreData.marketplace.enabled = true;
+			// 	marketConfig.enabled = true;
 			// } else if (payload.action === 'disable') {
-			// 	appstoreData.marketplace.enabled = false;
+			// 	marketConfig.enabled = false;
 			// } else if (payload.action === 'link') {
-			// 	appstoreData.marketplace.is_linked = true;
+			// 	marketConfig.is_linked = true;
 			// } else if (payload.action === 'unlink') {
-			// 	appstoreData.marketplace.is_linked = false;
+			// 	marketConfig.is_linked = false;
 			// } else if (payload.action === 'api_url') {
-			// 	appstoreData.marketplace.api_url = payload.api_url;
-			// } else if (payload.action === 'revoke_token') {
-			// 	appstoreData.marketplace.is_linked = false;
+			// 	marketConfig.api_url = payload.api_url;
 			// }
+			// self.setStore('marketConfig', marketConfig);
 			// onSuccess && onSuccess();
 
 			monster.request({
@@ -723,7 +718,7 @@ define(function(require) {
 				},
 				success: function(response) {
 					if (response && response.data) {
-						appstoreData.marketplace = response.data;
+						self.setStore('marketConfig', response.data);
 						onSuccess && onSuccess();
 					} else {
 						onError();
@@ -736,9 +731,9 @@ define(function(require) {
 		},
 		maybeSetApiUrl: function() {
 			const self = this;
-			const appstoreData = self.getStore('appstoreData');
+			const marketConfig = self.getStore('marketConfig') || {};
 
-			if (!appstoreData.marketplace.api_url && monster.config.api.default) {
+			if (!marketConfig.api_url && monster.config.api.default) {
 				self.updateMarketConnector({
 					action: 'api_url',
 					api_url: monster.config.api.default
