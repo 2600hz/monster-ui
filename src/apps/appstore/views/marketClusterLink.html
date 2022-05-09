@@ -1,0 +1,47 @@
+<div id="market-content">
+	<div class="market-header">
+		<img alt="marketplace illustration" src="apps/appstore/style/static/images/explore_marketplace.png" />
+	</div>
+	<div class="market-link">
+		<div class="market-body">
+			<div class="market-title page-header">
+				<h3>{{ i18n.marketplace.linkage.title }}</h3>
+			</div>
+			<p class="lead">{{ i18n.marketplace.linkage.lead }}</p>
+			<ol>
+				<li>{{ i18n.marketplace.linkage.stepSingin }} <a href="{{ config.marketplace_url }}" target="_blank">{{ i18n.marketplace.linkage.stepSingin }} <i class="fa fa-external-link"></i></a></li>
+				<li>{{ i18n.marketplace.linkage.stepGoto }} <a href="{{ config.marketplace_url}}/settings/account/manage-cluster" target="_blank">{{ i18n.marketplace.linkage.stepGotoLink }} <i class="fa fa-external-link"></i></a></li>
+				<li>{{{ i18n.marketplace.linkage.stepGenerateCode }}}</li>
+				<li>{{ i18n.marketplace.linkage.stepCopyCode }}</li>
+				<li>{{ i18n.marketplace.linkage.stepPasteCode }}</li>
+			</ol>
+			<form id="cluster_link_form" class="form-horizontal form-inline">
+				<div class="control-group">
+					<label class="control-label">{{ i18n.marketplace.linkage.formAccessCode }}</label>
+					<div class="controls">
+						<textarea required name="access_code" rows="4"></textarea>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{{ i18n.marketplace.linkage.formClusterName }}</label>
+					<div class="controls">
+						<input required="" type="text" name="cluster_name">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{{ i18n.marketplace.linkage.formClusterId }}</label>
+					<div class="controls">
+						<div class="plain-text">{{ config.cluster_id }}</div>
+					</div>
+				</div>
+				<div class="control-group control-actions clearfix">
+					<div class="pull-right">
+						<button id="save" type="submit" class="monster-button monster-button-success">
+							{{ i18n.marketplace.linkage.linkCluster }}
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,14 +1,19 @@
-<ul class="app-list clearfix">
-	{{#each apps}}
-	<li class="app-element{{#each tags}} {{this}}{{/each}}{{#if isInstalled}} installed{{/if}}" data-id="{{ id }}" data-name="{{toLowerCase label }}">
-		<div class="app-element-left">
-			<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
-		</div>
-		<div class="app-element-right">
-			<div class="app-title">{{ label }}</div>
-			<div class="app-description">{{ description }}</div>
-		</div>
-		<div class="app-installed"><i class="fa fa-check monster-green"></i></div>
-	</li>
-	{{/each}}
-</ul>
+<div class="a-list-container clearfix">
+	<div class="search-bar clearfix">
+		<input type="text" class="search-query input-medium pull-right" placeholder="{{i18n.search}}">
+	</div>
+	<ul class="app-list clearfix">
+		{{#each apps}}
+		<li class="app-element{{#each tags}} {{this}}{{/each}}{{#if isInstalled}} installed{{/if}}" data-id="{{ id }}" data-name="{{toLowerCase label }}">
+			<div class="app-element-left">
+				<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
+			</div>
+			<div class="app-element-right">
+				<div class="app-title">{{ label }}</div>
+				<div class="app-description">{{ description }}</div>
+			</div>
+			<div class="app-installed"><i class="fa fa-check monster-green"></i></div>
+		</li>
+		{{/each}}
+	</ul>
+</div>
