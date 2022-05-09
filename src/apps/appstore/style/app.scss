@@ -73,6 +73,48 @@
 	border-bottom: none;
 }
 
+#appstore_container .left-menu .marketplace {
+	.launch-market {
+		margin: 15px auto;
+		padding: 15px 10px;
+
+		background: #47C1BF;
+		border-radius: 4px;
+		color: white;
+
+		cursor: pointer;
+		font-size: 16px;
+		height: 36px;
+		line-height: 36px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.launch-market:hover {
+		background: #2F8A89;
+		border-radius: 4px;
+	}
+	.launch-market.active {
+		background: #2F8A89;
+		border-radius: 4px;
+	}
+
+	.title {
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+
+		i {
+			margin: 0 8px 0 4px;
+			font-size: 16px;
+			// color: #2F8A89;
+			color: white;
+		}
+	}
+}
+
 /********** RIGHT **********/
 
 #appstore_container .right-content {
@@ -95,12 +137,12 @@
 
 /* * * * * Center * * * * */
 
-#appstore_container .right-content .app-list-container .app-list {
+#appstore_container .right-content .right-container .app-list {
 	list-style: none;
 	margin: 0;
 }
 
-#appstore_container .right-content .app-list-container .app-element {
+#appstore_container .right-content .right-container .app-element {
 	width: 270px;
 	height: 110px;
 	border: solid 1px #ccc;
@@ -120,7 +162,7 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
 }
 
-#appstore_container .right-content .app-list-container .app-element:hover {
+#appstore_container .right-content .right-container .app-element:hover {
 	background: -moz-linear-gradient(top,  hsl(0,0%,96%) 0%, hsl(0,0%,99%) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,0%,96%)), color-stop(100%,hsl(0,0%,99%))); /* Chrome,Safari4+ */
 	background: -webkit-linear-gradient(top,  hsl(0,0%,96%) 0%,hsl(0,0%,99%) 100%); /* Chrome10+,Safari5.1+ */
@@ -130,7 +172,7 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#fcfcfc',GradientType=0 ); /* IE6-9 */
 }
 
-#appstore_container .right-content .app-list-container .app-element .app-installed {
+#appstore_container .right-content .right-container .app-element .app-installed {
 	height: 18px;
 	width: 18px;
 	padding: 3px;
@@ -142,17 +184,17 @@
 	border-bottom-left-radius: 4px;
 }
 
-#appstore_container .right-content .app-list-container .app-element:not(.installed) .app-installed {
+#appstore_container .right-content .right-container .app-element:not(.installed) .app-installed {
 	display: none;
 }
 
-#appstore_container .right-content .app-list-container .app-element-left {
+#appstore_container .right-content .right-container .app-element-left {
 	float: left;
 	width: 70px;
 	height: 100%;
 }
 
-#appstore_container .right-content .app-list-container .app-element-left .app-icon {
+#appstore_container .right-content .right-container .app-element-left .app-icon {
 	height: 100%;
 	width: 64px;
 	margin: auto;
@@ -160,13 +202,13 @@
 	background-size: contain;
 }
 
-#appstore_container .right-content .app-list-container .app-element-right {
+#appstore_container .right-content .right-container .app-element-right {
 	float: left;
 	width: 190px;
 	margin-left: 10px;
 }
 
-#appstore_container .right-content .app-list-container .app-element-right .app-title {
+#appstore_container .right-content .right-container .app-element-right .app-title {
 	text-transform: uppercase;
 	color: $primary-color;
 	font-weight: bold;
@@ -177,10 +219,171 @@
 	white-space: nowrap;
 }
 
-#appstore_container .right-content .app-list-container .app-element-right .app-description {
+#appstore_container .right-content .right-container .app-element-right .app-description {
 	height: 80px;
 	overflow: hidden;
 	font-size: 12px;
+}
+
+
+#appstore_container #market-content {
+	border: 1px solid #e0e0e9;
+	border-radius: 2px;
+	background-color: #FFF;
+	overflow: hidden;
+
+	.market-body {
+		padding: 20px;
+	}
+
+	a .fa.fa-external-link {
+		color: $primary-color;
+	}
+
+	.form-horizontal .plain-text {
+		margin-top: 5px;
+	}
+}
+
+#market-content .market-welcome {
+	text-align: center;
+	font-size: 18px;
+
+	.market-title {
+		margin-bottom: 20px 0 30px;
+		.title_finally {
+			color: #271FE0;
+			display: block;
+		}
+	}
+	.market-body {
+		.actions {
+			padding: 20px 20px 10px;
+		}
+	}
+}
+
+#market-content .market-link {
+	.market-body {
+		a .fa.fa-external-link {
+			color: $primary-color;
+		}
+		form {
+			margin: 0;
+			padding: 30px 0 0;
+
+			textarea {
+				max-width: 450px;
+				width: 100%;
+				box-sizing: border-box;
+			}
+			.control-actions {
+				padding-top: 20px;
+			}
+		}
+	}
+}
+
+#market-content .market-settings {
+	.market-body {
+		form {
+			margin: 0;
+			padding: 30px 0 0;
+
+			textarea {
+				width: 450px;
+			}
+		}
+	}
+
+	.header-form {
+		border-top-left-radius: 2px;
+		border-top-right-radius: 2px;
+		background-color: #22a5ff;
+		color: #fff;
+		height: 65px;
+		padding: 20px 20px 0;
+
+		.logo-header {
+			vertical-align: top;
+			margin-right: 25px;
+			width: 100px;
+			height: 37px;
+		}
+
+		.title {
+			font-size: 24px;
+			margin-bottom: 7px;
+		}
+	}
+
+	.go-to-market {
+		text-align: left;
+		padding-top: 10px;
+	}
+
+	form {
+		margin: 0;
+		.control-label {
+			text-align: left;
+		}
+	}
+
+	.content {
+		padding: 20px;
+
+		form {
+			margin: 0;
+		}
+		.help-block {
+			margin-bottom: 25px;
+
+			i.fa-question-circle {
+				margin-right: 10px;
+			}
+		}
+
+		.content-title {
+			border-bottom: 1px solid #c0c0c9;
+			color: #22a5ff;
+			font-size: 18px;
+			font-weight: 500;
+			margin-bottom: 25px;
+			padding-bottom: 10px;
+		}
+	}
+
+	.danger-content {
+		.content-data {
+			.row-wrap {
+				padding: 20px 0;
+			}
+			.danger-title {
+				margin-bottom: 10px;
+				font-size: 16px;
+			}
+			.help-block {
+				margin-bottom: 0;
+			}
+		}
+
+		button {
+			color: $danger-color;
+			border-color: $danger-color;
+			width: 100%;
+			i.fa {
+				color: $danger-color;
+				margin-right: 10px;
+			}
+		}
+	}
+}
+
+/************ Danger Confirmation Dialog ***************/
+.danger-dialog #action_input {
+	margin-top: 5px;
+	margin-left: 10px;
+	margin-bottom: 0px;
 }
 
 /********** POPUP **********/
@@ -347,7 +550,7 @@
 #appstore_popup_container .right-container .bottom-right-div {
 	position: absolute;
 	width: 180px;
-	bottom: 0px; 
+	bottom: 0px;
 }
 
 #appstore_popup_container .right-container .help-bloc > div {
@@ -362,7 +565,7 @@
 #appstore_popup_container .right-container .help-bloc a {
 	font-size: 14px;
 	font-weight: 600;
-} 
+}
 
 #appstore_popup_container .right-container .help-bloc a:hover {
 	color: $primary-color;
