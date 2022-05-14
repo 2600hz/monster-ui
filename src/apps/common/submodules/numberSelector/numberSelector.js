@@ -20,6 +20,7 @@ define(function(require) {
 		 * @param  {Boolean} [args.noExtension=false]
 		 * @param  {Boolean} [args.noSpare=false]
 		 * @param  {Boolean} [args.noCallerId=true]
+		 * @param  {Boolean} [args.noAssigned=true]
 		 * @param  {Boolean} [args.width=220px]
 		 * @param  {Object} [args.labels]
 		 */
@@ -30,6 +31,7 @@ define(function(require) {
 				noBuy = _.isBoolean(args.noBuy) ? args.noBuy : false,
 				noExtension = _.isBoolean(args.noExtension) ? args.noExtension : false,
 				noSpare = _.isBoolean(args.noSpare) ? args.noSpare : false,
+				noAssigned = _.isBoolean(args.noAssigned) ? args.noAssigned : true,
 				noCallerIdFromArg = _.isBoolean(args.noCallerId) ? args.noCallerId : true,
 				noCallerId = noCallerIdFromArg || !monster.util.getCapability('caller_id.external_numbers').isEnabled,
 				container = args.container,
@@ -38,6 +40,7 @@ define(function(require) {
 					remove: self.i18n.active().numberSelector.removeLink,
 					spare: self.i18n.active().numberSelector.spareLink,
 					external: self.i18n.active().numberSelector.externalLink,
+					assignedLink: self.i18n.active().numberSelector.assignedLink,
 					buy: self.i18n.active().numberSelector.buyLink,
 					extension: self.i18n.active().numberSelector.extensionLink,
 					hideNumber: false
@@ -53,6 +56,7 @@ define(function(require) {
 							inputName: inputName,
 							number: number,
 							noSpare: noSpare,
+							noAssigned: noAssigned,
 							noCallerId: true,
 							noBuy: monster.config.whitelabel.hideBuyNumbers
 								? true
@@ -63,6 +67,7 @@ define(function(require) {
 							inputName: inputName,
 							number: isSelectedValid ? number : undefined,
 							noSpare: noSpare,
+							noAssigned: noAssigned && _.isEmpty(numbers.phoneNumbers),
 							noCallerId: _.isEmpty(numbers.external) || noCallerId,
 							noBuy: monster.config.whitelabel.hideBuyNumbers
 								? true
@@ -118,7 +123,7 @@ define(function(require) {
 						error: next
 					});
 				},
-				listPhoneNumbers = function(next) {
+				listAssignedNumbers = function(next) {
 					self.callApi({
 						resource: 'numbers.list',
 						data: {
@@ -129,6 +134,7 @@ define(function(require) {
 						},
 						success: _.flow(
 							_.partial(_.get, _, 'data.numbers'),
+							_.partial(_.omitBy, _, 'used_by'),
 							_.keys,
 							_.partial(next, null)
 						),
@@ -142,7 +148,7 @@ define(function(require) {
 
 			monster.parallel({
 				external: listExternalNumbers,
-				phoneNumbers: listPhoneNumbers
+				assignedNumbers: listAssignedNumbers
 			}, next);
 		},
 
@@ -218,6 +224,19 @@ define(function(require) {
 						monster.pub('common.monsterListing.render', {
 							dataList: _
 								.chain(args.numbers.external)
+								.keyBy()
+								.mapValues(function() {
+									return {};
+								})
+								.value(),
+							dataType: 'numbers',
+							singleSelect: true,
+							okCallback: addNumberCallback
+						});
+						break;
+					case 'assigned':
+						monster.pub('common.monsterListing.render', {
+							dataList: _.chain(args.numbers.assignedNumbers)
 								.keyBy()
 								.mapValues(function() {
 									return {};
