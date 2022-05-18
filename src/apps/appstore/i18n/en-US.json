@@ -32,15 +32,15 @@
 		"welcome": {
 			"title": "A new way to make Kazoo awesome is",
 			"titleFinally": "Finally here",
-			"encouragement": "The 2600Hz marketplace helps you get the most of Kazoo. In addition, we are working hard to offer the best experience to discover and install applications in your cluster.",
+			"encouragement": "The 2600Hz Marketplace helps you get the most of KAZOO. In addition, we are working hard to offer the best experience to discover and install applications in your cluster.",
 			"enable": "Enable Marketplace Connector"
 		},
 		"linkage": {
 			"title": "Connect your cluster to 2600Hz Marketplace",
 			"lead": "In order to use applications from 2600Hz Marketplace, please follow these steps to connect your cluster to marketplace:",
-			"stepSingin": "Please Sign In into your account",
+			"stepSingin": "Please sign in to your 2600Hz Marketplace account",
 			"stepSinginLink": "2600Hz Marketplace portal",
-			"stepGoto": "Go to",
+			"stepGoto": "On the Marketplace, go to",
 			"stepGotoLink": "Account Settings -> Manage My Cluster",
 			"stepGenerateCode": "Click on <strong>Generate Access Code</strong>",
 			"stepCopyCode": "Copy the newly generated Access Code",
@@ -57,13 +57,13 @@
 			"dangerDisable": "Disable Marketplace Connector",
 			"dangerDisconnect": "Disconnect your cluster",
 			"dangerSection": "Danger Zone",
-			"helpApiUrl": "This URL will be used to serve UI app assets for marketplace applications.",
-			"helpDangerDisable": "Make Marketplace Connector to not run next time <code>kazoo_appex</code> or Kazoo nodes are restarted.",
-			"helpDangerDisconnect": "Disconnect your cluster from 2600Hz marketplace and cancel all apps.",
-			"helpMore": "To learn more about Marketplace Connector and these settings please see",
+			"helpApiUrl": "This URL will be used to serve UI app assets for Marketplace applications.",
+			"helpDangerDisable": "Tells the Marketplace Connector to not run the next time <code>kazoo_appex</code> or KAZOO nodes are restarted.",
+			"helpDangerDisconnect": "Disconnects your cluster from the 2600Hz Marketplace and cancel all apps.",
+			"helpMore": "To learn more about the Marketplace Connector and these settings, please see the",
 			"helpMoreLink": "Marketplace documentation",
 			"helpWarnDangerDisable": "Your service might be disrupted if the Marketplace Connector is not running!",
-			"helpWarnDangerDisconnect": "Once you delete this Cluster connection, there is no going back. Your service will be disrupted!",
+			"helpWarnDangerDisconnect": "Once you delete your Cluster connection, there is no going back. Your service will be disrupted!",
 			"settingsSection": "Settings",
 			"successUpdate": "You successfully saved changes to configuration!"
 		},
@@ -72,11 +72,11 @@
 			"cancel": "Cancel",
 			"actionBtn": "Disconnect from Marketplace",
 			"actionKey": "DISCONNECT",
-			"messageIntro": "This action CANNOT be undone. This will permanently disassociate your cluster from 2600Hz Marketplace and remove any apps or services purchased from marketplace.",
+			"messageIntro": "This action CANNOT be undone. This will permanently disassociate your cluster from the 2600Hz Marketplace and remove any apps or services purchased from marketplace.",
 			"messageExplanation": "Please type the word \"{{variable}}\" in the following input and then click on the Disconnect button to proceed."
 		},
 		"dangerDisableDialog": {
-			"content": "This will disable Marketplace connector. Next time your Kazoo node starts, the apps purchased through marketplace will not be started! Do not forget to update the list startup apps."
+			"content": "This will disable the Marketplace connector. The next time your KAZOO nodes start, the apps purchased through marketplace will not be started. Do not forget to remove those applications from your start up list."
 		}
 	},
 	"selectedUsers": "Selected Users",
