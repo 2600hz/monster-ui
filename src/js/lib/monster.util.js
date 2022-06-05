@@ -64,6 +64,7 @@ define(function(require) {
 		listAppsMetadata: listAppsMetadata,
 		listAppStoreMetadata: listAppStoreMetadata,
 		listAppLinks: listAppLinks,
+		parseQueryString: parseQueryString,
 		protectSensitivePhoneNumbers: protectSensitivePhoneNumbers,
 		randomString: randomString,
 		reload: reload,
@@ -1212,73 +1213,6 @@ define(function(require) {
 			return search;
 		};
 		/**
-		 * @param  {String} queryString
-		 * @return {Object}
-		 */
-		var parseQueryString = function(queryString) {
-			var pair;
-			var paramKey;
-			var paramValue;
-
-			// if query string is empty exit early
-			if (!queryString) {
-				return {};
-			}
-
-			return _
-				.chain(queryString)
-				// anything after # is not part of the query string, so get rid of it
-				.split('#', 1)
-				.toString()
-				// split our query string into its component parts
-				.split('&')
-				// prase query string key/value pairs
-				.transform(function(acc, component) {
-					// separate each component in key/value pair
-					pair = component.split('=');
-
-					// set parameter name and value (use 'true' if empty)
-					paramKey = pair[0];
-					paramValue = _.isUndefined(pair[1]) ? true : pair[1];
-
-					// if the paramKey ends with square brackets, e.g. colors[] or colors[2]
-					if (paramKey.match(/\[(\d+)?\]$/)) {
-						// create key if it doesn't exist
-						var key = paramKey.replace(/\[(\d+)?\]/, '');
-						if (!acc[key]) {
-							acc[key] = [];
-						}
-
-						// if it's an indexed array e.g. colors[2]
-						if (paramKey.match(/\[\d+\]$/)) {
-							// get the index value and add the entry at the appropriate position
-							var index = /\[(\d+)\]/.exec(paramKey)[1];
-							acc[key][index] = paramValue;
-						} else {
-							// otherwise add the value to the end of the array
-							acc[key].push(paramValue);
-						}
-					} else {
-						// we're dealing with a string
-						if (!acc[paramKey]) {
-							// if it doesn't exist, create property
-							acc[paramKey] = paramValue;
-						} else if (
-							acc[paramKey]
-							&& _.isString(acc[paramKey])
-						) {
-							// if property does exist and it's a string, convert it to an array
-							acc[paramKey] = [acc[paramKey]];
-							acc[paramKey].push(paramValue);
-						} else {
-							// otherwise add the property
-							acc[paramKey].push(paramValue);
-						}
-					}
-				}, {})
-				.value();
-		};
-		/**
 		 * @param  {Object} params
 		 * @return {Object|Array|String|undefined}
 		 */
@@ -1631,6 +1565,75 @@ define(function(require) {
 			.reject(hasInvalidProps)
 			.value();
 	}
+
+	/**
+	 * Parses a query string into an object
+	 * @param  {String} queryString Query string to be parsed
+	 * @return {Object}             Object representation of the query string parameters
+	 */
+	function parseQueryString(queryString) {
+		var pair;
+		var paramKey;
+		var paramValue;
+
+		// if query string is empty exit early
+		if (!queryString) {
+			return {};
+		}
+
+		return _
+			.chain(queryString)
+			// anything after # is not part of the query string, so get rid of it
+			.split('#', 1)
+			.toString()
+			// split our query string into its component parts
+			.split('&')
+			// prase query string key/value pairs
+			.transform(function(acc, component) {
+				// separate each component in key/value pair
+				pair = component.split('=');
+
+				// set parameter name and value (use 'true' if empty)
+				paramKey = pair[0];
+				paramValue = _.isUndefined(pair[1]) ? true : pair[1];
+
+				// if the paramKey ends with square brackets, e.g. colors[] or colors[2]
+				if (paramKey.match(/\[(\d+)?\]$/)) {
+					// create key if it doesn't exist
+					var key = paramKey.replace(/\[(\d+)?\]/, '');
+					if (!acc[key]) {
+						acc[key] = [];
+					}
+
+					// if it's an indexed array e.g. colors[2]
+					if (paramKey.match(/\[\d+\]$/)) {
+						// get the index value and add the entry at the appropriate position
+						var index = /\[(\d+)\]/.exec(paramKey)[1];
+						acc[key][index] = paramValue;
+					} else {
+						// otherwise add the value to the end of the array
+						acc[key].push(paramValue);
+					}
+				} else {
+					// we're dealing with a string
+					if (!acc[paramKey]) {
+						// if it doesn't exist, create property
+						acc[paramKey] = paramValue;
+					} else if (
+						acc[paramKey]
+						&& _.isString(acc[paramKey])
+					) {
+						// if property does exist and it's a string, convert it to an array
+						acc[paramKey] = [acc[paramKey]];
+						acc[paramKey].push(paramValue);
+					} else {
+						// otherwise add the property
+						acc[paramKey].push(paramValue);
+					}
+				}
+			}, {})
+			.value();
+	};
 
 	/**
 	 * Function used to replace displayed phone numbers by "fake" numbers.
