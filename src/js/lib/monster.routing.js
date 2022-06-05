@@ -104,7 +104,7 @@ define(function(require) {
 		},
 
 		addDefaultRoutes: function() {
-			this.add(/^apps\/([^/?]+)(?:\/[^?]*)?(\??.*)?$/, function(appName, query) {
+			this.add(/^apps\/([^/?]+)(?:\/[^?]*)?\??(.*)?$/, function(appName, queryString) {
 				// not logged in, do nothing to preserve potentially valid route to load after successful login
 				if (!monster.util.isLoggedIn()) {
 					return;
@@ -115,7 +115,8 @@ define(function(require) {
 					return;
 				}
 
-				var availableApps = monster.util.listAppStoreMetadata('user');
+				var availableApps = monster.util.listAppStoreMetadata('user'),
+					query = monster.util.parseQueryString(queryString);
 
 				// try loading the requested app
 				if (isAppLoadable(appName, availableApps)) {
