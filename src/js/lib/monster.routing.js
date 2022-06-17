@@ -104,14 +104,15 @@ define(function(require) {
 		},
 
 		addDefaultRoutes: function() {
-			this.add(/^apps\/([^/?]+)(?:\/[^?]*)?\??(.*)?$/, function(appName, queryString) {
+			this.add(/^apps\/([^/?]+)(\/[^?]*)?\??(.*)?$/, function(appName, restSegment, queryString) {
 				// not logged in, do nothing to preserve potentially valid route to load after successful login
 				if (!monster.util.isLoggedIn()) {
 					return;
 				}
 
-				// Do not reload app if it is already loaded (just the rest segment or the query has changed)
-				if (monster.apps.getActiveApp() === appName) {
+				// Do not reload app if it is already loaded and there is a rest segment,
+				// to allow the app to handle its own routing
+				if (monster.apps.getActiveApp() === appName && !_.isEmpty(restSegment)) {
 					return;
 				}
 
