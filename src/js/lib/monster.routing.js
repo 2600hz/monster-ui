@@ -104,7 +104,7 @@ define(function(require) {
 		},
 
 		addDefaultRoutes: function() {
-			this.add(/^apps\/([^/?]+)(\/[^?]*)?\??(.*)?$/, function(appName, restSegment, queryString) {
+			this.add(/^apps\/([a-z]+(?:-[a-z]+)?)(\/[^?]*)?\??(.*)?$/, function(appName, restSegment, queryString) {
 				// not logged in, do nothing to preserve potentially valid route to load after successful login
 				if (!monster.util.isLoggedIn()) {
 					return;
