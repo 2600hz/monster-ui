@@ -110,9 +110,10 @@ define(function(require) {
 					return;
 				}
 
-				// Do not reload app if it is already loaded and there is a rest segment,
-				// to allow the app to handle its own routing
-				if (monster.apps.getActiveApp() === appName && !_.isEmpty(restSegment)) {
+				var isActiveApp = monster.apps.getActiveApp() === appName,
+					hasCustomRouting = !_.isEmpty(restSegment);
+
+				if (isActiveApp && hasCustomRouting) {
 					return;
 				}
 
