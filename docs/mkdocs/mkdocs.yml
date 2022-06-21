@@ -90,6 +90,7 @@ nav:
       - 'docs/monster-util/isReseller().md'
       - 'docs/monster-util/isSuperDuper().md'
       - 'docs/monster-util/isWhitelabeling().md'
+      - 'docs/monster-util/parseQueryString().md'
       - 'docs/monster-util/protectSensitivePhoneNumbers().md'
       - 'docs/monster-util/randomString().md'
       - 'docs/monster-util/toFriendlyDate().md'

@@ -104,12 +104,21 @@ define(function(require) {
 		},
 
 		addDefaultRoutes: function() {
-			this.add('apps/{appName}:?query:', function(appName, query) {
+			this.add(/^apps\/([a-z]+(?:-[a-z]+)?)(\/[^?]*)?\??(.*)?$/, function(appName, restSegment, queryString) {
 				// not logged in, do nothing to preserve potentially valid route to load after successful login
 				if (!monster.util.isLoggedIn()) {
 					return;
 				}
-				var availableApps = monster.util.listAppStoreMetadata('user');
+
+				var isActiveApp = monster.apps.getActiveApp() === appName,
+					hasCustomRouting = !_.isEmpty(restSegment);
+
+				if (isActiveApp && hasCustomRouting) {
+					return;
+				}
+
+				var availableApps = monster.util.listAppStoreMetadata('user'),
+					query = monster.util.parseQueryString(queryString);
 
 				// try loading the requested app
 				if (isAppLoadable(appName, availableApps)) {
