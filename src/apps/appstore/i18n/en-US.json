@@ -49,7 +49,8 @@
 			"formAccessCode": "Access Code:",
 			"formClusterName": "Name your Cluster:",
 			"formClusterId": "Cluster ID:",
-			"linkCluster": "Link your cluster"
+			"linkCluster": "Link your cluster",
+			"cancelDisable": "Cancel and Disable"
 		},
 		"edition": {
 			"subtitle": "Appex Client Configuration",
