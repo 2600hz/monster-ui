@@ -255,6 +255,20 @@
 	font-size: 12px;
 }
 
+#appstore_container .market-beta-notice {
+	margin: 0 auto 25px;
+	padding: 24px;
+
+	background-color: #c6d9fc;
+	border-radius: 2px;
+	font-size: 16px;
+
+	i.fa-info-circle {
+		margin-right: 10px;
+		color: #3478f5;
+		font-size: 18px;
+	}
+}
 
 #appstore_container #market-content {
 	border: 1px solid #e0e0e9;
