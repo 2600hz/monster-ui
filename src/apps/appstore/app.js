@@ -506,7 +506,6 @@ define(function(require) {
 			parent.find('.market-link #cancel_disable').on('click', function(e) {
 				e.preventDefault();
 
-				self.maybeSetApiUrl();
 				self.updateMarketConnector(
 					{ action: 'disable' },
 					function() {
