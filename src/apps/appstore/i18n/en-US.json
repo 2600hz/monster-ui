@@ -29,7 +29,7 @@
 	"marketplace": {
 		"title": "Marketplace Connector",
 		"sidebarTitle": "Administrator Features",
-		"betaNotice": "2600Hz Marketplace is still in Alpha phase and is not ready for production use. Please expect some minor bugs and defects and/or limitation in features.",
+		"betaNotice": "2600Hz Marketplace is still in Alpha phase and is not fully certified for production use. Please expect some bugs and limitations in features and send us your feedback.",
 		"openToMarket": "Go to 2600Hz Marketplace",
 		"welcome": {
 			"title": "A new way to make Kazoo awesome is",
