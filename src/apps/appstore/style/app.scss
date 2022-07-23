@@ -109,7 +109,7 @@
 		line-height: 18px;
 		overflow: hidden;
 
-		background-color: #ff3d24;
+		background-color: $red-orange;
 		border: 1px solid white;
 		color: #fff;
 		text-align: center;
@@ -117,17 +117,17 @@
 		font-size: 12px;
 		font-weight: bold;
 
-		transform: rotate(315deg);
+		transform: rotate(-45deg);
 		box-shadow: 1px 1px 1px rgba(49, 49, 58, .6);
 	}
 
 	.launch-market:hover {
-		background: #2297ff;
-		border-color: #006bca;
+		background: $primary-color;
+		border-color: darken($primary-color, 20%);
 	}
 	.launch-market.active {
-		background: #2297ff;
-		border-color: #006bca;
+		background: $primary-color;
+		border-color: darken($primary-color, 20%);
 	}
 
 	.title {
@@ -139,7 +139,6 @@
 		i {
 			margin: 0 8px 0 4px;
 			font-size: 16px;
-			// color: #2F8A89;
 			color: white;
 		}
 	}
