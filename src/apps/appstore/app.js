@@ -502,6 +502,18 @@ define(function(require) {
 					saveThis.prop({ disabled: false });
 				}
 			});
+
+			parent.find('.market-link #cancel_disable').on('click', function(e) {
+				e.preventDefault();
+
+				self.updateMarketConnector(
+					{ action: 'disable' },
+					function() {
+						self.showMarketplaceConnector(
+							parent
+						);
+					});
+			});
 		},
 
 		renderMarketSettings: function(parent) {

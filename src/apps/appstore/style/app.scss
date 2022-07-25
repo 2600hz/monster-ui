@@ -74,16 +74,24 @@
 }
 
 #appstore_container .left-menu .marketplace {
+	margin: 24px auto;
+
+	.admin-title {
+		color: #a4a4ab;
+		font-weight: bold;
+		padding-left: 4px;
+	}
 	.launch-market {
-		margin: 15px auto;
+		position: relative;
+		margin: 8px auto;
 		padding: 15px 10px;
 
-		background: #47C1BF;
+		background: #f4f4f5;
+		border: 1px solid #bcbcc2;
 		border-radius: 4px;
-		color: white;
 
 		cursor: pointer;
-		font-size: 16px;
+		font-size: 15px;
 		height: 36px;
 		line-height: 36px;
 		overflow: hidden;
@@ -91,13 +99,35 @@
 		text-overflow: ellipsis;
 	}
 
+	.launch-market::after {
+		position: absolute;
+		content: 'Alpha';
+		bottom: 10px;
+		right: -58px;
+		width: 150px;
+		height: 18px;
+		line-height: 18px;
+		overflow: hidden;
+
+		background-color: $red-orange;
+		border: 1px solid white;
+		color: #fff;
+		text-align: center;
+		text-transform: uppercase;
+		font-size: 12px;
+		font-weight: bold;
+
+		transform: rotate(-45deg);
+		box-shadow: 1px 1px 1px rgba(49, 49, 58, .6);
+	}
+
 	.launch-market:hover {
-		background: #2F8A89;
-		border-radius: 4px;
+		background: $primary-color;
+		border-color: darken($primary-color, 20%);
 	}
 	.launch-market.active {
-		background: #2F8A89;
-		border-radius: 4px;
+		background: $primary-color;
+		border-color: darken($primary-color, 20%);
 	}
 
 	.title {
@@ -109,7 +139,6 @@
 		i {
 			margin: 0 8px 0 4px;
 			font-size: 16px;
-			// color: #2F8A89;
 			color: white;
 		}
 	}
@@ -225,6 +254,10 @@
 	font-size: 12px;
 }
 
+#appstore_container .market-beta-notice {
+	padding: 2px;
+	overflow: hidden;
+}
 
 #appstore_container #market-content {
 	border: 1px solid #e0e0e9;
