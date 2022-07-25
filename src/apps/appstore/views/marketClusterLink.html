@@ -1,3 +1,8 @@
+<div class="market-beta-notice">
+	{{#monsterPanelText "Alpha notice" "info" "fill-width"}}
+		{{ i18n.marketplace.betaNotice }}
+	{{/monsterPanelText}}
+</div>
 <div id="market-content">
 	<div class="market-header">
 		<img alt="marketplace illustration" src="apps/appstore/style/static/images/explore_marketplace.png" />
@@ -35,6 +40,9 @@
 					</div>
 				</div>
 				<div class="control-group control-actions clearfix">
+					<button id="cancel_disable" type="submit" class="monster-button monster-button-neutral">
+						{{ i18n.marketplace.linkage.cancelDisable }}
+					</button>
 					<div class="pull-right">
 						<button id="save" type="submit" class="monster-button monster-button-success">
 							{{ i18n.marketplace.linkage.linkCluster }}
