@@ -1181,7 +1181,7 @@ define(function(require) {
 					callback && callback(data.data);
 				},
 				error: function(parsedError, error, globalHandler) {
-					if (error.status === 403) {
+					if ([403, 404].includes(error.status)) {
 						monster.ui.alert(self.i18n.active().numbers.dialogAlertNowAllowed.info);
 					} else {
 						globalHandler(parsedError, { generateError: true });
