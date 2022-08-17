@@ -46,7 +46,6 @@ define(function(require) {
 					hideNumber: false
 				}, args.labels),
 				initTemplate = function(numbers) {
-					console.log(numbers);
 					var isSelectedValid = _
 							.chain(numbers)
 							.flatMap()
