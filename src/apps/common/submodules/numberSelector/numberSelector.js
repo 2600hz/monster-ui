@@ -46,6 +46,7 @@ define(function(require) {
 					hideNumber: false
 				}, args.labels),
 				initTemplate = function(numbers) {
+					console.log(numbers);
 					var isSelectedValid = _
 							.chain(numbers)
 							.flatMap()
@@ -67,7 +68,7 @@ define(function(require) {
 							inputName: inputName,
 							number: isSelectedValid ? number : undefined,
 							noSpare: noSpare,
-							noAssigned: noAssigned && _.isEmpty(numbers.phoneNumbers),
+							noAssigned: noAssigned || _.isEmpty(numbers.assignedNumbers),
 							noCallerId: _.isEmpty(numbers.external) || noCallerId,
 							noBuy: monster.config.whitelabel.hideBuyNumbers
 								? true
@@ -134,7 +135,7 @@ define(function(require) {
 						},
 						success: _.flow(
 							_.partial(_.get, _, 'data.numbers'),
-							_.partial(_.omitBy, _, 'used_by'),
+							_.partial(_.pickBy, _, 'used_by'),
 							_.keys,
 							_.partial(next, null)
 						),
