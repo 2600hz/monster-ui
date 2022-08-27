@@ -764,6 +764,13 @@
 		};
 
 		settings.success = function requestSuccess(responseData, status) {
+			if ('object' == typeof responseData.data && responseData.hasOwnProperty('metadata')) {
+				// Merge object's metadata with the actual object's data.
+				responseData.data = _.merge(responseData.data, responseData.metadata);
+				// Metadata will be used later to remove its k/v from the object before saving it.
+				responseData.data.metadata = responseData.metadata;
+			}
+
 			options.onRequestEnd && options.onRequestEnd(responseData, options);
 
 			options.onRequestSuccess && options.onRequestSuccess(responseData, options);
@@ -779,6 +786,14 @@
 		if (settings.type.toLowerCase() !== 'get') {
 			var postData = data.data,
 				envelopeKeys = {};
+
+			// Remove object's metadata (if any) merged in the success step.
+			if (postData.hasOwnProperty('metadata')) {
+				_.each(postData.metadata, function(index, name) {
+					name !== 'id' && delete postData[name];
+				});
+				delete postData.metadata;
+			}
 
 			if (options.hasOwnProperty('envelopeKeys')) {
 				var protectedKeys = ['data', 'accept_charges'];
