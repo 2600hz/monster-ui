@@ -766,7 +766,7 @@
 		settings.success = function requestSuccess(responseData, status) {
 			if ('object' == typeof responseData.data && responseData.hasOwnProperty('metadata')) {
 				// Merge object's metadata with the actual object's data.
-				responseData.data = _.merge(responseData.data, responseData.metadata);
+				responseData.data = $.extends(true, {}, responseData.data, responseData.metadata);
 				// Metadata will be used later to remove its k/v from the object before saving it.
 				responseData.data.metadata = responseData.metadata;
 			}
@@ -789,8 +789,11 @@
 
 			// Remove object's metadata (if any) merged in the success step.
 			if (postData.hasOwnProperty('metadata')) {
-				_.each(postData.metadata, function(index, name) {
-					name !== 'id' && delete postData[name];
+				$.each(postData.metadata, function(key) {
+ 					if (key === 'id') {
+						return;
+ 					}
+ 					delete postData[key];
 				});
 				delete postData.metadata;
 			}
