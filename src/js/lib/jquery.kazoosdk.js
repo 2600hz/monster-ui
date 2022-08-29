@@ -764,7 +764,8 @@
 		};
 
 		settings.success = function requestSuccess(responseData, status) {
-			if ('object' == typeof responseData.data && responseData.hasOwnProperty('metadata')) {
+			// If responseData.data is an array, it means it is a "listing" response, and metadata should not be merged.
+			if (!$.isArray(responseData.data) && responseData.hasOwnProperty('metadata')) {
 				// Merge object's metadata with the actual object's data.
 				$.extend(responseData.data, responseData.metadata);
 				// Metadata will be used later to remove its k/v from the object before saving it.
