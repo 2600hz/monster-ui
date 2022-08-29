@@ -146,6 +146,10 @@ define(function(require) {
 				return options.inverse(this);
 			},
 
+			isFeatureAvailable: function(featurePath, options) {
+				return options[monster.util.isFeatureAvailable(featurePath) ? 'fn' : 'inverse'](this);
+			},
+
 			isPrivLevelAdmin: function(pUser, pOptions) {
 				var user = pUser.hasOwnProperty('priv_level') ? pUser : undefined,
 					options = !pOptions ? pUser : pOptions;
