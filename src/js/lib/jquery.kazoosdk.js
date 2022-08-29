@@ -766,7 +766,7 @@
 		settings.success = function requestSuccess(responseData, status) {
 			if ('object' == typeof responseData.data && responseData.hasOwnProperty('metadata')) {
 				// Merge object's metadata with the actual object's data.
-				responseData.data = $.extends(true, {}, responseData.data, responseData.metadata);
+				$.extend(responseData.data, responseData.metadata);
 				// Metadata will be used later to remove its k/v from the object before saving it.
 				responseData.data.metadata = responseData.metadata;
 			}
