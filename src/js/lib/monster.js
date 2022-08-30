@@ -56,6 +56,144 @@ define(function(require) {
 		'whitelabel.useDropdownApploader': [_.isBoolean, false]
 	};
 
+	var featureSets = {
+		config: {
+			smartpbx: {
+				28: {
+					devices: {
+						manage: false,
+						settings: {
+							name: {
+								edit: false
+							},
+							sip: {
+								manage: false
+							},
+							codecs: {
+								manage: false
+							}
+						}
+					},
+					groups: {
+						manage: false
+					},
+					mainNumber: {
+						mainConferenceNumber: {
+							manage: false
+						},
+						incomingCallHandling: {
+							virtualReceptionist: false
+						}
+					},
+					numbers: {
+						manage: false
+					},
+					users: {
+						add: false,
+						settings: {
+							'delete': false,
+							allowUserPrivLevel: false,
+							fullName: {
+								edit: false
+							},
+							mainExtensionNumber: {
+								manage: false
+							}
+						},
+						devices: {
+							edit: false
+						},
+						phoneNumbers: {
+							edit: false
+						},
+						features: {
+							callerId: {
+								edit: false
+							},
+							callRecording: {
+								edit: false
+							},
+							conferencing: {
+								edit: false
+							},
+							faxing: {
+								i18nLabelPath: 'fax'
+							},
+							findMeFollowMe: {
+								edit: false
+							},
+							vmbox: {
+								edit: false,
+								transcription: false,
+								i18nLabelPath: 'voicemail'
+							}
+						}
+					},
+					vmboxes: {
+						add: false,
+						settings: {
+							voicemailNumber: {
+								manage: false
+							},
+							'delete': false
+						}
+					}
+				}
+			}
+		},
+		entitlements: {
+			'Virtual Receptionist': {
+				smartpbx: {
+					mainNumber: {
+						incomingCallHandling: {
+							virtualReceptionist: true
+						}
+					}
+				}
+			},
+			'Caller-ID Number': {
+				smartpbx: {
+					users: {
+						features: {
+							callerId: {
+								edit: false
+							}
+						}
+					}
+				}
+			},
+			groups: {
+				smartpbx: {
+					groups: {
+						manage: true
+					}
+				}
+			},
+			'Customized Call Recording': {
+				smartpbx: {
+					users: {
+						features: {
+							callRecording: {
+								edit: true
+							}
+						}
+					}
+				}
+			},
+			voicemail_transcription: {
+				smartpbx: {
+					users: {
+						features: {
+							vmbox: {
+								transcription: true
+							}
+						}
+					}
+				}
+			}
+		}
+	};
+
 	var _privateFlags = {
 		lockRetryAttempt: false,
 		retryFunctions: [],
@@ -583,8 +721,39 @@ define(function(require) {
 
 		md5: function(string) {
 			return md5(string);
-		}
+		},
+
+		getFeatureSet: getFeatureSet
 	};
+
+	function getFeatureSet(jwt) {
+		var tokenPayload = monster.util.jwt_decode(jwt);
+		var entitlementsFeatureSet = _
+			.chain(tokenPayload)
+			.get('entitlements', [])
+			.map(
+				_.partial(_.ary(_.get, 2), featureSets.entitlements)
+			)
+			.filter(_.isObject)
+			.reduce(
+				_.ary(_.merge, 2), {}
+			)
+			.value();
+		var configFeatureSet = _
+			.chain(monster.config)
+			.get('whitelabel')
+			.mapValues(function(value, key) {
+				var code = _.get(value, 'feature_set');
+				return _.get(featureSets.config, [key, code]);
+			})
+			.pickBy(_.isObject)
+			.value();
+
+		return _.merge({},
+			configFeatureSet,
+			entitlementsFeatureSet
+		);
+	}
 
 	/**
 	 * @param  {String} id Resource identifier

@@ -24,6 +24,15 @@ define(function(require) {
 			isAuthentified: false,
 
 			/**
+			 * Holds map of feature sets merged from config and entitlements.
+			 * @type {Object}
+			 *
+			 * Set on successful authentication.
+			 *
+			 */
+			featureSet: {},
+
+			/**
 			 * Holds map of capababilities returned on authentication.
 			 * @type {Object}
 			 *
@@ -274,6 +283,8 @@ define(function(require) {
 			self.resellerId = data.data.reseller_id;
 
 			self.appFlags.isAuthentified = true;
+
+			self.appFlags.featureSet = monster.getFeatureSet(data.auth_token);
 
 			self.appFlags.connections[self.appFlags.kazooConnectionName] = {
 				accountId: data.data.account_id,

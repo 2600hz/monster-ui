@@ -39,6 +39,7 @@ define(function(require) {
 		getCurrentUserDefaultApp: getCurrentUserDefaultApp,
 		getDefaultNumbersFormat: getDefaultNumbersFormat,
 		getDefaultRangeDates: getDefaultRangeDates,
+		getFeatureConfig: getFeatureConfig,
 		getFormatPhoneNumber: getFormatPhoneNumber,
 		getModbID: getModbID,
 		getNextExtension: getNextExtension,
@@ -51,6 +52,7 @@ define(function(require) {
 		gregorianToDate: gregorianToDate,
 		guid: guid,
 		isAdmin: isAdmin,
+		isFeatureAvailable: isFeatureAvailable,
 		isJSON: isJSON,
 		isLoggedIn: isLoggedIn,
 		isMasquerading: isMasquerading,
@@ -81,6 +83,14 @@ define(function(require) {
 		unixToDate: unixToDate,
 		updateImagePath: updateImagePath
 	};
+
+	function getFeatureConfig(featurePath, defaultValue) {
+		return _.get(monster.apps.auth.appFlags.featureSet, featurePath, defaultValue);
+	}
+
+	function isFeatureAvailable(featurePath) {
+		return _.get(monster.apps.auth.appFlags.featureSet, featurePath, true);
+	}
 
 	/**
 	 * Returns a randomly generated realm based on the logged in account's whitelabel document.
