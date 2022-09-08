@@ -156,7 +156,7 @@ define(function(require) {
 					users: {
 						features: {
 							callerId: {
-								edit: false
+								edit: true
 							}
 						}
 					}
