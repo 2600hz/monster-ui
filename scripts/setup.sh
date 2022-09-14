@@ -29,7 +29,7 @@ main() {
         --source \
         --limit $MAX_LIMIT \
         --json $REPONAME_PROP \
-        --jq ".[] | select(.$REPONAME_PROP | test("^$REPO_SUFFIX.+")) | .$REPONAME_PROP" \
+        --jq ".[] | select(.$REPONAME_PROP | test(\"^$REPO_SUFFIX.+\")) | .$REPONAME_PROP" \
         >$FILENAME_OF_REPOS
 
     while read -r reponame; do
