@@ -66,6 +66,9 @@ define(function(require) {
 							name: {
 								edit: false
 							},
+							callerId: {
+								editWhenSetOnAccount: false
+							},
 							sip: {
 								manage: false
 							},
@@ -108,7 +111,8 @@ define(function(require) {
 						},
 						features: {
 							callerId: {
-								edit: false
+								edit: false,
+								editWhenSetOnAccount: false
 							},
 							callRecording: {
 								edit: false
