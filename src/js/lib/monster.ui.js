@@ -2124,6 +2124,8 @@ define(function(require) {
 			var self = this,
 				codecsI18n = monster.apps.core.i18n.active().codecs,
 				defaultAudioList = {
+					'AMR-WB': codecsI18n.audio['AMR-WB'],
+					'AMR': codecsI18n.audio.AMR,
 					'CELT@32000h': codecsI18n.audio['CELT@32000h'],
 					'CELT@48000h': codecsI18n.audio['CELT@48000h'],
 					'CELT@64000h': codecsI18n.audio['CELT@64000h'],
