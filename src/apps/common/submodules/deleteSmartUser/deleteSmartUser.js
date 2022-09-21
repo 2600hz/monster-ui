@@ -81,9 +81,13 @@ define(function(require) {
 						}
 					});
 				},
-				callflows: function(callback) {
+				mobileCallflows: function(callback) {
 					self.deleteSmartUserListCallflows({
-						data: queryData,
+						data: _.merge({
+							filters: {
+								filter_type: 'mobile'
+							}
+						}, queryData),
 						success: function(data) {
 							callback(null, data);
 						}
@@ -101,7 +105,8 @@ define(function(require) {
 					});
 				}
 			}, function(error, results) {
-				var listFnDelete = [];
+				var hasMobileCallflows = !_.isEmpty(results.mobileCallflows),
+					listFnDelete = [];
 
 				if (!removeDevices) {
 					_.each(results.devices, function(device) {
@@ -135,12 +140,12 @@ define(function(require) {
 					});
 				}
 
-				_.each(results.callflows, function(callflow) {
-					/*
-					Special case for users with mobile devices:
-					reassign mobile devices to their respective mobile callflow instead of just deleting the callflow
-					 */
-					if (callflow.type === 'mobile') {
+				if (hasMobileCallflows) {
+					_.each(results.mobileCallflows, function(callflow) {
+						/*
+						Special case for users with mobile devices:
+						reassign mobile devices to their respective mobile callflow instead of just deleting the callflow
+						*/
 						listFnDelete.push(function(callback) {
 							self.deleteSmartUserReassignMobileDevice({
 								accountId: accountId,
@@ -150,26 +155,15 @@ define(function(require) {
 								}
 							});
 						});
-					} else {
-						listFnDelete.push(function(callback) {
-							self.deleteSmartUserDeleteCallflow({
-								data: {
-									accountId: accountId,
-									callflowId: callflow.id
-								},
-								success: function() {
-									callback(null, '');
-								}
-							});
-						});
-					}
-				});
+					});
+				}
 
 				monster.parallel(listFnDelete, function(err, resultsDelete) {
 					self.deleteSmartUserDeleteUser({
 						data: _.merge({
 							data: {
 								object_types: [
+									!hasMobileCallflows && 'callflow',
 									removeDevices && 'device',
 									removeConferences && 'conference',
 									'vmbox'
@@ -368,12 +362,6 @@ define(function(require) {
 			var self = this;
 
 			self.deleteSmartUserModifySingleResource('callflow.update', args);
-		},
-
-		deleteSmartUserDeleteCallflow: function(args) {
-			var self = this;
-
-			self.deleteSmartUserModifySingleResource('callflow.delete', args);
 		},
 
 		/* - Conferences */
