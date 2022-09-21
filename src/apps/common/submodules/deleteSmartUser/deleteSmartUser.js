@@ -87,6 +87,9 @@ define(function(require) {
 					});
 				},
 				conferences: function(callback) {
+					if (removeConferences) {
+						return callback(null);
+					}
 					self.deleteSmartUserListConferences({
 						data: queryData,
 						success: function(data) {
@@ -127,16 +130,21 @@ define(function(require) {
 					});
 				}
 
-				listFnDelete.push(function(callback) {
-					self.deleteSmartUserRemoveBulkConferences({
-						accountId: accountId,
-						conferences: results.conferences,
-						forceDelete: removeConferences,
-						success: function() {
-							callback(null, '');
-						}
+				if (!removeConferences) {
+					_.each(results.conferences, function(conference) {
+						listFnDelete.push(function(callback) {
+							self.deleteSmartUserUnassignConference({
+								data: {
+									accountId: accountId,
+									conferenceId: conference.id
+								},
+								success: function(data) {
+									callback(null, '');
+								}
+							});
+						});
 					});
-				});
+				}
 
 				_.each(results.callflows, function(callflow) {
 					/*
@@ -173,6 +181,7 @@ define(function(require) {
 						data: _.merge({
 							data: {
 								object_types: [
+									removeConferences && 'conference',
 									'vmbox'
 								]
 							}
@@ -222,55 +231,6 @@ define(function(require) {
 				}
 
 				args.hasOwnProperty('success') && args.success(updatedDevice);
-			});
-		},
-
-		deleteSmartUserRemoveBulkConferences: function(args) {
-			var self = this,
-				listRequests = [];
-
-			if (args.forceDelete) {
-				_.each(args.conferences, function(conference) {
-					listRequests.push(function(subCallback) {
-						self.deleteSmartUserDeleteConference({
-							data: {
-								accountId: args.accountId,
-								conferenceId: conference.id
-							},
-							success: function(data) {
-								subCallback(null, data);
-							},
-							error: function() {
-								subCallback(true);
-							}
-						});
-					});
-				});
-			} else {
-				_.each(args.conferences, function(conference) {
-					listRequests.push(function(subCallback) {
-						self.deleteSmartUserUnassignConference({
-							data: {
-								accountId: args.accountId,
-								conferenceId: conference.id
-							},
-							success: function(data) {
-								subCallback(null, data);
-							},
-							error: function() {
-								subCallback(true);
-							}
-						});
-					});
-				});
-			}
-
-			monster.parallel(listRequests, function(err, results) {
-				if (err) {
-					args.hasOwnProperty('error') && args.error(err);
-					return;
-				}
-				args.hasOwnProperty('success') && args.success(results);
 			});
 		},
 
@@ -450,12 +410,6 @@ define(function(require) {
 			var self = this;
 
 			self.deleteSmartUserModifySingleResource('conference.update', args);
-		},
-
-		deleteSmartUserDeleteConference: function(args) {
-			var self = this;
-
-			self.deleteSmartUserModifySingleResource('conference.delete', args);
 		},
 
 		/* - Users */
