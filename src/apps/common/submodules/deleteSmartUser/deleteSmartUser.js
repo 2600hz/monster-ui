@@ -71,6 +71,9 @@ define(function(require) {
 
 			monster.parallel({
 				devices: function(callback) {
+					if (removeDevices) {
+						return callback(null);
+					}
 					self.deleteSmartUserListDevices({
 						data: queryData,
 						success: function(data) {
@@ -100,21 +103,7 @@ define(function(require) {
 			}, function(error, results) {
 				var listFnDelete = [];
 
-				if (removeDevices) {
-					_.each(results.devices, function(device) {
-						listFnDelete.push(function(callback) {
-							self.deleteSmartUserDeleteDevice({
-								data: {
-									accountId: accountId,
-									deviceId: device.id
-								},
-								success: function() {
-									callback(null, '');
-								}
-							});
-						});
-					});
-				} else {
+				if (!removeDevices) {
 					_.each(results.devices, function(device) {
 						listFnDelete.push(function(callback) {
 							self.deleteSmartUserUnassignDevice({
@@ -181,6 +170,7 @@ define(function(require) {
 						data: _.merge({
 							data: {
 								object_types: [
+									removeDevices && 'device',
 									removeConferences && 'conference',
 									'vmbox'
 								]
@@ -358,12 +348,6 @@ define(function(require) {
 			var self = this;
 
 			self.deleteSmartUserModifySingleResource('device.update', args);
-		},
-
-		deleteSmartUserDeleteDevice: function(args) {
-			var self = this;
-
-			self.deleteSmartUserModifySingleResource('device.delete', args);
 		},
 
 		/* - Callflows */
