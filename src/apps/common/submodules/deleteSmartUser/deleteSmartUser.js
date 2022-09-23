@@ -56,55 +56,69 @@ define(function(require) {
 			});
 		},
 
-		deleteSmartUserDeleteUserData: function(args) {
+		deleteSmartUserListUserEntities: function(data, callback) {
 			var self = this,
-				accountId = args.data.accountId,
-				userId = args.data.userId,
-				removeDevices = args.removeDevices,
-				removeConferences = args.removeConferences,
+				accountId = data.acountId,
+				userId = data.userId,
+				shouldListDevices = data.shouldListDevices,
+				shouldListConferences = data.shouldListConferences,
 				queryData = {
 					accountId: accountId,
 					filters: {
 						filter_owner_id: userId
 					}
-				};
-
-			monster.parallel({
-				devices: function(callback) {
-					if (removeDevices) {
-						return callback(null);
-					}
-					self.deleteSmartUserListDevices({
-						data: queryData,
-						success: function(data) {
-							callback(null, data);
-						}
-					});
 				},
-				mobileCallflows: function(callback) {
+				listMobileCallflows = function(next) {
 					self.deleteSmartUserListCallflows({
 						data: _.merge({
 							filters: {
 								filter_type: 'mobile'
 							}
 						}, queryData),
-						success: function(data) {
-							callback(null, data);
-						}
+						success: _.partial(next, null)
 					});
 				},
-				conferences: function(callback) {
-					if (removeConferences) {
-						return callback(null);
+				maybeListDevices = function(next) {
+					if (!shouldListDevices) {
+						return next(null);
+					}
+					self.deleteSmartUserListDevices({
+						data: queryData,
+						success: _.partial(next, null)
+					});
+				},
+				maybeListConferences = function(next) {
+					if (!shouldListConferences) {
+						return next(null);
 					}
 					self.deleteSmartUserListConferences({
 						data: queryData,
-						success: function(data) {
-							callback(null, data);
-						}
+						success: _.partial(next, null)
 					});
-				}
-			}, function(error, results) {
+				};
+
+			monster.parallel({
+				conferences: maybeListConferences,
+				devices: maybeListDevices,
+				mobileCallflows: listMobileCallflows
+			}, callback);
+		},
+
+		deleteSmartUserDeleteUserData: function(args) {
+			var self = this,
+				accountId = args.data.accountId,
+				userId = args.data.userId,
+				listEntities = _.bind(self.deleteSmartUserListUserEntities, self, {
+					accountId: accountId,
+					userId: userId,
+					shouldListDevices: args.removeDevices,
+					shouldListConferences: args.removeConferences
+				}),
+				accountId = args.data.accountId,
+				removeDevices = args.removeDevices,
+				removeConferences = args.removeConferences;
+
+			listEntities(function(error, results) {
 				var hasMobileCallflows = !_.isEmpty(results.mobileCallflows),
 					listFnDelete = [];
 
