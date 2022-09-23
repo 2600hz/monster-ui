@@ -128,11 +128,9 @@ define(function(require) {
 							self.deleteSmartUserUnassignConference({
 								data: {
 									accountId: accountId,
-									conferenceId: conference.id
+									conference: conference
 								},
-								success: function(data) {
-									callback(null, '');
-								}
+								callback: callback
 							});
 						});
 					});
@@ -192,43 +190,22 @@ define(function(require) {
 		},
 
 		deleteSmartUserUnassignConference: function(args) {
-			var self = this;
+			var self = this,
+				callback = args.callback,
+				accountId = args.data.accountId,
+				conference = args.data.conference;
 
-			monster.waterfall([
-				function(callback) {
-					self.deleteSmartUserGetConference({
-						data: args.data,
-						success: function(conference) {
-							callback(null, conference);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
+			self.deleteSmartUserPatchConference({
+				data: {
+					accountId: accountId,
+					conferenceId: conference.id,
+					data: {
+						owner_id: null,
+						name: 'Unassigned ' + conference.name
+					}
 				},
-				function(conference, callback) {
-					conference.name = 'Unassigned ' + conference.name;
-					delete conference.owner_id;
-
-					self.deleteSmartUserUpdateConference({
-						data: _.merge({
-							data: conference
-						}, args.data),
-						success: function(updatedConference) {
-							callback(null, updatedConference);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
-				}
-			], function(err, updatedConference) {
-				if (err) {
-					args.hasOwnProperty('error') && args.error(err);
-					return;
-				}
-
-				args.hasOwnProperty('success') && args.success(updatedConference);
+				success: _.partial(callback, null),
+				error: callback
 			});
 		},
 
@@ -333,22 +310,16 @@ define(function(require) {
 
 		/* - Conferences */
 
-		deleteSmartUserGetConference: function(args) {
-			var self = this;
-
-			self.deleteSmartUserGetResource('conference.get', args);
-		},
-
 		deleteSmartUserListConferences: function(args) {
 			var self = this;
 
 			self.deleteSmartUserListAllResources('conference.list', args);
 		},
 
-		deleteSmartUserUpdateConference: function(args) {
+		deleteSmartUserPatchConference: function(args) {
 			var self = this;
 
-			self.deleteSmartUserModifySingleResource('conference.update', args);
+			self.deleteSmartUserModifySingleResource('conference.patch', args);
 		},
 
 		/* - Users */
