@@ -116,9 +116,7 @@ define(function(require) {
 									accountId: accountId,
 									deviceId: device.id
 								},
-								success: function() {
-									callback(null, '');
-								}
+								callback: callback
 							});
 						});
 					});
@@ -179,42 +177,17 @@ define(function(require) {
 		},
 
 		deleteSmartUserUnassignDevice: function(args) {
-			var self = this;
+			var self = this,
+				callback = args.callback;
 
-			monster.waterfall([
-				function(callback) {
-					self.deleteSmartUserGetDevice({
-						data: args.data,
-						success: function(deviceGet) {
-							callback(null, deviceGet);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
-				},
-				function(deviceGet, callback) {
-					delete deviceGet.owner_id;
-
-					self.deleteSmartUserUpdateDevice({
-						data: _.merge({
-							data: deviceGet
-						}, args.data),
-						success: function(updatedDevice) {
-							callback(null, updatedDevice);
-						},
-						error: function() {
-							callback(true);
-						}
-					});
-				}
-			], function(err, updatedDevice) {
-				if (err) {
-					args.hasOwnProperty('error') && args.error(err);
-					return;
-				}
-
-				args.hasOwnProperty('success') && args.success(updatedDevice);
+			self.deleteSmartUserPatchDevice({
+				data: _.merge({
+					data: {
+						owner_id: null
+					}
+				}, args.data),
+				success: _.partial(callback, null),
+				error: callback
 			});
 		},
 
@@ -326,22 +299,16 @@ define(function(require) {
 
 		/* - Devices */
 
-		deleteSmartUserGetDevice: function(args) {
-			var self = this;
-
-			self.deleteSmartUserGetResource('device.get', args);
-		},
-
 		deleteSmartUserListDevices: function(args) {
 			var self = this;
 
 			self.deleteSmartUserListAllResources('device.list', args);
 		},
 
-		deleteSmartUserUpdateDevice: function(args) {
+		deleteSmartUserPatchDevice: function(args) {
 			var self = this;
 
-			self.deleteSmartUserModifySingleResource('device.update', args);
+			self.deleteSmartUserModifySingleResource('device.patch', args);
 		},
 
 		/* - Callflows */
