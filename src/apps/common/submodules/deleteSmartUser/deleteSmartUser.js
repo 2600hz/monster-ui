@@ -143,7 +143,7 @@ define(function(require) {
 						reassign mobile devices to their respective mobile callflow instead of just deleting the callflow
 						*/
 						listFnDelete.push(function(callback) {
-							self.deleteSmartUserReassignMobileDevice({
+							self.deleteSmartUserUnassignMobileCallflow({
 								accountId: accountId,
 								callflow: callflow,
 								success: function(data) {
@@ -209,27 +209,14 @@ define(function(require) {
 			});
 		},
 
-		deleteSmartUserReassignMobileDevice: function(args) {
+		deleteSmartUserUnassignMobileCallflow: function(args) {
 			var self = this,
+				callback = args.callback,
 				accountId = args.accountId,
-				callflow = args.callflow;
+				callflow = args.callflow,
+				getMobileDevice = function(next) {
+					var mdn = _.head(callflow.numbers);
 
-			monster.parallel({
-				callflow: function(callback) {
-					self.deleteSmartUserGetCallflow({
-						data: {
-							accountId: accountId,
-							callflowId: callflow.id
-						},
-						success: function(callflow) {
-							callback(null, callflow);
-						}
-					});
-				},
-				mobileDevice: function(callback) {
-					var mdn = callflow.numbers[0].slice(2);
-
-					// List mobile devices
 					self.deleteSmartUserListDevices({
 						data: {
 							accountId: accountId,
@@ -237,39 +224,36 @@ define(function(require) {
 								'filter_mobile.mdn': mdn
 							}
 						},
-						success: function(mobileDevices) {
-							callback(null, _.head(mobileDevices));
-						}
+						success: _.flow(
+							_.head,
+							_.partial(next, null)
+						)
 					});
-				}
-			}, function(err, results) {
-				var fullCallflow = results.callflow,
-					mobileDevice = results.mobileDevice;
-
-				delete fullCallflow.owner_id;
-
-				if (mobileDevice) {
-					_.merge(fullCallflow, {
-						flow: {
-							module: 'device',
-							data: {
-								id: mobileDevice.id
-							}
-						}
+				},
+				unassignedMobileCallflow = function(mobileDevice, next) {
+					self.deleteSmartUserPatchCallflow({
+						data: {
+							accountId: accountId,
+							callflowId: callflow.id,
+							data: _.merge({
+								owner_id: null
+							}, _.isObject(mobileDevice) && {
+								flow: {
+									module: 'device',
+									data: _.pick(mobileDevice, [
+										'id'
+									])
+								}
+							})
+						},
+						success: _.partial(next, null)
 					});
-				}
+				};
 
-				self.deleteSmartUserUpdateCallflow({
-					data: {
-						accountId: accountId,
-						callflowId: fullCallflow.id,
-						data: fullCallflow
-					},
-					success: function(data) {
-						args.hasOwnProperty('success') && args.success(data);
-					}
-				});
-			});
+			monster.waterfall([
+				getMobileDevice,
+				unassignedMobileCallflow
+			], callback);
 		},
 
 		/* API resource calls */
@@ -290,22 +274,16 @@ define(function(require) {
 
 		/* - Callflows */
 
-		deleteSmartUserGetCallflow: function(args) {
-			var self = this;
-
-			self.deleteSmartUserGetResource('callflow.get', args);
-		},
-
 		deleteSmartUserListCallflows: function(args) {
 			var self = this;
 
 			self.deleteSmartUserListAllResources('callflow.list', args);
 		},
 
-		deleteSmartUserUpdateCallflow: function(args) {
+		deleteSmartUserPatchCallflow: function(args) {
 			var self = this;
 
-			self.deleteSmartUserModifySingleResource('callflow.update', args);
+			self.deleteSmartUserModifySingleResource('callflow.patch', args);
 		},
 
 		/* - Conferences */
