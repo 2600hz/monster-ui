@@ -37,7 +37,7 @@ define(function(require) {
 					},
 					removeDevices: removeDevices,
 					removeConferences: removeConferences,
-					success: function(data) {
+					callback: function(err, data) {
 						popup.dialog('close').remove();
 
 						args.hasOwnProperty('callback') && args.callback(data);
@@ -104,8 +104,59 @@ define(function(require) {
 			}, callback);
 		},
 
+		deleteSmartUserUnassignEntities: function(data, entities, callback) {
+			var self = this,
+				accountId = data.accountId,
+				shouldUnassignDevices = data.shouldUnassignDevices,
+				shouldUnassignConferences = data.shouldUnassignConferences,
+				unassignDevicesTasks = _.map(entities.devices, function(device) {
+					return function(next) {
+						self.deleteSmartUserUnassignDevice({
+							data: {
+								accountId: accountId,
+								deviceId: device.id
+							},
+							callback: next
+						});
+					};
+				}),
+				unassignConferencesTasks = _.map(entities.conferences, function(conference) {
+					return function(next) {
+						self.deleteSmartUserUnassignConference({
+							data: {
+								accountId: accountId,
+								conference: conference
+							},
+							callback: next
+						});
+					};
+				}),
+				unassignMobileCallflowsTasks = _.map(entities.mobileCallflows, function(callflow) {
+					return function(next) {
+						self.deleteSmartUserUnassignMobileCallflow({
+							accountId: accountId,
+							callflow: callflow,
+							callback: next
+						});
+					};
+				}),
+				hasMobileCallflows = !_.isEmpty(entities.mobileCallflows);
+
+			monster.parallel(_
+				.chain([
+					shouldUnassignDevices && unassignDevicesTasks,
+					shouldUnassignConferences && unassignConferencesTasks,
+					hasMobileCallflows && unassignMobileCallflowsTasks
+				])
+				.flatten()
+				.filter(_.isFunction)
+				.value()
+			, callback);
+		},
+
 		deleteSmartUserDeleteUserData: function(args) {
 			var self = this,
+				callback = args.callback,
 				accountId = args.data.accountId,
 				userId = args.data.userId,
 				listEntities = _.bind(self.deleteSmartUserListUserEntities, self, {
@@ -114,78 +165,38 @@ define(function(require) {
 					shouldListDevices: args.removeDevices,
 					shouldListConferences: args.removeConferences
 				}),
-				accountId = args.data.accountId,
-				removeDevices = args.removeDevices,
-				removeConferences = args.removeConferences;
-
-			listEntities(function(error, results) {
-				var hasMobileCallflows = !_.isEmpty(results.mobileCallflows),
-					listFnDelete = [];
-
-				if (!removeDevices) {
-					_.each(results.devices, function(device) {
-						listFnDelete.push(function(callback) {
-							self.deleteSmartUserUnassignDevice({
-								data: {
-									accountId: accountId,
-									deviceId: device.id
-								},
-								callback: callback
-							});
-						});
-					});
-				}
-
-				if (!removeConferences) {
-					_.each(results.conferences, function(conference) {
-						listFnDelete.push(function(callback) {
-							self.deleteSmartUserUnassignConference({
-								data: {
-									accountId: accountId,
-									conference: conference
-								},
-								callback: callback
-							});
-						});
-					});
-				}
-
-				if (hasMobileCallflows) {
-					_.each(results.mobileCallflows, function(callflow) {
-						/*
-						Special case for users with mobile devices:
-						reassign mobile devices to their respective mobile callflow instead of just deleting the callflow
-						*/
-						listFnDelete.push(function(callback) {
-							self.deleteSmartUserUnassignMobileCallflow({
-								accountId: accountId,
-								callflow: callflow,
-								success: function(data) {
-									callback(null, data);
-								}
-							});
-						});
-					});
-				}
-
-				monster.parallel(listFnDelete, function(err, resultsDelete) {
+				unassignEntities = _.bind(self.deleteSmartUserUnassignEntities, self, {
+					accountId: accountId,
+					shouldUnassignDevices: !args.removeDevices,
+					shouldUnassignConferences: !args.removeConferences
+				}),
+				processEntities = function(next) {
+					monster.waterfall([
+						listEntities,
+						unassignEntities
+					], next);
+				},
+				deleteUser = function(next) {
 					self.deleteSmartUserDeleteUser({
-						data: _.merge({
+						data: {
+							accountId: accountId,
+							userId: userId,
 							data: {
 								object_types: [
-									!hasMobileCallflows && 'callflow',
-									removeDevices && 'device',
-									removeConferences && 'conference',
+									'callflow',
+									'conference',
+									'device',
 									'vmbox'
 								]
 							}
-						}, args.data),
-						success: function(data) {
-							args.hasOwnProperty('success') && args.success(data);
 						}
 					});
-				});
-			});
+				};
+
+			monster.series([
+				processEntities,
+				deleteUser
+			], callback);
 		},
 
 		deleteSmartUserUnassignDevice: function(args) {
