@@ -617,12 +617,7 @@
 							ids = $.map(methodInfo.url.match(/{([^}]+)}/g) || [], function(v) { return v.replace(/{|}/g, ''); });
 
 						if ('filters' in methodSettings) {
-							$.each(methodSettings.filters, function(filterKey, filterValue) {
-								var valueArray = [].concat(filterValue);
-								$.each(valueArray, function(key, value) {
-									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + encodeURIComponent(value);
-								});
-							});
+							requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + parametersToQueryString(methodSettings.filters);
 						}
 
 						if (methodInfo.hasOwnProperty('type')) { requestSettings.type = methodInfo.type; }
@@ -666,6 +661,17 @@
 			throw new Error('You must provide a valid apiRoot.');
 		}
 	};
+
+	function parametersToQueryString(params) {
+		var queryString = '';
+		$.each(params, function(filterKey, filterValue) {
+			var valueArray = [].concat(filterValue);
+			$.each(valueArray, function(key, value) {
+				queryString += (queryString ? '' : '&') + filterKey + '=' + encodeURIComponent(value);
+			});
+		});
+		return queryString;
+	}
 
 	function authFunction(settings, defaultSettings, url) {
 		var apiRoot = settings.apiRoot || defaultSettings.apiRoot;
