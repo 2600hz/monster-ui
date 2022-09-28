@@ -2124,6 +2124,8 @@ define(function(require) {
 			var self = this,
 				codecsI18n = monster.apps.core.i18n.active().codecs,
 				defaultAudioList = {
+					'AMR-WB': codecsI18n.audio['AMR-WB'],
+					'AMR': codecsI18n.audio.AMR,
 					'CELT@32000h': codecsI18n.audio['CELT@32000h'],
 					'CELT@48000h': codecsI18n.audio['CELT@48000h'],
 					'CELT@64000h': codecsI18n.audio['CELT@64000h'],
@@ -3326,22 +3328,22 @@ define(function(require) {
 			}
 		},
 
-		clipboard: function(pTarget, value) {
+		clipboard: function(pTarget, value, successMessage) {
 			// Have to do this so it works...
 			$.ui.dialog.prototype._focusTabbable = $.noop;
 
 			var target = pTarget[0];
 
 			var cb = new Clipboard(target, {
-				text: function() {
-					return typeof value === 'function' ? value() : value;
+				text: function(trigger) {
+					return typeof value === 'function' ? value(trigger) : value;
 				}
 			});
 
 			cb.on('success', function() {
 				toast({
 					type: 'success',
-					message: monster.apps.core.i18n.active().clipboard.successCopy
+					message: successMessage || monster.apps.core.i18n.active().clipboard.successCopy
 				});
 			});
 		},
