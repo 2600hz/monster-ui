@@ -663,14 +663,21 @@
 	};
 
 	function parametersToQueryString(params) {
-		var queryString = '';
-		$.each(params, function(filterKey, filterValue) {
-			var valueArray = [].concat(filterValue);
-			$.each(valueArray, function(key, value) {
-				queryString += (queryString ? '' : '&') + filterKey + '=' + encodeURIComponent(value);
-			});
-		});
-		return queryString;
+		var keyPrefixesSupportingJSONArrayValues = /(?:^filter_(?:any|array_intersect_(?:any|none|all)|none)_.+)|^fields$/;
+		return Object
+			.keys(params)
+			.map(function(key) {
+				var values = [].concat(params[key]);
+				var formattedValues = keyPrefixesSupportingJSONArrayValues.test(key) ? [
+					JSON.stringify(values)
+				] : values;
+				return formattedValues
+					.map(function(value) {
+						return [key, encodeURIComponent(value)].join('=');
+					})
+					.join('&');
+			})
+			.join('&');
 	}
 
 	function authFunction(settings, defaultSettings, url) {
