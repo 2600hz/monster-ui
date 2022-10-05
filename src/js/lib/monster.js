@@ -717,13 +717,27 @@ define(function(require) {
 	 */
 	function getCookiesManager() {
 		return {
-			set: Cookies.set,
+			set: function set(key, value, attributes) {
+				var result;
+				try {
+					result = JSON.stringify(value);
+				} catch (e) {
+					return;
+				}
+				Cookies.set(key, result, attributes);
+			},
 			get: _.flow(
 				Cookies.get,
 				_.partial(_.defaultTo, _, null)
 			),
 			getJson: function getJson(key) {
-				return this.has(key) ? Cookies.getJSON(key) : null;
+				if (!this.has(key)) {
+					return null;
+				}
+				var value = Cookies.get(key);
+				try {
+					return JSON.parse(value);
+				} catch (e) {}
 			},
 			remove: Cookies.remove,
 			has: _.flow(

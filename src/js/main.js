@@ -9,7 +9,7 @@ require.config({
 		'chosen': 'js/vendor/jquery.chosen.min',
 		'clipboard': 'js/vendor/clipboard.min',
 		'config': 'js/config',
-		'cookies': 'js/vendor/js.cookie',
+		'cookies': 'js/vendor/js.cookie.min',
 		'crossroads': 'js/vendor/crossroads.min',
 		'date-holidays': 'js/vendor/date-holidays.min',
 		'ddslick': 'js/vendor/jquery.ddslick.min',
