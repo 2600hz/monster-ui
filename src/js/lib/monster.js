@@ -387,27 +387,7 @@ define(function(require) {
 			error: []
 		},
 
-		cookies: {
-			set: function set(key, value, options) {
-				Cookies.set(key, value, options);
-			},
-
-			get: function get(key) {
-				return this.has(key) ? Cookies.get(key) : null;
-			},
-
-			getJson: function getJson(key) {
-				return this.has(key) ? Cookies.getJSON(key) : null;
-			},
-
-			remove: function remove(key) {
-				Cookies.remove(key);
-			},
-
-			has: function has(key) {
-				return Cookies.get(key) === undefined ? false : true;
-			}
-		},
+		cookies: getCookiesManager(),
 
 		css: function(app, href) {
 			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(app, href) }).appendTo('head');
@@ -729,6 +709,31 @@ define(function(require) {
 
 		getFeatureSet: getFeatureSet
 	};
+
+	/**
+	 * Returns wrapper over cookie management library.
+	 * @private
+	 * @returns {Object} Cookies manager module.
+	 */
+	function getCookiesManager() {
+		return {
+			set: function set(key, value, options) {
+				Cookies.set(key, value, options);
+			},
+			get: function get(key) {
+				return this.has(key) ? Cookies.get(key) : null;
+			},
+			getJson: function getJson(key) {
+				return this.has(key) ? Cookies.getJSON(key) : null;
+			},
+			remove: function remove(key) {
+				Cookies.remove(key);
+			},
+			has: function has(key) {
+				return Cookies.get(key) === undefined ? false : true;
+			}
+		};
+	}
 
 	function getFeatureSet(jwt) {
 		var tokenPayload = monster.util.jwt_decode(jwt);
