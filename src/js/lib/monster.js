@@ -716,6 +716,11 @@ define(function(require) {
 	 * @returns {Object} Cookies manager module.
 	 */
 	function getCookiesManager() {
+		var crossSiteAttributes = {
+			samesite: 'none',
+			secure: true
+		};
+
 		return {
 			set: function set(key, value, attributes) {
 				var result;
@@ -724,7 +729,7 @@ define(function(require) {
 				} catch (e) {
 					return;
 				}
-				Cookies.set(key, result, attributes);
+				Cookies.set(key, result, _.merge({}, attributes, crossSiteAttributes));
 			},
 			get: _.flow(
 				Cookies.get,
