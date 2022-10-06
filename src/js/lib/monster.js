@@ -717,21 +717,19 @@ define(function(require) {
 	 */
 	function getCookiesManager() {
 		return {
-			set: function set(key, value, options) {
-				Cookies.set(key, value, options);
-			},
-			get: function get(key) {
-				return this.has(key) ? Cookies.get(key) : null;
-			},
+			set: Cookies.set,
+			get: _.flow(
+				Cookies.get,
+				_.partial(_.defaultTo, _, null)
+			),
 			getJson: function getJson(key) {
 				return this.has(key) ? Cookies.getJSON(key) : null;
 			},
-			remove: function remove(key) {
-				Cookies.remove(key);
-			},
-			has: function has(key) {
-				return Cookies.get(key) === undefined ? false : true;
-			}
+			remove: Cookies.remove,
+			has: _.flow(
+				Cookies.get,
+				_.negate(_.isUndefined)
+			)
 		};
 	}
 
