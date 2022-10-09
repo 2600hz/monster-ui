@@ -29,6 +29,7 @@ define(function(require) {
 	var defaultConfig = {
 		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
 		currencyCode: [isCurrencyCode, defaultCurrencyCode],
+		allowCrossSiteUsage: [_.isBoolean, false],
 		'developerFlags.showAllCallflows': [_.isBoolean, false],
 		'developerFlags.showJsErrors': [_.isBoolean, false],
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
@@ -716,9 +717,17 @@ define(function(require) {
 	 * @returns {Object} Cookies manager module.
 	 */
 	function getCookiesManager() {
-		var crossSiteAttributes = {
-			samesite: 'none',
-			secure: true
+		var mergeAttributes = function(attributes) {
+			var allowCrossSiteUsage = monster.config.allowCrossSiteUsage;
+			var crossSiteAttributes = {
+				samesite: 'none',
+				secure: true
+			};
+			return _.merge(
+				{},
+				attributes,
+				allowCrossSiteUsage && crossSiteAttributes
+			);
 		};
 
 		return {
@@ -729,7 +738,7 @@ define(function(require) {
 				} catch (e) {
 					return;
 				}
-				Cookies.set(key, result, _.merge({}, attributes, crossSiteAttributes));
+				Cookies.set(key, result, mergeAttributes(attributes));
 			},
 			get: _.flow(
 				Cookies.get,
