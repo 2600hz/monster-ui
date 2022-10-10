@@ -617,12 +617,7 @@
 							ids = $.map(methodInfo.url.match(/{([^}]+)}/g) || [], function(v) { return v.replace(/{|}/g, ''); });
 
 						if ('filters' in methodSettings) {
-							$.each(methodSettings.filters, function(filterKey, filterValue) {
-								var valueArray = [].concat(filterValue);
-								$.each(valueArray, function(key, value) {
-									requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + filterKey + '=' + encodeURIComponent(value);
-								});
-							});
+							requestSettings.url += (requestSettings.url.indexOf('?') > 0 ? '&' : '?') + parametersToQueryString(methodSettings.filters);
 						}
 
 						if (methodInfo.hasOwnProperty('type')) { requestSettings.type = methodInfo.type; }
@@ -666,6 +661,24 @@
 			throw new Error('You must provide a valid apiRoot.');
 		}
 	};
+
+	function parametersToQueryString(params) {
+		var keyPrefixesSupportingJSONArrayValues = /(?:^filter_(?:any|array_intersect_(?:any|none|all)|none)_.+)|^fields$/;
+		return Object
+			.keys(params)
+			.map(function(key) {
+				var values = [].concat(params[key]);
+				var formattedValues = keyPrefixesSupportingJSONArrayValues.test(key) ? [
+					JSON.stringify(values)
+				] : values;
+				return formattedValues
+					.map(function(value) {
+						return [key, encodeURIComponent(value)].join('=');
+					})
+					.join('&');
+			})
+			.join('&');
+	}
 
 	function authFunction(settings, defaultSettings, url) {
 		var apiRoot = settings.apiRoot || defaultSettings.apiRoot;
