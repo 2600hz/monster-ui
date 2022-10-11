@@ -17,6 +17,3 @@ tmp/
 
 # Dependency directory
 node_modules/
-
-# Configuration
-src/js/config.js
