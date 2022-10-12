@@ -101,6 +101,9 @@ define(function(require) {
 							},
 							mainExtensionNumber: {
 								manage: false
+							},
+							credentials: {
+								edit: false
 							}
 						},
 						devices: {
