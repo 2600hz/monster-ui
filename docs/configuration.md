@@ -42,6 +42,7 @@ Key | Description | Type | Default | Required
 `resellerId` | The resellerId key is the accountId of your master account, and is needed for some reseller features. For example it won't prompt for a credit card the sub-accounts that have a different resellerId than this resellerId | `String` | | `false`
 `whitelabel` | Contains all the flags that are whitelabel-able via the Branding app. Setting them in the config file will set the defaults if you don't use any whitelabel. If the domain used is defined in the whitelabel database, we'll override the following settings by what is set in the whitelabel document. | `Object`([#whitelabel](#whitelabel)) | | `true`
 `allowedExtraDeviceTypes` | Contains types of additional devices corresponding to integrations. | `Array` | | `false`
+`allowCrossSiteUsage` | Whether Monster UI supports being embedded into a third-party context (e.g. iframe with different domain). | `Boolean` | `false` | `false`
 
 
 ### `api`
