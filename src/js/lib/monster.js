@@ -107,6 +107,9 @@ define(function(require) {
 								edit: false
 							}
 						},
+						timezone: {
+							edit: false
+						},
 						devices: {
 							edit: false
 						},
