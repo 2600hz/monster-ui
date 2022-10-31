@@ -105,6 +105,9 @@ define(function(require) {
 							},
 							credentials: {
 								edit: false
+							},
+							utfExtensions: {
+								show: false
 							}
 						},
 						timezone: {
