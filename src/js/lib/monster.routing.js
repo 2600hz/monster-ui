@@ -120,8 +120,11 @@ define(function(require) {
 				var availableApps = monster.util.listAppStoreMetadata('user'),
 					query = monster.util.parseQueryString(queryString);
 
-				// try loading the requested app
-				if (isAppLoadable(appName, availableApps)) {
+				var appLoaderRoutingByPass = monster.config.byPassAppLoader;
+
+				if (appLoaderRoutingByPass === true) {
+					loadApp(appName, query);
+				} else if (isAppLoadable(appName, availableApps)) {
 					loadApp(appName, query, availableApps);
 				} else {
 					handleInvalidAppLoad(availableApps);
