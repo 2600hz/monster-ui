@@ -54,7 +54,8 @@ define(function(require) {
 		'whitelabel.countryCode': [isCountryCode, defaultCountryCode],
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
 		'whitelabel.showPAssertedIdentity': [_.isBoolean, false],
-		'whitelabel.useDropdownApploader': [_.isBoolean, false]
+		'whitelabel.useDropdownApploader': [_.isBoolean, false],
+		byPassAppLoader: [_.isBoolean, false]
 	};
 
 	var featureSets = {
