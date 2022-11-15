@@ -118,11 +118,10 @@ define(function(require) {
 				}
 
 				var availableApps = monster.util.listAppStoreMetadata('user'),
-					query = monster.util.parseQueryString(queryString);
+					query = monster.util.parseQueryString(queryString),
+					bypassAppStorePermissions = monster.config.bypassAppStorePermissions;
 
-				var appLoaderRoutingByPass = monster.config.byPassAppLoader;
-
-				if (appLoaderRoutingByPass === true) {
+				if (bypassAppStorePermissions) {
 					loadApp(appName, query);
 				} else if (isAppLoadable(appName, availableApps)) {
 					loadApp(appName, query, availableApps);
