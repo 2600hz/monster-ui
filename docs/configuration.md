@@ -43,8 +43,7 @@ Key | Description | Type | Default | Required
 `whitelabel` | Contains all the flags that are whitelabel-able via the Branding app. Setting them in the config file will set the defaults if you don't use any whitelabel. If the domain used is defined in the whitelabel database, we'll override the following settings by what is set in the whitelabel document. | `Object`([#whitelabel](#whitelabel)) | | `true`
 `allowedExtraDeviceTypes` | Contains types of additional devices corresponding to integrations. | `Array` | | `false`
 `allowCrossSiteUsage` | Whether Monster UI supports being embedded into a third-party context (e.g. iframe with different domain). | `Boolean` | `false` | `false`
-`byPassAppLoader` | Whether or not to use default appLoader loading process which includes a permission check to ensure authorized access only.  | `Boolean` | `false` | `false`
-
+`bypassAppStorePermissions` | Whether app store access restrictions should be bypassed when loading an app. When set to `true`, end-users are allowed to access any app installed on the cluster where Monster UI is running.  | `Boolean` | `false` | `false`
 ### `api`
 
 Key | Description | Type | Default | Required
