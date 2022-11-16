@@ -988,8 +988,7 @@ define(function(require) {
 		buyNumbersFormatCountryListElement: function(k, v) {
 			return {
 				text: v.name,
-				value: k,
-				imageSrc: 'http://192.168.1.182:8888/number_manager/img/flags/' + k + '.png'
+				value: k
 			};
 		},
 
