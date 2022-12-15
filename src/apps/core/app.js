@@ -88,12 +88,41 @@ define(function(require) {
 			self.displayLogo(mainTemplate);
 			self.displayFavicon();
 			self.loadSVG();
+			self.bindCrossSiteMessagingHandler();
 
 			container.append(mainTemplate);
 
 			monster.waterfall([
 				_.bind(self.loadIncludes, self)
 			], _.bind(self.loadAuth, self));
+		},
+
+		bindCrossSiteMessagingHandler: function() {
+			const crossSiteMessaging = JSON.parse(JSON.stringify(monster.config.crossSiteMessaging));
+
+			if (crossSiteMessaging === undefined) {
+				return;
+			}
+			const { origin, topics } = crossSiteMessaging;
+
+			window.addEventListener('message', handler);
+
+			function handler(event) {
+				if (event.origin !== origin) {
+					return;
+				}
+				const topic = event.data;
+
+				if (!topics.includes(topic)) {
+					return;
+				}
+
+				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging(topic)) {
+					return;
+				}
+
+				monster.pub(topic);
+			}
 		},
 
 		loadSVG: function() {
