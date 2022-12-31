@@ -238,6 +238,9 @@ define(function(require) {
 		 * @type {Handshakes}
 		 */
 		this.handshakes = new Handshakes();
+
+		this.MAX_RECONNECT_DELAY_IN_MILLISECONDS = 60 * 1000;
+		this.INITIAL_RECONNECT_TIMER_IN_MILLISECONDS = 125;
 	}
 	WebSocketClient.prototype = {
 		/**
@@ -272,9 +275,9 @@ define(function(require) {
 		 * Schedules a new connection attempt after a delay.
 		 */
 		reconnect: function reconnect() {
-			var MAX_TIMER = 60 * 1000;
+			var MAX_TIMER = this.MAX_RECONNECT_DELAY_IN_MILLISECONDS;
 			var MULTIPLIER = 2;
-			var timer = this.reconnectTimer || 125;
+			var timer = this.reconnectTimer || this.INITIAL_RECONNECT_TIMER_IN_MILLISECONDS;
 
 			this.reconnectTimer = Math.min(
 				timer * MULTIPLIER,
