@@ -243,8 +243,8 @@ define(function(require) {
 		 */
 		this.handshakes = new Handshakes();
 
-		this.MAX_RECONNECT_DELAY_IN_MILLISECONDS = 60 * 1000;
-		this.RECONNECT_BACKOFF_IN_MILLISECONDS = 125;
+		this.MAX_RECONNECT_DELAY_IN_MILLISECONDS = 10 * 1000;
+		this.RECONNECT_BACKOFF_IN_MILLISECONDS = 250;
 	}
 	WebSocketClient.prototype = {
 		/**
