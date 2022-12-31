@@ -6,6 +6,10 @@ define(function(require) {
 	var _ = require('lodash');
 	var monster = require('monster');
 
+	function getRandomInclusive(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	}
+
 	function Handshakes() {
 		this.entries = {};
 	}
@@ -210,10 +214,10 @@ define(function(require) {
 		this.reconnectTimeout = null;
 
 		/**
-		 * Holds the amount of time before next reconnection attempt.
+		 * Count of reconnect attempts elapsed during the current reconnect cycle.
 		 * @type {number}
 		 */
-		this.reconnectTimer = null;
+		this.reconnectAttempts = 0;
 
 		/**
 		 * Whether the connection should be closed without reconnect attempt.
@@ -240,7 +244,7 @@ define(function(require) {
 		this.handshakes = new Handshakes();
 
 		this.MAX_RECONNECT_DELAY_IN_MILLISECONDS = 60 * 1000;
-		this.INITIAL_RECONNECT_TIMER_IN_MILLISECONDS = 125;
+		this.RECONNECT_BACKOFF_IN_MILLISECONDS = 125;
 	}
 	WebSocketClient.prototype = {
 		/**
@@ -275,20 +279,20 @@ define(function(require) {
 		 * Schedules a new connection attempt after a delay.
 		 */
 		reconnect: function reconnect() {
-			var MAX_TIMER = this.MAX_RECONNECT_DELAY_IN_MILLISECONDS;
-			var MULTIPLIER = 2;
-			var timer = this.reconnectTimer || this.INITIAL_RECONNECT_TIMER_IN_MILLISECONDS;
+			var cap = this.MAX_RECONNECT_DELAY_IN_MILLISECONDS;
+			var base = this.RECONNECT_BACKOFF_IN_MILLISECONDS;
+			var attempts = this.reconnectAttempts;
+			var multiplier = Math.pow(2, attempts);
+			var temp = Math.min(cap, base * multiplier);
+			var delay = getRandomInclusive(0, temp);
 
-			this.reconnectTimer = Math.min(
-				timer * MULTIPLIER,
-				MAX_TIMER
-			);
+			this.reconnectAttempts += 1;
 			this.reconnectTimeout = setTimeout(
 				this.connect.bind(this),
-				this.reconnectTimer
+				delay
 			);
 
-			this.logger.log('reconnection scheduled in ' + this.reconnectTimer / 1000 + 's');
+			this.logger.log('reconnection attempt # ' + this.reconnectAttempts + ', scheduled in ' + delay / 1000 + 's');
 		},
 
 		/**
@@ -300,7 +304,7 @@ define(function(require) {
 			}
 			clearTimeout(this.reconnectTimeout);
 			this.reconnectTimeout = null;
-			this.reconnectTimer = null;
+			this.reconnectAttempts = 0;
 
 			this.logger.log('reconnect cleared');
 		},
