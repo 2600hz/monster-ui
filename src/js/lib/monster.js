@@ -157,6 +157,16 @@ define(function(require) {
 						eventRouting: true
 					}
 				}
+			},
+			callRecording: {
+				28: {
+					configuration: {
+						manage: true,
+						devices: {
+							manage: false
+						}
+					}
+				}
 			}
 		},
 		entitlements: {
