@@ -153,6 +153,9 @@ define(function(require) {
 							'delete': false
 						}
 					},
+					callRecording: {
+						showStorageSettings: false
+					},
 					other: {
 						eventRouting: true
 					}
