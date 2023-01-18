@@ -60,7 +60,8 @@ define(function(require) {
 					'name',
 					'full'
 				]
-			}
+			},
+			disableShowfirstUseWalkthrough: monster.config.whitelabel.disableShowfirstUseWalkthrough
 		},
 
 		mainContainer: '#myaccount',
@@ -270,7 +271,7 @@ define(function(require) {
 				if (currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
 					monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
 				// Only direct them to my account walkthrough if it's not a trial account
-				} else if (self.hasToShowWalkthrough()) {
+				} else if (self.hasToShowWalkthrough() && !self.appFlags.disableShowfirstUseWalkthrough) {
 					self.showWalkthrough(template, function() {
 						self.updateWalkthroughFlagUser();
 					});
@@ -409,7 +410,7 @@ define(function(require) {
 						if (mainContainer.hasClass('myaccount-open')) {
 							self.hide();
 						} else {
-							if (self.hasToShowWalkthrough()) {
+							if (self.hasToShowWalkthrough() && !self.appFlags.disableShowfirstUseWalkthrough) {
 								self.showWalkthrough(mainContainer, function() {
 									self.updateWalkthroughFlagUser();
 								});
