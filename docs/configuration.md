@@ -122,6 +122,7 @@ Key | Description | Type | Default | Required
 `showPAssertedIdentity` | Whether or not to render the P-Asserted-Identity section under Callflows app > Account Settings > Caller-ID. | `Boolean` | `false` | `false`
 `social` | List of social network to expose on the login page. | `Array` | | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
+`disableShowfirstUseWalkthrough` | If set to true, the new user walkthrough will not be displayed. False by default. | `Boolean` | `false` | `false`
 
 #### `acceptCharges`
 

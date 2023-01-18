@@ -55,7 +55,8 @@ define(function(require) {
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
 		'whitelabel.showPAssertedIdentity': [_.isBoolean, false],
 		'whitelabel.useDropdownApploader': [_.isBoolean, false],
-		bypassAppStorePermissions: [_.isBoolean, false]
+		bypassAppStorePermissions: [_.isBoolean, false],
+		'whitelabel.disableShowfirstUseWalkthrough': [_.isBoolean, false]
 	};
 
 	var featureSets = {
