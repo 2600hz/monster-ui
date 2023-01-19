@@ -92,15 +92,6 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## Authors
-
-[2600Hz employees](https://github.com/orgs/2600hz/people) actively working on this project:
-
-* [**Jean-Roch Maitre**](https://github.com/JRMaitre)
-* [**Joris Tirado**](https://github.com/azefiel)
-
-See also the list of [contributors](https://github.com/2600hz/monster-ui/graphs/contributors) who participate in this project.
-
 ## License
 
 This project is licensed under the Mozilla Public License - see the [LICENSE](LICENSE) file for details.
