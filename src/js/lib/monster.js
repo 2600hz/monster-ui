@@ -162,6 +162,12 @@ define(function(require) {
 				28: {
 					storageSettings: {
 						manage: true
+					},
+					configuration: {
+						manage: true,
+						devices: {
+							manage: false
+						}
 					}
 				}
 			}
