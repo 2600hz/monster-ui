@@ -160,6 +160,9 @@ define(function(require) {
 			},
 			callRecording: {
 				28: {
+					storageSettings: {
+						manage: true
+					},
 					configuration: {
 						manage: true,
 						devices: {
