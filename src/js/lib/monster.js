@@ -1132,6 +1132,6 @@ define(function(require) {
 	// See example in Cluster Manager
 	window.monster = monster;
 	window.Handlebars = handlebars;
-
+	//test;
 	return monster;
 });
