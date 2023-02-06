@@ -56,7 +56,7 @@ define(function(require) {
 		'whitelabel.showPAssertedIdentity': [_.isBoolean, false],
 		'whitelabel.useDropdownApploader': [_.isBoolean, false],
 		bypassAppStorePermissions: [_.isBoolean, false],
-		'whitelabel.disableShowfirstUseWalkthrough': [_.isBoolean, false]
+		'whitelabel.disableFirstUseWalkthrough': [_.isBoolean, false]
 	};
 
 	var featureSets = {
