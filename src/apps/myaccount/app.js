@@ -271,7 +271,7 @@ define(function(require) {
 				if (currentAccount.hasOwnProperty('trial_time_left') && monster.config.api.hasOwnProperty('screwdriver')) {
 					monster.pub('auth.showTrialInfo', currentAccount.trial_time_left);
 				// Only direct them to my account walkthrough if it's not a trial account
-				} else if (self.hasToShowWalkthrough() && !self.appFlags.disableFirstUseWalkthrough) {
+				} else if (self.hasToShowWalkthrough()) {
 					self.showWalkthrough(template, function() {
 						self.updateWalkthroughFlagUser();
 					});
@@ -410,7 +410,7 @@ define(function(require) {
 						if (mainContainer.hasClass('myaccount-open')) {
 							self.hide();
 						} else {
-							if (self.hasToShowWalkthrough() && !self.appFlags.disableFirstUseWalkthrough) {
+							if (self.hasToShowWalkthrough()) {
 								self.showWalkthrough(mainContainer, function() {
 									self.updateWalkthroughFlagUser();
 								});
@@ -585,7 +585,8 @@ define(function(require) {
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough
 		hasToShowWalkthrough: function(callback) {
 			var self = this,
-				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
+				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false
+					&& self.appFlags.disableFirstUseWalkthrough !== true;
 
 			if (typeof callback === 'function') {
 				callback(response);
