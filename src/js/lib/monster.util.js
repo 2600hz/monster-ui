@@ -17,6 +17,7 @@ define(function(require) {
 		dataFlags: getDataFlagsManager(),
 		dateToBeginningOfGregorianDay: dateToBeginningOfGregorianDay,
 		dateToEndOfGregorianDay: dateToEndOfGregorianDay,
+		validateEndOrBeginingOfGregorianDay: validateEndOrBeginingOfGregorianDay,
 		dateToGregorian: dateToGregorian,
 		dateToUnix: dateToUnix,
 		findCallflowNode: findCallflowNode,
@@ -240,6 +241,21 @@ define(function(require) {
 		return a > b ? 1
 			: a < b ? -1
 			: 0;
+	}
+
+	/**
+	 * @param {Date} date Date to convert to gregorian.
+	 * @param {String} [timezone] Timezone to set date in.
+	 * @param {String} [timezone] Timezone to validate UTC offset
+	 * @returns {Number} Gregoian timestamp to either begining or end of day.
+	 */
+	function validateEndOrBeginingOfGregorianDay(date, pTimezone, userTz) {
+		var tz = _.isNull(moment.tz.zone(userTz)) ? getCurrentTimeZone() : userTz;
+		if (moment.tz(tz).utcOffset() > 0) {
+			return dateToBeginningOfGregorianDay(date, pTimezone);
+		} else {
+			return dateToEndOfGregorianDay(date, pTimezone);
+		}
 	}
 
 	/**
