@@ -1,6 +1,6 @@
 ---
 name: monster-ui-core
-base_branch: origin/master
+base_branch: 'origin/5.2'
 exposure: private
 metapackage:
   - name: meta-monster-ui
