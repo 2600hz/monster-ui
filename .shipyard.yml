@@ -5,7 +5,7 @@ exposure: private
 metapackage:
   - name: meta-monster-ui
     type: required
-    branch: master
+    branch: '5.2'
     package: monster-ui-core
 base_core:
 template: monster-ui-core.spec.tmpl
