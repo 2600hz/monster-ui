@@ -366,8 +366,9 @@ define(function(require) {
 					self.getAccount(self.accountId, function(data) {
 						// The Kazoo Version is returned by all APIs. Since it won't change, we'll store it in this flag to display it in other places without querying APIs.
 						monster.config.developerFlags.kazooVersion = data.version;
+						var accountData = _.chain(data.metadata).pick(['billing_mode', 'enabled', 'superduper_admin', 'vnm_allow_additions']).merge(data.data).value();
 
-						callback(null, data.data);
+						callback(null, accountData);
 					},
 					function(data) {
 						callback('error account', data);
