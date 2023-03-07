@@ -367,7 +367,7 @@ define(function(require) {
 						// The Kazoo Version is returned by all APIs. Since it won't change, we'll store it in this flag to display it in other places without querying APIs.
 						monster.config.developerFlags.kazooVersion = data.version;
 
-						callback(null, data.data);
+						callback(null, _.merge(data.data, data.metadata));
 					},
 					function(data) {
 						callback('error account', data);
