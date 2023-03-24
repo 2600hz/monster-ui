@@ -162,7 +162,7 @@ define(function(require) {
 			callRecording: {
 				28: {
 					storageSettings: {
-						manage: true
+						manage: false
 					},
 					configuration: {
 						manage: true,
