@@ -80,7 +80,7 @@ define(function(require) {
 
 			monster.series([
 				function shouldRender(next) {
-					monster.pub('myaccount.hasToShowWalkthrough', next);
+					monster.pub('myaccount.hasToShowWalkthrough', _.partial(next, null));
 				}
 			], function(err) {
 				if (err) {
