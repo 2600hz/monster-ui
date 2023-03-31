@@ -200,7 +200,11 @@ define(function(require) {
 
 			self.getAuth(authToken,
 				function(authData) {
-					callback && callback(authData);
+					var tokenData = _.merge({}, authData, {
+						auth_token: authToken
+					});
+
+					callback && callback(tokenData);
 				},
 				function(error) {
 					errorCallback && errorCallback(error);
