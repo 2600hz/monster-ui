@@ -123,7 +123,7 @@ define(function(require) {
 						metadata: data.metadata
 					});
 
-					callback && callback(data.data);
+					callback && callback(conferenceData);
 				}
 			});
 		},
