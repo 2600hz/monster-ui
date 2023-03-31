@@ -119,7 +119,11 @@ define(function(require) {
 					conferenceId: conferenceId
 				},
 				success: function(data) {
-					callback && callback(data.data);
+					var conferenceData = _.merge({}, data.data, {
+						metadata: data.metadata
+					});
+
+					callback && callback(conferenceData);
 				}
 			});
 		},
@@ -257,8 +261,8 @@ define(function(require) {
 			return {
 				backButton: args.backButton,
 				conference: _.merge({
-					duration: data.conference._read_only.duration,
-					isLocked: data.conference._read_only.is_locked,
+					duration: data.conference.metadata.duration,
+					isLocked: data.conference.metadata.is_locked,
 					participants: participants,
 					moderators: moderators
 				}, _.pick(data.conference, [
