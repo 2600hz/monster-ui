@@ -29,6 +29,7 @@ define(function(require) {
 	var defaultConfig = {
 		'api.default': [_.isString, window.location.protocol + '//' + window.location.hostname + ':8000/v2/'],
 		currencyCode: [isCurrencyCode, defaultCurrencyCode],
+		allowCrossSiteUsage: [_.isBoolean, false],
 		'developerFlags.showAllCallflows': [_.isBoolean, false],
 		'developerFlags.showJsErrors': [_.isBoolean, false],
 		'port.loa': [_.isString, 'http://ui.zswitch.net/Editable.LOA.Form.pdf'],
@@ -53,7 +54,9 @@ define(function(require) {
 		'whitelabel.countryCode': [isCountryCode, defaultCountryCode],
 		'whitelabel.showMediaUploadDisclosure': [_.isBoolean, false],
 		'whitelabel.showPAssertedIdentity': [_.isBoolean, false],
-		'whitelabel.useDropdownApploader': [_.isBoolean, false]
+		'whitelabel.useDropdownApploader': [_.isBoolean, false],
+		bypassAppStorePermissions: [_.isBoolean, false],
+		'whitelabel.disableFirstUseWalkthrough': [_.isBoolean, false]
 	};
 
 	var featureSets = {
@@ -101,7 +104,16 @@ define(function(require) {
 							},
 							mainExtensionNumber: {
 								manage: false
+							},
+							credentials: {
+								edit: false
+							},
+							utfExtensions: {
+								show: false
 							}
+						},
+						timezone: {
+							edit: false
 						},
 						devices: {
 							edit: false
@@ -140,6 +152,22 @@ define(function(require) {
 								manage: false
 							},
 							'delete': false
+						}
+					},
+					other: {
+						eventRouting: true
+					}
+				}
+			},
+			callRecording: {
+				28: {
+					storageSettings: {
+						manage: false
+					},
+					configuration: {
+						manage: true,
+						devices: {
+							manage: false
 						}
 					}
 				}
@@ -387,27 +415,7 @@ define(function(require) {
 			error: []
 		},
 
-		cookies: {
-			set: function set(key, value, options) {
-				Cookies.set(key, value, options);
-			},
-
-			get: function get(key) {
-				return this.has(key) ? Cookies.get(key) : null;
-			},
-
-			getJson: function getJson(key) {
-				return this.has(key) ? Cookies.getJSON(key) : null;
-			},
-
-			remove: function remove(key) {
-				Cookies.remove(key);
-			},
-
-			has: function has(key) {
-				return Cookies.get(key) === undefined ? false : true;
-			}
-		},
+		cookies: getCookiesManager(),
 
 		css: function(app, href) {
 			$('<link/>', { rel: 'stylesheet', href: monster.util.cacheUrl(app, href) }).appendTo('head');
@@ -729,6 +737,56 @@ define(function(require) {
 
 		getFeatureSet: getFeatureSet
 	};
+
+	/**
+	 * Returns wrapper over cookie management library.
+	 * @private
+	 * @returns {Object} Cookies manager module.
+	 */
+	function getCookiesManager() {
+		var mergeAttributes = function(attributes) {
+			var allowCrossSiteUsage = monster.config.allowCrossSiteUsage;
+			var crossSiteAttributes = {
+				samesite: 'none',
+				secure: true
+			};
+			return _.merge(
+				{},
+				attributes,
+				allowCrossSiteUsage && crossSiteAttributes
+			);
+		};
+
+		return {
+			set: function set(key, value, attributes) {
+				var result;
+				try {
+					result = JSON.stringify(value);
+				} catch (e) {
+					return;
+				}
+				Cookies.set(key, result, mergeAttributes(attributes));
+			},
+			get: _.flow(
+				Cookies.get,
+				_.partial(_.defaultTo, _, null)
+			),
+			getJson: function getJson(key) {
+				if (!this.has(key)) {
+					return null;
+				}
+				var value = Cookies.get(key);
+				try {
+					return JSON.parse(value);
+				} catch (e) {}
+			},
+			remove: Cookies.remove,
+			has: _.flow(
+				Cookies.get,
+				_.negate(_.isUndefined)
+			)
+		};
+	}
 
 	function getFeatureSet(jwt) {
 		var tokenPayload = monster.util.jwt_decode(jwt);

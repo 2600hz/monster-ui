@@ -42,8 +42,8 @@ Key | Description | Type | Default | Required
 `resellerId` | The resellerId key is the accountId of your master account, and is needed for some reseller features. For example it won't prompt for a credit card the sub-accounts that have a different resellerId than this resellerId | `String` | | `false`
 `whitelabel` | Contains all the flags that are whitelabel-able via the Branding app. Setting them in the config file will set the defaults if you don't use any whitelabel. If the domain used is defined in the whitelabel database, we'll override the following settings by what is set in the whitelabel document. | `Object`([#whitelabel](#whitelabel)) | | `true`
 `allowedExtraDeviceTypes` | Contains types of additional devices corresponding to integrations. | `Array` | | `false`
-
-
+`allowCrossSiteUsage` | Whether Monster UI supports being embedded into a third-party context (e.g. iframe with different domain). | `Boolean` | `false` | `false`
+`bypassAppStorePermissions` | Whether app store access restrictions should be bypassed when loading an app. When set to `true`, end-users are allowed to access any app installed on the cluster where Monster UI is running.  | `Boolean` | `false` | `false`
 ### `api`
 
 Key | Description | Type | Default | Required
@@ -122,6 +122,7 @@ Key | Description | Type | Default | Required
 `showPAssertedIdentity` | Whether or not to render the P-Asserted-Identity section under Callflows app > Account Settings > Caller-ID. | `Boolean` | `false` | `false`
 `social` | List of social network to expose on the login page. | `Array` | | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
+`disableFirstUseWalkthrough` | If set to true, the new user walkthrough will not be displayed. False by default. | `Boolean` | `false` | `false`
 
 #### `acceptCharges`
 

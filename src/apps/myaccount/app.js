@@ -60,7 +60,8 @@ define(function(require) {
 					'name',
 					'full'
 				]
-			}
+			},
+			disableFirstUseWalkthrough: monster.config.whitelabel.disableFirstUseWalkthrough
 		},
 
 		mainContainer: '#myaccount',
@@ -584,7 +585,8 @@ define(function(require) {
 		// if flag "showfirstUseWalkthrough" is not set to false, we need to show the walkthrough
 		hasToShowWalkthrough: function(callback) {
 			var self = this,
-				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false;
+				response = self.appFlags.showMyAccount && self.uiFlags.user.get('showfirstUseWalkthrough') !== false
+					&& self.appFlags.disableFirstUseWalkthrough !== true;
 
 			if (typeof callback === 'function') {
 				callback(response);
