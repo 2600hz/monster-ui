@@ -55,5 +55,5 @@ Now that you have imported the collection and set up your environment variables,
 1. You can now play with the list of endpoints in the collection! If your token expires, you just have to run the `use_auth.create` endpoint again to generate a new one.
 
 
-[collection]: https://gist.githubusercontent.com/azefiel/c9f9901cd6729fba7c94131dd8815ea7/raw/3740ba1f5bbb0f16b10d2443f7da0e5e02be0beb/2600Hz%2520Kazoo%2520APIs%2520(OSS).postman_collection.json
-[environment]: https://gist.githubusercontent.com/azefiel/c9f9901cd6729fba7c94131dd8815ea7/raw/3740ba1f5bbb0f16b10d2443f7da0e5e02be0beb/2600Hz%2520Kazoo%2520APIs%2520(OSS).postman_environment.json
+[collection]: https://github.com/2600hz/docs/postman/2600hz_kazoo_apis_oss.postman_collection.json
+[environment]: https://github.com/2600hz/docs/postman/2600hz_kazoo_apis_oss.postman_environment.json
