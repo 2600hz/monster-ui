@@ -583,7 +583,7 @@
 				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
 				'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
 				'patch': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
-				'remove': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/match_lists/{matchListId}' }
+				'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/match_lists/{matchListId}' }
 			}
 		},
 		authTokens = {};
