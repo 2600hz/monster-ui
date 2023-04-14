@@ -1,0 +1,1581 @@
+{
+	"info": {
+		"_postman_id": "4ba7334d-55da-4eda-b369-6645b395e9d3",
+		"name": "2600Hz Kazoo APIs (OSS)",
+		"description": "List of most of Kazoo APIs that are OSS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "accounts",
+			"item": [
+				{
+					"name": "accounts.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/accounts/{{account_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"accounts",
+								"{{account_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/children.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/accounts/{{account_id}}/children",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"accounts",
+								"{{account_id}}",
+								"children"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/descendants.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/accounts/{{account_id}}/descendants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"accounts",
+								"{{account_id}}",
+								"descendants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/directories.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/accounts/{{account_id}}/directories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"accounts",
+								"{{account_id}}",
+								"directories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/channels.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/accounts/{{account_id}}/channels",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"accounts",
+								"{{account_id}}",
+								"channels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/limits.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/accounts/{{account_id}}/limits",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"accounts",
+								"{{account_id}}",
+								"limits"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/accounts/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "call_inspector",
+			"item": [
+				{
+					"name": "call_inspector.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/call_inspector/{callId}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"call_inspector",
+								"{callId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "call_inspector.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/call_inspector/",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"call_inspector",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/call_inspector/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "callflows",
+			"item": [
+				{
+					"name": "callflows.create",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"name\": \"callflow name\",\n    \"numbers\": [\n      \"3615\"\n    ],\n    \"flow\": {\n      \"module\": \"device\",\n      \"data\": {\n        \"id\": \"{{device_id}}\"\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{accounts_api}}/callflows",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"callflows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "callflows.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/callflows",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"callflows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "callflows.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/callflows/{{callflow_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"callflows",
+								"{{callflow_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "callflows.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/callflows/{{callflow_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"callflows",
+								"{{callflow_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/callflows/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "devices",
+			"item": [
+				{
+					"name": "devices.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/devices",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "devices.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/devices/{{device_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"devices",
+								"{{device_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "devices.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/devices/{{device_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"devices",
+								"{{device_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/devices/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "faxboxes",
+			"item": [
+				{
+					"name": "faxboxes.create",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"name\": \"John Doe's Faxbox\",\n    \"caller_name\": \"John Doe\",\n    \"caller_id\": \"+14151234567\",\n    \"fax_header\": \"John Doe's Fax Printer\",\n    \"smtp_permission_list\": [],\n    \"fax_identity\": \"+1 (415) 123-4567\",\n    \"fax_timezone\": \"America/Los_Angeles\",\n    \"retries\": 3,\n    \"notifications\": {\n      \"inbound\": {\n        \"email\": {\n          \"send_to\": [\n            \"devnull@2600hz.com\"\n          ]\n        }\n      },\n      \"outbound\": {\n        \"email\": {\n          \"send_to\": [\n            \"devnull@2600hz.com\"\n          ]\n        }\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{accounts_api}}/faxboxes",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"faxboxes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "faxboxes.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/faxboxes",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"faxboxes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "faxboxes.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/faxboxes/{{faxbox_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"faxboxes",
+								"{{faxbox_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "faxboxes.update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"name\": \"John Doe's Faxbox\",\n    \"caller_name\": \"John Doe\",\n    \"caller_id\": \"+14151234567\",\n    \"fax_header\": \"My Fax Printer\",\n    \"smtp_permission_list\": [\n      \"@2600hz.com\"\n    ],\n    \"fax_identity\": \"+1 (415) 123-4567\",\n    \"fax_timezone\": \"Europe/Paris\",\n    \"retries\": 7,\n    \"notifications\": {\n      \"inbound\": {\n        \"email\": {\n          \"send_to\": [\n            \"devnull@2600hz.com\"\n          ]\n        }\n      },\n      \"outbound\": {\n        \"email\": {\n          \"send_to\": [\n            \"devnull@2600hz.com\"\n          ]\n        }\n      }\n    }\n  }\n}"
+						},
+						"url": {
+							"raw": "{{accounts_api}}/faxboxes/{{faxbox_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"faxboxes",
+								"{{faxbox_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "faxboxes.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/faxboxes/{{faxbox_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"faxboxes",
+								"{{faxbox_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/faxboxes/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "groups",
+			"item": [
+				{
+					"name": "groups.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/groups",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groups.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/groups/{{group_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"groups",
+								"{{group_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/groups/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "phone_numbers",
+			"item": [
+				{
+					"name": "phone_numbers.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/phone_numbers",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"phone_numbers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phone_numbers.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/phone_numbers/{{number_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"phone_numbers",
+								"{{number_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phone_numbers.identify",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/phone_numbers/{{number_id}}/identify",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"phone_numbers",
+								"{{number_id}}",
+								"identify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phone_numbers/classifiers.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/phone_numbers/classifiers",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"phone_numbers",
+								"classifiers"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/phone_numbers/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "port_requests",
+			"item": [
+				{
+					"name": "port_requests.create",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n    \"bill\": {\n      \"address\": \"140 Geary St.\",\n      \"locality\": \"San Francisco\",\n      \"name\": \"John Doe\",\n      \"postal_code\": \"94108\",\n      \"region\": \"CA\"\n    },\n    \"name\": \"My Port Request\",\n    \"notifications\": {\n      \"email\": {\n        \"send_to\": \"devnull@2600hz.com\"\n      }\n    },\n    \"numbers\": {\n      \"4153216547\": {},\n      \"4153216548\": {},\n      \"4153216549\": {}\n    },\n    \"transfer_date\": \"63673756826\"\n  }\n}\n      "
+						},
+						"url": {
+							"raw": "{{accounts_api}}/port_requests",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/attachments.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/attachments",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/attachments.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/attachments/{{document_name}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"attachments",
+								"{{document_name}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/attachments.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/attachments{{document_name}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"attachments{{document_name}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/comments.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/comments",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/comments.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/comments/{{comment_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"comments",
+								"{{comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/comments.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/comments{{comment_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"comments{{comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/comments.purge",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/comments",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "port_requests/timeline.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/port_requests/{{port_id}}/timeline",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"port_requests",
+								"{{port_id}}",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/port_requests/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "service_plans",
+			"item": [
+				{
+					"name": "service_plans.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/service_plans",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"service_plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service_plans.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/service_plans/{{plan_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"service_plans",
+								"{{plan_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service_plans.current",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/service_plans/current",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"service_plans",
+								"current"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/service_plans/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "transactions",
+			"item": [
+				{
+					"name": "transactions.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/transactions?created_from={{from}}&created_to={{to}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "created_from",
+									"value": "{{from}}"
+								},
+								{
+									"key": "created_to",
+									"value": "{{to}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transactions/current_balance.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/transactions/current_balance",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"transactions",
+								"current_balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transactions/monthly_recurring.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/transactions/monthly_recurring?created_from={{from}}&created_to={{to}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"transactions",
+								"monthly_recurring"
+							],
+							"query": [
+								{
+									"key": "created_from",
+									"value": "{{from}}"
+								},
+								{
+									"key": "created_to",
+									"value": "{{to}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transactions/subscriptions.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/transactions/subscriptions",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"transactions",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/transactions/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "user_auth",
+			"item": [
+				{
+					"name": "user_auth.create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody),\r",
+									"    hasProperty = function hasProperty(thisArg, property) {\r",
+									"        return thisArg.hasOwnProperty(property) && thisArg[property];\r",
+									"    };\r",
+									"\r",
+									"tests[\"Response has account_id\"] = hasProperty(data.data, \"account_id\");\r",
+									"tests[\"Response has account_name\"] = hasProperty(data.data, \"account_name\");\r",
+									"tests[\"Response has auth_token\"] = hasProperty(data, \"auth_token\");\r",
+									"tests[\"Response has owner_id\"] = hasProperty(data.data, \"owner_id\");\r",
+									"\r",
+									"if (hasProperty(data.data, \"account_id\")) {\r",
+									"    postman.setEnvironmentVariable(\"account_id\", data.data.account_id);\r",
+									"}\r",
+									"\r",
+									"if (hasProperty(data.data, \"account_name\")) {\r",
+									"    postman.setEnvironmentVariable(\"account_name\", data.data.account_name);\r",
+									"}\r",
+									"\r",
+									"if (hasProperty(data, \"auth_token\")) {\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", data.auth_token);\r",
+									"}\r",
+									"\r",
+									"if (hasProperty(data.data, \"owner_id\")) {\r",
+									"    postman.setEnvironmentVariable(\"user_id\", data.data.owner_id);\r",
+									"}\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"accounts_api\", \"{{base_url}}/accounts/{{account_id}}\");\r",
+									"\r",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var username = postman.getEnvironmentVariable(\"username\"),\r",
+									"    password = postman.getEnvironmentVariable(\"password\"),\r",
+									"    credentials = CryptoJS.MD5(username + ':' + password);\r",
+									"\r",
+									"postman.setEnvironmentVariable('credentials', credentials);\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"data\": {\n      \"credentials\": \"{{credentials}}\",\n      \"account_name\": \"{{account_name}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/user_auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user_auth"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/auth/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "users.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/users",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/users/{{user_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/users/{{user_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/users/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "webhooks",
+			"item": [
+				{
+					"name": "webhooks.create",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n        \"name\": \"My Webhook\",\n        \"hook\": \"channel_create\",\n        \"retries\": \"1\",\n        \"http_verb\": \"get\",\n        \"custom_data\" : {\n            \"id\": \"0\"\n        },\n        \"uri\": \"http://89.234.67.144:33973\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{accounts_api}}/webhooks",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"webhooks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "webhooks.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/webhooks",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"webhooks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "webhooks.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/webhooks/{{webhook_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"webhooks",
+								"{{webhook_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "webhooks.update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": {\n        \"name\": \"My Webhook\",\n        \"hook\": \"channel_create\",\n        \"retries\": \"1\",\n        \"http_verb\": \"get\",\n        \"custom_data\" : {\n            \"id\": \"0\"\n        },\n        \"uri\": \"http://89.234.67.144:33973\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{accounts_api}}/webhooks/{{webhook_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"webhooks",
+								"{{webhook_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "webhooks.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/webhooks/{{webhook_id}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"webhooks",
+								"{{webhook_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/callflow/doc/webhooks/",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "whitelabel",
+			"item": [
+				{
+					"name": "whitelabel/domains.list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{accounts_api}}/whitelabel/domains",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"whitelabel",
+								"domains"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "whitelabel/domains.get",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Auth-Token",
+								"value": "{{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{accounts_api}}/whitelabel/domains?domain={{domain}}",
+							"host": [
+								"{{accounts_api}}"
+							],
+							"path": [
+								"whitelabel",
+								"domains"
+							],
+							"query": [
+								{
+									"key": "domain",
+									"value": "{{domain}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "https://docs.2600hz.com/dev/applications/crossbar/doc/whitelabeling/",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
