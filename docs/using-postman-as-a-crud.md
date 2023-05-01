@@ -55,5 +55,5 @@ Now that you have imported the collection and set up your environment variables,
 1. You can now play with the list of endpoints in the collection! If your token expires, you just have to run the `use_auth.create` endpoint again to generate a new one.
 
 
-[collection]: https://github.com/2600hz/monster-ui/blob/master/docs/postman/2600hz_kazoo_apis_oss.postman_collection.json
-[environment]: https://github.com/2600hz/monster-ui/blob/master/docs/postman/2600hz_kazoo_apis_oss.postman_environment.json
+[collection]: https://github.com/2600hz/monster-ui/blob/5.2/docs/postman/2600hz_kazoo_apis_oss.postman_collection.json
+[environment]: https://github.com/2600hz/monster-ui/blob/5.2/docs/postman/2600hz_kazoo_apis_oss.postman_environment.json
