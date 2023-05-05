@@ -792,7 +792,7 @@ define(function(require) {
 		var tokenPayload = monster.util.jwt_decode(jwt);
 		var entitlementsFeatureSet = _
 			.chain(tokenPayload)
-			.get('entitlements', [])
+			.get('bluejeans', [])
 			.map(
 				_.partial(_.ary(_.get, 2), featureSets.entitlements)
 			)
