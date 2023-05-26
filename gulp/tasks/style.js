@@ -1,6 +1,6 @@
 import { join } from 'upath';
 import gulp from 'gulp';
-import concatCss from 'gulp-concat-css';
+import concatCss from '@fomantic/gulp-concat-css';
 import cleanCss from 'gulp-clean-css';
 import { app, tmp } from '../paths.js';
 import { getAppsToInclude, sass } from '../helpers/helpers.js';

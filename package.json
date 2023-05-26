@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/2600hz/monster-ui#readme",
   "devDependencies": {
+    "@fomantic/gulp-concat-css": "^3.2.0",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -32,7 +33,6 @@
     "gulp-cached": "^1.1.1",
     "gulp-clean-css": "^3.9.0",
     "gulp-concat": "^2.6.1",
-    "gulp-concat-css": "^3.1.0",
     "gulp-declare": "^0.3.0",
     "gulp-eslint": "^6.0.0",
     "gulp-handlebars": "^5.0.2",
