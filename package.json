@@ -4,6 +4,7 @@
   "description": "Monster-UI",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -46,5 +47,9 @@
     "upath": "^1.1.2",
     "vinyl-paths": "^2.1.0",
     "yargs-parser": "^18.1.3"
+  },
+  "resolutions": {
+    "json5": "1.0.2",
+    "glob-parent": "5.1.2"
   }
 }
