@@ -40,7 +40,8 @@ define(function(require) {
 					recurringTableAmount: 2,
 					perMinuteTableAmount: 4
 				},
-				range: 'monthly'
+				range: 'monthly',
+				topupDupData: {}
 			}
 		},
 
@@ -767,10 +768,11 @@ define(function(require) {
 				event.preventDefault();
 
 				var autoRechargeFormData = monster.ui.getFormData('auto_recharge_content'),
-					dataTopUp = {
+					topupData = self.appFlags.balance.topupData,
+					dataTopUp = _.merge({
 						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',', '.')),
 						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',', '.'))
-					};
+					}, topupData);
 
 				if (dataTopUp.threshold && dataTopUp.amount) {
 					if (dataTopUp.threshold && dataTopUp.amount) {
@@ -964,6 +966,7 @@ define(function(require) {
 							data: accountData
 						},
 						success: function(data) {
+							self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 							cb(null);
 						},
 						error: function() {
