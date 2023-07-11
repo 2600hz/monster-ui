@@ -286,9 +286,11 @@ define(function(require) {
 				}
 			}
 
-			if (data.account.hasOwnProperty('topup')) {
+			if (_.get(data, 'account.topup.amount')) {
 				topupData.enabled = true;
+			}
 
+			if (data.account.hasOwnProperty('topup')) {
 				$.extend(true, topupData, data.account.topup);
 			}
 
@@ -1046,7 +1048,8 @@ define(function(require) {
 				},
 				success: function(data) {
 					if (data.data.hasOwnProperty('topup')) {
-						delete data.data.topup;
+						delete data.data.topup.amount;
+						delete data.data.topup.threshold;
 
 						self.callApi({
 							resource: 'account.update',
