@@ -286,14 +286,15 @@ define(function(require) {
 				}
 			}
 
-			if (_.get(data, 'account.topup.amount')) {
-				topupData.enabled = true;
-			}
-
 			if (data.account.hasOwnProperty('topup')) {
 				$.extend(true, topupData, data.account.topup);
 			}
 
+			if (_.get(data, 'account.topup.amount')) {
+				topupData.enabled = true;
+			}
+
+			self.appFlags.balance.topupData = topupData;
 			return {
 				subscriptions: {
 					show: _.some(serviceSummary.invoices, {
