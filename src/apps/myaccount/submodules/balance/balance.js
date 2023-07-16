@@ -775,7 +775,7 @@ define(function(require) {
 					dataTopUp = _.merge({
 						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',', '.')),
 						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',', '.'))
-					}, topupData);
+					}, _.omit(topupData, ['enabled']));
 
 				if (dataTopUp.threshold && dataTopUp.amount) {
 					if (dataTopUp.threshold && dataTopUp.amount) {
@@ -962,6 +962,7 @@ define(function(require) {
 					_.set(accountData, 'topup.monthly.preemptive', normalizedSubscriptions.preemptive);
 					_.set(accountData, 'topup.monthly.exact', normalizedSubscriptions.exact);
 
+					self.appFlags.balance.topupData = _.get(accountData, 'topup', {});
 					self.callApi({
 						resource: 'account.patch',
 						data: {
@@ -998,6 +999,7 @@ define(function(require) {
 					data.data = self.balanceFormatThresholdData(data.data);
 					data.data.notifications.low_balance.enabled = false;
 
+					self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 					self.callApi({
 						resource: 'account.update',
 						data: {
@@ -1025,6 +1027,7 @@ define(function(require) {
 					data.data.notifications.low_balance.enabled = true;
 					data.data.notifications.low_balance.threshold = valueThreshold;
 
+					self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 					self.callApi({
 						resource: 'account.update',
 						data: {
@@ -1052,6 +1055,7 @@ define(function(require) {
 						delete data.data.topup.amount;
 						delete data.data.topup.threshold;
 
+						self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 						self.callApi({
 							resource: 'account.update',
 							data: {
@@ -1078,6 +1082,7 @@ define(function(require) {
 				success: function(data) {
 					data.data.topup = dataTopUp;
 
+					self.appFlags.balance.topupData = dataTopUp;
 					self.callApi({
 						resource: 'account.update',
 						data: {
