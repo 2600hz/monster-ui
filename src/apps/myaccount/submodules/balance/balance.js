@@ -772,10 +772,10 @@ define(function(require) {
 
 				var autoRechargeFormData = monster.ui.getFormData('auto_recharge_content'),
 					topupData = self.appFlags.balance.topupData,
-					dataTopUp = _.merge({
+					dataTopUp = _.merge({}, _.omit(topupData, ['enabled']), {
 						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',', '.')),
 						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',', '.'))
-					}, _.omit(topupData, ['enabled']));
+					});
 
 				if (dataTopUp.threshold && dataTopUp.amount) {
 					if (dataTopUp.threshold && dataTopUp.amount) {
