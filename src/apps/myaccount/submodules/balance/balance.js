@@ -40,7 +40,8 @@ define(function(require) {
 					recurringTableAmount: 2,
 					perMinuteTableAmount: 4
 				},
-				range: 'monthly'
+				range: 'monthly',
+				topupDupData: {}
 			}
 		},
 
@@ -286,11 +287,14 @@ define(function(require) {
 			}
 
 			if (data.account.hasOwnProperty('topup')) {
-				topupData.enabled = true;
-
 				$.extend(true, topupData, data.account.topup);
 			}
 
+			if (_.get(data, 'account.topup.amount')) {
+				topupData.enabled = true;
+			}
+
+			self.appFlags.balance.topupData = topupData;
 			return {
 				subscriptions: {
 					show: _.some(serviceSummary.invoices, {
@@ -767,10 +771,11 @@ define(function(require) {
 				event.preventDefault();
 
 				var autoRechargeFormData = monster.ui.getFormData('auto_recharge_content'),
-					dataTopUp = {
+					topupData = self.appFlags.balance.topupData,
+					dataTopUp = _.merge({}, _.omit(topupData, ['enabled']), {
 						threshold: parseFloat(autoRechargeFormData.auto_recharge_threshold.replace(',', '.')),
 						amount: parseFloat(autoRechargeFormData.auto_recharge_amount.replace(',', '.'))
-					};
+					});
 
 				if (dataTopUp.threshold && dataTopUp.amount) {
 					if (dataTopUp.threshold && dataTopUp.amount) {
@@ -957,6 +962,7 @@ define(function(require) {
 					_.set(accountData, 'topup.monthly.preemptive', normalizedSubscriptions.preemptive);
 					_.set(accountData, 'topup.monthly.exact', normalizedSubscriptions.exact);
 
+					self.appFlags.balance.topupData = _.get(accountData, 'topup', {});
 					self.callApi({
 						resource: 'account.patch',
 						data: {
@@ -964,6 +970,7 @@ define(function(require) {
 							data: accountData
 						},
 						success: function(data) {
+							self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 							cb(null);
 						},
 						error: function() {
@@ -992,6 +999,7 @@ define(function(require) {
 					data.data = self.balanceFormatThresholdData(data.data);
 					data.data.notifications.low_balance.enabled = false;
 
+					self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 					self.callApi({
 						resource: 'account.update',
 						data: {
@@ -1019,6 +1027,7 @@ define(function(require) {
 					data.data.notifications.low_balance.enabled = true;
 					data.data.notifications.low_balance.threshold = valueThreshold;
 
+					self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 					self.callApi({
 						resource: 'account.update',
 						data: {
@@ -1043,8 +1052,10 @@ define(function(require) {
 				},
 				success: function(data) {
 					if (data.data.hasOwnProperty('topup')) {
-						delete data.data.topup;
+						delete data.data.topup.amount;
+						delete data.data.topup.threshold;
 
+						self.appFlags.balance.topupData = _.get(data, 'data.topup', {});
 						self.callApi({
 							resource: 'account.update',
 							data: {
@@ -1071,6 +1082,7 @@ define(function(require) {
 				success: function(data) {
 					data.data.topup = dataTopUp;
 
+					self.appFlags.balance.topupData = dataTopUp;
 					self.callApi({
 						resource: 'account.update',
 						data: {
