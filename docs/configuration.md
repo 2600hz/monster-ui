@@ -123,6 +123,7 @@ Key | Description | Type | Default | Required
 `social` | List of social network to expose on the login page. | `Array` | | `false`
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 `disableFirstUseWalkthrough` | If set to true, the new user walkthrough will not be displayed. False by default. | `Boolean` | `false` | `false`
+`invoiceRangeConfig` | The range of months one can navigate back to for the invoices in the Invoice Generator. Its default value is 6 months from the current month, but it is not required to have a value assigned to it | `Number` | `6` | `false`
 
 #### `acceptCharges`
 
