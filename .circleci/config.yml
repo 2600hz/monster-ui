@@ -39,7 +39,7 @@ jobs:
 
   build_centos7:
     docker:
-      - image: 2600hz/node-packager:14.17.4-centos-7
+      - image: 2600hz/node-packager:lts-centos-7
         user: circleci
     shell: /bin/bash --login
     working_directory: /home/circleci/2600hz/monster-ui
