@@ -132,9 +132,13 @@
 	},
 	"languages": {
 		"auto": "Автоматически",
-		"americanEnglish": "English (en-US)",
-		"frenchFrench": "French (fr-FR)",
-		"russianRussian": "Russian (ru-RU)"
+		"americanEnglish": "Английский (en-US)",
+		"frenchFrench": "Французский (fr-FR)",
+		"russianRussian": "Русский (ru-RU)",
+		"germanGerman": "Немецкий (de-DE)",
+		"spanishSpain": "испанский (es-ES)",
+		"britishEnglish": "Английский (en-GB)",
+		"canadianFrench": "Французский (fr-CA)"
 	},
 	"services": {
 		"cnam": "CNAM",
