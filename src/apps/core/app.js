@@ -76,7 +76,8 @@ define(function(require) {
 				mainTemplate = $(self.getTemplate({
 					name: 'app',
 					data: dataTemplate
-				}));
+				})),
+				crossSiteMessaging = monster.config.crossSiteMessaging;
 
 			document.title = monster.config.whitelabel.applicationTitle;
 
@@ -88,7 +89,10 @@ define(function(require) {
 			self.displayLogo(mainTemplate);
 			self.displayFavicon();
 			self.loadSVG();
-			self.bindCrossSiteMessagingHandler();
+
+			if (crossSiteMessaging !== undefined) {
+				self.bindCrossSiteMessagingHandler(crossSiteMessaging);
+			}
 
 			container.append(mainTemplate);
 
@@ -97,31 +101,21 @@ define(function(require) {
 			], _.bind(self.loadAuth, self));
 		},
 
-		bindCrossSiteMessagingHandler: function() {
-			const crossSiteMessaging = JSON.parse(JSON.stringify(monster.config.crossSiteMessaging));
-
-			if (crossSiteMessaging === undefined) {
-				return;
-			}
+		bindCrossSiteMessagingHandler: function(crossSiteMessaging) {
 			const { origin, topics } = crossSiteMessaging;
 
 			window.addEventListener('message', handler);
 
 			function handler(event) {
-				if (event.origin !== origin) {
-					return;
-				}
-				const topic = event.data;
-
-				if (!topics.includes(topic)) {
+				if (event.origin !== origin || !topics.includes(event.data)) {
 					return;
 				}
 
-				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging(topic)) {
+				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging(event.data)) {
 					return;
 				}
 
-				monster.pub(topic);
+				monster.pub('core.crossSiteMessage', event.data);
 			}
 		},
 
