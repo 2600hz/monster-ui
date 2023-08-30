@@ -138,9 +138,12 @@
 									<select id="account_language" name="language">
 										<option value="auto">{{i18n.languages.auto}}</option>
 										<option value="en-US"{{#compare account.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+										<option value="en-GB"{{#compare account.language '===' 'en-GB'}} selected{{/compare}}>{{i18n.languages.britishEnglish}}</option>
 										<option value="fr-FR"{{#compare account.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+										<option value="fr-CA"{{#compare account.language '===' 'fr-CA'}} selected{{/compare}}>{{i18n.languages.canadianFrench}}</option>
 										<option value="de-DE"{{#compare account.language '===' 'de-DE'}} selected{{/compare}}>{{i18n.languages.germanGerman}}</option>
 										<option value="ru-RU"{{#compare account.language '===' 'ru-RU'}} selected{{/compare}}>{{i18n.languages.russianRussian}}</option>
+										<option value="es-ES"{{#compare account.language '===' 'es-ES'}} selected{{/compare}}>{{i18n.languages.spanishSpain}}</option>
 									</select>
 								</div>
 							</div>
