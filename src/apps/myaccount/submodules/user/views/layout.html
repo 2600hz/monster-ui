@@ -99,10 +99,12 @@
 									<select id="user_language" name="language">
 										<option value="auto">{{i18n.languages.auto}}</option>
 										<option value="en-US"{{#compare user.language '===' 'en-US'}} selected{{/compare}}>{{i18n.languages.americanEnglish}}</option>
+										<option value="en-GB"{{#compare user.language '===' 'en-GB'}} selected{{/compare}}>{{i18n.languages.britishEnglish}}</option>
 										<option value="fr-FR"{{#compare user.language '===' 'fr-FR'}} selected{{/compare}}>{{i18n.languages.frenchFrench}}</option>
+										<option value="fr-CA"{{#compare user.language '===' 'fr-CA'}} selected{{/compare}}>{{i18n.languages.canadianFrench}}</option>
 										<option value="de-DE"{{#compare user.language '===' 'de-DE'}} selected{{/compare}}>{{i18n.languages.germanGerman}}</option>
 										<option value="ru-RU"{{#compare user.language '===' 'ru-RU'}} selected{{/compare}}>{{i18n.languages.russianRussian}}</option>
-										<option value="es-ES"{{#compare user.language '===' 'es-ES'}} selected {{/compare}}>{{i18n.languages.spainSpanish}}</option>
+										<option value="es-ES"{{#compare user.language '===' 'es-ES'}} selected{{/compare}}>{{i18n.languages.spanishSpain}}</option>
 									</select>
 								</div>
 							</div>
