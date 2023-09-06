@@ -517,7 +517,9 @@
 				'quickcall': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/quickcall/{number}' },
 				'hotdesks': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/hotdesks' },
 				'updatePresence': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/presence' },
-				'listDevices': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' }
+				'listDevices': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/devices' },
+				'updateChatStatus': { verb: 'PATCH', url: 'accounts/{accountId}/users/{userId}/getstream' },
+				'listUsersWithChat': { verb: 'GET', url: 'accounts/{accountId}/users/getstream' },
 			},
 			voicemail: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/vmboxes/{voicemailId}' },
