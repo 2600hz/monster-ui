@@ -177,6 +177,13 @@ Key | Description | Type | Default | Required
 `brands.[].keyFunctions` | List key functions available per brand ([schema][combo-keys-schema]). | `Array` | | `false`
 `brands.[].lineKeys` | List of keys to be used as default line keys per brand. | `Array` | | `false`
 
+#### `crossSiteMessaging`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`origin` | The remote source that the framework would be configured to accept cross-site messages from. | `String` | | `false`
+`topics` | Specific messages accepted from the configured remote source. | `Array`  | | `false`
+
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
 [country-codes]: https://www.iso.org/obp/ui/#search
 [combo-keys-schema]: https://github.com/2600hz/kazoo/blob/master/applications/crossbar/priv/couchdb/schemas/devices.combo_key.json

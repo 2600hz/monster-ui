@@ -104,19 +104,26 @@ define(function(require) {
 		bindCrossSiteMessagingHandler: function(crossSiteMessaging) {
 			const { origin, topics } = crossSiteMessaging;
 
-			window.addEventListener('message', handler);
+			var handleCrossSiteMessages = function handleCrossSiteMessages(event) {
+				var activeApp = monster.apps.getActiveApp(),
+					triggerApp = event.data.split('.')[0];
 
-			function handler(event) {
+				if (activeApp !== triggerApp) {
+					return;
+				}
+
 				if (event.origin !== origin || !topics.includes(event.data)) {
 					return;
 				}
 
-				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging(event.data)) {
+				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging().includes(event.data)) {
 					return;
 				}
 
-				monster.pub('core.crossSiteMessage', event.data);
-			}
+				monster.pub('core.crossSiteMessage.' + triggerApp, event.data);
+			};
+
+			window.addEventListener('message', handleCrossSiteMessages);
 		},
 
 		loadSVG: function() {
