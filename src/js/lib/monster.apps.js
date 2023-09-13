@@ -852,7 +852,6 @@ define(function() {
 				// Automatic upper case for text after the hyphen (example: change en-us to en-US)
 				language = language.replace(/-.*/, _.toUpper),
 				loadFile = function loadFile(app, language, callback) {
-					console.log('language ---', language)
 					$.ajax({
 						url: monster.util.cacheUrl(app, app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
