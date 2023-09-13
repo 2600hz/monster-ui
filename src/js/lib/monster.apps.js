@@ -859,7 +859,6 @@ define(function() {
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
 						success: _.partial(callback, null),
 						error: function(data, status, error) {
-							console.log('language ---', data, status, error)
 							callback(true);
 						}
 					});
