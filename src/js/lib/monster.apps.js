@@ -567,13 +567,33 @@ define(function() {
 			var self = this,
 				loadDefaultLanguage = _.bind(self.loadLocale, self, app, monster.defaultLanguage),
 				maybeLoadPreferredLanguage = function maybeLoadPreferredLanguage(app, language, callback) {
+					/**
+					 * The requested language is the same as the default so skip load again
+					 */
 					if (language.toLowerCase() === monster.defaultLanguage.toLowerCase()) {
 						return callback(null);
 					}
+
+					/**
+					 * The selected language is not supported so we set the default for the app
+					 */
 					if (!_.has(app.i18n, language)) {
-						console.info(language + ' isn\'t a supported language by this application: ' + app.name);
-						return callback(null);
+						console.info(language + ' isn\'t a supported language by this application: ' + app.name + ' switching automatically to ' + monster.defaultLanguage);
+						self.loadLocale(
+							app,
+							monster.defaultLanguage,
+							// Prepend null as we don't care if it errors out, the app can still load
+							_.partial(callback, null)
+						);
+
+						monster.ui.toast({
+							type: 'info',
+							message: 'The default language isn\'t supported for the selected app, switching automatically to ' + monster.defaultLanguage
+						});
+
+						return;
 					}
+
 					// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
 					self.loadLocale(
 						app,
@@ -832,6 +852,7 @@ define(function() {
 				// Automatic upper case for text after the hyphen (example: change en-us to en-US)
 				language = language.replace(/-.*/, _.toUpper),
 				loadFile = function loadFile(app, language, callback) {
+					console.log('language ---', language)
 					$.ajax({
 						url: monster.util.cacheUrl(app, app.appPath + '/i18n/' + language + '.json'),
 						dataType: 'json',
@@ -839,8 +860,7 @@ define(function() {
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
 						success: _.partial(callback, null),
 						error: function(data, status, error) {
-							console.log('_loadLocale error: ', status, error);
-
+							console.log('language ---', data, status, error)
 							callback(true);
 						}
 					});
