@@ -1,74 +1,108 @@
 version: 2
-
 workflows:
   version: 2
   build_branch:
     jobs:
       - mkdocs
-      - build_centos7:
+      -
+        build_centos7:
           requires:
             - mkdocs
-
+      -
+        build_rockylinux8:
+          requires:
+            - mkdocs
+      -
+        build_rockylinux9:
+          requires:
+            - mkdocs
   build_release:
     jobs:
-      - mkdocs:
+      -
+        mkdocs:
           filters:
             tags:
               only: /^\d+\.\d+\.\d+$/
             branches:
-              ignore: /.*/
-
-      - build_centos7:
+              ignore: '/.*/'
+      -
+        build_centos7:
           requires:
             - mkdocs
           filters:
             tags:
-              only: /^\d+\.\d+\.\d+$/
+              only: '/^\d+\.\d+\.\d+(\.\d+)?$/'
             branches:
-              ignore: /.*/
-
+              ignore: '/.*/'
+      -
+        build_rockylinux8:
+          requires:
+            - mkdocs
+          filters:
+            tags:
+              only: '/^\d+\.\d+\.\d+(\.\d+)?$/'
+            branches:
+              ignore: '/.*/'
+      -
+        build_rockylinux9:
+          requires:
+            - mkdocs
+          filters:
+            tags:
+              only: '/^\d+\.\d+\.\d+(\.\d+)?$/'
+            branches:
+              ignore: '/.*/'
 jobs:
   mkdocs:
     docker:
-      - image: circleci/python:3.7.0
+      -
+        image: 'circleci/python:3.7.0'
     steps:
       - checkout
-      - run: sudo pip install PyYAML
-      - run: ./scripts/validate_mkdocs.py
-      - run: ./scripts/reconcile_docs_to_index.bash
-
+      -
+        run: 'sudo pip install PyYAML'
+      -
+        run: ./scripts/validate_mkdocs.py
+      -
+        run: ./scripts/reconcile_docs_to_index.bash
   build_centos7:
     docker:
-      - image: 2600hz/node-packager:lts-centos-7
+      -
+        image: '2600hz/node-packager:14-centos-7'
         user: circleci
-    shell: /bin/bash --login
+    shell: '/bin/bash --login'
     working_directory: /home/circleci/2600hz/monster-ui
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
       CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
-      BASH_ENV: "/home/circleci/2600hz/.bashrc"
-      BUILD_ROOT: "/home/circleci/2600hz/packager"
-      BUILD_SOURCES: "/home/circleci/2600hz/packager/SOURCES"
-      BUILD_RPMS: "/home/circleci/2600hz/packager/RPMS"
-      APP_DIR: "/home/circleci/2600hz/monster-ui"
+      BASH_ENV: /home/circleci/2600hz/.bashrc
+      BUILD_ROOT: /home/circleci/2600hz/packager
+      BUILD_SOURCES: /home/circleci/2600hz/packager/SOURCES
+      BUILD_RPMS: /home/circleci/2600hz/packager/RPMS
+      APP_DIR: /home/circleci/2600hz/monster-ui
     steps:
       - checkout
-      - persist_to_workspace:
+      -
+        persist_to_workspace:
           root: .
           paths:
             - .
-      - restore_cache:
-          key: dependency-cache-centos-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install dependencies from package.json
+      -
+        restore_cache:
+          key: 'dependency-cache-centos-7-{{ checksum "package-lock.json" }}'
+      -
+        run:
+          name: 'Install dependencies from package.json'
           command: |
             npm install
             npm rebuild node-sass
-      - run:
-          name: Run a production build
-          command: gulp build-prod
-      - run:
-          name: Generating version info
+      -
+        run:
+          name: 'Run a production build'
+          command: 'gulp build-prod'
+      -
+        run:
+          name: 'Generating version info'
           command: |
             cd $BUILD_ROOT
             VERSION=$(./version)
@@ -80,21 +114,24 @@ jobs:
             PACKAGE_NAME=$(./package_name)
             echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
             echo "build version for ${PACKAGE_NAME} version: ${VERSION} release: ${RELEASE}"
-      - run:
-          name: Extracting build artifacts
+      -
+        run:
+          name: 'Extracting build artifacts'
           command: |
             cd $BUILD_SOURCES
             echo " - copy build into artifacts"
             cp -R ${APP_DIR}/dist/* ${BUILD_SOURCES}/
-      - run:
-          name: Building CHANGELOG and VERSION files
+      -
+        run:
+          name: 'Building CHANGELOG and VERSION files'
           command: |
             cd $BUILD_ROOT
             ./package_docs
             echo " - generate build version and changelog"
-      - run:
-          name: Preparing source tar
-          command: |
+      -
+        run:
+          name: 'Preparing source tar'
+          command: |-
             cd $BUILD_ROOT
             echo " - removing files that should not be packaged in the source tar"
             rm -rf ${BUILD_SOURCES}/.??*
@@ -106,14 +143,201 @@ jobs:
             cp -r ${BUILD_SOURCES}/* ${ARTIFACTS_NAME}/.
             tar -cf ${ARTIFACTS_NAME}.tar ${ARTIFACTS_NAME}
             cp ${ARTIFACTS_NAME}.tar ${BUILD_SOURCES}/.
-      - run:
-          name: Building package
+      -
+        run:
+          name: 'Building package'
           command: |
             cd $BUILD_ROOT
             ./build
-      - store_artifacts:
+      -
+        store_artifacts:
           path: /home/circleci/2600hz/packager/RPMS
-      - save_cache:
-          key: dependency-cache-centos-{{ checksum "package-lock.json" }}
+      -
+        save_cache:
+          key: 'dependency-cache-centos-7-{{ checksum "package-lock.json" }}'
+          paths:
+            - ./node_modules
+  build_rockylinux8:
+    docker:
+      -
+        image: '2600hz/node-packager:14-rockylinux-8'
+        user: circleci
+    shell: '/bin/bash --login'
+    working_directory: /home/circleci/2600hz/monster-ui
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+      BASH_ENV: /home/circleci/2600hz/.bashrc
+      BUILD_ROOT: /home/circleci/2600hz/packager
+      BUILD_SOURCES: /home/circleci/2600hz/packager/SOURCES
+      BUILD_RPMS: /home/circleci/2600hz/packager/RPMS
+      APP_DIR: /home/circleci/2600hz/monster-ui
+    steps:
+      - checkout
+      -
+        persist_to_workspace:
+          root: .
+          paths:
+            - .
+      -
+        restore_cache:
+          key: 'dependency-cache-rockylinux-8-{{ checksum "package-lock.json" }}'
+      -
+        run:
+          name: 'Install dependencies from package.json'
+          command: |
+            npm install
+            npm rebuild node-sass
+      -
+        run:
+          name: 'Run a production build'
+          command: 'gulp build-prod'
+      -
+        run:
+          name: 'Generating version info'
+          command: |
+            cd $BUILD_ROOT
+            VERSION=$(./version)
+            RELEASE=$(./release)
+            PACKAGE_NAME=$(./package_name)
+            echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
+            echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "export RELEASE=${RELEASE}" >> $BASH_ENV
+            PACKAGE_NAME=$(./package_name)
+            echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
+            echo "build version for ${PACKAGE_NAME} version: ${VERSION} release: ${RELEASE}"
+      -
+        run:
+          name: 'Extracting build artifacts'
+          command: |
+            cd $BUILD_SOURCES
+            echo " - copy build into artifacts"
+            cp -R ${APP_DIR}/dist/* ${BUILD_SOURCES}/
+      -
+        run:
+          name: 'Building CHANGELOG and VERSION files'
+          command: |
+            cd $BUILD_ROOT
+            ./package_docs
+            echo " - generate build version and changelog"
+      -
+        run:
+          name: 'Preparing source tar'
+          command: |-
+            cd $BUILD_ROOT
+            echo " - removing files that should not be packaged in the source tar"
+            rm -rf ${BUILD_SOURCES}/.??*
+            rm -rf ${BUILD_SOURCES}/doc*
+            rm -rf ${BUILD_SOURCES}/*.md
+            echo " - creating the source tar"
+            ARTIFACTS_NAME=${PACKAGE_NAME}-${VERSION}
+            mkdir -p ${ARTIFACTS_NAME}
+            cp -r ${BUILD_SOURCES}/* ${ARTIFACTS_NAME}/.
+            tar -cf ${ARTIFACTS_NAME}.tar ${ARTIFACTS_NAME}
+            cp ${ARTIFACTS_NAME}.tar ${BUILD_SOURCES}/.
+      -
+        run:
+          name: 'Building package'
+          command: |
+            cd $BUILD_ROOT
+            ./build
+      -
+        store_artifacts:
+          path: /home/circleci/2600hz/packager/RPMS
+      -
+        save_cache:
+          key: 'dependency-cache-rockylinux-8-{{ checksum "package-lock.json" }}'
+          paths:
+            - ./node_modules
+  build_rockylinux9:
+    docker:
+      -
+        image: '2600hz/node-packager:14-rockylinux-9'
+        user: circleci
+    shell: '/bin/bash --login'
+    working_directory: /home/circleci/2600hz/monster-ui
+    environment:
+      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+      BASH_ENV: /home/circleci/2600hz/.bashrc
+      BUILD_ROOT: /home/circleci/2600hz/packager
+      BUILD_SOURCES: /home/circleci/2600hz/packager/SOURCES
+      BUILD_RPMS: /home/circleci/2600hz/packager/RPMS
+      APP_DIR: /home/circleci/2600hz/monster-ui
+    steps:
+      - checkout
+      -
+        persist_to_workspace:
+          root: .
+          paths:
+            - .
+      -
+        restore_cache:
+          key: 'dependency-cache-rockylinux-9-{{ checksum "package-lock.json" }}'
+      -
+        run:
+          name: 'Install dependencies from package.json'
+          command: |
+            npm install
+            npm rebuild node-sass
+      -
+        run:
+          name: 'Run a production build'
+          command: 'gulp build-prod'
+      -
+        run:
+          name: 'Generating version info'
+          command: |
+            cd $BUILD_ROOT
+            VERSION=$(./version)
+            RELEASE=$(./release)
+            PACKAGE_NAME=$(./package_name)
+            echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
+            echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "export RELEASE=${RELEASE}" >> $BASH_ENV
+            PACKAGE_NAME=$(./package_name)
+            echo "export PACKAGE_NAME=${PACKAGE_NAME}" >> $BASH_ENV
+            echo "build version for ${PACKAGE_NAME} version: ${VERSION} release: ${RELEASE}"
+      -
+        run:
+          name: 'Extracting build artifacts'
+          command: |
+            cd $BUILD_SOURCES
+            echo " - copy build into artifacts"
+            cp -R ${APP_DIR}/dist/* ${BUILD_SOURCES}/
+      -
+        run:
+          name: 'Building CHANGELOG and VERSION files'
+          command: |
+            cd $BUILD_ROOT
+            ./package_docs
+            echo " - generate build version and changelog"
+      -
+        run:
+          name: 'Preparing source tar'
+          command: |-
+            cd $BUILD_ROOT
+            echo " - removing files that should not be packaged in the source tar"
+            rm -rf ${BUILD_SOURCES}/.??*
+            rm -rf ${BUILD_SOURCES}/doc*
+            rm -rf ${BUILD_SOURCES}/*.md
+            echo " - creating the source tar"
+            ARTIFACTS_NAME=${PACKAGE_NAME}-${VERSION}
+            mkdir -p ${ARTIFACTS_NAME}
+            cp -r ${BUILD_SOURCES}/* ${ARTIFACTS_NAME}/.
+            tar -cf ${ARTIFACTS_NAME}.tar ${ARTIFACTS_NAME}
+            cp ${ARTIFACTS_NAME}.tar ${BUILD_SOURCES}/.
+      -
+        run:
+          name: 'Building package'
+          command: |
+            cd $BUILD_ROOT
+            ./build
+      -
+        store_artifacts:
+          path: /home/circleci/2600hz/packager/RPMS
+      -
+        save_cache:
+          key: 'dependency-cache-rockylinux-9-{{ checksum "package-lock.json" }}'
           paths:
             - ./node_modules
