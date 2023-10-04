@@ -278,6 +278,22 @@
 	}
 }
 
+#market-content .market-settings {
+	form {
+		.control-group .controls{
+			.well {
+				+ .help-block{
+					margin-top: 10px;
+				}
+			}
+		}
+	}
+}
+
+#market-content .empty-placeholder{
+	font-style: italic;
+}
+
 #market-content .market-welcome {
 	text-align: center;
 	font-size: 18px;
