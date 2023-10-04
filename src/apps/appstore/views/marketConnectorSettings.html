@@ -25,6 +25,16 @@
 								{{ i18n.marketplace.edition.helpMore }} <a href="{{ config.marketplace_url }}/help-center" target="_blank">{{ i18n.marketplace.edition.helpMoreLink }} <i class="fa fa-external-link"></i></a>.
 							</div>
 							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
+								<div class="controls">
+										{{#if config.cluster_name}}
+										<span class="well well-small">{{ config.cluster_name }}</span>
+										{{else}}
+											<span class="empty-placeholder">{{ i18n.marketplace.edition.emptyClusterName }}</span>
+										{{/if}}
+								</div>
+							</div>
+							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterId }}</label>
 								<div class="controls">
 									<span class="well well-small">{{ config.cluster_id }}</span>
@@ -36,6 +46,22 @@
 									<input required="" type="text" name="api_url" value="{{ config.api_url }}">
 									<span class="help-block">{{ i18n.marketplace.edition.helpApiUrl }}</span>
 								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.kazooAllInOneLabel }}</label>
+								<div class="controls">
+								{{#monsterSwitch}}
+								<input type="checkbox" name="kazoo_all_in_one_node" id="all_in_one"  />
+								{{/monsterSwitch}}
+								<span class="help-block">{{ i18n.marketplace.edition.kazooAllInOneHelpText }}</span>
+							</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">{{ i18n.marketplace.edition.metaKazooVersion }}</label>
+							<div class="controls">
+								<span class="well well-small">{{ config.cluster_kazoo_version }}</span>
+								<span class="help-block">{{ i18n.marketplace.edition.kazooVersionHelpText }}</span>
 							</div>
 						</div>
 					</div>
