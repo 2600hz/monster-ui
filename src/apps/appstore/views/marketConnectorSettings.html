@@ -51,7 +51,7 @@
 								<label class="control-label">{{ i18n.marketplace.edition.kazooAllInOneLabel }}</label>
 								<div class="controls">
 								{{#monsterSwitch}}
-								<input type="checkbox" name="is_aio_cluster" id="all_in_one" />
+								<input type="checkbox" name="is_aio_cluster" id="all_in_one" checked="{{ config.is_aio_cluster}}"/>
 								{{/monsterSwitch}}
 								<span class="help-block">{{ i18n.marketplace.edition.kazooAllInOneHelpText }}</span>
 							</div>
