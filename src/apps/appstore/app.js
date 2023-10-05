@@ -686,10 +686,13 @@ define(function(require) {
 			// use this fake to test ui without calling API
 			// let fake = {
 			// 	cluster_id: 'lolololololol',
-			// 	enabled: false,
+			//	name: "cluster",
+			// 	enabled: true,
 			// 	app_exchange_url: 'http://localhost:8080/',
 			// 	marketplace_url: 'http://localhost:3030',
-			// 	is_linked: false,
+			//	is_aio_cluster: true,
+			// 	is_linked: true,
+			//	kazoo_version: "5.1.0",
 			// 	_read_only: {}
 			// };
 			monster.request({
