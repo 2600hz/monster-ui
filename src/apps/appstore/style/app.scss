@@ -278,6 +278,32 @@
 	}
 }
 
+
+#market-content .market-settings {
+	form {
+		.control-group .controls.block-margin{
+			min-height: 60px;
+		}
+	}
+}
+
+#market-content .market-settings {
+	form {
+		.err-message{
+			color: red;
+		}
+	}
+}
+
+#market-content .market-settings {
+	form {
+		#api_url-error{
+			position: relative;
+			padding: 5px;
+		}
+	}
+}
+
 #market-content .market-settings {
 	form {
 		.control-group .controls{
