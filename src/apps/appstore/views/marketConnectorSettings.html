@@ -27,8 +27,8 @@
 							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
 								<div class="controls">
-										{{#if config.cluster_name}}
-										<span class="well well-small">{{ config.cluster_name }}</span>
+										{{#if config.name}}
+										<span class="well well-small">{{ config.name }}</span>
 										{{else}}
 											<span class="empty-placeholder">{{ i18n.marketplace.edition.emptyClusterName }}</span>
 										{{/if}}
@@ -36,7 +36,7 @@
 							</div>
 							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterId }}</label>
-								<div class="controls">
+								<div class="controls block-margin">
 									<span class="well well-small">{{ config.cluster_id }}</span>
 								</div>
 							</div>
@@ -51,7 +51,7 @@
 								<label class="control-label">{{ i18n.marketplace.edition.kazooAllInOneLabel }}</label>
 								<div class="controls">
 								{{#monsterSwitch}}
-								<input type="checkbox" name="kazoo_all_in_one_node" id="all_in_one"  />
+								<input type="checkbox" name="is_aio_cluster" id="all_in_one" />
 								{{/monsterSwitch}}
 								<span class="help-block">{{ i18n.marketplace.edition.kazooAllInOneHelpText }}</span>
 							</div>
@@ -60,7 +60,11 @@
 						<div class="control-group">
 							<label class="control-label">{{ i18n.marketplace.edition.metaKazooVersion }}</label>
 							<div class="controls">
-								<span class="well well-small">{{ config.cluster_kazoo_version }}</span>
+								{{#if config.kazoo_version}}
+								<span class="well well-small">{{ config.kazoo_version }}</span>
+								{{else}}
+								<span class="err-message">Version is not set, application cannot be started</span>
+								{{/if}}
 								<span class="help-block">{{ i18n.marketplace.edition.kazooVersionHelpText }}</span>
 							</div>
 						</div>
