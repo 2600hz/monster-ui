@@ -30,7 +30,8 @@ define(function(require) {
 				parent = container || $('#monster_content');
 
 			self.setStore({
-				shouldShowMarket: monster.util.isSuperDuper() && !monster.util.isMasquerading(),
+				//shouldShowMarket: monster.util.isSuperDuper() && !monster.util.isMasquerading(),
+				shouldShowMarket: true,
 				marketConfig: null
 			});
 
@@ -60,7 +61,7 @@ define(function(require) {
 
 		bindEvents: function(parent, appstoreData) {
 			var self = this,
-				shouldShowMarket = self.getStore('shouldShowMarket'),
+				shouldShowMarket = true,
 				marketplaceActive = false;
 
 			parent.find('.app-filter').on('click', function(e) {
@@ -488,7 +489,7 @@ define(function(require) {
 						{
 							action: 'link',
 							access_code: formData.access_code,
-							name: formData.cluster_name
+							settings: { name: formData.cluster_name }
 						},
 						function() {
 							self.showMarketplaceConnector(
@@ -534,7 +535,13 @@ define(function(require) {
 			const self = this;
 			const configForm = template.find('#configuration_form');
 
-			monster.ui.validate(configForm);
+			monster.ui.validate(configForm, {
+				rules: {
+					api_url: {
+						url: true
+					}
+				}
+			});
 
 			const marketAction = function(payload, varName, formThis) {
 				self.updateMarketConnector(
@@ -565,7 +572,17 @@ define(function(require) {
 
 				if (monster.ui.valid(configForm)) {
 					const formData = monster.ui.getFormData('configuration_form');
-					marketAction({ action: 'api_url', api_url: formData.api_url }, 'api_url', saveThis);
+					marketAction(
+						{
+							action: 'update',
+							settings:
+								{
+									api_url: formData.api_url,
+									is_aio_cluster: formData.is_aio_cluster
+								}
+						},
+						'api_url',
+						saveThis);
 				} else {
 					saveThis.prop({ disabled: false });
 				}
@@ -667,7 +684,6 @@ define(function(require) {
 			const self = this;
 
 			// use this fake to test ui without calling API
-			//
 			// let fake = {
 			// 	cluster_id: 'lolololololol',
 			// 	enabled: false,
@@ -676,8 +692,6 @@ define(function(require) {
 			// 	is_linked: false,
 			// 	_read_only: {}
 			// };
-			// self.setStore('marketConfig', fake);
-
 			monster.request({
 				resource: 'marketplace.get',
 				success: function(response) {
@@ -697,7 +711,6 @@ define(function(require) {
 			const self = this;
 
 			// use this to test ui without calling API
-			//
 			// const marketConfig = self.getStore('marketConfig') || {};
 			// if (payload.action === 'enable') {
 			// 	marketConfig.enabled = true;
@@ -737,7 +750,7 @@ define(function(require) {
 
 			if (!marketConfig.api_url && monster.config.api.default) {
 				self.updateMarketConnector({
-					action: 'api_url',
+					action: 'update',
 					api_url: monster.config.api.default
 				});
 			}
