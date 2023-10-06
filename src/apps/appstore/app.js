@@ -576,7 +576,7 @@ define(function(require) {
 							action: 'update',
 							settings:
 								{
-									api_url: formData.api_url,
+									api_url: monster.config.api.default,
 									is_aio_cluster: formData.is_aio_cluster
 								}
 						},
@@ -753,7 +753,7 @@ define(function(require) {
 			if (!marketConfig.api_url && monster.config.api.default) {
 				self.updateMarketConnector({
 					action: 'update',
-					setting: {
+					settings: {
 						api_url: monster.config.api.default
 					}
 				});
