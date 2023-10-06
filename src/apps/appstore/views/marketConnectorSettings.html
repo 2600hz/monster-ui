@@ -27,11 +27,7 @@
 							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
 								<div class="controls">
-								{{#if config.name}}
-									<span>{{ config.name }}</span>
-								{{else}}
-									<span class="empty-placeholder">{{ i18n.marketplace.edition.emptyClusterName }}</span>
-								{{/if}}
+									<input type="text" name="cluster_name"  value="{{ config.name }}" placeholder="{{ i18n.marketplace.edition.emptyClusterName }}"/>
 								</div>
 							</div>
 							<div class="control-group">
