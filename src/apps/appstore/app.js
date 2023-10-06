@@ -572,7 +572,6 @@ define(function(require) {
 								{
 									name: formData.cluster_name,
 									api_url: formData.api_url,
-									name: formData.name,
 									is_aio_cluster: formData.is_aio_cluster
 								}
 						},
