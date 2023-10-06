@@ -30,8 +30,7 @@ define(function(require) {
 				parent = container || $('#monster_content');
 
 			self.setStore({
-				//shouldShowMarket: monster.util.isSuperDuper() && !monster.util.isMasquerading(),
-				shouldShowMarket: true,
+				shouldShowMarket: monster.util.isSuperDuper() && !monster.util.isMasquerading(),
 				marketConfig: null
 			});
 
