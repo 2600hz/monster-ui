@@ -281,14 +281,6 @@
 
 #market-content .market-settings {
 	form {
-		.control-group .controls.block-margin{
-			min-height: 60px;
-		}
-	}
-}
-
-#market-content .market-settings {
-	form {
 		.err-message{
 			color: red;
 		}
@@ -300,18 +292,6 @@
 		#api_url-error{
 			position: relative;
 			padding: 5px;
-		}
-	}
-}
-
-#market-content .market-settings {
-	form {
-		.control-group .controls{
-			.well {
-				+ .help-block{
-					margin-top: 10px;
-				}
-			}
 		}
 	}
 }
@@ -411,7 +391,7 @@
 			margin: 0;
 		}
 		.help-block {
-			margin-bottom: 25px;
+			margin: 10px 0 0;
 
 			i.fa-question-circle {
 				margin-right: 10px;
