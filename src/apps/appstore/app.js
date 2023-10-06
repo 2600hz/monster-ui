@@ -753,7 +753,9 @@ define(function(require) {
 			if (!marketConfig.api_url && monster.config.api.default) {
 				self.updateMarketConnector({
 					action: 'update',
-					api_url: monster.config.api.default
+					setting: {
+						api_url: monster.config.api.default
+					}
 				});
 			}
 		}
