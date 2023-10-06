@@ -1,5 +1,5 @@
 <div class="market-beta-notice">
-	{{#monsterPanelText "Alpha notice" "info" "fill-width"}}
+	{{#monsterPanelText "Beta notice" "info" "fill-width"}}
 		{{ i18n.marketplace.betaNotice }}
 	{{/monsterPanelText}}
 </div>
@@ -22,20 +22,47 @@
 						<div class="content-data">
 							<div class="help-block clearfix">
 								<i class="fa fa-question-circle"></i>
-								{{ i18n.marketplace.edition.helpMore }} <a href="{{ config.marketplace_url }}/help-center" target="_blank">{{ i18n.marketplace.edition.helpMoreLink }} <i class="fa fa-external-link"></i></a>.
+								{{ i18n.marketplace.edition.helpMore }} <a href="{{ config.marketplace_url }}/docs" target="_blank">{{ i18n.marketplace.edition.helpMoreLink }} <i class="fa fa-external-link"></i></a>.
 							</div>
 							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterId }}</label>
 								<div class="controls">
-									<span class="well well-small">{{ config.cluster_id }}</span>
+									<div class="plain-text">{{ config.cluster_id }}</div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
+								<div class="controls">
+									<input type="text" name="cluster_name"  value="{{ config.name }}" placeholder="{{ i18n.marketplace.edition.emptyClusterName }}"/>
+									<div class="help-block">{{ i18n.marketplace.edition.helpClusterName }}</div>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.apiUrl }}</label>
 								<div class="controls">
 									<input required="" type="text" name="api_url" value="{{ config.api_url }}">
-									<span class="help-block">{{ i18n.marketplace.edition.helpApiUrl }}</span>
+									<div class="help-block">{{ i18n.marketplace.edition.helpApiUrl }}</div>
 								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.kazooAllInOneLabel }}</label>
+								<div class="controls">
+								{{#monsterSwitch}}
+								<input type="checkbox" name="is_aio_cluster" id="all_in_one" {{#if config.is_aio_cluster}} checked="true" {{/if}}/>
+								{{/monsterSwitch}}
+								<div class="help-block">{{ i18n.marketplace.edition.kazooAllInOneHelpText }}</div>
+							</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">{{ i18n.marketplace.edition.metaKazooVersion }}</label>
+							<div class="controls">
+								{{#if config.kazoo_version}}
+								<div class="plain-text">{{ config.kazoo_version }}</div>
+								{{else}}
+								<div class="plain-text err-message">{{ i18n.marketplace.edition.emptyKazooVersion }}</div>
+								{{/if}}
+								<div class="help-block">{{ i18n.marketplace.edition.kazooVersionHelpText }}</div>
 							</div>
 						</div>
 					</div>
