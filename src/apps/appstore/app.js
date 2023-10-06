@@ -576,7 +576,7 @@ define(function(require) {
 							action: 'update',
 							settings:
 								{
-									api_url: monster.config.api.default,
+									api_url: formData.api_ur,
 									is_aio_cluster: formData.is_aio_cluster
 								}
 						},
