@@ -25,15 +25,15 @@
 								{{ i18n.marketplace.edition.helpMore }} <a href="{{ config.marketplace_url }}/docs" target="_blank">{{ i18n.marketplace.edition.helpMoreLink }} <i class="fa fa-external-link"></i></a>.
 							</div>
 							<div class="control-group">
-								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
-								<div class="controls">
-									<input type="text" name="cluster_name"  value="{{ config.name }}" placeholder="{{ i18n.marketplace.edition.emptyClusterName }}"/>
-								</div>
-							</div>
-							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterId }}</label>
 								<div class="controls">
 									<div class="plain-text">{{ config.cluster_id }}</div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
+								<div class="controls">
+									<input type="text" name="cluster_name"  value="{{ config.name }}" placeholder="{{ i18n.marketplace.edition.emptyClusterName }}"/>
 								</div>
 							</div>
 							<div class="control-group">

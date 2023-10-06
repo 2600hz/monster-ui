@@ -62,6 +62,7 @@
 			"dangerDisconnect": "Disconnect your cluster",
 			"dangerSection": "Danger Zone",
 			"emptyClusterName": "Cluster name is not set",
+			"helpClusterName": "A friendly name for your cluster to help you recognize it easier on Marketplace portal",
 			"helpApiUrl": "This URL will be used to serve UI app assets for Marketplace applications.",
 			"helpDangerDisable": "Disables the Marketplace Connector (takes effect AFTER <code>kazoo_appex</code> or KAZOO nodes are restarted).",
 			"helpDangerDisconnect": "Disconnects your cluster from the 2600Hz Marketplace and cancel all apps.",
