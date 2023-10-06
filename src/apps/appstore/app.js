@@ -60,7 +60,7 @@ define(function(require) {
 
 		bindEvents: function(parent, appstoreData) {
 			var self = this,
-				shouldShowMarket = true,
+				shouldShowMarket = self.getStore('shouldShowMarket'),
 				marketplaceActive = false;
 
 			parent.find('.app-filter').on('click', function(e) {
