@@ -534,13 +534,7 @@ define(function(require) {
 			const self = this;
 			const configForm = template.find('#configuration_form');
 
-			monster.ui.validate(configForm, {
-				rules: {
-					api_url: {
-						url: true
-					}
-				}
-			});
+			monster.ui.validate(configForm);
 
 			const marketAction = function(payload, varName, formThis) {
 				self.updateMarketConnector(
@@ -694,6 +688,8 @@ define(function(require) {
 			//	kazoo_version: "5.1.0",
 			// 	_read_only: {}
 			// };
+			// self.setStore('marketConfig', fake);
+			// onSuccess()
 			monster.request({
 				resource: 'marketplace.get',
 				success: function(response) {
