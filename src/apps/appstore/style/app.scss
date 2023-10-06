@@ -101,7 +101,7 @@
 
 	.launch-market::after {
 		position: absolute;
-		content: 'Alpha';
+		content: 'Beta';
 		bottom: 10px;
 		right: -58px;
 		width: 150px;
@@ -109,7 +109,7 @@
 		line-height: 18px;
 		overflow: hidden;
 
-		background-color: $red-orange;
+		background-color: $primary-color;
 		border: 1px solid white;
 		color: #fff;
 		text-align: center;
