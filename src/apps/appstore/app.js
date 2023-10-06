@@ -570,6 +570,7 @@ define(function(require) {
 							action: 'update',
 							settings:
 								{
+									name: formData.cluster_name,
 									api_url: formData.api_url,
 									is_aio_cluster: formData.is_aio_cluster
 								}
