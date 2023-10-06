@@ -28,7 +28,7 @@
 								<label class="control-label">{{ i18n.marketplace.edition.clusterName }}</label>
 								<div class="controls">
 								{{#if config.name}}
-									<span class="well well-small">{{ config.name }}</span>
+									<span>{{ config.name }}</span>
 								{{else}}
 									<span class="empty-placeholder">{{ i18n.marketplace.edition.emptyClusterName }}</span>
 								{{/if}}
@@ -37,7 +37,7 @@
 							<div class="control-group">
 								<label class="control-label">{{ i18n.marketplace.edition.clusterId }}</label>
 								<div class="controls block-margin">
-									<span class="well well-small">{{ config.cluster_id }}</span>
+									<span>{{ config.cluster_id }}</span>
 								</div>
 							</div>
 							<div class="control-group">
@@ -61,7 +61,7 @@
 							<label class="control-label">{{ i18n.marketplace.edition.metaKazooVersion }}</label>
 							<div class="controls">
 								{{#if config.kazoo_version}}
-								<span class="well well-small">{{ config.kazoo_version }}</span>
+								<span>{{ config.kazoo_version }}</span>
 								{{else}}
 								<span class="err-message">Version is not set, application cannot be started</span>
 								{{/if}}
