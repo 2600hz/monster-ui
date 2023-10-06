@@ -576,7 +576,7 @@ define(function(require) {
 							action: 'update',
 							settings:
 								{
-									api_url: formData.api_ur,
+									api_url: formData.api_url,
 									is_aio_cluster: formData.is_aio_cluster
 								}
 						},
