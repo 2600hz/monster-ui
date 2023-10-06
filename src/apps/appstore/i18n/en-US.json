@@ -74,6 +74,7 @@
 			"kazooAllInOneLabel": "Kazoo all-in-one node",
 			"kazooAllInOneHelpText": "Indicates all Kazoo Erlang nodes in your cluster are running the same set of Kazoo applications. Turning this on will make sure starting Marketplace application on one node will start them in other Kazoo nodes in your cluster.",
 			"kazooVersionHelpText": "To set your meta kazoo please go to Marketplace portal, Manage Cluster page",
+			"emptyKazooVersion": "Kazoo Version is not set, Marketplace applications cannot be started",
 			"settingsSection": "Settings",
 			"successUpdate": "You successfully saved changes to configuration!"
 		},

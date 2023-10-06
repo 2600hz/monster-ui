@@ -60,7 +60,7 @@
 								{{#if config.kazoo_version}}
 								<div class="plain-text">{{ config.kazoo_version }}</div>
 								{{else}}
-								<div class="err-message">Version is not set, application cannot be started</div>
+								<div class="plain-text err-message">{{ i18n.marketplace.edition.emptyKazooVersion }}</div>
 								{{/if}}
 								<div class="help-block">{{ i18n.marketplace.edition.kazooVersionHelpText }}</div>
 							</div>
