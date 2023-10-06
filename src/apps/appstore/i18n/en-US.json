@@ -82,7 +82,7 @@
 			"cancel": "Cancel",
 			"actionBtn": "Disconnect from Marketplace",
 			"actionKey": "DISCONNECT",
-			"messageIntro": "This action CANNOT be undone. This will permanently disconnect your cluster from the 2600Hz Marketplace and remove any apps or services purchased from it.",
+			"messageIntro": "This action CANNOT be undone. This will permanently disconnect your cluster from the 2600Hz Marketplace and you won't be able start Marketplace application anymore.",
 			"messageExplanation": "Please type the word \"{{variable}}\" in the following input and then click on the Disconnect button to proceed."
 		},
 		"dangerDisableDialog": {
