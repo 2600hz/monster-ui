@@ -391,11 +391,19 @@
 			margin: 0;
 		}
 		.help-block {
-			margin: 10px 0 0;
+			margin-top: 10px;
+
+			.clearfix {
+				margin-bottom: 25px;
+			}
 
 			i.fa-question-circle {
 				margin-right: 10px;
 			}
+		}
+
+		.help-block.clearfix {
+			margin-bottom: 25px;
 		}
 
 		.content-title {
