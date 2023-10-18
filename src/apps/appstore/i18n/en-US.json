@@ -89,7 +89,7 @@
 		"dangerDisableDialog": {
 			"content": "This will disable the Marketplace connector. The next time your KAZOO nodes start, apps purchased through the Marketplace will not be started. Do not forget to also remove those applications from your Kazoo nodes start up list."
 		},
-		"ulinkedCluster": {
+		"unlinkedCluster": {
 			"mainText": "Hey, if you unliked your cluster using the marketplace portal",
 			"buttonText":"Click here to cleanup cluster link state in your cluster"
 		}
