@@ -93,15 +93,17 @@ define(function(require) {
 						marketplaceActive = true;
 						self.showMarketplaceConnector(parent);
 					},
-					function(error) {
+					function(error, data, handler) {
 						/* checking for the error returned when cluster is unlinked from portal
 						an then log into monster ui*/
-						if (error.status === 500 && error.data.name === 'Unauthorized') {
+						const isAppexPasstrough = error.responseText.includes('appex_passthrough_error');
+						const isUnauthorizedError = error.responseText.includes('Unauthorized');
+						if (isAppexPasstrough && isUnauthorizedError) {
 							/* if this is not true the left items won't do anything*/
 							marketplaceActive = true;
 							self.renderMarketUnLinkedCluster(parent);
 						} else {
-							self.showErrorDialog(error);
+							handler(data);
 						}
 					});
 				});
@@ -534,29 +536,15 @@ define(function(require) {
 			}));
 
 			monster.ui.insertTemplate(parent.find('.right-container'), template);
-			self.bindUnlinckClusterEvents();
+			self.bindUnlinckClusterEvents(parent);
 		},
 
-		bindUnlinckClusterEvents: function() {
+		bindUnlinckClusterEvents: function(parent) {
 			var self = this;
 			$('#complete-unlink').on('click', function() {
 				self.updateMarketConnector({ action: 'unlink' }, function() {
-					window.location = window.location.pathname;
+					self.renderMarketWelcome(parent);
 				});
-			});
-		},
-
-		showErrorDialog: function(error) {
-			var self = this;
-			monster.ui.requestErrorDialog({
-				data: {
-					status: error.status,
-					message: self.i18n.active().errors.generic,
-					requestId: error.requestId || '',
-					response: error.responseText ? JSON.stringify($.parseJSON(error.responseText), null, 4) : JSON.stringify(error, null, 4),
-					url: error.monsterData.url,
-					verb: error.monsterData.verb,
-					jsonResponse: error.responseText ? $.parseJSON(error.responseText) : error }
 			});
 		},
 
@@ -746,8 +734,8 @@ define(function(require) {
 						onError();
 					}
 				},
-				error: function(err) {
-					onError && onError(err);
+				error: function(err, data, handler) {
+					onError && onError(err, data, handler);
 				}
 			});
 		},
