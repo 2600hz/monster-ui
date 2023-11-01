@@ -31,7 +31,7 @@
 				'patch': { verb: 'PATCH', url: 'accounts/{accountId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}' },
 				'listDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants' },
-				'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children' },
+				'listChildren': { verb: 'GET', url: 'accounts/{accountId}/children?ascending=true' },
 				'listParents': { verb: 'GET', url: 'accounts/{accountId}/tree' },
 				'searchByName': { verb: 'GET', url: 'search?t=account&q=name&v={accountName}' },
 				'searchAll': { verb: 'GET', url: 'search/multi?t=account&by_name={searchValue}&by_realm={searchValue}&by_id={searchValue}' },
