@@ -571,8 +571,14 @@ define(function() {
 						return callback(null);
 					}
 					if (!_.has(app.i18n, language)) {
+						if (_.includes(window.location.hash, app.appPath)) {
+							monster.ui.toast({
+								type: 'info',
+								message: 'The default language isn\'t supported for the selected app, switching automatically to ' + monster.defaultLanguage
+							});
+						}
 						console.info(language + ' isn\'t a supported language by this application: ' + app.name);
-						return callback(null);
+						return callback(null, { languageSupported: false });
 					}
 					// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
 					self.loadLocale(
@@ -588,7 +594,7 @@ define(function() {
 			monster.waterfall([
 				loadDefaultLanguage,
 				_.partial(maybeLoadPreferredLanguage, app, monster.config.whitelabel.language)
-			], function augmentI18n(err) {
+			], function augmentI18n(err, response) {
 				if (err) {
 					return mainCallback && mainCallback(err);
 				}
@@ -604,9 +610,10 @@ define(function() {
 							language = _.find([
 								monster.config.whitelabel.language,
 								monster.defaultLanguage
-							], _.partial(_.includes, loadedLanguages));
+							], _.partial(_.includes, loadedLanguages)),
+							appLanguage = _.get(response, 'languageSupported', true) ? language : monster.defaultLanguage;
 
-						return app.data.i18n[language];
+						return app.data.i18n[appLanguage];
 					}
 				});
 
@@ -839,8 +846,6 @@ define(function() {
 						complete: _.partial(monster.pub, 'monster.requestEnd'),
 						success: _.partial(callback, null),
 						error: function(data, status, error) {
-							console.log('_loadLocale error: ', status, error);
-
 							callback(true);
 						}
 					});
