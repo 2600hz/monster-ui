@@ -578,7 +578,7 @@ define(function() {
 							});
 						}
 						console.info(language + ' isn\'t a supported language by this application: ' + app.name);
-						return callback(null, { languageSupported: false });
+						return callback(null);
 					}
 					// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
 					self.loadLocale(
@@ -594,10 +594,13 @@ define(function() {
 			monster.waterfall([
 				loadDefaultLanguage,
 				_.partial(maybeLoadPreferredLanguage, app, monster.config.whitelabel.language)
-			], function augmentI18n(err, response) {
+			], function augmentI18n(err) {
 				if (err) {
 					return mainCallback && mainCallback(err);
 				}
+
+				var loadedLanguages = _.keys(app.data.i18n);
+
 				// We'll merge the Core I18n once we're done loading the different I18n coming with the application
 				if (monster.apps.hasOwnProperty('core')) {
 					$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
@@ -606,14 +609,12 @@ define(function() {
 				// add an active property method to the i18n array within the app.
 				_.extend(app.i18n, {
 					active: function() {
-						var loadedLanguages = _.keys(app.data.i18n),
-							language = _.find([
-								monster.config.whitelabel.language,
-								monster.defaultLanguage
-							], _.partial(_.includes, loadedLanguages)),
-							appLanguage = _.get(response, 'languageSupported', true) ? language : monster.defaultLanguage;
+						var language = _.find([
+							monster.config.whitelabel.language,
+							monster.defaultLanguage
+						], _.partial(_.includes, loadedLanguages));
 
-						return app.data.i18n[appLanguage];
+						return app.data.i18n[language];
 					}
 				});
 
