@@ -116,7 +116,7 @@ define(function(require) {
 					return;
 				}
 
-				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging().includes(event.data)) {
+				if (!monster.util.isAuthorizedTopicForCrossSiteMessaging(event.data)) {
 					return;
 				}
 

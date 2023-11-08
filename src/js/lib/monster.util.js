@@ -85,7 +85,7 @@ define(function(require) {
 		isAuthorizedTopicForCrossSiteMessaging: isAuthorizedTopicForCrossSiteMessaging
 	};
 
-	function isAuthorizedTopicForCrossSiteMessaging() {
+	function isAuthorizedTopicForCrossSiteMessaging(topicName) {
 		var TopicForCrossSiteMessaging = [
 			'voip.tab.myOffice',
 			'voip.tab.numbers',
@@ -98,7 +98,7 @@ define(function(require) {
 			'voip.tab.featureCodes'
 		];
 
-		return TopicForCrossSiteMessaging;
+		return TopicForCrossSiteMessaging.includes(topicName);
 	}
 
 	function getFeatureConfig(featurePath, defaultValue) {
