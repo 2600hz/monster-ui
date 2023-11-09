@@ -105,20 +105,20 @@ define(function(require) {
 			var origin = crossSiteMessaging.origin,
 				topics = crossSiteMessaging.topics;
 
-			function handleCrossSiteMessages(event) {
+			var handleCrossSiteMessages = function handleCrossSiteMessages(event) {
 				var activeApp = monster.apps.getActiveApp(),
 					eventData = event.data;
 
 				if (!_.isString(eventData) || activeApp !== eventData.split('.')[0]) {
 					return;
-                }
+				}
 
 				if (event.origin !== origin || !topics.includes(eventData) || !monster.util.isAuthorizedTopicForCrossSiteMessaging(eventData)) {
 					return;
 				}
 
 				monster.pub('core.crossSiteMessage.' + activeApp, eventData);
-			}
+			};
 
 			window.addEventListener('message', handleCrossSiteMessages);
 		},
