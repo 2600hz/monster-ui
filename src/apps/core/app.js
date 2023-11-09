@@ -102,7 +102,8 @@ define(function(require) {
 		},
 
 		bindCrossSiteMessagingHandler: function(crossSiteMessaging) {
-			const { origin, topics } = crossSiteMessaging;
+			var origin = crossSiteMessaging.origin,
+				topics = crossSiteMessaging.topics;
 
 			function handleCrossSiteMessages(event) {
 				var activeApp = monster.apps.getActiveApp(),
