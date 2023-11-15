@@ -567,33 +567,19 @@ define(function() {
 			var self = this,
 				loadDefaultLanguage = _.bind(self.loadLocale, self, app, monster.defaultLanguage),
 				maybeLoadPreferredLanguage = function maybeLoadPreferredLanguage(app, language, callback) {
-					/**
-					 * The requested language is the same as the default so skip load again
-					 */
 					if (language.toLowerCase() === monster.defaultLanguage.toLowerCase()) {
 						return callback(null);
 					}
-
-					/**
-					 * The selected language is not supported so we set the default for the app
-					 */
 					if (!_.has(app.i18n, language)) {
-						console.info(language + ' isn\'t a supported language by this application: ' + app.name + ' switching automatically to ' + monster.defaultLanguage);
-						self.loadLocale(
-							app,
-							monster.defaultLanguage,
-							// Prepend null as we don't care if it errors out, the app can still load
-							_.partial(callback, null)
-						);
-
-						monster.ui.toast({
-							type: 'info',
-							message: 'The default language isn\'t supported for the selected app, switching automatically to ' + monster.defaultLanguage
-						});
-
-						return;
+						if (_.includes(window.location.hash, app.appPath)) {
+							monster.ui.toast({
+								type: 'info',
+								message: 'The default language isn\'t supported for the selected app, switching automatically to ' + monster.defaultLanguage
+							});
+						}
+						console.info(language + ' isn\'t a supported language by this application: ' + app.name);
+						return callback(null);
 					}
-
 					// If the preferred language of the user is supported by the application and different from the default language, we load its i18n files.
 					self.loadLocale(
 						app,
@@ -612,6 +598,9 @@ define(function() {
 				if (err) {
 					return mainCallback && mainCallback(err);
 				}
+
+				var loadedLanguages = _.keys(app.data.i18n);
+
 				// We'll merge the Core I18n once we're done loading the different I18n coming with the application
 				if (monster.apps.hasOwnProperty('core')) {
 					$.extend(true, app.data.i18n, monster.apps.core.data.i18n);
@@ -620,11 +609,10 @@ define(function() {
 				// add an active property method to the i18n array within the app.
 				_.extend(app.i18n, {
 					active: function() {
-						var loadedLanguages = _.keys(app.data.i18n),
-							language = _.find([
-								monster.config.whitelabel.language,
-								monster.defaultLanguage
-							], _.partial(_.includes, loadedLanguages));
+						var language = _.find([
+							monster.config.whitelabel.language,
+							monster.defaultLanguage
+						], _.partial(_.includes, loadedLanguages));
 
 						return app.data.i18n[language];
 					}
