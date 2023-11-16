@@ -96,6 +96,7 @@ nav:
       - 'docs/monster-util/toFriendlyDate().md'
       - 'docs/monster-util/unixToDate().md'
       - 'docs/monster-util/unformatPhoneNumber().md'
+      - 'docs/monster-util/isAuthorizedTopicForCrossSiteMessaging().md'
       - 'dataFlags':
         - 'docs/monster-util/dataFlags.md'
         - 'docs/monster-util/dataFlags/add().md'
