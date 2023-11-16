@@ -50,7 +50,10 @@ define(function(require) {
 						parsedNumber = parseInt(number);
 
 						if (parsedNumber && parsedNumber > 0 && parsedNumber < 100000) {
-							formattedData.extensions.push({ extension: parsedNumber, callflow: callflow.name || self.i18n.active().extensionTools.getNew.table.unNamedCallflow });
+							formattedData.extensions.push({
+								extension: number,
+								callflow: callflow.name || self.i18n.active().extensionTools.getNew.table.unNamedCallflow
+							});
 						}
 					});
 				});
