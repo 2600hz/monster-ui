@@ -44,6 +44,8 @@ Key | Description | Type | Default | Required
 `allowedExtraDeviceTypes` | Contains types of additional devices corresponding to integrations. | `Array` | | `false`
 `allowCrossSiteUsage` | Whether Monster UI supports being embedded into a third-party context (e.g. iframe with different domain). | `Boolean` | `false` | `false`
 `bypassAppStorePermissions` | Whether app store access restrictions should be bypassed when loading an app. When set to `true`, end-users are allowed to access any app installed on the cluster where Monster UI is running.  | `Boolean` | `false` | `false`
+`crossSiteMessaging` | Configures whether the application permits messages from external domains and specifies acceptable message topics. | `Object`([#crossSiteMessaging](#crossSiteMessaging)) | | `false`
+
 ### `api`
 
 Key | Description | Type | Default | Required
@@ -176,6 +178,13 @@ Key | Description | Type | Default | Required
 `brands.[]` | Each object key correspont to the device brand name (`yealink`, `avaya`...). | `Object` | | `false`
 `brands.[].keyFunctions` | List key functions available per brand ([schema][combo-keys-schema]). | `Array` | | `false`
 `brands.[].lineKeys` | List of keys to be used as default line keys per brand. | `Array` | | `false`
+
+#### `crossSiteMessaging`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`origin` | The remote source that the framework would be configured to accept cross-site messages from. | `String` | | `false`
+`topics` | Specific messages accepted from the configured remote source. | `Array`  | | `false`
 
 [currency-codes]: http://www.currency-iso.org/en/home/tables/table-a1.html
 [country-codes]: https://www.iso.org/obp/ui/#search
