@@ -642,9 +642,16 @@ define(function() {
 					_.get(options, 'sourceUrl')
 				]),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
+				externalUrl = hasExternalUrlConfigured
+					? externalUrl.endsWith('/')
+						? externalUrl.substring(0, externalUrl.length - 1)
+						: externalUrl
+					: undefined,
+				// moduleId must match with the name the module is registering itself
+				// see: https://requirejs.org/docs/jquery.html#modulename
 				pathConfig = hasExternalUrlConfigured ? {
 					directory: externalUrl,
-					module: 'app-' + name
+					module: 'apps/' + name + '/app'
 				} : {
 					directory: 'apps/' + name,
 					module: 'apps/' + name + '/app'
@@ -700,10 +707,19 @@ define(function() {
 					callback(null, app);
 				},
 				requireSubModule = function(app, subModule, callback) {
-					var pathSubModule = app.appPath + '/submodules/',
-						path = pathSubModule + subModule + '/' + subModule;
+					var subModulePath = '/submodules/' + subModule + '/' + subModule,
+						subModuleId = 'apps/' + name + subModulePath;
 
-					require([path], function(module) {
+					if (hasExternalUrlConfigured) {
+						// modules are expected to not require their submodules directly
+						// otherwise require app.js will fail because it is not using
+						// source_url.
+						require.config(
+							_.set({}, ['paths', subModuleId], externalUrl + subModulePath)
+						);
+					}
+
+					require([subModuleId], function(module) {
 						/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
 						var oldSubscribes = $.extend(true, {}, app.subscribe);
 						$.extend(true, app, module);
