@@ -81,8 +81,25 @@ define(function(require) {
 		},
 		unformatPhoneNumber: unformatPhoneNumber,
 		unixToDate: unixToDate,
-		updateImagePath: updateImagePath
+		updateImagePath: updateImagePath,
+		isAuthorizedTopicForCrossSiteMessaging: isAuthorizedTopicForCrossSiteMessaging
 	};
+
+	function isAuthorizedTopicForCrossSiteMessaging(topicName) {
+		var TopicForCrossSiteMessaging = [
+			'voip.tab.myOffice',
+			'voip.tab.numbers',
+			'voip.tab.users',
+			'voip.tab.groups',
+			'voip.tab.strategy',
+			'voip.tab.callLogs',
+			'voip.tab.devices',
+			'voip.tab.vmboxes',
+			'voip.tab.featureCodes'
+		];
+
+		return TopicForCrossSiteMessaging.includes(topicName);
+	}
 
 	function getFeatureConfig(featurePath, defaultValue) {
 		return _.get(monster.apps.auth.appFlags.featureSet, featurePath, defaultValue);
