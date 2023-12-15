@@ -636,24 +636,26 @@ define(function() {
 					_.partial(_.map, _, monster.normalizeUrlPathEnding),
 					_.partial(_.find, _, _.isString)
 				),
+				removeTrailingSlash = function(url) {
+					// Remove trailing '/'
+					return _.endsWith(url, '/') ? url.slice(0, -1) : url;
+				},
 				metadata = monster.util.getAppStoreMetadata(name),
-				externalUrl = getValidUrl([
+				externalUrl = _.flow(
+					getValidUrl,
+					removeTrailingSlash
+				)([
 					_.get(metadata, 'source_url'),
 					_.get(options, 'sourceUrl')
 				]),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
-				externalUrl = hasExternalUrlConfigured
-					? externalUrl.endsWith('/')
-						? externalUrl.substring(0, externalUrl.length - 1)
-						: externalUrl
-					: undefined,
-				// moduleId must match with the name the module is registering itself
-				// see: https://requirejs.org/docs/jquery.html#modulename
 				pathConfig = hasExternalUrlConfigured ? {
 					directory: externalUrl,
+					moduleRoot: 'apps/' + name,
 					module: 'apps/' + name + '/app'
 				} : {
 					directory: 'apps/' + name,
+					moduleRoot: 'apps/' + name,
 					module: 'apps/' + name + '/app'
 				},
 				apiUrl = getValidUrl([
@@ -706,20 +708,11 @@ define(function() {
 
 					callback(null, app);
 				},
-				requireSubModule = function(app, subModule, callback) {
-					var subModulePath = '/submodules/' + subModule + '/' + subModule,
-						subModuleId = 'apps/' + name + subModulePath;
+				requireSubModule = _.partial(function(appRoot, app, subModule, callback) {
+					var pathSubModule = appRoot + '/submodules/',
+						path = pathSubModule + subModule + '/' + subModule;
 
-					if (hasExternalUrlConfigured) {
-						// modules are expected to not require their submodules directly
-						// otherwise require app.js will fail because it is not using
-						// source_url.
-						require.config(
-							_.set({}, ['paths', subModuleId], externalUrl + subModulePath)
-						);
-					}
-
-					require([subModuleId], function(module) {
+					require([path], function(module) {
 						/* We need to be able to subscribe to the same event with many callbacks, so we can't merge the subscribes key together, or it would override some valid callbacks */
 						var oldSubscribes = $.extend(true, {}, app.subscribe);
 						$.extend(true, app, module);
@@ -733,7 +726,7 @@ define(function() {
 
 						callback(null);
 					}, callback);
-				},
+				}, pathConfig.moduleRoot),
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
 						.chain(app)
@@ -789,7 +782,7 @@ define(function() {
 
 			if (hasExternalUrlConfigured) {
 				require.config(
-					_.set({}, ['paths', pathConfig.module], pathConfig.directory + '/app')
+					_.set({}, ['paths', pathConfig.moduleRoot], pathConfig.directory)
 				);
 			}
 
