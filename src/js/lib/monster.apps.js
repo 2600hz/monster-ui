@@ -636,17 +636,26 @@ define(function() {
 					_.partial(_.map, _, monster.normalizeUrlPathEnding),
 					_.partial(_.find, _, _.isString)
 				),
+				removeTrailingSlash = function(url) {
+					// Remove trailing '/'
+					return _.endsWith(url, '/') ? url.slice(0, -1) : url;
+				},
 				metadata = monster.util.getAppStoreMetadata(name),
-				externalUrl = getValidUrl([
+				externalUrl = _.flow(
+					getValidUrl,
+					removeTrailingSlash
+				)([
 					_.get(metadata, 'source_url'),
 					_.get(options, 'sourceUrl')
 				]),
 				hasExternalUrlConfigured = !_.isUndefined(externalUrl),
 				pathConfig = hasExternalUrlConfigured ? {
 					directory: externalUrl,
-					module: 'app-' + name
+					moduleRoot: 'apps/' + name,
+					module: 'apps/' + name + '/app'
 				} : {
 					directory: 'apps/' + name,
+					moduleRoot: 'apps/' + name,
 					module: 'apps/' + name + '/app'
 				},
 				apiUrl = getValidUrl([
@@ -699,8 +708,8 @@ define(function() {
 
 					callback(null, app);
 				},
-				requireSubModule = function(app, subModule, callback) {
-					var pathSubModule = app.appPath + '/submodules/',
+				requireSubModule = _.partial(function(appRoot, app, subModule, callback) {
+					var pathSubModule = appRoot + '/submodules/',
 						path = pathSubModule + subModule + '/' + subModule;
 
 					require([path], function(module) {
@@ -717,7 +726,7 @@ define(function() {
 
 						callback(null);
 					}, callback);
-				},
+				}, pathConfig.moduleRoot),
 				loadSubModules = function loadSubModules(app, callback) {
 					monster.parallel(_
 						.chain(app)
@@ -773,7 +782,7 @@ define(function() {
 
 			if (hasExternalUrlConfigured) {
 				require.config(
-					_.set({}, ['paths', pathConfig.module], pathConfig.directory + '/app')
+					_.set({}, ['paths', pathConfig.moduleRoot], pathConfig.directory)
 				);
 			}
 
