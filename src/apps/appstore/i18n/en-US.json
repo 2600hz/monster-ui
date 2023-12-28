@@ -88,6 +88,10 @@
 		},
 		"dangerDisableDialog": {
 			"content": "This will disable the Marketplace connector. The next time your KAZOO nodes start, apps purchased through the Marketplace will not be started. Do not forget to also remove those applications from your Kazoo nodes start up list."
+		},
+		"unlinkedCluster": {
+			"mainText": "Hmmm. We are currently unable to access the Marketplace Connector app. It appears your cluster was disconnected using your Marketplace Account's disconnection routine. To restore the Connector app and access the Cluster Connection page, please select the button below. You will then need to restart the cluster connection process from the Marketplace.",
+			"buttonText":"Complete Unlinking"
 		}
 	},
 	"selectedUsers": "Selected Users",

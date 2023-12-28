@@ -92,6 +92,19 @@ define(function(require) {
 
 						marketplaceActive = true;
 						self.showMarketplaceConnector(parent);
+					},
+					function(error, data, handler) {
+						/* checking for the error returned when cluster is unlinked from portal
+						an then log into monster ui*/
+						const isAppexPasstrough = error.responseText.includes('appex_passthrough_error');
+						const isUnauthorizedError = error.responseText.includes('Unauthorized');
+						if (isAppexPasstrough && isUnauthorizedError) {
+							/* if this is not true the left items won't do anything*/
+							marketplaceActive = true;
+							self.renderMarketUnLinkedCluster(parent);
+						} else {
+							handler(data);
+						}
 					});
 				});
 			}
@@ -516,6 +529,25 @@ define(function(require) {
 			});
 		},
 
+		renderMarketUnLinkedCluster: function(parent) {
+			const self = this;
+			const template = $(self.getTemplate({
+				name: 'marketUnlinkedCluster'
+			}));
+
+			monster.ui.insertTemplate(parent.find('.right-container'), template);
+			self.bindUnlinckClusterEvents(parent);
+		},
+
+		bindUnlinckClusterEvents: function(parent) {
+			var self = this;
+			$('#complete-unlink').on('click', function() {
+				self.updateMarketConnector({ action: 'unlink' }, function() {
+					self.renderMarketWelcome(parent);
+				});
+			});
+		},
+
 		renderMarketSettings: function(parent) {
 			const self = this;
 			const marketConfig = self.getStore('marketConfig');
@@ -693,6 +725,7 @@ define(function(require) {
 			// onSuccess()
 			monster.request({
 				resource: 'marketplace.get',
+				generateError: false,
 				success: function(response) {
 					if (response && response.data) {
 						self.setStore('marketConfig', response.data);
@@ -701,8 +734,8 @@ define(function(require) {
 						onError();
 					}
 				},
-				error: function(err) {
-					onError && onError(err);
+				error: function(err, data, handler) {
+					onError && onError(err, data, handler);
 				}
 			});
 		},
