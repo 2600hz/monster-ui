@@ -1936,6 +1936,15 @@ define(function(require) {
 					phoneNumber: phoneNumber
 				},
 				success: function(_data, status) {
+					if (_.get(_data, 'metadata.carrier_module')) {
+						_data.data.carrier_module = _.get(_data, 'metadata.carrier_module');
+					}
+					if (_.get(_data, 'metadata.features')) {
+						_data.data['metadata'] = {
+							features: _.get(_data,'metadata.features')
+						};
+					}
+
 					success && success(_data.data);
 				},
 				error: function(_data, status) {
