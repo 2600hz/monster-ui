@@ -40,10 +40,10 @@ define(function(require) {
 					carriers: carriers
 				};
 
-			if (dataNumber.hasOwnProperty('_read_only') && dataNumber._read_only.hasOwnProperty('carrier_module')) {
+			if (dataNumber.hasOwnProperty('carrier_module')) {
 				_.each(carriers, function(carrier) {
-					if (dataNumber._read_only.carrier_module === carrier.key) {
-						formattedData.selectedCarrier = dataNumber._read_only.carrier_module;
+					if (dataNumber.carrier_module === carrier.key) {
+						formattedData.selectedCarrier = dataNumber.carrier_module;
 					}
 				});
 
