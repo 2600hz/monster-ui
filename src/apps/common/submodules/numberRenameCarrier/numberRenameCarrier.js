@@ -40,10 +40,10 @@ define(function(require) {
 					carriers: carriers
 				};
 
-			if (dataNumber.hasOwnProperty('carrier_module')) {
+			if (dataNumber.hasOwnProperty('metadata') && dataNumber.metadata.hasOwnProperty('carrier_module')) {
 				_.each(carriers, function(carrier) {
-					if (dataNumber.carrier_module === carrier.key) {
-						formattedData.selectedCarrier = dataNumber.carrier_module;
+					if (dataNumber.metadata.carrier_module === carrier.key) {
+						formattedData.selectedCarrier = dataNumber.metadata.carrier_module;
 					}
 				});
 
