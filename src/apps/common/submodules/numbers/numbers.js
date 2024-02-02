@@ -1936,6 +1936,8 @@ define(function(require) {
 					phoneNumber: phoneNumber
 				},
 				success: function(_data, status) {
+					_data.data['metadata'] = _.get(_data, 'metadata', {});
+
 					success && success(_data.data);
 				},
 				error: function(_data, status) {
