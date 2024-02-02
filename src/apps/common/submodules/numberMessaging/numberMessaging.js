@@ -114,7 +114,7 @@ define(function(require) {
 		numberMessagingFormatData: function(args) {
 			var self = this,
 				numberData = args.numberData,
-				settings = _.get(numberData, '_read_only.features.settings', {});
+				settings = _.get(numberData, 'metadata.features.settings', {});
 
 			return {
 				features: _.map(['sms', 'mms'], function(feature) {
