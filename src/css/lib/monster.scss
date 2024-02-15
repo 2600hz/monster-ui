@@ -1015,6 +1015,7 @@ label.monster-radio-large > i::after {
 }
 .number-box.disabled {
 	cursor: default;
+	display: block;
 }
 .number-box.disabled:hover {
 	background: #f9f9f9;
