@@ -1167,8 +1167,8 @@ define(function(require) {
 			throw new TypeError('"number" is not an object');
 		}
 		var pathToFeatures = _.find([
-			'_read_only.features.available',
-			'features_available'
+			'metadata.features.available',
+			'features'
 		], function(path) {
 			return _.has(number, path);
 		});
