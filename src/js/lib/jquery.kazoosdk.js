@@ -72,7 +72,8 @@
 			},
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' }
+				'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' },
+				'getToken': { verb: 'GET', url: 'accounts/{accountId}/braintree/client_token' }
 			},
 			blacklist: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/blacklists' },
