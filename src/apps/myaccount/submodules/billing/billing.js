@@ -2,7 +2,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		card = require('card');
+		card = require('card'),
+		dropin = require('dropin');
 
 	var billing = {
 
@@ -40,7 +41,19 @@ define(function(require) {
 							callback(null, {});
 						}
 					});
-				}
+				},
+				accountToken: function(callback) {
+					self.callApi({
+						resource: 'billing.getToken',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data, status) {
+							callback(null, data.data);
+						}
+					});
+				},
+
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
 					var billingTemplate = $(self.getTemplate({
@@ -62,6 +75,32 @@ define(function(require) {
 						values: {
 							number: '•••• •••• •••• ' + (results.billing.credit_card.last_four || '••••')
 						}
+					});
+
+					dropin.create({
+						authorization: _.get(results, 'accountToken.client_token'),
+						selector: '#dropin_container',
+						vaultManager: true
+					}, function (err, instance) {
+						billingTemplate.find('.change-card').on('click', function() {
+							instance.requestPaymentMethod(function (err, payload) {
+								if (err) {
+									instance.clearSelectedPaymentMethod();
+                							return;
+             							} else {
+									self.requestUpdateBilling({
+										data: {
+											data: {
+												nonce: payload.nonce
+											}
+										},
+										success: function(data) {
+											console.log(data);
+										}
+									});
+								}
+    							});
+  						})
 					});
 
 					if (typeof args.callback === 'function') {
@@ -92,9 +131,8 @@ define(function(require) {
 					var reg_visa = new RegExp('^4[0-9]{12}(?:[0-9]{3})?$'),
 						reg_mastercard = new RegExp('^5[1-5][0-9]{14}$'),
 						reg_amex = new RegExp('^3[47][0-9]{13}$'),
-						reg_discover = new RegExp('^6(?:011|5[0-9]{2})[0-9]{12}$');
-						//regDiners = new RegExp('^3(?:0[0-5]|[68][0-9])[0-9]{11}$'),
-						//regJSB= new RegExp('^(?:2131|1800|35\\d{3})\\d{11}$');
+						reg_discover = new RegExp('^6(?:011|5[0-9]{2})[0-9]{12}$'),
+						reg_JSB = new RegExp('^(?:2131|1800|35\\d{3})\\d{11}$');
 
 					if (reg_visa.test(number)) {
 						return 'visa';
@@ -112,13 +150,9 @@ define(function(require) {
 						return 'discover';
 					}
 
-					// if (reg_diners.test(number)) {
-					// 	return 'DINERS';
-					// }
-
-					// if (reg_JSB.test(number)) {
-					// 	return 'JSB';
-					// }
+					if (reg_JSB.test(number)) {
+						return 'JSB';
+					}
 
 					return false;
 				},
@@ -135,24 +169,19 @@ define(function(require) {
 					}
 				};
 
-			template.find('.edit-credit-card').on('click', function(e) {
+			template.on('click', '.braintree-toggle', function(e) {
 				e.preventDefault();
 
-				template.find('.edition').show();
+				template.find('.change-card').addClass('show');
 				template.find('.uneditable').hide();
 				displayCardType('');
 			});
 
-			template.find('#credit_card_number').on('keyup', function(e) {
-				displayCardType($(this).val());
-			});
+			template.on('click', '.braintree-method', function(e) {
+				e.preventDefault();
 
-			template.find('#credit_card_number').on('paste', function(e) {
-				var currentElement = $(this);
-				//Hack for paste event: w/o timeout, the value is set to undefined...
-				setTimeout(function() {
-					displayCardType(currentElement.val());
-				}, 0);
+				template.find('.change-card').removeClass('show');
+				displayCardType('');
 			});
 
 			//Refreshing the card info when opening the settings-item
@@ -161,12 +190,32 @@ define(function(require) {
 				if (!settingsItem.hasClass('open')) {
 					settingsItem.find('input').keyup();
 				}
+
+                                template.find('.credit-card-container').show();
 			});
 			monster.pub('myaccount.events', {
 				template: template,
 				data: data
 			});
+		},
+
+		requestUpdateBilling: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.update',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
 		}
+
 	};
 
 	return billing;
