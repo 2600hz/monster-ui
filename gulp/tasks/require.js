@@ -33,6 +33,7 @@ const libsToExcludeFromApp = [
 	'ddslick',
 	'disableAutoFill',
 	'drop',
+	'dropin',
 	'duo',
 	'file-saver',
 	'fileupload',
