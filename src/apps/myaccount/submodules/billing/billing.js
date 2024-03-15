@@ -2,7 +2,6 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		card = require('card'),
 		dropin = require('dropin');
 
 	var billing = {
@@ -52,8 +51,7 @@ define(function(require) {
 							callback(null, data.data);
 						}
 					});
-				},
-
+				}
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
 					var billingTemplate = $(self.getTemplate({
@@ -62,7 +60,10 @@ define(function(require) {
 							submodule: 'billing'
 						})),
 						setCardHeader = function(creditCard, button) {
-							var newTypeClass = 'card-type ' + _.toLower(creditCard.card_type),
+							var cardType = _.toLower(creditCard.card_type) === 'american express'
+									? 'amex'
+									: _.toLower(creditCard.card_type),
+								newTypeClass = 'card-type ' + cardType,
 								newDescription = creditCard.last_four
 									? '•••• •••• •••• ' + (creditCard.last_four)
 									: '';
@@ -84,17 +85,6 @@ define(function(require) {
 
 					monster.pub('myaccount.renderSubmodule', billingTemplate);
 
-				/*	billingTemplate.find('#form_credit_card').card({
-						container: '.credit-card-container',
-						nameInput: '#first_name, #last_name',
-						numberInput: '#credit_card_number',
-						expiryInput: '#expiration_date_month, #expiration_date_year',
-						cvcInput: '#security_code',
-						values: {
-							number: '•••• •••• •••• ' + (results.billing.credit_card.last_four || '••••')
-						}
-					});*/
-
 					dropin.create({
 						authorization: _.get(results, 'accountToken.client_token'),
 						selector: '#dropin_container',
@@ -104,16 +94,15 @@ define(function(require) {
 								required: true
 							}
 						}
-					}, function (err, instance) {
+					}, function(err, instance) {
 						var saveButton = billingTemplate.find('.save-card'),
-							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button');
+							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
 
 						saveButton.on('click', function() {
-							instance.requestPaymentMethod(function (err, payload) {
+							instance.requestPaymentMethod(function(err, payload) {
 								if (err) {
 									instance.clearSelectedPaymentMethod();
-                							return;
-             							} else {
+								} else {
 									self.requestUpdateBilling({
 										data: {
 											data: {
@@ -125,8 +114,8 @@ define(function(require) {
 										}
 									});
 								}
-    							});
-  						});
+							});
+						});
 
 						deleteButton.on('click', function() {
 							setCardHeader({}, saveButton);
@@ -143,13 +132,17 @@ define(function(require) {
 		billingFormatData: function(data, callback) {
 			if (!_.isEmpty(data.billing)) {
 				var creditCards = _.get(data, 'billing.credit_cards', {});
-				data.billing.credit_card = _.find(creditCards, { default: true }) || {};
+				data.billing.credit_card = _.find(creditCards, { 'default': true }) || {};
 
 				/* If There is a credit card stored, we fill the fields with * */
 				if (data.billing.credit_card.last_four) {
+					var cardType = data.billing.credit_card.card_type.toLowerCase();
+
 					data.billing.credit_card.fake_number = '************' + data.billing.credit_card.last_four;
 					data.billing.credit_card.fake_cvv = '***';
-					data.billing.credit_card.type = data.billing.credit_card.card_type.toLowerCase();
+					data.billing.credit_card.type = cardType === 'american express'
+						? 'amex'
+						: cardType;
 				}
 			}
 
@@ -185,8 +178,13 @@ define(function(require) {
 					settingsItem.find('input').keyup();
 				}
 
-                                template.find('.credit-card-container').show();
+				template.find('.credit-card-container').show();
 			});
+
+			template.on('change', '#dropin_container', function(e) {
+				console.log('changed');
+			});
+
 			monster.pub('myaccount.events', {
 				template: template,
 				data: data
