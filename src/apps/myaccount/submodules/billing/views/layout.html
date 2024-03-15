@@ -3,7 +3,10 @@
 		<li class="settings-item clearfix" data-name="credit_card">
 			<a class="settings-link clearfix">
 				<span class="title">{{ i18n.billing.cardOnFile }}</span>
-				<span class="description"><span class="card-type {{billing.credit_card.type}}"/>{{billing.credit_card.fake_number}}</span>
+				<span class="description">
+					<span class="card-type {{billing.credit_card.type}}" />
+					<span class="fake-number">{{billing.credit_card.fake_number}}</span>
+				</span>
 				<span class="update">
 					<i class="fa fa-cog icon-small"></i>
 					<span class="text">{{ i18n.editSettings }}</span>
@@ -14,7 +17,7 @@
 				<div class="row-fluid">
 					<div class="span12">
 						<form id="form_credit_card" class="form-horizontal">
-							<div class="credit-card-inputs uneditable">
+						<!--	<div class="credit-card-inputs uneditable">
 								<div class="control-group">
 									<label class="control-label" for="first_name">{{ i18n.billing.billingName }}</label>
 									<div class="controls">
@@ -41,11 +44,12 @@
 								</div>
 							</div>
 							<div class="credit-card-container uneditable"></div>
+						-->
 							<div id="dropin_container"></div>
 							<div class="action-group clearfix">
 								<div class="action-bar">
 									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
-									<button type="submit" class="monster-button-success change-card" data-module="billing" data-field="credit_card">{{ i18n.saveChanges }}</button>
+									<button type="submit" class="monster-button-success save-card" data-module="billing" data-field="credit_card">{{ i18n.saveChanges }}</button>
 								</div>
 							</div>
 						</form>

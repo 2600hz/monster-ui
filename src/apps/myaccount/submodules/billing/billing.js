@@ -57,16 +57,34 @@ define(function(require) {
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
 					var billingTemplate = $(self.getTemplate({
-						name: 'layout',
-						data: results,
-						submodule: 'billing'
-					}));
+							name: 'layout',
+							data: results,
+							submodule: 'billing'
+						})),
+						setCardHeader = function(creditCard, button) {
+							var newTypeClass = 'card-type ' + _.toLower(creditCard.card_type),
+								newDescription = creditCard.last_four
+									? '•••• •••• •••• ' + (creditCard.last_four)
+									: '';
+							billingTemplate.find('.card-type')
+								.removeClass()
+								.addClass(newTypeClass);
+
+							billingTemplate.find('.fake-number')
+								.text(newDescription);
+
+							if (!_.isEmpty(creditCard)) {
+								button.removeClass('show');
+							} else {
+								button.addClass('show');
+							}
+						};
 
 					self.billingBindEvents(billingTemplate, results);
 
 					monster.pub('myaccount.renderSubmodule', billingTemplate);
 
-					billingTemplate.find('#form_credit_card').card({
+				/*	billingTemplate.find('#form_credit_card').card({
 						container: '.credit-card-container',
 						nameInput: '#first_name, #last_name',
 						numberInput: '#credit_card_number',
@@ -75,14 +93,22 @@ define(function(require) {
 						values: {
 							number: '•••• •••• •••• ' + (results.billing.credit_card.last_four || '••••')
 						}
-					});
+					});*/
 
 					dropin.create({
 						authorization: _.get(results, 'accountToken.client_token'),
 						selector: '#dropin_container',
-						vaultManager: true
+						vaultManager: true,
+						card: {
+							cardholderName: {
+								required: true
+							}
+						}
 					}, function (err, instance) {
-						billingTemplate.find('.change-card').on('click', function() {
+						var saveButton = billingTemplate.find('.save-card'),
+							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button');
+
+						saveButton.on('click', function() {
 							instance.requestPaymentMethod(function (err, payload) {
 								if (err) {
 									instance.clearSelectedPaymentMethod();
@@ -95,12 +121,16 @@ define(function(require) {
 											}
 										},
 										success: function(data) {
-											console.log(data);
+											setCardHeader(_.head(_.get(data, 'credit_cards')), saveButton);
 										}
 									});
 								}
     							});
-  						})
+  						});
+
+						deleteButton.on('click', function() {
+							setCardHeader({}, saveButton);
+						});
 					});
 
 					if (typeof args.callback === 'function') {
@@ -112,7 +142,8 @@ define(function(require) {
 
 		billingFormatData: function(data, callback) {
 			if (!_.isEmpty(data.billing)) {
-				data.billing.credit_card = data.billing.credit_cards[0] || {};
+				var creditCards = _.get(data, 'billing.credit_cards', {});
+				data.billing.credit_card = _.find(creditCards, { default: true }) || {};
 
 				/* If There is a credit card stored, we fill the fields with * */
 				if (data.billing.credit_card.last_four) {
@@ -127,61 +158,24 @@ define(function(require) {
 
 		billingBindEvents: function(template, data) {
 			var self = this,
-				getCardType = function(number) {
-					var reg_visa = new RegExp('^4[0-9]{12}(?:[0-9]{3})?$'),
-						reg_mastercard = new RegExp('^5[1-5][0-9]{14}$'),
-						reg_amex = new RegExp('^3[47][0-9]{13}$'),
-						reg_discover = new RegExp('^6(?:011|5[0-9]{2})[0-9]{12}$'),
-						reg_JSB = new RegExp('^(?:2131|1800|35\\d{3})\\d{11}$');
+				creditCardData = _.get(data, 'billing.credit_card');
 
-					if (reg_visa.test(number)) {
-						return 'visa';
-					}
-
-					if (reg_mastercard.test(number)) {
-						return 'mastercard';
-					}
-
-					if (reg_amex.test(number)) {
-						return 'amex';
-					}
-
-					if (reg_discover.test(number)) {
-						return 'discover';
-					}
-
-					if (reg_JSB.test(number)) {
-						return 'JSB';
-					}
-
-					return false;
-				},
-				displayCardType = function(cardNumber) {
-					var type = getCardType(cardNumber);
-
-					if (type === false) {
-						template.find('.edition .card-type').hide();
-						template.find('.add-on i').show();
-					} else if (!(template.find('.card-type.' + type).is(':visible'))) {
-						template.find('.edition .card-type').hide();
-						template.find('.add-on i').hide();
-						template.find('.edition .card-type.' + type).css('display', 'inline-block');
-					}
-				};
+			if (_.isEmpty(creditCardData)) {
+				template.find('.save-card').addClass('show');
+			}
 
 			template.on('click', '.braintree-toggle', function(e) {
 				e.preventDefault();
 
-				template.find('.change-card').addClass('show');
-				template.find('.uneditable').hide();
-				displayCardType('');
+				template.find('.save-card').addClass('show');
+				//template.find('.uneditable').hide();
 			});
 
 			template.on('click', '.braintree-method', function(e) {
 				e.preventDefault();
 
-				template.find('.change-card').removeClass('show');
-				displayCardType('');
+				template.find('.save-card').removeClass('show');
+				//template.find('.uneditable').show();
 			});
 
 			//Refreshing the card info when opening the settings-item
