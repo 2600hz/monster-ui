@@ -811,22 +811,6 @@ define(function(require) {
 						liSettings.find('.uneditable').show();
 						liSettings.find('.edition').hide();
 					});
-				},
-				settingsValidate = function(fieldName, dataForm, callback) {
-					var formPassword = template.find('#form_password');
-					var formAccountAdministrator = template.find('#form_account_administrator');
-
-					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
-					// If the field is password, we start custom validation
-
-					if (formPassword.length) {
-						self.validatePasswordForm(formPassword, callback);
-					// otherwise we don't have any validation for this field, we execute the callback
-					} else if (formAccountAdministrator.length) {
-						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
-					} else {
-						callback && callback();
-					}
 				};
 
 			template.find('.settings-link').on('click', function() {
@@ -853,49 +837,6 @@ define(function(require) {
 					var currentElement = $(v);
 					currentElement.val(currentElement.data('original_value'));
 				});
-			});
-
-			template.find('.change').on('click', function(e) {
-				e.preventDefault();
-
-				var currentElement = $(this),
-					module = currentElement.parents('#myaccount').find('.myaccount-menu .myaccount-element.active').data('module'),
-					moduleToUpdate = currentElement.data('module'),
-					fieldName = currentElement.data('field'),
-					newData = (function cleanFormData(moduleToUpdate, data) {
-						if (moduleToUpdate === 'billing') {
-							data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
-						}
-
-						return data;
-					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName));
-
-				settingsValidate(fieldName, newData,
-					function() {
-						self.settingsUpdateData(moduleToUpdate, data[moduleToUpdate], newData,
-							function(data) {
-								var args = {
-									callback: function(parent) {
-										if (fieldName === 'credit_card') {
-											parent.find('.edition').hide();
-											parent.find('.uneditable').show();
-										} else if (fieldName === 'colorblind') {
-											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
-										}
-
-										self.highlightField(parent, fieldName);
-
-										/* TODO USELESS? */
-										if (typeof callbackUpdate === 'function') {
-										}
-									}
-								};
-
-								monster.pub('myaccount.' + module + '.renderContent', args);
-							}
-						);
-					}
-				);
 			});
 		},
 
