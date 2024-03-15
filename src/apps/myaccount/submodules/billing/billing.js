@@ -60,13 +60,14 @@ define(function(require) {
 							submodule: 'billing'
 						})),
 						setCardHeader = function(creditCard, button) {
-							var cardType = _.toLower(creditCard.card_type) === 'american express'
-									? 'amex'
-									: _.toLower(creditCard.card_type),
-								newTypeClass = 'card-type ' + cardType,
+							var cardType = _.get(creditCard, 'card_type', '').toLowerCase(),
+								newTypeClass = cardType === 'american express'
+									? 'card-type amex'
+									: 'card-type ' + cardType,
 								newDescription = creditCard.last_four
 									? '•••• •••• •••• ' + (creditCard.last_four)
 									: '';
+
 							billingTemplate.find('.card-type')
 								.removeClass()
 								.addClass(newTypeClass);
@@ -161,14 +162,12 @@ define(function(require) {
 				e.preventDefault();
 
 				template.find('.save-card').addClass('show');
-				//template.find('.uneditable').hide();
 			});
 
 			template.on('click', '.braintree-method', function(e) {
 				e.preventDefault();
 
 				template.find('.save-card').removeClass('show');
-				//template.find('.uneditable').show();
 			});
 
 			//Refreshing the card info when opening the settings-item
@@ -177,12 +176,6 @@ define(function(require) {
 				if (!settingsItem.hasClass('open')) {
 					settingsItem.find('input').keyup();
 				}
-
-				template.find('.credit-card-container').show();
-			});
-
-			template.on('change', '#dropin_container', function(e) {
-				console.log('changed');
 			});
 
 			monster.pub('myaccount.events', {
