@@ -2,7 +2,7 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		card = require('card');
+		dropin = require('dropin');
 
 	var billing = {
 
@@ -40,28 +40,104 @@ define(function(require) {
 							callback(null, {});
 						}
 					});
+				},
+				accountToken: function(callback) {
+					self.getAccountToken({
+						success: function(data) {
+							callback(null, data);
+						},
+						error: function(data) {
+							self.requestUpdateBilling({
+								data: {
+									data: {
+										first_name: 'Test',
+										last_name: 'Test'
+									}
+								},
+								success: function(data) {
+									self.getAccountToken({
+										success: function(data) {
+											callback(null, data);
+										}
+									});
+								}
+							});
+						}
+					});
 				}
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
 					var billingTemplate = $(self.getTemplate({
-						name: 'layout',
-						data: results,
-						submodule: 'billing'
-					}));
+							name: 'layout',
+							data: results,
+							submodule: 'billing'
+						})),
+						setCardHeader = function(creditCard, button) {
+							var cardType = _.get(creditCard, 'card_type', '').toLowerCase(),
+								newTypeClass = cardType === 'american express'
+									? 'card-type amex'
+									: 'card-type ' + cardType,
+								newDescription = creditCard.last_four
+									? '•••• •••• •••• ' + (creditCard.last_four)
+									: '';
+
+							billingTemplate.find('.card-type')
+								.removeClass()
+								.addClass(newTypeClass);
+
+							billingTemplate.find('.fake-number')
+								.text(newDescription);
+
+							if (!_.isEmpty(creditCard)) {
+								button.removeClass('show');
+							} else {
+								button.addClass('show');
+							}
+						};
 
 					self.billingBindEvents(billingTemplate, results);
 
 					monster.pub('myaccount.renderSubmodule', billingTemplate);
 
-					billingTemplate.find('#form_credit_card').card({
-						container: '.credit-card-container',
-						nameInput: '#first_name, #last_name',
-						numberInput: '#credit_card_number',
-						expiryInput: '#expiration_date_month, #expiration_date_year',
-						cvcInput: '#security_code',
-						values: {
-							number: '•••• •••• •••• ' + (results.billing.credit_card.last_four || '••••')
+					dropin.create({
+						authorization: _.get(results, 'accountToken.client_token'),
+						selector: '#dropin_container',
+						vaultManager: true,
+						card: {
+							cardholderName: {
+								required: true
+							}
 						}
+					}, function(err, instance) {
+						var saveButton = billingTemplate.find('.save-card'),
+							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
+
+						saveButton.on('click', function(e) {
+							e.preventDefault();
+
+							instance.requestPaymentMethod(function(err, payload) {
+								if (err) {
+									instance.clearSelectedPaymentMethod();
+								} else {
+									self.requestUpdateBilling({
+										data: {
+											data: {
+												nonce: payload.nonce
+											}
+										},
+										success: function(data) {
+											setCardHeader(_.head(_.get(data, 'credit_cards')), saveButton);
+										}
+									});
+								}
+							});
+						});
+
+						deleteButton.on('click', function(e) {
+							e.preventDefault();
+
+							setCardHeader({}, saveButton);
+						});
 					});
 
 					if (typeof args.callback === 'function') {
@@ -73,13 +149,18 @@ define(function(require) {
 
 		billingFormatData: function(data, callback) {
 			if (!_.isEmpty(data.billing)) {
-				data.billing.credit_card = data.billing.credit_cards[0] || {};
+				var creditCards = _.get(data, 'billing.credit_cards', {});
+				data.billing.credit_card = _.find(creditCards, { 'default': true }) || {};
 
 				/* If There is a credit card stored, we fill the fields with * */
 				if (data.billing.credit_card.last_four) {
+					var cardType = data.billing.credit_card.card_type.toLowerCase();
+
 					data.billing.credit_card.fake_number = '************' + data.billing.credit_card.last_four;
 					data.billing.credit_card.fake_cvv = '***';
-					data.billing.credit_card.type = data.billing.credit_card.card_type.toLowerCase();
+					data.billing.credit_card.type = cardType === 'american express'
+						? 'amex'
+						: cardType;
 				}
 			}
 
@@ -88,71 +169,22 @@ define(function(require) {
 
 		billingBindEvents: function(template, data) {
 			var self = this,
-				getCardType = function(number) {
-					var reg_visa = new RegExp('^4[0-9]{12}(?:[0-9]{3})?$'),
-						reg_mastercard = new RegExp('^5[1-5][0-9]{14}$'),
-						reg_amex = new RegExp('^3[47][0-9]{13}$'),
-						reg_discover = new RegExp('^6(?:011|5[0-9]{2})[0-9]{12}$');
-						//regDiners = new RegExp('^3(?:0[0-5]|[68][0-9])[0-9]{11}$'),
-						//regJSB= new RegExp('^(?:2131|1800|35\\d{3})\\d{11}$');
+				creditCardData = _.get(data, 'billing.credit_card');
 
-					if (reg_visa.test(number)) {
-						return 'visa';
-					}
+			if (_.isEmpty(creditCardData)) {
+				template.find('.save-card').addClass('show');
+			}
 
-					if (reg_mastercard.test(number)) {
-						return 'mastercard';
-					}
-
-					if (reg_amex.test(number)) {
-						return 'amex';
-					}
-
-					if (reg_discover.test(number)) {
-						return 'discover';
-					}
-
-					// if (reg_diners.test(number)) {
-					// 	return 'DINERS';
-					// }
-
-					// if (reg_JSB.test(number)) {
-					// 	return 'JSB';
-					// }
-
-					return false;
-				},
-				displayCardType = function(cardNumber) {
-					var type = getCardType(cardNumber);
-
-					if (type === false) {
-						template.find('.edition .card-type').hide();
-						template.find('.add-on i').show();
-					} else if (!(template.find('.card-type.' + type).is(':visible'))) {
-						template.find('.edition .card-type').hide();
-						template.find('.add-on i').hide();
-						template.find('.edition .card-type.' + type).css('display', 'inline-block');
-					}
-				};
-
-			template.find('.edit-credit-card').on('click', function(e) {
+			template.on('click', '.braintree-toggle', function(e) {
 				e.preventDefault();
 
-				template.find('.edition').show();
-				template.find('.uneditable').hide();
-				displayCardType('');
+				template.find('.save-card').addClass('show');
 			});
 
-			template.find('#credit_card_number').on('keyup', function(e) {
-				displayCardType($(this).val());
-			});
+			template.on('click', '.braintree-method', function(e) {
+				e.preventDefault();
 
-			template.find('#credit_card_number').on('paste', function(e) {
-				var currentElement = $(this);
-				//Hack for paste event: w/o timeout, the value is set to undefined...
-				setTimeout(function() {
-					displayCardType(currentElement.val());
-				}, 0);
+				template.find('.save-card').removeClass('show');
 			});
 
 			//Refreshing the card info when opening the settings-item
@@ -162,11 +194,48 @@ define(function(require) {
 					settingsItem.find('input').keyup();
 				}
 			});
+
 			monster.pub('myaccount.events', {
 				template: template,
 				data: data
 			});
+		},
+
+		requestUpdateBilling: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.update',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		getAccountToken: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.getToken',
+				data: _.merge({
+					accountId: self.accountId,
+					generateError: false
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
 		}
+
 	};
 
 	return billing;

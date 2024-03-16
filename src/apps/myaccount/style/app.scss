@@ -240,6 +240,14 @@
 	background: url(static/mastercard.png);
 }
 
+#myaccount .myaccount-content .list-settings .card-type.unionpay {
+	background: url(static/unionpay.png);
+}
+
+#myaccount .myaccount-content .list-settings .card-type.jcb {
+	background: url(static/jcb.png);
+}
+
 #myaccount .myaccount-content .list-settings {
 	overflow: visible;
 	margin: 0;
