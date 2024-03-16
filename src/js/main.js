@@ -15,6 +15,7 @@ require.config({
 		'ddslick': 'js/vendor/jquery.ddslick.min',
 		'disableAutoFill': 'js/vendor/jquery.disableAutoFill',
 		'drop': 'js/vendor/drop',
+		'dropin': 'js/vendor/dropin.min',
 		'duo': 'js/vendor/duo.min',
 		'file-saver': 'js/vendor/file-saver-1.3.2.min',
 		'fileupload': 'js/lib/jquery.fileupload',
