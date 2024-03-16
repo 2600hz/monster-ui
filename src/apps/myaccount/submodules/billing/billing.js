@@ -42,13 +42,26 @@ define(function(require) {
 					});
 				},
 				accountToken: function(callback) {
-					self.callApi({
-						resource: 'billing.getToken',
-						data: {
-							accountId: self.accountId
+					self.getAccountToken({
+						success: function(data) {
+							callback(null, data);
 						},
-						success: function(data, status) {
-							callback(null, data.data);
+						error: function(data) {
+							self.requestUpdateBilling({
+								data: {
+									data: {
+										first_name: 'Test',
+										last_name: 'Test'
+									}
+								},
+								success: function(data) {
+									self.getAccountToken({
+										success: function(data) {
+											callback(null, data);
+										}
+									});
+								}
+							});
 						}
 					});
 				}
@@ -99,7 +112,9 @@ define(function(require) {
 						var saveButton = billingTemplate.find('.save-card'),
 							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
 
-						saveButton.on('click', function() {
+						saveButton.on('click', function(e) {
+							e.preventDefault();
+
 							instance.requestPaymentMethod(function(err, payload) {
 								if (err) {
 									instance.clearSelectedPaymentMethod();
@@ -118,7 +133,9 @@ define(function(require) {
 							});
 						});
 
-						deleteButton.on('click', function() {
+						deleteButton.on('click', function(e) {
+							e.preventDefault();
+
 							setCardHeader({}, saveButton);
 						});
 					});
@@ -191,6 +208,24 @@ define(function(require) {
 				resource: 'billing.update',
 				data: _.merge({
 					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		getAccountToken: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.getToken',
+				data: _.merge({
+					accountId: self.accountId,
+					generateError: false
 				}, args.data),
 				success: function(data) {
 					args.hasOwnProperty('success') && args.success(data.data);
