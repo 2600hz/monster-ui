@@ -10,3 +10,13 @@
 #myaccount .myaccount-content .billing-content-wrapper .credit-card-container .card .back {
 	background: #808089;
 }
+#myaccount .myaccount-content .billing-content-wrapper .action-group .save-card {
+	display: none;
+}
+#myaccount .myaccount-content .billing-content-wrapper .action-group .save-card.show {
+	display: inline-block;
+}
+
+[data-braintree-id="toggle"] {
+  display: none;
+}
