@@ -69,7 +69,7 @@ define(function(require) {
 		userBindingEvents: function(template, data) {
 			var self = this;
 
-			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone || 'inherit', {inherit: self.i18n.active().defaultTimezone});
+			timezone.populateDropdown(template.find('#user_timezone'), data.user.timezone || 'inherit', { inherit: self.i18n.active().defaultTimezone });
 			monster.ui.chosen(template.find('#user_timezone'));
 			monster.ui.showPasswordStrength(template.find('#password'));
 
