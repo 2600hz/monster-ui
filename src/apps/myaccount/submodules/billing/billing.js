@@ -72,6 +72,7 @@ define(function(require) {
 							data: results,
 							submodule: 'billing'
 						})),
+						expiredCreditCardData = _.get(results, 'billing.expired_card'),
 						setCardHeader = function(creditCard, button) {
 							var cardType = _.get(creditCard, 'card_type', '').toLowerCase(),
 								newTypeClass = cardType === 'american express'
@@ -127,6 +128,22 @@ define(function(require) {
 										},
 										success: function(data) {
 											setCardHeader(_.head(_.get(data, 'credit_cards')), saveButton);
+
+											if (!_.isEmpty(expiredCreditCardData)) {
+													self.deleteCardBilling({
+														data: {
+															cardId: expiredCreditCardData.id
+														},
+														success: function(data) {
+															monster.ui.toast({
+																type: 'success',
+																message: self.i18n.active().billing.toastr.expiredCardDeleted
+								});
+
+															billingTemplate.find('.card-expired').hide();
+														}
+													});
+											}
 										}
 									});
 								}
@@ -151,6 +168,7 @@ define(function(require) {
 			if (!_.isEmpty(data.billing)) {
 				var creditCards = _.get(data, 'billing.credit_cards', {});
 				data.billing.credit_card = _.find(creditCards, { 'default': true }) || {};
+				data.billing.expired_card = _.find(creditCards, { 'default': true, 'expired': true }) || {};
 
 				/* If There is a credit card stored, we fill the fields with * */
 				if (data.billing.credit_card.last_four) {
@@ -169,9 +187,15 @@ define(function(require) {
 
 		billingBindEvents: function(template, data) {
 			var self = this,
-				creditCardData = _.get(data, 'billing.credit_card');
+				creditCardData = _.get(data, 'billing.credit_card'),
+				expiredCardData = _.get(data, 'billing.expired_card');
 
 			if (_.isEmpty(creditCardData)) {
+				template.find('.save-card').addClass('show');
+			}
+
+			if (!_.isEmpty(expiredCardData)) {
+				template.find('.card-expired').show();
 				template.find('.save-card').addClass('show');
 			}
 
@@ -234,7 +258,25 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
-		}
+		},
+
+		deleteCardBilling: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.deleteCard',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
 
 	};
 
