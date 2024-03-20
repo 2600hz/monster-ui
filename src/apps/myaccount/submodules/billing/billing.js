@@ -120,30 +120,38 @@ define(function(require) {
 								if (err) {
 									instance.clearSelectedPaymentMethod();
 								} else {
-									self.requestUpdateBilling({
-										data: {
-											data: {
-												nonce: payload.nonce
-											}
+									monster.parallel({
+										updateBilling: function(callback) {
+											self.requestUpdateBilling({
+												data: {
+													data: {
+														nonce: payload.nonce
+													}
+												},
+												success: function(data) {
+													callback(null, data);
+												}
+											});
 										},
-										success: function(data) {
-											setCardHeader(_.head(_.get(data, 'credit_cards')), saveButton);
-
+										deletedCard: function(callback) {
 											if (!_.isEmpty(expiredCreditCardData)) {
-													self.deleteCardBilling({
-														data: {
-															cardId: expiredCreditCardData.id
-														},
-														success: function(data) {
-															monster.ui.toast({
-																type: 'success',
-																message: self.i18n.active().billing.toastr.expiredCardDeleted
-								});
-
-															billingTemplate.find('.card-expired').hide();
-														}
-													});
+												self.deleteCardBilling({
+													data: {
+														cardId: expiredCreditCardData.id
+													},
+													success: function(data) {
+														callback(null, data);
+													}
+												});
+											} else {
+												callback(null);
 											}
+										}
+									}, function(err, results) {
+										setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
+
+										if (results.deletedCard) {
+											billingTemplate.find('.card-expired').hide();
 										}
 									});
 								}
@@ -275,9 +283,7 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
-		},
-
-
+		}
 	};
 
 	return billing;
