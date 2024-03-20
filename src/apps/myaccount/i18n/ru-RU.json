@@ -112,6 +112,7 @@
 		"month": "MM",
 		"securityCode": "Код безопасности / CVV",
 		"changeCard": "Изменить данные карты",
+		"expiredCard": "The previous card on file has expired, please add a new card to avoid service interruption!",
 
 		"accountAdministrator": "Связь по вопросам оплаты",
 		"accountAdministratorFullName": "ФИО",
