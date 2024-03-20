@@ -154,6 +154,7 @@
 		"month": "MM",
 		"securityCode": "Sicherheitscode / CVV-Code",
 		"changeCard": "Kartendaten ändern",
+		"expiredCard": "The previous card on file has expired, please add a new card to avoid service interruption!",
 
 		"accountAdministrator": "Rechnungskontakt",
 		"accountAdministratorFullName": "Vollständiger Name",

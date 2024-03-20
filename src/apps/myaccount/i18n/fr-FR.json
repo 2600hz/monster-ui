@@ -86,6 +86,7 @@
 		"month": "MM",
 		"securityCode": "Code de sécurité / CVV",
 		"changeCard": "Changer carte",
+		"expiredCard": "The previous card on file has expired, please add a new card to avoid service interruption!",
 
 		"accountAdministrator": "Changer carte",
 		"accountAdministratorFullName": "Nom complet",
