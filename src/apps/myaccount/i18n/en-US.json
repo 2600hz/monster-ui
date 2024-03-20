@@ -173,9 +173,6 @@
 		"securityCode": "Security Code / CVV",
 		"changeCard": "Change Card Info",
 		"expiredCard": "The previous card on file has expired, please add a new card to avoid service interruption!",
-		"toastr": {
-			"expiredCardDeleted": "Card updated succesfully."
-		},
 
 		"accountAdministrator": "Billing Contact",
 		"accountAdministratorFullName": "Full Name",
