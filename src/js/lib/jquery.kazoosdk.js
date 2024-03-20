@@ -73,6 +73,7 @@
 			billing: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/braintree/customer' },
 				'update': { verb: 'POST', url: 'accounts/{accountId}/braintree/customer' },
+				'deleteCard': { verb: 'DELETE', url: 'accounts/{accountId}/braintree/cards/{cardId}' },
 				'getToken': { verb: 'GET', url: 'accounts/{accountId}/braintree/client_token' }
 			},
 			blacklist: {
