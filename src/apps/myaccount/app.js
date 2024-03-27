@@ -811,6 +811,22 @@ define(function(require) {
 						liSettings.find('.uneditable').show();
 						liSettings.find('.edition').hide();
 					});
+				},
+				settingsValidate = function(fieldName, dataForm, callback) {
+					var formPassword = template.find('#form_password');
+					var formAccountAdministrator = template.find('#form_account_administrator');
+
+					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
+					// If the field is password, we start custom validation
+
+					if (formPassword.length) {
+						self.validatePasswordForm(formPassword, callback);
+					// otherwise we don't have any validation for this field, we execute the callback
+					} else if (formAccountAdministrator.length) {
+						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
+					} else {
+						callback && callback();
+					}
 				};
 
 			template.find('.settings-link').on('click', function() {
@@ -820,10 +836,6 @@ define(function(require) {
 
 				if (!isOpen) {
 					var args = { link: $(this) };
-
-					if (data.hasOwnProperty('billing')) {
-						args.hasEmptyCreditCardInfo = _.isEmpty(data.billing.credit_cards);
-					}
 
 					self._openAccordionGroup(args);
 				}
@@ -837,6 +849,42 @@ define(function(require) {
 					var currentElement = $(v);
 					currentElement.val(currentElement.data('original_value'));
 				});
+			});
+
+			template.find('.change').on('click', function(e) {
+				e.preventDefault();
+
+				var currentElement = $(this),
+					module = currentElement.parents('#myaccount').find('.myaccount-menu .myaccount-element.active').data('module'),
+					moduleToUpdate = currentElement.data('module'),
+					fieldName = currentElement.data('field'),
+					newData = (function cleanFormData(moduleToUpdate, data) {
+						return data;
+					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName));
+
+				settingsValidate(fieldName, newData,
+					function() {
+						self.settingsUpdateData(moduleToUpdate, data[moduleToUpdate], newData,
+							function(data) {
+								var args = {
+									callback: function(parent) {
+										if (fieldName === 'colorblind') {
+											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
+										}
+
+										self.highlightField(parent, fieldName);
+
+										/* TODO USELESS? */
+										if (typeof callbackUpdate === 'function') {
+										}
+									}
+								};
+
+								monster.pub('myaccount.' + module + '.renderContent', args);
+							}
+						);
+					}
+				);
 			});
 		},
 
@@ -864,19 +912,12 @@ define(function(require) {
 		_openAccordionGroup: function(args) {
 			var self = this,
 				link = args.link,
-				settingsItem = link.parents('.settings-item'),
-				hasEmptyCreditCardInfo = args.hasEmptyCreditCardInfo === false ? false : true;
+				settingsItem = link.parents('.settings-item');
 
 			settingsItem.addClass('open');
 			link.find('.update .text').text(self.i18n.active().close);
 			link.find('.update i').removeClass('fa-cog').addClass('fa-times');
 			settingsItem.find('.settings-item-content').slideDown('fast');
-
-			/* If there is no credit-card data, we skip the step that just displays the creditcard info */
-			if (settingsItem.data('name') === 'credit_card' && hasEmptyCreditCardInfo) {
-				settingsItem.find('.uneditable').hide();
-				settingsItem.find('.edition').show();
-			}
 		},
 
 		settingsUpdateData: function(type, data, newData, callbackSuccess, callbackError) {
