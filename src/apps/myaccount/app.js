@@ -837,10 +837,6 @@ define(function(require) {
 				if (!isOpen) {
 					var args = { link: $(this) };
 
-					if (data.hasOwnProperty('billing')) {
-						args.hasEmptyCreditCardInfo = _.isEmpty(data.billing.credit_cards);
-					}
-
 					self._openAccordionGroup(args);
 				}
 			});
@@ -863,10 +859,6 @@ define(function(require) {
 					moduleToUpdate = currentElement.data('module'),
 					fieldName = currentElement.data('field'),
 					newData = (function cleanFormData(moduleToUpdate, data) {
-						if (moduleToUpdate === 'billing') {
-							data.credit_card.expiration_date = data.extra.expiration_date.month + '/' + data.extra.expiration_date.year;
-						}
-
 						return data;
 					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName));
 
@@ -876,10 +868,7 @@ define(function(require) {
 							function(data) {
 								var args = {
 									callback: function(parent) {
-										if (fieldName === 'credit_card') {
-											parent.find('.edition').hide();
-											parent.find('.uneditable').show();
-										} else if (fieldName === 'colorblind') {
+										if (fieldName === 'colorblind') {
 											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
 										}
 
@@ -930,12 +919,6 @@ define(function(require) {
 			link.find('.update .text').text(self.i18n.active().close);
 			link.find('.update i').removeClass('fa-cog').addClass('fa-times');
 			settingsItem.find('.settings-item-content').slideDown('fast');
-
-			/* If there is no credit-card data, we skip the step that just displays the creditcard info */
-			if (settingsItem.data('name') === 'credit_card' && hasEmptyCreditCardInfo) {
-				settingsItem.find('.uneditable').hide();
-				settingsItem.find('.edition').show();
-			}
 		},
 
 		settingsUpdateData: function(type, data, newData, callbackSuccess, callbackError) {
