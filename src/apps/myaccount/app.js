@@ -912,8 +912,7 @@ define(function(require) {
 		_openAccordionGroup: function(args) {
 			var self = this,
 				link = args.link,
-				settingsItem = link.parents('.settings-item'),
-				hasEmptyCreditCardInfo = args.hasEmptyCreditCardInfo === false ? false : true;
+				settingsItem = link.parents('.settings-item');
 
 			settingsItem.addClass('open');
 			link.find('.update .text').text(self.i18n.active().close);
