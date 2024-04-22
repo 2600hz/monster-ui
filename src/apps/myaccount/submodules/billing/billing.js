@@ -227,6 +227,14 @@ define(function(require) {
 				}
 			});
 
+			// Select paymet method option
+			var $paymentContent = template.find('.payment-content');
+			template.find('input[type="radio"][name="payment_method"]').change(function() {
+				var $paymentTypeContent = $paymentContent.find('[data-payment-type="' + this.value + '"]');
+				$paymentTypeContent.removeClass('payment-type-content-hidden');
+				$paymentTypeContent.siblings().addClass('payment-type-content-hidden');
+			});
+
 			monster.pub('myaccount.events', {
 				template: template,
 				data: data

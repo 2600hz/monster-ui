@@ -32,7 +32,7 @@
 	"store": "Store",
 
 	"settingsCategory": "Settings",
-	"billingCategory": "Billing",
+	"billingCategory": "Payment Details",
 	"trunkingCategory": "Trunking",
 
 	"editSettings": "Edit",
@@ -162,7 +162,6 @@
 		"title": "Payment Details",
 		"missingCard": "Your credit card information is invalid, expired or missing - please update your credit card and save the changes.",
 
-		"cardOnFile": "Card on File",
 		"billingName": "Name",
 		"firstName": "First",
 		"lastName": "Last",
@@ -174,16 +173,68 @@
 		"changeCard": "Change Card Info",
 		"expiredCard": "The previous card on file has expired, please add a new card to avoid service interruption!",
 
-		"accountAdministrator": "Billing Contact",
-		"accountAdministratorFullName": "Full Name",
-		"accountAdministratorEmail": "Email",
-		"accountAdministratorNumber": "Phone Number",
-		"accountAdministratorAddress": "Primary Service Address",
-		"accountAdministratorAddressLineTwo": "Address Line 2",
-		"accountAdministratorAddressCity": "City",
-		"accountAdministratorAddressState": "State/Province/Region",
-		"accountAdministratorAddressCountry": "Country",
-		"accountAdministratorAddressZipCode": "Zip/Postal Code"
+		"billingContact": {
+			"title": "Billing Contact",
+			"information": "Each account is required to have a valid Billing Contact configured. All fields required.",
+			"billingAddress": "Billing Address",
+			"firstName": {
+				"label": "First Name",
+				"placeholder": "Jon"
+			},
+			"lastName": {
+				"label": "Last Name",
+				"placeholder": "Doe"
+			},
+			"email": {
+				"label": "Email",
+				"placeholder": "jon_doe@company.com"
+			},
+			"number": {
+				"label": "Phone Number",
+				"placeholder": "4152223333"
+			},
+			"streetAddress": {
+				"label": "Primary Service Address",
+				"placeholder": "140 Geary St."
+			},
+			"streetAddressExtra": {
+				"label": "Address Line 2",
+				"placeholder": "3rd Floor"
+			},
+			"locality": {
+				"label": "City",
+				"placeholder": "San Francisco"
+			},
+			"region": {
+				"label": "State/Province/Region",
+				"placeholder": "California"
+			},
+			"country": {
+				"label": "Country",
+				"placeholder": "US"
+			},
+			"postalCode": {
+				"label": "Zip/Postal Code",
+				"placeholder": "12345"
+			}
+		},
+
+		"paymentMethod": {
+			"title": "Payment Method",
+			"options": {
+				"ach": {
+					"title": "ACH Direct Debit",
+					"description": "Pay for transactions by debiting directly from a bank account."
+				},
+				"card": {
+					"title": "Credit/Debit Card",
+					"description": "Pay for transactions using a credit/debit card."
+				}
+			}
+		},
+
+		"save": "Save Changes",
+		"clear": "Clear Changes"
 	},
 
 	"trunks": {
