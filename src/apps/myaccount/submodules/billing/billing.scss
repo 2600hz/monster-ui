@@ -1,0 +1,104 @@
+@import "../../../../css/partials/base";
+
+/*#myaccount .myaccount-content .billing-content-wrapper .credit-card-inputs {
+    display: inline-block;
+}
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-container {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-container .card .front,
+#myaccount .myaccount-content .billing-content-wrapper .credit-card-container .card .back {
+	background: #808089;
+}
+#myaccount .myaccount-content .billing-content-wrapper .action-group .save-card {
+	display: none;
+}
+#myaccount .myaccount-content .billing-content-wrapper .action-group .save-card.show {
+	display: inline-block;
+}
+
+[data-braintree-id="toggle"] {
+  display: none;
+}*/
+
+#myaccount .myaccount-content .billing-content-wrapper {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+
+	.billing-body {
+		flex-grow: 1;
+
+		.settings-item-section {
+			display: flex;
+			flex-wrap: wrap;
+			margin: 0 -0.5rem 0.5rem -0.5rem;
+
+			.section-title {
+				font-size: 14px;
+				font-weight: 600;
+				margin-bottom: 1.5rem;
+				width: 100%;
+				line-height: 1.25rem;
+				padding: 0 0.5rem 0 0.5rem;
+			}
+
+			.section-information {
+				width: calc(50% - 1rem);
+				margin-left: 0.5rem;
+				margin-right: calc(50% - 0.5rem);
+				margin-bottom: 1.5rem;
+			}
+
+			.control-group {
+				width: calc(50% - 1rem);
+				margin: 0 0.5rem 1rem 0.5rem;
+
+				.control-label {
+					margin-top: 0;
+					margin-bottom: 0.25rem;
+				}
+
+				.controls {
+					margin-left: 0;
+				}
+			}
+
+			input {
+				display: block;
+				width: 100%;
+				box-sizing: border-box;
+				height: 2.25rem;
+				padding: 0.5rem 0.75rem;
+				margin: 0;
+			}
+		}
+
+		.payment-type-content {
+			display: block;
+
+			&-hidden {
+				display: none;
+			}
+		}
+	}
+
+	.billing-footer {
+		margin: 1.5rem -30px -20px -30px;
+		padding: 1rem 1.5rem;
+		text-align: right;
+		border-top: 1px solid $input-border-color;
+
+		#myaccount_billing_clear {
+			margin-left: 1rem;
+			margin-right: 1rem;
+			color: $midgray2;
+		}
+
+		#myaccount_billing_save {
+			margin-left: 0.75rem;
+		}
+	}
+}

@@ -45,16 +45,9 @@
 
 /* MYACCOUNT MENU */
 #myaccount .myaccount-container {
-	padding-left: 280px;
 	min-height: 100%;
 	overflow: hidden;
-}
-#myaccount .myaccount-container > div {
-	float: left;
-	position: relative;
-	padding-bottom: 20000px;
-	margin-bottom: -20000px;
-	/* Hack to keep both columns at the same height */
+	display: flex;
 }
 #myaccount .myaccount-menu {
 	background-color: #f0f0f9;
@@ -62,7 +55,7 @@
 	border-right: 1px solid #c0c0c9;
 	box-sizing: border-box;
 	right: 280px;
-	margin-left: -100%;
+	padding-bottom: 1rem;
 
 	-webkit-transition:width 0.3s;
 	-moz-transition:width 0.3s;
@@ -70,7 +63,9 @@
 	transition:width 0.3s;
 }
 #myaccount .myaccount-right {
-	width: 100%;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 #myaccount .myaccount-menu .nav {
@@ -167,6 +162,9 @@
 #myaccount .myaccount-content {
 	background-color: white;
 	padding: 20px 30px;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 #myaccount .myaccount-titlebar {
