@@ -6,6 +6,15 @@ define(function(require) {
 
 	var billing = {
 
+		appFlags: {
+			validBillingContactFields: {
+				'contact.billing.first_name': false,
+				'contact.billing.last_name': false,
+				'contact.billing.email': false,
+				'contact.billing.number': false
+			}
+		},
+
 		subscribe: {
 			'myaccount.billing.renderContent': '_billingRenderContent'
 		},
@@ -67,7 +76,7 @@ define(function(require) {
 				}
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
-					var billingTemplate = $(self.getTemplate({
+					var $billingTemplate = $(self.getTemplate({
 							name: 'layout',
 							data: results,
 							submodule: 'billing'
@@ -82,11 +91,11 @@ define(function(require) {
 									? '•••• •••• •••• ' + (creditCard.last_four)
 									: '';
 
-							billingTemplate.find('.card-type')
+							$billingTemplate.find('.card-type')
 								.removeClass()
 								.addClass(newTypeClass);
 
-							billingTemplate.find('.fake-number')
+							$billingTemplate.find('.fake-number')
 								.text(newDescription);
 
 							if (!_.isEmpty(creditCard)) {
@@ -96,9 +105,80 @@ define(function(require) {
 							}
 						};
 
-					self.billingBindEvents(billingTemplate, results);
+					// Initialize country selector
+					monster.ui.countrySelector(
+						$billingTemplate.find('#account_administrator_country'),
+						{
+							selectedValues: results.account.contact.billing.country,
+							options: {
+								showEmptyOption: false
+							}
+						}
+					);
 
-					monster.pub('myaccount.renderSubmodule', billingTemplate);
+					// Check if billing contact is filled
+					_.each(self.appFlags.validBillingContactFields, function(_value, key) {
+						self.appFlags.validBillingContactFields[key] = !_.chain(results).get(key).isEmpty().value();
+					});
+
+					self.billingEnableCreditCardSection($billingTemplate);
+
+					// Set static validations
+					monster.ui.validate($billingTemplate.find('#form_account_administrator'), {
+						ignore: '.chosen-search-input', // Ignore only search input fields in jQuery Chosen controls. Don't ignore hidden fields.
+						rules: {
+							'contact.billing.first_name': {
+								required: true
+							},
+							'contact.billing.last_name': {
+								required: true
+							},
+							'contact.billing.email': {
+								required: true,
+								email: true,
+								normalizer: function(value) {
+									return _.toLower(value);
+								}
+							},
+							'contact.billing.number': {
+								phoneNumber: true,
+								required: true
+							},
+							'contact.billing.street_address': {
+								required: true
+							},
+							'contact.billing.locality': {
+								required: true
+							},
+							'contact.billing.region': {
+								required: true
+							},
+							'contact.billing.postal_code': {
+								required: true
+							},
+							'contact.billing.country': {
+								required: true
+							}
+						},
+						onfocusout: function(element) {
+							var $element = $(element),
+								name = $element.attr('name'),
+								isValid = $element.valid();
+
+							if (!_.has(self.appFlags.validBillingContactFields, name)) {
+								return;
+							}
+
+							self.appFlags.validBillingContactFields[name] = isValid;
+
+							self.billingEnableCreditCardSection($billingTemplate);
+						},
+						autoScrollOnInvalid: true
+					});
+
+					self.billingBindEvents($billingTemplate, results);
+
+					monster.pub('myaccount.renderSubmodule', $billingTemplate);
 
 					dropin.create({
 						authorization: _.get(results, 'accountToken.client_token'),
@@ -110,8 +190,8 @@ define(function(require) {
 							}
 						}
 					}, function(err, instance) {
-						var saveButton = billingTemplate.find('.save-card'),
-							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
+						var saveButton = $billingTemplate.find('.save-card'),
+							deleteButton = $billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
 
 						saveButton.on('click', function(e) {
 							e.preventDefault();
@@ -151,7 +231,7 @@ define(function(require) {
 										setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
 
 										if (results.deletedCard) {
-											billingTemplate.find('.card-expired').hide();
+											$billingTemplate.find('.card-expired').hide();
 										}
 									});
 								}
@@ -166,13 +246,31 @@ define(function(require) {
 					});
 
 					if (typeof args.callback === 'function') {
-						args.callback(billingTemplate);
+						args.callback($billingTemplate);
 					}
 				});
 			});
 		},
 
+		billingEnableCreditCardSection: function($billingTemplate) {
+			var self = this;
+
+			if (_.every(self.appFlags.validBillingContactFields)) {
+				$billingTemplate
+					.find('.payment-type-selection-item')
+						.removeClass('sds_SelectionList_Item_Disabled');
+				$billingTemplate.find('.payment-type-warning').hide();
+			} else {
+				$billingTemplate
+					.find('.payment-type-selection-item')
+						.addClass('sds_SelectionList_Item_Disabled');
+				$billingTemplate.find('.payment-type-warning').show();
+			}
+		},
+
 		billingFormatData: function(data, callback) {
+			data.extra = {};
+
 			if (!_.isEmpty(data.billing)) {
 				var creditCards = _.get(data, 'billing.credit_cards', {});
 				data.billing.credit_card = _.find(creditCards, { 'default': true }) || {};
@@ -189,6 +287,26 @@ define(function(require) {
 						: cardType;
 				}
 			}
+
+			if (_.has(data.account.contact.billing)) {
+				var hasBillingContactFullName = !_.isEmpty(data.account.contact.billing.name);
+				var hasBillingContactNames = !_.isEmpty(data.account.contact.billing.first_name) && !_.isEmpty(data.account.contact.billing.last_name);
+				data.extra.accountHasBillingContact = !_.isEmpty(data.account.contact.billing.email)
+					&& !_.isEmpty(data.account.contact.billing.number)
+					&& (hasBillingContactFullName || hasBillingContactNames);
+
+				if (data.account.contact.billing.name) {
+					// Split names by first space
+					var names = data.account.contact.billing.name.replace(/\s+/, '\x01').split('\x01');
+					delete data.account.contact.billing.name;
+					data.account.contact.billing.firstName = names[0];
+					data.account.contact.billing.lastName = names[1] || '';
+				}
+			} else {
+				data.extra.accountHasBillingContact = false;
+			}
+
+			console.log('billing.billingFormatData', data);
 
 			callback(data);
 		},

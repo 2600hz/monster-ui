@@ -829,7 +829,7 @@ define(function(require) {
 					}
 				};
 
-			template.find('.settings-link').on('click', function() {
+			template.find('.settings-item:not(.open) .settings-link').on('click', function() {
 				var isOpen = $(this).parent().hasClass('open');
 
 				closeContent();

@@ -131,6 +131,8 @@
 		}
 	}
 	.sds_SelectionList_Item_Disabled{
+		pointer-events: none;
+
 		.sds_SelectionList_Item_LabelBox{
 			cursor: not-allowed;
 			opacity: 0.54;
