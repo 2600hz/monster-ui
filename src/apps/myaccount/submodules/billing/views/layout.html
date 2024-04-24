@@ -1,12 +1,12 @@
 <div class="billing-content-wrapper">
 	<div class="billing-body">
 		<ul class="list-settings">
-			<li class="settings-item clearfix open" data-name="account_administrator">
+			<li class="settings-item clearfix open always-open" data-name="account_administrator">
 				<div class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.billingContact.title }}</span>
 				</div>
 				<div class="settings-item-content" style="display: block;">
-					<form id="form_account_administrator" class="settings-item-form">
+					<form id="form_billing" class="settings-item-form">
 						<fieldset class="settings-item-section">
 							<div class="section-information">
 								{{i18n.billing.billingContact.information}}
@@ -78,7 +78,7 @@
 					</form>
 				</div>
 			</li>
-			<li class="settings-item clearfix open" data-name="credit_card">
+			<li class="settings-item clearfix open always-open" data-name="credit_card">
 				<div class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
 				</div>
@@ -141,7 +141,7 @@
 		<a href="javascript:void(0);" id="myaccount_billing_clear">
 			{{i18n.billing.clear}}
 		</a>
-		<button id="myaccount_billing_save" class="monster-button-success">
+		<button id="myaccount_billing_save" class="monster-button-success change" data-module="account" data-field="billing">
 			{{i18n.billing.save}}
 		</button>
 	</div>

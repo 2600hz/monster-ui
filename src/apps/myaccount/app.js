@@ -757,51 +757,12 @@ define(function(require) {
 			}
 		},
 
-		validateAccountAdministratorForm: function(formAccountAdministrator, callback) {
-			var self = this;
-
-			monster.ui.validate(formAccountAdministrator, {
-				rules: {
-					'contact.billing.name': {
-						required: true
-					},
-					'contact.billing.email': {
-						required: true,
-						email: true
-					},
-					'contact.billing.number': {
-						required: true
-					},
-					'contact.billing.street_address': {
-						required: true
-					},
-					'contact.billing.locality': {
-						required: true
-					},
-					'contact.billing.region': {
-						required: true
-					},
-					'contact.billing.country': {
-						required: true
-					},
-					'contact.billing.postal_code': {
-						required: true,
-						digits: true
-					}
-				}
-			});
-
-			if (monster.ui.valid(formAccountAdministrator)) {
-				callback && callback();
-			}
-		},
-
 		_myaccountEvents: function(args) {
 			var self = this,
 				data = args.data,
 				template = args.template,
 				closeContent = function() {
-					var liSettings = template.find('li.settings-item.open'),
+					var liSettings = template.find('li.settings-item.open:not(.always-open)'),
 						aSettings = liSettings.find('a.settings-link');
 
 					liSettings.find('.settings-item-content').slideUp('fast', function() {
@@ -812,24 +773,14 @@ define(function(require) {
 						liSettings.find('.edition').hide();
 					});
 				},
-				settingsValidate = function(fieldName, dataForm, callback) {
-					var formPassword = template.find('#form_password');
-					var formAccountAdministrator = template.find('#form_account_administrator');
-
-					// This is still ghetto, I didn't want to re-factor the whole code to tweak the validation
-					// If the field is password, we start custom validation
-
-					if (formPassword.length) {
-						self.validatePasswordForm(formPassword, callback);
-					// otherwise we don't have any validation for this field, we execute the callback
-					} else if (formAccountAdministrator.length) {
-						self.validateAccountAdministratorForm(formAccountAdministrator, callback);
-					} else {
-						callback && callback();
-					}
+				validateSettings = args.validateCallback || function(callback) {
+					callback(null);
+				},
+				postUpdateSettings = args.updateCallback || function(data, callback) {
+					callback(null, data);
 				};
 
-			template.find('.settings-item:not(.open) .settings-link').on('click', function() {
+			template.find('.settings-item:not(.always-open) .settings-link').on('click', function() {
 				var isOpen = $(this).parent().hasClass('open');
 
 				closeContent();
@@ -860,31 +811,26 @@ define(function(require) {
 					fieldName = currentElement.data('field'),
 					newData = (function cleanFormData(moduleToUpdate, data) {
 						return data;
-					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName));
+					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName)),
+					updateSettings = _.bind(self.settingsUpdateData, self, moduleToUpdate, data[moduleToUpdate], newData);
 
-				settingsValidate(fieldName, newData,
-					function() {
-						self.settingsUpdateData(moduleToUpdate, data[moduleToUpdate], newData,
-							function(data) {
-								var args = {
-									callback: function(parent) {
-										if (fieldName === 'colorblind') {
-											$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
-										}
-
-										self.highlightField(parent, fieldName);
-
-										/* TODO USELESS? */
-										if (typeof callbackUpdate === 'function') {
-										}
-									}
-								};
-
-								monster.pub('myaccount.' + module + '.renderContent', args);
+				monster.waterfall([
+					validateSettings,
+					updateSettings,
+					postUpdateSettings
+				], function(_err, data) {
+					var args = {
+						callback: function(parent) {
+							if (fieldName === 'colorblind') {
+								$('body').toggleClass('colorblind', data.data.ui_flags.colorblind);
 							}
-						);
-					}
-				);
+
+							self.highlightField(parent, fieldName);
+						}
+					};
+
+					monster.pub('myaccount.' + module + '.renderContent', args);
+				});
 			});
 		},
 
@@ -920,7 +866,7 @@ define(function(require) {
 			settingsItem.find('.settings-item-content').slideDown('fast');
 		},
 
-		settingsUpdateData: function(type, data, newData, callbackSuccess, callbackError) {
+		settingsUpdateData: function(type, data, newData, callback) {
 			var self = this,
 				params = {
 					accountId: self.accountId,
@@ -986,15 +932,11 @@ define(function(require) {
 			self.callApi({
 				resource: type.concat('.update'),
 				data: params,
-				success: function(_data, status) {
-					if (typeof callbackSuccess === 'function') {
-						callbackSuccess(_data, status);
-					}
+				success: function(_data) {
+					callback && callback(null, _data);
 				},
-				error: function(_data, status) {
-					if (typeof callbackError === 'function') {
-						callbackError(_data, status);
-					}
+				error: function() {
+					callback && callback(true);
 				}
 			});
 		},
