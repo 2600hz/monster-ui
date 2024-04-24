@@ -1,17 +1,12 @@
 <div class="billing-content-wrapper">
 	<div class="billing-body">
 		<ul class="list-settings">
-			<li class="settings-item clearfix" data-name="account_administrator">
-				<a class="settings-link clearfix">
+			<li class="settings-item clearfix open always-open" data-name="account_administrator">
+				<div class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.billingContact.title }}</span>
-					<span class="update">
-						<i class="fa fa-cog icon-small"></i>
-						<span class="text">{{ i18n.editSettings }}</span>
-					</span>
-					<span class="changes-saved">{{ i18n.changesSaved }}</span>
-				</a>
-				<div class="settings-item-content">
-					<form id="form_account_administrator" class="settings-item-form">
+				</div>
+				<div class="settings-item-content" style="display: block;">
+					<form id="form_billing" class="settings-item-form">
 						<fieldset class="settings-item-section">
 							<div class="section-information">
 								{{i18n.billing.billingContact.information}}
@@ -19,13 +14,13 @@
 							<div class="control-group">
 								<label class="control-label" for="account_administrator_full_name">{{i18n.billing.billingContact.firstName.label}}</label>
 								<div class="controls">
-									<input type="text" id="account_administrator_full_name" name="contact.billing.name" value="{{account.contact.billing.firstName}}" placeholder="{{i18n.billing.billingContact.firstName.placeholder}}">
+									<input type="text" id="account_administrator_full_name" name="contact.billing.first_name" value="{{account.contact.billing.first_name}}" placeholder="{{i18n.billing.billingContact.firstName.placeholder}}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="account_administrator_full_name">{{i18n.billing.billingContact.lastName.label}}</label>
 								<div class="controls">
-									<input type="text" id="account_administrator_full_name" name="contact.billing.name" value="{{account.contact.billing.lastName}}" placeholder="{{i18n.billing.billingContact.lastName.placeholder}}">
+									<input type="text" id="account_administrator_full_name" name="contact.billing.last_name" value="{{account.contact.billing.last_name}}" placeholder="{{i18n.billing.billingContact.lastName.placeholder}}">
 								</div>
 							</div>
 							<div class="control-group">
@@ -70,7 +65,7 @@
 							<div class="control-group">
 								<label class="control-label" for="account_administrator_country">{{i18n.billing.billingContact.country.label}}</label>
 								<div class="controls">
-									<input type="text" id="account_administrator_country" name="contact.billing.country" value="{{account.contact.billing.country}}" placeholder="{{i18n.billing.billingContact.country.placeholder}}"/>
+									<select id="account_administrator_country" name="contact.billing.country" data-placeholder="{{i18n.billing.billingContact.country.placeholder}}"></select>
 								</div>
 							</div>
 							<div class="control-group">
@@ -83,18 +78,13 @@
 					</form>
 				</div>
 			</li>
-			<li class="settings-item clearfix" data-name="credit_card">
-				<a class="settings-link clearfix">
+			<li class="settings-item clearfix open always-open" data-name="credit_card">
+				<div class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
-					<span class="update">
-						<i class="fa fa-cog icon-small"></i>
-						<span class="text">{{ i18n.editSettings }}</span>
-					</span>
-					<span class="changes-saved">{{ i18n.changesSaved }}</span>
-				</a>
-				<div class="settings-item-content">
-					<div class="sds_SelectionList sds_SelectionList_Grid SelectionListExample">
-						<div class="sds_SelectionList_Item">
+				</div>
+				<div class="settings-item-content" style="display: block;">
+					<div class="sds_SelectionList sds_SelectionList_Grid payment-type-selection">
+						<div class="sds_SelectionList_Item payment-type-selection-item">
 							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_ach" name="payment_method" value="ach">
 							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_ach" />
 							<label for="myaccount_billing_payment_ach" class="sds_SelectionList_Item_LabelBox">
@@ -112,7 +102,7 @@
 								</div>
 							</label>
 						</div>
-						<div class="sds_SelectionList_Item">
+						<div class="sds_SelectionList_Item payment-type-selection-item">
 							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_card" name="payment_method" value="card">
 							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_card" />
 							<label for="myaccount_billing_payment_card" class="sds_SelectionList_Item_LabelBox">
@@ -131,6 +121,10 @@
 						</div>
 					</div>
 
+					{{#monsterPanelText null "warning" "fill-width payment-type-warning"}}
+						{{i18n.billing.paymentMethod.billingContactWarning}}
+					{{/monsterPanelText}}
+
 					<div class="payment-content">
 						<div class="payment-type-content payment-type-content-hidden" data-payment-type="ach">
 							TODO: ACH
@@ -143,10 +137,7 @@
 		</ul>
 	</div>
 	<div class="billing-footer">
-		<a href="javascript:void(0);" id="myaccount_billing_clear" class="monster-button cancel">
-			{{i18n.cancel}}
-		</a>
-		<button id="myaccount_billing_save" class="monster-button-success save-card">
+		<button id="myaccount_billing_save" class="monster-button-success change" data-module="account" data-field="billing">
 			{{i18n.billing.save}}
 		</button>
 	</div>
