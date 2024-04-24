@@ -230,11 +230,11 @@
 					"title": "Credit/Debit Card",
 					"description": "Pay for transactions using a credit/debit card."
 				}
-			}
+			},
+			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method."
 		},
 
-		"save": "Save Changes",
-		"clear": "Clear Changes"
+		"save": "Save Changes"
 	},
 
 	"trunks": {
