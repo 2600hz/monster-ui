@@ -102,7 +102,7 @@ define(function(require) {
 				container = args.container,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
-						name: 'credit-card-section',
+						name: 'card-section',
 						submodule: 'billing'
 					}));
 
@@ -167,6 +167,24 @@ define(function(require) {
 							});
 						});
 					});
+				};
+
+			appendTemplate();
+		},
+
+		renderACHSection: function(args) {
+			var self = this,
+				container = args.container,
+				appendTemplate = function appendTemplate() {
+					var template = $(self.getTemplate({
+						name: 'ach-section',
+						submodule: 'billing'
+					}));
+
+					container
+						.find('div[data-payment-type="ach"]')
+						.removeClass('payment-type-content-hidden')
+						.append(template);
 				};
 
 			appendTemplate();

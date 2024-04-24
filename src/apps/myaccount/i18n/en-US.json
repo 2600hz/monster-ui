@@ -218,6 +218,9 @@
 				"placeholder": "12345"
 			}
 		},
+		"warning": {
+			"achDirectDebit": "This payment option requires a two-step bank verification process, which provides a way to check the validity of a bank account before attempting to process transactions. This verification process helps protect against fraudulent or erroneous transactions, and typically takes 2-3 business days."
+		},
 
 		"paymentMethod": {
 			"title": "Payment Method",
