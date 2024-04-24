@@ -14,14 +14,15 @@
 }
 #myaccount .myaccount-content .billing-content-wrapper .action-group .save-card {
 	display: none;
-}
-#myaccount .myaccount-content .billing-content-wrapper .action-group .save-card.show {
+}*/
+
+#myaccount .myaccount-content .billing-content-wrapper .billing-footer .save-card.show {
 	display: inline-block;
 }
 
-[data-braintree-id="toggle"] {
+[data-braintree-id="toggle"], [data-braintree-id='methods-label'] {
   display: none;
-}*/
+}
 
 #myaccount .myaccount-content .billing-content-wrapper {
 	flex-grow: 1;

@@ -4,7 +4,6 @@
 			<li class="settings-item clearfix" data-name="account_administrator">
 				<a class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.billingContact.title }}</span>
-					<span class="description">{{account.contact.billing.email}}{{#if account.contact.billing.number}}&nbsp;&nbsp;(<span class="number">{{formatPhoneNumber account.contact.billing.number}}</span>){{/if}}</span>
 					<span class="update">
 						<i class="fa fa-cog icon-small"></i>
 						<span class="text">{{ i18n.editSettings }}</span>
@@ -87,10 +86,6 @@
 			<li class="settings-item clearfix" data-name="credit_card">
 				<a class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
-					<span class="description">
-						<span class="card-type {{billing.credit_card.type}}" />
-						<span class="fake-number">{{billing.credit_card.fake_number}}</span>
-					</span>
 					<span class="update">
 						<i class="fa fa-cog icon-small"></i>
 						<span class="text">{{ i18n.editSettings }}</span>
@@ -141,7 +136,6 @@
 							TODO: ACH
 						</div>
 						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card">
-							TODO: CARD
 						</div>
 					</div>
 				</div>
@@ -149,10 +143,10 @@
 		</ul>
 	</div>
 	<div class="billing-footer">
-		<a href="javascript:void(0);" id="myaccount_billing_clear">
-			{{i18n.billing.clear}}
+		<a href="javascript:void(0);" id="myaccount_billing_clear" class="monster-button cancel">
+			{{i18n.cancel}}
 		</a>
-		<button id="myaccount_billing_save" class="monster-button-success">
+		<button id="myaccount_billing_save" class="monster-button-success save-card">
 			{{i18n.billing.save}}
 		</button>
 	</div>

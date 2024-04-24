@@ -72,36 +72,47 @@ define(function(require) {
 							data: results,
 							submodule: 'billing'
 						})),
-						expiredCreditCardData = _.get(results, 'billing.expired_card'),
-						setCardHeader = function(creditCard, button) {
-							var cardType = _.get(creditCard, 'card_type', '').toLowerCase(),
-								newTypeClass = cardType === 'american express'
-									? 'card-type amex'
-									: 'card-type ' + cardType,
-								newDescription = creditCard.last_four
-									? '•••• •••• •••• ' + (creditCard.last_four)
-									: '';
-
-							billingTemplate.find('.card-type')
-								.removeClass()
-								.addClass(newTypeClass);
-
-							billingTemplate.find('.fake-number')
-								.text(newDescription);
-
-							if (!_.isEmpty(creditCard)) {
-								button.removeClass('show');
-							} else {
-								button.addClass('show');
-							}
-						};
+						expiredCreditCardData = _.get(results, 'billing.expired_card');
 
 					self.billingBindEvents(billingTemplate, results);
 
 					monster.pub('myaccount.renderSubmodule', billingTemplate);
 
+					if (_.get(results, 'billing.credit_card')) {
+						billingTemplate
+							.find('#myaccount_billing_payment_card')
+							.prop('checked', true);
+
+						self.renderCardSection(
+							_.merge({}, results, {
+								container: billingTemplate
+							})
+						);
+					}
+
+					if (typeof args.callback === 'function') {
+						args.callback(billingTemplate);
+					}
+				});
+			});
+		},
+
+		renderCardSection: function(args) {
+			var self = this,
+				container = args.container,
+				appendTemplate = function appendTemplate() {
+					var template = $(self.getTemplate({
+						name: 'credit-card-section',
+						submodule: 'billing'
+					}));
+
+					container
+						.find('div[data-payment-type="card"]')
+						.removeClass('payment-type-content-hidden')
+						.append(template);
+
 					dropin.create({
-						authorization: _.get(results, 'accountToken.client_token'),
+						authorization: _.get(args, 'accountToken.client_token'),
 						selector: '#dropin_container',
 						vaultManager: true,
 						card: {
@@ -110,8 +121,8 @@ define(function(require) {
 							}
 						}
 					}, function(err, instance) {
-						var saveButton = billingTemplate.find('.save-card'),
-							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
+						var saveButton = container.find('.save-card'),
+							expiredCreditCardData = _.get(args, 'billing.expired_card');
 
 						saveButton.on('click', function(e) {
 							e.preventDefault();
@@ -148,28 +159,17 @@ define(function(require) {
 											}
 										}
 									}, function(err, results) {
-										setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
-
 										if (results.deletedCard) {
-											billingTemplate.find('.card-expired').hide();
+											template.find('.card-expired').hide();
 										}
 									});
 								}
 							});
 						});
-
-						deleteButton.on('click', function(e) {
-							e.preventDefault();
-
-							setCardHeader({}, saveButton);
-						});
 					});
+				};
 
-					if (typeof args.callback === 'function') {
-						args.callback(billingTemplate);
-					}
-				});
-			});
+			appendTemplate();
 		},
 
 		billingFormatData: function(data, callback) {
