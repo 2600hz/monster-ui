@@ -6,6 +6,15 @@ define(function(require) {
 
 	var billing = {
 
+		appFlags: {
+			validBillingContactFields: {
+				'contact.billing.first_name': false,
+				'contact.billing.last_name': false,
+				'contact.billing.email': false,
+				'contact.billing.number': false
+			}
+		},
+
 		subscribe: {
 			'myaccount.billing.renderContent': '_billingRenderContent'
 		},
@@ -67,11 +76,12 @@ define(function(require) {
 				}
 			}, function(err, results) {
 				self.billingFormatData(results, function(results) {
-					var billingTemplate = $(self.getTemplate({
+					var $billingTemplate = $(self.getTemplate({
 							name: 'layout',
 							data: results,
 							submodule: 'billing'
 						})),
+						$billingContactForm = $billingTemplate.find('#form_billing'),
 						expiredCreditCardData = _.get(results, 'billing.expired_card'),
 						setCardHeader = function(creditCard, button) {
 							var cardType = _.get(creditCard, 'card_type', '').toLowerCase(),
@@ -82,11 +92,11 @@ define(function(require) {
 									? '•••• •••• •••• ' + (creditCard.last_four)
 									: '';
 
-							billingTemplate.find('.card-type')
+							$billingTemplate.find('.card-type')
 								.removeClass()
 								.addClass(newTypeClass);
 
-							billingTemplate.find('.fake-number')
+							$billingTemplate.find('.fake-number')
 								.text(newDescription);
 
 							if (!_.isEmpty(creditCard)) {
@@ -96,10 +106,81 @@ define(function(require) {
 							}
 						};
 
-					self.billingBindEvents(billingTemplate, results);
+					// Initialize country selector
+					monster.ui.countrySelector(
+						$billingTemplate.find('#account_administrator_country'),
+						{
+							selectedValues: results.account.contact.billing.country,
+							options: {
+								showEmptyOption: false
+							}
+						}
+					);
 
-					monster.pub('myaccount.renderSubmodule', billingTemplate);
+					// Check if billing contact is filled
+					_.each(self.appFlags.validBillingContactFields, function(_value, key) {
+						self.appFlags.validBillingContactFields[key] = !_.chain(results).get(key).isEmpty().value();
+					});
 
+					self.billingEnableCreditCardSection($billingTemplate);
+
+					// Set validations
+					monster.ui.validate($billingContactForm, {
+						ignore: '.chosen-search-input', // Ignore only search input fields in jQuery Chosen controls. Don't ignore hidden fields.
+						rules: {
+							'contact.billing.first_name': {
+								required: true
+							},
+							'contact.billing.last_name': {
+								required: true
+							},
+							'contact.billing.email': {
+								required: true,
+								email: true,
+								normalizer: function(value) {
+									return _.toLower(value);
+								}
+							},
+							'contact.billing.number': {
+								phoneNumber: true,
+								required: true
+							},
+							'contact.billing.street_address': {
+								required: true
+							},
+							'contact.billing.locality': {
+								required: true
+							},
+							'contact.billing.region': {
+								required: true
+							},
+							'contact.billing.postal_code': {
+								required: true
+							},
+							'contact.billing.country': {
+								required: true
+							}
+						},
+						onfocusout: function(element) {
+							var $element = $(element),
+								name = $element.attr('name'),
+								isValid = $element.valid();
+
+							if (!_.has(self.appFlags.validBillingContactFields, name)) {
+								return;
+							}
+
+							self.appFlags.validBillingContactFields[name] = isValid;
+
+							self.billingEnableCreditCardSection($billingTemplate);
+						},
+						autoScrollOnInvalid: true
+					});
+
+					// Render template
+					monster.pub('myaccount.renderSubmodule', $billingTemplate);
+
+					// Render card form
 					dropin.create({
 						authorization: _.get(results, 'accountToken.client_token'),
 						selector: '#dropin_container',
@@ -110,66 +191,98 @@ define(function(require) {
 							}
 						}
 					}, function(err, instance) {
-						var saveButton = billingTemplate.find('.save-card'),
-							deleteButton = billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
-
-						saveButton.on('click', function(e) {
-							e.preventDefault();
-
-							instance.requestPaymentMethod(function(err, payload) {
-								if (err) {
-									instance.clearSelectedPaymentMethod();
-								} else {
-									monster.parallel({
-										updateBilling: function(callback) {
-											self.requestUpdateBilling({
-												data: {
-													data: {
-														nonce: payload.nonce
-													}
-												},
-												success: function(data) {
-													callback(null, data);
-												}
-											});
-										},
-										deletedCard: function(callback) {
-											if (!_.isEmpty(expiredCreditCardData)) {
-												self.deleteCardBilling({
-													data: {
-														cardId: expiredCreditCardData.id
-													},
-													success: function(data) {
-														callback(null, data);
-													}
-												});
-											} else {
-												callback(null);
-											}
-										}
-									}, function(err, results) {
-										setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
-
-										if (results.deletedCard) {
-											billingTemplate.find('.card-expired').hide();
-										}
-									});
-								}
-							});
-						});
+						var saveButton = $billingTemplate.find('.save-card'),
+							deleteButton = $billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
 
 						deleteButton.on('click', function(e) {
 							e.preventDefault();
 
 							setCardHeader({}, saveButton);
 						});
+
+						// Bind events
+						self.billingBindEvents({
+							template: $billingTemplate,
+							data: results,
+							validateCallback: function(callback) {
+								var isValid = monster.ui.valid($billingContactForm);
+
+								if (isValid) {
+									callback && callback(null);
+								}
+							},
+							updateCallback: function(data, callback) {
+								console.log('TODO');
+
+								callback(null, data);
+
+								/*
+								instance.requestPaymentMethod(function(err, payload) {
+									if (err) {
+										instance.clearSelectedPaymentMethod();
+									} else {
+										monster.parallel({
+											updateBilling: function(callback) {
+												self.requestUpdateBilling({
+													data: {
+														data: {
+															nonce: payload.nonce
+														}
+													},
+													success: function(data) {
+														callback(null, data);
+													}
+												});
+											},
+											deletedCard: function(callback) {
+												if (!_.isEmpty(expiredCreditCardData)) {
+													self.deleteCardBilling({
+														data: {
+															cardId: expiredCreditCardData.id
+														},
+														success: function(data) {
+															callback(null, data);
+														}
+													});
+												} else {
+													callback(null);
+												}
+											}
+										}, function(err, results) {
+											setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
+
+											if (results.deletedCard) {
+												$billingTemplate.find('.card-expired').hide();
+											}
+										});
+									}
+								});
+								*/
+							}
+						});
 					});
 
 					if (typeof args.callback === 'function') {
-						args.callback(billingTemplate);
+						args.callback($billingTemplate);
 					}
 				});
 			});
+		},
+
+		billingEnableCreditCardSection: function($billingTemplate) {
+			var self = this;
+
+			if (_.every(self.appFlags.validBillingContactFields)) {
+				$billingTemplate
+					.find('.payment-type-selection-item')
+						.removeClass('sds_SelectionList_Item_Disabled');
+				$billingTemplate.find('.payment-type-warning').hide();
+			} else {
+				$billingTemplate
+					.find('.payment-type-selection-item')
+						.addClass('sds_SelectionList_Item_Disabled');
+				$billingTemplate.find('.payment-type-warning').show();
+			}
 		},
 
 		billingFormatData: function(data, callback) {
@@ -190,11 +303,21 @@ define(function(require) {
 				}
 			}
 
+			if (_.has(data.account, 'contact.billing.name')) {
+				// Split names by first space
+				var names = data.account.contact.billing.name.replace(/\s+/, '\x01').split('\x01');
+				delete data.account.contact.billing.name;
+				data.account.contact.billing.firstName = names[0];
+				data.account.contact.billing.lastName = names[1] || '';
+			}
+
 			callback(data);
 		},
 
-		billingBindEvents: function(template, data) {
+		billingBindEvents: function(args) {
 			var self = this,
+				template = args.template,
+				data = args.data,
 				creditCardData = _.get(data, 'billing.credit_card'),
 				expiredCardData = _.get(data, 'billing.expired_card');
 
@@ -235,10 +358,7 @@ define(function(require) {
 				$paymentTypeContent.siblings().addClass('payment-type-content-hidden');
 			});
 
-			monster.pub('myaccount.events', {
-				template: template,
-				data: data
-			});
+			monster.pub('myaccount.events', args);
 		},
 
 		requestUpdateBilling: function(args) {
