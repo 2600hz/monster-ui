@@ -2,7 +2,9 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		dropin = require('dropin');
+		dropin = require('dropin'),
+		client = require('braintree-client'),
+		usBankAccount = require('us-bank-account');
 
 	var billing = {
 
@@ -110,7 +112,7 @@ define(function(require) {
 
 					// Set validations
 					monster.ui.validate($billingContactForm, {
-						ignore: '.chosen-search-input', // Ignore only search input fields in jQuery Chosen controls. Don't ignore hidden fields.
+					ignore: '.chosen-search-input', // Ignore only search input fields in jQuery Chosen controls. Don't ignore hidden fields.
 						rules: {
 							'contact.billing.first_name': {
 								required: true
@@ -162,17 +164,15 @@ define(function(require) {
 					});
 
 					//display credit card section
-					if (_.get(results, 'billing.credit_card')) {
+					if (!_.isEmpty(_.get(results, 'billing.credit_card'))) {
 						$billingTemplate
 							.find('#myaccount_billing_payment_card')
 							.prop('checked', true);
 
-						self.renderCardSection(
-							_.merge({}, results, {
-								template: $billingTemplate,
-								billingContactForm: $billingContactForm
-							})
-						);
+						self.renderCardSection({
+							template: $billingContactForm,
+							data: results
+						});
 					}
 
 					// Render template
@@ -181,7 +181,7 @@ define(function(require) {
 					// Bind events
 					self.billingBindEvents({
 						template: $billingTemplate,
-						data: args,
+						data: results,
 						validateCallback: function(callback) {
 							var isValid = monster.ui.valid(args.billingContactForm);
 
@@ -206,6 +206,7 @@ define(function(require) {
 		renderCardSection: function(args) {
 			var self = this,
 				container = args.template,
+				data = args.data,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'card-section',
@@ -219,7 +220,7 @@ define(function(require) {
 
 					// Render card form
 					dropin.create({
-						authorization: _.get(args, 'accountToken.client_token'),
+						authorization: _.get(data, 'accountToken.client_token'),
 						selector: '#dropin_container',
 						vaultManager: true,
 						card: {
@@ -229,7 +230,7 @@ define(function(require) {
 						}
 					}, function(err, instance) {
 						var saveButton = container.find('.save-card'),
-							expiredCreditCardData = _.get(args, 'billing.expired_card');
+							expiredCreditCardData = _.get(data, 'billing.expired_card');
 
 								/*instance.requestPaymentMethod(function(err, payload) {
 									if (err) {
@@ -275,8 +276,10 @@ define(function(require) {
 		},
 
 		renderAchSection: function(args) {
+			console.log(args);
 			var self = this,
 				container = args.template,
+				data = args.data,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'ach-section',
@@ -288,6 +291,27 @@ define(function(require) {
 						.removeClass('payment-type-content-hidden')
 						.empty()
 						.append(template);
+
+					// Render ACH Direct Debit form
+					client.create({
+						authorization: _.get(data, 'accountToken.client_token')
+					}, function(clientErr, clientInstance) {
+						if (clientErr) {
+							console.log('there was an error here');
+						}
+
+						usBankAccount.create({
+							client: clientInstance
+						}, function(usBankAccountErr, usBankAccountInstance){
+							console.log(usBankAccountErr);
+							if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
+								monster.ui.alert('error', self.i18n.active().billing.achSection.bankNotEnabled);
+								//hide section and uncheck option
+								container.find('.payment-type-content').addClass('payment-type-content-hidden');
+								container.find('#myaccount_billing_payment_ach').prop('checked', false);
+							}
+						});
+					});
 				};
 
 			appendTemplate();
