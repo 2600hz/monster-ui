@@ -52,6 +52,7 @@
 #myaccount .myaccount-menu {
 	background-color: #f0f0f9;
 	width: 280px;
+	flex-shrink: 0;
 	border-right: 1px solid #c0c0c9;
 	box-sizing: border-box;
 	right: 280px;
