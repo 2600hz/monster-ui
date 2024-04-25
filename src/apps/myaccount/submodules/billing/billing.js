@@ -11,8 +11,14 @@ define(function(require) {
 				'contact.billing.first_name': false,
 				'contact.billing.last_name': false,
 				'contact.billing.email': false,
-				'contact.billing.number': false
-			}
+				'contact.billing.number': false,
+				'contact.billing.street_address': false,
+				'contact.billing.locality': false,
+				'contact.billing.region': false,
+				'contact.billing.country': false,
+				'contact.billing.postal_code': false
+			},
+			selectedPaymentType: null
 		},
 
 		subscribe: {
@@ -97,10 +103,10 @@ define(function(require) {
 
 					// Check if billing contact is filled
 					_.each(self.appFlags.validBillingContactFields, function(_value, key) {
-						self.appFlags.validBillingContactFields[key] = !_.chain(results).get(key).isEmpty().value();
+						self.appFlags.validBillingContactFields[key] = !_.chain(results.account).get(key).isEmpty().value();
 					});
 
-					self.billingEnableCreditCardSection($billingTemplate);
+					self.billingEnablePaymentSection($billingTemplate);
 
 					// Set validations
 					monster.ui.validate($billingContactForm, {
@@ -150,11 +156,12 @@ define(function(require) {
 
 							self.appFlags.validBillingContactFields[name] = isValid;
 
-							self.billingEnableCreditCardSection($billingTemplate);
+							self.billingEnablePaymentSection($billingTemplate);
 						},
 						autoScrollOnInvalid: true
 					});
 
+					//display credit card section
 					if (_.get(results, 'billing.credit_card')) {
 						$billingTemplate
 							.find('#myaccount_billing_payment_card')
@@ -162,7 +169,7 @@ define(function(require) {
 
 						self.renderCardSection(
 							_.merge({}, results, {
-								container: $billingTemplate,
+								template: $billingTemplate,
 								billingContactForm: $billingContactForm
 							})
 						);
@@ -198,7 +205,7 @@ define(function(require) {
 
 		renderCardSection: function(args) {
 			var self = this,
-				container = args.container,
+				container = args.template,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'card-section',
@@ -267,9 +274,9 @@ define(function(require) {
 			appendTemplate();
 		},
 
-		renderACHSection: function(args) {
+		renderAchSection: function(args) {
 			var self = this,
-				container = args.container,
+				container = args.template,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 						name: 'ach-section',
@@ -279,25 +286,29 @@ define(function(require) {
 					container
 						.find('div[data-payment-type="ach"]')
 						.removeClass('payment-type-content-hidden')
+						.empty()
 						.append(template);
 				};
 
 			appendTemplate();
 		},
 
-		billingEnableCreditCardSection: function($billingTemplate) {
-			var self = this;
+		billingEnablePaymentSection: function($billingTemplate) {
+			var self = this,
+				paymentType = self.appFlags.selectedPaymentType;
 
 			if (_.every(self.appFlags.validBillingContactFields)) {
 				$billingTemplate
 					.find('.payment-type-selection-item')
 						.removeClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').hide();
+				$billingTemplate.find('div[data-payment-type="' + paymentType + '"]').removeClass('payment-type-content-hidden');
 			} else {
 				$billingTemplate
 					.find('.payment-type-selection-item')
 						.addClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').show();
+				$billingTemplate.find('.payment-type-content').addClass('payment-type-content-hidden');
 			}
 		},
 
@@ -372,6 +383,14 @@ define(function(require) {
 				var $paymentTypeContent = $paymentContent.find('[data-payment-type="' + this.value + '"]');
 				$paymentTypeContent.removeClass('payment-type-content-hidden');
 				$paymentTypeContent.siblings().addClass('payment-type-content-hidden');
+
+				self.appFlags.selectedPaymentType = this.value;
+
+				if (this.value === 'ach') {
+					self.renderAchSection(args);
+				} else {
+					self.renderCardSection(args);
+				}
 			});
 
 			monster.pub('myaccount.events', args);

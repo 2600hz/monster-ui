@@ -97,6 +97,15 @@
 			&-hidden {
 				display: none;
 			}
+
+			.ach-content-wrapper {
+				background-color: #e0e0e2;
+				padding: 16px;
+
+				.ach-section:not(:last-child) {
+					padding-bottom: 16px;
+				}
+			}
 		}
 
 		.payment-type-selection {

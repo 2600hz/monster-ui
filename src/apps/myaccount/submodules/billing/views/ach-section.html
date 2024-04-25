@@ -1,5 +1,26 @@
 <div class="ach-content-wrapper">
-	{{#monsterPanelText null "info" "fill-width"}}
-		{{i18n.billing.warning.achDirectDebit}}
-	{{/monsterPanelText}}
+	<div class="ach-content-section">
+		{{#monsterPanelText null "warning" "fill-width"}}
+			{{i18n.billing.achSection.warning}}
+		{{/monsterPanelText}}
+		<div class="ach-section">
+			{{i18n.billing.achSection.description}}
+		</div>
+		<div class="ach-section">
+
+		</div>
+		<div class="ach-section">
+			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left">
+				{{i18n.billing.achSection.agreement.part1}}
+			</p>
+			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left">
+				{{i18n.billing.achSection.agreement.part2}}
+			</p>
+		</div>
+		<div class="ach-section">
+			<button id="begin-verification" class="monster-button-primary" data-module="verification" data-field="billing">
+          	              {{i18n.billing.achSection.beginVerification}}
+                	</button>
+		</div>
+	</div>
 </div>

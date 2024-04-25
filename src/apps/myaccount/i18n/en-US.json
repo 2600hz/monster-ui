@@ -218,8 +218,14 @@
 				"placeholder": "12345"
 			}
 		},
-		"warning": {
-			"achDirectDebit": "This payment option requires a two-step bank verification process, which provides a way to check the validity of a bank account before attempting to process transactions. This verification process helps protect against fraudulent or erroneous transactions, and typically takes 2-3 business days."
+		"achSection": {
+			"warning": "This payment option requires a two-step bank verification process, which provides a way to check the validity of a bank account before attempting to process transactions. This verification process helps protect against fraudulent or erroneous transactions, and typically takes 2-3 business days.",
+			"description": "Provide the required bank account information below to begin verification. This will trigger the billing system to send two micro-transaction deposits to the bank account, followed immediately by a single debit to reverse the deposits. You will need to verify the amount of these two micro-transaction deposits in the next step.",
+			"agreement": {
+				"part1": "By clicking [“Begin verification”], I authorize Braintree, a service of PayPal, on behalf of 2600hz to verify my bank account information using bank information and consumer reports and I authorize 2600hz to initiate an ACH/electronic debit to my checking/savings account, Depository Name: {{name}}, Routing Number:{{routingNumber}} and Account Number:{{accountNumber}}, that will be stored on file, and debited on or after the due date. I agree the ACH transactions I authorize comply with all applicable laws.",
+				"part2": "I understand that this authorization will remain in full force and effect until I notify 2600hz that I wish to revoke this authorization."
+			},
+			"beginVerification": "Begin Verification"
 		},
 
 		"paymentMethod": {
