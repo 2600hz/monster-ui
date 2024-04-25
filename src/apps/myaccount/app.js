@@ -837,6 +837,10 @@ define(function(require) {
 		highlightField: function(parent, fieldName) {
 			var	link = parent.find('li[data-name=' + fieldName + ']');
 
+			if (link.hasClass('always-open')) {
+				return;
+			}
+
 			link.find('.update').hide();
 			link
 				.find('.changes-saved')

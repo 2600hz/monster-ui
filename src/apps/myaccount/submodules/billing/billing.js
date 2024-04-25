@@ -92,7 +92,7 @@ define(function(require) {
 
 					// Initialize country selector
 					monster.ui.countrySelector(
-						$billingTemplate.find('#account_administrator_country'),
+						$billingTemplate.find('#billing_contact_country'),
 						{
 							selectedValues: results.account.contact.billing.country,
 							options: {
@@ -181,9 +181,9 @@ define(function(require) {
 					// Bind events
 					self.billingBindEvents({
 						template: $billingTemplate,
-						data: args,
+						data: results,
 						validateCallback: function(callback) {
-							var isValid = monster.ui.valid(args.billingContactForm);
+							var isValid = monster.ui.valid($billingContactForm);
 
 							if (isValid) {
 								callback && callback(null);
