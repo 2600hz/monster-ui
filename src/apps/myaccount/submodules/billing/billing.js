@@ -11,8 +11,14 @@ define(function(require) {
 				'contact.billing.first_name': false,
 				'contact.billing.last_name': false,
 				'contact.billing.email': false,
-				'contact.billing.number': false
-			}
+				'contact.billing.number': false,
+				'contact.billing.street_address': false,
+				'contact.billing.locality': false,
+				'contact.billing.region': false,
+				'contact.billing.country': false,
+				'contact.billing.postal_code': false
+			},
+			selectedPaymentType: null
 		},
 
 		subscribe: {
@@ -82,29 +88,7 @@ define(function(require) {
 							submodule: 'billing'
 						})),
 						$billingContactForm = $billingTemplate.find('#form_billing'),
-						expiredCreditCardData = _.get(results, 'billing.expired_card'),
-						setCardHeader = function(creditCard, button) {
-							var cardType = _.get(creditCard, 'card_type', '').toLowerCase(),
-								newTypeClass = cardType === 'american express'
-									? 'card-type amex'
-									: 'card-type ' + cardType,
-								newDescription = creditCard.last_four
-									? '•••• •••• •••• ' + (creditCard.last_four)
-									: '';
-
-							$billingTemplate.find('.card-type')
-								.removeClass()
-								.addClass(newTypeClass);
-
-							$billingTemplate.find('.fake-number')
-								.text(newDescription);
-
-							if (!_.isEmpty(creditCard)) {
-								button.removeClass('show');
-							} else {
-								button.addClass('show');
-							}
-						};
+						expiredCreditCardData = _.get(results, 'billing.expired_card');
 
 					// Initialize country selector
 					monster.ui.countrySelector(
@@ -119,10 +103,10 @@ define(function(require) {
 
 					// Check if billing contact is filled
 					_.each(self.appFlags.validBillingContactFields, function(_value, key) {
-						self.appFlags.validBillingContactFields[key] = !_.chain(results).get(key).isEmpty().value();
+						self.appFlags.validBillingContactFields[key] = !_.chain(results.account).get(key).isEmpty().value();
 					});
 
-					self.billingEnableCreditCardSection($billingTemplate);
+					self.billingEnablePaymentSection($billingTemplate);
 
 					// Set validations
 					monster.ui.validate($billingContactForm, {
@@ -172,17 +156,70 @@ define(function(require) {
 
 							self.appFlags.validBillingContactFields[name] = isValid;
 
-							self.billingEnableCreditCardSection($billingTemplate);
+							self.billingEnablePaymentSection($billingTemplate);
 						},
 						autoScrollOnInvalid: true
 					});
 
+					//display credit card section
+					if (_.get(results, 'billing.credit_card')) {
+						$billingTemplate
+							.find('#myaccount_billing_payment_card')
+							.prop('checked', true);
+
+						self.renderCardSection(
+							_.merge({}, results, {
+								template: $billingTemplate,
+								billingContactForm: $billingContactForm
+							})
+						);
+					}
+
 					// Render template
 					monster.pub('myaccount.renderSubmodule', $billingTemplate);
 
+					// Bind events
+					self.billingBindEvents({
+						template: $billingTemplate,
+						data: args,
+						validateCallback: function(callback) {
+							var isValid = monster.ui.valid(args.billingContactForm);
+
+							if (isValid) {
+								callback && callback(null);
+							}
+						},
+						updateCallback: function(data, callback) {
+							console.log('TODO');
+
+							callback(null, data);
+						}
+					});
+
+					if (typeof args.callback === 'function') {
+						args.callback($billingTemplate);
+					}
+				});
+			});
+		},
+
+		renderCardSection: function(args) {
+			var self = this,
+				container = args.template,
+				appendTemplate = function appendTemplate() {
+					var template = $(self.getTemplate({
+						name: 'card-section',
+						submodule: 'billing'
+					}));
+
+					container
+						.find('div[data-payment-type="card"]')
+						.removeClass('payment-type-content-hidden')
+						.append(template);
+
 					// Render card form
 					dropin.create({
-						authorization: _.get(results, 'accountToken.client_token'),
+						authorization: _.get(args, 'accountToken.client_token'),
 						selector: '#dropin_container',
 						vaultManager: true,
 						card: {
@@ -191,33 +228,10 @@ define(function(require) {
 							}
 						}
 					}, function(err, instance) {
-						var saveButton = $billingTemplate.find('.save-card'),
-							deleteButton = $billingTemplate.find('.braintree-delete-confirmation__button[data-braintree-id="delete-confirmation__yes"]');
+						var saveButton = container.find('.save-card'),
+							expiredCreditCardData = _.get(args, 'billing.expired_card');
 
-						deleteButton.on('click', function(e) {
-							e.preventDefault();
-
-							setCardHeader({}, saveButton);
-						});
-
-						// Bind events
-						self.billingBindEvents({
-							template: $billingTemplate,
-							data: results,
-							validateCallback: function(callback) {
-								var isValid = monster.ui.valid($billingContactForm);
-
-								if (isValid) {
-									callback && callback(null);
-								}
-							},
-							updateCallback: function(data, callback) {
-								console.log('TODO');
-
-								callback(null, data);
-
-								/*
-								instance.requestPaymentMethod(function(err, payload) {
+								/*instance.requestPaymentMethod(function(err, payload) {
 									if (err) {
 										instance.clearSelectedPaymentMethod();
 									} else {
@@ -249,39 +263,52 @@ define(function(require) {
 												}
 											}
 										}, function(err, results) {
-											setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
-
 											if (results.deletedCard) {
-												$billingTemplate.find('.card-expired').hide();
+												template.find('.card-expired').hide();
 											}
 										});
 									}
-								});
-								*/
-							}
-						});
+								});*/
 					});
-
-					if (typeof args.callback === 'function') {
-						args.callback($billingTemplate);
-					}
-				});
-			});
+				};
+			appendTemplate();
 		},
 
-		billingEnableCreditCardSection: function($billingTemplate) {
-			var self = this;
+		renderAchSection: function(args) {
+			var self = this,
+				container = args.template,
+				appendTemplate = function appendTemplate() {
+					var template = $(self.getTemplate({
+						name: 'ach-section',
+						submodule: 'billing'
+					}));
+
+					container
+						.find('div[data-payment-type="ach"]')
+						.removeClass('payment-type-content-hidden')
+						.empty()
+						.append(template);
+				};
+
+			appendTemplate();
+		},
+
+		billingEnablePaymentSection: function($billingTemplate) {
+			var self = this,
+				paymentType = self.appFlags.selectedPaymentType;
 
 			if (_.every(self.appFlags.validBillingContactFields)) {
 				$billingTemplate
 					.find('.payment-type-selection-item')
 						.removeClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').hide();
+				$billingTemplate.find('div[data-payment-type="' + paymentType + '"]').removeClass('payment-type-content-hidden');
 			} else {
 				$billingTemplate
 					.find('.payment-type-selection-item')
 						.addClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').show();
+				$billingTemplate.find('.payment-type-content').addClass('payment-type-content-hidden');
 			}
 		},
 
@@ -356,6 +383,14 @@ define(function(require) {
 				var $paymentTypeContent = $paymentContent.find('[data-payment-type="' + this.value + '"]');
 				$paymentTypeContent.removeClass('payment-type-content-hidden');
 				$paymentTypeContent.siblings().addClass('payment-type-content-hidden');
+
+				self.appFlags.selectedPaymentType = this.value;
+
+				if (this.value === 'ach') {
+					self.renderAchSection(args);
+				} else {
+					self.renderCardSection(args);
+				}
 			});
 
 			monster.pub('myaccount.events', args);
