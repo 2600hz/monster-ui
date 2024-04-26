@@ -21,6 +21,7 @@ const libsToExcludeFromWhole = [
 
 const libsToExcludeFromApp = [
 	'async',
+	'braintree-client',
 	'bootstrap',
 	'braintree-client',
 	'braintree-hosted-fields',
@@ -89,6 +90,7 @@ const libsToExcludeFromApp = [
 	'timepicker',
 	'toastr',
 	'touch-punch',
+	'us-bank-account',
 	'validate',
 	'vfs_fonts',
 	'wysiwyg'

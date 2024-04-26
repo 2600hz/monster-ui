@@ -3,6 +3,7 @@ require.config({
 	waitSeconds: 200,
 	paths: {
 		'async': 'js/vendor/async.min',
+		'braintree-client': 'js/vendor/braintree-client.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
 		'braintree-client': 'js/vendor/braintree.client.min',
 		'braintree-hosted-fields': 'js/vendor/braintree.hosted-fields.min',
@@ -73,6 +74,7 @@ require.config({
 		'timepicker': 'js/vendor/jquery.timepicker.min',
 		'toastr': 'js/vendor/toastr-1.3.0',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
+		'us-bank-account': 'js/vendor/us-bank-account.min',
 		'validate': 'js/vendor/jquery.validate.min',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min'
 	},
