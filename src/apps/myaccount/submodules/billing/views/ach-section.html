@@ -7,20 +7,109 @@
 			{{i18n.billing.achSection.description}}
 		</div>
 		<div class="ach-section">
-
-		</div>
-		<div class="ach-section">
-			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left">
-				{{i18n.billing.achSection.agreement.part1}}
-			</p>
-			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left">
-				{{i18n.billing.achSection.agreement.part2}}
-			</p>
-		</div>
-		<div class="ach-section">
-			<button id="begin-verification" class="monster-button-primary" data-module="verification" data-field="billing">
-          	              {{i18n.billing.achSection.beginVerification}}
-                	</button>
+			<form id="form_ach_payment" class="ach-payment-form">
+				<fieldset class="settings-item-section">
+					<div class="control-group">
+						<label class="control-label" for="routing_number">{{i18n.billing.achSection.achForm.routingNumber.label}}</label>
+						<div class="controls">
+							<input type="text" id="routing_number" name="routing_number" value="" placeholder="{{i18n.billing.achSection.achForm.routingNumber.placeholder}}">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="account_number">{{i18n.billing.achSection.achForm.accountNumber.label}}</label>
+						<div class="controls">
+							<input type="text" id="account_number" name="account_number" value="" placeholder="{{i18n.billing.achSection.achForm.accountNumber.placeholder}}">
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="settings-item-section">
+					<div class="control-group">
+						<label class="control-label" for="account_type">{{i18n.billing.achSection.achForm.accountType.label}}</label>
+						<div class="sds_SelectionList sds_SelectionList_Grid account-type-selection">
+							<div class="sds_SelectionList_Item account-type-item">
+								<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="account_type_checking" name="account_type" value="checking">
+								<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="account_type_checking" />
+								<label for="account_type_checking" class="sds_SelectionList_Item_LabelBox">
+									<div class="sds_SelectionList_Item_LabelBox_Header">
+										<div class="sds_SelectionList_Item_Content">
+											<span class="sds_SelectionList_Item_Content_Title">
+												{{ i18n.billing.achSection.achForm.accountType.checking }}
+											</span>
+										</div>
+										<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Radio">
+										</div>
+									</div>
+								</label>
+							</div>
+							<div class="sds_SelectionList_Item account-type-item">
+								<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="account_type_savings" name="account_type" value="savings">
+								<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="account_type_savings" />
+								<label for="account_type_savings" class="sds_SelectionList_Item_LabelBox">
+									<div class="sds_SelectionList_Item_LabelBox_Header">
+										<div class="sds_SelectionList_Item_Content">
+											<span class="sds_SelectionList_Item_Content_Title">
+												{{ i18n.billing.achSection.achForm.accountType.savings }}
+											</span>
+										</div>
+										<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Radio">
+										</div>
+									</div>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="ownership_type">{{i18n.billing.achSection.achForm.ownershipType.label}}</label>
+						<div class="sds_SelectionList sds_SelectionList_Grid ownership-type-selection">
+							<div class="sds_SelectionList_Item ownership-type-item">
+								<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="ownership_type_personal" name="ownership_type" value="personal">
+								<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="ownership_type_personal" />
+								<label for="ownership_type_personal" class="sds_SelectionList_Item_LabelBox">
+									<div class="sds_SelectionList_Item_LabelBox_Header">
+										<div class="sds_SelectionList_Item_Content">
+											<span class="sds_SelectionList_Item_Content_Title">
+												{{ i18n.billing.achSection.achForm.ownershipType.personal }}
+											</span>
+										</div>
+										<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Radio">
+										</div>
+									</div>
+								</label>
+							</div>
+							<div class="sds_SelectionList_Item ownership-type-item">
+								<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="ownership_type_business" name="ownership_type" value="business">
+								<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="ownership_type_business" />
+								<label for="ownership_type_business" class="sds_SelectionList_Item_LabelBox">
+									<div class="sds_SelectionList_Item_LabelBox_Header">
+										<div class="sds_SelectionList_Item_Content">
+											<span class="sds_SelectionList_Item_Content_Title">
+												{{ i18n.billing.achSection.achForm.ownershipType.business }}
+											</span>
+										</div>
+										<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Radio">
+										</div>
+									</div>
+								</label>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left agreement1">
+					{{i18n.billing.achSection.achForm.agreement.part1.line1}}
+					<span class="agreement-name"></span>
+					{{i18n.billing.achSection.achForm.agreement.part1.line2}}
+					<span class="agreement-routing_number"></span>
+					{{i18n.billing.achSection.achForm.agreement.part1.line3}}
+					<span class="agreement-account_number"></span>
+					{{i18n.billing.achSection.achForm.agreement.part1.line4}}
+				</p>
+				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left agreement2">
+					{{i18n.billing.achSection.achForm.agreement.part2}}
+				</p>
+				<button id="begin-verification" class="monster-button-primary begin-verification" data-module="verification" data-field="billing">
+          	        	      {{i18n.billing.achSection.achForm.beginVerification}}
+                		</button>
+			</form>
 		</div>
 	</div>
 </div>
