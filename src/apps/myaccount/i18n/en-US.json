@@ -249,13 +249,16 @@
 	"creditCard": {
 		"add": {
 			"name": {
-				"label": "Name on Card"
+				"label": "Name on Card",
+				"invalid": "Name is required."
 			},
 			"number": {
-				"label": "Card Number"
+				"label": "Card Number",
+				"invalid": "Card number is invalid."
 			},
 			"expirationDate": {
-				"label": "Expiration Date"
+				"label": "Expiration Date",
+				"invalid": "Expiration date is invalid."
 			},
 			"agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
 			"addCard": "Add Card"
@@ -265,7 +268,11 @@
 			"number": "Card:",
 			"expirationDate": "Expiration Date:",
 			"removeCard": "Remove card"
-		}
+		},
+		"addSuccess": "Credit card ending in {{variable}} added as payment method.",
+		"addFailure": "Failed to add credit card as payment method.",
+		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
+		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method."
 	},
 
 	"trunks": {

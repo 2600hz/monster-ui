@@ -21,8 +21,12 @@
 				font-family: 'Source Sans Pro', Helvetica, sans-serif;
 				font-weight: normal;
 
-				.braintree-hosted-fields-focused {
+				&.braintree-hosted-fields-focused {
 					border-color: #2297FF;
+				}
+
+				&.monster-invalid {
+					border-color: #FF3D24;
 				}
 			}
 

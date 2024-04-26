@@ -58,6 +58,9 @@ define(function(require) {
 								// bootstrap styles
 								/*'font-size': '1rem',
 								color: '#495057'*/
+							},
+							'.invalid': {
+								'border-color': '#FF3D24'
 							}
 						},
 						fields: {
@@ -84,14 +87,37 @@ define(function(require) {
 					return;
 				}
 
+				var validateField = function(event) {
+					console.log('validateField', event);
+					var field = event.fields[event.emittedBy];
+
+					if (field.isValid) {
+						$(field.container)
+							.removeClass('monster-invalid')
+							.siblings('label')
+								.hide();
+					} else {
+						$(field.container)
+							.addClass('monster-invalid')
+							.siblings('label')
+								.show();
+					}
+				};
+
 				hostedFieldsInstance.on('validityChange', function(event) {
+					console.log('validityChange', event);
+
 					// Check if all fields are valid, then show submit button
-					var formValid = Object.keys(event.fields).every(function (key) {
+					var formValid = Object.keys(event.fields).every(function(key) {
 						return event.fields[key].isValid;
 					});
 
 					$submitButton.prop('disabled', !formValid);
+
+					validateField(event);
 				});
+
+				hostedFieldsInstance.on('blur', validateField);
 
 				$form.on('submit', function(event) {
 					event.preventDefault();
@@ -132,8 +158,27 @@ define(function(require) {
 								}
 							}
 						}, function(err, results) {
+							if (err) {
+								monster.ui.toast({
+									type: 'error',
+									message: self.i18n.active().creditCard.addFailure
+								});
+
+								return;
+							}
+
 							var newArgs = _.assign({}, args, {
 								cards: results.updateBilling.credit_cards
+							});
+
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().creditCard.addSuccess,
+									data: {
+										variable: _.get(results.updateBilling.credit_cards, [0, 'last_four'])
+									}
+								})
 							});
 
 							self.creditCardRender(newArgs);
@@ -190,6 +235,11 @@ define(function(require) {
 					});
 				}
 			], function(err, clientInstance, vaultInstance, vaultCard) {
+				if (err) {
+					console.error(err);
+					return;
+				}
+
 				$template.find('#credit_card_delete').on('click', function(event) {
 					event.preventDefault();
 
@@ -213,9 +263,28 @@ define(function(require) {
 						}
 					], function(err, result) {
 						if (err) {
-							console.error(err);
+							monster.ui.toast({
+								type: 'error',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().creditCard.removeFailure,
+									data: {
+										variable: card.last_four
+									}
+								})
+							});
 							return;
 						}
+
+						monster.ui.toast({
+							type: 'success',
+							message: self.getTemplate({
+								name: '!' + self.i18n.active().creditCard.removeSuccess,
+								data: {
+									variable: card.last_four
+								}
+							})
+						});
+
 						var newArgs = _.assign({}, args, { cards: [] });
 
 						self.creditCardRender(newArgs);
