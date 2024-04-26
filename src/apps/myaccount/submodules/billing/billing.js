@@ -38,6 +38,10 @@ define(function(require) {
 				'account_type': false,
 				'ownership_type': false
 			},
+			validAchVerificationFormFields: {
+				'deposit_amount_1': null,
+				'deposit_amount_2': null
+			},
 			selectedPaymentType: null
 		},
 
@@ -307,11 +311,12 @@ define(function(require) {
 							name: 'ach-section',
 							submodule: 'billing'
 						})),
+						beginVerificationButton = template.find('.begin-verification'),
 						enableFormButton = function() {
 							if (_.every(self.appFlags.validAchFormFields)) {
-								template.find('.begin-verification').removeClass('disabled');
+								beginVerificationButton.removeClass('disabled');
 							} else {
-								template.find('.begin-verification').addClass('disabled');
+								beginVerificationButton.addClass('disabled');
 							}
 						},
 						$achForm = template.find('#form_ach_payment'),
@@ -375,12 +380,10 @@ define(function(require) {
 								container.find('#myaccount_billing_payment_ach').prop('checked', false);
 							}
 
-							var verifyButton = template.find('.begin-verification');
-
-							verifyButton.on('click', function(event) {
+							beginVerificationButton.on('click', function(event) {
 								event.preventDefault();
 
-								if (verifyButton.hasClass('disabled')) {
+								if (beginVerificationButton.hasClass('disabled')) {
 									return;
 								}
 								var achDebitData = monster.ui.getFormData('form_ach_payment'),
@@ -428,6 +431,10 @@ define(function(require) {
 											},
 											success: function(data) {
 												//SEND TO MICRO TRANSFER VIEW
+												var statusSection = container.find('.verification-status');
+												statusSection.text(self.i18n.active().billing.achVerification.status.pending);
+												statusSection.addClass('sds_Badge_Yellow');
+												self.renderAchVerificationSection(args);
 											}
 										});
 									}
@@ -438,6 +445,66 @@ define(function(require) {
 				};
 
 			appendTemplate();
+		},
+
+		renderAchVerificationSection: function(args) {
+			var self = this,
+				container = args.template,
+				data = args.data,
+				appendTemplate = function appendTemplate() {
+					var template = $(self.getTemplate({
+							name: 'ach-section-verification',
+							submodule: 'billing'
+						})),
+						verifyButton =  template.find('.verify-account'),
+						enableVerifyButton = function() {
+							if (_.every(self.appFlags.validAchVerificationFormFields)) {
+								verifyButton.removeClass('disabled');
+							} else {
+								verifyButton.addClass('disabled');
+							}
+						},
+						$achForm = template.find('#form_ach_verification'),
+						billingContactData = self.appFlags.billingContactFields,
+						firstname = billingContactData['contact.billing.first_name'],
+						lastname = billingContactData['contact.billing.last_name'];
+
+					container
+						.find('div[data-payment-type="ach"]')
+						.removeClass('payment-type-content-hidden')
+						.empty()
+						.append(template);
+
+					enableVerifyButton();
+
+					//Set validations for form
+					monster.ui.validate($achForm, {
+						rules: {
+							'deposit_amount_1': {
+								required: true
+							},
+							'deposit_amount_2': {
+								required: true
+							}
+						},
+						onfocusout: function(element) {
+							var $element = $(element),
+								name = $element.attr('name'),
+								isValid = $element.valid();
+
+							self.appFlags.validAchVerificationFormFields[name] = isValid;
+
+							enableVerifyButton();
+						},
+						autoScrollOnInvalid: true
+					});
+
+					verifyButton.on('click', function(event) {
+						event.preventDefault();
+					});
+				};
+			appendTemplate();
+
 		},
 
 		billingEnablePaymentSection: function($billingTemplate) {

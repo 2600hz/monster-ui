@@ -1,0 +1,45 @@
+<div class="ach-verification-content-wrapper">
+	<div class="ach-content-section">
+		<div class="ach-section">
+			{{i18n.billing.achVerification.description}}
+		</div>
+		<div class="ach-section">
+			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left bank-information">
+				<span class="summary-label">{{i18n.billing.achVerification.summary.bankName}}</span>
+				<span class="bank-name"></span>
+			</p>
+			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left bank-information">
+				<span class="summary-label">{{i18n.billing.achVerification.summary.account}}</span>
+				<span class="account"></span>
+			</p>
+			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left bank-information">
+				<span class="summary-label">{{i18n.billing.achVerification.summary.type}}</span>
+				<span class="type"></span>
+			</p>
+		</div>
+		<div class="ach-section">
+			<form id="form_ach_verification" class="ach-verification-form">
+				<fieldset class="settings-item-section">
+					<div class="control-group">
+						<label class="control-label" for="deposit_amount_1">{{i18n.billing.achVerification.achVerificationForm.depositAmount.label}}</label>
+						<div class="controls">
+							<input type="text" id="deposit_amount_1" name="deposit_amount_1" value="" placeholder="{{i18n.billing.achVerification.achVerificationForm.depositAmount.placeholder}}">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="deposit_amount_2">{{i18n.billing.achVerification.achVerificationForm.depositAmount.label}}</label>
+						<div class="controls">
+							<input type="text" id="deposit_amount_2" name="deposit_amount_2" value="" placeholder="{{i18n.billing.achVerification.achVerificationForm.depositAmount.placeholder}}">
+						</div>
+					</div>
+				</fieldset>
+				<button id="remove_ach_account" class="monster-button remove-ach-account" data-module="verification" data-field="billing">
+          	        	      {{i18n.billing.achVerification.button.removeAccount}}
+                		</button>
+				<button id="verify_account" class="monster-button-primary verify-account" data-module="verification" data-field="billing">
+          	        	      {{i18n.billing.achVerification.button.verifyAccount}}
+                		</button>
+			</form>
+		</div>
+	</div>
+</div>
