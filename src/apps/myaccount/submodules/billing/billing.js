@@ -135,7 +135,7 @@ define(function(require) {
 
 					// Set validations
 					monster.ui.validate($billingContactForm, {
-					ignore: '.chosen-search-input', // Ignore only search input fields in jQuery Chosen controls. Don't ignore hidden fields.
+						ignore: '.chosen-search-input', // Ignore only search input fields in jQuery Chosen controls. Don't ignore hidden fields.
 						rules: {
 							'contact.billing.first_name': {
 								required: true
@@ -317,7 +317,7 @@ define(function(require) {
 						$achForm = template.find('#form_ach_payment'),
 						billingContactData = self.appFlags.billingContactFields,
 						firstname = billingContactData['contact.billing.first_name'],
-                                                lastname = billingContactData['contact.billing.last_name'];
+						lastname = billingContactData['contact.billing.last_name'];
 
 					container
 						.find('div[data-payment-type="ach"]')
@@ -367,8 +367,7 @@ define(function(require) {
 					}, function(clientErr, clientInstance) {
 						usBankAccount.create({
 							client: clientInstance
-						}, function(usBankAccountErr, usBankAccountInstance){
-
+						}, function(usBankAccountErr, usBankAccountInstance) {
 							if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
 								monster.ui.alert('warning', self.i18n.active().billing.achSection.bankNotEnabled);
 								//hide section and uncheck option
@@ -385,7 +384,7 @@ define(function(require) {
 									return;
 								}
 								var achDebitData = monster.ui.getFormData('form_ach_payment'),
-									mandateText = template.find('.agreement1').text() + ' ' + template.find('.agreement2').text();
+									mandateText = template.find('.agreement1').text() + ' ' + template.find('.agreement2').text(),
 									bankDetails = {
 										accountNumber: achDebitData.account_number,
 										routingNumber: achDebitData.routing_number,
@@ -401,10 +400,10 @@ define(function(require) {
 									};
 
 								if (bankDetails.ownershipType === 'personal') {
-									bankDetails.firstName = firstname,
-									bankDetails.lastname = lastname
+									bankDetails.firstName = firstname;
+									bankDetails.lastname = lastname;
 								} else {
-									bankDetails.businessName = _.get(data, 'account.name')
+									bankDetails.businessName = _.get(data, 'account.name');
 								}
 
 								usBankAccountInstance.tokenize({
