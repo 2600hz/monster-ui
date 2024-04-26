@@ -1,0 +1,45 @@
+<div class="add-card-content-wrapper">
+	<div class="settings-item-content" style="display: block;">
+		<form id="form_credit-card" class="settings-item-form">
+			<fieldset class="settings-item-section">
+				<div class="section-information">
+					<span class="card-type visa"></span>
+					<span class="card-type mastercard"></span>
+					<span class="card-type unionpay"></span>
+					<span class="card-type amex"></span>
+					<span class="card-type jcb"></span>
+					<span class="card-type discover"></span>
+				</div>
+				<div class="control-group control-group-expanded">
+					<label class="control-label" for="credit_card_name">{{i18n.creditCard.add.name.label}}</label>
+					<div class="controls">
+						<div id="credit_card_name" class="credit-card-input" />
+						<label id="credit_card_name-error" class="monster-invalid" for="credit_card_name" style="display: none;">{{i18n.creditCard.add.name.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="credit_card_number">{{i18n.creditCard.add.number.label}}</label>
+					<div class="controls">
+						<div id="credit_card_number" class="credit-card-input" />
+						<label id="credit_card_number-error" class="monster-invalid" for="credit_card_number" style="display: none;">{{i18n.creditCard.add.number.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="credit_card_expiration_date">{{i18n.creditCard.add.expirationDate.label}}</label>
+					<div class="controls">
+						<div id="credit_card_expiration_date" class="credit-card-input" />
+						<label id="credit_card_expiration_date-error" class="monster-invalid" for="credit_card_expiration_date" style="display: none;">{{i18n.creditCard.add.expirationDate.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group control-group-expanded">
+					{{{i18n.creditCard.add.agreement}}}
+				</div>
+				<div class="control-group control-group-expanded">
+					<button type="submit" id="credit_card_save" class="monster-button-primary" disabled>
+						{{i18n.creditCard.add.addCard}}
+					</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>

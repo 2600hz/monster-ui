@@ -292,10 +292,43 @@
 					"description": "Pay for transactions using a credit/debit card."
 				}
 			},
-			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method."
+			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
+			"expiredCard": {
+				"title": "Expired Card",
+				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
+			}
 		},
 
 		"save": "Save Changes"
+	},
+
+	"creditCard": {
+		"add": {
+			"name": {
+				"label": "Name on Card",
+				"invalid": "Name is required."
+			},
+			"number": {
+				"label": "Card Number",
+				"invalid": "Card number is invalid."
+			},
+			"expirationDate": {
+				"label": "Expiration Date",
+				"invalid": "Expiration date is invalid."
+			},
+			"agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
+			"addCard": "Add Card"
+		},
+		"show": {
+			"name": "Cardholder Name:",
+			"number": "Card:",
+			"expirationDate": "Expiration Date:",
+			"removeCard": "Remove card"
+		},
+		"addSuccess": "Credit card ending in {{variable}} added as payment method.",
+		"addFailure": "Failed to add credit card as payment method.",
+		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
+		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method."
 	},
 
 	"trunks": {

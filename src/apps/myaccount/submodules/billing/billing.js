@@ -2,9 +2,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		dropin = require('dropin'),
 		client = require('braintree-client'),
-		usBankAccount = require('us-bank-account');
+		usBankAccount = require('braintree-us-bank-account');
 
 	var billing = {
 
@@ -75,7 +74,7 @@ define(function(require) {
 							callback(null, data.data);
 						},
 						error: function(data, status) {
-							/* For some people billing is not via braintree, but we still ned to display the tab */
+							/* For some people billing is not via braintree, but we still need to display the tab */
 							callback(null, {});
 						}
 					});
@@ -105,6 +104,10 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
+				if (err) {
+					return;
+				}
+
 				self.billingFormatData(results, function(results) {
 					var $billingTemplate = $(self.getTemplate({
 							name: 'layout',
@@ -112,11 +115,11 @@ define(function(require) {
 							submodule: 'billing'
 						})),
 						$billingContactForm = $billingTemplate.find('#form_billing'),
-						expiredCreditCardData = _.get(results, 'billing.expired_card');
+						expiredCardData = _.get(results, 'billing.expired_card');
 
 					// Initialize country selector
 					monster.ui.countrySelector(
-						$billingTemplate.find('#account_administrator_country'),
+						$billingTemplate.find('#billing_contact_country'),
 						{
 							selectedValues: results.account.contact.billing.country,
 							options: {
@@ -190,18 +193,6 @@ define(function(require) {
 						autoScrollOnInvalid: true
 					});
 
-					//display credit card section
-				/*	if (!_.isEmpty(_.get(results, 'billing.credit_card'))) {
-						$billingTemplate
-							.find('#myaccount_billing_payment_card')
-							.prop('checked', true);
-
-						self.renderCardSection({
-							template: $billingContactForm,
-							data: results
-						});
-					}*/
-
 					// Render template
 					monster.pub('myaccount.renderSubmodule', $billingTemplate);
 
@@ -210,96 +201,50 @@ define(function(require) {
 						template: $billingTemplate,
 						data: results,
 						validateCallback: function(callback) {
-							var isValid = monster.ui.valid(args.billingContactForm);
+							var isValid = monster.ui.valid($billingContactForm);
 
 							if (isValid) {
 								callback && callback(null);
 							}
 						},
 						updateCallback: function(data, callback) {
-							console.log('TODO');
-
+							// Add here any steps to do after billing contact update
 							callback(null, data);
 						}
 					});
+
+					// Display credit card section if card is set
+					var hasCreditCard = !_.chain(results)
+						.get('billing.credit_cards')
+						.isEmpty()
+						.value(),
+						isCardExpired = !_.isEmpty(expiredCardData);
+
+					if (hasCreditCard && !isCardExpired) {
+						$billingTemplate
+							.find('#myaccount_billing_payment_card')
+							.prop('checked', true);
+
+						// TODO: Remove duplicated code with #myaccount_billing_payment_card change event
+						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card"]');
+						$paymentTypeContent.removeClass('payment-type-content-hidden');
+
+						self.creditCardRender({
+							container: $billingTemplate.find('.payment-type-content[data-payment-type="card"]'),
+							authorization: _.get(results, 'accountToken.client_token'),
+							expiredCardData: expiredCardData,
+							cards: _.get(results, 'billing.credit_cards')
+						});
+					} else if (isCardExpired) {
+						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
+						$paymentTypeContent.removeClass('payment-type-content-hidden');
+					}
 
 					if (typeof args.callback === 'function') {
 						args.callback($billingTemplate);
 					}
 				});
 			});
-		},
-
-		renderCardSection: function(args) {
-			var self = this,
-				container = args.template,
-				data = args.data,
-				appendTemplate = function appendTemplate() {
-					var template = $(self.getTemplate({
-						name: 'card-section',
-						submodule: 'billing'
-					}));
-
-					container
-						.find('div[data-payment-type="card"]')
-						.removeClass('payment-type-content-hidden')
-						.append(template);
-
-					// Render card form
-					dropin.create({
-						authorization: _.get(data, 'accountToken.client_token'),
-						selector: '#dropin_container',
-						vaultManager: true,
-						card: {
-							cardholderName: {
-								required: true
-							}
-						}
-					}, function(err, instance) {
-						var saveButton = container.find('.save-card'),
-							expiredCreditCardData = _.get(data, 'billing.expired_card');
-
-								/*instance.requestPaymentMethod(function(err, payload) {
-									if (err) {
-										instance.clearSelectedPaymentMethod();
-									} else {
-										monster.parallel({
-											updateBilling: function(callback) {
-												self.requestUpdateBilling({
-													data: {
-														data: {
-															nonce: payload.nonce
-														}
-													},
-													success: function(data) {
-														callback(null, data);
-													}
-												});
-											},
-											deletedCard: function(callback) {
-												if (!_.isEmpty(expiredCreditCardData)) {
-													self.deleteCardBilling({
-														data: {
-															cardId: expiredCreditCardData.id
-														},
-														success: function(data) {
-															callback(null, data);
-														}
-													});
-												} else {
-													callback(null);
-												}
-											}
-										}, function(err, results) {
-											if (results.deletedCard) {
-												template.find('.card-expired').hide();
-											}
-										});
-									}
-								});*/
-					});
-				};
-			appendTemplate();
 		},
 
 		renderAchSection: function(args) {
@@ -612,7 +557,12 @@ define(function(require) {
 				if (this.value === 'ach') {
 					self.renderAchSection(args);
 				} else {
-					self.renderCardSection(args);
+					self.creditCardRender({
+						container: template.find('.payment-type-content[data-payment-type="card"]'),
+						authorization: _.get(data, 'accountToken.client_token'),
+						expiredCardData: expiredCardData,
+						cards: _.get(data, 'billing.credit_cards')
+					});
 				}
 			});
 
@@ -644,23 +594,6 @@ define(function(require) {
 				data: _.merge({
 					accountId: self.accountId,
 					generateError: false
-				}, args.data),
-				success: function(data) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-
-		deleteCardBilling: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'billing.deleteCard',
-				data: _.merge({
-					accountId: self.accountId
 				}, args.data),
 				success: function(data) {
 					args.hasOwnProperty('success') && args.success(data.data);

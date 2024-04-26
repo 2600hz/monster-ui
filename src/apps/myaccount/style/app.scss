@@ -1,6 +1,7 @@
 @import "../../../css/partials/base";
 @import url('../submodules/balance/balance.css');
 @import url('../submodules/billing/billing.css');
+@import url('../submodules/creditCard/creditCard.css');
 @import "../submodules/servicePlan/servicePlan.scss";
 @import url('../submodules/transactions/transactions.css');
 @import url('../submodules/trunks/trunks.css');
@@ -52,6 +53,7 @@
 #myaccount .myaccount-menu {
 	background-color: #f0f0f9;
 	width: 280px;
+	flex-shrink: 0;
 	border-right: 1px solid #c0c0c9;
 	box-sizing: border-box;
 	right: 280px;
