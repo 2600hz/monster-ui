@@ -9,6 +9,18 @@ define(function(require) {
 	var billing = {
 
 		appFlags: {
+			billingContactFields: {
+				'contact.billing.first_name': null,
+				'contact.billing.last_name': null,
+				'contact.billing.email': null,
+				'contact.billing.number': null,
+				'contact.billing.street_address': null,
+				'contact.billing.street_address_extra': null,
+				'contact.billing.locality': null,
+				'contact.billing.region': null,
+				'contact.billing.country': null,
+				'contact.billing.postal_code': null
+			},
 			validBillingContactFields: {
 				'contact.billing.first_name': false,
 				'contact.billing.last_name': false,
@@ -19,6 +31,12 @@ define(function(require) {
 				'contact.billing.region': false,
 				'contact.billing.country': false,
 				'contact.billing.postal_code': false
+			},
+			validAchFormFields: {
+				'account_number': false,
+				'routing_number': false,
+				'account_type': false,
+				'ownership_type': false
 			},
 			selectedPaymentType: null
 		},
@@ -106,7 +124,12 @@ define(function(require) {
 					// Check if billing contact is filled
 					_.each(self.appFlags.validBillingContactFields, function(_value, key) {
 						self.appFlags.validBillingContactFields[key] = !_.chain(results.account).get(key).isEmpty().value();
+
+						//set values to cache
+						self.appFlags.billingContactFields[key] = _.chain(results.account).get(key).value();
 					});
+					//set street_address_extra
+					self.appFlags.billingContactFields['contact.billing.street_address_extra'] = _.get(results, 'account.contact.billing.street_address_extra', null);
 
 					self.billingEnablePaymentSection($billingTemplate);
 
@@ -164,7 +187,7 @@ define(function(require) {
 					});
 
 					//display credit card section
-					if (!_.isEmpty(_.get(results, 'billing.credit_card'))) {
+				/*	if (!_.isEmpty(_.get(results, 'billing.credit_card'))) {
 						$billingTemplate
 							.find('#myaccount_billing_payment_card')
 							.prop('checked', true);
@@ -173,7 +196,7 @@ define(function(require) {
 							template: $billingContactForm,
 							data: results
 						});
-					}
+					}*/
 
 					// Render template
 					monster.pub('myaccount.renderSubmodule', $billingTemplate);
@@ -276,15 +299,25 @@ define(function(require) {
 		},
 
 		renderAchSection: function(args) {
-			console.log(args);
 			var self = this,
 				container = args.template,
 				data = args.data,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
-						name: 'ach-section',
-						submodule: 'billing'
-					}));
+							name: 'ach-section',
+							submodule: 'billing'
+						})),
+						enableFormButton = function() {
+							if (_.every(self.appFlags.validAchFormFields)) {
+								template.find('.begin-verification').removeClass('disabled');
+							} else {
+								template.find('.begin-verification').addClass('disabled');
+							}
+						},
+						$achForm = template.find('#form_ach_payment'),
+						billingContactData = self.appFlags.billingContactFields,
+						firstname = billingContactData['contact.billing.first_name'],
+                                                lastname = billingContactData['contact.billing.last_name'];
 
 					container
 						.find('div[data-payment-type="ach"]')
@@ -292,24 +325,115 @@ define(function(require) {
 						.empty()
 						.append(template);
 
+					enableFormButton();
+
+					//Set agreement name
+					template.find('.agreement-name').text(firstname + ' ' + lastname);
+
+					//Set validations for form
+					monster.ui.validate($achForm, {
+						rules: {
+							'account_number': {
+								required: true,
+								digits: true
+							},
+							'routing_number': {
+								required: true,
+								digits: true
+							},
+							'ownership_type': {
+								required: true
+							},
+							'account_type': {
+								required: true
+							}
+						},
+						onfocusout: function(element) {
+							var $element = $(element),
+								name = $element.attr('name'),
+								isValid = $element.valid(),
+								value = isValid ? $element.val() : '';
+
+							template.find('.agreement-' + name).text(value);
+							self.appFlags.validAchFormFields[name] = isValid;
+
+							enableFormButton();
+						},
+						autoScrollOnInvalid: true
+					});
 					// Render ACH Direct Debit form
 					client.create({
 						authorization: _.get(data, 'accountToken.client_token')
 					}, function(clientErr, clientInstance) {
-						if (clientErr) {
-							console.log('there was an error here');
-						}
-
 						usBankAccount.create({
 							client: clientInstance
 						}, function(usBankAccountErr, usBankAccountInstance){
-							console.log(usBankAccountErr);
+
 							if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
+								console.log(usBankAccountErr);
 								monster.ui.alert('error', self.i18n.active().billing.achSection.bankNotEnabled);
 								//hide section and uncheck option
 								container.find('.payment-type-content').addClass('payment-type-content-hidden');
 								container.find('#myaccount_billing_payment_ach').prop('checked', false);
 							}
+
+							var verifyButton = template.find('.begin-verification');
+
+							console.log(usBankAccountInstance);
+							verifyButton.on('click', function(event) {
+								event.preventDefault();
+
+								if (verifyButton.hasClass('disabled')) {
+									return;
+								}
+								var achDebitData = monster.ui.getFormData('form_ach_payment'),
+									mandateText = template.find('.agreement1').text() + ' ' + template.find('.agreement2').text();
+									bankDetails = {
+										accountNumber: achDebitData.account_number,
+										routingNumber: achDebitData.routing_number,
+										accountType: achDebitData.account_type,
+										ownershipType: achDebitData.ownership_type,
+										billingAddress: {
+											streetAddress: billingContactData['contact.billing.street_address'],
+											extendedAddress: billingContactData['contact.billing.street_address_extra'],
+											locality: billingContactData['contact.billing.locality'],
+											region: billingContactData['contact.billing.region'],
+											postalCode: billingContactData['contact.billing.postal_code']
+										}
+									};
+
+								if (bankDetails.ownershipType === 'personal') {
+									bankDetails.firstName = firstname,
+									bankDetails.lastname = lastname
+								} else {
+									bankDetails.businessName = _.get(data, 'account.name')
+								}
+
+								usBankAccountInstance.tokenize({
+									bankDetails: bankDetails,
+									mandateText: mandateText
+								}, function(tokenizeErr, tokenizePayload) {
+									if (tokenizeErr) {
+										console.log(tokenizeErr);
+										monster.ui.toast({
+											type: 'error',
+											message: self.i18n.active().billing.achSection.toastr.error
+										});
+									} else {
+										console.log(tokenizePayload);
+										self.requestUpdateBilling({
+											data: {
+												data: {
+													nonce: tokenizePayload.nonce
+												}
+											},
+											success: function(data) {
+												console.log(data);
+											}
+										});
+									}
+								});
+							});
 						});
 					});
 				};

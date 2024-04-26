@@ -7,24 +7,24 @@
 			{{i18n.billing.achSection.description}}
 		</div>
 		<div class="ach-section">
-			<form id="form_account_administrator" class="ach-payment-form">
+			<form id="form_ach_payment" class="ach-payment-form">
 				<fieldset class="settings-item-section">
 					<div class="control-group">
 						<label class="control-label" for="routing_number">{{i18n.billing.achSection.achForm.routingNumber.label}}</label>
 						<div class="controls">
-							<input type="text" id="routing_number" name="contact.billing.name" value="{{account.contact.billing.firstName}}" placeholder="{{i18n.billing.achSection.achForm.routingNumber.placeholder}}">
+							<input type="text" id="routing_number" name="routing_number" value="" placeholder="{{i18n.billing.achSection.achForm.routingNumber.placeholder}}">
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="account_number">{{i18n.billing.achSection.achForm.accountNumber.label}}</label>
 						<div class="controls">
-							<input type="text" id="account_number" name="contact.billing.name" value="{{account.contact.billing.firstName}}" placeholder="{{i18n.billing.achSection.achForm.accountNumber.placeholder}}">
+							<input type="text" id="account_number" name="account_number" value="" placeholder="{{i18n.billing.achSection.achForm.accountNumber.placeholder}}">
 						</div>
 					</div>
 				</fieldset>
 				<fieldset class="settings-item-section">
 					<div class="control-group">
-						<label class="control-label" for="routing_number">{{i18n.billing.achSection.achForm.accountType.label}}</label>
+						<label class="control-label" for="account_type">{{i18n.billing.achSection.achForm.accountType.label}}</label>
 						<div class="sds_SelectionList sds_SelectionList_Grid account-type-selection">
 							<div class="sds_SelectionList_Item account-type-item">
 								<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="account_type_checking" name="account_type" value="checking">
@@ -59,7 +59,7 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="routing_number">{{i18n.billing.achSection.achForm.ownershipType.label}}</label>
+						<label class="control-label" for="ownership_type">{{i18n.billing.achSection.achForm.ownershipType.label}}</label>
 						<div class="sds_SelectionList sds_SelectionList_Grid ownership-type-selection">
 							<div class="sds_SelectionList_Item ownership-type-item">
 								<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="ownership_type_personal" name="ownership_type" value="personal">
@@ -94,13 +94,19 @@
 						</div>
 					</div>
 				</fieldset>
-				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left">
-					{{i18n.billing.achSection.achForm.agreement.part1}}
+				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left agreement1">
+					{{i18n.billing.achSection.achForm.agreement.part1.line1}}
+					<span class="agreement-name"></span>
+					{{i18n.billing.achSection.achForm.agreement.part1.line2}}
+					<span class="agreement-routing_number"></span>
+					{{i18n.billing.achSection.achForm.agreement.part1.line3}}
+					<span class="agreement-account_number"></span>
+					{{i18n.billing.achSection.achForm.agreement.part1.line4}}
 				</p>
-				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left">
+				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left agreement2">
 					{{i18n.billing.achSection.achForm.agreement.part2}}
 				</p>
-				<button id="begin-verification" class="monster-button-primary" data-module="verification" data-field="billing">
+				<button id="begin-verification" class="monster-button-primary begin-verification" data-module="verification" data-field="billing">
           	        	      {{i18n.billing.achSection.achForm.beginVerification}}
                 		</button>
 			</form>
