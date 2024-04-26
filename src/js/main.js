@@ -6,6 +6,7 @@ require.config({
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
 		'braintree-client': 'js/vendor/braintree.client.min',
 		'braintree-hosted-fields': 'js/vendor/braintree.hosted-fields.min',
+		'braintree-vault-manager': 'js/vendor/braintree.vault-manager.min',
 		'card': 'js/vendor/card',
 		'chart': 'js/vendor/Chart.min',
 		'chosen': 'js/vendor/jquery.chosen.min',

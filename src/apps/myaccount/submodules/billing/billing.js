@@ -87,7 +87,8 @@ define(function(require) {
 							data: results,
 							submodule: 'billing'
 						})),
-						$billingContactForm = $billingTemplate.find('#form_billing');
+						$billingContactForm = $billingTemplate.find('#form_billing'),
+						expiredCardData = _.get(results, 'billing.expired_card');
 
 					// Initialize country selector
 					monster.ui.countrySelector(
@@ -183,14 +184,26 @@ define(function(require) {
 
 					// Display credit card section if card is set
 					var hasCreditCard = !_.chain(results)
-						.get('credit_cards')
+						.get('billing.credit_cards')
 						.isEmpty()
-						.value();
+						.value(),
+						isCardExpired = !_.isEmpty(expiredCardData);
 
-					if (hasCreditCard) {
+					if (hasCreditCard && !isCardExpired) {
 						$billingTemplate
 							.find('#myaccount_billing_payment_card')
 							.prop('checked', true);
+
+						// TODO: Remove duplicated code with #myaccount_billing_payment_card change event
+						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card"]');
+						$paymentTypeContent.removeClass('payment-type-content-hidden');
+
+						self.creditCardRender({
+							container: $billingTemplate.find('.payment-type-content[data-payment-type="card"]'),
+							authorization: _.get(results, 'accountToken.client_token'),
+							expiredCardData: expiredCardData,
+							cards: _.get(results, 'billing.credit_cards')
+						});
 					}
 
 					if (typeof args.callback === 'function') {
@@ -389,7 +402,8 @@ define(function(require) {
 					self.creditCardRender({
 						container: template.find('.payment-type-content[data-payment-type="card"]'),
 						authorization: _.get(data, 'accountToken.client_token'),
-						expiredCardData: expiredCardData
+						expiredCardData: expiredCardData,
+						cards: _.get(data, 'billing.credit_cards')
 					});
 				}
 			});
@@ -422,23 +436,6 @@ define(function(require) {
 				data: _.merge({
 					accountId: self.accountId,
 					generateError: false
-				}, args.data),
-				success: function(data) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-
-		deleteCardBilling: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'billing.deleteCard',
-				data: _.merge({
-					accountId: self.accountId
 				}, args.data),
 				success: function(data) {
 					args.hasOwnProperty('success') && args.success(data.data);

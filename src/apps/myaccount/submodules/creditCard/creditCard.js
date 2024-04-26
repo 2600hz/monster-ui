@@ -3,7 +3,8 @@ define(function(require) {
 		_ = require('lodash'),
 		monster = require('monster'),
 		braintreeClient = require('braintree-client'),
-		braintreeHostedFields = require('braintree-hosted-fields');
+		braintreeHostedFields = require('braintree-hosted-fields'),
+		braintreeVaultManager = require('braintree-vault-manager');
 
 	var creditCard = {
 
@@ -13,16 +14,33 @@ define(function(require) {
 
 		creditCardRender: function(args) {
 			var self = this,
-				$container = args.container,
 				expiredCardData = args.expiredCardData,
+				cards = args.cards;
+
+			if (_.isEmpty(cards) || !_.isEmpty(expiredCardData)) {
+				self.creditCardRenderAdd(args);
+			} else {
+				self.creditCardRenderShow(args);
+			}
+		},
+
+		creditCardRenderAdd: function(args) {
+			var self = this,
+				$container = args.container;
+
+			if ($container.find('.add-card-content-wrapper').length > 0) {
+				return;
+			}
+
+			var expiredCardData = args.expiredCardData,
 				$template = $(self.getTemplate({
-					name: 'layout',
+					name: 'add-card',
 					submodule: 'creditCard'
 				})),
 				$form = $template.find('form'),
 				$submitButton = $template.find('#credit_card_save');
 
-			$container.append($template);
+			$container.empty().append($template);
 
 			monster.waterfall([
 				function createBraintreeInstance(next) {
@@ -78,6 +96,8 @@ define(function(require) {
 				$form.on('submit', function(event) {
 					event.preventDefault();
 
+					$submitButton.prop('disabled', true);
+
 					hostedFieldsInstance.tokenize({ vault: true }, function(err, payload) {
 						if (err) {
 							console.err(err);
@@ -112,14 +132,112 @@ define(function(require) {
 								}
 							}
 						}, function(err, results) {
-							//setCardHeader(_.head(_.get(results, 'updateBilling.credit_cards')), saveButton);
+							var newArgs = _.assign({}, args, {
+								cards: results.updateBilling.credit_cards
+							});
 
-							if (results.deletedCard) {
-								//billingTemplate.find('.card-expired').hide();
-							}
+							self.creditCardRender(newArgs);
 						});
 					});
 				});
+			});
+		},
+
+		creditCardRenderShow: function(args) {
+			var self = this,
+				card = _.get(args, ['cards', 0]),
+				$container = args.container,
+				$template = $(self.getTemplate({
+					name: 'show-card',
+					submodule: 'creditCard',
+					data: {
+						name: card.cardholder_name,
+						number: '**** **** **** ' + card.last_four,
+						cardType: card.type,
+						expirationDate: card.expiration_month + '/' + card.expiration_year.slice(-2)
+					}
+				}));
+
+			$container.empty().append($template);
+
+			monster.waterfall([
+				function createBraintreeInstance(next) {
+					braintreeClient.create({
+						authorization: args.authorization
+					}, next);
+				},
+				function createVaultmanager(clientInstance, next) {
+					braintreeVaultManager.create({
+						client: clientInstance,
+						authorization: args.authorization
+					}, function(err, hostedFieldsInstance) {
+						next(err, clientInstance, hostedFieldsInstance);
+					});
+				},
+				function fetchPaymentMethods(clientInstance, vaultInstance, next) {
+					vaultInstance.fetchPaymentMethods(function(err, payload) {
+						if (err) {
+							return next(err);
+						}
+
+						var vaultCard = _.find(payload, function(payment) {
+							return payment.details.bin === card.bin && payment.details.lastFour === card.last_four;
+						});
+
+						console.log('fetchPaymentMethods', { payload, vaultCard });
+
+						next(err, clientInstance, vaultInstance, vaultCard);
+					});
+				}
+			], function(err, clientInstance, vaultInstance, vaultCard) {
+				$template.find('#credit_card_delete').on('click', function(event) {
+					event.preventDefault();
+
+					$(this).prop('disabled', true);
+
+					monster.waterfall([
+						// It seems that either the vault or kazoo can be used to delete the card
+						function deleteVaultCard(next) {
+							//vaultInstance.deletePaymentMethod(vaultCard.nonce, next);
+							next(null);
+						},
+						function deleteBilling(next) {
+							self.deleteCardBilling({
+								data: {
+									cardId: card.id
+								},
+								success: function(data) {
+									next(null, data);
+								}
+							});
+						}
+					], function(err, result) {
+						if (err) {
+							console.error(err);
+							return;
+						}
+						var newArgs = _.assign({}, args, { cards: [] });
+
+						self.creditCardRender(newArgs);
+					});
+				});
+			});
+		},
+
+		deleteCardBilling: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.deleteCard',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
 			});
 		}
 	};
