@@ -370,8 +370,7 @@ define(function(require) {
 						}, function(usBankAccountErr, usBankAccountInstance){
 
 							if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
-								console.log(usBankAccountErr);
-								monster.ui.alert('error', self.i18n.active().billing.achSection.bankNotEnabled);
+								monster.ui.alert('warning', self.i18n.active().billing.achSection.bankNotEnabled);
 								//hide section and uncheck option
 								container.find('.payment-type-content').addClass('payment-type-content-hidden');
 								container.find('#myaccount_billing_payment_ach').prop('checked', false);
@@ -379,7 +378,6 @@ define(function(require) {
 
 							var verifyButton = template.find('.begin-verification');
 
-							console.log(usBankAccountInstance);
 							verifyButton.on('click', function(event) {
 								event.preventDefault();
 
@@ -414,13 +412,15 @@ define(function(require) {
 									mandateText: mandateText
 								}, function(tokenizeErr, tokenizePayload) {
 									if (tokenizeErr) {
-										console.log(tokenizeErr);
 										monster.ui.toast({
 											type: 'error',
 											message: self.i18n.active().billing.achSection.toastr.error
 										});
 									} else {
-										console.log(tokenizePayload);
+										monster.ui.toast({
+											type: 'success',
+											message: self.i18n.active().billing.achSection.toastr.success
+										});
 										self.requestUpdateBilling({
 											data: {
 												data: {
@@ -428,7 +428,7 @@ define(function(require) {
 												}
 											},
 											success: function(data) {
-												console.log(data);
+												//SEND TO MICRO TRANSFER VIEW
 											}
 										});
 									}
@@ -443,7 +443,8 @@ define(function(require) {
 
 		billingEnablePaymentSection: function($billingTemplate) {
 			var self = this,
-				paymentType = self.appFlags.selectedPaymentType;
+				paymentType = self.appFlags.selectedPaymentType,
+				country = self.appFlags.billingContactFields['contact.billing.country'];
 
 			if (_.every(self.appFlags.validBillingContactFields)) {
 				$billingTemplate
@@ -457,6 +458,14 @@ define(function(require) {
 						.addClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').show();
 				$billingTemplate.find('.payment-type-content').addClass('payment-type-content-hidden');
+			}
+
+			//disable ACH Direct Debit if country is not US
+			if (['US', 'United States'].indexOf(country) < 0) {
+				$billingTemplate
+					.find('#myaccount_billing_payment_ach')
+					.parents('.payment-type-selection-item')
+					.addClass('sds_SelectionList_Item_Disabled');
 			}
 		},
 
