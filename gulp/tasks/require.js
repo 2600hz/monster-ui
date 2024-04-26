@@ -21,10 +21,10 @@ const libsToExcludeFromWhole = [
 
 const libsToExcludeFromApp = [
 	'async',
-	'braintree-client',
 	'bootstrap',
 	'braintree-client',
 	'braintree-hosted-fields',
+	'braintree-us-bank-account',
 	'braintree-vault-manager',
 	'card',
 	'chart',
@@ -37,7 +37,6 @@ const libsToExcludeFromApp = [
 	'ddslick',
 	'disableAutoFill',
 	'drop',
-	'dropin',
 	'duo',
 	'file-saver',
 	'fileupload',
@@ -90,7 +89,6 @@ const libsToExcludeFromApp = [
 	'timepicker',
 	'toastr',
 	'touch-punch',
-	'us-bank-account',
 	'validate',
 	'vfs_fonts',
 	'wysiwyg'
