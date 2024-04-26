@@ -100,10 +100,33 @@
 
 			.ach-content-wrapper {
 				background-color: #e0e0e2;
-				padding: 16px;
+			}
+
+			.ach-verification-content-wrapper {
+				background-color: #fde6b9;
+
+				.bank-information {
+					display: flex;
+
+					.summary-label {
+						width: 5rem;
+					}
+
+					&:last-child {
+                                        	margin: 0;
+                               		}
+				}
+
+				.remove-ach-account {
+					margin-right: 1rem;
+				}
+			}
+	
+			.ach-content-wrapper, .ach-verification-content-wrapper {
+				padding: 1rem;
 
 				.ach-section:not(:last-child) {
-					padding-bottom: 16px;
+					padding-bottom: 1rem;
 				}
 
 				.ach-payment-form {

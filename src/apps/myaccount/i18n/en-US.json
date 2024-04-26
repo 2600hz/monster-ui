@@ -257,6 +257,24 @@
 				"success": "Bank account was succesfully stored"
 			}
 		},
+		"achVerification": {
+			"description": "Two micro-transaction deposits have been sent to the bank account provided in the previous step. These deposits should show up as \"PAYPAL\" on your bank statement. Please verify the amount of these two deposits below to complete the verification process for this bank account.",
+			"achVerificationForm": {
+				"depositAmount": {
+					"label": "Deposit Amount",
+					"placeholder": "Deposit Amount"
+				}
+			},
+			"summary": {
+				"bankName": "Bank Name: ",
+				"account": "Account: ",
+				"type": "type: "
+			},
+			"button": {
+				"removeAccount": "Remove Account",
+				"verifyAccount": "Verify Account"
+			}
+		},
 
 		"paymentMethod": {
 			"title": "Payment Method",
