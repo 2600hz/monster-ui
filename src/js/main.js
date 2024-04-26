@@ -3,10 +3,10 @@ require.config({
 	waitSeconds: 200,
 	paths: {
 		'async': 'js/vendor/async.min',
-		'braintree-client': 'js/vendor/braintree-client.min',
 		'bootstrap': 'js/vendor/bootstrap-2.3.1.min',
 		'braintree-client': 'js/vendor/braintree.client.min',
 		'braintree-hosted-fields': 'js/vendor/braintree.hosted-fields.min',
+		'braintree-us-bank-account': 'js/vendor/braintree.us-bank-account.min',
 		'braintree-vault-manager': 'js/vendor/braintree.vault-manager.min',
 		'card': 'js/vendor/card',
 		'chart': 'js/vendor/Chart.min',
@@ -19,7 +19,6 @@ require.config({
 		'ddslick': 'js/vendor/jquery.ddslick.min',
 		'disableAutoFill': 'js/vendor/jquery.disableAutoFill',
 		'drop': 'js/vendor/drop',
-		'dropin': 'js/vendor/dropin.min',
 		'duo': 'js/vendor/duo.min',
 		'file-saver': 'js/vendor/file-saver-1.3.2.min',
 		'fileupload': 'js/lib/jquery.fileupload',
@@ -74,7 +73,6 @@ require.config({
 		'timepicker': 'js/vendor/jquery.timepicker.min',
 		'toastr': 'js/vendor/toastr-1.3.0',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
-		'us-bank-account': 'js/vendor/us-bank-account.min',
 		'validate': 'js/vendor/jquery.validate.min',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min'
 	},

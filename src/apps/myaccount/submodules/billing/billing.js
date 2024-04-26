@@ -2,9 +2,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		dropin = require('dropin'),
 		client = require('braintree-client'),
-		usBankAccount = require('us-bank-account');
+		usBankAccount = require('braintree-us-bank-account');
 
 	var billing = {
 
@@ -75,7 +74,7 @@ define(function(require) {
 							callback(null, data.data);
 						},
 						error: function(data, status) {
-							/* For some people billing is not via braintree, but we still ned to display the tab */
+							/* For some people billing is not via braintree, but we still need to display the tab */
 							callback(null, {});
 						}
 					});
@@ -105,6 +104,10 @@ define(function(require) {
 					});
 				}
 			}, function(err, results) {
+				if (err) {
+					return;
+				}
+
 				self.billingFormatData(results, function(results) {
 					var $billingTemplate = $(self.getTemplate({
 							name: 'layout',
@@ -205,8 +208,7 @@ define(function(require) {
 							}
 						},
 						updateCallback: function(data, callback) {
-							console.log('TODO');
-
+							// Add here any steps to do after billing contact update
 							callback(null, data);
 						}
 					});
@@ -243,78 +245,6 @@ define(function(require) {
 					}
 				});
 			});
-		},
-
-		renderCardSection: function(args) {
-			var self = this,
-				container = args.template,
-				data = args.data,
-				appendTemplate = function appendTemplate() {
-					var template = $(self.getTemplate({
-						name: 'card-section',
-						submodule: 'billing'
-					}));
-
-					container
-						.find('div[data-payment-type="card"]')
-						.removeClass('payment-type-content-hidden')
-						.append(template);
-
-					// Render card form
-					dropin.create({
-						authorization: _.get(data, 'accountToken.client_token'),
-						selector: '#dropin_container',
-						vaultManager: true,
-						card: {
-							cardholderName: {
-								required: true
-							}
-						}
-					}, function(err, instance) {
-						var saveButton = container.find('.save-card'),
-							expiredCreditCardData = _.get(data, 'billing.expired_card');
-
-								/*instance.requestPaymentMethod(function(err, payload) {
-									if (err) {
-										instance.clearSelectedPaymentMethod();
-									} else {
-										monster.parallel({
-											updateBilling: function(callback) {
-												self.requestUpdateBilling({
-													data: {
-														data: {
-															nonce: payload.nonce
-														}
-													},
-													success: function(data) {
-														callback(null, data);
-													}
-												});
-											},
-											deletedCard: function(callback) {
-												if (!_.isEmpty(expiredCreditCardData)) {
-													self.deleteCardBilling({
-														data: {
-															cardId: expiredCreditCardData.id
-														},
-														success: function(data) {
-															callback(null, data);
-														}
-													});
-												} else {
-													callback(null);
-												}
-											}
-										}, function(err, results) {
-											if (results.deletedCard) {
-												template.find('.card-expired').hide();
-											}
-										});
-									}
-								});*/
-					});
-				};
-			appendTemplate();
 		},
 
 		renderAchSection: function(args) {
