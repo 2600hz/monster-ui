@@ -240,7 +240,11 @@
 					"description": "Pay for transactions using a credit/debit card."
 				}
 			},
-			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method."
+			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
+			"expiredCard": {
+				"title": "Expired Card",
+				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
+			}
 		},
 
 		"save": "Save Changes"

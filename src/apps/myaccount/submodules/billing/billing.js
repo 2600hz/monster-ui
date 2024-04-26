@@ -204,6 +204,9 @@ define(function(require) {
 							expiredCardData: expiredCardData,
 							cards: _.get(results, 'billing.credit_cards')
 						});
+					} else if (isCardExpired) {
+						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
+						$paymentTypeContent.removeClass('payment-type-content-hidden');
 					}
 
 					if (typeof args.callback === 'function') {
