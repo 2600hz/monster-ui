@@ -273,6 +273,10 @@
 			"button": {
 				"removeAccount": "Remove Account",
 				"verifyAccount": "Verify Account"
+			},
+			"status": {
+				"pending": "Verification pending...",
+				"verified": "Verified"
 			}
 		},
 

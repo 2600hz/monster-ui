@@ -91,6 +91,28 @@
 			}
 		}
 
+		.payment-type-selection{
+			.sds_Badge {
+				font-size: 12px;
+				font-weight: 600;
+				padding: 0 0.5rem;
+				border-radius: 1rem;
+				margin-left: 0.5rem;
+
+				&_Yellow {
+					background: #fde6b9;
+				}
+
+				&_Green {
+					background: #c2f4bf;
+				}
+
+				&_Grey {
+					background: #ccccd0;
+				}
+			}
+		}
+
 		.payment-type-content {
 			display: block;
 
@@ -115,7 +137,7 @@
 					&:last-child {
                                         	margin: 0;
                                		}
-				}
+		}
 
 				.remove-ach-account {
 					margin-right: 1rem;

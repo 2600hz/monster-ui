@@ -431,6 +431,9 @@ define(function(require) {
 											},
 											success: function(data) {
 												//SEND TO MICRO TRANSFER VIEW
+												var statusSection = container.find('.verification-status');
+												statusSection.text(self.i18n.active().billing.achVerification.status.pending);
+												statusSection.addClass('sds_Badge_Yellow');
 												self.renderAchVerificationSection(args);
 											}
 										});
