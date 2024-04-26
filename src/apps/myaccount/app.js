@@ -8,6 +8,7 @@ define(function(require) {
 			'account',
 			'balance',
 			'billing',
+			'creditCard',
 			'errorTracker',
 			'servicePlan',
 			'transactions',

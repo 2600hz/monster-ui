@@ -246,6 +246,20 @@
 		"save": "Save Changes"
 	},
 
+	"creditCard": {
+		"name": {
+			"label": "Name on Card"
+		},
+		"number": {
+			"label": "Card Number"
+		},
+		"expirationDate": {
+			"label": "Expiration Date"
+		},
+		"agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
+		"addCard": "Add Card"
+	},
+
 	"trunks": {
 		"title": "Trunks",
 		"outbound": "Outbound",

@@ -87,8 +87,7 @@ define(function(require) {
 							data: results,
 							submodule: 'billing'
 						})),
-						$billingContactForm = $billingTemplate.find('#form_billing'),
-						expiredCreditCardData = _.get(results, 'billing.expired_card');
+						$billingContactForm = $billingTemplate.find('#form_billing');
 
 					// Initialize country selector
 					monster.ui.countrySelector(
@@ -161,20 +160,6 @@ define(function(require) {
 						autoScrollOnInvalid: true
 					});
 
-					//display credit card section
-					if (_.get(results, 'billing.credit_card')) {
-						$billingTemplate
-							.find('#myaccount_billing_payment_card')
-							.prop('checked', true);
-
-						self.renderCardSection(
-							_.merge({}, results, {
-								template: $billingTemplate,
-								billingContactForm: $billingContactForm
-							})
-						);
-					}
-
 					// Render template
 					monster.pub('myaccount.renderSubmodule', $billingTemplate);
 
@@ -195,6 +180,18 @@ define(function(require) {
 							callback(null, data);
 						}
 					});
+
+					// Display credit card section if card is set
+					var hasCreditCard = !_.chain(results)
+						.get('credit_cards')
+						.isEmpty()
+						.value();
+
+					if (hasCreditCard) {
+						$billingTemplate
+							.find('#myaccount_billing_payment_card')
+							.prop('checked', true);
+					}
 
 					if (typeof args.callback === 'function') {
 						args.callback($billingTemplate);
@@ -389,7 +386,11 @@ define(function(require) {
 				if (this.value === 'ach') {
 					self.renderAchSection(args);
 				} else {
-					self.renderCardSection(args);
+					self.creditCardRender({
+						container: template.find('.payment-type-content[data-payment-type="card"]'),
+						authorization: _.get(data, 'accountToken.client_token'),
+						expiredCardData: expiredCardData
+					});
 				}
 			});
 
