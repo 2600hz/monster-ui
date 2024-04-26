@@ -88,7 +88,6 @@ define(function(require) {
 				}
 
 				var validateField = function(event) {
-					console.log('validateField', event);
 					var field = event.fields[event.emittedBy];
 
 					if (field.isValid) {
@@ -105,8 +104,6 @@ define(function(require) {
 				};
 
 				hostedFieldsInstance.on('validityChange', function(event) {
-					console.log('validityChange', event);
-
 					// Check if all fields are valid, then show submit button
 					var formValid = Object.keys(event.fields).every(function(key) {
 						return event.fields[key].isValid;
@@ -228,8 +225,6 @@ define(function(require) {
 						var vaultCard = _.find(payload, function(payment) {
 							return payment.details.bin === card.bin && payment.details.lastFour === card.last_four;
 						});
-
-						console.log('fetchPaymentMethods', { payload, vaultCard });
 
 						next(err, clientInstance, vaultInstance, vaultCard);
 					});
