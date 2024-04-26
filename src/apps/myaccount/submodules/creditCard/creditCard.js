@@ -52,17 +52,7 @@ define(function(require) {
 					braintreeHostedFields.create({
 						preventAutofill: false,
 						client: clientInstance,
-						styles: {
-							input: {
-								// change input styles to match
-								// bootstrap styles
-								/*'font-size': '1rem',
-								color: '#495057'*/
-							},
-							'.invalid': {
-								'border-color': '#FF3D24'
-							}
-						},
+						styles: {},
 						fields: {
 							cardholderName: {
 								selector: '#credit_card_name',
@@ -164,10 +154,6 @@ define(function(require) {
 								return;
 							}
 
-							var newArgs = _.assign({}, args, {
-								cards: results.updateBilling.credit_cards
-							});
-
 							monster.ui.toast({
 								type: 'success',
 								message: self.getTemplate({
@@ -178,7 +164,7 @@ define(function(require) {
 								})
 							});
 
-							self.creditCardRender(newArgs);
+							args.callback && args.callback();
 						});
 					});
 				});
@@ -280,9 +266,7 @@ define(function(require) {
 							})
 						});
 
-						var newArgs = _.assign({}, args, { cards: [] });
-
-						self.creditCardRender(newArgs);
+						args.callback && args.callback();
 					});
 				});
 			});

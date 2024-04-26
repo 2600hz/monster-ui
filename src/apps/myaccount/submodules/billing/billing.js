@@ -115,11 +115,12 @@ define(function(require) {
 							submodule: 'billing'
 						})),
 						$billingContactForm = $billingTemplate.find('#form_billing'),
+						$countrySelector = $billingTemplate.find('#billing_contact_country'),
 						expiredCardData = _.get(results, 'billing.expired_card');
 
 					// Initialize country selector
 					monster.ui.countrySelector(
-						$billingTemplate.find('#billing_contact_country'),
+						$countrySelector,
 						{
 							selectedValues: results.account.contact.billing.country,
 							options: {
@@ -199,6 +200,7 @@ define(function(require) {
 					// Bind events
 					self.billingBindEvents({
 						template: $billingTemplate,
+						moduleArgs: args,
 						data: results,
 						validateCallback: function(callback) {
 							var isValid = monster.ui.valid($billingContactForm);
@@ -233,7 +235,10 @@ define(function(require) {
 							container: $billingTemplate.find('.payment-type-content[data-payment-type="card"]'),
 							authorization: _.get(results, 'accountToken.client_token'),
 							expiredCardData: expiredCardData,
-							cards: _.get(results, 'billing.credit_cards')
+							cards: _.get(results, 'billing.credit_cards'),
+							callback: function() {
+								monster.pub('myaccount.billing.renderContent', args);
+							}
 						});
 					} else if (isCardExpired) {
 						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
@@ -511,34 +516,37 @@ define(function(require) {
 
 		billingBindEvents: function(args) {
 			var self = this,
-				template = args.template,
+				$template = args.template,
 				data = args.data,
+				moduleArgs = args.moduleArgs,
+				$countrySelector = $template.find('#billing_contact_country'),
+				$paymentMethodRadioGroup = $template.find('input[type="radio"][name="payment_method"]'),
 				creditCardData = _.get(data, 'billing.credit_card'),
 				expiredCardData = _.get(data, 'billing.expired_card');
 
 			if (_.isEmpty(creditCardData)) {
-				template.find('.save-card').addClass('show');
+				$template.find('.save-card').addClass('show');
 			}
 
 			if (!_.isEmpty(expiredCardData)) {
-				template.find('.card-expired').show();
-				template.find('.save-card').addClass('show');
+				$template.find('.card-expired').show();
+				$template.find('.save-card').addClass('show');
 			}
 
-			template.on('click', '.braintree-toggle', function(e) {
+			$template.on('click', '.braintree-toggle', function(e) {
 				e.preventDefault();
 
-				template.find('.save-card').addClass('show');
+				$template.find('.save-card').addClass('show');
 			});
 
-			template.on('click', '.braintree-method', function(e) {
+			$template.on('click', '.braintree-method', function(e) {
 				e.preventDefault();
 
-				template.find('.save-card').removeClass('show');
+				$template.find('.save-card').removeClass('show');
 			});
 
 			//Refreshing the card info when opening the settings-item
-			template.find('.settings-item[data-name="credit_card"] .settings-link').on('click', function() {
+			$template.find('.settings-item[data-name="credit_card"] .settings-link').on('click', function() {
 				var settingsItem = $(this).parents('.settings-item');
 				if (!settingsItem.hasClass('open')) {
 					settingsItem.find('input').keyup();
@@ -546,8 +554,8 @@ define(function(require) {
 			});
 
 			// Select paymet method option
-			var $paymentContent = template.find('.payment-content');
-			template.find('input[type="radio"][name="payment_method"]').change(function() {
+			var $paymentContent = $template.find('.payment-content');
+			$paymentMethodRadioGroup.change(function() {
 				var $paymentTypeContent = $paymentContent.find('[data-payment-type="' + this.value + '"]');
 				$paymentTypeContent.removeClass('payment-type-content-hidden');
 				$paymentTypeContent.siblings().addClass('payment-type-content-hidden');
@@ -558,12 +566,20 @@ define(function(require) {
 					self.renderAchSection(args);
 				} else {
 					self.creditCardRender({
-						container: template.find('.payment-type-content[data-payment-type="card"]'),
+						container: $template.find('.payment-type-content[data-payment-type="card"]'),
 						authorization: _.get(data, 'accountToken.client_token'),
 						expiredCardData: expiredCardData,
-						cards: _.get(data, 'billing.credit_cards')
+						cards: _.get(data, 'billing.credit_cards'),
+						callback: function() {
+							monster.pub('myaccount.billing.renderContent', moduleArgs);
+						}
 					});
 				}
+			});
+
+			$countrySelector.on('change', function() {
+				self.appFlags.billingContactFields['contact.billing.country'] = this.value;
+				self.billingEnablePaymentSection($template);
 			});
 
 			monster.pub('myaccount.events', args);
