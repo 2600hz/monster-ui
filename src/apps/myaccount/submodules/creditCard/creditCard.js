@@ -43,7 +43,7 @@ define(function(require) {
 			$container.empty().append($template);
 
 			monster.waterfall([
-				function createBraintreeInstance(next) {
+				function createClientInstance(next) {
 					braintreeClient.create({
 						authorization: args.authorization
 					}, next);
@@ -119,7 +119,7 @@ define(function(require) {
 
 						monster.parallel({
 							updateBilling: function(callback) {
-								self.requestUpdateBilling({
+								self.billingRequestUpdateBilling({
 									data: {
 										data: {
 											nonce: payload.nonce
@@ -189,7 +189,7 @@ define(function(require) {
 			$container.empty().append($template);
 
 			monster.waterfall([
-				function createBraintreeInstance(next) {
+				function createClientInstance(next) {
 					braintreeClient.create({
 						authorization: args.authorization
 					}, next);
