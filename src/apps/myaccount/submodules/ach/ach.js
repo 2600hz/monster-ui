@@ -8,15 +8,17 @@ define(function(require) {
 	var ach = {
 
 		appFlags: {
-			validAchFormFields: {
-				'account_number': false,
-				'routing_number': false,
-				'account_type': false,
-				'ownership_type': false
-			},
-			validAchVerificationFormFields: {
-				'deposit_amount_1': null,
-				'deposit_amount_2': null
+			ach: {
+				validAchFormFields: {
+					'account_number': false,
+					'routing_number': false,
+					'account_type': false,
+					'ownership_type': false
+				},
+				validAchVerificationFormFields: {
+					'deposit_amount_1': null,
+					'deposit_amount_2': null
+				}
 			}
 		},
 
@@ -33,16 +35,16 @@ define(function(require) {
 						})),
 						beginVerificationButton = template.find('.begin-verification'),
 						enableFormButton = function() {
-							if (_.every(self.appFlags.validAchFormFields)) {
+							if (_.every(self.appFlags.ach.validAchFormFields)) {
 								beginVerificationButton.removeClass('disabled');
 							} else {
 								beginVerificationButton.addClass('disabled');
 							}
 						},
 						$achForm = template.find('#form_ach_payment'),
-						billingContactData = self.appFlags.billingContactFields,
-						firstname = billingContactData['contact.billing.first_name'],
-						lastname = billingContactData['contact.billing.last_name'];
+						billingContactData = self.appFlags.billing.billingContactFields,
+						firstname = billingContactData['contact.billing.first_name'].value,
+						lastname = billingContactData['contact.billing.last_name'].value;
 
 					container
 						.find('div[data-payment-type="ach"]')
@@ -80,7 +82,7 @@ define(function(require) {
 								value = isValid ? $element.val() : '';
 
 							template.find('.agreement-' + name).text(value);
-							self.appFlags.validAchFormFields[name] = isValid;
+							self.appFlags.ach.validAchFormFields[name] = isValid;
 
 							enableFormButton();
 						},
@@ -89,11 +91,7 @@ define(function(require) {
 
 					// Render ACH Direct Debit form
 					monster.waterfall([
-						function createClientInstance(next) {
-							client.create({
-								authorization: _.get(data, 'accountToken.client_token')
-							}, next);
-						},
+						_.bind(self.billingCreateBraintreeClientInstance, self),
 						function createBankAccountInstance(clientInstance, next) {
 							usBankAccount.create({
 								client: clientInstance
@@ -123,11 +121,11 @@ define(function(require) {
 									accountType: achDebitData.account_type,
 									ownershipType: achDebitData.ownership_type,
 									billingAddress: {
-										streetAddress: billingContactData['contact.billing.street_address'],
-										extendedAddress: billingContactData['contact.billing.street_address_extra'],
-										locality: billingContactData['contact.billing.locality'],
-										region: billingContactData['contact.billing.region'],
-										postalCode: billingContactData['contact.billing.postal_code']
+										streetAddress: billingContactData['contact.billing.street_address'].value,
+										extendedAddress: billingContactData['contact.billing.street_address_extra'].value,
+										locality: billingContactData['contact.billing.locality'].value,
+										region: billingContactData['contact.billing.region'].value,
+										postalCode: billingContactData['contact.billing.postal_code'].value
 									}
 								};
 
@@ -186,16 +184,16 @@ define(function(require) {
 						})),
 						verifyButton = template.find('.verify-account'),
 						enableVerifyButton = function() {
-							if (_.every(self.appFlags.validAchVerificationFormFields)) {
+							if (_.every(self.appFlags.ach.validAchVerificationFormFields)) {
 								verifyButton.removeClass('disabled');
 							} else {
 								verifyButton.addClass('disabled');
 							}
 						},
 						$achForm = template.find('#form_ach_verification'),
-						billingContactData = self.appFlags.billingContactFields,
-						firstname = billingContactData['contact.billing.first_name'],
-						lastname = billingContactData['contact.billing.last_name'];
+						billingContactData = self.appFlags.billing.billingContactFields,
+						firstname = billingContactData['contact.billing.first_name'].value,
+						lastname = billingContactData['contact.billing.last_name'].value;
 
 					container
 						.find('div[data-payment-type="ach"]')

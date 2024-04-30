@@ -1,84 +1,89 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster');
+		monster = require('monster'),
+		braintreeClient = require('braintree-client');
 
 	var billing = {
 
 		appFlags: {
-			billingContactFields: {
-				'contact.billing.first_name': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
+			billing: {
+				billingContactFields: {
+					'contact.billing.first_name': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.last_name': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.email': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.number': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.street_address': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.street_address_extra': {
+						required: false,
+						originalValue: null,
+						value: null,
+						valid: true,
+						changed: false
+					},
+					'contact.billing.locality': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.region': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.country': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					},
+					'contact.billing.postal_code': {
+						required: true,
+						originalValue: null,
+						value: null,
+						valid: null,
+						changed: false
+					}
 				},
-				'contact.billing.last_name': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.email': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.number': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.street_address': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.street_address_extra': {
-					required: false,
-					originalValue: null,
-					value: null,
-					valid: true,
-					changed: false
-				},
-				'contact.billing.locality': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.region': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.country': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				},
-				'contact.billing.postal_code': {
-					required: true,
-					originalValue: null,
-					value: null,
-					valid: null,
-					changed: false
-				}
-			},
-			selectedPaymentType: 'none'
+				selectedPaymentType: 'none',
+				braintreeClientToken: null,
+				braintreeClientInstance: null
+			}
 		},
 
 		subscribe: {
@@ -145,6 +150,8 @@ define(function(require) {
 					return;
 				}
 
+				self.appFlags.billing.braintreeClientToken = _.get(results, 'accountToken.client_token');
+
 				self.billingFormatData(results, function(results) {
 					var $billingTemplate = $(self.getTemplate({
 							name: 'layout',
@@ -155,13 +162,13 @@ define(function(require) {
 						$countrySelector = $billingTemplate.find('#billing_contact_country'),
 						expiredCardData = _.get(results, 'billing.expired_card'),
 						shouldBeRequired = function() {
-							return self.appFlags.selectedPaymentType !== 'none';
+							return self.appFlags.billing.selectedPaymentType !== 'none';
 						},
 						validateField = function(element) {
 							var $element = $(element),
 								name = $element.attr('name'),
 								isValid = $element.valid(),
-								field = self.appFlags.billingContactFields[name],
+								field = self.appFlags.billing.billingContactFields[name],
 								value = _.trim($element.val()),
 								isEmpty = _.isEmpty(value);
 
@@ -185,8 +192,8 @@ define(function(require) {
 					);
 
 					// Check if billing contact is valid
-					_.each(self.appFlags.billingContactFields, function(data, key) {
-						var field = self.appFlags.billingContactFields[key];
+					_.each(self.appFlags.billing.billingContactFields, function(data, key) {
+						var field = self.appFlags.billing.billingContactFields[key];
 						field.valid = !field.required || !_.chain(results.account).get(key).isEmpty().value();
 						field.value = _.chain(results.account).get(key).trim().value();
 						field.originalValue = field.value;
@@ -296,9 +303,9 @@ define(function(require) {
 
 		billingEnablePaymentSection: function($billingTemplate) {
 			var self = this,
-				paymentType = self.appFlags.selectedPaymentType,
-				country = self.appFlags.billingContactFields['contact.billing.country'].value,
-				isContactValid = _.every(self.appFlags.billingContactFields, 'valid');
+				paymentType = self.appFlags.billing.selectedPaymentType,
+				country = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
+				isContactValid = _.every(self.appFlags.billing.billingContactFields, 'valid');
 
 			if (isContactValid) {
 				$billingTemplate
@@ -376,7 +383,7 @@ define(function(require) {
 					$paymentContent.find('.payment-type-content:not([data-payment-type="' + value + '"])')
 						.addClass('payment-type-content-hidden');
 
-					self.appFlags.selectedPaymentType = value;
+					self.appFlags.billing.selectedPaymentType = value;
 
 					monster.ui.valid($contactForm);
 
@@ -406,7 +413,7 @@ define(function(require) {
 			});
 
 			$countrySelector.on('change', function() {
-				var field = self.appFlags.billingContactFields['contact.billing.country'];
+				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
 				field.value = this.value;
 				field.changed = (this.value !== field.originalValue);
 
@@ -429,7 +436,7 @@ define(function(require) {
 		billingEnableSubmitButton: function($template) {
 			var self = this,
 				$submitButton = $template.find('#myaccount_billing_save'),
-				hasFormChanged = _.some(self.appFlags.billingContactFields, 'changed');
+				hasFormChanged = _.some(self.appFlags.billing.billingContactFields, 'changed');
 
 			$submitButton.prop('disabled', !hasFormChanged);
 		},
@@ -467,6 +474,28 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		billingCreateBraintreeClientInstance: function(next) {
+			var self = this;
+
+			if (self.appFlags.billing.braintreeClientInstance) {
+				next(null, self.appFlags.billing.braintreeClientInstance);
+				return;
+			}
+
+			monster.waterfall([
+				function createClientInstance(waterfallNext) {
+					braintreeClient.create({
+						authorization: self.appFlags.billing.braintreeClientToken
+					}, waterfallNext);
+				},
+				function storeClientInstance(client, waterfallNext) {
+					self.appFlags.billing.braintreeClientInstance = client;
+
+					waterfallNext(null, client);
+				}
+			], next);
 		}
 	};
 
