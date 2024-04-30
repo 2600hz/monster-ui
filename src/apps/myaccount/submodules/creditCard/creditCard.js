@@ -43,11 +43,7 @@ define(function(require) {
 			$container.empty().append($template);
 
 			monster.waterfall([
-				function createClientInstance(next) {
-					braintreeClient.create({
-						authorization: args.authorization
-					}, next);
-				},
+				_.bind(self.billingCreateBraintreeClientInstance, self),
 				function createHostedFields(clientInstance, next) {
 					braintreeHostedFields.create({
 						preventAutofill: false,
