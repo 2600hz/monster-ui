@@ -5,6 +5,7 @@ define(function(require) {
 
 	var app = {
 		subModules: [
+			'ach',
 			'account',
 			'balance',
 			'billing',
