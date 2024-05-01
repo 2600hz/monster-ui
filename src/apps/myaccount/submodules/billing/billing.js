@@ -392,7 +392,10 @@ define(function(require) {
 					}
 
 					if (value === 'ach') {
-						self.achRenderSection(args);
+						self.achRenderSection({
+							data: data,
+							container: $template.find('div[data-payment-type="ach"]')
+						});
 					} else {
 						self.creditCardRender({
 							container: $template.find('.payment-type-content[data-payment-type="card"]'),

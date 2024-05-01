@@ -26,7 +26,7 @@ define(function(require) {
 
 		achRenderSection: function(args) {
 			var self = this,
-				container = args.template,
+				container = args.container,
 				data = args.data,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
@@ -45,12 +45,6 @@ define(function(require) {
 						billingContactData = self.appFlags.billing.billingContactFields,
 						firstname = billingContactData['contact.billing.first_name'].value,
 						lastname = billingContactData['contact.billing.last_name'].value;
-
-					container
-						.find('div[data-payment-type="ach"]')
-						.removeClass('payment-type-content-hidden')
-						.empty()
-						.append(template);
 
 					enableFormButton();
 
@@ -90,6 +84,8 @@ define(function(require) {
 					});
 
 					// Render ACH Direct Debit form
+					monster.pub('monster.requestStart', {});
+
 					monster.waterfall([
 						_.bind(self.billingCreateBraintreeClientInstance, self),
 						function createBankAccountInstance(clientInstance, next) {
@@ -100,11 +96,20 @@ define(function(require) {
 							});
 						}
 					], function(usBankAccountErr, clientInstance, usBankAccountInstance) {
+						monster.pub('monster.requestEnd', {});
+
 						if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
-							monster.ui.alert('warning', self.i18n.active().billing.achSection.bankNotEnabled);
-							//hide section and uncheck option
-							container.find('.payment-type-content').addClass('payment-type-content-hidden');
-							container.find('#myaccount_billing_payment_ach').prop('checked', false);
+							var $unavailableTemplate = $(self.getTemplate({
+								name: 'ach-section-unavailable',
+								submodule: 'ach'
+							}));
+
+							container
+								.removeClass('payment-type-content-hidden')
+								.empty()
+								.append($unavailableTemplate);
+
+							return;
 						}
 
 						beginVerificationButton.on('click', function(event) {
@@ -167,6 +172,11 @@ define(function(require) {
 								}
 							});
 						});
+
+						container
+							.removeClass('payment-type-content-hidden')
+							.empty()
+							.append(template);
 					});
 				};
 
@@ -175,7 +185,7 @@ define(function(require) {
 
 		achRenderVerificationSection: function(args) {
 			var self = this,
-				container = args.template,
+				container = args.container,
 				data = args.data,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
@@ -196,7 +206,6 @@ define(function(require) {
 						lastname = billingContactData['contact.billing.last_name'].value;
 
 					container
-						.find('div[data-payment-type="ach"]')
 						.removeClass('payment-type-content-hidden')
 						.empty()
 						.append(template);

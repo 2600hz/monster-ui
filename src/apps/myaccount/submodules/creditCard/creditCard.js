@@ -42,6 +42,8 @@ define(function(require) {
 
 			$container.empty().append($template);
 
+			monster.pub('monster.requestStart', {});
+
 			monster.waterfall([
 				_.bind(self.billingCreateBraintreeClientInstance, self),
 				function createHostedFields(clientInstance, next) {
@@ -68,6 +70,8 @@ define(function(require) {
 					});
 				}
 			], function(err, clientInstance, hostedFieldsInstance) {
+				monster.pub('monster.requestEnd', {});
+
 				if (err) {
 					console.error(err);
 					return;
