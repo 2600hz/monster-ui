@@ -1,5 +1,18 @@
 <div id="myaccount">
 	<div class="myaccount-container">
+		<div class="myaccount-right clearfix">
+			<div class="myaccount-titlebar">
+				<div class="myaccount-module-title"></div>
+				<div class="myaccount-close">
+					<button type="button" class="monster-button">
+						<i class="fa fa-times"></i>{{i18n.close}}
+					</button>
+				</div>
+			</div>
+			<div class="myaccount-content container-fluid">
+
+			</div>
+		</div>
 		<div class="myaccount-menu">
 			<ul class="nav nav-list">
 				{{#if restrictions.categories.settings.show}}
@@ -133,19 +146,6 @@
 				</li>
 				{{/if}}
 			</ul>
-		</div>
-		<div class="myaccount-right clearfix">
-			<div class="myaccount-titlebar">
-				<div class="myaccount-module-title"></div>
-				<div class="myaccount-close">
-					<button type="button" class="monster-button">
-						<i class="fa fa-times"></i>{{i18n.close}}
-					</button>
-				</div>
-			</div>
-			<div class="myaccount-content container-fluid">
-
-			</div>
 		</div>
 	</div>
 	<div class="myaccount-dialog-container"></div>
