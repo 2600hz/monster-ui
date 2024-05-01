@@ -170,6 +170,7 @@ define(function(require) {
 			// The back-end doesn't let us set features anymore, they return
 			// the field based on the key set on that document.
 			delete args.data.data.features;
+			delete args.data.data.metadata;
 
 			self.callApi({
 				resource: 'numbers.update',
