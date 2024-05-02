@@ -234,7 +234,7 @@
 				},
 				"beginVerification": "Begin Verification"
 			},
-			"bankNotEnabled": "US bank account is not enabled.",
+			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin.",
 			"toastr": {
 				"error": "Unable to store this bank account information",
 				"success": "Bank account was succesfully stored"
