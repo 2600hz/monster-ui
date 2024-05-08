@@ -26,7 +26,8 @@ define(function(require) {
 
 		creditCardRenderAdd: function(args) {
 			var self = this,
-				$container = args.container;
+				$container = args.container,
+				surcharge = args.surcharge;
 
 			if ($container.find('.add-card-content-wrapper').length > 0) {
 				return;
@@ -39,6 +40,12 @@ define(function(require) {
 				})),
 				$form = $template.find('form'),
 				$submitButton = $template.find('#credit_card_save');
+
+			if (surcharge) {
+				$template.find('.credit-card-surcharge-notice span').text(surcharge);
+			} else {
+				$template.find('.credit-card-surcharge-notice').hide();
+			}
 
 			$container.empty().append($template);
 
@@ -63,19 +70,36 @@ define(function(require) {
 							expirationDate: {
 								selector: '#credit_card_expiration_date',
 								placeholder: 'MM / YY'
+							},
+							cvv: {
+								selector: '#credit_card_cvv',
+								placeholder: 'CVV'
 							}
 						}
 					}, function(err, hostedFieldsInstance) {
 						next(err, clientInstance, hostedFieldsInstance);
 					});
+				},
+				function checkChallenges(clientInstance, hostedFieldsInstance, next) {
+					hostedFieldsInstance.getChallenges(function(err, challenges) {
+						next(err, clientInstance, hostedFieldsInstance, challenges);
+					});
 				}
-			], function(err, clientInstance, hostedFieldsInstance) {
-				monster.pub('monster.requestEnd', {});
-
+			], function(err, clientInstance, hostedFieldsInstance, challenges) {
 				if (err) {
+					monster.pub('monster.requestEnd', {});
 					console.error(err);
 					return;
 				}
+
+				if (!_.includes(challenges, 'cvv')) {
+					var $smallControlGroups = $template.find('.control-group-small');
+
+					$smallControlGroups.eq(0).removeClass('control-group-small');
+					$smallControlGroups.eq(1).addClass('control-group-hidden');
+				}
+
+				monster.pub('monster.requestEnd', {});
 
 				var validateField = function(event) {
 					var field = event.fields[event.emittedBy];
@@ -164,7 +188,7 @@ define(function(require) {
 								})
 							});
 
-							args.callback && args.callback();
+							args.submitCallback && args.submitCallback();
 						});
 					});
 				});
