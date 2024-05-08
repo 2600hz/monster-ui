@@ -289,7 +289,8 @@
 				},
 				"card": {
 					"title": "Credit/Debit Card",
-					"description": "Pay for transactions using a credit/debit card."
+					"description": "Pay for transactions using a credit/debit card.",
+					"surcharge": "<span>2.7</span>% service fee"
 				}
 			},
 			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
@@ -316,6 +317,10 @@
 				"label": "Expiration Date",
 				"invalid": "Expiration date is invalid."
 			},
+			"cvv": {
+				"label": "CVV",
+				"invalid": "CVV is invalid."
+			},
 			"agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
 			"addCard": "Add Card"
 		},
@@ -328,7 +333,8 @@
 		"addSuccess": "Credit card ending in {{variable}} added as payment method.",
 		"addFailure": "Failed to add credit card as payment method.",
 		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
-		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method."
+		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
+		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.7</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted. We do not surcharge Visa and Mastercard debit cards."
 	},
 
 	"trunks": {

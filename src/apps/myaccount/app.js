@@ -900,6 +900,8 @@ define(function(require) {
 					}
 				}
 			} else if (type === 'account') {
+				delete params.data.contact.billing.region_select;
+
 				// We have to do the cleaning here because the $.extend doesn't work as we expect with arrays...
 				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format')) {
 					if (newData.ui_flags.numbers_format !== 'international_with_exceptions') {
