@@ -24,6 +24,46 @@ define(function(require) {
 
 		subscribe: {},
 
+		requests: {
+			'myaccount.getAccount': {
+				url: 'accounts/{accountId}',
+				verb: 'GET'
+			},
+			'myaccount.braintree.putAchToken': {
+				apiRoot: monster.config.whitelabel.achApi,
+				url: '/accounts/{accountId}/braintree/ach/vault',
+				verb: 'PUT',
+				generateError: false
+			},
+			'myaccount.braintree.deleteAchMethod': {
+				apiRoot: monster.config.whitelabel.achApi,
+				url: '/accounts/{accountId}/braintree/ach/{paymentMethodToken}',
+				verb: 'DELETE',
+				generateError: false
+			},
+			'myaccount.braintree.confirmMicroDeposits': {
+				apiRoot: monster.config.whitelabel.achApi,
+				url: '/accounts/{accountId}/braintree/ach/{verificationId}/confirm',
+				verb: 'PUT',
+				generateError: false
+			},
+			'myaccount.braintree.getVerificationStatus': {
+				apiRoot: monster.config.whitelabel.achApi,
+				url: '/accounts/{accountId}/braintree/ach/{verificationId}',
+				verb: 'GET',
+				generateError: false
+			},
+                        'myaccount.braintree.getAch': {
+                                apiRoot: monster.config.whitelabel.achApi,
+                                url: '/accounts/{accountId}/braintree/ach',
+                                verb: 'GET',
+                                generateError: false,
+				removeHeaders: [
+					'X-Kazoo-Cluster-ID'
+				]
+                        }
+                },
+
 		achRenderSection: function(args) {
 			var self = this,
 				container = args.container,
@@ -94,8 +134,16 @@ define(function(require) {
 							}, function(usBankAccountErr, usBankAccountInstance) {
 								next(usBankAccountErr, clientInstance, usBankAccountInstance);
 							});
+						},
+						function braintreeAch(usBankAccountErr, usBankAccountInstance, next) {
+							self.getBraintreeAch({
+								success: function(data) {
+									next(null, usBankAccountErr, usBankAccountInstance, data);
+								}
+							});
 						}
-					], function(usBankAccountErr, clientInstance, usBankAccountInstance) {
+					], function(usBankAccountErr, clientInstance, usBankAccountInstance, data) {
+						console.log(data);
 						monster.pub('monster.requestEnd', {});
 
 						if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
@@ -240,6 +288,93 @@ define(function(require) {
 				};
 
 			appendTemplate();
+		},
+
+		/*Braintree ACH functions*/
+                putAchToken: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.putAchToken',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		deleteAchMethod: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.deleteAchMethod',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		confirmMicroDeposits: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.confirmMicroDeposits',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		getVerificationStatus: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.getVerificationStatus',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		getBraintreeAch: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.getAch',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
 		}
 	};
 
