@@ -50,6 +50,12 @@ define(function(require) {
 
 			$debitCardError.hide();
 
+			if (surcharge) {
+				$template.find('.credit-card-surcharge-notice span').text(surcharge);
+			} else {
+				$template.find('.credit-card-surcharge-notice').hide();
+			}
+
 			$container.empty().append($template);
 
 			monster.pub('monster.requestStart', {});
