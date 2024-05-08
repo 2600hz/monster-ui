@@ -489,6 +489,7 @@ define(function(require) {
 		keyValueSelector: keyValueSelector,
 		monthpicker: monthpicker,
 		numberPicker: numberPicker,
+		stateSelector: stateSelector,
 		toast: toast,
 
 		// When the developer wants to use steps, he can just send an object like { range: 'max', steps: [30,3600,18880], value: 30 }
@@ -4093,6 +4094,96 @@ define(function(require) {
 	};
 
 	/**
+	 * Gets a template to render the option items for a `select` list of US states
+	 *
+	 * @private
+	 * @param {Object} args
+	 * @param {String|String[]} args.selectedValues  The value or values to be selected
+	 * @param {Boolean} args.showEmptyOption  Whether or not to add an empty option to the list
+	 * @returns  {String}  States selector template
+	 */
+	function getStateSelectorTemplate(args) {
+		var selectedValues = args.selectedValues,
+			showEmptyOption = args.showEmptyOption,
+			showTerritories = args.showTerritories,
+			states = {
+				'AL': 'Alabama',
+				'AK': 'Alaska',
+				'AZ': 'Arizona',
+				'AR': 'Arkansas',
+				'CA': 'California',
+				'CO': 'Colorado',
+				'CT': 'Connecticut',
+				'DE': 'Delaware',
+				'FL': 'Florida',
+				'GA': 'Georgia',
+				'HI': 'Hawaii',
+				'ID': 'Idaho',
+				'IL': 'Illinois',
+				'IN': 'Indiana',
+				'IA': 'Iowa',
+				'KS': 'Kansas',
+				'KY': 'Kentucky',
+				'LA': 'Louisiana',
+				'ME': 'Maine',
+				'MD': 'Maryland',
+				'MA': 'Massachusetts',
+				'MI': 'Michigan',
+				'MN': 'Minnesota',
+				'MS': 'Mississippi',
+				'MO': 'Missouri',
+				'MT': 'Montana',
+				'NE': 'Nebraska',
+				'NV': 'Nevada',
+				'NH': 'New Hampshire',
+				'NJ': 'New Jersey',
+				'NM': 'New Mexico',
+				'NY': 'New York',
+				'NC': 'North Carolina',
+				'ND': 'North Dakota',
+				'OH': 'Ohio',
+				'OK': 'Oklahoma',
+				'OR': 'Oregon',
+				'PA': 'Pennsylvania',
+				'RI': 'Rhode Island',
+				'SC': 'South Carolina',
+				'SD': 'South Dakota',
+				'TN': 'Tennessee',
+				'TX': 'Texas',
+				'UT': 'Utah',
+				'VT': 'Vermont',
+				'VA': 'Virginia',
+				'WA': 'Washington',
+				'WV': 'West Virginia',
+				'WI': 'Wisconsin',
+				'WY': 'Wyoming'
+			},
+			territories = {
+				'AS': 'American Samoa',
+				'GU': 'Guam',
+				'MP': 'Northern Mariana Islands',
+				'PR': 'Puerto Rico',
+				'VI': 'U.S. Virgin Islands'
+			},
+			stateList = _
+				.chain(states)
+				.assign(showTerritories ? territories : {})
+				.map(function(label, code) {
+					return {
+						code: code,
+						label: label
+					};
+				})
+				.sortBy('label')
+				.value();
+		return monster.template(monster.apps.core, 'monster-state-selector', {
+			states: stateList,
+			selectedStates: selectedValues,
+			showEmptyOption: showEmptyOption
+		});
+	}
+
+	/**
 	 * Get handlebars template to render an SVG icon
 	 * @param   {Object} args
 	 * @param   {String} args.id            Icon ID
@@ -4403,6 +4494,58 @@ define(function(require) {
 			}
 		});
 		return $target.spinner(options);
+	}
+
+	/**
+	 * Transforms a select field into a searchable list of US states.
+	 * @param  {jQuery} $target  <select> element on which the list will be built
+	 * @param  {Object} [args]  Additional arguments for the widget
+	 * @param  {String|String[]} [args.selectedValues]  List of selected values
+	 * @param  {Object} [args.options]  Options for widget
+	 * @returns  {Object}  Chosen instance
+	 */
+	function stateSelector($target, args) {
+		if (!($target instanceof jQuery)) {
+			throw TypeError('"$target" is not a jQuery object');
+		}
+		if (!$target.is('select')) {
+			throw TypeError('"$target" is not a select input');
+		}
+		if (!_.isUndefined(args) && !_.isPlainObject(args)) {
+			throw TypeError('"args" is not a plain object');
+		}
+		if (
+			_.has(args, 'selectedValues')
+			&& !(_.isString(args.selectedValues) || _.isArray(args.selectedValues))
+		) {
+			throw TypeError('"args.selectedValues" is not a string nor an array');
+		}
+		if (_.has(args, 'options') && !_.isPlainObject(args.options)) {
+			throw TypeError('"args.options" is not a plain object');
+		}
+		var selectedValues = _.get(args, 'selectedValues', []);
+		var options = _.get(args, 'options', {});
+		var showEmptyOption = _.get(options, 'showEmptyOption', false);
+		var showTerritories = _.get(options, 'showTerritories', false);
+		var itemsTemplate = getStateSelectorTemplate({
+			selectedValues: selectedValues,
+			showEmptyOption: showEmptyOption,
+			showTerritories: showTerritories
+		});
+		var itemTemplate = monster.template(monster.apps.core, 'monster-state-selector-item');
+		var chosenOptions = _.merge({
+			html_template: itemTemplate
+		}, _.omit(options, ['showTerritories']));
+		var chosenInstance;
+
+		// Append items to select element
+		$target.append(itemsTemplate);
+
+		// Initialize chosen
+		chosenInstance = ui.chosen($target, chosenOptions);
+		chosenInstance.container.addClass('monster-state-selector');
+
+		return chosenInstance;
 	}
 
 	/**
