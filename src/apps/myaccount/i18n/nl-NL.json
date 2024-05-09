@@ -206,8 +206,8 @@
 				"pending": "Verification pending...",
 				"verified": "Verified"
 			},
-                        "toast": {
-                                "deletion": "Verified bank account and payment method removed."
+			"toast": {
+				"deletion": "Verified bank account and payment method removed."
 			}
 		}
 	},
