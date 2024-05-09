@@ -39,13 +39,16 @@ define(function(require) {
 					submodule: 'creditCard'
 				})),
 				$form = $template.find('form'),
-				$submitButton = $template.find('#credit_card_save');
+				$submitButton = $template.find('#credit_card_save'),
+				$debitCardError = $template.find('.credit-card-debit-error');
 
 			if (surcharge) {
 				$template.find('.credit-card-surcharge-notice span').text(surcharge);
 			} else {
 				$template.find('.credit-card-surcharge-notice').hide();
 			}
+
+			$debitCardError.hide();
 
 			$container.empty().append($template);
 
@@ -80,12 +83,20 @@ define(function(require) {
 						next(err, clientInstance, hostedFieldsInstance);
 					});
 				},
-				function checkChallenges(clientInstance, hostedFieldsInstance, next) {
+				function createVaultmanager(clientInstance, hostedFieldsInstance, next) {
+					braintreeVaultManager.create({
+						client: clientInstance,
+						authorization: args.authorization
+					}, function(err, vaultManagerInstance) {
+						next(err, clientInstance, hostedFieldsInstance, vaultManagerInstance);
+					});
+				},
+				function checkChallenges(clientInstance, hostedFieldsInstance, vaultManagerInstance, next) {
 					hostedFieldsInstance.getChallenges(function(err, challenges) {
-						next(err, clientInstance, hostedFieldsInstance, challenges);
+						next(err, clientInstance, hostedFieldsInstance, vaultManagerInstance, challenges);
 					});
 				}
-			], function(err, clientInstance, hostedFieldsInstance, challenges) {
+			], function(err, clientInstance, hostedFieldsInstance, vaultManagerInstance, challenges) {
 				if (err) {
 					monster.pub('monster.requestEnd', {});
 					console.error(err);
@@ -109,17 +120,31 @@ define(function(require) {
 							.removeClass('monster-invalid')
 							.siblings('label')
 								.hide();
+						$debitCardError.hide();
 					} else {
 						$(field.container)
 							.addClass('monster-invalid')
 							.siblings('label')
 								.show();
 					}
+
+					// Re-validate expiration date if car number changes,
+					// because expirationDate is marked as invalid for debit card
+					if (event.emittedBy === 'number') {
+						validateField(_.assign({}, event, {
+							emittedBy: 'expirationDate'
+						}));
+					}
 				};
 
 				hostedFieldsInstance.on('validityChange', function(event) {
 					// Check if all fields are valid, then show submit button
 					var formValid = Object.keys(event.fields).every(function(key) {
+						if (key === 'cvv') {
+							return _.includes(challenges, 'cvv')
+								? event.fields[key].isValid
+								: event.fields[key].isPotentiallyValid;
+						}
 						return event.fields[key].isValid;
 					});
 
@@ -135,14 +160,39 @@ define(function(require) {
 
 					$submitButton.prop('disabled', true);
 
-					hostedFieldsInstance.tokenize({ vault: true }, function(err, payload) {
+					monster.pub('monster.requestStart', {});
+					hostedFieldsInstance.tokenize({
+						vault: true,
+						fieldsToTokenize: ['cardholderName', 'number', 'expirationDate'].concat(
+							_.includes(challenges, 'cvv') ? ['cvv'] : []
+						)
+					}, function(err, payload) {
 						if (err) {
-							console.err(err);
+							console.error(err);
+							monster.pub('monster.requestEnd', {});
+							return;
+						}
+
+						if (payload.binData.debit === 'Yes') {
+							$debitCardError.show();
+							$template.find('#credit_card_number,#credit_card_expiration_date')
+								.addClass('monster-invalid')
+								.siblings('label')
+								.show();
+
+							vaultManagerInstance.deletePaymentMethod(payload.nonce, function(err) {
+								if (err) {
+									console.error(err);
+								}
+
+								monster.pub('monster.requestEnd', {});
+							});
+
 							return;
 						}
 
 						monster.parallel({
-							updateBilling: function(callback) {
+							updateBilling: function(next) {
 								self.billingRequestUpdateBilling({
 									data: {
 										data: {
@@ -150,25 +200,27 @@ define(function(require) {
 										}
 									},
 									success: function(data) {
-										callback(null, data);
+										next(null, data);
 									}
 								});
 							},
-							deletedCard: function(callback) {
+							deletedCard: function(next) {
 								if (!_.isEmpty(expiredCardData)) {
 									self.deleteCardBilling({
 										data: {
 											cardId: expiredCardData.id
 										},
 										success: function(data) {
-											callback(null, data);
+											next(null, data);
 										}
 									});
 								} else {
-									callback(null);
+									next(null);
 								}
 							}
 						}, function(err, results) {
+							monster.pub('monster.requestEnd', {});
+
 							if (err) {
 								monster.ui.toast({
 									type: 'error',
@@ -290,7 +342,7 @@ define(function(require) {
 							})
 						});
 
-						args.callback && args.callback();
+						args.submitCallback && args.submitCallback();
 					});
 				});
 			});
