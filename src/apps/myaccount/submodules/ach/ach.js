@@ -144,15 +144,29 @@ define(function(require) {
 						},
 						function braintreeAch(usBankAccountErr, usBankAccountInstance, next) {
 							self.getBraintreeAch({
-								success: function(data) {
-									next(null, usBankAccountErr, usBankAccountInstance, data);
+								success: function(bankData) {
+									next(null, usBankAccountErr, usBankAccountInstance, bankData);
 								}
 							});
+						},
+						function braintreeAchStatus(usBankAccountErr, usBankAccountInstance, bankData, next) {
+							if (_.isEmpty(bankData)) {
+								next(null, usBankAccountErr, usBankAccountInstance, bankData, []);
+							} else {
+								var newBankData = _.head(bankData);
+								self.getVerificationStatus({
+									data: {
+										verificationId: _.get(newBankData, 'verification_id')
+									},
+									success: function(statusData) {
+										next(null, usBankAccountErr, usBankAccountInstance, newBankData, statusData);
+									}
+								});
+							}
 						}
-					], function(usBankAccountErr, clientInstance, usBankAccountInstance, data) {
+					], function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
 						monster.pub('monster.requestEnd', {});
 
-						console.log(data);
 						if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
 							var $unavailableTemplate = $(self.getTemplate({
 								name: 'ach-section-unavailable',
@@ -167,9 +181,12 @@ define(function(require) {
 							return;
 						}
 
-						if (!_.isEmpty(data)) {
+						if (!_.isEmpty(bankData)) {
 							self.achRenderVerificationSection(_.merge({}, args, {
-								bankData: _.head(data)
+								data: {
+									bankData: bankData,
+									statusData: statusData
+								}
 							}));
 
 							return;
@@ -178,6 +195,7 @@ define(function(require) {
 						$beginVerificationButton.on('click', function(event) {
 							event.preventDefault();
 
+							$beginVerificationButton.prop('disabled', true);
 							var achDebitData = monster.ui.getFormData('form_ach_payment'),
 								mandateText = template.find('.agreement1').text() + ' ' + template.find('.agreement2').text(),
 								bankDetails = {
@@ -222,7 +240,6 @@ define(function(require) {
 											}
 										},
 										success: function(data) {
-											console.log(data);
 											self.achRenderSection(args);
 										}
 									});
@@ -244,7 +261,8 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				data = args.data,
-				bankData = args.bankData,
+				bankData = data.bankData,
+				statusData = data.statusData,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 							name: 'ach-section-verification',
@@ -264,14 +282,34 @@ define(function(require) {
 						$achForm = template.find('#form_ach_verification'),
 						billingContactData = self.appFlags.billing.billingContactFields,
 						firstname = billingContactData['contact.billing.first_name'].value,
-						lastname = billingContactData['contact.billing.last_name'].value;
+						lastname = billingContactData['contact.billing.last_name'].value,
+						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status'),
+						setBadgeStatus = function() {
+							var currentStatus = _.get(statusData, 'status');
+
+							console.log(currentStatus);
+							if (['pending', 'complete'].indexOf(currentStatus) > -1) {
+								var classStatusName = currentStatus === 'pending'
+										? 'sds_Badge_Yellow'
+										: 'sds_Badge_Green',
+									className = 'sds_Badge ' + classStatusName,
+									badgeText = currentStatus === 'pending'
+										? self.i18n.active().achDirectDebit.achVerification.status.pending
+										: self.i18n.active().achDirectDebit.achVerification.status.verified;
+
+								$statusBadge.addClass(className);
+								$statusBadge.text(badgeText);
+							}
+						};
 
 					container
 						.removeClass('payment-type-content-hidden')
 						.empty()
 						.append(template);
 
+					//Disable/Enable Verify button and set status badge on card
 					enableVerifyButton();
+					setBadgeStatus();
 
 					//Set validations for form
 					monster.ui.validate($achForm, {
@@ -297,11 +335,14 @@ define(function(require) {
 
 					$verifyAccountButton.on('click', function(event) {
 						event.preventDefault();
+
+						$verifyAccountButton.prop('disabled', true);
 					});
 
 					$removeAccountButton.on('click', function(event) {
 						event.preventDefault();
 
+						$removeAccountButton.prop('disabled', true);
 						self.deleteAchMethod({
 							data: {
 								paymentMethodToken: bankData.payment_method_token
@@ -312,8 +353,9 @@ define(function(require) {
 									message: self.i18n.active().achDirectDebit.achVerification.toast.deletion
 								});
 
-								delete args.bankData;
-								self.achRenderSection(args);
+								delete args.data.statusData;
+								delete args.data.bankData;
+								args.submitCallback && args.submitCallback();
 							}
 						});
 					});
