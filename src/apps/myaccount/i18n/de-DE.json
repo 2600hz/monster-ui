@@ -259,7 +259,7 @@
 				"beginVerification": "Begin Verification"
 			},
 			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin.",
-			"toastr": {
+			"toast": {
 				"error": "Unable to store this bank account information",
 				"success": "Bank account was succesfully stored"
 			}
@@ -284,6 +284,9 @@
 			"status": {
 				"pending": "Verification pending...",
 				"verified": "Verified"
+			},
+                        "toast": {
+                                "deletion": "Verified bank account and payment method removed."
 			}
 		}
 	},

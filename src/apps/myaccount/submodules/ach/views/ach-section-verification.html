@@ -6,15 +6,15 @@
 		<div class="ach-section">
 			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left bank-information">
 				<span class="summary-label">{{i18n.achDirectDebit.achVerification.summary.bankName}}</span>
-				<span class="bank-name"></span>
+				<span class="bank-name">{{name}}</span>
 			</p>
 			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left bank-information">
 				<span class="summary-label">{{i18n.achDirectDebit.achVerification.summary.account}}</span>
-				<span class="account"></span>
+				<span class="account">{{number}}</span>
 			</p>
 			<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left bank-information">
 				<span class="summary-label">{{i18n.achDirectDebit.achVerification.summary.type}}</span>
-				<span class="type"></span>
+				<span class="type">{{type}}</span>
 			</p>
 		</div>
 		<div class="ach-section">
@@ -33,10 +33,10 @@
 						</div>
 					</div>
 				</fieldset>
-				<button id="remove_ach_account" class="monster-button remove-ach-account" data-module="verification" data-field="billing">
+				<button id="remove_account" class="monster-button-danger">
           	        	      {{i18n.achDirectDebit.achVerification.button.removeAccount}}
                 		</button>
-				<button id="verify_account" class="monster-button-primary verify-account" data-module="verification" data-field="billing">
+				<button id="verify_account" class="monster-button-primary">
           	        	      {{i18n.achDirectDebit.achVerification.button.verifyAccount}}
                 		</button>
 			</form>
