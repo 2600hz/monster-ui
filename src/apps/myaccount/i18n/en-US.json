@@ -334,7 +334,8 @@
 		"addFailure": "Failed to add credit card as payment method.",
 		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
 		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
-		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.7</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted. We do not surcharge Visa and Mastercard debit cards."
+		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.7</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted. We do not surcharge Visa and Mastercard debit cards.",
+		"debitCardError": "We do not accept debit card payments. Please use ACH, or a Visa/Mastercard credit card."
 	},
 
 	"trunks": {
