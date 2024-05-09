@@ -96,7 +96,7 @@
 		"__comment": "UI-966: Added common control to select carrier in myaccount",
 		"__version": "v3.20_s0",
 		"carrierTitle": "Настройки оператора"
-	},
+	}8F,
 
 	"billing": {
 		"title": "Payment Details",
@@ -158,6 +158,30 @@
 				"placeholder": "12345"
 			}
 		},
+
+		"paymentMethod": {
+			"title": "Payment Method",
+			"options": {
+				"ach": {
+					"title": "ACH Direct Debit",
+					"description": "Pay for transactions by debiting directly from a bank account."
+				},
+				"card": {
+					"title": "Credit/Debit Card",
+					"description": "Pay for transactions using a credit/debit card."
+				}
+			},
+			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
+			"expiredCard": {
+				"title": "Expired Card",
+				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
+			}
+		},
+
+		"save": "Save Changes"
+	},
+
+	"achDirectDebit": {
 		"achSection": {
 			"warning": "This payment option requires a two-step bank verification process, which provides a way to check the validity of a bank account before attempting to process transactions. This verification process helps protect against fraudulent or erroneous transactions, and typically takes 2-3 business days.",
 			"description": "Provide the required bank account information below to begin verification. This will trigger the billing system to send two micro-transaction deposits to the bank account, followed immediately by a single debit to reverse the deposits. You will need to verify the amount of these two micro-transaction deposits in the next step.",
@@ -218,29 +242,42 @@
 				"pending": "Verification pending...",
 				"verified": "Verified"
 			}
-		},
-
-		"paymentMethod": {
-			"title": "Payment Method",
-			"options": {
-				"ach": {
-					"title": "ACH Direct Debit",
-					"description": "Pay for transactions by debiting directly from a bank account."
-				},
-				"card": {
-					"title": "Credit/Debit Card",
-					"description": "Pay for transactions using a credit/debit card."
-				}
-			},
-			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
-			"expiredCard": {
-				"title": "Expired Card",
-				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
-			}
-		},
-
-		"save": "Save Changes"
+		}
 	},
+
+	"creditCard": {
+                "add": {
+                        "name": {
+                                "label": "Name on Card",
+                                "invalid": "Name is required."
+                        },
+                        "number": {
+                                "label": "Card Number",
+                                "invalid": "Card number is invalid."
+                        },
+                        "expirationDate": {
+                                "label": "Expiration Date",
+                                "invalid": "Expiration date is invalid."
+                        },
+                        "cvv": {
+                                "label": "CVV",
+                                "invalid": "CVV is invalid."
+                        },
+                        "agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
+                        "addCard": "Add Card"
+                },
+                "show": {
+                        "name": "Cardholder Name:",
+                        "number": "Card:",
+                        "expirationDate": "Expiration Date:",
+                        "removeCard": "Remove card"
+                },
+                "addSuccess": "Credit card ending in {{variable}} added as payment method.",
+                "addFailure": "Failed to add credit card as payment method.",
+                "removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
+                "removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
+                "surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.7</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted. We do not surcharge Visa and Mastercard debit cards."
+        },
 
 	"trunks": {
 		"title": "Каналы",
