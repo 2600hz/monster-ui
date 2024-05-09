@@ -56,6 +56,8 @@ define(function(require) {
 				$template.find('.credit-card-surcharge-notice').hide();
 			}
 
+			$debitCardError.hide();
+
 			$container.empty().append($template);
 
 			monster.pub('monster.requestStart', {});
