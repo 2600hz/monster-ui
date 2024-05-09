@@ -17,6 +17,11 @@
 				<span class="type">{{type}}</span>
 			</p>
 		</div>
+		<div class="ach-section-error ach-section-hidden" data-payment-type="incorrect-amount">
+			{{#monsterPanelText i18n.achDirectDebit.verificationFailure.title "danger" "fill-width"}}
+				{{i18n.achDirectDebit.verificationFailure.message}}
+			{{/monsterPanelText}}
+		</div>
 		<div class="ach-section">
 			<form id="form_ach_verification" class="ach-verification-form">
 				<fieldset class="settings-item-section">

@@ -181,8 +181,19 @@ define(function(require) {
 							return;
 						}
 
-						if (!_.isEmpty(bankData)) {
+						if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'pending') {
 							self.achRenderVerificationSection(_.merge({}, args, {
+								data: {
+									bankData: bankData,
+									statusData: statusData
+								}
+							}));
+
+							return;
+						}
+
+						if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'verified') {
+							self.achRenderShowBank(_.merge({}, args, {
 								data: {
 									bankData: bankData,
 									statusData: statusData
@@ -216,7 +227,7 @@ define(function(require) {
 								bankDetails.firstName = firstname;
 								bankDetails.lastName = lastname;
 							} else {
-								bankDetails.businessName = _.get(data, 'account.name');
+								bankDetails.businessName = _.get(args, 'data.account.name');
 							}
 
 							usBankAccountInstance.tokenize({
@@ -226,12 +237,12 @@ define(function(require) {
 								if (tokenizeErr) {
 									monster.ui.toast({
 										type: 'error',
-										message: self.i18n.active().achDirectDebit.achSection.toast.error
+										message: self.i18n.active().achDirectDebit.addFailure
 									});
 								} else {
 									monster.ui.toast({
 										type: 'success',
-										message: self.i18n.active().achDirectDebit.achSection.toast.success
+										message: self.i18n.active().achDirectDebit.addSuccess
 									});
 									self.putAchToken({
 										data: {
@@ -283,24 +294,11 @@ define(function(require) {
 						billingContactData = self.appFlags.billing.billingContactFields,
 						firstname = billingContactData['contact.billing.first_name'].value,
 						lastname = billingContactData['contact.billing.last_name'].value,
-						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status'),
-						setBadgeStatus = function() {
-							var currentStatus = _.get(statusData, 'status');
+						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status');
 
-							console.log(currentStatus);
-							if (['pending', 'complete'].indexOf(currentStatus) > -1) {
-								var classStatusName = currentStatus === 'pending'
-										? 'sds_Badge_Yellow'
-										: 'sds_Badge_Green',
-									className = 'sds_Badge ' + classStatusName,
-									badgeText = currentStatus === 'pending'
-										? self.i18n.active().achDirectDebit.achVerification.status.pending
-										: self.i18n.active().achDirectDebit.achVerification.status.verified;
-
-								$statusBadge.addClass(className);
-								$statusBadge.text(badgeText);
-							}
-						};
+					//set badge status and text
+					$statusBadge.addClass('sds_Badge sds_Badge_Yellow');
+					$statusBadge.text(self.i18n.active().achDirectDebit.achVerification.status.pending);
 
 					container
 						.removeClass('payment-type-content-hidden')
@@ -309,7 +307,6 @@ define(function(require) {
 
 					//Disable/Enable Verify button and set status badge on card
 					enableVerifyButton();
-					setBadgeStatus();
 
 					//Set validations for form
 					monster.ui.validate($achForm, {
@@ -336,7 +333,37 @@ define(function(require) {
 					$verifyAccountButton.on('click', function(event) {
 						event.preventDefault();
 
+						var verificationAmounts = monster.ui.getFormData('form_ach_verification');
+
 						$verifyAccountButton.prop('disabled', true);
+						self.confirmMicroDeposits({
+							data: {
+								verificationId: _.get(bankData, 'verification_id'),
+								data: {
+									deposits: [
+										Math.floor(verificationAmounts.deposit_amount_1),
+										Math.floor(verificationAmounts.deposit_amount_2)
+									]
+								}
+							},
+							success: function(data) {
+								container.find('.ach-section-error').hide();
+								monster.ui.toast({
+									type: 'success',
+									message: self.getTemplate({
+										name: '!' + self.i18n.active().achDirectDebit.verificationSuccess,
+										data: {
+											variable: _.get(bankData, 'account_number_last_4')
+										}
+									})
+								});
+
+								self.achRenderSection(args);
+							},
+							error: function(errData) {
+								container.find('.ach-section-error').show();
+							}
+						});
 					});
 
 					$removeAccountButton.on('click', function(event) {
@@ -350,7 +377,60 @@ define(function(require) {
 							success: function(data) {
 								monster.ui.toast({
 									type: 'success',
-									message: self.i18n.active().achDirectDebit.achVerification.toast.deletion
+									message: self.i18n.active().achDirectDebit.removeSuccess
+								});
+
+								delete args.data.statusData;
+								delete args.data.bankData;
+								args.submitCallback && args.submitCallback();
+							}
+						});
+					});
+				};
+
+			appendTemplate();
+		},
+
+		achRenderShowBank: function(args) {
+			var self = this,
+				container = args.container,
+				data = args.data,
+				bankData = data.bankData,
+				statusData = data.statusData,
+				appendTemplate = function appendTemplate() {
+					var template = $(self.getTemplate({
+							name: 'show-bank-account',
+							submodule: 'ach',
+							data: {
+								number: '**** **** **** ' + bankData.account_number_last_4,
+								type: _.upperFirst(bankData.account_type),
+								name: bankData.bank_name
+							}
+						})),
+						$removeAccountButton = template.find('#remove_account'),
+						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status');
+
+					//set badge status
+					$statusBadge.addClass('sds_Badge sds_Badge_Green');
+					$statusBadge.text(self.i18n.active().achDirectDebit.achVerification.status.verified);
+
+					container
+						.removeClass('payment-type-content-hidden')
+						.empty()
+						.append(template);
+
+					$removeAccountButton.on('click', function(event) {
+						event.preventDefault();
+
+						$removeAccountButton.prop('disabled', true);
+						self.deleteAchMethod({
+							data: {
+								paymentMethodToken: bankData.payment_method_token
+							},
+							success: function(data) {
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().achDirectDebit.removeSuccess
 								});
 
 								delete args.data.statusData;
