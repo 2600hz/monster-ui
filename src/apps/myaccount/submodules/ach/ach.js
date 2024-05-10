@@ -1,11 +1,9 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster'),
-		usBankAccount = require('braintree-us-bank-account');
+		monster = require('monster');
 
 	var ach = {
-
 		appFlags: {
 			ach: {
 				validAchFormFields: {
@@ -29,7 +27,7 @@ define(function(require) {
 				verb: 'GET'
 			},
 			'myaccount.braintree.putAchToken': {
-				apiRoot: monster.config.whitelabel.achApi,
+				apiRoot: monster.config.api.braintree,
 				url: '/accounts/{accountId}/braintree/ach/vault',
 				verb: 'PUT',
 				generateError: false,
@@ -38,7 +36,7 @@ define(function(require) {
 				]
 			},
 			'myaccount.braintree.deleteAchMethod': {
-				apiRoot: monster.config.whitelabel.achApi,
+				apiRoot: monster.config.api.braintree,
 				url: '/accounts/{accountId}/braintree/ach/{paymentMethodToken}',
 				verb: 'DELETE',
 				generateError: false,
@@ -47,7 +45,7 @@ define(function(require) {
 				]
 			},
 			'myaccount.braintree.confirmMicroDeposits': {
-				apiRoot: monster.config.whitelabel.achApi,
+				apiRoot: monster.config.api.braintree,
 				url: '/accounts/{accountId}/braintree/ach/{verificationId}/confirm',
 				verb: 'PUT',
 				generateError: false,
@@ -56,7 +54,7 @@ define(function(require) {
 				]
 			},
 			'myaccount.braintree.getVerificationStatus': {
-				apiRoot: monster.config.whitelabel.achApi,
+				apiRoot: monster.config.api.braintree,
 				url: '/accounts/{accountId}/braintree/ach/{verificationId}',
 				verb: 'GET',
 				generateError: false,
@@ -65,7 +63,7 @@ define(function(require) {
 				]
 			},
 			'myaccount.braintree.getAch': {
-				apiRoot: monster.config.whitelabel.achApi,
+				apiRoot: monster.config.api.braintree,
 				url: '/accounts/{accountId}/braintree/ach',
 				verb: 'GET',
 				generateError: false,
@@ -91,9 +89,21 @@ define(function(require) {
 						$achForm = template.find('#form_ach_payment'),
 						billingContactData = self.appFlags.billing.billingContactFields,
 						firstname = billingContactData['contact.billing.first_name'].value,
-						lastname = billingContactData['contact.billing.last_name'].value;
+						lastname = billingContactData['contact.billing.last_name'].value,
+						validateField = function(element) {
+							var $element = $(element),
+								name = $element.attr('name'),
+								isValid = $element.valid(),
+								value = isValid ? $element.val() : '';
 
-					enableBeginVerificationButton();
+							template.find('.agreement-' + name).text(value);
+							self.appFlags.ach.validAchFormFields[name] = isValid;
+
+							enableBeginVerificationButton();
+						};
+
+					//disabe 'Begin Verification' button on render
+					$beginVerificationButton.prop('disabled', true);
 
 					//Set agreement name
 					template.find('.agreement-name').text(firstname + ' ' + lastname);
@@ -116,55 +126,16 @@ define(function(require) {
 								required: true
 							}
 						},
-						onfocusout: function(element) {
-							var $element = $(element),
-								name = $element.attr('name'),
-								isValid = $element.valid(),
-								value = isValid ? $element.val() : '';
-
-							template.find('.agreement-' + name).text(value);
-							self.appFlags.ach.validAchFormFields[name] = isValid;
-
-							enableBeginVerificationButton();
-						},
+						onfocusout: validateField,
+						onkeyup: validateField,
+						onclick: validateField,
 						autoScrollOnInvalid: true
 					});
 
 					// Render ACH Direct Debit form
 					monster.pub('monster.requestStart', {});
 
-					monster.waterfall([
-						_.bind(self.billingCreateBraintreeClientInstance, self),
-						function createBankAccountInstance(clientInstance, next) {
-							usBankAccount.create({
-								client: clientInstance
-							}, function(usBankAccountErr, usBankAccountInstance) {
-								next(usBankAccountErr, clientInstance, usBankAccountInstance);
-							});
-						},
-						function braintreeAch(usBankAccountErr, usBankAccountInstance, next) {
-							self.getBraintreeAch({
-								success: function(bankData) {
-									next(null, usBankAccountErr, usBankAccountInstance, bankData);
-								}
-							});
-						},
-						function braintreeAchStatus(usBankAccountErr, usBankAccountInstance, bankData, next) {
-							if (_.isEmpty(bankData)) {
-								next(null, usBankAccountErr, usBankAccountInstance, bankData, []);
-							} else {
-								var newBankData = _.head(bankData);
-								self.getVerificationStatus({
-									data: {
-										verificationId: _.get(newBankData, 'verification_id')
-									},
-									success: function(statusData) {
-										next(null, usBankAccountErr, usBankAccountInstance, newBankData, statusData);
-									}
-								});
-							}
-						}
-					], function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
+					self.billingGetAchData(function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
 						monster.pub('monster.requestEnd', {});
 
 						if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
@@ -288,7 +259,16 @@ define(function(require) {
 							$verifyAccountButton.prop('disabled', !isFormValid);
 						},
 						$achForm = template.find('#form_ach_verification'),
-						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status');
+						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status'),
+						validateField = function(element) {
+							var $element = $(element),
+								name = $element.attr('name'),
+								isValid = $element.valid();
+
+							self.appFlags.ach.validAchVerificationFormFields[name] = isValid;
+
+							enableVerifyButton();
+						};
 
 					//set badge status and text
 					$statusBadge.addClass('sds_Badge sds_Badge_Yellow');
@@ -299,8 +279,8 @@ define(function(require) {
 						.empty()
 						.append(template);
 
-					//Disable/Enable Verify button and set status badge on card
-					enableVerifyButton();
+					//Disable 'Verify' button and set status badge on card
+					$verifyAccountButton.prop('disabled', true);
 
 					//Set validations for form
 					monster.ui.validate($achForm, {
@@ -312,15 +292,8 @@ define(function(require) {
 								required: true
 							}
 						},
-						onfocusout: function(element) {
-							var $element = $(element),
-								name = $element.attr('name'),
-								isValid = $element.valid();
-
-							self.appFlags.ach.validAchVerificationFormFields[name] = isValid;
-
-							enableVerifyButton();
-						},
+						onfocusout: validateField,
+						onkeyup: validateField,
 						autoScrollOnInvalid: true
 					});
 

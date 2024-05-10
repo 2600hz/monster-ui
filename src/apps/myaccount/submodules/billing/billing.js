@@ -2,7 +2,8 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
 		monster = require('monster'),
-		braintreeClient = require('braintree-client');
+		braintreeClient = require('braintree-client'),
+		usBankAccount = require('braintree-us-bank-account');
 
 	var billing = {
 
@@ -342,6 +343,11 @@ define(function(require) {
 						}
 					});
 
+					//Display ACH section if it's set and in pending or verified state
+					self.billingUpdateAchDirectDebitStatus({
+						template: $billingTemplate
+					});
+
 					// Display credit card section if card is set
 					var hasCreditCard = !_.chain(results)
 						.get('billing.credit_cards')
@@ -676,6 +682,71 @@ define(function(require) {
 					waterfallNext(null, client);
 				}
 			], next);
+		},
+
+		billingGetAchData: function(next) {
+			var self = this;
+
+			monster.waterfall([
+				_.bind(self.billingCreateBraintreeClientInstance, self),
+				function createBankAccountInstance(clientInstance, next) {
+					usBankAccount.create({
+						client: clientInstance
+					}, function(usBankAccountErr, usBankAccountInstance) {
+						next(usBankAccountErr, clientInstance, usBankAccountInstance);
+					});
+				},
+				function braintreeAch(usBankAccountErr, usBankAccountInstance, next) {
+					self.getBraintreeAch({
+						success: function(bankData) {
+							next(null, usBankAccountErr, usBankAccountInstance, bankData);
+						}
+					});
+				},
+				function braintreeAchStatus(usBankAccountErr, usBankAccountInstance, bankData, next) {
+					if (_.isEmpty(bankData)) {
+						next(null, usBankAccountErr, usBankAccountInstance, bankData, []);
+					} else {
+						var newBankData = _.head(bankData);
+
+						self.getVerificationStatus({
+							data: {
+								verificationId: _.get(newBankData, 'verification_id')
+							},
+							success: function(statusData) {
+								next(null, usBankAccountErr, usBankAccountInstance, newBankData, statusData);
+							}
+						});
+					}
+				}
+			], next);
+		},
+
+		billingUpdateAchDirectDebitStatus: function(args) {
+			var self = this
+				$template = args.template;
+
+			self.billingGetAchData(function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
+				var $statusBadge = $template.find('#myaccount_billing_payment_ach_status'),
+					setBadgeStatus = function() {
+						var currentStatus = _.get(statusData, 'status');
+
+						if (['pending', 'verified'].indexOf(currentStatus) > -1) {
+							var classStatusName = currentStatus === 'pending'
+								? 'sds_Badge_Yellow'
+								: 'sds_Badge_Green',
+								className = 'sds_Badge ' + classStatusName,
+								badgeText = currentStatus === 'pending'
+									? self.i18n.active().achDirectDebit.achVerification.status.pending
+									: self.i18n.active().achDirectDebit.achVerification.status.verified;
+
+								$statusBadge.addClass(className);
+								$statusBadge.text(badgeText);
+						}
+					};
+
+				setBadgeStatus();
+			});
 		}
 	};
 
