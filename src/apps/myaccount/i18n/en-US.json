@@ -218,6 +218,31 @@
 				"placeholder": "12345"
 			}
 		},
+
+		"paymentMethod": {
+			"title": "Payment Method",
+			"options": {
+				"ach": {
+					"title": "ACH Direct Debit",
+					"description": "Pay for transactions by debiting directly from a bank account."
+				},
+				"card": {
+					"title": "Credit/Debit Card",
+					"description": "Pay for transactions using a credit/debit card.",
+					"surcharge": "<span>2.7</span>% service fee"
+				}
+			},
+			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
+			"expiredCard": {
+				"title": "Expired Card",
+				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
+			}
+		},
+
+		"save": "Save Changes"
+	},
+
+	"achDirectDebit": {
 		"achSection": {
 			"warning": "This payment option requires a two-step bank verification process, which provides a way to check the validity of a bank account before attempting to process transactions. This verification process helps protect against fraudulent or erroneous transactions, and typically takes 2-3 business days.",
 			"description": "Provide the required bank account information below to begin verification. This will trigger the billing system to send two micro-transaction deposits to the bank account, followed immediately by a single debit to reverse the deposits. You will need to verify the amount of these two micro-transaction deposits in the next step.",
@@ -251,11 +276,7 @@
 				},
 				"beginVerification": "Begin Verification"
 			},
-			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin.",
-			"toastr": {
-				"error": "Unable to store this bank account information",
-				"success": "Bank account was succesfully stored"
-			}
+			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin."
 		},
 		"achVerification": {
 			"description": "Two micro-transaction deposits have been sent to the bank account provided in the previous step. These deposits should show up as \"PAYPAL\" on your bank statement. Please verify the amount of these two deposits below to complete the verification process for this bank account.",
@@ -279,28 +300,15 @@
 				"verified": "Verified"
 			}
 		},
-
-		"paymentMethod": {
-			"title": "Payment Method",
-			"options": {
-				"ach": {
-					"title": "ACH Direct Debit",
-					"description": "Pay for transactions by debiting directly from a bank account."
-				},
-				"card": {
-					"title": "Credit/Debit Card",
-					"description": "Pay for transactions using a credit/debit card.",
-					"surcharge": "<span>2.7</span>% service fee"
-				}
-			},
-			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
-			"expiredCard": {
-				"title": "Expired Card",
-				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
-			}
-		},
-
-		"save": "Save Changes"
+		"addFailure": "Unable to store this bank account information",
+		"addSuccess": "Bank account was succesfully stored",
+		"removeSuccess": "Verified bank account and payment method removed.",
+		"removeFailure": "There was an error deleting this bank account",
+		"verificationSuccess": "ACH verification successfully completed for bank account: ***********{{variable}}",
+		"verificationFailure": {
+			"title": "Incorrect Amount(s)",
+			"message": "The amounts provided above do NOT match the verification records. Please double check your inputs below and try again. You have up to 4 attempts."
+		}
 	},
 
 	"creditCard": {
