@@ -184,8 +184,7 @@ define(function(require) {
 						if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'pending') {
 							self.achRenderVerificationSection(_.merge({}, args, {
 								data: {
-									bankData: bankData,
-									statusData: statusData
+									bankData: bankData
 								}
 							}));
 
@@ -195,8 +194,7 @@ define(function(require) {
 						if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'verified') {
 							self.achRenderShowBank(_.merge({}, args, {
 								data: {
-									bankData: bankData,
-									statusData: statusData
+									bankData: bankData
 								}
 							}));
 
@@ -273,7 +271,6 @@ define(function(require) {
 				container = args.container,
 				data = args.data,
 				bankData = data.bankData,
-				statusData = data.statusData,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 							name: 'ach-section-verification',
@@ -291,9 +288,6 @@ define(function(require) {
 							$verifyAccountButton.prop('disabled', !isFormValid);
 						},
 						$achForm = template.find('#form_ach_verification'),
-						billingContactData = self.appFlags.billing.billingContactFields,
-						firstname = billingContactData['contact.billing.first_name'].value,
-						lastname = billingContactData['contact.billing.last_name'].value,
 						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status');
 
 					//set badge status and text
@@ -396,7 +390,6 @@ define(function(require) {
 				container = args.container,
 				data = args.data,
 				bankData = data.bankData,
-				statusData = data.statusData,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 							name: 'show-bank-account',

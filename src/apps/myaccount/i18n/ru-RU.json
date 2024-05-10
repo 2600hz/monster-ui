@@ -215,11 +215,7 @@
 				},
 				"beginVerification": "Begin Verification"
 			},
-			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin.",
-			"toast": {
-				"error": "Unable to store this bank account information",
-				"success": "Bank account was succesfully stored"
-			}
+			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin."
 		},
 		"achVerification": {
 			"description": "Two micro-transaction deposits have been sent to the bank account provided in the previous step. These deposits should show up as \"PAYPAL\" on your bank statement. Please verify the amount of these two deposits below to complete the verification process for this bank account.",
@@ -241,10 +237,16 @@
 			"status": {
 				"pending": "Verification pending...",
 				"verified": "Verified"
-			},
-			"toast": {
-				"deletion": "Verified bank account and payment method removed."
 			}
+		},
+		"addFailure": "Unable to store this bank account information",
+		"addSuccess": "Bank account was succesfully stored",
+		"removeSuccess": "Verified bank account and payment method removed.",
+		"removeFailure": "There was an error deleting this bank account",
+		"verificationSuccess": "ACH verification successfully completed for bank account: ***********{{variable}}",
+		"verificationFailure": {
+			"title": "Incorrect Amount(s)",
+			"message": "The amounts provided above do NOT match the verification records. Please double check your inputs below and try again. You have up to 4 attempts."
 		}
 	},
 
