@@ -481,7 +481,10 @@ define(function(require) {
 					if (value === 'ach') {
 						self.achRenderSection({
 							data: data,
-							container: $template.find('div[data-payment-type="ach"]')
+							container: $template.find('div[data-payment-type="ach"]'),
+							submitCallback: function() {
+								monster.pub('myaccount.billing.renderContent', moduleArgs);
+							}
 						});
 					} else {
 						self.creditCardRender({

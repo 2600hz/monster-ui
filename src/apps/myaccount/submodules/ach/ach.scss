@@ -18,8 +18,12 @@
 			}
 		}
 
-		.remove-ach-account {
+		#remove_account {
 			margin-right: 1rem;
+		}
+
+		.ach-section-hidden {
+			display: none;
 		}
 	}
 
@@ -32,6 +36,12 @@
 
 		.ach-payment-form {
 			margin: 0;
+		}
+	}
+
+	.show-bank-content-wrapper {
+		#remove_account {
+			margin-top: 1.5rem;
 		}
 	}
 }
