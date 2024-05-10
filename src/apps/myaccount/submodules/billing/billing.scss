@@ -92,6 +92,14 @@
 					background: #ccccd0;
 				}
 			}
+
+			.badge-surcharge {
+				display: inline-flex;
+
+				&-hidden {
+					display: none;
+				}
+			}
 		}
 
 		.payment-content {

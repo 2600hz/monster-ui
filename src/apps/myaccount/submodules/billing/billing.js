@@ -84,9 +84,9 @@ define(function(require) {
 				selectedPaymentType: 'none',
 				braintreeClientToken: null,
 				braintreeClientInstance: null,
-				usSurcharges: [
+				usCreditCardSurcharges: [
 					{
-						value: '2.7',
+						value: '2.6',
 						states: [
 							'AK',
 							'AL',
@@ -144,7 +144,8 @@ define(function(require) {
 						value: '2',
 						states: ['CO']
 					}
-				]
+				],
+				usStatesDeniedCreditCards: ['CT', 'MA', 'ME', 'NY']
 			}
 		},
 
@@ -224,6 +225,8 @@ define(function(require) {
 						$countrySelector = $billingTemplate.find('#billing_contact_country'),
 						$stateSelector = $billingTemplate.find('#billing_contact_state_select'),
 						expiredCardData = _.get(results, 'billing.expired_card'),
+						country = _.get(results, 'account.contact.billing.country'),
+						region = _.get(results, 'account.contact.billing.region'),
 						shouldBeRequired = function() {
 							return self.appFlags.billing.selectedPaymentType !== 'none';
 						},
@@ -240,14 +243,14 @@ define(function(require) {
 							field.changed = (field.value !== field.originalValue);
 
 							self.billingEnableSubmitButton($billingTemplate);
-							self.billingEnablePaymentSection($billingTemplate);
+							self.billingEnablePaymentSection($billingTemplate, name);
 						};
 
 					// Initialize country selector
 					monster.ui.countrySelector(
 						$countrySelector,
 						{
-							selectedValues: _.get(results, 'account.contact.billing.country'),
+							selectedValues: country,
 							options: {
 								showEmptyOption: false
 							}
@@ -258,7 +261,7 @@ define(function(require) {
 					monster.ui.stateSelector(
 						$stateSelector,
 						{
-							selectedValues: _.get(results, 'account.contact.billing.region'),
+							selectedValues: region,
 							options: {
 								showEmptyOption: false
 							}
@@ -277,7 +280,12 @@ define(function(require) {
 					self.billingEnablePaymentSection($billingTemplate);
 					self.billingDisplayStateSelector({
 						template: $billingTemplate,
-						countryCode: _.get(results, 'account.contact.billing.country')
+						countryCode: country
+					});
+					self.billingCreditCardUpdateSurcharge({
+						template: $billingTemplate,
+						countryCode: country,
+						regionCode: region
 					});
 
 					// Set validations
@@ -361,7 +369,7 @@ define(function(require) {
 							.prop('checked', true);
 
 						// TODO: Remove duplicated code with #myaccount_billing_payment_card change event
-						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card"]');
+						var $paymentTypeContent = $billingTemplate.find('.payment-type-content[data-payment-type="card"]');
 						$paymentTypeContent.removeClass('payment-type-content-hidden');
 
 						self.creditCardRender({
@@ -369,16 +377,13 @@ define(function(require) {
 							authorization: _.get(results, 'accountToken.client_token'),
 							expiredCardData: expiredCardData,
 							cards: _.get(results, 'billing.credit_cards'),
-							surcharge: self.billingGetSurcharge(
-								_.get(results, 'account.contact.billing.country'),
-								_.get(results, 'account.contact.billing.region')
-							),
+							surcharge: self.billingGetCreditCardSurcharge(country, region),
 							submitCallback: function() {
 								monster.pub('myaccount.billing.renderContent', args);
 							}
 						});
 					} else if (isCardExpired) {
-						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
+						var $paymentTypeContent = $billingTemplate.find('.payment-type-content[data-payment-type="card-expired"]');
 						$paymentTypeContent.removeClass('payment-type-content-hidden');
 					}
 
@@ -389,40 +394,72 @@ define(function(require) {
 			});
 		},
 
-		billingEnablePaymentSection: function($billingTemplate) {
+		billingEnablePaymentSection: function($billingTemplate, changedFieldName) {
 			var self = this,
 				paymentType = self.appFlags.billing.selectedPaymentType,
 				country = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
-				isContactValid = _.every(self.appFlags.billing.billingContactFields, 'valid');
+				region = self.appFlags.billing.billingContactFields['contact.billing.region'].value,
+				isContactValid = _.every(self.appFlags.billing.billingContactFields, 'valid'),
+				$paymentSelectionItems = $billingTemplate.find('.payment-type-selection-item'),
+				$achPaymentSelectionItem = $paymentSelectionItems.filter('.payment-type-content[data-payment-type="ach"]'),
+				$cardPaymentSelectionItem = $paymentSelectionItems.filter('.payment-type-content[data-payment-type="card"]');
 
 			if (isContactValid) {
-				$billingTemplate
-					.find('.payment-type-selection-item')
-						.removeClass('sds_SelectionList_Item_Disabled');
+				$paymentSelectionItems.removeClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').hide();
 			} else {
-				$billingTemplate
-					.find('.payment-type-selection-item')
-						.addClass('sds_SelectionList_Item_Disabled');
+				$paymentSelectionItems.addClass('sds_SelectionList_Item_Disabled');
 				$billingTemplate.find('.payment-type-warning').show();
 			}
 
 			if (paymentType === 'none') {
 				if (isContactValid) {
-					$billingTemplate.find('div[data-payment-type="' + paymentType + '"]').removeClass('payment-type-content-hidden');
+					$billingTemplate.find('.payment-content .payment-type-content[data-payment-type="' + paymentType + '"]').removeClass('payment-type-content-hidden');
 				} else {
-					$billingTemplate.find('.payment-type-content').addClass('payment-type-content-hidden');
+					$billingTemplate.find('.payment-content .payment-type-content').addClass('payment-type-content-hidden');
 				}
 			} else {
 				$billingTemplate.find('.disable-overlay')[isContactValid ? 'hide' : 'show']();
 			}
 
-			// Disable ACH Direct Debit if country is not US
+			if (!isContactValid || !_.includes(['contact.billing.country', 'contact.billing.region'], changedFieldName)) {
+				return;
+			}
+
+			// Enable payment options according to the region
 			if (['US', 'United States'].indexOf(country) < 0) {
-				$billingTemplate
-					.find('#myaccount_billing_payment_ach')
-					.parents('.payment-type-selection-item')
-					.addClass('sds_SelectionList_Item_Disabled');
+				// If country is not US
+
+				// Disable ACH
+				$achPaymentSelectionItem.addClass('sds_SelectionList_Item_Disabled');
+
+				// Allow credit and debit cards
+				$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Title')
+					.contents().first()
+						.replaceWith(self.i18n.active().paymentMethod.options.card.creditDebitCardTitle);
+				$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
+					.text(self.i18n.active().paymentMethod.options.card.description);
+			} else {
+				// If country is US
+
+				// Enable ACH
+				$achPaymentSelectionItem.removeClass('sds_SelectionList_Item_Disabled');
+
+				// Allow only credit cards
+				$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Title')
+					.contents().first()
+						.replaceWith(self.i18n.active().paymentMethod.options.card.creditCardTitle);
+
+				// Check region
+				if (_.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
+					// Disable credit card option
+					$cardPaymentSelectionItem.addClass('sds_SelectionList_Item_Disabled');
+					$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
+						.text(self.i18n.active().paymentMethod.options.card.denyDescription);
+				} else {
+					$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
+						.text(self.i18n.active().paymentMethod.options.card.description);
+				}
 			}
 		},
 
@@ -468,7 +505,7 @@ define(function(require) {
 				$paymentMethodRadioGroup = $template.find('input[type="radio"][name="payment_method"]'),
 				expiredCardData = _.get(data, 'billing.expired_card'),
 				paymentTypeChange = function(value) {
-					var $paymentTypeContent = $paymentContent.find('[data-payment-type="' + value + '"]'),
+					var $paymentTypeContent = $paymentContent.find('.payment-type-content[data-payment-type="' + value + '"]'),
 						countryCode = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
 						regionCode = self.appFlags.billing.billingContactFields['contact.billing.region'].value;
 
@@ -487,7 +524,7 @@ define(function(require) {
 					if (value === 'ach') {
 						self.achRenderSection({
 							data: data,
-							container: $template.find('div[data-payment-type="ach"]'),
+							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
 							submitCallback: function() {
 								monster.pub('myaccount.billing.renderContent', moduleArgs);
 							}
@@ -498,7 +535,7 @@ define(function(require) {
 							authorization: _.get(data, 'accountToken.client_token'),
 							expiredCardData: expiredCardData,
 							cards: _.get(data, 'billing.credit_cards'),
-							surcharge: self.billingGetSurcharge(countryCode, regionCode),
+							surcharge: self.billingGetCreditCardSurcharge(countryCode, regionCode),
 							submitCallback: function() {
 								monster.pub('myaccount.billing.renderContent', moduleArgs);
 							}
@@ -528,7 +565,7 @@ define(function(require) {
 				}
 
 				self.billingEnableSubmitButton($template);
-				self.billingUpdateSurcharge({
+				self.billingCreditCardUpdateSurcharge({
 					template: $template,
 					countryCode: this.value,
 					regionCode: 'AL'
@@ -551,7 +588,7 @@ define(function(require) {
 				$stateInput.val(state);
 
 				self.billingEnableSubmitButton($template);
-				self.billingUpdateSurcharge({
+				self.billingCreditCardUpdateSurcharge({
 					template: $template,
 					countryCode: countryCode,
 					regionCode: state
@@ -579,20 +616,20 @@ define(function(require) {
 			}
 		},
 
-		billingUpdateSurcharge: function(args) {
+		billingCreditCardUpdateSurcharge: function(args) {
 			var self = this,
 				$template = args.template,
 				countryCode = args.countryCode,
 				regionCode = args.regionCode,
-				surcharge = self.billingGetSurcharge(countryCode, regionCode),
+				surcharge = self.billingGetCreditCardSurcharge(countryCode, regionCode),
 				$creditCardSurchargeBadge = $template.find('#myaccount_billing_payment_card_surcharge'),
 				$creditCardSurchargeNotice = $template.find('.payment-type-content[data-payment-type="card"] .credit-card-surcharge-notice');
 
 			if (countryCode === 'US') {
-				$creditCardSurchargeBadge.show();
+				$creditCardSurchargeBadge.removeClass('badge-surcharge-hidden');
 				$creditCardSurchargeNotice.show();
 			} else {
-				$creditCardSurchargeBadge.hide();
+				$creditCardSurchargeBadge.addClass('badge-surcharge-hidden');
 				$creditCardSurchargeNotice.hide();
 			}
 
@@ -605,14 +642,14 @@ define(function(require) {
 			}
 		},
 
-		billingGetSurcharge: function(countryCode, regionCode) {
+		billingGetCreditCardSurcharge: function(countryCode, regionCode) {
 			var self = this;
 
 			if (countryCode !== 'US') {
 				return;
 			}
 
-			var surcharge = _.find(self.appFlags.billing.usSurcharges, function(surcharge) {
+			var surcharge = _.find(self.appFlags.billing.usCreditCardSurcharges, function(surcharge) {
 				return _.includes(surcharge.states, regionCode);
 			});
 

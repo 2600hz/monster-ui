@@ -83,27 +83,16 @@ define(function(require) {
 						next(err, clientInstance, hostedFieldsInstance);
 					});
 				},
-				function createVaultmanager(clientInstance, hostedFieldsInstance, next) {
-					braintreeVaultManager.create({
-						client: clientInstance,
-						authorization: args.authorization
-					}, function(err, vaultManagerInstance) {
-						next(err, clientInstance, hostedFieldsInstance, vaultManagerInstance);
-					});
-				},
-				function checkChallenges(clientInstance, hostedFieldsInstance, vaultManagerInstance, next) {
-					hostedFieldsInstance.getChallenges(function(err, challenges) {
-						next(err, clientInstance, hostedFieldsInstance, vaultManagerInstance, challenges);
-					});
-				}
-			], function(err, clientInstance, hostedFieldsInstance, vaultManagerInstance, challenges) {
+				_.bind(self.creditCardGetAdditionalInformation, self, args.authorization)
+			], function(err, clientInstance, hostedFieldsInstance, additionalData) {
+				debugger;
 				if (err) {
 					monster.pub('monster.requestEnd', {});
 					console.error(err);
 					return;
 				}
 
-				if (!_.includes(challenges, 'cvv')) {
+				if (!_.includes(additionalData.challenges, 'cvv')) {
 					var $smallControlGroups = $template.find('.control-group-small');
 
 					$smallControlGroups.eq(0).removeClass('control-group-small');
@@ -141,7 +130,7 @@ define(function(require) {
 					// Check if all fields are valid, then show submit button
 					var formValid = Object.keys(event.fields).every(function(key) {
 						if (key === 'cvv') {
-							return _.includes(challenges, 'cvv')
+							return _.includes(additionalData.challenges, 'cvv')
 								? event.fields[key].isValid
 								: event.fields[key].isPotentiallyValid;
 						}
@@ -164,7 +153,7 @@ define(function(require) {
 					hostedFieldsInstance.tokenize({
 						vault: true,
 						fieldsToTokenize: ['cardholderName', 'number', 'expirationDate'].concat(
-							_.includes(challenges, 'cvv') ? ['cvv'] : []
+							_.includes(additionalData.challenges, 'cvv') ? ['cvv'] : []
 						)
 					}, function(err, payload) {
 						if (err) {
@@ -180,7 +169,7 @@ define(function(require) {
 								.siblings('label')
 								.show();
 
-							vaultManagerInstance.deletePaymentMethod(payload.nonce, function(err) {
+							additionalData.vaultManager.deletePaymentMethod(payload.nonce, function(err) {
 								if (err) {
 									console.error(err);
 								}
@@ -345,6 +334,31 @@ define(function(require) {
 						args.submitCallback && args.submitCallback();
 					});
 				});
+			});
+		},
+
+		creditCardGetAdditionalInformation: function(authorization, clientInstance, hostedFieldsInstance, callback) {
+			monster.parallel({
+				vaultManager: function(next) {
+					braintreeVaultManager.create({
+						client: clientInstance,
+						authorization: authorization
+					}, function(err, vaultManagerInstance) {
+						next(err, vaultManagerInstance);
+					});
+				},
+				challenges: function(next) {
+					hostedFieldsInstance.getChallenges(function(err, challenges) {
+						next(err, challenges);
+					});
+				},
+				supportedCardTypes: function(next) {
+					hostedFieldsInstance.getSupportedCardTypes(function(err, supportedCardTypes) {
+						next(err, supportedCardTypes);
+					});
+				}
+			}, function(err, results) {
+				callback(err, clientInstance, hostedFieldsInstance, results);
 			});
 		},
 
