@@ -35,15 +35,6 @@ define(function(require) {
 					'X-Kazoo-Cluster-ID'
 				]
 			},
-			'myaccount.braintree.deleteAchMethod': {
-				apiRoot: monster.config.api.braintree,
-				url: '/accounts/{accountId}/braintree/ach/{paymentMethodToken}',
-				verb: 'DELETE',
-				generateError: false,
-				removeHeaders: [
-					'X-Kazoo-Cluster-ID'
-				]
-			},
 			'myaccount.braintree.confirmMicroDeposits': {
 				apiRoot: monster.config.api.braintree,
 				url: '/accounts/{accountId}/braintree/ach/{verificationId}/confirm',
@@ -337,7 +328,7 @@ define(function(require) {
 						event.preventDefault();
 
 						$removeAccountButton.prop('disabled', true);
-						self.deleteAchMethod({
+						self.deletePaymentMethod({
 							data: {
 								paymentMethodToken: bankData.payment_method_token
 							},
@@ -389,7 +380,7 @@ define(function(require) {
 						event.preventDefault();
 
 						$removeAccountButton.prop('disabled', true);
-						self.deleteAchMethod({
+						self.deletePaymentMethod({
 							data: {
 								paymentMethodToken: bankData.payment_method_token
 							},
@@ -419,24 +410,6 @@ define(function(require) {
 				data: _.merge({
 					accountId: self.accountId
 				}, args.data),
-				success: function(data) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-
-		deleteAchMethod: function(args) {
-			var self = this;
-
-			monster.request({
-				resource: 'myaccount.braintree.deleteAchMethod',
-				data: _.merge({
-					accountId: self.accountId
-				}, args.data),
-
 				success: function(data) {
 					args.hasOwnProperty('success') && args.success(data.data);
 				},
