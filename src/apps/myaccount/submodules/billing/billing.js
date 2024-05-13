@@ -82,6 +82,7 @@ define(function(require) {
 					}
 				},
 				selectedPaymentType: 'none',
+				defaultPaymentType: '',
 				braintreeClientToken: null,
 				braintreeClientInstance: null,
 				usSurcharges: [
@@ -152,6 +153,36 @@ define(function(require) {
 			'myaccount.billing.renderContent': '_billingRenderContent'
 		},
 
+		requests: {
+			'myaccount.braintree.getPaymentMethods': {
+				apiRoot: monster.config.api.braintree,
+				url: '/accounts/{accountId}/braintree/payment_methods',
+				verb: 'GET',
+				generateError: false,
+				removeHeaders: [
+					'X-Kazoo-Cluster-ID'
+				]
+			},
+			'myaccount.braintree.setDefaultPaymentMethod': {
+				apiRoot: monster.config.api.braintree,
+				url: '/accounts/{accountId}/braintree/payment_methods/{paymentMethodToken}/default',
+				verb: 'POST',
+				generateError: false,
+				removeHeaders: [
+					'X-Kazoo-Cluster-ID'
+				]
+			},
+			'myaccount.braintree.deletePaymentMethod': {
+				apiRoot: monster.config.api.braintree,
+				url: '/accounts/{accountId}/braintree/payment_methods/{paymentMethodToken}',
+				verb: 'DELETE',
+				generateError: false,
+				removeHeaders: [
+					'X-Kazoo-Cluster-ID'
+				]
+			}
+		},
+
 		_billingRenderContent: function(args) {
 			var self = this;
 
@@ -183,25 +214,21 @@ define(function(require) {
 						}
 					});
 				},
-				accountToken: function(callback) {
+				payment: function(callback) {
 					self.billingGetAccountToken({
 						success: function(data) {
-							callback(null, data);
+							self.getPaymentMethods({
+								success: function(paymentData) {
+									callback(null, {data, paymentData});
+								}, error: function(data) {
+									callback(null, {});
+								}
+							});
 						},
 						error: function(data) {
-							self.billingRequestUpdateBilling({
-								data: {
-									data: {
-										first_name: 'Test',
-										last_name: 'Test'
-									}
-								},
-								success: function(data) {
-									self.billingGetAccountToken({
-										success: function(data) {
-											callback(null, data);
-										}
-									});
+							callback(null, {
+								'accountToken': {
+									'client_token': null
 								}
 							});
 						}
@@ -212,7 +239,17 @@ define(function(require) {
 					return;
 				}
 
-				self.appFlags.billing.braintreeClientToken = _.get(results, 'accountToken.client_token');
+				if (!_.isEmpty(results.payment.paymentData)) {
+					var payments = _.get(results, 'payment.paymentData'),
+						isAchDefault = _.find(payments, { 'default': true, 'verified': true }),
+						isCreditDefault = _.find(payments, { 'default': true, 'expired': false });
+
+					if (isAchDefault || isCreditDefault) {
+						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'credit';
+					}
+				}
+
+				self.appFlags.billing.braintreeClientToken = _.get(results, 'payment.data.client_token');
 
 				self.billingFormatData(results, function(results) {
 					var $billingTemplate = $(self.getTemplate({
@@ -239,9 +276,12 @@ define(function(require) {
 							field.value = value;
 							field.changed = (field.value !== field.originalValue);
 
-							self.billingEnableSubmitButton($billingTemplate);
-							self.billingEnablePaymentSection($billingTemplate);
-						};
+							if (self.appFlags.billing.braintreeClientToken) {
+								self.billingEnableSubmitButton($billingTemplate);
+								self.billingEnablePaymentSection($billingTemplate);
+							}
+						},
+						defaultPaymentType = self.appFlags.billing.defaultPaymentType;
 
 					// Initialize country selector
 					monster.ui.countrySelector(
@@ -273,12 +313,14 @@ define(function(require) {
 						field.originalValue = field.value;
 					});
 
-					// Enable/display sections accordingly
-					self.billingEnablePaymentSection($billingTemplate);
-					self.billingDisplayStateSelector({
-						template: $billingTemplate,
-						countryCode: _.get(results, 'account.contact.billing.country')
-					});
+					if (self.appFlags.billing.braintreeClientToken) {
+						// Enable/display sections accordingly
+						self.billingEnablePaymentSection($billingTemplate);
+						self.billingDisplayStateSelector({
+							template: $billingTemplate,
+							countryCode: _.get(results, 'account.contact.billing.country')
+						});
+					}
 
 					// Set validations
 					monster.ui.validate($billingContactForm, {
@@ -343,27 +385,40 @@ define(function(require) {
 						}
 					});
 
-					//Display ACH section if it's set and in pending or verified state
-					self.billingUpdateAchDirectDebitStatus({
-						template: $billingTemplate
-					});
+					if (self.appFlags.billing.braintreeClientToken) {
+						//Display ACH section if it's set and in pending or verified state
+						self.billingUpdateAchDirectDebitStatus({
+							template: $billingTemplate
+						});
 
-					// Display credit card section if card is set
-					var hasCreditCard = !_.chain(results)
-						.get('billing.credit_cards')
-						.isEmpty()
-						.value(),
-						isCardExpired = !_.isEmpty(expiredCardData);
+						// Display error if default payment is credit card and it's expiered
+						var isCardExpired = !_.isEmpty(expiredCardData);
 
-					if (hasCreditCard && !isCardExpired) {
-						$billingTemplate
-							.find('#myaccount_billing_payment_card')
+						if (isCardExpired) {
+							var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
+							$paymentTypeContent.removeClass('payment-type-content-hidden');
+						}
+
+						if (typeof args.callback === 'function') {
+							args.callback($billingTemplate);
+						}
+					}
+
+					//select default payment
+					var className = '#myaccount_billing_payment_' + defaultPaymentType;
+					$billingTemplate
+						.find(className)
 							.prop('checked', true);
 
-						// TODO: Remove duplicated code with #myaccount_billing_payment_card change event
-						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card"]');
-						$paymentTypeContent.removeClass('payment-type-content-hidden');
-
+					if (defaultPaymentType === 'ach') {
+						self.achRenderSection({
+							data: results,
+							container: $template.find('div[data-payment-type="ach"]'),
+							submitCallback: function() {
+								monster.pub('myaccount.billing.renderContent', moduleArgs);
+							}
+						});	
+					} else if (defaultPaymentType === 'credit') {
 						self.creditCardRender({
 							container: $billingTemplate.find('.payment-type-content[data-payment-type="card"]'),
 							authorization: _.get(results, 'accountToken.client_token'),
@@ -377,13 +432,6 @@ define(function(require) {
 								monster.pub('myaccount.billing.renderContent', args);
 							}
 						});
-					} else if (isCardExpired) {
-						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
-						$paymentTypeContent.removeClass('payment-type-content-hidden');
-					}
-
-					if (typeof args.callback === 'function') {
-						args.callback($billingTemplate);
 					}
 				});
 			});
@@ -395,6 +443,8 @@ define(function(require) {
 				country = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
 				isContactValid = _.every(self.appFlags.billing.billingContactFields, 'valid');
 
+			console.log(paymentType);
+			console.log(self.appFlags);
 			if (isContactValid) {
 				$billingTemplate
 					.find('.payment-type-selection-item')
@@ -426,22 +476,10 @@ define(function(require) {
 			}
 		},
 
-		billingFormatData: function(data, callback) {
+		billingFormatData:function(data, callback) {
 			if (!_.isEmpty(data.billing)) {
 				var creditCards = _.get(data, 'billing.credit_cards', {});
-				data.billing.credit_card = _.find(creditCards, { 'default': true }) || {};
 				data.billing.expired_card = _.find(creditCards, { 'default': true, 'expired': true }) || {};
-
-				/* If There is a credit card stored, we fill the fields with * */
-				if (data.billing.credit_card.last_four) {
-					var cardType = data.billing.credit_card.card_type.toLowerCase();
-
-					data.billing.credit_card.fake_number = '************' + data.billing.credit_card.last_four;
-					data.billing.credit_card.fake_cvv = '***';
-					data.billing.credit_card.type = cardType === 'american express'
-						? 'amex'
-						: cardType;
-				}
 			}
 
 			if (_.has(data.account, 'contact.billing.name')) {
@@ -484,25 +522,27 @@ define(function(require) {
 						return;
 					}
 
-					if (value === 'ach') {
-						self.achRenderSection({
-							data: data,
-							container: $template.find('div[data-payment-type="ach"]'),
-							submitCallback: function() {
-								monster.pub('myaccount.billing.renderContent', moduleArgs);
-							}
-						});
-					} else {
-						self.creditCardRender({
-							container: $template.find('.payment-type-content[data-payment-type="card"]'),
-							authorization: _.get(data, 'accountToken.client_token'),
-							expiredCardData: expiredCardData,
-							cards: _.get(data, 'billing.credit_cards'),
-							surcharge: self.billingGetSurcharge(countryCode, regionCode),
-							submitCallback: function() {
-								monster.pub('myaccount.billing.renderContent', moduleArgs);
-							}
-						});
+					if (self.appFlags.billing.braintreeClientToken) {
+						if (value === 'ach') {
+							self.achRenderSection({
+								data: data,
+								container: $template.find('div[data-payment-type="ach"]'),
+								submitCallback: function() {
+									monster.pub('myaccount.billing.renderContent', moduleArgs);
+								}
+							});
+						} else {
+							self.creditCardRender({
+								container: $template.find('.payment-type-content[data-payment-type="card"]'),
+								authorization: self.appFlags.billing.braintreeClientToken,
+								expiredCardData: expiredCardData,
+								cards: _.get(data, 'billing.credit_cards'),
+								surcharge: self.billingGetSurcharge(countryCode, regionCode),
+								submitCallback: function() {
+									monster.pub('myaccount.billing.renderContent', moduleArgs);
+								}
+							});
+						}
 					}
 				};
 
@@ -627,41 +667,6 @@ define(function(require) {
 			$submitButton.prop('disabled', !hasFormChanged);
 		},
 
-		billingRequestUpdateBilling: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'billing.update',
-				data: _.merge({
-					accountId: self.accountId
-				}, args.data),
-				success: function(data) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-
-		billingGetAccountToken: function(args) {
-			var self = this;
-
-			self.callApi({
-				resource: 'billing.getToken',
-				data: _.merge({
-					accountId: self.accountId,
-					generateError: false
-				}, args.data),
-				success: function(data) {
-					args.hasOwnProperty('success') && args.success(data.data);
-				},
-				error: function(parsedError) {
-					args.hasOwnProperty('error') && args.error(parsedError);
-				}
-			});
-		},
-
 		billingCreateBraintreeClientInstance: function(next) {
 			var self = this;
 
@@ -746,6 +751,92 @@ define(function(require) {
 					};
 
 				setBadgeStatus();
+			});
+		},
+
+		billingRequestUpdateBilling: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.update',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		billingGetAccountToken: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'billing.getToken',
+				data: _.merge({
+					accountId: self.accountId,
+					generateError: false
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		getPaymentMethods: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.getPaymentMethods',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		setDefaultPaymentMethod: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.setDefaultPaymentMethod',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
+		},
+
+		deletePaymentMethod: function(args) {
+			var self = this;
+
+			monster.request({
+				resource: 'myaccount.braintree.deletePaymentMethod',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					args.hasOwnProperty('success') && args.success(data.data);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
 			});
 		}
 	};
