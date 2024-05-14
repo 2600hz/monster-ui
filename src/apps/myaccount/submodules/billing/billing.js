@@ -449,6 +449,7 @@ define(function(require) {
 						// TODO: Remove duplicated code with #myaccount_billing_payment_card change event
 						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card"]');
 						$paymentTypeContent.removeClass('payment-type-content-hidden');
+
 						self.creditCardRender({
 							container: $billingTemplate.find('.payment-type-content[data-payment-type="card"]'),
 							authorization: self.appFlags.billing.braintreeClientToken,
@@ -692,9 +693,13 @@ define(function(require) {
 			var self = this,
 				$submitButton = $template.find('#myaccount_billing_save'),
 				hasFormChanged = _.some(self.appFlags.billing.billingContactFields, 'changed'),
+				payments = self.appFlags.billing.payments,
 				defaultPaymentType = self.appFlags.billing.defaultPaymentType,
 				selectedPaymentType = self.appFlags.billing.selectedPaymentType,
-				isDefaultChanged = defaultPaymentType !== selectedPaymentType;
+				isDefaultValid = selectedPaymentType === 'ach'
+					? _.find(payments, { 'type': 'ach', 'verified': true })
+					: _.find(payments, { 'expired': false, 'type': 'credit_card' }),
+				isDefaultChanged = (defaultPaymentType !== selectedPaymentType) && isDefaultValid;
 
 			$submitButton.prop('disabled', !hasFormChanged && !isDefaultChanged);
 		},
