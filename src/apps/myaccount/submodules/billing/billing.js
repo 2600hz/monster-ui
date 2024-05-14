@@ -212,10 +212,12 @@ define(function(require) {
 						}
 					});
 				}
-			}, function(err, results) {
+			}, function(err, apiResults) {
 				if (err) {
 					return;
 				}
+
+				var results = _.merge(apiResults, args.data);
 
 				self.appFlags.billing.braintreeClientToken = _.get(results, 'accountToken.client_token');
 
@@ -282,11 +284,12 @@ define(function(require) {
 						var field = self.appFlags.billing.billingContactFields[key];
 						field.valid = !field.required || !_.chain(results.account).get(key).isEmpty().value();
 						field.value = _.chain(results.account).get(key).trim().value();
-						field.originalValue = field.value;
+						field.originalValue = _.chain(apiResults.account).get(key).trim().value();
 					});
 					self.appFlags.billing.enabledPayments.card = hasCards;
 
 					// Enable/display sections accordingly
+					self.billingEnableSubmitButton($billingTemplate);
 					self.billingEnablePaymentSection($billingTemplate);
 					self.billingDisplayStateSelector({
 						template: $billingTemplate,
@@ -556,7 +559,10 @@ define(function(require) {
 							data: data,
 							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
 							submitCallback: function() {
-								monster.pub('myaccount.billing.renderContent', moduleArgs);
+								var data = self.billingGetFormData(),
+									args = _.assign({}, moduleArgs, { data: data });
+
+								monster.pub('myaccount.billing.renderContent', args);
 							}
 						});
 					} else {
@@ -568,7 +574,10 @@ define(function(require) {
 							country: countryCode,
 							region: regionCode,
 							submitCallback: function() {
-								monster.pub('myaccount.billing.renderContent', moduleArgs);
+								var data = self.billingGetFormData(),
+									args = _.assign({}, moduleArgs, { data: data });
+
+								monster.pub('myaccount.billing.renderContent', args);
 							}
 						});
 					}
@@ -834,6 +843,17 @@ define(function(require) {
 
 				setBadgeStatus();
 			});
+		},
+
+		billingGetFormData: function() {
+			var self = this,
+				data = {
+					account: monster.ui.getFormData('form_billing')
+				};
+
+			delete data.account.contact.billing.region_select;
+
+			return data;
 		}
 	};
 
