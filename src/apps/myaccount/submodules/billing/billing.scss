@@ -92,10 +92,23 @@
 					background: #ccccd0;
 				}
 			}
+
+			.badge-surcharge {
+				display: inline-flex;
+
+				&-hidden {
+					display: none;
+				}
+			}
 		}
 
-		.payment-content {
+		.payment-type-content {
 			position: relative;
+			display: block;
+
+			&-hidden {
+				display: none;
+			}
 
 			.disable-overlay {
 				position: absolute;
@@ -106,14 +119,6 @@
 				background: #ffffff;
 				opacity: 0.4;
 				z-index: 100;
-			}
-		}
-
-		.payment-type-content {
-			display: block;
-
-			&-hidden {
-				display: none;
 			}
 		}
 
@@ -138,6 +143,10 @@
 				min-width: 100%;
 			}
 		}
+	}
+
+	.card-expired.card-expired-hidden {
+		display: none;
 	}
 
 	.billing-footer {
