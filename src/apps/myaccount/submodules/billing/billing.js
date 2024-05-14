@@ -392,7 +392,6 @@ define(function(require) {
 
 		billingEnablePaymentSection: function($billingTemplate, changedFieldName) {
 			var self = this,
-				//paymentType = self.appFlags.billing.selectedPaymentType,
 				country = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
 				region = self.appFlags.billing.billingContactFields['contact.billing.region'].value,
 				isContactValid = _.every(self.appFlags.billing.billingContactFields, 'valid'),
@@ -418,22 +417,6 @@ define(function(require) {
 				$billingTemplate.find('.payment-type-warning').show();
 				$billingTemplate.find('.disable-overlay').show();
 			}
-
-			/*if (paymentType === 'none') {
-				if (isContactValid) {
-					$billingTemplate.find('.payment-content .payment-type-content[data-payment-type="' + paymentType + '"]').removeClass('payment-type-content-hidden');
-				} else {
-					$billingTemplate.find('.payment-content .payment-type-content').addClass('payment-type-content-hidden');
-				}
-			} else {
-				if (!enabledPayments.card) {
-					$billingTemplate.find('.disable-overlay')[isContactValid ? 'hide' : 'show']();
-				}
-			}
-
-			if (!isContactValid || !_.includes(['contact.billing.country', 'contact.billing.region'], changedFieldName)) {
-				return;
-			}*/
 
 			// Enable payment options according to the region
 			if (['US', 'United States'].indexOf(country) < 0) {
@@ -597,16 +580,6 @@ define(function(require) {
 				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
 				field.value = this.value;
 				field.changed = (this.value !== field.originalValue);
-
-				/*if (this.value !== 'US') {
-					var $achRadio = $paymentMethodRadioGroup.filter('[value="ach"]');
-
-					if ($achRadio.is(':checked')) {
-						$achRadio.attr('checked', false);
-						paymentTypeChange('none');
-						monster.ui.valid($contactForm);
-					}
-				}*/
 
 				self.billingEnableSubmitButton($template);
 				self.billingDisplayStateSelector({
