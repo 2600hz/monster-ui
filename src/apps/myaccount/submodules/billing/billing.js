@@ -83,6 +83,7 @@ define(function(require) {
 				},
 				selectedPaymentType: 'none',
 				defaultPaymentType: '',
+				payments: [],
 				braintreeClientToken: null,
 				braintreeClientInstance: null,
 				usSurcharges: [
@@ -219,8 +220,8 @@ define(function(require) {
 						success: function(data) {
 							self.getPaymentMethods({
 								success: function(paymentData) {
-									callback(null, {data, paymentData});
-								}, error: function(data) {
+									callback(null, { data, paymentData });
+								}, error: function(errData) {
 									callback(null, {});
 								}
 							});
@@ -247,6 +248,8 @@ define(function(require) {
 					if (isAchDefault || isCreditDefault) {
 						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'credit';
 					}
+
+					self.appFlags.billing.payments = payments;
 				}
 
 				self.appFlags.billing.braintreeClientToken = _.get(results, 'payment.data.client_token');
@@ -381,31 +384,55 @@ define(function(require) {
 						},
 						updateCallback: function(data, callback) {
 							// Add here any steps to do after billing contact update
-							callback(null, data);
+							var defaultPaymentType = self.appFlags.billing.defaultPaymentType,
+								selectedPaymentType = self.appFlags.billing.selectedPaymentType,
+								isDefaultChanged = defaultPaymentType !== selectedPaymentType,
+								payments = self.appFlags.billing.payments,
+								type = selectedPaymentType === 'ach' ? 'ach' : 'credit_card',
+								selectedPayment = _.find(payments, { 'type': type });
+
+							if (isDefaultChanged) {
+								$billingTemplate.find('#myaccount_billing_save').prop('disabled', true);
+								self.setDefaultPaymentMethod({
+									data: {
+										paymentMethodToken: selectedPayment.id
+									},
+									success: function(defaultData) {
+										self.appFlags.billing.defaultPaymentType = selectedPaymentType;
+										callback(null, data);
+									}
+								});
+							} else {
+								callback(null, data);
+							}
 						}
 					});
 
-					if (self.appFlags.billing.braintreeClientToken) {
-						//Display ACH section if it's set and in pending or verified state
-						self.billingUpdateAchDirectDebitStatus({
-							template: $billingTemplate
-						});
+					if (!self.appFlags.billing.braintreeClientToken) {
+						return;
+					}
 
-						// Display error if default payment is credit card and it's expiered
-						var isCardExpired = !_.isEmpty(expiredCardData);
+					//Display ACH section if it's set and in pending or verified state
+					self.billingUpdateAchDirectDebitStatus({
+						template: $billingTemplate
+					});
 
-						if (isCardExpired) {
-							var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
-							$paymentTypeContent.removeClass('payment-type-content-hidden');
-						}
+					// Display error if default payment is credit card and it's expiered
+					var isCardExpired = !_.isEmpty(expiredCardData);
 
-						if (typeof args.callback === 'function') {
-							args.callback($billingTemplate);
-						}
+					if (isCardExpired) {
+						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card-expired"]');
+						$paymentTypeContent.removeClass('payment-type-content-hidden');
+					}
+
+					if (typeof args.callback === 'function') {
+						args.callback($billingTemplate);
 					}
 
 					//select default payment
-					var className = '#myaccount_billing_payment_' + defaultPaymentType;
+					var type = defaultPaymentType === 'credit' ? 'card' : 'ach',
+						className = '#myaccount_billing_payment_' + type;
+
 					$billingTemplate
 						.find(className)
 							.prop('checked', true);
@@ -413,15 +440,18 @@ define(function(require) {
 					if (defaultPaymentType === 'ach') {
 						self.achRenderSection({
 							data: results,
-							container: $template.find('div[data-payment-type="ach"]'),
+							container: $billingTemplate.find('.payment-type-content[data-payment-type="ach"]'),
 							submitCallback: function() {
-								monster.pub('myaccount.billing.renderContent', moduleArgs);
+								monster.pub('myaccount.billing.renderContent', args);
 							}
-						});	
+						});
 					} else if (defaultPaymentType === 'credit') {
+						// TODO: Remove duplicated code with #myaccount_billing_payment_card change event
+						var $paymentTypeContent = $billingTemplate.find('[data-payment-type="card"]');
+						$paymentTypeContent.removeClass('payment-type-content-hidden');
 						self.creditCardRender({
 							container: $billingTemplate.find('.payment-type-content[data-payment-type="card"]'),
-							authorization: _.get(results, 'accountToken.client_token'),
+							authorization: self.appFlags.billing.braintreeClientToken,
 							expiredCardData: expiredCardData,
 							cards: _.get(results, 'billing.credit_cards'),
 							surcharge: self.billingGetSurcharge(
@@ -443,8 +473,6 @@ define(function(require) {
 				country = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
 				isContactValid = _.every(self.appFlags.billing.billingContactFields, 'valid');
 
-			console.log(paymentType);
-			console.log(self.appFlags);
 			if (isContactValid) {
 				$billingTemplate
 					.find('.payment-type-selection-item')
@@ -476,7 +504,7 @@ define(function(require) {
 			}
 		},
 
-		billingFormatData:function(data, callback) {
+		billingFormatData: function(data, callback) {
 			if (!_.isEmpty(data.billing)) {
 				var creditCards = _.get(data, 'billing.credit_cards', {});
 				data.billing.expired_card = _.find(creditCards, { 'default': true, 'expired': true }) || {};
@@ -522,81 +550,82 @@ define(function(require) {
 						return;
 					}
 
-					if (self.appFlags.billing.braintreeClientToken) {
-						if (value === 'ach') {
-							self.achRenderSection({
-								data: data,
-								container: $template.find('div[data-payment-type="ach"]'),
-								submitCallback: function() {
-									monster.pub('myaccount.billing.renderContent', moduleArgs);
-								}
-							});
-						} else {
-							self.creditCardRender({
-								container: $template.find('.payment-type-content[data-payment-type="card"]'),
-								authorization: self.appFlags.billing.braintreeClientToken,
-								expiredCardData: expiredCardData,
-								cards: _.get(data, 'billing.credit_cards'),
-								surcharge: self.billingGetSurcharge(countryCode, regionCode),
-								submitCallback: function() {
-									monster.pub('myaccount.billing.renderContent', moduleArgs);
-								}
-							});
-						}
+					self.billingEnableSubmitButton($template);
+					if (value === 'ach') {
+						self.achRenderSection({
+							data: data,
+							container: $template.find('div[data-payment-type="ach"]'),
+							submitCallback: function() {
+								monster.pub('myaccount.billing.renderContent', moduleArgs);
+							}
+						});
+					} else {
+						self.creditCardRender({
+							container: $template.find('.payment-type-content[data-payment-type="card"]'),
+							authorization: self.appFlags.billing.braintreeClientToken,
+							expiredCardData: expiredCardData,
+							cards: _.get(data, 'billing.credit_cards'),
+							surcharge: self.billingGetSurcharge(countryCode, regionCode),
+							submitCallback: function() {
+								monster.pub('myaccount.billing.renderContent', moduleArgs);
+							}
+						});
 					}
 				};
 
-			// Select paymet method option
-			var $paymentContent = $template.find('.payment-content');
-			$paymentMethodRadioGroup.change(function() {
-				paymentTypeChange(this.value);
-			});
+			if (self.appFlags.billing.braintreeClientToken) {
+				// Select paymet method option
+				var $paymentContent = $template.find('.payment-content');
+				$paymentMethodRadioGroup.change(function() {
+					paymentTypeChange(this.value);
+				});
 
-			$countrySelector.on('change', function() {
-				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
-				field.value = this.value;
-				field.changed = (this.value !== field.originalValue);
+				$countrySelector.on('change', function() {
+					var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
+					field.value = this.value;
+					field.changed = (this.value !== field.originalValue);
 
-				if (this.value !== 'US') {
-					var $achRadio = $paymentMethodRadioGroup.filter('[value="ach"]');
+					if (this.value !== 'US') {
+						var $achRadio = $paymentMethodRadioGroup.filter('[value="ach"]');
 
-					if ($achRadio.is(':checked')) {
-						$achRadio.attr('checked', false);
-						paymentTypeChange('none');
-						monster.ui.valid($contactForm);
+						if ($achRadio.is(':checked')) {
+							$achRadio.attr('checked', false);
+							paymentTypeChange('none');
+							monster.ui.valid($contactForm);
+						}
 					}
-				}
 
-				self.billingEnableSubmitButton($template);
-				self.billingUpdateSurcharge({
-					template: $template,
-					countryCode: this.value,
-					regionCode: 'AL'
+					self.billingEnableSubmitButton($template);
+					self.billingUpdateSurcharge({
+						template: $template,
+						countryCode: this.value,
+						regionCode: 'AL'
+					});
+					self.billingDisplayStateSelector({
+						template: $template,
+						countryCode: this.value,
+						resetValues: true
+					});
 				});
-				self.billingDisplayStateSelector({
-					template: $template,
-					countryCode: this.value,
-					resetValues: true
+
+				$stateSelector.on('change', function() {
+					var state = this.value,
+						countryCode = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
+						field = self.appFlags.billing.billingContactFields['contact.billing.region'];
+
+					field.value = state;
+					field.changed = (state !== field.originalValue);
+
+					$stateInput.val(state);
+
+					self.billingEnableSubmitButton($template);
+					self.billingUpdateSurcharge({
+						template: $template,
+						countryCode: countryCode,
+						regionCode: state
+					});
 				});
-			});
-
-			$stateSelector.on('change', function() {
-				var state = this.value,
-					countryCode = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
-					field = self.appFlags.billing.billingContactFields['contact.billing.region'];
-
-				field.value = state;
-				field.changed = (state !== field.originalValue);
-
-				$stateInput.val(state);
-
-				self.billingEnableSubmitButton($template);
-				self.billingUpdateSurcharge({
-					template: $template,
-					countryCode: countryCode,
-					regionCode: state
-				});
-			});
+			}
 
 			monster.pub('myaccount.events', args);
 		},
@@ -662,9 +691,12 @@ define(function(require) {
 		billingEnableSubmitButton: function($template) {
 			var self = this,
 				$submitButton = $template.find('#myaccount_billing_save'),
-				hasFormChanged = _.some(self.appFlags.billing.billingContactFields, 'changed');
+				hasFormChanged = _.some(self.appFlags.billing.billingContactFields, 'changed'),
+				defaultPaymentType = self.appFlags.billing.defaultPaymentType,
+				selectedPaymentType = self.appFlags.billing.selectedPaymentType,
+				isDefaultChanged = defaultPaymentType !== selectedPaymentType;
 
-			$submitButton.prop('disabled', !hasFormChanged);
+			$submitButton.prop('disabled', !hasFormChanged && !isDefaultChanged);
 		},
 
 		billingCreateBraintreeClientInstance: function(next) {
@@ -728,7 +760,7 @@ define(function(require) {
 		},
 
 		billingUpdateAchDirectDebitStatus: function(args) {
-			var self = this
+			var self = this,
 				$template = args.template;
 
 			self.billingGetAchData(function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
@@ -738,15 +770,15 @@ define(function(require) {
 
 						if (['pending', 'verified'].indexOf(currentStatus) > -1) {
 							var classStatusName = currentStatus === 'pending'
-								? 'sds_Badge_Yellow'
-								: 'sds_Badge_Green',
+									? 'sds_Badge_Yellow'
+									: 'sds_Badge_Green',
 								className = 'sds_Badge ' + classStatusName,
 								badgeText = currentStatus === 'pending'
 									? self.i18n.active().achDirectDebit.achVerification.status.pending
 									: self.i18n.active().achDirectDebit.achVerification.status.verified;
 
-								$statusBadge.addClass(className);
-								$statusBadge.text(badgeText);
+							$statusBadge.addClass(className);
+							$statusBadge.text(badgeText);
 						}
 					};
 
