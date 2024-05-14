@@ -27,7 +27,9 @@ define(function(require) {
 		creditCardRenderAdd: function(args) {
 			var self = this,
 				$container = args.container,
-				surcharge = args.surcharge;
+				country = args.country,
+				region = args.region,
+				surcharge = self.billingGetCreditCardSurcharge(country, region);
 
 			if ($container.find('.add-card-content-wrapper').length > 0) {
 				return;
@@ -50,7 +52,7 @@ define(function(require) {
 
 			$debitCardError.hide();
 
-			$container.empty().append($template);
+			$container.append($template);
 
 			monster.pub('monster.requestStart', {});
 
@@ -85,14 +87,13 @@ define(function(require) {
 				},
 				_.bind(self.creditCardGetAdditionalInformation, self, args.authorization)
 			], function(err, clientInstance, hostedFieldsInstance, additionalData) {
-				debugger;
 				if (err) {
 					monster.pub('monster.requestEnd', {});
 					console.error(err);
 					return;
 				}
 
-				if (!_.includes(additionalData.challenges, 'cvv')) {
+				if (country === 'US' && !_.includes(additionalData.challenges, 'cvv')) {
 					var $smallControlGroups = $template.find('.control-group-small');
 
 					$smallControlGroups.eq(0).removeClass('control-group-small');
@@ -162,7 +163,7 @@ define(function(require) {
 							return;
 						}
 
-						if (payload.binData.debit === 'Yes') {
+						if (country === 'US' && payload.binData.debit === 'Yes') {
 							$debitCardError.show();
 							$template.find('#credit_card_number,#credit_card_expiration_date')
 								.addClass('monster-invalid')
@@ -251,7 +252,7 @@ define(function(require) {
 					}
 				}));
 
-			$container.empty().append($template);
+			$container.append($template);
 
 			monster.waterfall([
 				function createClientInstance(next) {

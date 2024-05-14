@@ -84,8 +84,8 @@
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
 				</div>
 				<div class="settings-item-content" style="display: block;">
-					<div class="sds_SelectionList sds_SelectionList_Grid payment-type-selection" data-payment-type="ach">
-						<div class="sds_SelectionList_Item payment-type-selection-item">
+					<div class="sds_SelectionList sds_SelectionList_Grid payment-type-selection">
+						<div class="sds_SelectionList_Item payment-type-selection-item" data-payment-type="ach">
 							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_ach" name="payment_method" value="ach">
 							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_ach" />
 							<label for="myaccount_billing_payment_ach" class="sds_SelectionList_Item_LabelBox">
@@ -134,13 +134,11 @@
 						<div class="payment-type-content payment-type-content-hidden" data-payment-type="ach">
 						</div>
 						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card">
-						</div>
-						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card-expired">
-							{{#monsterPanelText i18n.billing.paymentMethod.expiredCard.title "danger" "fill-width"}}
+							<div class="disable-overlay" style="display: none;"></div>
+							{{#monsterPanelText i18n.billing.paymentMethod.expiredCard.title "danger" "card-expired card-expired-hidden fill-width"}}
 								{{i18n.billing.paymentMethod.expiredCard.message}}
 							{{/monsterPanelText}}
 						</div>
-						<div class="disable-overlay" style="display: none;"></div>
 					</div>
 				</div>
 			</li>
