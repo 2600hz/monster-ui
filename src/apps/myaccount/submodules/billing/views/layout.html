@@ -87,7 +87,7 @@
 				</div>
 				<div class="settings-item-content" style="display: block;">
 					<div class="sds_SelectionList sds_SelectionList_Grid payment-type-selection">
-						<div class="sds_SelectionList_Item payment-type-selection-item">
+						<div class="sds_SelectionList_Item payment-type-selection-item" data-payment-type="ach">
 							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_ach" name="payment_method" value="ach">
 							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_ach" />
 							<label for="myaccount_billing_payment_ach" class="sds_SelectionList_Item_LabelBox">
@@ -106,15 +106,15 @@
 								</div>
 							</label>
 						</div>
-						<div class="sds_SelectionList_Item payment-type-selection-item">
+						<div class="sds_SelectionList_Item payment-type-selection-item" data-payment-type="card">
 							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_card" name="payment_method" value="card">
 							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_card" />
 							<label for="myaccount_billing_payment_card" class="sds_SelectionList_Item_LabelBox">
 								<div class="sds_SelectionList_Item_LabelBox_Header">
 									<div class="sds_SelectionList_Item_Content">
 										<span class="sds_SelectionList_Item_Content_Title">
-											{{ i18n.billing.paymentMethod.options.card.title }}
-											<div id="myaccount_billing_payment_card_surcharge" class="sds_Badge sds_Badge_Grey">
+											{{ i18n.billing.paymentMethod.options.card.creditDebitCardTitle }}
+											<div id="myaccount_billing_payment_card_surcharge" class="sds_Badge sds_Badge_Grey badge-surcharge badge-surcharge-hidden">
 												{{{ i18n.billing.paymentMethod.options.card.surcharge }}}
 											</div>
 										</span>
@@ -136,13 +136,11 @@
 						<div class="payment-type-content payment-type-content-hidden" data-payment-type="ach">
 						</div>
 						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card">
-						</div>
-						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card-expired">
-							{{#monsterPanelText i18n.billing.paymentMethod.expiredCard.title "danger" "fill-width"}}
+							<div class="disable-overlay" style="display: none;"></div>
+							{{#monsterPanelText i18n.billing.paymentMethod.expiredCard.title "danger" "card-expired card-expired-hidden fill-width"}}
 								{{i18n.billing.paymentMethod.expiredCard.message}}
 							{{/monsterPanelText}}
 						</div>
-						<div class="disable-overlay" style="display: none;"></div>
 					</div>
 				</div>
 			</li>

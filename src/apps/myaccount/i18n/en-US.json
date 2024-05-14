@@ -227,9 +227,11 @@
 					"description": "Pay for transactions by debiting directly from a bank account."
 				},
 				"card": {
-					"title": "Credit/Debit Card",
+					"creditCardTitle": "Credit Card",
+					"creditDebitCardTitle": "Credit/Debit Card",
 					"description": "Pay for transactions using a credit/debit card.",
-					"surcharge": "<span>2.7</span>% service fee"
+					"denyDescription": "Credit card is not allowed in your state",
+					"surcharge": "<span>2.6</span>% service fee"
 				}
 			},
 			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
@@ -342,7 +344,7 @@
 		"addFailure": "Failed to add credit card as payment method.",
 		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
 		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
-		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.7</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted. We do not surcharge Visa and Mastercard debit cards.",
+		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.6</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted.",
 		"debitCardError": "We do not accept debit card payments. Please use ACH, or a Visa/Mastercard credit card."
 	},
 
