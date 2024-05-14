@@ -261,7 +261,7 @@ define(function(require) {
 				}
 
 				self.appFlags.billing.braintreeClientToken = _.get(results, 'payment.data.client_token');
-				debugger;
+
 				self.billingFormatData(results, function(results) {
 					var $billingTemplate = $(self.getTemplate({
 							name: 'layout',
