@@ -155,6 +155,11 @@ define(function(require) {
 							enableBeginVerificationButton();
 						};
 
+					//set validation to false on load
+					_.each(self.appFlags.ach.validAchFormFields, (value, key) => {
+						self.appFlags.ach.validAchFormFields[key] = false;
+					});
+
 					self.appFlags.ach.container = container;
 					self.appFlags.ach.buttonName = 'beginVerification';
 
@@ -284,6 +289,11 @@ define(function(require) {
 
 							enableVerifyButton();
 						};
+
+					//set validation to false on load
+					_.each(self.appFlags.ach.validAchVerificationFormFields, (value, key) => {
+						self.appFlags.ach.validAchVerificationFormFields[key] = false;
+					});
 
 					self.appFlags.ach.container = container;
 					self.appFlags.ach.buttonName = 'verify';
