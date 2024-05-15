@@ -331,8 +331,9 @@
 				"label": "CVV",
 				"invalid": "CVV is invalid."
 			},
-			"agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
-			"addCard": "Add Card"
+			"agreement": "I acknowledge the surcharges associated with using this credit card payment method. By paying with this card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
+			"addCard": "Add Card",
+			"saveAndAddCard": "Save & add card"
 		},
 		"show": {
 			"name": "Cardholder Name:",
