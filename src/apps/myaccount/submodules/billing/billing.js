@@ -790,6 +790,7 @@ define(function(require) {
 			$submitButton.prop('disabled', !billingHasPendingChanges);
 
 			self.creditCardBillingHasPendingChanges(billingHasPendingChanges);
+			self.achBillingHasPendingChanges(billingHasPendingChanges);
 		},
 
 		billingCreateBraintreeClientInstance: function(next) {
