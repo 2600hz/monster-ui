@@ -265,7 +265,9 @@ define(function(require) {
 								})
 							});
 
-							args.submitCallback && args.submitCallback();
+							args.submitCallback && args.submitCallback({
+								surchargeAccepted: monster.util.dateToGregorian(new Date())
+							});
 						});
 					});
 				});
@@ -274,8 +276,13 @@ define(function(require) {
 
 		creditCardRenderShow: function(args) {
 			var self = this,
-				card = _.get(args, ['cards', 0]),
-				$container = args.container,
+				$container = args.container;
+
+			if ($container.find('.show-card-content-wrapper').length > 0) {
+				return;
+			}
+
+			var card = _.get(args, ['cards', 0]),
 				$template = $(self.getTemplate({
 					name: 'show-card',
 					submodule: 'creditCard',
@@ -316,7 +323,7 @@ define(function(require) {
 						next(err, clientInstance, vaultInstance, vaultCard);
 					});
 				}
-			], function(err, clientInstance, vaultInstance, vaultCard) {
+			], function(err, _clientInstance, _vaultInstance, _vaultCard) {
 				if (err) {
 					console.error(err);
 					return;
@@ -404,6 +411,10 @@ define(function(require) {
 			self.appFlags.creditCard.country = country;
 
 			if (!self.appFlags.creditCard.container) {
+				return;
+			}
+
+			if (self.appFlags.creditCard.container.find('.card-type-list').length === 0) {
 				return;
 			}
 

@@ -254,7 +254,7 @@ define(function(require) {
 						isCreditDefault = _.find(payments, { 'default': true, 'expired': false });
 
 					if (isAchDefault || isCreditDefault) {
-						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'credit';
+						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'card';
 					}
 
 					self.appFlags.billing.payments = payments;
@@ -330,16 +330,17 @@ define(function(require) {
 						field.valid = !field.required || !_.chain(results.account).get(key).isEmpty().value();
 						field.value = _.chain(results.account).get(key).trim().value();
 						field.originalValue = _.chain(apiResults.account).get(key).trim().value();
+						field.changed = false;
 					});
 					self.appFlags.billing.enabledPayments.card = hasCards;
 
 					// Enable/display sections accordingly
-					self.billingEnableSubmitButton($billingTemplate);
 					self.billingDisplayStateSelector({
 						template: $billingTemplate,
 						countryCode: country,
 						initial: true
 					});
+					self.billingEnableSubmitButton($billingTemplate);
 
 					if (self.appFlags.billing.braintreeClientToken) {
 						self.billingEnablePaymentSection($billingTemplate);
@@ -411,25 +412,41 @@ define(function(require) {
 							// Add here any steps to do after billing contact update
 							var defaultPaymentType = self.appFlags.billing.defaultPaymentType,
 								selectedPaymentType = self.appFlags.billing.selectedPaymentType,
-								isDefaultChanged = defaultPaymentType !== selectedPaymentType,
-								payments = self.appFlags.billing.payments,
-								type = selectedPaymentType === 'ach' ? 'ach' : 'credit_card',
-								selectedPayment = _.find(payments, { 'type': type });
+								isDefaultChanged = defaultPaymentType !== selectedPaymentType;
 
-							if (isDefaultChanged) {
-								$billingTemplate.find('#myaccount_billing_save').prop('disabled', true);
-								self.setDefaultPaymentMethod({
-									data: {
-										paymentMethodToken: selectedPayment.id
-									},
-									success: function(defaultData) {
-										self.appFlags.billing.defaultPaymentType = selectedPaymentType;
-										callback(null, data);
-									}
-								});
-							} else {
+							if (!isDefaultChanged) {
 								callback(null, data);
+								return;
 							}
+
+							monster.waterfall([
+								function reloadPaymentMethods(next) {
+									self.getPaymentMethods({
+										success: function(payments) {
+											next(null, payments);
+										},
+										error: function(errData) {
+											next(errData);
+										}
+									});
+								},
+								function updateDefaultPaymentMethod(payments, next) {
+									var type = selectedPaymentType === 'ach' ? 'ach' : 'credit_card',
+										selectedPayment = _.find(payments, { 'type': type });
+
+									self.setDefaultPaymentMethod({
+										data: {
+											paymentMethodToken: selectedPayment.id
+										},
+										success: function(defaultData) {
+											self.appFlags.billing.defaultPaymentType = selectedPaymentType;
+											callback(null, data);
+										}
+									});
+								}
+							], function(err, _results) {
+								callback(err, data);
+							});
 						}
 					});
 
@@ -442,17 +459,10 @@ define(function(require) {
 						template: $billingTemplate
 					});
 
-					// Display credit card section if card is set
-					if (hasCards || isCardExpired) {
-						var $paymentMethodRadioGroup = $billingTemplate.find('input[type="radio"][name="payment_method"]');
-						$paymentMethodRadioGroup
-							.filter('[value="card"]')
-								.prop('checked', true)
-								.trigger('change');
-						if (isCardExpired) {
-							var $paymentTypeContent = $billingTemplate.find('.card-expired');
-							$paymentTypeContent.removeClass('card-expired-hidden');
-						}
+					// Display expired credit card notification if necessary
+					if (isCardExpired) {
+						var $paymentTypeContent = $billingTemplate.find('.card-expired');
+						$paymentTypeContent.removeClass('card-expired-hidden');
 					}
 
 					if (typeof args.callback === 'function') {
@@ -460,12 +470,7 @@ define(function(require) {
 					}
 
 					//select default payment
-					var type = defaultPaymentType === 'none'
-							? 'none'
-							: defaultPaymentType === 'credit'
-								? 'card'
-								: 'ach',
-						className = '#myaccount_billing_payment_' + type;
+					var className = '#myaccount_billing_payment_' + defaultPaymentType;
 
 					$billingTemplate
 						.find(className)
@@ -611,6 +616,7 @@ define(function(require) {
 					}
 
 					self.billingEnableSubmitButton($template);
+
 					if (value === 'ach') {
 						self.achRenderSection({
 							data: data,
@@ -630,10 +636,11 @@ define(function(require) {
 							cards: cards,
 							country: countryCode,
 							region: regionCode,
-							submitCallback: function() {
+							submitCallback: function(args) {
 								self.billingUpdateContactInfo({
 									template: $template,
-									moduleArgs: moduleArgs
+									moduleArgs: moduleArgs,
+									surchargeAccepted: _.get(args, 'surchargeAccepted')
 								});
 							}
 						});
@@ -775,8 +782,8 @@ define(function(require) {
 				defaultPaymentType = self.appFlags.billing.defaultPaymentType,
 				selectedPaymentType = self.appFlags.billing.selectedPaymentType,
 				isDefaultValid = selectedPaymentType === 'ach'
-					? _.find(payments, { 'type': 'ach', 'verified': true })
-					: _.find(payments, { 'expired': false, 'type': 'credit_card' }),
+					? _.some(payments, { 'type': 'ach', 'verified': true })
+					: _.some(payments, { 'expired': false, 'type': 'credit_card' }),
 				isDefaultChanged = (defaultPaymentType !== selectedPaymentType) && isDefaultValid,
 				billingHasPendingChanges = hasFormChanged || isDefaultChanged;
 
@@ -971,14 +978,21 @@ define(function(require) {
 
 		billingUpdateContactInfo: function(args) {
 			var self = this,
-				$submitButton = args.template.find('#myaccount_billing_save'),
+				$template = args.template,
+				$submitButton = $template.find('#myaccount_billing_save'),
 				moduleArgs = args.moduleArgs,
-				data = self.billingGetFormData(),
-				renderArgs = _.assign({}, moduleArgs, { data: data });
+				surchargeAccepted = args.surchargeAccepted;
 
-			if ($submitButton.prop('disabled')) {
-				monster.pub('myaccount.billing.renderContent', renderArgs);
+			// Only payment method was added
+			if ($submitButton.prop('disabled') && !surchargeAccepted) {
+				monster.pub('myaccount.billing.renderContent', moduleArgs);
 				return;
+			}
+
+			// Update account after adding payment method
+			if (surchargeAccepted) {
+				$template.find('form [name="braintree.surcharge_accepted"]').val(surchargeAccepted);
+				$submitButton.prop('disabled', false);
 			}
 
 			// This will emit myaccount.billing.renderContent after updating the account
