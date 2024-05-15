@@ -151,12 +151,15 @@ define(function(require) {
 						states: ['CO']
 					}
 				],
-				usStatesDeniedCreditCards: ['CT', 'MA', 'ME', 'NY']
+				usStatesDeniedCreditCards: ['CT', 'MA', 'ME', 'NY'],
+				requestCount: 0
 			}
 		},
 
 		subscribe: {
-			'myaccount.billing.renderContent': '_billingRenderContent'
+			'myaccount.billing.renderContent': '_billingRenderContent',
+			'monster.requestStart': '_billingRequestStart',
+			'monster.requestEnd': '_billingRequestEnd'
 		},
 
 		requests: {
@@ -186,6 +189,28 @@ define(function(require) {
 				removeHeaders: [
 					'X-Kazoo-Cluster-ID'
 				]
+			}
+		},
+
+		_billingRequestStart: function() {
+			var self = this;
+
+			self.appFlags.billing.requestCount++;
+
+			if (self.appFlags.billing.requestCount > 0) {
+				$(document).find('#myaccount_billing_loading_overlay')
+					.removeClass('billing-body-loading-overlay-hidden');
+			}
+		},
+
+		_billingRequestEnd: function() {
+			var self = this;
+
+			self.appFlags.billing.requestCount--;
+
+			if (self.appFlags.billing.requestCount === 0) {
+				$(document).find('#myaccount_billing_loading_overlay')
+					.addClass('billing-body-loading-overlay-hidden');
 			}
 		},
 
