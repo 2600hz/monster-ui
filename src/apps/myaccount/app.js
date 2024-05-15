@@ -816,6 +816,8 @@ define(function(require) {
 					})(moduleToUpdate, monster.ui.getFormData('form_' + fieldName)),
 					updateSettings = _.bind(self.settingsUpdateData, self, moduleToUpdate, data[moduleToUpdate], newData);
 
+				currentElement.prop('disabled', true);
+
 				monster.waterfall([
 					validateSettings,
 					updateSettings,
@@ -901,6 +903,12 @@ define(function(require) {
 				}
 			} else if (type === 'account') {
 				delete params.data.contact.billing.region_select;
+
+				if (_.get(params.data, ['braintree', 'surcharge_accepted'], '') === '') {
+					_.unset(params.data, 'braintree');
+				} else {
+					params.data.braintree.surcharge_accepted = _.toInteger(params.data.braintree.surcharge_accepted);
+				}
 
 				// We have to do the cleaning here because the $.extend doesn't work as we expect with arrays...
 				if (newData.hasOwnProperty('ui_flags') && newData.ui_flags.hasOwnProperty('numbers_format')) {
