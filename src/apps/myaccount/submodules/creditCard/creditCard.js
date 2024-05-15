@@ -8,7 +8,14 @@ define(function(require) {
 
 	var creditCard = {
 
-		appFlags: {},
+		appFlags: {
+			creditCard: {
+				container: null,
+				billingHasPendingChanges: false,
+				country: null,
+				hostedFieldsInstance: null
+			}
+		},
 
 		subscribe: {},
 
@@ -16,6 +23,9 @@ define(function(require) {
 			var self = this,
 				expiredCardData = args.expiredCardData,
 				cards = args.cards;
+
+			self.appFlags.creditCard.container = args.container;
+			self.appFlags.creditCard.country = args.country;
 
 			if (_.isEmpty(cards) || !_.isEmpty(expiredCardData)) {
 				self.creditCardRenderAdd(args);
@@ -38,7 +48,10 @@ define(function(require) {
 			var expiredCardData = args.expiredCardData,
 				$template = $(self.getTemplate({
 					name: 'add-card',
-					submodule: 'creditCard'
+					submodule: 'creditCard',
+					data: {
+						billingHasPendingChanges: self.appFlags.creditCard.billingHasPendingChanges
+					}
 				})),
 				$form = $template.find('form'),
 				$submitButton = $template.find('#credit_card_save'),
@@ -70,7 +83,15 @@ define(function(require) {
 							},
 							number: {
 								selector: '#credit_card_number',
-								placeholder: '4111 1111 1111 1111'
+								placeholder: '4111 1111 1111 1111',
+								supportedCardBrands: country === 'US'
+									? {
+										'american-express': false,
+										discover: false,
+										jcb: false,
+										'union-pay': false
+									}
+									: {}
 							},
 							expirationDate: {
 								selector: '#credit_card_expiration_date',
@@ -93,6 +114,39 @@ define(function(require) {
 					return;
 				}
 
+				self.appFlags.creditCard.hostedFieldsInstance = hostedFieldsInstance;
+
+				self.creditCardRenderSupportedCardTypes({
+					country: country
+				});
+
+				var isAgreementAccepted = false,
+					isCardValid = false,
+					validateField = function(event) {
+						var field = event.fields[event.emittedBy];
+
+						if (field.isValid) {
+							$(field.container)
+								.removeClass('monster-invalid')
+								.siblings('label')
+									.hide();
+							$debitCardError.hide();
+						} else {
+							$(field.container)
+								.addClass('monster-invalid')
+								.siblings('label')
+									.show();
+						}
+
+						// Re-validate expiration date if car number changes,
+						// because expirationDate is marked as invalid for debit card
+						if (event.emittedBy === 'number') {
+							validateField(_.assign({}, event, {
+								emittedBy: 'expirationDate'
+							}));
+						}
+					};
+
 				if (country === 'US' && !_.includes(additionalData.challenges, 'cvv')) {
 					var $smallControlGroups = $template.find('.control-group-small');
 
@@ -102,34 +156,9 @@ define(function(require) {
 
 				monster.pub('monster.requestEnd', {});
 
-				var validateField = function(event) {
-					var field = event.fields[event.emittedBy];
-
-					if (field.isValid) {
-						$(field.container)
-							.removeClass('monster-invalid')
-							.siblings('label')
-								.hide();
-						$debitCardError.hide();
-					} else {
-						$(field.container)
-							.addClass('monster-invalid')
-							.siblings('label')
-								.show();
-					}
-
-					// Re-validate expiration date if car number changes,
-					// because expirationDate is marked as invalid for debit card
-					if (event.emittedBy === 'number') {
-						validateField(_.assign({}, event, {
-							emittedBy: 'expirationDate'
-						}));
-					}
-				};
-
 				hostedFieldsInstance.on('validityChange', function(event) {
 					// Check if all fields are valid, then show submit button
-					var formValid = Object.keys(event.fields).every(function(key) {
+					isCardValid = Object.keys(event.fields).every(function(key) {
 						if (key === 'cvv') {
 							return _.includes(additionalData.challenges, 'cvv')
 								? event.fields[key].isValid
@@ -138,12 +167,18 @@ define(function(require) {
 						return event.fields[key].isValid;
 					});
 
-					$submitButton.prop('disabled', !formValid);
+					$submitButton.prop('disabled', !isAgreementAccepted || !isCardValid);
 
 					validateField(event);
 				});
 
 				hostedFieldsInstance.on('blur', validateField);
+
+				$form.find('input[name="credit_card_accept_agreement"]').on('change', function() {
+					isAgreementAccepted = this.checked;
+
+					$submitButton.prop('disabled', !isAgreementAccepted || !isCardValid);
+				});
 
 				$form.on('submit', function(event) {
 					event.preventDefault();
@@ -338,6 +373,87 @@ define(function(require) {
 			});
 		},
 
+		creditCardBillingHasPendingChanges: function(value) {
+			var self = this;
+
+			if (self.appFlags.creditCard.billingHasPendingChanges === value) {
+				return;
+			}
+
+			self.appFlags.creditCard.billingHasPendingChanges = value;
+
+			if (!self.appFlags.creditCard.container) {
+				return;
+			}
+
+			var saveText = value
+				? self.i18n.active().creditCard.add.saveAndAddCard
+				: self.i18n.active().creditCard.add.addCard;
+
+			self.appFlags.creditCard.container.find('#credit_card_save').text(saveText);
+		},
+
+		creditCardChangeCountry: function(args) {
+			var self = this,
+				country = args.country;
+
+			if (self.appFlags.creditCard.country === country) {
+				return;
+			}
+
+			self.appFlags.creditCard.country = country;
+
+			if (!self.appFlags.creditCard.container) {
+				return;
+			}
+
+			self.appFlags.creditCard.hostedFieldsInstance.setAttribute({
+				field: 'number',
+				attribute: 'supportedCardBrands',
+				value: country === 'US'
+					? {
+						'american-express': false,
+						discover: false,
+						jcb: false,
+						'union-pay': false
+					}
+					: {}
+			});
+
+			self.creditCardRenderSupportedCardTypes({
+				country: country
+			});
+		},
+
+		creditCardRenderSupportedCardTypes: function(args) {
+			var self = this,
+				country = args.country;
+
+			monster.pub('monster.requestStart', {});
+
+			self.appFlags.creditCard.hostedFieldsInstance.getSupportedCardTypes(function(err, cardTypes) {
+				var normalizedCardTypes = _.chain(cardTypes)
+					.map(_.kebabCase)
+					.difference(country === 'US' ? ['american-express', 'discover', 'jcb', 'union-pay'] : [])
+					.value();
+
+				var $template = $(self.getTemplate({
+					name: 'card-type-list',
+					submodule: 'creditCard',
+					data: {
+						cardTypes: normalizedCardTypes
+					}
+				}));
+
+				self.appFlags.creditCard.container
+					.find('.card-type-list')
+						.empty()
+						.append($template);
+
+				monster.pub('monster.requestEnd', {});
+			});
+		},
+
 		creditCardGetAdditionalInformation: function(authorization, clientInstance, hostedFieldsInstance, callback) {
 			monster.parallel({
 				vaultManager: function(next) {
@@ -351,11 +467,6 @@ define(function(require) {
 				challenges: function(next) {
 					hostedFieldsInstance.getChallenges(function(err, challenges) {
 						next(err, challenges);
-					});
-				},
-				supportedCardTypes: function(next) {
-					hostedFieldsInstance.getSupportedCardTypes(function(err, supportedCardTypes) {
-						next(err, supportedCardTypes);
 					});
 				}
 			}, function(err, results) {

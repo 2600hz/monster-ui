@@ -212,6 +212,9 @@ define(function(require) {
 							case 'label-prepend':
 								templateData.prepend = true;
 								break;
+							case 'raw-label':
+								templateData.rawLabel = true;
+								break;
 							default:
 								templateData.label = arguments[i];
 								break;

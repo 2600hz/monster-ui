@@ -86,7 +86,7 @@ define(function(require) {
 					card: false
 				},
 				selectedPaymentType: 'none',
-				defaultPaymentType: '',
+				defaultPaymentType: 'none',
 				payments: [],
 				braintreeClientToken: null,
 				braintreeClientInstance: null,
@@ -225,7 +225,7 @@ define(function(require) {
 						success: function(data) {
 							self.getPaymentMethods({
 								success: function(paymentData) {
-									callback(null, { data, paymentData });
+									callback(null, { data: data, paymentData: paymentData });
 								},
 								error: function(errData) {
 									callback(null, {});
@@ -460,13 +460,17 @@ define(function(require) {
 					}
 
 					//select default payment
-					var type = defaultPaymentType === 'credit' ? 'card' : 'ach',
+					var type = defaultPaymentType === 'none'
+							? 'none'
+							: defaultPaymentType === 'credit'
+								? 'card'
+								: 'ach',
 						className = '#myaccount_billing_payment_' + type;
 
 					$billingTemplate
 						.find(className)
 							.prop('checked', true)
-							.trigger('change')
+							.trigger('change');
 				});
 			});
 		},
@@ -612,10 +616,10 @@ define(function(require) {
 							data: data,
 							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
 							submitCallback: function() {
-								var data = self.billingGetFormData(),
-									args = _.assign({}, moduleArgs, { data: data });
-
-								monster.pub('myaccount.billing.renderContent', args);
+								self.billingUpdateContactInfo({
+									template: $template,
+									moduleArgs: moduleArgs
+								});
 							}
 						});
 					} else {
@@ -627,10 +631,10 @@ define(function(require) {
 							country: countryCode,
 							region: regionCode,
 							submitCallback: function() {
-								var data = self.billingGetFormData(),
-									args = _.assign({}, moduleArgs, { data: data });
-
-								monster.pub('myaccount.billing.renderContent', args);
+								self.billingUpdateContactInfo({
+									template: $template,
+									moduleArgs: moduleArgs
+								});
 							}
 						});
 					}
@@ -664,6 +668,9 @@ define(function(require) {
 					regionCode: self.appFlags.billing.billingContactFields['contact.billing.region'].value
 				});
 				self.billingEnablePaymentSection($template, 'contact.billing.country');
+				self.creditCardChangeCountry({
+					country: this.value
+				});
 			});
 
 			$stateSelector.on('change', function() {
@@ -770,9 +777,12 @@ define(function(require) {
 				isDefaultValid = selectedPaymentType === 'ach'
 					? _.find(payments, { 'type': 'ach', 'verified': true })
 					: _.find(payments, { 'expired': false, 'type': 'credit_card' }),
-				isDefaultChanged = (defaultPaymentType !== selectedPaymentType) && isDefaultValid;
+				isDefaultChanged = (defaultPaymentType !== selectedPaymentType) && isDefaultValid,
+				billingHasPendingChanges = hasFormChanged || isDefaultChanged;
 
-			$submitButton.prop('disabled', !hasFormChanged && !isDefaultChanged);
+			$submitButton.prop('disabled', !billingHasPendingChanges);
+
+			self.creditCardBillingHasPendingChanges(billingHasPendingChanges);
 		},
 
 		billingCreateBraintreeClientInstance: function(next) {
@@ -957,6 +967,22 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		billingUpdateContactInfo: function(args) {
+			var self = this,
+				$submitButton = args.template.find('#myaccount_billing_save'),
+				moduleArgs = args.moduleArgs,
+				data = self.billingGetFormData(),
+				renderArgs = _.assign({}, moduleArgs, { data: data });
+
+			if ($submitButton.prop('disabled')) {
+				monster.pub('myaccount.billing.renderContent', renderArgs);
+				return;
+			}
+
+			// This will emit myaccount.billing.renderContent after updating the account
+			$submitButton.trigger('click');
 		}
 	};
 
