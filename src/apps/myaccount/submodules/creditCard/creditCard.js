@@ -231,7 +231,7 @@ define(function(require) {
 							},
 							deletedCard: function(next) {
 								if (!_.isEmpty(expiredCardData)) {
-									self.deleteCardBilling({
+									self.creditCardDelete({
 										data: {
 											cardId: expiredCardData.id
 										},
@@ -341,7 +341,7 @@ define(function(require) {
 							next(null);
 						},
 						function deleteBilling(next) {
-							self.deleteCardBilling({
+							self.creditCardDelete({
 								data: {
 									cardId: card.id
 								},
@@ -374,7 +374,9 @@ define(function(require) {
 							})
 						});
 
-						args.submitCallback && args.submitCallback();
+						args.submitCallback && args.submitCallback({
+							surchargeAccepted: ''
+						});
 					});
 				});
 			});
@@ -485,7 +487,7 @@ define(function(require) {
 			});
 		},
 
-		deleteCardBilling: function(args) {
+		creditCardDelete: function(args) {
 			var self = this;
 
 			self.callApi({

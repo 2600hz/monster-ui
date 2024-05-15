@@ -308,7 +308,7 @@ define(function(require) {
 						{
 							selectedValues: country,
 							options: {
-								showEmptyOption: false
+								showEmptyOption: true
 							}
 						}
 					);
@@ -319,7 +319,7 @@ define(function(require) {
 						{
 							selectedValues: region,
 							options: {
-								showEmptyOption: false
+								showEmptyOption: true
 							}
 						}
 					);
@@ -440,7 +440,7 @@ define(function(require) {
 										},
 										success: function(defaultData) {
 											self.appFlags.billing.defaultPaymentType = selectedPaymentType;
-											callback(null, data);
+											next(null, data);
 										}
 									});
 								}
@@ -985,13 +985,13 @@ define(function(require) {
 				surchargeAccepted = args.surchargeAccepted;
 
 			// Only payment method was added
-			if ($submitButton.prop('disabled') && !surchargeAccepted) {
+			if ($submitButton.prop('disabled') && _.isNil(surchargeAccepted)) {
 				monster.pub('myaccount.billing.renderContent', moduleArgs);
 				return;
 			}
 
 			// Update account after adding payment method
-			if (surchargeAccepted) {
+			if (!_.isNil(surchargeAccepted)) {
 				$template.find('form [name="braintree.surcharge_accepted"]').val(surchargeAccepted);
 				$submitButton.prop('disabled', false);
 			}
