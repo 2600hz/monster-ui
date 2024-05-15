@@ -275,14 +275,16 @@ define(function(require) {
 
 				if (!_.isEmpty(results.payment.paymentData)) {
 					var payments = _.get(results, 'payment.paymentData'),
-						isAchDefault = _.find(payments, { 'default': true, 'verified': true }),
-						isCreditDefault = _.find(payments, { 'default': true, 'expired': false });
+						isAchDefault = _.find(payments, { 'default': true, 'type': 'ach' }),
+						isCreditDefault = _.find(payments, { 'default': true, 'expired': false, 'type': 'credit_card' });
 
 					if (isAchDefault || isCreditDefault) {
 						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'card';
 					}
 
 					self.appFlags.billing.payments = payments;
+				} else {
+					self.appFlags.billing.defaultPaymentType = 'none';
 				}
 
 				self.appFlags.billing.braintreeClientToken = _.get(results, 'payment.data.client_token');
