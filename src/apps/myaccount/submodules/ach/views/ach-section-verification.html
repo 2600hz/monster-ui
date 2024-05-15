@@ -42,7 +42,11 @@
           	        	      {{i18n.achDirectDebit.achVerification.button.removeAccount}}
                 		</button>
 				<button id="verify_account" class="monster-button-primary">
-          	        	      {{i18n.achDirectDebit.achVerification.button.verifyAccount}}
+					{{#if billingHasPendingChanges}}
+						{{i18n.achDirectDebit.achVerification.button.saveAndVerifyAccount}}
+					{{else}}
+						{{i18n.achDirectDebit.achVerification.button.verifyAccount}}
+					{{/if}}
                 		</button>
 			</form>
 		</div>

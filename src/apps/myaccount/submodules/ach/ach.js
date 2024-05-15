@@ -15,7 +15,10 @@ define(function(require) {
 				validAchVerificationFormFields: {
 					'deposit_amount_1': null,
 					'deposit_amount_2': null
-				}
+				},
+				container: null,
+				billingHasPendingChanges: false,
+				buttonName: null
 			}
 		},
 
@@ -66,13 +69,72 @@ define(function(require) {
 
 		achRenderSection: function(args) {
 			var self = this,
+				container = args.container;
+
+			// Render ACH Direct Debit form
+			monster.pub('monster.requestStart', {});
+
+			self.billingGetAchData(function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
+				monster.pub('monster.requestEnd', {});
+
+				if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
+					var $unavailableTemplate = $(self.getTemplate({
+						name: 'ach-section-unavailable',
+						submodule: 'ach'
+					}));
+
+					container
+						.removeClass('payment-type-content-hidden')
+						.empty()
+						.append($unavailableTemplate);
+					return;
+				}
+
+				if (_.isEmpty(bankData)) {
+					self.achRenderBeginVerificationSection(_.merge({}, args, {
+						data: {
+							bankData: bankData,
+							usBankAccountInstance: usBankAccountInstance
+						}
+					}));
+
+					return;
+				}
+
+				if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'pending') {
+					self.achRenderVerificationSection(_.merge({}, args, {
+						data: {
+							bankData: bankData
+						}
+					}));
+
+					return;
+				}
+
+				if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'verified') {
+					self.achRenderShowBank(_.merge({}, args, {
+						data: {
+							bankData: bankData
+						}
+					}));
+
+					return;
+				}
+			});
+		},
+
+		achRenderBeginVerificationSection: function(args) {
+			var self = this,
 				container = args.container,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
-							name: 'ach-section',
-							submodule: 'ach'
+							name: 'ach-section-beginVerification',
+							submodule: 'ach',
+							data: {
+								billingHasPendingChanges: self.appFlags.ach.billingHasPendingChanges
+							}
 						})),
-						$beginVerificationButton = template.find('.begin-verification'),
+						$beginVerificationButton = template.find('#beginVerification_account'),
 						enableBeginVerificationButton = function() {
 							var isFormValid = _.every(self.appFlags.ach.validAchFormFields);
 							$beginVerificationButton.prop('disabled', !isFormValid);
@@ -92,6 +154,9 @@ define(function(require) {
 
 							enableBeginVerificationButton();
 						};
+
+					self.appFlags.ach.container = container;
+					self.appFlags.ach.buttonName = 'beginVerification';
 
 					//disabe 'Begin Verification' button on render
 					$beginVerificationButton.prop('disabled', true);
@@ -123,108 +188,66 @@ define(function(require) {
 						autoScrollOnInvalid: true
 					});
 
-					// Render ACH Direct Debit form
-					monster.pub('monster.requestStart', {});
+					$beginVerificationButton.on('click', function(event) {
+						event.preventDefault();
 
-					self.billingGetAchData(function(usBankAccountErr, clientInstance, usBankAccountInstance, bankData, statusData) {
-						monster.pub('monster.requestEnd', {});
-
-						if (usBankAccountErr && _.get(usBankAccountErr, 'code') === 'US_BANK_ACCOUNT_NOT_ENABLED') {
-							var $unavailableTemplate = $(self.getTemplate({
-								name: 'ach-section-unavailable',
-								submodule: 'ach'
-							}));
-
-							container
-								.removeClass('payment-type-content-hidden')
-								.empty()
-								.append($unavailableTemplate);
-
-							return;
-						}
-
-						if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'pending') {
-							self.achRenderVerificationSection(_.merge({}, args, {
-								data: {
-									bankData: bankData
+						$beginVerificationButton.prop('disabled', true);
+						var achDebitData = monster.ui.getFormData('form_ach_payment'),
+							mandateText = template.find('.agreement1').text() + ' ' + template.find('.agreement2').text(),
+							bankDetails = {
+								accountNumber: achDebitData.account_number,
+								routingNumber: achDebitData.routing_number,
+								accountType: achDebitData.account_type,
+								ownershipType: achDebitData.ownership_type,
+								billingAddress: {
+									streetAddress: billingContactData['contact.billing.street_address'].value,
+									extendedAddress: billingContactData['contact.billing.street_address_extra'].value,
+									locality: billingContactData['contact.billing.locality'].value,
+									region: billingContactData['contact.billing.region'].value,
+									postalCode: billingContactData['contact.billing.postal_code'].value
 								}
-							}));
+							};
 
-							return;
+						if (bankDetails.ownershipType === 'personal') {
+							bankDetails.firstName = firstname;
+							bankDetails.lastName = lastname;
+						} else {
+							bankDetails.businessName = _.get(args, 'data.account.name');
 						}
 
-						if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'verified') {
-							self.achRenderShowBank(_.merge({}, args, {
-								data: {
-									bankData: bankData
-								}
-							}));
-
-							return;
-						}
-
-						$beginVerificationButton.on('click', function(event) {
-							event.preventDefault();
-
-							$beginVerificationButton.prop('disabled', true);
-							var achDebitData = monster.ui.getFormData('form_ach_payment'),
-								mandateText = template.find('.agreement1').text() + ' ' + template.find('.agreement2').text(),
-								bankDetails = {
-									accountNumber: achDebitData.account_number,
-									routingNumber: achDebitData.routing_number,
-									accountType: achDebitData.account_type,
-									ownershipType: achDebitData.ownership_type,
-									billingAddress: {
-										streetAddress: billingContactData['contact.billing.street_address'].value,
-										extendedAddress: billingContactData['contact.billing.street_address_extra'].value,
-										locality: billingContactData['contact.billing.locality'].value,
-										region: billingContactData['contact.billing.region'].value,
-										postalCode: billingContactData['contact.billing.postal_code'].value
-									}
-								};
-
-							if (bankDetails.ownershipType === 'personal') {
-								bankDetails.firstName = firstname;
-								bankDetails.lastName = lastname;
+						args.data.usBankAccountInstance.tokenize({
+							bankDetails: bankDetails,
+							mandateText: mandateText
+						}, function(tokenizeErr, tokenizePayload) {
+							if (tokenizeErr) {
+								monster.ui.toast({
+									type: 'error',
+									message: self.i18n.active().achDirectDebit.addFailure
+								});
 							} else {
-								bankDetails.businessName = _.get(args, 'data.account.name');
-							}
-
-							usBankAccountInstance.tokenize({
-								bankDetails: bankDetails,
-								mandateText: mandateText
-							}, function(tokenizeErr, tokenizePayload) {
-								if (tokenizeErr) {
-									monster.ui.toast({
-										type: 'error',
-										message: self.i18n.active().achDirectDebit.addFailure
-									});
-								} else {
-									monster.ui.toast({
-										type: 'success',
-										message: self.i18n.active().achDirectDebit.addSuccess
-									});
-									self.putAchToken({
+								monster.ui.toast({
+									type: 'success',
+									message: self.i18n.active().achDirectDebit.addSuccess
+								});
+								self.putAchToken({
+									data: {
 										data: {
-											data: {
-												nonce: tokenizePayload.nonce
-											}
-										},
-										success: function(data) {
-											self.achRenderSection(args);
+											nonce: tokenizePayload.nonce
 										}
-									});
-								}
-							});
+									},
+									success: function(data) {
+										args.submitCallback && args.submitCallback();
+									}
+								});
+							}
 						});
-
-						container
-							.removeClass('payment-type-content-hidden')
-							.empty()
-							.append(template);
 					});
-				};
 
+					container
+						.removeClass('payment-type-content-hidden')
+						.empty()
+						.append(template);
+				};
 			appendTemplate();
 		},
 
@@ -240,7 +263,8 @@ define(function(require) {
 							data: {
 								number: '**** **** **** ' + bankData.account_number_last_4,
 								type: _.upperFirst(bankData.account_type),
-								name: bankData.bank_name
+								name: bankData.bank_name,
+								billingHasPendingChanges: self.appFlags.ach.billingHasPendingChanges
 							}
 						})),
 						$verifyAccountButton = template.find('#verify_account'),
@@ -260,6 +284,9 @@ define(function(require) {
 
 							enableVerifyButton();
 						};
+
+					self.appFlags.ach.container = container;
+					self.appFlags.ach.buttonName = 'verify';
 
 					//set badge status and text
 					$statusBadge.addClass('sds_Badge sds_Badge_Yellow');
@@ -316,7 +343,7 @@ define(function(require) {
 									})
 								});
 
-								self.achRenderSection(args);
+								args.submitCallback && args.submitCallback();
 							},
 							error: function(errData) {
 								container.find('.ach-section-error').show();
@@ -366,6 +393,8 @@ define(function(require) {
 						})),
 						$removeAccountButton = template.find('#remove_account'),
 						$statusBadge = container.parents('.settings-item-content').find('#myaccount_billing_payment_ach_status');
+					self.appFlags.ach.container = null;
+					self.appFlags.ach.buttonName = null;
 
 					//set badge status
 					$statusBadge.addClass('sds_Badge sds_Badge_Green');
@@ -399,6 +428,31 @@ define(function(require) {
 				};
 
 			appendTemplate();
+		},
+
+		achBillingHasPendingChanges: function(value) {
+			var self = this;
+
+			if (self.appFlags.ach.billingHasPendingChanges === value) {
+				return;
+			}
+
+			self.appFlags.ach.billingHasPendingChanges = value;
+
+			if (!self.appFlags.ach.container) {
+				return;
+			}
+
+			var buttonName = self.appFlags.ach.buttonName,
+				verificationButton = value
+					? self.i18n.active().achDirectDebit.achVerification.button.saveAndVerifyAccount
+					: self.i18n.active().achDirectDebit.achVerification.button.verifyAccount,
+				beginVerificationButton = value
+					? self.i18n.active().achDirectDebit.achSection.achForm.saveAndBeginVerification
+					: self.i18n.active().achDirectDebit.achSection.achForm.beginVerification,
+				saveText = buttonName === 'verify' ? verificationButton : beginVerificationButton;
+
+			self.appFlags.ach.container.find('#' + buttonName + '_account').text(saveText);
 		},
 
 		/*Braintree ACH functions*/

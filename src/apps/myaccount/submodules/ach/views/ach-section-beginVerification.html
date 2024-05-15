@@ -106,8 +106,12 @@
 				<p class="sds_Text sds_Text_TextStyle_Mouse sds_Text_Align_Left agreement2">
 					{{i18n.achDirectDebit.achSection.achForm.agreement.part2}}
 				</p>
-				<button id="begin-verification" class="monster-button-primary begin-verification" data-module="verification" data-field="billing">
-          	        	      {{i18n.achDirectDebit.achSection.achForm.beginVerification}}
+				<button id="beginVerification_account" class="monster-button-primary" data-module="verification" data-field="billing">
+					{{#if billingHasPendingChanges}}
+						{{i18n.achDirectDebit.achSection.achForm.saveAndBeginVerification}}
+					{{else}}
+						{{i18n.achDirectDebit.achSection.achForm.beginVerification}}
+					{{/if}}
                 		</button>
 			</form>
 		</div>

@@ -213,7 +213,8 @@
 					},
 					"part2": "I understand that this authorization will remain in full force and effect until I notify 2600hz that I wish to revoke this authorization."
 				},
-				"beginVerification": "Begin Verification"
+				"beginVerification": "Begin verification",
+				"saveAndBeginVerification": "Save & begin verification"
 			},
 			"bankNotEnabled": "ACH Direct Debit in not enabled in this account, please contact your admin."
 		},
@@ -231,8 +232,9 @@
 				"type": "type: "
 			},
 			"button": {
-				"removeAccount": "Remove Account",
-				"verifyAccount": "Verify Account"
+				"removeAccount": "Remove account",
+				"verifyAccount": "Verify account",
+				"saveAndVerifyAccount": "Save & verify account"
 			},
 			"status": {
 				"pending": "Verification pending...",
@@ -269,7 +271,8 @@
                                 "invalid": "CVV is invalid."
                         },
                         "agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
-                        "addCard": "Add Card"
+                        "addCard": "Add card",
+			"saveAndAddCard": "Save & add card"
                 },
                 "show": {
                         "name": "Cardholder Name:",
