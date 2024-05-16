@@ -1,4 +1,4 @@
-<div class="monster-panel-text {{#if className}} {{className}}{{/if}}" data-type="warning">
+<div class="monster-panel-text{{#unless title}} monster-panel-text-no-title{{/unless}}{{#if className}} {{className}}{{/if}}" data-type="warning">
 	<div class="monster-panel-text-header clearfix">
 		<div class="icon-wrapper">{{telicon 'warning--triangle' class='iconography'}}</div>
 		<div class="title-text-wrapper">{{ title }}</div>

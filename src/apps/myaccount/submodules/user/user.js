@@ -83,7 +83,25 @@ define(function(require) {
 
 			monster.pub('myaccount.events', {
 				template: template,
-				data: data
+				data: data,
+				validateCallback: function(callback) {
+					var formPassword = template.find('#form_password');
+
+					monster.ui.validate(formPassword, {
+						rules: {
+							'password': {
+								minlength: 6
+							},
+							'confirm_password': {
+								equalTo: 'input[name="password"]'
+							}
+						}
+					});
+
+					if (monster.ui.valid(formPassword)) {
+						callback && callback(null);
+					}
+				}
 			});
 		}
 	};

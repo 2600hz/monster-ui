@@ -707,6 +707,11 @@ label.monster-radio-large > i::after {
 		width: 100%;
 	}
 
+	&.monster-panel-text-no-title .monster-panel-text-content {
+		margin-top: -2.25rem;
+		margin-left: 2rem;
+	}
+
 	.monster-panel-text-header {
 		padding: 1.25rem 1rem 1rem 1rem;
 		font-size: 1rem;

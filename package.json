@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/2600hz/monster-ui#readme",
   "devDependencies": {
+    "@2600hz/sds-core": "^2.0.0",
+    "@2600hz/sds-themes": "^2.3.3",
     "@fomantic/gulp-concat-css": "^3.2.0",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
@@ -42,6 +44,7 @@
     "gulp-uglify": "^2.1.2",
     "gulp-wrap": "^0.14.0",
     "node-sass": "^8.0.0",
+    "node-sass-tilde-importer": "^1.0.2",
     "requirejs": "^2.3.5",
     "semver": "^5.7.0",
     "upath": "^1.1.2",

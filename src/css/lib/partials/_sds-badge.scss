@@ -1,0 +1,193 @@
+@import '~@2600hz/sds-core/sds-tools';
+
+//---------------
+//Variables Declaration
+//---------------
+.sds_Badge {
+  --sds_badge_background: var(
+    --sds_theme_color_neutral_tint_2,
+    #{sds-color(grey, 20)}
+  );
+  --sds_badge_icon: var(--sds_theme_icon, #{sds-color(grey, 70)});
+  --sds_badge_text: var(--sds_theme_text, #{sds-color(grey, 100)});
+}
+
+//---------------
+//Styles
+//---------------
+.sds_Badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 sds-spc(8);
+  border-radius: sds-spc(16);
+  background: var(--sds_badge_background);
+  color: var(--sds_badge_text);
+  height: 20px;
+  min-width: 20px;
+  text-align: center;
+  @include sds-typeset(mouse, semi);
+  .sds_Telicon {
+    margin-right: sds-spc(8);
+    color: var(--sds_badge_icon);
+  }
+}
+
+.sds_Badge_Blue {
+  --sds_badge_background: var(
+    --sds_theme_color_blue_tint_2,
+    #{sds-color(blue, 10)}
+  );
+  --sds_badge_icon: var(--sds_theme_color_blue, #{sds-color(blue)});
+}
+
+.sds_Badge_Green {
+  --sds_badge_background: var(
+    --sds_theme_color_green_tint_2,
+    #{sds-color(green, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_green_interactive,
+    #{sds-color(green, 60)}
+  );
+}
+
+.sds_Badge_Yellow {
+  --sds_badge_background: var(
+    --sds_theme_color_yellow_tint_2,
+    #{sds-color(yellow, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_yellow_interactive,
+    #{sds-color(yellow, 60)}
+  );
+}
+
+.sds_Badge_Red {
+  --sds_badge_background: var(
+    --sds_theme_color_red_tint_2,
+    #{sds-color(red, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_red_interactive,
+    #{sds-color(red, 60)}
+  );
+}
+
+.sds_Badge_Indigo {
+  --sds_badge_background: var(
+    --sds_theme_color_indigo_tint_2,
+    #{sds-color(indigo, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_indigo_interactive,
+    #{sds-color(indigo, 60)}
+  );
+}
+
+.sds_Badge_Purple {
+  --sds_badge_background: var(
+    --sds_theme_color_purple_tint_2,
+    #{sds-color(purple, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_purple_interactive,
+    #{sds-color(purple, 60)}
+  );
+}
+
+.sds_Badge_Lime {
+  --sds_badge_background: var(
+    --sds_theme_color_lime_tint_2,
+    #{sds-color(lime, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_lime_interactive,
+    #{sds-color(lime, 60)}
+  );
+}
+
+.sds_Badge_Teal {
+  --sds_badge_background: var(
+    --sds_theme_color_teal_tint_2,
+    #{sds-color(teal, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_iteal_interactive,
+    #{sds-color(teal, 60)}
+  );
+}
+
+.sds_Badge_Orange {
+  --sds_badge_background: var(
+    --sds_theme_color_orange_tint_2,
+    #{sds-color(orange, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_orange_interactive,
+    #{sds-color(orange, 60)}
+  );
+}
+
+.sds_Badge_Pink {
+  --sds_badge_background: var(
+    --sds_theme_color_pink_tint_2,
+    #{sds-color(pink, 10)}
+  );
+  --sds_badge_icon: var(
+    --sds_theme_color_pink_interactive,
+    #{sds-color(pink, 60)}
+  );
+}
+
+.sds_Badge_Counter {
+  color: sds-color(white);
+}
+
+.sds_Badge_Counter_SingleNumber {
+  padding: 0;
+}
+
+.sds_Badge_Counter_Grey {
+  --sds_badge_background: var(--sds_theme_color_neutral, #{sds-color(grey)});
+}
+
+.sds_Badge_Counter_Blue {
+  --sds_badge_background: var(--sds_theme_color_blue, #{sds-color(blue)});
+}
+
+.sds_Badge_Counter_Green {
+  --sds_badge_background: var(--sds_theme_color_green, #{sds-color(green)});
+}
+
+.sds_Badge_Counter_Yellow {
+  --sds_badge_background: var(--sds_theme_color_yellow, #{sds-color(yellow)});
+}
+
+.sds_Badge_Counter_Red {
+  --sds_badge_background: var(--sds_theme_color_red, #{sds-color(red)});
+}
+
+.sds_Badge_Counter_Indigo {
+  --sds_badge_background: var(--sds_theme_color_indigo, #{sds-color(indigo)});
+}
+
+.sds_Badge_Counter_Purple {
+  --sds_badge_background: var(--sds_theme_color_purple, #{sds-color(purple)});
+}
+
+.sds_Badge_Counter_Lime {
+  --sds_badge_background: var(--sds_theme_color_dlime, #{sds-color(lime)});
+}
+
+.sds_Badge_Counter_Teal {
+  --sds_badge_background: var(--sds_theme_color_teal, #{sds-color(teal)});
+}
+
+.sds_Badge_Counter_Orange {
+  --sds_badge_background: var(--sds_theme_color_dorange, #{sds-color(orange)});
+}
+
+.sds_Badge_Counter_Pink {
+  --sds_badge_background: var(--sds_theme_color_pink, #{sds-color(pink)});
+}

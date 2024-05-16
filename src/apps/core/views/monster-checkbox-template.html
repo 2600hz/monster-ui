@@ -6,6 +6,6 @@
 	{{/if}}
 	<i></i>
 	{{#if label}}
-		<span>{{label}}</span>
+		<span>{{#if rawLabel}}{{{label}}}{{else}}{{label}}{{/if}}</span>
 	{{/if}}
 </label>
