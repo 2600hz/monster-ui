@@ -4,6 +4,7 @@ import parser from 'yargs-parser';
 import { src } from '../paths.js';
 import nodeSass from 'node-sass';
 import gulpSass from 'gulp-sass';
+import tildeImporter from 'node-sass-tilde-importer';
 
 const getAppsToExclude = () => ['demo_done', 'skeleton', 'tutorial'];
 
@@ -27,4 +28,10 @@ export const getProApps = () => ({
 		whole: env.pro && env.pro.length ? env.pro.split(',') : []
 	}[mode]);
 
-export const sass = gulpSass(nodeSass);
+const compileSass = gulpSass(nodeSass);
+
+export const sass = () => compileSass({
+    importer: tildeImporter
+});
+
+sass.logError = compileSass.logError.bind(sass);

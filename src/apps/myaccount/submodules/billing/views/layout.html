@@ -1,117 +1,163 @@
 <div class="billing-content-wrapper">
-	<ul class="list-settings">
-		<li class="settings-item clearfix" data-name="credit_card">
-			<a class="settings-link clearfix">
-				<span class="title">{{ i18n.billing.cardOnFile }}</span>
-				<span class="description">
-					<span class="card-type {{billing.credit_card.type}}" />
-					<span class="fake-number">{{billing.credit_card.fake_number}}</span>
-				</span>
-				<span class="update">
-					<i class="fa fa-cog icon-small"></i>
-					<span class="text">{{ i18n.editSettings }}</span>
-				</span>
-				<span class="changes-saved">{{ i18n.changesSaved }}</span>
-			</a>
-			<div class="settings-item-content">
-				<div class="row-fluid">
-					<div class="span12">
-						<div class="card-expired hide">
-							{{#monsterText 'warning'}}
-								{{ i18n.billing.expiredCard }}
-							{{/monsterText}}
+	<div id="myaccount_billing_loading_overlay" class="billing-body-loading-overlay">
+		<i class="icon-telicon-loading-circle monster-loading-spinner"></i>
+	</div>
+	<div class="billing-body">
+		<ul class="list-settings">
+			<li class="settings-item clearfix open always-open" data-name="billing">
+				<div class="settings-link clearfix">
+					<span class="title">{{ i18n.billing.billingContact.title }}</span>
+				</div>
+				<div class="settings-item-content" style="display: block;">
+					<form id="form_billing" class="settings-item-form">
+						<fieldset class="settings-item-section">
+							<div class="section-information">
+								{{i18n.billing.billingContact.information}}
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_full_name">{{i18n.billing.billingContact.firstName.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_full_name" name="contact.billing.first_name" value="{{account.contact.billing.first_name}}" placeholder="{{i18n.billing.billingContact.firstName.placeholder}}">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_full_name">{{i18n.billing.billingContact.lastName.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_full_name" name="contact.billing.last_name" value="{{account.contact.billing.last_name}}" placeholder="{{i18n.billing.billingContact.lastName.placeholder}}">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_email">{{i18n.billing.billingContact.email.label}}</label>
+								<div class="controls">
+									<input type="email" id="billing_contact_email" name="contact.billing.email" value="{{account.contact.billing.email}}" placeholder="{{i18n.billing.billingContact.email.placeholder}}" data-original_value="{{account.contact.billing.email}}"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_number">{{i18n.billing.billingContact.number.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_number" name="contact.billing.number" value="{{account.contact.billing.number}}" placeholder="{{i18n.billing.billingContact.number.placeholder}}"/>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset class="settings-item-section">
+							<h3 class="section-title">{{i18n.billing.billingContact.billingAddress}}</h3>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_address">{{i18n.billing.billingContact.streetAddress.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_address" name="contact.billing.street_address" value="{{account.contact.billing.street_address}}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_address_line_2">{{i18n.billing.billingContact.streetAddressExtra.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_address_line_2" name="contact.billing.street_address_extra" value="{{account.contact.billing.street_address_extra}}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_city">{{i18n.billing.billingContact.locality.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_city" name="contact.billing.locality" value="{{account.contact.billing.locality}}" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_state">{{i18n.billing.billingContact.region.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_state" name="contact.billing.region" value="{{account.contact.billing.region}}"/>
+									<select id="billing_contact_state_select" name="contact.billing.region_select" data-placeholder="{{i18n.billing.billingContact.region.placeholder}}"></select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_country">{{i18n.billing.billingContact.country.label}}</label>
+								<div class="controls">
+									<select id="billing_contact_country" name="contact.billing.country"></select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="billing_contact_zipcode">{{i18n.billing.billingContact.postalCode.label}}</label>
+								<div class="controls">
+									<input type="text" id="billing_contact_zipcode" name="contact.billing.postal_code" value="{{account.contact.billing.postal_code}}"/>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</li>
+
+			{{#if payment.data.client_token }}
+			<li class="settings-item clearfix open always-open" data-name="credit_card">
+				<div class="settings-link clearfix">
+					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
+				</div>
+				<div class="settings-item-content" style="display: block;">
+					<div class="no-payment-available-small-notices">
+						<div class="no-ach-available no-ach-available-hidden">{{ i18n.billing.paymentMethod.smallNotices.noAch }}</div>
+						<div class="no-card-available no-card-available-hidden">{{ i18n.billing.paymentMethod.smallNotices.noCard }}</div>
+					</div>
+					<div class="sds_SelectionList sds_SelectionList_Grid payment-type-selection">
+						<div class="sds_SelectionList_Item payment-type-selection-item" data-payment-type="ach">
+							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_ach" name="payment_method" value="ach">
+							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_ach" />
+							<label for="myaccount_billing_payment_ach" class="sds_SelectionList_Item_LabelBox">
+								<div class="sds_SelectionList_Item_LabelBox_Header">
+									<div class="sds_SelectionList_Item_Content">
+										<span class="sds_SelectionList_Item_Content_Title">
+											{{ i18n.billing.paymentMethod.options.ach.title }}
+											<div id="myaccount_billing_payment_ach_status"></div>
+										</span>
+										<span class="sds_SelectionList_Item_Content_Description">
+											{{ i18n.billing.paymentMethod.options.ach.description }}
+										</span>
+									</div>
+									<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Radio">
+									</div>
+								</div>
+							</label>
 						</div>
-						<form id="form_credit_card" class="form-horizontal">
-							<div id="dropin_container"></div>
-							<div class="action-group clearfix">
-								<div class="action-bar">
-									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
-									<button type="submit" class="monster-button-success save-card" data-module="billing" data-field="credit_card">{{ i18n.saveChanges }}</button>
+						<div class="sds_SelectionList_Item payment-type-selection-item" data-payment-type="card">
+							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_card" name="payment_method" value="card">
+							<label class="sds_RadioRaw sds_SelectionList_Item_Selector" for="myaccount_billing_payment_card" />
+							<label for="myaccount_billing_payment_card" class="sds_SelectionList_Item_LabelBox">
+								<div class="sds_SelectionList_Item_LabelBox_Header">
+									<div class="sds_SelectionList_Item_Content">
+										<span class="sds_SelectionList_Item_Content_Title">
+											{{ i18n.billing.paymentMethod.options.card.creditDebitCardTitle }}
+											<div id="myaccount_billing_payment_card_surcharge" class="sds_Badge sds_Badge_Grey badge-surcharge badge-surcharge-hidden">
+												{{{ i18n.billing.paymentMethod.options.card.surcharge }}}
+											</div>
+										</span>
+										<span class="sds_SelectionList_Item_Content_Description">
+											{{ i18n.billing.paymentMethod.options.card.description }}
+										</span>
+									</div>
+									<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Radio"></div>
 								</div>
-							</div>
-						</form>
+							</label>
+						</div>
+					</div>
+
+					{{#monsterPanelText null "warning" "fill-width payment-type-warning"}}
+						{{i18n.billing.paymentMethod.billingContactWarning}}
+					{{/monsterPanelText}}
+
+					<div class="payment-content">
+						<div class="payment-type-content payment-type-content-hidden" data-payment-type="ach">
+						</div>
+						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card">
+						</div>
+						<div class="payment-type-content payment-type-content-hidden" data-payment-type="card-expired">
+							{{#monsterPanelText i18n.billing.paymentMethod.expiredCard.title "danger" "fill-width"}}
+								{{i18n.billing.paymentMethod.expiredCard.message}}
+							{{/monsterPanelText}}
+						</div>
 					</div>
 				</div>
-			</div>
-		</li>
-		<li class="settings-item clearfix" data-name="account_administrator">
-			<a class="settings-link clearfix">
-				<span class="title">{{ i18n.billing.accountAdministrator }}</span>
-				<span class="description">{{account.contact.billing.email}}{{#if account.contact.billing.number}}&nbsp;&nbsp;(<span class="number">{{formatPhoneNumber account.contact.billing.number}}</span>){{/if}}</span>
-				<span class="update">
-					<i class="fa fa-cog icon-small"></i>
-					<span class="text">{{ i18n.editSettings }}</span>
-				</span>
-				<span class="changes-saved">{{ i18n.changesSaved }}</span>
-			</a>
-			<div class="settings-item-content">
-				<div class="row-fluid">
-					<div class="span12">
-						<form id="form_account_administrator" class="form-horizontal">
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_full_name">{{ i18n.billing.accountAdministratorFullName  }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_full_name" name="contact.billing.name" value="{{account.contact.billing.name}}" placeholder="{{ i18n.placeholderName  }}">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_email">{{ i18n.billing.accountAdministratorEmail }}</label>
-								<div class="controls">
-									<input type="email" id="account_administrator_email" name="contact.billing.email" value="{{account.contact.billing.email}}" placeholder="{{ i18n.placeholderEmail }}" data-original_value="{{account.contact.billing.email}}"/>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_number">{{ i18n.phoneNumber }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_number" name="contact.billing.number" value="{{account.contact.billing.number}}" placeholder="{{ i18n.placeholderNumber }}"/>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_address">{{ i18n.billing.accountAdministratorAddress }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_address" name="contact.billing.street_address" value="{{account.contact.billing.street_address}}" placeholder="{{ i18n.placeholderAddress }}" />
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_address_line_2">{{ i18n.billing.accountAdministratorAddressLineTwo  }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_address_line_2" name="contact.billing.street_address_extra" value="{{account.contact.billing.street_address_extra}}" placeholder="{{ i18n.placeholderAddressLineTwo  }}"/>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_city">{{ i18n.billing.accountAdministratorAddressCity  }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_city" name="contact.billing.locality" value="{{acocunt.contact.billing.locality}}" placeholder="{{ i18n.placeholderCity  }}" />
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_state">{{ i18n.billing.accountAdministratorAddressState  }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_state" name="contact.billing.region" value="{{account.contact.billing.region}}" placeholder="{{ i18n.placeholderState  }}"/>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_country">{{ i18n.billing.accountAdministratorAddressCountry }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_country" name="contact.billing.country" value="{{account.contact.billing.country}}" placeholder="{{ i18n.placeholderCountry }}"/>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="account_administrator_zipcode">{{ i18n.billing.accountAdministratorAddressZipCode }}</label>
-								<div class="controls">
-									<input type="text" id="account_administrator_zipcode" name="contact.billing.postal_code" value="{{account.contact.billing.postal_code}}" placeholder="{{ i18n.placeholderZipCode }}"/>
-								</div>
-							</div>
-							<div class="action-group clearfix">
-								<div class="action-bar">
-									<button type="button" class="monster-button cancel">{{ i18n.cancel }}</button>
-									<button type="submit" class="monster-button-success change" data-module="account" data-field="account_administrator">{{ i18n.saveChanges }}</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</li>
-	</ul>
+			</li>
+			{{/if}}
+		</ul>
+	</div>
+	<div class="billing-footer">
+		<button id="myaccount_billing_save" class="monster-button-success" data-module="account" data-field="billing" disabled>
+			{{i18n.billing.save}}
+		</button>
+	</div>
 </div>

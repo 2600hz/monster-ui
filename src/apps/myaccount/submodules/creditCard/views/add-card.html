@@ -1,0 +1,61 @@
+<div class="add-card-content-wrapper">
+	<div class="disable-overlay" style="display: none;"></div>
+	<div class="settings-item-content" style="display: block;">
+		{{#monsterPanelText null "info" "fill-width credit-card-surcharge-notice"}}
+			{{{i18n.creditCard.surchargeNotice}}}
+		{{/monsterPanelText}}
+		{{#monsterPanelText null "danger" "fill-width credit-card-debit-error"}}
+			{{{i18n.creditCard.debitCardError}}}
+		{{/monsterPanelText}}
+		<form id="form_credit-card" class="settings-item-form">
+			<fieldset class="settings-item-section">
+				<div class="section-information card-type-list">
+				</div>
+				<div class="control-group control-group-large">
+					<label class="control-label" for="credit_card_name">{{i18n.creditCard.add.name.label}}</label>
+					<div class="controls">
+						<div id="credit_card_name" class="credit-card-input" />
+						<label id="credit_card_name-error" class="monster-invalid" for="credit_card_name" style="display: none;">{{i18n.creditCard.add.name.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="credit_card_number">{{i18n.creditCard.add.number.label}}</label>
+					<div class="controls">
+						<div id="credit_card_number" class="credit-card-input" />
+						<label id="credit_card_number-error" class="monster-invalid" for="credit_card_number" style="display: none;">{{i18n.creditCard.add.number.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group control-group-small">
+					<label class="control-label" for="credit_card_expiration_date">{{i18n.creditCard.add.expirationDate.label}}</label>
+					<div class="controls">
+						<div id="credit_card_expiration_date" class="credit-card-input" />
+						<label id="credit_card_expiration_date-error" class="monster-invalid" for="credit_card_expiration_date" style="display: none;">{{i18n.creditCard.add.expirationDate.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group control-group-small">
+					<label class="control-label" for="credit_card_cvv">{{i18n.creditCard.add.cvv.label}}</label>
+					<div class="controls">
+						<div id="credit_card_cvv" class="credit-card-input" />
+						<label id="credit_card_cvv-error" class="monster-invalid" for="credit_card_cvv" style="display: none;">{{i18n.creditCard.add.expirationDate.invalid}}</label>
+					</div>
+				</div>
+				<div class="control-group control-group-large control-group-agreement">
+					<div>
+						{{#monsterCheckbox "raw-label" i18n.creditCard.add.agreement}}
+							<input type="checkbox" name="credit_card_accept_agreement" />
+						{{/monsterCheckbox}}
+					</div>
+				</div>
+				<div class="control-group control-group-large">
+					<button type="submit" id="credit_card_save" class="monster-button-primary" disabled>
+						{{#if billingHasPendingChanges}}
+							{{i18n.creditCard.add.saveAndAddCard}}
+						{{else}}
+							{{i18n.creditCard.add.addCard}}
+						{{/if}}
+					</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>

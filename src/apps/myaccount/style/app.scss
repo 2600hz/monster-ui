@@ -1,6 +1,8 @@
 @import "../../../css/partials/base";
+@import url('../submodules/ach/ach.css');
 @import url('../submodules/balance/balance.css');
 @import url('../submodules/billing/billing.css');
+@import url('../submodules/creditCard/creditCard.css');
 @import "../submodules/servicePlan/servicePlan.scss";
 @import url('../submodules/transactions/transactions.css');
 @import url('../submodules/trunks/trunks.css');
@@ -228,7 +230,7 @@
 	background: url(static/visa.png);
 }
 
-#myaccount .myaccount-content .list-settings .card-type.amex {
+#myaccount .myaccount-content .list-settings .card-type.american-express {
 	background: url(static/amex.png);
 }
 
@@ -240,7 +242,7 @@
 	background: url(static/mastercard.png);
 }
 
-#myaccount .myaccount-content .list-settings .card-type.unionpay {
+#myaccount .myaccount-content .list-settings .card-type.union-pay {
 	background: url(static/unionpay.png);
 }
 
