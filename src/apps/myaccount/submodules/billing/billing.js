@@ -663,12 +663,12 @@ define(function(require) {
 							country: countryCode,
 							region: regionCode,
 							preSubmitCallback: function(args, next) {
-								var surchargeAccepted = args.surchargeAccepted;
+								var surchargeAccepted = _.get(args, 'surchargeAccepted');
 
 								self.billingSaveContactInfo($template, data.account, surchargeAccepted, next);
 							},
 							submitCallback: function(args) {
-								var surchargeAccepted = args.surchargeAccepted;
+								var surchargeAccepted = _.get(args, 'surchargeAccepted');
 
 								monster.waterfall([
 									function updateBraintreeAccountInfo(next) {

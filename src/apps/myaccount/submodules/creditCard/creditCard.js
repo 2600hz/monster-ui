@@ -120,6 +120,9 @@ define(function(require) {
 				self.creditCardRenderSupportedCardTypes({
 					country: country
 				});
+				self.creditCardRenderAgreement({
+					country: country
+				});
 
 				var isAgreementAccepted = false,
 					isCardValid = false,
@@ -148,7 +151,7 @@ define(function(require) {
 						}
 					};
 
-				if (country === 'US' && !_.includes(additionalData.challenges, 'cvv')) {
+				if (/*country === 'US' && */!_.includes(additionalData.challenges, 'cvv')) {
 					var $smallControlGroups = $template.find('.control-group-small');
 
 					$smallControlGroups.eq(0).removeClass('control-group-small');
@@ -420,7 +423,8 @@ define(function(require) {
 
 		creditCardChangeCountry: function(args) {
 			var self = this,
-				country = args.country;
+				country = args.country,
+				$container = self.appFlags.creditCard.container;
 
 			if (self.appFlags.creditCard.country === country) {
 				return;
@@ -428,11 +432,11 @@ define(function(require) {
 
 			self.appFlags.creditCard.country = country;
 
-			if (!self.appFlags.creditCard.container) {
+			if (!$container) {
 				return;
 			}
 
-			if (self.appFlags.creditCard.container.find('.card-type-list').length === 0) {
+			if ($container.find('.card-type-list').length === 0) {
 				return;
 			}
 
@@ -447,6 +451,10 @@ define(function(require) {
 				: {};
 
 			self.creditCardRenderSupportedCardTypes({
+				country: country
+			});
+
+			self.creditCardRenderAgreement({
 				country: country
 			});
 		},
@@ -478,6 +486,20 @@ define(function(require) {
 
 				monster.pub('monster.requestEnd', {});
 			});
+		},
+
+		creditCardRenderAgreement: function(args) {
+			var self = this,
+				country = args.country,
+				$container = self.appFlags.creditCard.container;
+
+			if (country === 'US') {
+				$container.find('.control-group-agreement').show();
+				$container.find('[name="credit_card_accept_agreement"]').prop('checked', false).trigger('change');
+			} else {
+				$container.find('.control-group-agreement').hide();
+				$container.find('[name="credit_card_accept_agreement"]').prop('checked', true).trigger('change');
+			}
 		},
 
 		creditCardGetAdditionalInformation: function(authorization, clientInstance, hostedFieldsInstance, callback) {
