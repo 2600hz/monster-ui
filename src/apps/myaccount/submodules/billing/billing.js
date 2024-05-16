@@ -627,17 +627,23 @@ define(function(require) {
 						},
 						function updateDefaultPaymentMethod(payments, next) {
 							var type = selectedPaymentType === 'ach' ? 'ach' : 'credit_card',
-								selectedPayment = _.find(payments, { 'type': type });
+								selectedPayment = selectedPaymentType === 'ach'
+									? _.find(payments, { 'type': type, 'verified': true })
+									: _.find(payments, { 'type': type });
 
-							self.setDefaultPaymentMethod({
-								data: {
-									paymentMethodToken: selectedPayment.id
-								},
-								success: function(defaultData) {
-									self.appFlags.billing.defaultPaymentType = selectedPaymentType;
-									next(null);
-								}
-							});
+							if (_.get(selectedPayment, 'id')) {
+								self.setDefaultPaymentMethod({
+									data: {
+										paymentMethodToken: selectedPayment.id
+									},
+									success: function(defaultData) {
+										self.appFlags.billing.defaultPaymentType = selectedPaymentType;
+										next(null);
+									}
+								});
+							} else {
+								next(null);
+							}
 						}
 					], callback);
 				},
@@ -678,13 +684,14 @@ define(function(require) {
 						self.achRenderSection({
 							data: data,
 							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
+							expiredCardData: expiredCardData,
 							preSubmitCallback: function(next) {
 								monster.parallel({
 									saveContactInfo: function(next) {
 										self.billingSaveContactInfo($template, data.account, null, next);
 									},
 									deleteExpiredCard: function(next) {
-										if (!expiredCardData) {
+										if (_.isEmpty(expiredCardData)) {
 											next(null);
 											return;
 										}
@@ -805,7 +812,12 @@ define(function(require) {
 			});
 
 			$submitButton.on('click', function() {
-				self.billingSaveContactInfo($template, data.account, null, function(err) {
+				monster.waterfall([
+					function saveContactInfo(next) {
+						self.billingSaveContactInfo($template, data.account, null, next);
+					},
+					updateCallback
+				], function(err) {
 					if (err) {
 						console.error(err);
 						return;
