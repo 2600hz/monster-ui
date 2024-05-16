@@ -144,7 +144,6 @@
 		"title": "Payment Details",
 		"missingCard": "Ihre Kreditkartendaten sind ungültig, abgelaufen oder unvollständig. Bitte aktualisieren Sie Ihre Kreditkartendaten und speichern Sie die Änderungen.",
 
-		"cardOnFile": "Angegebene Kreditkarte",
 		"billingName": "Name",
 		"firstName": "Erste",
 		"lastName": "Letzte",
@@ -210,14 +209,25 @@
 					"description": "Pay for transactions by debiting directly from a bank account."
 				},
 				"card": {
-					"title": "Credit/Debit Card",
-					"description": "Pay for transactions using a credit/debit card."
+					"creditCardTitle": "Credit Card",
+					"creditDebitCardTitle": "Credit/Debit Card",
+					"creditDebitCardDescription": "Pay for transactions using a credit/debit card.",
+					"creditCardDescription": "Pay for transactions using a credit card. Debit cards are not allowed.",
+					"creditDenyDescription": "Credit card is not allowed in your state",
+					"surcharge": "<span>2.6</span>% service fee"
 				}
 			},
 			"billingContactWarning": "A valid Billing Contact is required before you can configure a payment method.",
 			"expiredCard": {
 				"title": "Expired Card",
 				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
+			},
+			"smallNotices": {
+				"noCard": "*Based on the Billing Address above, the Credit Card payment method is not available.",
+				"noAch": "*Based on the Billing Address above, the ACH payment method is not available."
+			},
+			"bigNotices": {
+				"noCard": "The option to use a Credit Card is not available in the following states: NY, CT, MA, ME. Debit cards are also not a valid method. Please use ACH Direct Debit"
 			}
 		},
 
@@ -294,41 +304,42 @@
 			"message": "The amounts provided above do NOT match the verification records. Please double check your inputs below and try again. You have up to 4 attempts."
 		}
 	},
-	
+
 	"creditCard": {
-                "add": {
-                        "name": {
-                                "label": "Name on Card",
-                                "invalid": "Name is required."
-                        },
-                        "number": {
-                                "label": "Card Number",
-                                "invalid": "Card number is invalid."
-                        },
-                        "expirationDate": {
-                                "label": "Expiration Date",
-                                "invalid": "Expiration date is invalid."
-                        },
-                        "cvv": {
-                                "label": "CVV",
-                                "invalid": "CVV is invalid."
-                        },
-                        "agreement": "By paying with my card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
-                        "addCard": "Add card",
+		"add": {
+			"name": {
+				"label": "Name on Card",
+				"invalid": "Name is required."
+			},
+			"number": {
+				"label": "Card Number",
+				"invalid": "Card number is invalid."
+			},
+			"expirationDate": {
+				"label": "Expiration Date",
+				"invalid": "Expiration date is invalid."
+			},
+			"cvv": {
+				"label": "CVV",
+				"invalid": "CVV is invalid."
+			},
+			"agreement": "I acknowledge the surcharges associated with using this credit card payment method. By paying with this card, I agree to the <a href=\"https://www.paypal.com/us/legalhub/home\" target=\"_blank\">PayPal Privacy Statement</a>",
+			"addCard": "Add card",
 			"saveAndAddCard": "Save & add card"
-                },
-                "show": {
-                        "name": "Cardholder Name:",
-                        "number": "Card:",
-                        "expirationDate": "Expiration Date:",
-                        "removeCard": "Remove card"
-                },
-                "addSuccess": "Credit card ending in {{variable}} added as payment method.",
-                "addFailure": "Failed to add credit card as payment method.",
-                "removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
-                "removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
-                "surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.7</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted. We do not surcharge Visa and Mastercard debit cards."
-        },
+		},
+		"show": {
+			"name": "Cardholder Name:",
+			"number": "Card:",
+			"expirationDate": "Expiration Date:",
+			"removeCard": "Remove card"
+		},
+		"addSuccess": "Credit card ending in {{variable}} added as payment method.",
+		"addFailure": "Failed to add credit card as payment method.",
+		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
+		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
+		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.6</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted.",
+		"debitCardError": "We do not accept debit card payments. Please use ACH, or a Visa/Mastercard credit card."
+	},
 
 	"trunks": {
 		"title": "Trunks",
