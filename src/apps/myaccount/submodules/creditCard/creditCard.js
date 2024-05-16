@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		moment = require('moment'),
 		monster = require('monster'),
 		braintreeClient = require('braintree-client'),
 		braintreeHostedFields = require('braintree-hosted-fields'),
@@ -216,34 +217,51 @@ define(function(require) {
 							return;
 						}
 
-						monster.parallel({
-							updateBilling: function(next) {
-								self.billingRequestUpdateBilling({
-									data: {
-										data: {
-											nonce: payload.nonce
-										}
-									},
-									success: function(data) {
-										next(null, data);
-									}
-								});
-							},
-							deletedCard: function(next) {
-								if (!_.isEmpty(expiredCardData)) {
-									self.creditCardDelete({
-										data: {
-											cardId: expiredCardData.id
-										},
-										success: function(data) {
-											next(null, data);
-										}
-									});
-								} else {
-									next(null);
+						monster.waterfall([
+							function preSubmit(next) {
+								if (args.preSubmitCallback) {
+									var now = moment().toDate(),
+										timestamp = monster.util.dateToGregorian(now);
+
+									args.preSubmitCallback({
+										surchargeAccepted: timestamp
+									}, next);
+									return;
 								}
+
+								next(null);
+							},
+							function updateCard(next) {
+								monster.parallel({
+									updateBilling: function(next) {
+										self.billingRequestUpdateBilling({
+											data: {
+												data: {
+													nonce: payload.nonce
+												}
+											},
+											success: function(data) {
+												next(null, data);
+											}
+										});
+									},
+									deletedCard: function(next) {
+										if (!_.isEmpty(expiredCardData)) {
+											self.creditCardDelete({
+												data: {
+													cardId: expiredCardData.id
+												},
+												success: function(data) {
+													next(null, data);
+												}
+											});
+										} else {
+											next(null);
+										}
+									}
+								}, next);
 							}
-						}, function(err, results) {
+						], function(err, results) {
 							monster.pub('monster.requestEnd', {});
 
 							if (err) {
@@ -265,9 +283,7 @@ define(function(require) {
 								})
 							});
 
-							args.submitCallback && args.submitCallback({
-								surchargeAccepted: monster.util.dateToGregorian(new Date())
-							});
+							args.submitCallback && args.submitCallback();
 						});
 					});
 				});
@@ -420,18 +436,15 @@ define(function(require) {
 				return;
 			}
 
-			self.appFlags.creditCard.hostedFieldsInstance.setAttribute({
-				field: 'number',
-				attribute: 'supportedCardBrands',
-				value: country === 'US'
-					? {
-						'american-express': false,
-						discover: false,
-						jcb: false,
-						'union-pay': false
-					}
-					: {}
-			});
+			// HACK: Update client supported card types
+			self.appFlags.creditCard.hostedFieldsInstance._merchantConfigurationOptions.fields.supportedCardBrands = country === 'US'
+				? {
+					'american-express': false,
+					discover: false,
+					jcb: false,
+					'union-pay': false
+				}
+				: {};
 
 			self.creditCardRenderSupportedCardTypes({
 				country: country

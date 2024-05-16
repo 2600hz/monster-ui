@@ -220,16 +220,22 @@ define(function(require) {
 							bankDetails.businessName = _.get(args, 'data.account.name');
 						}
 
-						args.data.usBankAccountInstance.tokenize({
-							bankDetails: bankDetails,
-							mandateText: mandateText
-						}, function(tokenizeErr, tokenizePayload) {
-							if (tokenizeErr) {
-								monster.ui.toast({
-									type: 'error',
-									message: self.i18n.active().achDirectDebit.addFailure
-								});
-							} else {
+						monster.waterfall([
+							function preSubmit(next) {
+								if (args.preSubmitCallback) {
+									args.preSubmitCallback(next);
+									return;
+								}
+
+								next(null);
+							},
+							function tokenize(next) {
+								args.data.usBankAccountInstance.tokenize({
+									bankDetails: bankDetails,
+									mandateText: mandateText
+								}, next);
+							},
+							function putAchToken(tokenizePayload, next) {
 								monster.ui.toast({
 									type: 'success',
 									message: self.i18n.active().achDirectDebit.addSuccess
@@ -241,10 +247,20 @@ define(function(require) {
 										}
 									},
 									success: function(data) {
-										args.submitCallback && args.submitCallback();
+										next(null);
 									}
 								});
 							}
+						], function(err, _res) {
+							if (err) {
+								monster.ui.toast({
+									type: 'error',
+									message: self.i18n.active().achDirectDebit.addFailure
+								});
+								return;
+							}
+
+							args.submitCallback && args.submitCallback();
 						});
 					});
 
@@ -331,33 +347,53 @@ define(function(require) {
 						var verificationAmounts = monster.ui.getFormData('form_ach_verification');
 
 						$verifyAccountButton.prop('disabled', true);
-						self.confirmMicroDeposits({
-							data: {
-								verificationId: _.get(bankData, 'verification_id'),
-								data: {
-									deposits: [
-										Math.floor(verificationAmounts.deposit_amount_1),
-										Math.floor(verificationAmounts.deposit_amount_2)
-									]
-								}
-							},
-							success: function(data) {
-								container.find('.ach-section-error').hide();
-								monster.ui.toast({
-									type: 'success',
-									message: self.getTemplate({
-										name: '!' + self.i18n.active().achDirectDebit.verificationSuccess,
-										data: {
-											variable: _.get(bankData, 'account_number_last_4')
-										}
-									})
-								});
 
-								args.submitCallback && args.submitCallback();
+						monster.waterfall([
+							function preSubmit(next) {
+								if (args.preSubmitCallback) {
+									args.preSubmitCallback(next);
+									return;
+								}
+
+								next(null);
 							},
-							error: function(errData) {
-								container.find('.ach-section-error').show();
+							function confirmMicroDeposits(next) {
+								self.confirmMicroDeposits({
+									data: {
+										verificationId: _.get(bankData, 'verification_id'),
+										data: {
+											deposits: [
+												Math.floor(verificationAmounts.deposit_amount_1),
+												Math.floor(verificationAmounts.deposit_amount_2)
+											]
+										}
+									},
+									success: function(data) {
+										next(null, data);
+									},
+									error: function(errData) {
+										next(true);
+									}
+								});
 							}
+						], function(err, res) {
+							if (err) {
+								container.find('.ach-section-error').show();
+								return;
+							}
+
+							container.find('.ach-section-error').hide();
+							monster.ui.toast({
+								type: 'success',
+								message: self.getTemplate({
+									name: '!' + self.i18n.active().achDirectDebit.verificationSuccess,
+									data: {
+										variable: _.get(bankData, 'account_number_last_4')
+									}
+								})
+							});
+
+							args.submitCallback && args.submitCallback();
 						});
 					});
 

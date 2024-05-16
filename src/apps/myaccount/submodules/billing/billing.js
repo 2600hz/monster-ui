@@ -427,54 +427,7 @@ define(function(require) {
 					self.billingBindEvents({
 						template: $billingTemplate,
 						moduleArgs: args,
-						data: results,
-						validateCallback: function(callback) {
-							var isValid = monster.ui.valid($billingContactForm);
-
-							if (isValid) {
-								callback && callback(null);
-							}
-						},
-						updateCallback: function(data, callback) {
-							// Add here any steps to do after billing contact update
-							var defaultPaymentType = self.appFlags.billing.defaultPaymentType,
-								selectedPaymentType = self.appFlags.billing.selectedPaymentType,
-								isDefaultChanged = defaultPaymentType !== selectedPaymentType;
-
-							if (!isDefaultChanged) {
-								callback(null, data);
-								return;
-							}
-
-							monster.waterfall([
-								function reloadPaymentMethods(next) {
-									self.getPaymentMethods({
-										success: function(payments) {
-											next(null, payments);
-										},
-										error: function(errData) {
-											next(errData);
-										}
-									});
-								},
-								function updateDefaultPaymentMethod(payments, next) {
-									var type = selectedPaymentType === 'ach' ? 'ach' : 'credit_card',
-										selectedPayment = _.find(payments, { 'type': type });
-
-									self.setDefaultPaymentMethod({
-										data: {
-											paymentMethodToken: selectedPayment.id
-										},
-										success: function(defaultData) {
-											self.appFlags.billing.defaultPaymentType = selectedPaymentType;
-											next(null, data);
-										}
-									});
-								}
-							], function(err, _results) {
-								callback(err, data);
-							});
-						}
+						data: results
 					});
 
 					if (!self.appFlags.billing.braintreeClientToken) {
@@ -554,7 +507,7 @@ define(function(require) {
 					.contents().first()
 						.replaceWith(self.i18n.active().billing.paymentMethod.options.card.creditDebitCardTitle);
 				$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
-					.text(self.i18n.active().billing.paymentMethod.options.card.description);
+					.text(self.i18n.active().billing.paymentMethod.options.card.creditDebitCardDescription);
 			} else {
 				// If country is US
 
@@ -570,7 +523,7 @@ define(function(require) {
 				if (_.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
 					// Disable credit card option
 					$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
-						.text(self.i18n.active().billing.paymentMethod.options.card.denyDescription);
+						.text(self.i18n.active().billing.paymentMethod.options.card.creditDenyDescription);
 
 					if (!enabledPayments.card) {
 						$cardPaymentSelectionItem.addClass('sds_SelectionList_Item_Disabled');
@@ -582,7 +535,7 @@ define(function(require) {
 					}
 				} else {
 					$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
-						.text(self.i18n.active().billing.paymentMethod.options.card.description);
+						.text(self.i18n.active().billing.paymentMethod.options.card.creditCardDescription);
 				}
 			}
 		},
@@ -615,8 +568,47 @@ define(function(require) {
 				$stateSelector = $template.find('#billing_contact_state_select'),
 				$paymentContent = $template.find('.payment-content'),
 				$paymentMethodRadioGroup = $template.find('input[type="radio"][name="payment_method"]'),
+				$submitButton = $template.find('#myaccount_billing_save'),
 				cards = _.get(data, 'billing.credit_cards'),
 				expiredCardData = _.get(data, 'billing.expired_card'),
+				updateCallback = function(callback) {
+					// Add here any steps to do after billing contact update
+					var defaultPaymentType = self.appFlags.billing.defaultPaymentType,
+						selectedPaymentType = self.appFlags.billing.selectedPaymentType,
+						isDefaultChanged = defaultPaymentType !== selectedPaymentType;
+
+					if (!isDefaultChanged) {
+						callback(null);
+						return;
+					}
+
+					monster.waterfall([
+						function reloadPaymentMethods(next) {
+							self.getPaymentMethods({
+								success: function(payments) {
+									next(null, payments);
+								},
+								error: function(errData) {
+									next(errData);
+								}
+							});
+						},
+						function updateDefaultPaymentMethod(payments, next) {
+							var type = selectedPaymentType === 'ach' ? 'ach' : 'credit_card',
+								selectedPayment = _.find(payments, { 'type': type });
+
+							self.setDefaultPaymentMethod({
+								data: {
+									paymentMethodToken: selectedPayment.id
+								},
+								success: function(defaultData) {
+									self.appFlags.billing.defaultPaymentType = selectedPaymentType;
+									next(null);
+								}
+							});
+						}
+					], callback);
+				},
 				paymentTypeChange = function(value) {
 					if (value === 'none') {
 						$paymentContent
@@ -648,10 +640,17 @@ define(function(require) {
 						self.achRenderSection({
 							data: data,
 							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
+							preSubmitCallback: function(next) {
+								self.billingSaveContactInfo($template, data.account, null, next);
+							},
 							submitCallback: function() {
-								self.billingUpdateContactInfo({
-									template: $template,
-									moduleArgs: moduleArgs
+								updateCallback(function(err) {
+									if (err) {
+										console.error(err);
+										return;
+									}
+
+									monster.pub('myaccount.billing.renderContent', moduleArgs);
 								});
 							}
 						});
@@ -663,11 +662,31 @@ define(function(require) {
 							cards: cards,
 							country: countryCode,
 							region: regionCode,
+							preSubmitCallback: function(args, next) {
+								var surchargeAccepted = args.surchargeAccepted;
+
+								self.billingSaveContactInfo($template, data.account, surchargeAccepted, next);
+							},
 							submitCallback: function(args) {
-								self.billingUpdateContactInfo({
-									template: $template,
-									moduleArgs: moduleArgs,
-									surchargeAccepted: _.get(args, 'surchargeAccepted')
+								var surchargeAccepted = args.surchargeAccepted;
+
+								monster.waterfall([
+									function updateBraintreeAccountInfo(next) {
+										if (_.isNil(surchargeAccepted)) {
+											next(null);
+											return;
+										}
+
+										self.billingSaveContactInfo($template, data.account, surchargeAccepted, next);
+									},
+									updateCallback
+								], function(err) {
+									if (err) {
+										console.error(err);
+										return;
+									}
+
+									monster.pub('myaccount.billing.renderContent', moduleArgs);
 								});
 							}
 						});
@@ -724,6 +743,17 @@ define(function(require) {
 					regionCode: state
 				});
 				self.billingEnablePaymentSection($template, 'contact.billing.region');
+			});
+
+			$submitButton.on('click', function() {
+				self.billingSaveContactInfo($template, data.account, null, function(err) {
+					if (err) {
+						console.error(err);
+						return;
+					}
+
+					monster.pub('myaccount.billing.renderContent', moduleArgs);
+				});
 			});
 
 			monster.pub('myaccount.events', args);
@@ -907,17 +937,6 @@ define(function(require) {
 			});
 		},
 
-		billingGetFormData: function() {
-			var self = this,
-				data = {
-					account: monster.ui.getFormData('form_billing')
-				};
-
-			delete data.account.contact.billing.region_select;
-
-			return data;
-		},
-
 		billingRequestUpdateBilling: function(args) {
 			var self = this;
 
@@ -1004,27 +1023,50 @@ define(function(require) {
 			});
 		},
 
-		billingUpdateContactInfo: function(args) {
+		billingSaveContactInfo: function($template, account, surchargeAccepted, next) {
 			var self = this,
-				$template = args.template,
+				$billingContactForm = $template.find('#form_billing'),
 				$submitButton = $template.find('#myaccount_billing_save'),
-				moduleArgs = args.moduleArgs,
-				surchargeAccepted = args.surchargeAccepted;
+				isValid = monster.ui.valid($billingContactForm),
+				formData = {},
+				updatedAccount = {};
 
-			// Only payment method was added
 			if ($submitButton.prop('disabled') && _.isNil(surchargeAccepted)) {
-				monster.pub('myaccount.billing.renderContent', moduleArgs);
+				next(null);
 				return;
 			}
 
-			// Update account after adding payment method
-			if (!_.isNil(surchargeAccepted)) {
-				$template.find('form [name="braintree.surcharge_accepted"]').val(surchargeAccepted);
-				$submitButton.prop('disabled', false);
+			if (!isValid) {
+				next('CONTACT_INVALID');
+				return;
 			}
 
-			// This will emit myaccount.billing.renderContent after updating the account
-			$submitButton.trigger('click');
+			formData = monster.ui.getFormData('form_billing');
+			updatedAccount = _.merge({}, account, formData);
+
+			delete updatedAccount.contact.billing.region_select;
+
+			if (surchargeAccepted === '') {
+				_.unset(updatedAccount, ['braintree', 'surcharge_accepted']);
+			} else {
+				updatedAccount.braintree = _.merge({}, updatedAccount.braintree, {
+					surcharge_accepted: surchargeAccepted
+				});
+			}
+
+			self.callApi({
+				resource: 'account.update',
+				data: {
+					accountId: self.accountId,
+					data: updatedAccount
+				},
+				success: function(_data) {
+					next && next(null);
+				},
+				error: function() {
+					next && next(true);
+				}
+			});
 		}
 	};
 

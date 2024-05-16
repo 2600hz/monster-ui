@@ -229,8 +229,9 @@
 				"card": {
 					"creditCardTitle": "Credit Card",
 					"creditDebitCardTitle": "Credit/Debit Card",
-					"description": "Pay for transactions using a credit/debit card.",
-					"denyDescription": "Credit card is not allowed in your state",
+					"creditDebitCardDescription": "Pay for transactions using a credit/debit card.",
+					"creditCardDescription": "Pay for transactions using a credit card. Debit cards are not allowed.",
+					"creditDenyDescription": "Credit card is not allowed in your state",
 					"surcharge": "<span>2.6</span>% service fee"
 				}
 			},
