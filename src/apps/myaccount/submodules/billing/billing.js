@@ -275,8 +275,8 @@ define(function(require) {
 
 				if (!_.isEmpty(results.payment.paymentData)) {
 					var payments = _.get(results, 'payment.paymentData'),
-						isAchDefault = _.find(payments, { 'default': true, 'type': 'ach' }),
-						isCreditDefault = _.find(payments, { 'default': true, 'expired': false, 'type': 'credit_card' });
+						isAchDefault = _.some(payments, { 'default': true, 'type': 'ach' }),
+						isCreditDefault = _.some(payments, { 'default': true, 'expired': false, 'type': 'credit_card' });
 
 					if (isAchDefault || isCreditDefault) {
 						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'card';
@@ -327,6 +327,12 @@ define(function(require) {
 						},
 						defaultPaymentType = self.appFlags.billing.defaultPaymentType;
 
+					self.appFlags.billing.enabledPayments.card = hasCards;
+					self.appFlags.billing.enabledPayments.ach = _.chain(results)
+						.get('payment.paymentData', [])
+						.some({ type: 'ach' })
+						.value();
+
 					// Initialize country selector
 					monster.ui.countrySelector(
 						$countrySelector,
@@ -357,7 +363,6 @@ define(function(require) {
 						field.originalValue = _.chain(apiResults.account).get(key).trim().value();
 						field.changed = false;
 					});
-					self.appFlags.billing.enabledPayments.card = hasCards;
 
 					// Enable/display sections accordingly
 					self.billingDisplayStateSelector({
