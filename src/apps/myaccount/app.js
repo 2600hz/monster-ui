@@ -777,9 +777,6 @@ define(function(require) {
 				},
 				validateSettings = args.validateCallback || function(callback) {
 					callback(null);
-				},
-				postUpdateSettings = args.updateCallback || function(data, callback) {
-					callback(null, data);
 				};
 
 			template.find('.settings-item:not(.always-open) .settings-link').on('click', function() {
@@ -820,8 +817,7 @@ define(function(require) {
 
 				monster.waterfall([
 					validateSettings,
-					updateSettings,
-					postUpdateSettings
+					updateSettings
 				], function(_err, data) {
 					var args = {
 						callback: function(parent) {
