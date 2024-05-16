@@ -1,0 +1,192 @@
+@import "../../../../css/partials/base";
+
+/*[data-braintree-id="toggle"], [data-braintree-id='methods-label'] {
+  display: none;
+}*/
+
+#myaccount .myaccount-content .billing-content-wrapper {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - 167px);
+	position: relative;
+
+	.billing-body-loading-overlay {
+		position: absolute;
+		top: -70px;
+		bottom: -20px;
+		left: -30px;
+		right: -30px;
+		background: #ffffff;
+		opacity: 0.8;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&-hidden {
+			display: none;
+		}
+	}
+
+	.list-settings {
+		.settings-item.open {
+			border-color: #c0c0c9;
+
+			.settings-link {
+				cursor: unset;
+			}
+		}
+
+		.controls input.monster-invalid {
+			border-color: $danger-color;
+		}
+	}
+
+	.billing-body {
+		flex-grow: 1;
+
+		.settings-item-section {
+			display: flex;
+			flex-wrap: wrap;
+			margin: 0 -0.5rem 0.5rem -0.5rem;
+
+			.section-title {
+				font-size: 14px;
+				font-weight: 600;
+				margin-bottom: 1.5rem;
+				width: 100%;
+				line-height: 1.25rem;
+				padding: 0 0.5rem 0 0.5rem;
+			}
+
+			.section-information {
+				width: calc(50% - 1rem);
+				margin-left: 0.5rem;
+				margin-right: calc(50% - 0.5rem);
+				margin-bottom: 1.5rem;
+			}
+
+			.control-group {
+				width: calc(50% - 1rem);
+				margin: 0 0.5rem 1rem 0.5rem;
+
+				.control-label {
+					margin-top: 0;
+					margin-bottom: 0.25rem;
+				}
+
+				.controls {
+					margin-left: 0;
+				}
+			}
+
+			input {
+				display: block;
+				width: 100%;
+				box-sizing: border-box;
+				height: 2.25rem;
+				padding: 0.5rem 0.75rem;
+				margin: 0;
+			}
+		}
+
+		.payment-type-selection{
+			.sds_Badge {
+				font-size: 12px;
+				font-weight: 600;
+				padding: 0 0.5rem;
+				border-radius: 1rem;
+				margin-left: 0.5rem;
+
+				&_Yellow {
+					background: #fde6b9;
+				}
+
+				&_Green {
+					background: #c2f4bf;
+				}
+
+				&_Grey {
+					background: #ccccd0;
+				}
+			}
+
+			.badge-surcharge {
+				display: inline-flex;
+
+				&-hidden {
+					display: none;
+				}
+			}
+		}
+
+		.payment-type-content {
+			display: block;
+
+			&-hidden {
+				display: none;
+			}
+
+			.disable-overlay {
+				position: absolute;
+				top: 0,;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background: #ffffff;
+				opacity: 0.4;
+				z-index: 100;
+			}
+		}
+
+		.payment-type-selection {
+			margin-bottom: 0.75rem;
+		}
+
+		.chosen-container-single {
+			width: auto !important;
+			display: block;
+
+			.chosen-single {
+				height: 2.25rem;
+
+				span {
+					font-size: 14px;
+  					line-height: 34px;
+				}
+			}
+
+			.chosen-drop {
+				min-width: 100%;
+			}
+		}
+	}
+
+	.billing-footer {
+		margin: 1.5rem -30px -20px -30px;
+		padding: 1rem 1.5rem;
+		text-align: right;
+		border-top: 1px solid $input-border-color;
+
+		#myaccount_billing_save {
+			margin-left: 0.75rem;
+		}
+	}
+
+	.no-payment-available-small-notices {
+		margin-bottom: 1rem;
+
+		&.no-payment-available-small-notices-card .no-card-available {
+			display: none;
+		}
+
+		&.no-payment-available-small-notices-ach .no-ach-available {
+			display: none;
+		}
+	}
+
+	.no-card-available-hidden, .no-ach-available-hidden {
+		display: none;
+	}
+}

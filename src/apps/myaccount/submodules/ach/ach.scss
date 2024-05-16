@@ -1,0 +1,47 @@
+#myaccount .myaccount-content .billing-content-wrapper .billing-body .payment-type-content {
+	.ach-content-wrapper {
+		background-color: #e0e0e2;
+	}
+
+	.ach-verification-content-wrapper {
+		background-color: #fde6b9;
+
+		.bank-information {
+			display: flex;
+
+			.summary-label {
+				width: 5rem;
+			}
+
+			&:last-child {
+				margin: 0;
+			}
+		}
+
+		#remove_account {
+			margin-right: 1rem;
+		}
+
+		.ach-section-hidden {
+			display: none;
+		}
+	}
+
+	.ach-content-wrapper, .ach-verification-content-wrapper {
+		padding: 1rem;
+
+		.ach-section:not(:last-child) {
+			padding-bottom: 1rem;
+		}
+
+		.ach-payment-form {
+			margin: 0;
+		}
+	}
+
+	.show-bank-content-wrapper {
+		#remove_account {
+			margin-top: 1.5rem;
+		}
+	}
+}
