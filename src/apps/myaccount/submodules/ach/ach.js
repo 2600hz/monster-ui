@@ -117,8 +117,6 @@ define(function(require) {
 							bankData: bankData
 						}
 					}));
-
-					return;
 				}
 			});
 		},
