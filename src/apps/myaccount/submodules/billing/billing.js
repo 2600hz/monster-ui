@@ -654,7 +654,28 @@ define(function(require) {
 							data: data,
 							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
 							preSubmitCallback: function(next) {
-								self.billingSaveContactInfo($template, data.account, null, next);
+								monster.parallel({
+									saveContactInfo: function(next) {
+										self.billingSaveContactInfo($template, data.account, null, next);
+									},
+									deleteExpiredCard: function(next) {
+										if (!expiredCardData) {
+											next(null);
+											return;
+										}
+
+										self.creditCardDelete({
+											data: {
+												cardId: expiredCardData.id
+											},
+											success: function(_data) {
+												next(null);
+											}
+										});
+									}
+								}, function(err, _res) {
+									next(err);
+								});
 							},
 							submitCallback: function() {
 								updateCallback(function(err) {
