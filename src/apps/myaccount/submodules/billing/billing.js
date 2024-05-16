@@ -248,14 +248,18 @@ define(function(require) {
 				payment: function(callback) {
 					self.billingGetAccountToken({
 						success: function(data) {
-							self.getPaymentMethods({
-								success: function(paymentData) {
-									callback(null, { data: data, paymentData: paymentData });
-								},
-								error: function(errData) {
-									callback(null, {});
-								}
-							});
+							if (monster.config.api.braintree && _.get(data, 'client_token')) {
+								self.getPaymentMethods({
+									success: function(paymentData) {
+										callback(null, { data: data, paymentData: paymentData });
+									},
+									error: function(errData) {
+										callback(null, {});
+									}
+								});
+							} else {
+								callback(null, {});
+							}
 						},
 						error: function(data) {
 							callback(null, {
@@ -337,7 +341,7 @@ define(function(require) {
 					monster.ui.countrySelector(
 						$countrySelector,
 						{
-							selectedValues: country,
+							selectedValues: country || '',
 							options: {
 								showEmptyOption: true
 							}
@@ -348,7 +352,7 @@ define(function(require) {
 					monster.ui.stateSelector(
 						$stateSelector,
 						{
-							selectedValues: region,
+							selectedValues: region || '',
 							options: {
 								showEmptyOption: true
 							}
