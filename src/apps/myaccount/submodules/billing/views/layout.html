@@ -89,6 +89,10 @@
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
 				</div>
 				<div class="settings-item-content" style="display: block;">
+					<div class="no-payment-available-small-notices">
+						<div class="no-ach-available no-ach-available-hidden">{{ i18n.billing.paymentMethod.smallNotices.noAch }}</div>
+						<div class="no-card-available no-card-available-hidden">{{ i18n.billing.paymentMethod.smallNotices.noCard }}</div>
+					</div>
 					<div class="sds_SelectionList sds_SelectionList_Grid payment-type-selection">
 						<div class="sds_SelectionList_Item payment-type-selection-item" data-payment-type="ach">
 							<input type="radio" class="sds_RadioRaw_Input sds_SelectionList_Item_Selector_Input" id="myaccount_billing_payment_ach" name="payment_method" value="ach">

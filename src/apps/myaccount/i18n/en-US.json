@@ -239,6 +239,13 @@
 			"expiredCard": {
 				"title": "Expired Card",
 				"message": "The previous card on file has expired. Please update your payment card to avoid service interruptions."
+			},
+			"smallNotices": {
+				"noCard": "*Based on the Billing Address above, the Credit Card payment method is not available.",
+				"noAch": "*Based on the Billing Address above, the ACH payment method is not available."
+			},
+			"bigNotices": {
+				"noCard": "The option to use a Credit Card is not available in the following states: NY, CT, MA, ME. Debit cards are also not a valid method. Please use ACH Direct Debit"
 			}
 		},
 

@@ -506,6 +506,9 @@ define(function(require) {
 				// If country is not US
 
 				// Disable ACH
+				$billingTemplate.find('.no-ach-available')
+					.removeClass('no-ach-available-hidden');
+
 				if (!enabledPayments.ach) {
 					$achPaymentSelectionItem.addClass('sds_SelectionList_Item_Disabled');
 
@@ -516,15 +519,22 @@ define(function(require) {
 				}
 
 				// Allow credit and debit cards
+				$billingTemplate.find('.no-card-available')
+					.addClass('no-card-available-hidden');
+
 				$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Title')
 					.contents().first()
 						.replaceWith(self.i18n.active().billing.paymentMethod.options.card.creditDebitCardTitle);
+
 				$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
 					.text(self.i18n.active().billing.paymentMethod.options.card.creditDebitCardDescription);
 			} else {
 				// If country is US
 
 				// Enable ACH
+				$billingTemplate.find('.no-ach-available')
+					.addClass('no-ach-available-hidden');
+
 				$achPaymentSelectionItem.removeClass('sds_SelectionList_Item_Disabled');
 
 				// Allow only credit cards
@@ -535,6 +545,9 @@ define(function(require) {
 				// Check region
 				if (_.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
 					// Disable credit card option
+					$billingTemplate.find('.no-card-available')
+						.removeClass('no-card-available-hidden');
+
 					$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
 						.text(self.i18n.active().billing.paymentMethod.options.card.creditDenyDescription);
 
@@ -547,6 +560,12 @@ define(function(require) {
 						}
 					}
 				} else {
+					// Enable card option
+					$billingTemplate.find('.no-card-available')
+						.addClass('no-card-available-hidden');
+
+					$cardPaymentSelectionItem.removeClass('sds_SelectionList_Item_Disabled');
+
 					$cardPaymentSelectionItem.find('.sds_SelectionList_Item_Content_Description')
 						.text(self.i18n.active().billing.paymentMethod.options.card.creditCardDescription);
 				}
@@ -623,6 +642,12 @@ define(function(require) {
 					], callback);
 				},
 				paymentTypeChange = function(value) {
+					$template.find('.no-payment-available-small-notices')
+						.removeClass('no-payment-available-small-notices-ach')
+						.removeClass('no-payment-available-small-notices-card')
+						.removeClass('no-payment-available-small-notices-none')
+						.addClass('no-payment-available-small-notices-' + value);
+
 					if (value === 'none') {
 						$paymentContent
 							.find('.payment-type-content')
