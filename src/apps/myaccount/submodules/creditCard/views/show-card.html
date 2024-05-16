@@ -12,6 +12,7 @@
 			<td class="show-card-label">{{i18n.creditCard.show.expirationDate}}</td>
 			<td class="show-card-value">{{expirationDate}}</td>
 		</tr>
+	{{#unless expiredMode}}
 		<tr class="show-card-row">
 			<td colspan="2">
 				<button id="credit_card_delete" class="monster-button-danger">
@@ -19,5 +20,6 @@
 				</button>
 			</td>
 		</tr>
+	{{/unless}}
 	</tbody>
 </table>

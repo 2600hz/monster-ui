@@ -23,12 +23,13 @@ define(function(require) {
 		creditCardRender: function(args) {
 			var self = this,
 				expiredCardData = args.expiredCardData,
-				cards = args.cards;
+				cards = args.cards,
+				expiredMode = _.get(args, 'expiredMode', false);
 
 			self.appFlags.creditCard.container = args.container;
 			self.appFlags.creditCard.country = args.country;
 
-			if (_.isEmpty(cards) || !_.isEmpty(expiredCardData)) {
+			if (!expiredMode && (_.isEmpty(cards) || !_.isEmpty(expiredCardData))) {
 				self.creditCardRenderAdd(args);
 			} else {
 				self.creditCardRenderShow(args);
@@ -295,7 +296,8 @@ define(function(require) {
 
 		creditCardRenderShow: function(args) {
 			var self = this,
-				$container = args.container;
+				$container = args.container,
+				expiredMode = _.get(args, 'expiredMode', false);
 
 			if ($container.find('.show-card-content-wrapper').length > 0) {
 				return;
@@ -309,7 +311,8 @@ define(function(require) {
 						name: card.cardholder_name,
 						number: '**** **** **** ' + card.last_four,
 						cardType: card.type,
-						expirationDate: card.expiration_month + '/' + card.expiration_year.slice(-2)
+						expirationDate: card.expiration_month + '/' + card.expiration_year.slice(-2),
+						expiredMode: expiredMode
 					}
 				}));
 
