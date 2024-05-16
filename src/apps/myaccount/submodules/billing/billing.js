@@ -299,10 +299,8 @@ define(function(require) {
 						$countrySelector = $billingTemplate.find('#billing_contact_country'),
 						$stateSelector = $billingTemplate.find('#billing_contact_state_select'),
 						expiredCardData = _.get(results, 'billing.expired_card'),
-						hasCards = !_.chain(results)
-							.get('billing.credit_cards')
-							.isEmpty()
-							.value(),
+						cards = _.get(results, 'billing.credit_cards'),
+						hasCards = !_.isEmpty(cards),
 						isCardExpired = !_.isEmpty(expiredCardData),
 						country = _.get(results, 'account.contact.billing.country'),
 						region = _.get(results, 'account.contact.billing.region'),
@@ -441,21 +439,31 @@ define(function(require) {
 
 					// Display expired credit card notification if necessary
 					if (isCardExpired) {
-						var $paymentTypeContent = $billingTemplate.find('.card-expired');
-						$paymentTypeContent.removeClass('card-expired-hidden');
+						var $expiredCardPaymentTypeContent = $billingTemplate.find('.payment-type-content[data-payment-type="card-expired"]');
+						$expiredCardPaymentTypeContent.removeClass('payment-type-content-hidden');
+
+						self.creditCardRender({
+							container: $expiredCardPaymentTypeContent,
+							authorization: self.appFlags.billing.braintreeClientToken,
+							expiredCardData: expiredCardData,
+							expiredMode: true,
+							cards: cards,
+							country: country,
+							region: region
+						});
+					} else {
+						//select default payment
+						var className = '#myaccount_billing_payment_' + defaultPaymentType;
+
+						$billingTemplate
+							.find(className)
+								.prop('checked', true)
+								.trigger('change');
 					}
 
 					if (typeof args.callback === 'function') {
 						args.callback($billingTemplate);
 					}
-
-					//select default payment
-					var className = '#myaccount_billing_payment_' + defaultPaymentType;
-
-					$billingTemplate
-						.find(className)
-							.prop('checked', true)
-							.trigger('change');
 				});
 			});
 		},
