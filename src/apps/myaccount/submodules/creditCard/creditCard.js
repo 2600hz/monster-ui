@@ -297,6 +297,8 @@ define(function(require) {
 		creditCardRenderShow: function(args) {
 			var self = this,
 				$container = args.container,
+				country = args.country,
+				region = args.region,
 				expiredMode = _.get(args, 'expiredMode', false);
 
 			if ($container.find('.show-card-content-wrapper').length > 0) {
@@ -317,6 +319,11 @@ define(function(require) {
 				}));
 
 			$container.append($template);
+
+			if (!expiredMode && country === 'US' && _.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
+				$container.find('.no-card-available')
+					.removeClass('no-card-available-hidden');
+			}
 
 			monster.waterfall([
 				function createClientInstance(next) {

@@ -173,4 +173,20 @@
 			margin-left: 0.75rem;
 		}
 	}
+
+	.no-payment-available-small-notices {
+		margin-bottom: 1rem;
+
+		&.no-payment-available-small-notices-card .no-card-available {
+			display: none;
+		}
+
+		&.no-payment-available-small-notices-ach .no-ach-available {
+			display: none;
+		}
+	}
+
+	.no-card-available-hidden, .no-ach-available-hidden {
+		display: none;
+	}
 }
