@@ -49,7 +49,6 @@ define(function(require) {
 				})),
 				popup;
 
-			console.log(dataNumber);
 			monster.ui.validate(popupHtml, {
 				rules: {
 					notification_contact_emails: {

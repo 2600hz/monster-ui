@@ -108,7 +108,13 @@
 		"country": "Country",
 		"successE911": "Вы успешно обновили адрес вызова экстренных служб для номера {{phoneNumber}}",
 		"title": "Адрес для вызова экстренных служб",
-		"verifyLocation": "Проверьте адрес"
+		"verifyLocation": "Проверьте адрес",
+		"countries": {
+			"us": {
+				"value": "US",
+				"option": "United States"
+			}
+		}
 	},
 
 	"failover": {
