@@ -736,6 +736,12 @@
 			"youEntered": "You entered:",
 			"choicesAvailable": "Choices available:",
 			"content": "Several addresses matched the information you provided. Perhaps you didn't enter a street number or the building has multiple units."
+		},
+		"countries": {
+			"us": {
+				"value": "US",
+				"option": "United States"
+			}
 		}
 	},
 

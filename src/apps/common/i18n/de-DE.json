@@ -217,6 +217,12 @@
 			"youEntered": "Ihre Eingabe:",
 			"choicesAvailable": "Verfügbare Auswahl:",
 			"content": "Ihre Angaben passen zu mehreren Adressen. Vielleicht haben Sie keine Hausnummer angegeben oder das Haus besteht aus mehreren Gebäuden."
+		},
+		"countries": {
+			"us": {
+				"value": "US",
+				"option": "United States"
+			}
 		}
 	},
 
