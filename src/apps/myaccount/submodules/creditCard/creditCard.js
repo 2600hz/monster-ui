@@ -125,7 +125,7 @@ define(function(require) {
 					country: country
 				});
 
-				var isAgreementAccepted = false,
+				var isAgreementAccepted = country !== 'US',
 					isCardValid = false,
 					validateField = function(event) {
 						var field = event.fields[event.emittedBy];
@@ -143,9 +143,10 @@ define(function(require) {
 									.show();
 						}
 
-						// Re-validate expiration date if car number changes,
-						// because expirationDate is marked as invalid for debit card
-						if (event.emittedBy === 'number') {
+						// Re-validate expiration date if car number changes, as
+						// expirationDate may be marked as invalid for debit card
+						if (event.emittedBy === 'number'
+							&& $(event.fields.expirationDate.container).hasClass('monster-invalid')) {
 							validateField(_.assign({}, event, {
 								emittedBy: 'expirationDate'
 							}));

@@ -779,6 +779,7 @@ define(function(require) {
 				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
 				field.value = this.value;
 				field.changed = (this.value !== field.originalValue);
+				field.valid = !_.isEmpty(this.value);
 
 				self.billingEnableSubmitButton($template);
 				self.billingDisplayStateSelector({
@@ -803,6 +804,7 @@ define(function(require) {
 
 				field.value = state;
 				field.changed = (state !== field.originalValue);
+				field.valid = !_.isEmpty(state);
 
 				$stateInput.val(state);
 
@@ -921,7 +923,7 @@ define(function(require) {
 
 			$submitButton.prop('disabled', !billingHasPendingChanges);
 
-			self.creditCardBillingHasPendingChanges(billingHasPendingChanges);
+			self.creditCardBillingHasPendingChanges(hasFormChanged);
 			self.achBillingHasPendingChanges(billingHasPendingChanges);
 		},
 
