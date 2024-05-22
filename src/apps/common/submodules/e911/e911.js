@@ -49,6 +49,7 @@ define(function(require) {
 				})),
 				popup;
 
+			console.log(dataNumber);
 			monster.ui.validate(popupHtml, {
 				rules: {
 					notification_contact_emails: {
@@ -237,6 +238,13 @@ define(function(require) {
 		},
 
 		e911Normalize: function(data) {
+			var splitAddress = data.street_address.split(/\s/g);
+			data.caller_name = monster.apps.auth.currentAccount.name;
+			data.legacy_data = {
+				house_number: _.head(splitAddress)
+			};
+			data.street_address = splitAddress.slice(1).join(' ');
+
 			return _.merge({}, data, {
 				notification_contact_emails: _
 					.chain(data)

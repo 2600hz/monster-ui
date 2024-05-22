@@ -724,6 +724,7 @@
 		"postalCode": "Zip Code",
 		"rotatedText": "For emergency services",
 		"state": "State",
+		"country": "Country",
 		"successE911": "You successfully updated the e911 information of <br> {{phoneNumber}}",
 		"title": "E911 Information",
 		"verifyLocation": "Verify Location",
