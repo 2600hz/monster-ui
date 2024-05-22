@@ -37,16 +37,9 @@
 
 	"editSettings": "Edit",
 	"changesSaved": "Changes Saved!",
-	"placeholderName": "Jon Doe",
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Phone Number",
 	"placeholderNumber": "4152223333",
-	"placeholderAddress": "140 Geary St.",
-	"placeholderAddressLineTwo": "3rd Floor",
-	"placeholderCity": "San Francisco",
-	"placeholderState": "California",
-	"placeholderCountry": "United States",
-	"placeholderZipCode": "12345",
 
 	"walkthrough": {
 		"greetingsDialog": {
@@ -207,11 +200,11 @@
 			},
 			"region": {
 				"label": "State/Province/Region",
-				"placeholder": "California"
+				"placeholder": "Select state"
 			},
 			"country": {
 				"label": "Country",
-				"placeholder": "US"
+				"placeholder": "Select country"
 			},
 			"postalCode": {
 				"label": "Zip/Postal Code",
