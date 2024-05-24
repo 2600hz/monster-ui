@@ -262,11 +262,7 @@ define(function(require) {
 							}
 						},
 						error: function(data) {
-							callback(null, {
-								'accountToken': {
-									'client_token': null
-								}
-							});
+							callback(null, {});
 						}
 					});
 				}
