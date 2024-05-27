@@ -306,20 +306,7 @@ define(function(require) {
 				return;
 			}
 
-			var card = _.get(args, ['cards', 0]),
-				$template = $(self.getTemplate({
-					name: 'show-card',
-					submodule: 'creditCard',
-					data: {
-						name: card.cardholder_name,
-						number: '**** **** **** ' + card.last_four,
-						cardType: card.type,
-						expirationDate: card.expiration_month + '/' + card.expiration_year.slice(-2),
-						expiredMode: expiredMode
-					}
-				}));
-
-			$container.append($template);
+			var card = _.get(args, ['cards', 0]);
 
 			if (!expiredMode && country === 'US' && _.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
 				$container.find('.no-card-available')
@@ -353,11 +340,26 @@ define(function(require) {
 						next(err, clientInstance, vaultInstance, vaultCard);
 					});
 				}
-			], function(err, _clientInstance, _vaultInstance, _vaultCard) {
+			], function(err, _clientInstance, _vaultInstance, vaultCard) {
 				if (err) {
 					console.error(err);
 					return;
 				}
+
+				var $template = $(self.getTemplate({
+					name: 'show-card',
+					submodule: 'creditCard',
+					data: {
+						name: _.find([
+							card.cardholder_name,
+							_.get(vaultCard, 'details.cardholderName')
+						]),
+						number: '**** **** **** ' + card.last_four,
+						cardType: card.type,
+						expirationDate: card.expiration_month + '/' + card.expiration_year.slice(-2),
+						expiredMode: expiredMode
+					}
+				}));
 
 				$template.find('#credit_card_delete').on('click', function(event) {
 					event.preventDefault();
@@ -409,6 +411,8 @@ define(function(require) {
 						});
 					});
 				});
+
+				$container.append($template);
 			});
 		},
 

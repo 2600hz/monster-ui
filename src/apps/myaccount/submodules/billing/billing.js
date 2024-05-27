@@ -594,7 +594,7 @@ define(function(require) {
 
 		billingFormatData: function(data, callback) {
 			if (!_.isEmpty(data.billing.customer)) {
-				var creditCards = _.get(data, 'billing.customer.credit_cards', {});
+				var creditCards = _.get(data, 'billing.customer.credit_cards', []);
 				data.billing.customer.expired_card = _.find(creditCards, { 'default': true, 'expired': true }) || {};
 			}
 
