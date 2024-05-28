@@ -229,69 +229,30 @@ define(function(require) {
 						}
 					});
 				},
-				billing: function(callback) {
-					self.callApi({
-						resource: 'billing.get',
-						data: {
-							accountId: self.accountId,
-							generateError: false
-						},
-						success: function(data, status) {
-							callback(null, data.data);
-						},
-						error: function(data, status) {
-							/* For some people billing is not via braintree, but we still need to display the tab */
-							callback(null, {});
-						}
-					});
-				},
-				payment: function(callback) {
-					self.billingGetAccountToken({
-						success: function(data) {
-							if (monster.config.api.braintree && _.get(data, 'client_token')) {
-								self.getPaymentMethods({
-									success: function(paymentData) {
-										callback(null, { data: data, paymentData: paymentData });
-									},
-									error: function(errData) {
-										callback(null, {});
-									}
-								});
-							} else {
-								callback(null, {});
-							}
-						},
-						error: function(data) {
-							callback(null, {
-								'accountToken': {
-									'client_token': null
-								}
-							});
-						}
-					});
-				}
+				billing: _.bind(self.billingGetBillingData, self)
 			}, function(err, apiResults) {
 				if (err) {
 					return;
 				}
 
-				var results = _.merge(apiResults, args.data);
+				var results = _.merge(apiResults, args.data),
+					payments = _.get(results, 'billing.payments');
 
-				if (!_.isEmpty(results.payment.paymentData)) {
-					var payments = _.get(results, 'payment.paymentData'),
-						isAchDefault = _.some(payments, { 'default': true, 'type': 'ach' }),
+				if (_.isEmpty(payments)) {
+					self.appFlags.billing.defaultPaymentType = 'none';
+				} else {
+					var isAchDefault = _.some(payments, { 'default': true, 'type': 'ach' }),
 						isCreditDefault = _.some(payments, { 'default': true, 'expired': false, 'type': 'credit_card' });
 
-					if (isAchDefault || isCreditDefault) {
-						self.appFlags.billing.defaultPaymentType = isAchDefault ? 'ach' : 'card';
-					}
-
+					self.appFlags.billing.defaultPaymentType = isAchDefault
+						? 'ach'
+						: isCreditDefault
+							? 'card'
+							: 'none';
 					self.appFlags.billing.payments = payments;
-				} else {
-					self.appFlags.billing.defaultPaymentType = 'none';
 				}
 
-				self.appFlags.billing.braintreeClientToken = _.get(results, 'payment.data.client_token');
+				self.appFlags.billing.braintreeClientToken = _.get(results, 'billing.token.client_token');
 
 				self.billingFormatData(results, function(results) {
 					var $billingTemplate = $(self.getTemplate({
@@ -302,8 +263,8 @@ define(function(require) {
 						$billingContactForm = $billingTemplate.find('#form_billing'),
 						$countrySelector = $billingTemplate.find('#billing_contact_country'),
 						$stateSelector = $billingTemplate.find('#billing_contact_state_select'),
-						expiredCardData = _.get(results, 'billing.expired_card'),
-						cards = _.get(results, 'billing.credit_cards'),
+						expiredCardData = _.get(results, 'billing.customer.expired_card'),
+						cards = _.get(results, 'billing.customer.credit_cards'),
 						hasCards = !_.isEmpty(cards),
 						isCardExpired = !_.isEmpty(expiredCardData),
 						country = _.get(results, 'account.contact.billing.country'),
@@ -333,7 +294,7 @@ define(function(require) {
 
 					self.appFlags.billing.enabledPayments.card = hasCards;
 					self.appFlags.billing.enabledPayments.ach = _.chain(results)
-						.get('payment.paymentData', [])
+						.get('billing.payments', [])
 						.some({ type: 'ach' })
 						.value();
 
@@ -460,7 +421,7 @@ define(function(require) {
 							country: country,
 							region: region
 						});
-					} else {
+					} else if (defaultPaymentType !== 'none') {
 						//select default payment
 						var className = '#myaccount_billing_payment_' + defaultPaymentType;
 
@@ -475,6 +436,61 @@ define(function(require) {
 					}
 				});
 			});
+		},
+
+		billingGetBillingData: function(callback) {
+			var self = this;
+
+			if (!monster.util.isReseller()) {
+				return callback(null, {});
+			}
+
+			monster.waterfall([
+				function getBillingCustomer(next) {
+					self.callApi({
+						resource: 'billing.get',
+						data: {
+							accountId: self.accountId,
+							generateError: false
+						},
+						success: function(data) {
+							next(null, { customer: data.data });
+						},
+						error: function() {
+							/* For some people billing is not via braintree, but we still need to display the tab */
+							next(null, {});
+						}
+					});
+				},
+				function getCustomerToken(mainData, next) {
+					if (!monster.config.api.braintree) {
+						return next(null, mainData);
+					}
+
+					self.billingGetAccountToken({
+						success: function(data) {
+							next(null, _.assign({}, mainData, { token: data }));
+						},
+						error: function() {
+							next(null, mainData);
+						}
+					});
+				},
+				function getBraintreePaymentMethods(mainData, next) {
+					if (!monster.config.api.braintree || !_.get(mainData, 'token.client_token')) {
+						return next(null, mainData);
+					}
+
+					self.getPaymentMethods({
+						success: function(payments) {
+							next(null, _.assign({}, mainData, { payments: payments }));
+						},
+						error: function() {
+							next(null, mainData);
+						}
+					});
+				}
+			], callback);
 		},
 
 		billingEnablePaymentSection: function($billingTemplate, changedFieldName) {
@@ -577,9 +593,9 @@ define(function(require) {
 		},
 
 		billingFormatData: function(data, callback) {
-			if (!_.isEmpty(data.billing)) {
-				var creditCards = _.get(data, 'billing.credit_cards', {});
-				data.billing.expired_card = _.find(creditCards, { 'default': true, 'expired': true }) || {};
+			if (!_.isEmpty(data.billing.customer)) {
+				var creditCards = _.get(data, 'billing.customer.credit_cards', []);
+				data.billing.customer.expired_card = _.find(creditCards, { 'default': true, 'expired': true }) || {};
 			}
 
 			if (_.has(data.account, 'contact.billing.name')) {
@@ -605,8 +621,16 @@ define(function(require) {
 				$paymentContent = $template.find('.payment-content'),
 				$paymentMethodRadioGroup = $template.find('input[type="radio"][name="payment_method"]'),
 				$submitButton = $template.find('#myaccount_billing_save'),
-				cards = _.get(data, 'billing.credit_cards'),
-				expiredCardData = _.get(data, 'billing.expired_card'),
+				cards = _.get(data, 'billing.customer.credit_cards'),
+				expiredCardData = _.get(data, 'billing.customer.expired_card'),
+				achData = {
+					account: data.account,
+					billing: data.billing.customer,
+					payment: {
+						data: data.billing.token,
+						paymentData: data.billing.payments
+					}
+				},
 				updateCallback = function(callback) {
 					// Add here any steps to do after billing contact update
 					var defaultPaymentType = self.appFlags.billing.defaultPaymentType,
@@ -686,7 +710,7 @@ define(function(require) {
 
 					if (value === 'ach') {
 						self.achRenderSection({
-							data: data,
+							data: achData,
 							container: $template.find('.payment-type-content[data-payment-type="ach"]'),
 							expiredCardData: expiredCardData,
 							preSubmitCallback: function(next) {
@@ -779,12 +803,13 @@ define(function(require) {
 				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
 				field.value = this.value;
 				field.changed = (this.value !== field.originalValue);
+				field.valid = !field.required || !_.isEmpty(this.value);
 
-				self.billingEnableSubmitButton($template);
 				self.billingDisplayStateSelector({
 					template: $template,
 					countryCode: this.value
 				});
+				self.billingEnableSubmitButton($template);
 				self.billingCreditCardUpdateSurcharge({
 					template: $template,
 					countryCode: this.value,
@@ -803,6 +828,7 @@ define(function(require) {
 
 				field.value = state;
 				field.changed = (state !== field.originalValue);
+				field.valid = !field.required || !_.isEmpty(state);
 
 				$stateInput.val(state);
 
@@ -842,7 +868,28 @@ define(function(require) {
 				$regionSelectorChosen = $template.find('#billing_contact_state_select_chosen'),
 				countryCode = args.countryCode,
 				initial = _.get(args, 'initial', false),
-				regionField = self.appFlags.billing.billingContactFields['contact.billing.region'];
+				regionField = self.appFlags.billing.billingContactFields['contact.billing.region'],
+				getStateCode = function(value) {
+					var lowerCaseValue = value.toLowerCase(),
+						countries = $regionSelector.find('option').map(function(_i, item) {
+							var $item = $(item);
+
+							return {
+								code: $item.attr('value').toLowerCase(),
+								name: $item.text().toLowerCase()
+							};
+						}).get();
+
+					return _.chain(countries)
+						.filter(function(country) {
+							return country.code === lowerCaseValue || country.name === lowerCaseValue;
+						})
+						.map(function(country) {
+							return country.code.toUpperCase();
+						})
+						.head()
+						.value();
+				};
 
 			if (countryCode === 'US') {
 				if (initial || $stateInput.is(':visible')) {
@@ -850,11 +897,21 @@ define(function(require) {
 					$regionSelectorChosen.show();
 
 					if (!initial) {
-						var value = $regionSelector.val();
+						var textValue = $stateInput.val(),
+							countryCode = getStateCode(textValue),
+							value;
+
+						if (countryCode) {
+							value = countryCode;
+							$regionSelector.val(value).trigger('chosen:updated');
+						} else {
+							value = $regionSelector.val();
+						}
+
 						$stateInput.val(value);
 						regionField.value = value;
 						regionField.changed = (regionField.originalValue !== value);
-						regionField.valid = !_.isEmpty(value);
+						regionField.valid = !regionField.required || !_.isEmpty(value);
 					}
 				}
 			} else {
@@ -866,7 +923,7 @@ define(function(require) {
 						$stateInput.val('');
 						regionField.value = '';
 						regionField.changed = (regionField.originalValue !== '');
-						regionField.valid = false;
+						regionField.valid = !regionField.required;
 					}
 				}
 			}
@@ -921,7 +978,7 @@ define(function(require) {
 
 			$submitButton.prop('disabled', !billingHasPendingChanges);
 
-			self.creditCardBillingHasPendingChanges(billingHasPendingChanges);
+			self.creditCardBillingHasPendingChanges(hasFormChanged);
 			self.achBillingHasPendingChanges(billingHasPendingChanges);
 		},
 
