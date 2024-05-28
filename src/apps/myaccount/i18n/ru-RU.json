@@ -11,16 +11,9 @@
 
 	"editSettings": "Редактировать",
 	"changesSaved": "Изменения сохранены!",
-	"placeholderFullName": "Jon Doe",
 	"placeholderEmail": "jon_doe@company.com",
 	"phoneNumber": "Телефонный номер",
 	"placeholderNumber": "74951111111",
-	"placeholderAddress": "140 Geary St.",
-	"placeholderAddressLineTwo": "3rd Floor",
-	"placeholderCity": "San Francisco",
-	"placeholderState": "California",
-	"placeholderCountry": "United States",
-	"placeholderZipCode": "12345",
 
 	"walkthrough": {
 		"greetingsDialog": {
