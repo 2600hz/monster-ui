@@ -283,7 +283,8 @@ define(function(require) {
 								number: '**** **** **** ' + bankData.account_number_last_4,
 								type: _.upperFirst(bankData.account_type),
 								name: bankData.bank_name,
-								billingHasPendingChanges: self.appFlags.ach.billingHasPendingChanges
+								billingHasPendingChanges: self.appFlags.ach.billingHasPendingChanges,
+								isAwaitingSettlement: _.get(args, 'data.account.braintree.verification_submitted')
 							}
 						})),
 						$verifyAccountButton = template.find('#verify_account'),
@@ -361,8 +362,8 @@ define(function(require) {
 										verificationId: _.get(bankData, 'verification_id'),
 										data: {
 											deposits: [
-												Math.floor(verificationAmounts.deposit_amount_1),
-												Math.floor(verificationAmounts.deposit_amount_2)
+												Math.floor(verificationAmounts.deposit_amount_1 * 100),
+												Math.floor(verificationAmounts.deposit_amount_2 * 100)
 											]
 										}
 									},
