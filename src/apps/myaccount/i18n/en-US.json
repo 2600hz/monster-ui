@@ -305,6 +305,9 @@
 				"verified": "Verified"
 			}
 		},
+		"awaitingSettlement": {
+                	"description": "We have confirmed the deposit amounts. Please check again later."
+              	},
 		"addFailure": "Unable to store this bank account information",
 		"addSuccess": "Bank account was succesfully stored",
 		"removeSuccess": "Verified bank account and payment method removed.",
