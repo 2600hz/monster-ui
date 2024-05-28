@@ -803,13 +803,13 @@ define(function(require) {
 				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
 				field.value = this.value;
 				field.changed = (this.value !== field.originalValue);
-				field.valid = !_.isEmpty(this.value);
+				field.valid = !field.required || !_.isEmpty(this.value);
 
-				self.billingEnableSubmitButton($template);
 				self.billingDisplayStateSelector({
 					template: $template,
 					countryCode: this.value
 				});
+				self.billingEnableSubmitButton($template);
 				self.billingCreditCardUpdateSurcharge({
 					template: $template,
 					countryCode: this.value,
@@ -828,7 +828,7 @@ define(function(require) {
 
 				field.value = state;
 				field.changed = (state !== field.originalValue);
-				field.valid = !_.isEmpty(state);
+				field.valid = !field.required || !_.isEmpty(state);
 
 				$stateInput.val(state);
 
@@ -911,7 +911,7 @@ define(function(require) {
 						$stateInput.val(value);
 						regionField.value = value;
 						regionField.changed = (regionField.originalValue !== value);
-						regionField.valid = !_.isEmpty(value);
+						regionField.valid = !regionField.required || !_.isEmpty(value);
 					}
 				}
 			} else {
@@ -923,7 +923,7 @@ define(function(require) {
 						$stateInput.val('');
 						regionField.value = '';
 						regionField.changed = (regionField.originalValue !== '');
-						regionField.valid = false;
+						regionField.valid = !regionField.required;
 					}
 				}
 			}
