@@ -361,8 +361,8 @@ define(function(require) {
 										verificationId: _.get(bankData, 'verification_id'),
 										data: {
 											deposits: [
-												Math.floor(verificationAmounts.deposit_amount_1),
-												Math.floor(verificationAmounts.deposit_amount_2)
+												Math.floor(verificationAmounts.deposit_amount_1 * 100),
+												Math.floor(verificationAmounts.deposit_amount_2 * 100)
 											]
 										}
 									},
