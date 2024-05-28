@@ -11,16 +11,9 @@
 
 	"editSettings": "Bewerk",
 	"changesSaved": "Wijzigingen Opgeslagen!",
-	"placeholderName": "Jon Doe",
 	"placeholderEmail": "jon_doe@yumminova.eu",
 	"phoneNumber": "Telefoonnummer",
 	"placeholderNumber": "+31222xxxxxx",
-	"placeholderAddress": "140 Geary St.",
-	"placeholderAddressLineTwo": "3rd Floor",
-	"placeholderCity": "San Francisco",
-	"placeholderState": "California",
-	"placeholderCountry": "United States",
-	"placeholderZipCode": "12345",
 
 	"user": {
 		"title": "Gebruiker",

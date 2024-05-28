@@ -1,5 +1,5 @@
 <div class="billing-content-wrapper">
-	<div id="myaccount_billing_loading_overlay" class="billing-body-loading-overlay">
+	<div id="myaccount_billing_loading_overlay" class="billing-body-loading-overlay billing-body-loading-overlay-hidden">
 		<i class="icon-telicon-loading-circle monster-loading-spinner"></i>
 	</div>
 	<div class="billing-body">
@@ -83,7 +83,7 @@
 				</div>
 			</li>
 
-			{{#if payment.data.client_token }}
+		{{#if billing.token.client_token }}
 			<li class="settings-item clearfix open always-open" data-name="credit_card">
 				<div class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
@@ -152,7 +152,7 @@
 					</div>
 				</div>
 			</li>
-			{{/if}}
+		{{/if}}
 		</ul>
 	</div>
 	<div class="billing-footer">
