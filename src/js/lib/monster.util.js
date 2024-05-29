@@ -1151,7 +1151,7 @@ define(function(require) {
 		}
 		var pathToFeatures = _.find([
 			'metadata.features.available',
-			'features'
+			'features_available'
 		], function(path) {
 			return _.has(number, path);
 		});
