@@ -205,7 +205,6 @@
 		"postalCode": "PLZ",
 		"rotatedText": "Für Notdienste",
 		"state": "Bundesland/Kanton",
-		"country": "Country",
 		"successE911": "Sie haben die e911-Adresse von <br> {{phoneNumber}} erfolgreich aktualisiert",
 		"title": "E911-Adresse",
 		"verifyLocation": "Standort prüfen",
@@ -217,12 +216,6 @@
 			"youEntered": "Ihre Eingabe:",
 			"choicesAvailable": "Verfügbare Auswahl:",
 			"content": "Ihre Angaben passen zu mehreren Adressen. Vielleicht haben Sie keine Hausnummer angegeben oder das Haus besteht aus mehreren Gebäuden."
-		},
-		"countries": {
-			"us": {
-				"value": "US",
-				"option": "United States"
-			}
 		}
 	},
 
