@@ -302,7 +302,8 @@
 			},
 			"status": {
 				"pending": "Verification pending...",
-				"verified": "Verified"
+				"verified": "Verified",
+				"failed": "Failed"
 			}
 		},
 		"awaitingSettlement": {
@@ -316,6 +317,13 @@
 		"verificationFailure": {
 			"title": "Incorrect Amount(s)",
 			"message": "The amounts provided above do NOT match the verification records. Please double check your inputs below and try again. You have up to 4 attempts."
+		},
+		"verificationDeclined": {
+			"title": "Bank account cannot be verified",
+			"message": {
+				"gateway_rejected": "You have reached the maximum amount of confirmation attempts",
+              	"processor_declined": "Verification was declined by the processor"
+			}
 		}
 	},
 
