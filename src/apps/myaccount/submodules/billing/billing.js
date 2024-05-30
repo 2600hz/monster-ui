@@ -969,18 +969,20 @@ define(function(require) {
 				function braintreeAchStatus(usBankAccountErr, usBankAccountInstance, bankData, next) {
 					if (_.isEmpty(bankData)) {
 						next(null, usBankAccountErr, usBankAccountInstance, bankData, []);
-					} else {
-						var newBankData = _.head(bankData);
-
-						self.getVerificationStatus({
-							data: {
-								verificationId: _.get(newBankData, 'verification_id')
-							},
-							success: function(statusData) {
-								next(null, usBankAccountErr, usBankAccountInstance, newBankData, statusData);
-							}
-						});
+						return;
 					}
+
+					var newBankData = _.head(bankData);
+
+					self.getVerificationStatus({
+						data: {
+							verificationId: _.get(newBankData, 'verification_id')
+						},
+						success: function(statusData) {
+							statusData.status = 'processor_declined';
+							next(null, usBankAccountErr, usBankAccountInstance, newBankData, statusData);
+						}
+					});
 				}
 			], next);
 		},
@@ -994,18 +996,24 @@ define(function(require) {
 					setBadgeStatus = function() {
 						var currentStatus = _.get(statusData, 'status');
 
-						if (['pending', 'verified'].indexOf(currentStatus) > -1) {
-							var classStatusName = currentStatus === 'pending'
-									? 'sds_Badge_Yellow'
-									: 'sds_Badge_Green',
-								className = 'sds_Badge ' + classStatusName,
-								badgeText = currentStatus === 'pending'
-									? self.i18n.active().achDirectDebit.achVerification.status.pending
-									: self.i18n.active().achDirectDebit.achVerification.status.verified;
-
-							$statusBadge.addClass(className);
-							$statusBadge.text(badgeText);
+						if (!currentStatus) {
+							return;
 						}
+
+						var classStatusName = currentStatus === 'pending'
+								? 'sds_Badge_Yellow'
+								: currentStatus === 'verified'
+									? 'sds_Badge_Green'
+									: 'sds_Badge_Red',
+							className = 'sds_Badge ' + classStatusName,
+							badgeText = currentStatus === 'pending'
+								? self.i18n.active().achDirectDebit.achVerification.status.pending
+								: currentStatus === 'verified'
+									? self.i18n.active().achDirectDebit.achVerification.status.verified
+									: self.i18n.active().achDirectDebit.achVerification.status.failed;
+
+						$statusBadge.addClass(className);
+						$statusBadge.text(badgeText);
 					};
 
 				setBadgeStatus();
