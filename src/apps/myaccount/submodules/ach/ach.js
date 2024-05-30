@@ -111,13 +111,12 @@ define(function(require) {
 					return;
 				}
 
-				if (!_.isEmpty(bankData) && _.get(statusData, 'status') === 'verified') {
-					self.achRenderShowBank(_.merge({}, args, {
-						data: {
-							bankData: bankData
-						}
-					}));
-				}
+				self.achRenderShowBank(_.merge({}, args, {
+					data: {
+						bankData: bankData,
+						status: _.get(statusData, 'status')
+					}
+				}));
 			});
 		},
 
@@ -425,6 +424,7 @@ define(function(require) {
 			var self = this,
 				container = args.container,
 				data = args.data,
+				status = data.status,
 				bankData = data.bankData,
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
@@ -433,7 +433,8 @@ define(function(require) {
 							data: {
 								number: '**** **** **** ' + bankData.account_number_last_4,
 								type: _.upperFirst(bankData.account_type),
-								name: bankData.bank_name
+								name: bankData.bank_name,
+								status: status
 							}
 						})),
 						$removeAccountButton = template.find('#remove_account'),
@@ -442,8 +443,13 @@ define(function(require) {
 					self.appFlags.ach.buttonName = null;
 
 					//set badge status
-					$statusBadge.addClass('sds_Badge sds_Badge_Green');
-					$statusBadge.text(self.i18n.active().achDirectDebit.achVerification.status.verified);
+					if (status === 'verified') {
+						$statusBadge.addClass('sds_Badge sds_Badge_Green');
+						$statusBadge.text(self.i18n.active().achDirectDebit.achVerification.status.verified);
+					} else {
+						$statusBadge.addClass('sds_Badge sds_Badge_Red');
+						$statusBadge.text(self.i18n.active().achDirectDebit.achVerification.status.failed);
+					}
 
 					container
 						.removeClass('payment-type-content-hidden')
