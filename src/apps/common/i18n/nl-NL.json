@@ -107,16 +107,9 @@
 		"postalCode": "Postcode",
 		"rotatedText": "Voor alarmdiensten",
 		"state": "Provincie",
-		"country": "Country",
 		"successE911": "U werkte met succes het 112 alarmdienst adres bij voor {{phoneNumber}}",
 		"title": "112 Adres",
-		"verifyLocation": "Check de Locatie",
-		"countries": {
-			"us": {
-				"value": "US",
-				"option": "United States"
-			}
-		}
+		"verifyLocation": "Check de Locatie"
 	},
 
 	"failover": {
