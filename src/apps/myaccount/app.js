@@ -162,11 +162,7 @@ define(function(require) {
 					trunking: ['inbound', 'outbound'],
 					misc: ['errorTracker']
 				},
-				_callback = function(billing, uiRestrictions) {
-					if (_.isEmpty(billing)) {
-						uiRestrictions.billing.show_tab = false;
-					}
-
+				_callback = function(uiRestrictions) {
 					uiRestrictions.categories = {};
 
 					for (var i in categories) {
@@ -189,21 +185,7 @@ define(function(require) {
 
 			self._UIRestrictionsCompatibility({
 				restrictions: restrictions,
-				callback: function(uiRestrictions) {
-					self.callApi({
-						resource: 'billing.get',
-						data: {
-							accountId: self.accountId,
-							generateError: false
-						},
-						success: function(data, status) {
-							_callback(data.data, uiRestrictions);
-						},
-						error: function(data, status) {
-							_callback({}, uiRestrictions);
-						}
-					});
-				}
+				callback: _callback
 			});
 		},
 
