@@ -1036,7 +1036,6 @@ define(function(require) {
 							verificationId: _.get(newBankData, 'verification_id')
 						},
 						success: function(statusData) {
-							statusData.status = 'processor_declined';
 							next(null, usBankAccountErr, usBankAccountInstance, newBankData, statusData);
 						}
 					});
