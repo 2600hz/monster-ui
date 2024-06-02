@@ -1,0 +1,16 @@
+<div id="myaccount_creditcard_disclaimer_dialog" class="clearfix">
+	<div class="disclaimer-dialog-notice">
+		{{{i18n.creditCard.surchargeNotice}}}
+		<br/><br/>
+		{{{i18n.creditCard.disclaimer.message}}}
+	</div>
+	<div class="disclaimer-dialog-agreement">
+		{{#monsterCheckbox "raw-label" i18n.creditCard.add.agreement}}
+			<input type="checkbox" name="credit_card_accept_agreement" />
+		{{/monsterCheckbox}}
+	</div>
+	<div class="disclaimer-dialog-footer">
+		<button id="myaccount_creditcard_disclaimer_accept" type="button" class="monster-button-primary monster-button-small pull-right" disabled>{{i18n.creditCard.disclaimer.saveAndContinue}}</button>
+		<button id="myaccount_creditcard_disclaimer_payments" type="button" class="monster-button-small pull-right">{{i18n.creditCard.disclaimer.updatePaymentMethod}}</button>
+	</div>
+</div>

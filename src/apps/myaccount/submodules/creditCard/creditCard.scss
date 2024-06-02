@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 #myaccount .myaccount-content .billing-content-wrapper .billing-body {
 	.add-card-content-wrapper {
 		position: relative;
@@ -75,6 +77,40 @@
 		}
 		.monster-button-danger {
 			margin-top: 1rem;
+		}
+	}
+}
+
+.myaccount-creditcard-dialog {
+	.disclaimer-dialog-title {
+		background-color: var(--sds_theme_color_warning);
+	}
+	.svg-icon {
+		float: left;
+		padding-top: 0.75rem;
+		padding-right: 0.5rem;
+	}
+
+	#myaccount_creditcard_disclaimer_dialog {
+		max-width: 560px;
+		padding: 1rem;
+
+		.disclaimer-dialog-notice {
+			margin-bottom: 1rem;
+		}
+
+		.disclaimer-dialog-agreement {
+			margin-bottom: 1rem;
+
+			a {
+				color: $primary-color;
+			}
+		}
+
+		.disclaimer-dialog-footer {
+			.monster-button-small {
+				margin-left: 0.5rem;
+			}
 		}
 	}
 }
