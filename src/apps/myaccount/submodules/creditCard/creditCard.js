@@ -552,6 +552,125 @@ define(function(require) {
 					args.hasOwnProperty('error') && args.error(parsedError);
 				}
 			});
+		},
+
+		creditCardCheckStatus: function() {
+			var self = this,
+				isReseller = monster.util.isReseller(),
+				isMasquerading = monster.util.isMasquerading(),
+				isAdmin = monster.util.isAdmin();
+
+			if (!isReseller || isMasquerading || !isAdmin) {
+				return;
+			}
+
+			monster.parallel({
+				account: function(next) {
+					self.callApi({
+						resource: 'account.get',
+						data: {
+							accountId: self.accountId
+						},
+						success: function(data) {
+							next(null, data.data);
+						},
+						error: function() {
+							next(true);
+						}
+					});
+				},
+				billing: function(next) {
+					self.callApi({
+						resource: 'billing.get',
+						data: {
+							accountId: self.accountId,
+							generateError: false
+						},
+						success: function(data) {
+							next(null, data.data);
+						},
+						error: function() {
+							next(true);
+						}
+					});
+				}
+			}, function(err, results) {
+				if (err) {
+					return;
+				}
+
+				var account = results.account,
+					billing = results.billing,
+					isSurchargeAccepted = !!_.get(account, ['braintree', 'surcharge_accepted']),
+					hasCreditCards = !_.chain(billing).get('credit_cards', []).isEmpty().value(),
+					country = _.get(account, ['contact', 'billing', 'country']),
+					region = _.get(account, ['contact', 'billing', 'region']),
+					surcharge = self.billingGetCreditCardSurcharge(country, region);
+
+				if (!hasCreditCards || isSurchargeAccepted || country !== 'US') {
+					return;
+				}
+
+				var $template = $(self.getTemplate({
+						name: 'disclaimerDialog',
+						submodule: 'creditCard'
+					})),
+					$acceptButton = $template.find('#myaccount_creditcard_disclaimer_accept'),
+					$dialog = monster.ui.dialog($template, {
+						dialogClass: 'myaccount-creditcard-dialog',
+						title: self.i18n.active().creditCard.disclaimer.title,
+						isPersistent: true,
+						hideClose: true,
+						closeOnEscape: false
+					}),
+					$icon = monster.ui.getSvgIconTemplate({ id: 'telicon2--warning--triangle' });
+
+				if (surcharge) {
+					$template.find('.disclaimer-dialog-notice span').text(surcharge);
+				}
+
+				$template.find('input[name="credit_card_accept_agreement"]')
+					.on('change', function() {
+						$acceptButton.prop('disabled', !this.checked);
+					});
+
+				$acceptButton.on('click', function() {
+					var now = moment().toDate(),
+						timestamp = monster.util.dateToGregorian(now),
+						updatedAccount = _.merge({}, account, {
+							braintree: {
+								surcharge_accepted: timestamp
+							}
+						});
+
+					self.callApi({
+						resource: 'account.update',
+						data: {
+							accountId: updatedAccount.id,
+							data: updatedAccount
+						},
+						success: function() {
+							$dialog.dialog('close');
+						},
+						error: function() {
+							$dialog.dialog('close');
+						}
+					});
+				});
+
+				$template.find('#myaccount_creditcard_disclaimer_payments')
+					.on('click', function() {
+						$dialog.dialog('close');
+						self.showSubmodule({
+							module: 'billing'
+						});
+					});
+
+				$dialog
+					.siblings('.ui-dialog-titlebar')
+						.addClass('disclaimer-dialog-title')
+						.prepend($icon);
+			});
 		}
 	};
 
