@@ -616,6 +616,7 @@ define(function(require) {
 						submodule: 'creditCard'
 					})),
 					$acceptButton = $template.find('#myaccount_creditcard_disclaimer_accept'),
+					$checkbox = $template.find('input[name="credit_card_accept_agreement"]'),
 					$dialog = monster.ui.dialog($template, {
 						dialogClass: 'myaccount-creditcard-dialog',
 						title: self.i18n.active().creditCard.disclaimer.title,
@@ -629,10 +630,9 @@ define(function(require) {
 					$template.find('.disclaimer-dialog-notice span').text(surcharge);
 				}
 
-				$template.find('input[name="credit_card_accept_agreement"]')
-					.on('change', function() {
-						$acceptButton.prop('disabled', !this.checked);
-					});
+				$checkbox.on('change', function() {
+					$acceptButton.prop('disabled', !this.checked);
+				});
 
 				$acceptButton.on('click', function() {
 					var now = moment().toDate(),
@@ -642,6 +642,9 @@ define(function(require) {
 								surcharge_accepted: timestamp
 							}
 						});
+
+					$acceptButton.prop('disabled', true);
+					$checkbox.prop('disabled', true);
 
 					self.callApi({
 						resource: 'account.update',
