@@ -260,6 +260,8 @@ define(function(require) {
 						self.updateWalkthroughFlagUser();
 					});
 				}
+
+				self.creditCardCheckStatus();
 			}
 		},
 
