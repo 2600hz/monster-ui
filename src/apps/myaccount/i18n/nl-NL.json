@@ -209,6 +209,9 @@
 				"verified": "Verified"
 			}
 		},
+		"awaitingSettlement": {
+			"description": "We have confirmed the deposit amounts. Please check again later."
+		},
 		"addFailure": "Unable to store this bank account information",
 		"addSuccess": "Bank account was succesfully stored",
 		"removeSuccess": "Verified bank account and payment method removed.",
@@ -217,6 +220,13 @@
 		"verificationFailure": {
 			"title": "Incorrect Amount(s)",
 			"message": "The amounts provided above do NOT match the verification records. Please double check your inputs below and try again. You have up to 4 attempts."
+		},
+		"verificationDeclined": {
+			"title": "Bank account cannot be verified",
+			"message": {
+				"gateway_rejected": "You have reached the maximum amount of confirmation attempts",
+              	"processor_declined": "Verification was declined by the processor"
+			}
 		}
 	},
 
@@ -253,7 +263,13 @@
 		"removeSuccess": "Credit card ending in {{variable}} removed as payment method.",
 		"removeFailure": "Failed to remove credit card ending in {{variable}} as payment method.",
 		"surchargeNotice": "NOTICE: We impose a surcharge of up to <span>2.6</span>% of the transaction amount on Visa and Mastercard credit card products, which is not greater than our cost of acceptance, in states where such surcharges are permitted.",
-		"debitCardError": "We do not accept debit card payments. Please use ACH, or a Visa/Mastercard credit card."
+		"debitCardError": "We do not accept debit card payments. Please use ACH, or a Visa/Mastercard credit card.",
+		"disclaimer": {
+			"title": "Changes to credit card payments",
+			"message": "In order to continue using your current credit card as a valid payment method, you must acknowledge and agree to this surcharge. If not, you will need to update to a different payment method.",
+			"updatePaymentMethod": "Update payment method",
+			"saveAndContinue": "Save & continue"
+		}
 	},
 
 	"trunks": {
