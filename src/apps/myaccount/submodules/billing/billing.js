@@ -1185,9 +1185,9 @@ define(function(require) {
 
 			delete updatedAccount.contact.billing.region_select;
 
-			if (surchargeAccepted === '') {
+			if (surchargeAccepted === 'delete') {
 				_.unset(updatedAccount, ['braintree', 'surcharge_accepted']);
-			} else {
+			} else if (surchargeAccepted) {
 				updatedAccount.braintree = _.merge({}, updatedAccount.braintree, {
 					surcharge_accepted: surchargeAccepted
 				});
