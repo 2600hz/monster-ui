@@ -590,7 +590,7 @@
 				'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/match_lists/{matchListId}' }
 			},
 			configs: {
-				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/configs/kazoo_endpoint'}
+				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/configs/{endpoint}' }
 			}
 		},
 		authTokens = {};
