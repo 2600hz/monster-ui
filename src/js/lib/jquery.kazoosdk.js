@@ -576,6 +576,17 @@
 				'deleteNotification': { verb: 'DELETE', url: 'accounts/{accountId}/notifications/{notificationId}' },
 				'getDnsEntries': { verb: 'GET', url: 'accounts/{accountId}/whitelabel/domains' },
 				'checkDnsEntries': { verb: 'POST', url: 'accounts/{accountId}/whitelabel/domains?domain={domain}&use_tcp={useTcp}' }
+			},
+			matchList: {
+				'list': { 'verb': 'GET', 'url': 'accounts/{accountId}/match_lists/' },
+				'create': { 'verb': 'PUT', 'url': 'accounts/{accountId}/match_lists' },
+				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
+				'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
+				'patch': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
+				'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/match_lists/{matchListId}' }
+			},
+			configs: {
+				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/configs/kazoo_endpoint'}
 			}
 		},
 		authTokens = {};
