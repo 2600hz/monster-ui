@@ -588,6 +588,9 @@
 				'update': { 'verb': 'POST', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
 				'patch': { 'verb': 'PATCH', 'url': 'accounts/{accountId}/match_lists/{matchListId}' },
 				'delete': { 'verb': 'DELETE', 'url': 'accounts/{accountId}/match_lists/{matchListId}' }
+			},
+			configs: {
+				'get': { 'verb': 'GET', 'url': 'accounts/{accountId}/configs/kazoo_endpoint'}
 			}
 		},
 		authTokens = {};
