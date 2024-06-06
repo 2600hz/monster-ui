@@ -605,26 +605,32 @@ define(function(require) {
 					hasCreditCards = !_.chain(billing).get('credit_cards', []).isEmpty().value(),
 					country = _.get(account, ['contact', 'billing', 'country']),
 					region = _.get(account, ['contact', 'billing', 'region']),
-					surcharge = self.billingGetCreditCardSurcharge(country, region);
+					surcharge = self.billingGetCreditCardSurcharge(country, region),
+					isCardAccepted = !!surcharge;
 
-				if (!hasCreditCards || isSurchargeAccepted || country !== 'US') {
+				if (!hasCreditCards || country !== 'US' || (isCardAccepted && isSurchargeAccepted)) {
 					return;
 				}
 
 				var $template = $(self.getTemplate({
 						name: 'disclaimerDialog',
-						submodule: 'creditCard'
+						submodule: 'creditCard',
+						data: {
+							isCardAccepted: isCardAccepted
+						}
 					})),
 					$acceptButton = $template.find('#myaccount_creditcard_disclaimer_accept'),
 					$checkbox = $template.find('input[name="credit_card_accept_agreement"]'),
 					$dialog = monster.ui.dialog($template, {
-						dialogClass: 'myaccount-creditcard-dialog',
-						title: self.i18n.active().creditCard.disclaimer.title,
+						dialogClass: isCardAccepted ? 'myaccount-creditcard-dialog' : 'myaccount-creditcard-dialog-no-card',
+						title: self.i18n.active().creditCard.disclaimer[isCardAccepted ? 'title' : 'noCardTitle'],
 						isPersistent: true,
 						hideClose: true,
-						closeOnEscape: false
+						closeOnEscape: !isCardAccepted
 					}),
-					$icon = monster.ui.getSvgIconTemplate({ id: 'telicon2--warning--triangle' });
+					$icon = isCardAccepted
+						? monster.ui.getSvgIconTemplate({ id: 'telicon2--warning--triangle' })
+						: monster.ui.getSvgIconTemplate({ id: 'telicon2--x--circle' });
 
 				if (surcharge) {
 					$template.find('.disclaimer-dialog-notice span').text(surcharge);
@@ -667,6 +673,11 @@ define(function(require) {
 						self.showSubmodule({
 							module: 'billing'
 						});
+					});
+
+				$template.find('#myaccount_creditcard_disclaimer_cancel')
+					.on('click', function() {
+						$dialog.dialog('close');
 					});
 
 				$dialog
