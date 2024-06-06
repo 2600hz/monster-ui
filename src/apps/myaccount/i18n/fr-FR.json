@@ -152,7 +152,7 @@
 				"noAch": "*Based on the Billing Address above, the ACH payment method is not available."
 			},
 			"bigNotices": {
-				"noCard": "The option to use a Credit Card is not available in the following states: NY, CT, MA, ME. Debit cards are also not a valid method. Please use ACH Direct Debit"
+				"noCard": "We can no longer accept debit or credit card payments in your state. Please update your payment method to ACH Direct Deposit by July 1, 2024, to avoid service interruption. Note: ACH payment setup may take up to 4 days to process."
 			}
 		},
 
@@ -216,7 +216,8 @@
 			},
 			"status": {
 				"pending": "Verification pending...",
-				"verified": "Verified"
+				"verified": "Verified",
+				"failed": "Failed"
 			}
 		},
 		"awaitingSettlement": {
@@ -276,7 +277,9 @@
 		"debitCardError": "We do not accept debit card payments. Please use ACH, or a Visa/Mastercard credit card.",
 		"disclaimer": {
 			"title": "Changes to credit card payments",
+			"noCardTitle": "Important Update to 2600Hz Payment Options",
 			"message": "In order to continue using your current credit card as a valid payment method, you must acknowledge and agree to this surcharge. If not, you will need to update to a different payment method.",
+			"noCardMessage": "We've introduced ACH Direct Deposit as a new payment method. However, we can no longer accept debit or credit card payments in your state. Please update your payment method to ACH Direct Deposit by July 1, 2024, to avoid service interruption.",
 			"updatePaymentMethod": "Update payment method",
 			"saveAndContinue": "Save & continue"
 		}

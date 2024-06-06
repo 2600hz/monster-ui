@@ -81,19 +81,28 @@
 	}
 }
 
-.myaccount-creditcard-dialog {
-	.disclaimer-dialog-title {
-		background-color: var(--sds_theme_color_warning);
-	}
-	.svg-icon {
-		float: left;
-		padding-top: 0.75rem;
-		padding-right: 0.5rem;
+.myaccount-creditcard-dialog, .myaccount-creditcard-dialog-no-card {
+	.disclaimer-dialog-title.ui-dialog-titlebar {
+		background: $white;
+		padding: 1.5rem;
+
+		.ui-dialog-title {
+			font-size: 22px;
+			line-height: 2rem;
+			color: #333;
+		}
+
+		.svg-icon {
+			float: left;
+			padding-right: 1rem;
+			width: 2rem;
+			height: 2rem;
+		}
 	}
 
 	#myaccount_creditcard_disclaimer_dialog {
-		max-width: 560px;
-		padding: 1rem;
+		max-width: 510px;
+		padding: 0 1.5rem  1.5rem 1.5rem;
 
 		.disclaimer-dialog-notice {
 			margin-bottom: 1rem;
@@ -102,15 +111,30 @@
 		.disclaimer-dialog-agreement {
 			margin-bottom: 1rem;
 
+			label {
+				font-size: 15.4px;
+				line-height: 20px;
+			}
+
 			a {
 				color: $primary-color;
 			}
 		}
 
 		.disclaimer-dialog-footer {
-			.monster-button-small {
+			margin-top: 2rem;
+
+			.monster-button {
 				margin-left: 0.5rem;
 			}
 		}
 	}
+}
+
+.myaccount-creditcard-dialog .disclaimer-dialog-title.ui-dialog-titlebar .svg-icon {
+	color: $warning-color;
+}
+
+.myaccount-creditcard-dialog-no-card .disclaimer-dialog-title.ui-dialog-titlebar .svg-icon {
+	color: $danger-color;
 }
