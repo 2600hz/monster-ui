@@ -1167,6 +1167,7 @@ define(function(require) {
 				$billingContactForm = $template.find('#form_billing'),
 				$submitButton = $template.find('#myaccount_billing_save'),
 				isValid = monster.ui.valid($billingContactForm),
+				isSurchargeAccepted = !!_.get(account, ['braintree', 'surcharge_accepted']),
 				formData = {},
 				updatedAccount = {};
 
@@ -1185,9 +1186,7 @@ define(function(require) {
 
 			delete updatedAccount.contact.billing.region_select;
 
-			if (surchargeAccepted === 'delete') {
-				_.unset(updatedAccount, ['braintree', 'surcharge_accepted']);
-			} else if (surchargeAccepted) {
+			if (!isSurchargeAccepted && surchargeAccepted) {
 				updatedAccount.braintree = _.merge({}, updatedAccount.braintree, {
 					surcharge_accepted: surchargeAccepted
 				});
