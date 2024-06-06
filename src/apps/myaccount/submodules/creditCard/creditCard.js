@@ -308,11 +308,6 @@ define(function(require) {
 
 			var card = _.get(args, ['cards', 0]);
 
-			if (!expiredMode && country === 'US' && _.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
-				$container.find('.no-card-available')
-					.removeClass('no-card-available-hidden');
-			}
-
 			monster.waterfall([
 				function createClientInstance(next) {
 					braintreeClient.create({
@@ -360,6 +355,11 @@ define(function(require) {
 						expiredMode: expiredMode
 					}
 				}));
+
+				if (!expiredMode && country === 'US' && _.includes(self.appFlags.billing.usStatesDeniedCreditCards, region)) {
+					$template.filter('.no-card-available')
+						.removeClass('no-card-available-hidden');
+				}
 
 				$template.find('#credit_card_delete').on('click', function(event) {
 					event.preventDefault();
