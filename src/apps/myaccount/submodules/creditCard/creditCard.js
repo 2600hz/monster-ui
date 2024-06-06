@@ -407,7 +407,7 @@ define(function(require) {
 						});
 
 						args.submitCallback && args.submitCallback({
-							surchargeAccepted: ''
+							surchargeAccepted: 'delete'
 						});
 					});
 				});
