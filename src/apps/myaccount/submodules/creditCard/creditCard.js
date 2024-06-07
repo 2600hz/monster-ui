@@ -406,9 +406,7 @@ define(function(require) {
 							})
 						});
 
-						args.submitCallback && args.submitCallback({
-							surchargeAccepted: ''
-						});
+						args.submitCallback && args.submitCallback();
 					});
 				});
 
