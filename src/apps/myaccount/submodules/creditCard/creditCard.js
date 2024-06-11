@@ -599,7 +599,7 @@ define(function(require) {
 
 				var account = results.account,
 					billing = results.billing,
-					isSurchargeAccepted = !!_.get(account, ['braintree', 'surcharge_accepted']),
+					isSurchargeAccepted = self.billingIsSurchargeAccepted(account),
 					hasCreditCards = !_.chain(billing).get('credit_cards', []).isEmpty().value(),
 					country = _.get(account, ['contact', 'billing', 'country']),
 					region = _.get(account, ['contact', 'billing', 'region']),
@@ -643,7 +643,10 @@ define(function(require) {
 						timestamp = monster.util.dateToGregorian(now),
 						updatedAccount = _.merge({}, account, {
 							braintree: {
-								surcharge_accepted: timestamp
+								surcharge_accepted: timestamp,
+								user_id: monster.apps.auth.currentUser.id,
+								first_name: monster.apps.auth.currentUser.first_name,
+								last_name: monster.apps.auth.currentUser.last_name
 							}
 						});
 
