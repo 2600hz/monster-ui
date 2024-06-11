@@ -1167,7 +1167,7 @@ define(function(require) {
 				$billingContactForm = $template.find('#form_billing'),
 				$submitButton = $template.find('#myaccount_billing_save'),
 				isValid = monster.ui.valid($billingContactForm),
-				isSurchargeAccepted = !!_.get(account, ['braintree', 'surcharge_accepted']),
+				isSurchargeAccepted = self.billingIsSurchargeAccepted(account),
 				formData = {},
 				updatedAccount = {};
 
@@ -1188,7 +1188,10 @@ define(function(require) {
 
 			if (!isSurchargeAccepted && surchargeAccepted) {
 				updatedAccount.braintree = _.merge({}, updatedAccount.braintree, {
-					surcharge_accepted: surchargeAccepted
+					surcharge_accepted: surchargeAccepted,
+					user_id: monster.apps.auth.currentUser.id,
+					first_name: monster.apps.auth.currentUser.first_name,
+					last_name: monster.apps.auth.currentUser.last_name
 				});
 			}
 
@@ -1205,6 +1208,10 @@ define(function(require) {
 					next && next(true);
 				}
 			});
+		},
+
+		billingIsSurchargeAccepted: function(account) {
+			return !!_.get(account, ['braintree', 'surcharge_accepted']);
 		}
 	};
 
