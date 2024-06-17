@@ -436,7 +436,7 @@ define(function(require) {
 						},
 						success: function(data, status) {
 							self.triggerMasquerading({
-								account: data.data,
+								account: data,
 								callback: function() {
 									var currentApp = monster.apps.getActiveApp();
 									if (currentApp in monster.apps) {
@@ -480,11 +480,14 @@ define(function(require) {
 
 		triggerMasquerading: function(args) {
 			var self = this,
-				account = args.account,
+				account = args.account.data,
 				callback = args.callback,
 				afterGetData = function(account) {
 					monster.apps.auth.currentAccount = $.extend(true, {}, account);
 					self.updateApps(account.id);
+
+					monster.apps.auth.currentAccount.reseller_id = _.get(args, 'account.metadata.reseller_id');
+					monster.apps.auth.currentAccount.is_reseller = _.get(args, 'account.metadata.is_reseller');
 
 					monster.pub('myaccount.renderNavLinks', {
 						name: account.name,
