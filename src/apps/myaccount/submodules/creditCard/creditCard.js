@@ -3,7 +3,6 @@ define(function(require) {
 		_ = require('lodash'),
 		moment = require('moment'),
 		monster = require('monster'),
-		braintreeClient = require('braintree-client'),
 		braintreeHostedFields = require('braintree-hosted-fields'),
 		braintreeVaultManager = require('braintree-vault-manager');
 
@@ -41,9 +40,11 @@ define(function(require) {
 				$container = args.container,
 				country = args.country,
 				region = args.region,
-				surcharge = self.billingGetCreditCardSurcharge(country, region);
+				surcharge = self.billingGetCreditCardSurcharge(country, region),
+				postRenderCallback = args.postRenderCallback;
 
 			if ($container.find('.add-card-content-wrapper').length > 0) {
+				postRenderCallback && postRenderCallback();
 				return;
 			}
 
@@ -108,7 +109,7 @@ define(function(require) {
 						next(err, clientInstance, hostedFieldsInstance);
 					});
 				},
-				_.bind(self.creditCardGetAdditionalInformation, self, args.authorization)
+				_.bind(self.creditCardGetAdditionalInformation, self, self.appFlags.billing.braintreeClientToken)
 			], function(err, clientInstance, hostedFieldsInstance, additionalData) {
 				if (err) {
 					monster.pub('monster.requestEnd', {});
@@ -292,6 +293,8 @@ define(function(require) {
 						});
 					});
 				});
+
+				postRenderCallback && postRenderCallback();
 			});
 		},
 
@@ -309,15 +312,11 @@ define(function(require) {
 			var card = _.get(args, ['cards', 0]);
 
 			monster.waterfall([
-				function createClientInstance(next) {
-					braintreeClient.create({
-						authorization: args.authorization
-					}, next);
-				},
+				_.bind(self.billingCreateBraintreeClientInstance, self),
 				function createVaultmanager(clientInstance, next) {
 					braintreeVaultManager.create({
 						client: clientInstance,
-						authorization: args.authorization
+						authorization: self.appFlags.billing.braintreeClientToken
 					}, function(err, hostedFieldsInstance) {
 						next(err, clientInstance, hostedFieldsInstance);
 					});
