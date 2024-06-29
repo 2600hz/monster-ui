@@ -255,9 +255,14 @@ define(function(require) {
 				self.appFlags.billing.braintreeClientToken = _.get(results, 'billing.token.client_token');
 
 				self.billingFormatData(results, function(results) {
-					var $billingTemplate = $(self.getTemplate({
+					var isReseller = monster.util.isReseller(),
+						isMasquerading = monster.util.isMasquerading(),
+						isAdmin = monster.util.isAdmin(),
+						$billingTemplate = $(self.getTemplate({
 							name: 'layout',
-							data: results,
+							data: _.assign({
+								displayPamentMethods: isReseller && isAdmin && !isMasquerading
+							}, results),
 							submodule: 'billing'
 						})),
 						$billingContactForm = $billingTemplate.find('#form_billing'),
@@ -286,9 +291,7 @@ define(function(require) {
 
 							self.billingEnableSubmitButton($billingTemplate);
 
-							if (self.appFlags.billing.braintreeClientToken) {
-								self.billingEnablePaymentSection($billingTemplate);
-							}
+							self.billingEnablePaymentSection($billingTemplate);
 						},
 						defaultPaymentType = self.appFlags.billing.defaultPaymentType;
 
@@ -337,14 +340,12 @@ define(function(require) {
 					});
 					self.billingEnableSubmitButton($billingTemplate);
 
-					if (self.appFlags.billing.braintreeClientToken) {
-						self.billingEnablePaymentSection($billingTemplate);
-						self.billingCreditCardUpdateSurcharge({
-							template: $billingTemplate,
-							countryCode: country,
-							regionCode: region
-						});
-					}
+					self.billingEnablePaymentSection($billingTemplate);
+					self.billingCreditCardUpdateSurcharge({
+						template: $billingTemplate,
+						countryCode: country,
+						regionCode: region
+					});
 
 					// Set validations
 					monster.ui.validate($billingContactForm, {
@@ -414,7 +415,6 @@ define(function(require) {
 
 						self.creditCardRender({
 							container: $expiredCardPaymentTypeContent,
-							authorization: self.appFlags.billing.braintreeClientToken,
 							expiredCardData: expiredCardData,
 							expiredMode: true,
 							cards: cards,
@@ -493,7 +493,7 @@ define(function(require) {
 			], callback);
 		},
 
-		billingEnablePaymentSection: function($billingTemplate, changedFieldName) {
+		billingEnablePaymentSection: function($billingTemplate) {
 			var self = this,
 				country = self.appFlags.billing.billingContactFields['contact.billing.country'].value,
 				region = self.appFlags.billing.billingContactFields['contact.billing.region'].value,
@@ -751,11 +751,13 @@ define(function(require) {
 					} else {
 						self.creditCardRender({
 							container: $template.find('.payment-type-content[data-payment-type="card"]'),
-							authorization: self.appFlags.billing.braintreeClientToken,
 							expiredCardData: expiredCardData,
 							cards: cards,
 							country: countryCode,
 							region: regionCode,
+							postRenderCallback: function() {
+								self.billingEnablePaymentSection($template);
+							},
 							preSubmitCallback: function(args, next) {
 								var surchargeAccepted = _.get(args, 'surchargeAccepted');
 
@@ -787,17 +789,13 @@ define(function(require) {
 					}
 				};
 
-			if (self.appFlags.billing.braintreeClientToken) {
-				// Select paymet method option
-				var $paymentContent = $template.find('.payment-content');
-				$paymentMethodRadioGroup.change(function() {
-					var paymentType = !this.checked || _.isNil(this.value)
-						? 'none'
-						: this.value;
+			$paymentMethodRadioGroup.change(function() {
+				var paymentType = !this.checked || _.isNil(this.value)
+					? 'none'
+					: this.value;
 
-					paymentTypeChange(paymentType);
-				});
-			}
+				paymentTypeChange(paymentType);
+			});
 
 			$countrySelector.on('change', function() {
 				var field = self.appFlags.billing.billingContactFields['contact.billing.country'];
@@ -815,7 +813,7 @@ define(function(require) {
 					countryCode: this.value,
 					regionCode: self.appFlags.billing.billingContactFields['contact.billing.region'].value
 				});
-				self.billingEnablePaymentSection($template, 'contact.billing.country');
+				self.billingEnablePaymentSection($template);
 				self.creditCardChangeCountry({
 					country: this.value
 				});
@@ -838,7 +836,7 @@ define(function(require) {
 					countryCode: countryCode,
 					regionCode: state
 				});
-				self.billingEnablePaymentSection($template, 'contact.billing.region');
+				self.billingEnablePaymentSection($template);
 			});
 
 			$submitButton.on('click', function() {
@@ -991,9 +989,44 @@ define(function(require) {
 			}
 
 			monster.waterfall([
-				function createClientInstance(waterfallNext) {
+				function createBillingCustomer(waterfallNext) {
+					if (self.appFlags.billing.braintreeClientToken) {
+						return waterfallNext(null, self.appFlags.billing.braintreeClientToken);
+					}
+
+					self.billingRequestUpdateBilling({
+						data: {
+							data: {
+								company:  monster.apps.auth.originalAccount.name,
+								first_name: monster.apps.auth.currentUser.first_name,
+								last_name: monster.apps.auth.currentUser.last_name
+							}
+						},
+						success: function() {
+							waterfallNext(null, null);
+						},
+						error: function(parsedError) {
+							waterfallNext(parsedError);
+						}
+					});
+				},
+				function getAccountToken(authorization, waterfallNext) {
+					if (authorization) {
+						return waterfallNext(null, authorization);
+					}
+
+					self.billingGetAccountToken({
+						success: function(data) {
+							waterfallNext(null, data.client_token);
+						},
+						error: function(parsedError) {
+							waterfallNext(parsedError);
+						}
+					});
+				},
+				function createClientInstance(authorization, waterfallNext) {
 					braintreeClient.create({
-						authorization: self.appFlags.billing.braintreeClientToken
+						authorization: authorization
 					}, waterfallNext);
 				},
 				function storeClientInstance(client, waterfallNext) {
