@@ -15,15 +15,15 @@
 								{{i18n.billing.billingContact.information}}
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="billing_contact_full_name">{{i18n.billing.billingContact.firstName.label}}</label>
+								<label class="control-label" for="billing_contact_first_name">{{i18n.billing.billingContact.firstName.label}}</label>
 								<div class="controls">
-									<input type="text" id="billing_contact_full_name" name="contact.billing.first_name" value="{{account.contact.billing.first_name}}" placeholder="{{i18n.billing.billingContact.firstName.placeholder}}">
+									<input type="text" id="billing_contact_first_name" name="contact.billing.first_name" value="{{account.contact.billing.first_name}}" placeholder="{{i18n.billing.billingContact.firstName.placeholder}}">
 								</div>
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="billing_contact_full_name">{{i18n.billing.billingContact.lastName.label}}</label>
+								<label class="control-label" for="billing_contact_last_name">{{i18n.billing.billingContact.lastName.label}}</label>
 								<div class="controls">
-									<input type="text" id="billing_contact_full_name" name="contact.billing.last_name" value="{{account.contact.billing.last_name}}" placeholder="{{i18n.billing.billingContact.lastName.placeholder}}">
+									<input type="text" id="billing_contact_last_name" name="contact.billing.last_name" value="{{account.contact.billing.last_name}}" placeholder="{{i18n.billing.billingContact.lastName.placeholder}}">
 								</div>
 							</div>
 							<div class="control-group">
@@ -83,7 +83,7 @@
 				</div>
 			</li>
 
-		{{#if billing.token.client_token }}
+		{{#if displayPamentMethods }}
 			<li class="settings-item clearfix open always-open" data-name="credit_card">
 				<div class="settings-link clearfix">
 					<span class="title">{{ i18n.billing.paymentMethod.title }}</span>
