@@ -105,16 +105,9 @@
 		"postalCode": "Почтовый индекс",
 		"rotatedText": "Для экстренных служб",
 		"state": "Регион",
-		"country": "Country",
 		"successE911": "Вы успешно обновили адрес вызова экстренных служб для номера {{phoneNumber}}",
 		"title": "Адрес для вызова экстренных служб",
-		"verifyLocation": "Проверьте адрес",
-		"countries": {
-			"us": {
-				"value": "US",
-				"option": "United States"
-			}
-		}
+		"verifyLocation": "Проверьте адрес"
 	},
 
 	"failover": {
