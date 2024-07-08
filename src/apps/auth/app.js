@@ -50,6 +50,11 @@ define(function(require) {
 				apiRoot: monster.config.api.screwdriver,
 				url: 'upgrade',
 				verb: 'POST'
+			},
+			'duo.auth.url': {
+				apiRoot: 'http://localhost:3001',
+				url: 'duo-auth-url',
+				verb: 'POST'
 			}
 		},
 
@@ -1423,6 +1428,13 @@ define(function(require) {
 		handleMultiFactor: function(data, loginData, success, error) {
 			var self = this;
 
+			console.log({
+				data,
+				loginData,
+				success,
+				error
+			})
+
 			if (data.multi_factor_request.provider_name === 'duo') {
 				self.showDuoDialog(data, loginData, success, error);
 			} else {
@@ -1434,29 +1446,19 @@ define(function(require) {
 			var self = this,
 				wasSuccessful = false;
 
-			require(['duo'], function() {
-				var template = self.getTemplate({ name: 'duo-dialog' }),
-					dialog = monster.ui.dialog(template, {
-						title: self.i18n.active().duoDialog.title,
-						onClose: function() {
-							if (!wasSuccessful) {
-								error && error();
-							}
+				monster.request({
+					resource: 'auth.upgradeTrial',
+					data: {
+						username: $('#login').val().toLowerCase(),
+						"settings": {
+							"duo_api_hostname": "api-db068e3d.duosecurity.com",
+							"duo_redirect_url": "http://localhost:3000"
 						}
-					});
-
-				Duo.init({
-					iframe: dialog.find('iframe')[0],
-					sig_request: data.multi_factor_request.settings.duo_sig_request,
-					host: data.multi_factor_request.settings.duo_api_hostname,
-					submit_callback: function(form) {
-						wasSuccessful = true;
-						loginData.multi_factor_response = $(form).find('[name="sig_response"]').attr('value');
-						dialog.dialog('close').remove();
-						success && success(loginData);
+					},
+					success: function(data, status) {
+						console.log('req', data, status)
 					}
 				});
-			});
 		},
 
 		/**
