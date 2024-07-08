@@ -304,6 +304,12 @@ define(function(require) {
 							enableVerifyButton();
 						};
 
+					template
+						.find('input[type="text"]')
+							.mask('#0.00', {
+								reverse: true
+							});
+
 					//set validation to false on load
 					_.each(self.appFlags.ach.validAchVerificationFormFields, (value, key) => {
 						self.appFlags.ach.validAchVerificationFormFields[key] = false;
