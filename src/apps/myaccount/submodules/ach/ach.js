@@ -274,6 +274,14 @@ define(function(require) {
 				container = args.container,
 				data = args.data,
 				bankData = data.bankData,
+				parseAmount = function parseAmount(value) {
+					var splitAmount = _.split(value, '.'),
+						integer = _.trimStart(splitAmount[0], '0'),
+						cents = splitAmount.length === 1 ? '00' : _.padEnd(splitAmount[1], 2, '0'),
+						amount = integer + cents;
+
+					return _.parseInt(amount);
+				},
 				appendTemplate = function appendTemplate() {
 					var template = $(self.getTemplate({
 							name: 'ach-section-verification',
@@ -303,6 +311,12 @@ define(function(require) {
 
 							enableVerifyButton();
 						};
+
+					template
+						.find('input[type="text"]')
+							.mask('#0.00', {
+								reverse: true
+							});
 
 					//set validation to false on load
 					_.each(self.appFlags.ach.validAchVerificationFormFields, (value, key) => {
@@ -356,13 +370,16 @@ define(function(require) {
 								next(null);
 							},
 							function confirmMicroDeposits(next) {
+								var depositAmount1 = parseAmount(verificationAmounts.deposit_amount_1),
+									depositAmount2 = parseAmount(verificationAmounts.deposit_amount_2);
+
 								self.confirmMicroDeposits({
 									data: {
 										verificationId: _.get(bankData, 'verification_id'),
 										data: {
 											deposits: [
-												Math.floor(verificationAmounts.deposit_amount_1 * 100),
-												Math.floor(verificationAmounts.deposit_amount_2 * 100)
+												depositAmount1,
+												depositAmount2
 											]
 										}
 									},
