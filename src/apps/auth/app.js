@@ -52,9 +52,14 @@ define(function(require) {
 				verb: 'POST'
 			},
 			'duo.auth.url': {
-				apiRoot: 'http://localhost:3001',
-				url: 'duo-auth-url',
-				verb: 'POST'
+				apiRoot: monster.config.api.duo,
+				url: '/duo-auth-url',
+				verb: 'POST',
+				contentType: "application/json",
+				removeHeaders: [
+					'X-Kazoo-Cluster-ID',
+					'X-Auth-Token'
+				]
 			}
 		},
 
@@ -1443,22 +1448,21 @@ define(function(require) {
 		},
 
 		showDuoDialog: function(data, loginData, success, error) {
-			var self = this,
-				wasSuccessful = false;
-
-				monster.request({
-					resource: 'auth.upgradeTrial',
+			monster.request({
+				resource: 'duo.auth.url',
+				data: {
 					data: {
 						username: $('#login').val().toLowerCase(),
 						"settings": {
 							"duo_api_hostname": "api-db068e3d.duosecurity.com",
-							"duo_redirect_url": "http://localhost:3000"
+							"duo_redirect_url": window.location.origin
 						}
-					},
-					success: function(data, status) {
-						console.log('req', data, status)
 					}
-				});
+				},
+				success: function(data) {
+					window.location.href = data.duoURL
+				}
+			});
 		},
 
 		/**
