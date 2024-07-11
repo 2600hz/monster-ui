@@ -109,6 +109,8 @@ define(function(require) {
 				successfulAuth = self._afterSuccessfulAuth.bind(self),
 				errorAuth = self.renderLoginPage.bind(self);
 
+			console.log('urlParams --', urlParams)
+
 			if (monster.config.whitelabel.hasOwnProperty('authentication')) {
 			// Custom authentication app
 				self.customAuth = monster.config.whitelabel.authentication;
@@ -172,6 +174,9 @@ define(function(require) {
 
 					successfulAuth && successfulAuth(data);
 				}, errorAuth);
+			} else if (urlParams.hasOwnProperty('duo_code')) {
+				// DUO recovery redirect
+					self.checkDuoAuth(urlParams.duo_code, urlParams.state);
 			} else {
 			// Login page rendering
 				self.renderLoginPage();
@@ -1269,6 +1274,21 @@ define(function(require) {
 			$template.find('.cancel-link').on('click', closePopup);
 		},
 
+		checkDuoAuth: function(duoCode, duoState) {
+			var self = this,
+				loginData = JSON.parse(localStorage.getItem('prevAuth')),
+				duoData = JSON.parse(localStorage.getItem('duoAuth'));
+
+			//loginData.multi_factor_response = duoToken;
+			multi_factor_response
+			loginData.duo_code = duoCode;
+			loginData.duo_state = duoState;
+			loginData.duo_host = window.location.origin;
+			loginData.duo_saved_state = duoData.state
+
+			self.putAuth(loginData);
+		},
+
 		checkRecoveryId: function(recoveryId, callback) {
 			var self = this;
 
@@ -1299,6 +1319,7 @@ define(function(require) {
 				},
 				error: function(errorPayload, data, globalHandler) {
 					if (data.status === 401 && errorPayload.data.hasOwnProperty('multi_factor_request')) {
+						console.log('handleMultiFactor 2', dataRecovery)
 						self.handleMultiFactor(errorPayload.data, dataRecovery, function(augmentedDataRecovery) {
 							self.recoveryWithResetId(augmentedDataRecovery, success, error);
 						}, function() {
@@ -1363,6 +1384,7 @@ define(function(require) {
 
 		// API Calls
 		putAuth: function(loginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs) {
+			console.log('do auth')
 			var self = this,
 				dataPayload = $.extend(true, {
 					data: loginData,
@@ -1405,6 +1427,7 @@ define(function(require) {
 							// If it's a 401 that is about requesting additional login information via MFA, we need to know if it comes from a reconnect attempt
 							// If it comes from a reconnect attempt, then we show a popup to ask them if they want to reconnect.
 							// If we don't do that and the system automatically reconnected, then the User would see a popup asking him to re-authenticate Duo without any context.
+							console.log('handleMultifactor 1')
 							var handleMultifactor = function() {
 								self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
 									self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
@@ -1448,18 +1471,20 @@ define(function(require) {
 		},
 
 		showDuoDialog: function(data, loginData, success, error) {
+			localStorage.setItem('prevAuth', JSON.stringify(loginData))
+
 			monster.request({
 				resource: 'duo.auth.url',
 				data: {
 					data: {
 						username: $('#login').val().toLowerCase(),
-						"settings": {
-							"duo_api_hostname": "api-db068e3d.duosecurity.com",
-							"duo_redirect_url": window.location.origin
+						settings: {
+							duo_redirect_url: window.location.origin
 						}
 					}
 				},
 				success: function(data) {
+					localStorage.setItem('duoAuth', JSON.stringify(data))
 					window.location.href = data.duoURL
 				}
 			});
