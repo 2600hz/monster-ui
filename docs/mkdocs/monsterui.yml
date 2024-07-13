@@ -1,4 +1,4 @@
-- 'index.md'
+- 'docs/mkdocs/index.md'
 - 'docs/tutorial.md'
 - 'Quick Guides':
   - 'docs/configuration.md'
