@@ -1,5 +1,3 @@
-title: datepicker()
-
 # monster.ui.datepicker()
 
 ## Syntax

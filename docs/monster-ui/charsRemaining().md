@@ -1,5 +1,3 @@
-title: charsRemaining()
-
 # monster.ui.charsRemaining()
 
 ## Syntax

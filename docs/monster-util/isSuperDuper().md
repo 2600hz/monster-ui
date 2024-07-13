@@ -1,5 +1,3 @@
-title: isSuperDuper()
-
 # monster.util.isSuperDuper()
 
 ## Syntax

@@ -1,5 +1,3 @@
-title: insertTemplate()
-
 # monster.ui.insertTemplate()
 
 ## Syntax

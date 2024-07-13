@@ -1,4 +1,5 @@
 # method()
+
 _If this method is complex, put a quick description of its behavior here_
 
 _Optionally, a screen shot of what the method do can be placed here_

@@ -1,5 +1,3 @@
-title: getNumberFeatures()
-
 # monster.util.getNumberFeatures()
 
 ## Syntax

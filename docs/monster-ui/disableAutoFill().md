@@ -1,5 +1,3 @@
-title: disableAutoFill()
-
 # monster.ui.disableAutoFill()
 
 ![](images/disableAutoFill.gif)

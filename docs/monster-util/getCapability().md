@@ -1,5 +1,3 @@
-title: getCapability()
-
 # monster.util.getCapability()
 
 ## Syntax

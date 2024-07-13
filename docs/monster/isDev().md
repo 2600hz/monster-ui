@@ -1,5 +1,3 @@
-title: isDev()
-
 # monster.isDev()
 
 ## Syntax

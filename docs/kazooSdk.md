@@ -1,18 +1,16 @@
-title: How to use the JavaScript Kazoo SDK
-
-# Kazoo SDK
+# How to use the JavaScript Kazoo SDK
 
 The Kazoo javascript SDK is a jQuery plugin that allows you to easily call an extensive list of APIs from Kazoo.
 
-### Requirements
+## Requirements
 
 This is a jQuery plugin, and therefore requires [jQuery](http://jquery.com/) to work.
 
 This SDK only provides a set of functions to call the APIs, you need an API server running Kazoo.
 
-### Usage
+## Usage
 
-#### Initialization
+### Initialization
 
 You can access the kazooSdk object by calling the method `jQuery.getKazooSdk(settings)`. This object will contain all the API functions. It is strongly recommended to store this object in a variable and re-use it, instead of calling the _getKazooSdk_ method multiple times.
 

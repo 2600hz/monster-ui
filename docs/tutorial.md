@@ -1,5 +1,3 @@
-title: Tutorial
-
 # Tutorial: Create your own Monster UI app
 The goal of this tutorial is to help any developer who wants to build a Web application for the Monster UI framework.
 At the end of this tutorial, you will have a functional Monster UI app accessible from your local version of Monster UI via the App Exchange.

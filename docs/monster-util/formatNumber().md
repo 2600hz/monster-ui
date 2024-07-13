@@ -1,5 +1,3 @@
-title: formatNumber()
-
 # monster.util.formatNumber()
 
 ## Syntax

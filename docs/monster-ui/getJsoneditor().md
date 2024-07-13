@@ -1,5 +1,3 @@
-title: getJsoneditor()
-
 # monster.ui.getJsoneditor()
 
 ## Syntax

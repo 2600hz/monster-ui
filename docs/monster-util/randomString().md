@@ -1,5 +1,3 @@
-title: randomString()
-
 # monster.util.randomString()
 
 ## Syntax

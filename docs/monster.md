@@ -1,6 +1,5 @@
-title: Using Monster methods
+# Using Monster methods
 
-# monster
 The `monster` object exposes several core methods used to perform essential actions, as well as two objects containing a lot of helpers useful to build Monster apps easily.
 
 ### Methods

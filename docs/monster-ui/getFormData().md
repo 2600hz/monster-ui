@@ -1,5 +1,3 @@
-title: getFormData()
-
 # monster.ui.getFormData()
 
 ## Syntax

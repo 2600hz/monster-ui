@@ -1,5 +1,3 @@
-title: toFriendlyDate()
-
 # monster.util.toFriendlyDate()
 
 ## Syntax

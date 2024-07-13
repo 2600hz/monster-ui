@@ -1,4 +1,4 @@
-title: Using application flags
+# Using application flags
 
 ### What will I learn in this documentation?
 A Monster Application is a folder containing JavaScript, HTML, and CSS to represent an application in our Monster Framework. In order to get more help on how to create the application, check [here][tutorial].

@@ -1,5 +1,3 @@
-title: generateAppLayout()
-
 # monster.ui.generateAppLayout()
 
 ![](images/generateAppLayout-preview.png)

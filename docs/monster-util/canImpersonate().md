@@ -1,5 +1,3 @@
-title: canImpersonate()
-
 # monster.util.canImpersonate()
 
 ## Syntax

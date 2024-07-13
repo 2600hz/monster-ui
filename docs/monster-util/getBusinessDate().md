@@ -1,6 +1,5 @@
-title: getBusinessDate()
-
 # monster.util.getBusinessDate()
+
 The `monster.utilgetBusinessDate()` method adds or removes business days to the current date or to a specific date.
 
 ## Syntax

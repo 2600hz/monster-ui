@@ -1,5 +1,3 @@
-title: getTemplate()
-
 # monster.getTemplate()
 
 ## Syntax

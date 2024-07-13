@@ -1,5 +1,3 @@
-title: waterfall()
-
 # monster.waterfall()
 
 ## Syntax

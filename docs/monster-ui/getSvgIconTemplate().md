@@ -1,5 +1,3 @@
-title: getSvgIconTemplate()
-
 # monster.ui.getSvgIconTemplate()
 
 ## Syntax

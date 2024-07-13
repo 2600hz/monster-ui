@@ -1,5 +1,3 @@
-title: gregorianToDate()
-
 # monster.util.gregorianToDate()
 
 ## Syntax

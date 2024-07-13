@@ -1,5 +1,3 @@
-title: monthpicker()
-
 # monster.ui.monthpicker()
 
 ## Syntax

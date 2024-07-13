@@ -1,5 +1,3 @@
-title: formatPhoneNumber()
-
 # monster.util.formatPhoneNumber()
 
 ## Syntax

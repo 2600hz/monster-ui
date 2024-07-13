@@ -1,5 +1,3 @@
-title: timepicker()
-
 # monster.ui.timepicker()
 
 ## Syntax

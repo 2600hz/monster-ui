@@ -1,5 +1,3 @@
-title: codecSelector()
-
 # monster.ui.codecSelector()
 The `monster.ui.codecSelector()` method generates a selector for audio/video codecs.
 

@@ -1,5 +1,3 @@
-title: protectSensitivePhoneNumbers()
-
 # monster.util.protectSensitivePhoneNumbers()
 
 ## Syntax

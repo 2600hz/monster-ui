@@ -1,5 +1,3 @@
-title: getUserFullName()
-
 # monster.util.getUserFullName()
 
 ## Syntax

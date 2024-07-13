@@ -1,5 +1,3 @@
-title: markdownToHtml()
-
 # monster.ui.markdownToHtml()
 The `monster.ui.markdownToHtml` renders markdown content as HTML.
 

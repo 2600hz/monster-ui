@@ -1,5 +1,3 @@
-title: request()
-
 # monster.request()
 
 ## Syntax

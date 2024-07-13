@@ -1,5 +1,3 @@
-title: parseQueryString()
-
 # monster.util.parseQueryString()
 
 ## Syntax

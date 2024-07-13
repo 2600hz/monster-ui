@@ -1,5 +1,3 @@
-title: callApi()
-
 # appContext.callApi()
 
 ## Syntax

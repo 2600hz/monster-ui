@@ -1,5 +1,3 @@
-title: Branch Workflow
-
 # Branch Workflow
 
 In order for of our builds to run and packages to be published automatically, we follow a custom workflow when it comes to feature branch management. To better understand that workflow, let's run through an example.

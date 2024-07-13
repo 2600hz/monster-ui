@@ -1,6 +1,5 @@
-title: Add your app to the App Store
+# Adding your application to the App Store
 
-## Adding your application to the App Store
 The Monster-UI Framework has been built to allow developers to code their own apps and to allow them to reach their users via the Monster-UI.
 
 There are 2 ways to add your applications inside the database.

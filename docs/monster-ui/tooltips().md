@@ -1,5 +1,3 @@
-title: tooltips()
-
 # monster.ui.tooltips()
 
 ## Syntax

@@ -1,5 +1,3 @@
-title: confirm()
-
 # monster.ui.confirm()
 The `monster.ui.confirm()` method generates a dialog window giving the user the choice to confirm or cancel an action.
 

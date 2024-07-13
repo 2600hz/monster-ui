@@ -1,5 +1,3 @@
-title: series()
-
 # monster.series()
 
 ## Syntax

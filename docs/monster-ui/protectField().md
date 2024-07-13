@@ -1,5 +1,3 @@
-title: protectField()
-
 # monster.ui.protectField()
 
 ![](http://i.imgur.com/0c0QP2X.png)

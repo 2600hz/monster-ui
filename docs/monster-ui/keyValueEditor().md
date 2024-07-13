@@ -1,5 +1,3 @@
-title: keyValueEditor()
-
 # monster.ui.keyValueEditor()
 
 ## Syntax

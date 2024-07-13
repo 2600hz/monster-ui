@@ -1,5 +1,3 @@
-title: showPasswordStrength()
-
 # monster.ui.showPasswordStrength()
 
 ## Syntax

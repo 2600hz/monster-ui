@@ -1,31 +1,6 @@
-title: Coding standards (Advanced)
-
-# 2600hz JavaScript Style Guide() {
+# JavaScript Style Guide
 
 *Freely inspired from [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript)*
-
-
-## Table of Contents
-
-1. [Types](#types)
-1. [Objects](#objects)
-1. [Arrays](#arrays)
-1. [Strings](#strings)
-1. [Functions](#functions)
-1. [Properties](#properties)
-1. [Variables](#variables)
-1. [Hoisting](#hoisting)
-1. [Conditional Expressions & Equality](#conditional-expressions--equality)
-1. [Blocks](#blocks)
-1. [Comments](#comments)
-1. [Whitespace](#whitespace)
-1. [Commas](#commas)
-1. [Semicolons](#semicolons)
-1. [Type Casting & Coercion](#type-casting--coercion)
-1. [Naming Conventions](#naming-conventions)
-1. [jQuery](#jquery)
-1. [Lodash](#lodash)
-
 
 ## Types
 

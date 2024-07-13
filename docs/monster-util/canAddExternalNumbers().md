@@ -1,5 +1,3 @@
-title: canAddExternalNumbers()
-
 # monster.util.canAddExternalNumbers()
 
 ## Syntax

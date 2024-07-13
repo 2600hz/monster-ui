@@ -1,5 +1,3 @@
-title: isLoggedIn()
-
 # monster.util.isLoggedIn()
 
 ## Syntax

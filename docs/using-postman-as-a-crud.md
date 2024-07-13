@@ -1,5 +1,3 @@
-title: Using Postman as a CRUD
-
 # Using Postman as a CRUD
 
 * [Install Postman](#install-postman)

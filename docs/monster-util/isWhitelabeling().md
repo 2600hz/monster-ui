@@ -1,5 +1,3 @@
-title: isWhitelabeling()
-
 # monster.util.isWhitelabeling()
 
 ## Syntax

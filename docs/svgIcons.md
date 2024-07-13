@@ -1,6 +1,5 @@
-title: SVG Icons
+# SVG Icons
 
-# SVG Icons in Monster-UI
 Monster UI includes 4 SVG icon collections:
 
 #### Google Drive Logos

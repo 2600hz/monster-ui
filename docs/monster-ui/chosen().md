@@ -1,5 +1,3 @@
-title: chosen()
-
 # monster.ui.chosen()
 
 ## Syntax

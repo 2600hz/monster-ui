@@ -1,5 +1,3 @@
-title: countrySelector()
-
 # monster.ui.countrySelector()
 
 ## Syntax

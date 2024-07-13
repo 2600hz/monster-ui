@@ -1,9 +1,7 @@
-title: formatPrice()
+# monster.util.formatPrice()
 
 !!! warning
     Although `monster.util#formatPrice` is not strictly deprecated (as in "removed from the util module"), it is now considered a legacy function and should be avoided as it might be removed in the future. For similar formatting functionalities, use [`monster.util#formatNumber`](./formatNumber().md) instead.
-
-# monster.util.formatPrice()
 
 ## Syntax
 ```javascript

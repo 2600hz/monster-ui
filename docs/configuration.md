@@ -1,6 +1,7 @@
-title: Configure your Monster UI install
+# Configure your Monster UI install
 
-# config.js
+## config.js
+
 Monster UI is highly configurable through a single file located at `src/js/config.js`. This file lets you connect your different backend services to Monster UI and exposes other settings, like whitelabeling, that can be set for the entire UI.
 
 ## Example

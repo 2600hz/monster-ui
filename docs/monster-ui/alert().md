@@ -1,6 +1,5 @@
-title: alert()
-
 # monster.ui.alert()
+
 The `monster.ui.alert()` method generates a customizable dialog window with three distinctive styles.
 
 ![Image showing the different state of the alert box](http://i.imgur.com/gCwHP0M.png)

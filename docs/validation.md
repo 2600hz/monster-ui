@@ -1,6 +1,4 @@
-title: How to use the validation in your UI
-
-# Using validation in Monster-UI
+# How to use the validation in your UI
 
 Validation in Monster-UI is done using the [jQuery Validation plugin][jquery_validation_plugin]. Their documentation is very complete, and it is strongly advised that you take look at it to have a better understanding of how it works.
 

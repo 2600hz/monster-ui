@@ -1,5 +1,3 @@
-title: getAuthToken()
-
 # monster.util.getAuthToken()
 
 ## Syntax

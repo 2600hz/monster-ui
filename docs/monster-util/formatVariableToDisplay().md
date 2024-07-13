@@ -1,5 +1,3 @@
-title: formatVariableToDisplay()
-
 # monster.util.formatVariableToDisplay()
 
 ## Syntax

@@ -1,5 +1,3 @@
-title: add()
-
 # monster.util.dataFlags.add()
 
 ## Syntax

@@ -1,5 +1,3 @@
-title: destroy()
-
 # monster.util.dataFlags.destroy()
 
 ## Syntax

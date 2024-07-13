@@ -1,5 +1,3 @@
-title: renderPDF()
-
 # monster.ui.renderPDF()
 
 ## Syntax

@@ -1,6 +1,5 @@
-title: Using a Common control
-
 # Using a Common Control
+
 **Common Controls** are functionalities that are included natively into **Monster UI** and can be accessed through all applications independently of which of them are already installed.
 **Common Controls** are pieces of code that usually have one purpose (for example, display the account's hierarchy in a drop-down) and could be used in several applications.
 

@@ -1,5 +1,3 @@
-title: isReseller()
-
 # monster.util.isReseller()
 
 ## Syntax

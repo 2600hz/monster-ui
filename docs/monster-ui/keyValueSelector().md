@@ -1,5 +1,3 @@
-title: keyValueSelector()
-
 # keyValueSelector
 
 ![](images/keyValueSelector.gif)

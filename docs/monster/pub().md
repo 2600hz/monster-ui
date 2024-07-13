@@ -1,5 +1,3 @@
-title: pub()
-
 # monster.pub()
 
 ## Syntax

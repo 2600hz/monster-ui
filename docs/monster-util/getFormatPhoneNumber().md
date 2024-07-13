@@ -1,5 +1,3 @@
-title: getFormatPhoneNumber()
-
 # monster.util.getFormatPhoneNumber()
 
 ## Syntax

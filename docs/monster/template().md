@@ -1,5 +1,3 @@
-title: template()
-
 # monster.template()
 
 This method is used internally to load core templates and should not be used by regular apps.

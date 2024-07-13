@@ -1,6 +1,5 @@
-title: Using Monster Events
-
 # Using Monster Events
+
 **Monster UI** use [postal.js][postaljs] as a local message bus (pub/sub system). It is mostly used to subscribe and publish [Common Controls][common controls] into applications and is wrapped inside **Monster** methods to simplify their invocation.
 
 ### Subscribe

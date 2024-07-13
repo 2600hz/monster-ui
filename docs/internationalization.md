@@ -1,5 +1,3 @@
-title: Adding I18n to your application
-
 # Adding i18n to your application
 
 * [Create the i18n files](#create-the-i18n-files)

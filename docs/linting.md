@@ -1,6 +1,4 @@
-title: Coding standards linting
-
-# Coding standards - Linting your JS Code
+# Linting your JS Code
 
 In order to keep our codebase maintainable and consistent, we decided to use a Linter to enforce some rules and show warnings or errors to developers to let them know what code style is expected in our applications. As of today, its use is optional, but we intend to make it mandatory in the future for any commits going into the framework. As we just recently implemented it, there are still a lot of linting errors thrown, so until we go through all of them, we will not make it a requirement.
 

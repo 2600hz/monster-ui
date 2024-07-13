@@ -1,5 +1,3 @@
-title: isMasquerading()
-
 # monster.util.isMasquerading()
 
 ## Syntax

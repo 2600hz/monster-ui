@@ -1,5 +1,3 @@
-title: unixToDate()
-
 # monster.util.unixToDate()
 
 ## Syntax

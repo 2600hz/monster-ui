@@ -1,5 +1,3 @@
-title: formatMacAddress()
-
 # monster.util.formatMacAddress()
 
 ## Syntax

@@ -1,5 +1,3 @@
-title: unformatPhoneNumber()
-
 # monster.util.unformatPhoneNumber()
 
 ## Syntax

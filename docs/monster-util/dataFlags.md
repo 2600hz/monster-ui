@@ -1,5 +1,3 @@
-title: dataFlags
-
 # monster.util.dataFlags
 The `monster.util.dataFlags` object contains different methods used to easily access and change flags set by Monster on data objects.
 

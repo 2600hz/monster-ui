@@ -1,5 +1,3 @@
-title: renderJSON()
-
 # monster.ui.renderJSON()
 
 ## Syntax

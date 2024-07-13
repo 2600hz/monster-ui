@@ -1,5 +1,3 @@
-title: get()
-
 # monster.util.dataFlags.get()
 
 ## Syntax

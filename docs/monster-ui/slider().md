@@ -1,5 +1,3 @@
-title: slider()
-
 # monster.ui.slider()
 
 ## Syntax

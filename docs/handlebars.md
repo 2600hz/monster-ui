@@ -1,6 +1,5 @@
-title: Using Handlebars for your templates
+# Using Handlebars for your templates
 
-# Handlebars in Monster-UI
 In order to add dynamic data in our views, we needed a templating engine. And Handlebars is the templating engine we chose. In this document, we'll explain how to use it, and how to use some helpers that can be very helpful for certain tasks.
 
 * [How to use it](#how-to-use-it)

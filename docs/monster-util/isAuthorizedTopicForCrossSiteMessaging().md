@@ -1,5 +1,3 @@
-"title: isAuthorizedTopicForCrossSiteMessaging()
-
 # monster.util.isAuthorizedTopicForCrossSiteMessaging()
 
 ## Syntax

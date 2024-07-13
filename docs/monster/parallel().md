@@ -1,5 +1,3 @@
-title: parallel()
-
 # monster.parallel()
 
 ## Syntax

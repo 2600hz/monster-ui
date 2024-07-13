@@ -1,5 +1,3 @@
-title: getUrlVars()
-
 # monster.util.getUrlVars()
 
 ## Syntax

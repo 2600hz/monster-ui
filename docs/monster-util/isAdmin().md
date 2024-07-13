@@ -1,5 +1,3 @@
-title: isAdmin()
-
 # monster.util.isAdmin()
 
 ## Syntax

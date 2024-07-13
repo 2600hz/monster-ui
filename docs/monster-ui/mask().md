@@ -1,5 +1,3 @@
-title: mask()
-
 # monster.ui.mask()
 
 ## Syntax

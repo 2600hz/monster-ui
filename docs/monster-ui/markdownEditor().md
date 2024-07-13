@@ -1,5 +1,3 @@
-title: markdownEditor()
-
 # monster.ui.markdownEditor()
 The `monster.ui.markdownEditor()` method converts a simple textarea into a markdown editor.
 

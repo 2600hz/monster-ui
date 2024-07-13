@@ -1,5 +1,3 @@
-title: Build Commands
-
 # Build Commands
 
 Monster UI's build system is powered by `gulp`. It provides build management commands for applications as well as for the framework as a whole.

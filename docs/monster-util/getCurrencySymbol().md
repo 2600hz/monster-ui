@@ -1,5 +1,3 @@
-title: getCurrencySymbol()
-
 # monster.util.getCurrencySymbol()
 
 ## Syntax

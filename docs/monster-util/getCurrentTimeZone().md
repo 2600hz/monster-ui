@@ -1,5 +1,3 @@
-title: getCurrentTimeZone()
-
 # monster.util.getCurrentTimeZone()
 
 ## Syntax

@@ -1,5 +1,3 @@
-title: numberPicker()
-
 # monster.ui.numberPicker()
 
 ## Syntax
