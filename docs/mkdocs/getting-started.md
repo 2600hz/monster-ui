@@ -1,6 +1,4 @@
-title: Monster UI
-
-# [Monster UI](https://docs.2600hz.com/ui/) &middot; [![GitHub license](https://img.shields.io/badge/license-MPL%201.1-blue.svg)](LICENSE) [![CircleCI branch](https://img.shields.io/circleci/project/github/2600hz/monster-ui/master.svg)](https://circleci.com/gh/2600hz/monster-ui)
+# Monster UI Application Developer Reference
 
 The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
