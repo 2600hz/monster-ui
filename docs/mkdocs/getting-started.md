@@ -1,8 +1,7 @@
-# Monster UI Application Developer Reference
+# Getting Started
 
 The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
-## Getting Started
 
 *These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container*
 
