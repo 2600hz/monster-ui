@@ -109,8 +109,6 @@ define(function(require) {
 				successfulAuth = self._afterSuccessfulAuth.bind(self),
 				errorAuth = self.renderLoginPage.bind(self);
 
-			console.log('urlParams --', urlParams)
-
 			if (monster.config.whitelabel.hasOwnProperty('authentication')) {
 			// Custom authentication app
 				self.customAuth = monster.config.whitelabel.authentication;
@@ -1319,7 +1317,6 @@ define(function(require) {
 				},
 				error: function(errorPayload, data, globalHandler) {
 					if (data.status === 401 && errorPayload.data.hasOwnProperty('multi_factor_request')) {
-						console.log('handleMultiFactor 2', dataRecovery)
 						self.handleMultiFactor(errorPayload.data, dataRecovery, function(augmentedDataRecovery) {
 							self.recoveryWithResetId(augmentedDataRecovery, success, error);
 						}, function() {
@@ -1384,7 +1381,6 @@ define(function(require) {
 
 		// API Calls
 		putAuth: function(loginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs) {
-			console.log('do auth')
 			var self = this,
 				dataPayload = $.extend(true, {
 					data: loginData,
@@ -1427,7 +1423,6 @@ define(function(require) {
 							// If it's a 401 that is about requesting additional login information via MFA, we need to know if it comes from a reconnect attempt
 							// If it comes from a reconnect attempt, then we show a popup to ask them if they want to reconnect.
 							// If we don't do that and the system automatically reconnected, then the User would see a popup asking him to re-authenticate Duo without any context.
-							console.log('handleMultifactor 1')
 							var handleMultifactor = function() {
 								self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
 									self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
@@ -1455,13 +1450,6 @@ define(function(require) {
 
 		handleMultiFactor: function(data, loginData, success, error) {
 			var self = this;
-
-			console.log({
-				data,
-				loginData,
-				success,
-				error
-			})
 
 			if (data.multi_factor_request.provider_name === 'duo') {
 				self.showDuoDialog(data, loginData, success, error);
