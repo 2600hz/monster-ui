@@ -1479,6 +1479,7 @@ define(function(require) {
 					data: {
 						username: $('#login').val().toLowerCase(),
 						settings: {
+							duo_api_hostname: _.get(data, 'multi_factor_request.settings.duo_api_hostname'),
 							duo_redirect_url: window.location.origin
 						}
 					}
