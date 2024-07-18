@@ -174,7 +174,7 @@ define(function(require) {
 				}, errorAuth);
 			} else if (urlParams.hasOwnProperty('duo_code')) {
 				// DUO recovery redirect
-					self.checkDuoAuth(urlParams.duo_code, urlParams.state);
+					self.checkDuoAuth(urlParams.duo_code);
 			} else {
 			// Login page rendering
 				self.renderLoginPage();
@@ -1272,19 +1272,19 @@ define(function(require) {
 			$template.find('.cancel-link').on('click', closePopup);
 		},
 
-		checkDuoAuth: function(duoCode, duoState) {
+		checkDuoAuth: function(duoCode) {
 			var self = this,
 				loginData = JSON.parse(localStorage.getItem('prevAuth')),
 				duoData = JSON.parse(localStorage.getItem('duoAuth'));
 
-			//loginData.multi_factor_response = duoToken;
-			multi_factor_response
-			loginData.duo_code = duoCode;
-			loginData.duo_state = duoState;
-			loginData.duo_host = window.location.origin;
-			loginData.duo_saved_state = duoData.state
+			loginData.multi_factor_response = {
+				code: duoCode,
+				redirect_uri: window.location.origin
+			};
 
-			self.putAuth(loginData);
+			self.putAuth(loginData, function(data) {
+				// Do Auth success
+			});
 		},
 
 		checkRecoveryId: function(recoveryId, callback) {
@@ -1458,7 +1458,7 @@ define(function(require) {
 			}
 		},
 
-		showDuoDialog: function(data, loginData, success, error) {
+		showDuoDialog: function(data, loginData) {
 			localStorage.setItem('prevAuth', JSON.stringify(loginData))
 
 			monster.request({
@@ -1474,6 +1474,7 @@ define(function(require) {
 				},
 				success: function(data) {
 					localStorage.setItem('duoAuth', JSON.stringify(data))
+
 					window.location.href = data.duoURL
 				}
 			});
