@@ -50,16 +50,6 @@ define(function(require) {
 				apiRoot: monster.config.api.screwdriver,
 				url: 'upgrade',
 				verb: 'POST'
-			},
-			'duo.auth.url': {
-				apiRoot: monster.config.api.duo,
-				url: '/duo-auth-url',
-				verb: 'POST',
-				contentType: "application/json",
-				removeHeaders: [
-					'X-Kazoo-Cluster-ID',
-					'X-Auth-Token'
-				]
 			}
 		},
 
@@ -141,7 +131,14 @@ define(function(require) {
 					window.location = sso.login;
 				}
 			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-			// OAuth redirect
+				const duoAuthState = localStorage.getItem('duoAuthState')
+
+				if (duoAuthState === urlParams.state) {
+					self.checkDuoAuth(urlParams.code);
+					return
+				}
+
+				// OAuth redirect
 				self.getNewOAuthTokenFromURLParams(urlParams, function(authData) {
 					// Once we set our token we refresh the page to get rid of new URL params from auth callback
 					self.buildCookiesFromSSOResponse(authData);
@@ -172,9 +169,6 @@ define(function(require) {
 
 					successfulAuth && successfulAuth(data);
 				}, errorAuth);
-			} else if (urlParams.hasOwnProperty('duo_code')) {
-				// DUO recovery redirect
-					self.checkDuoAuth(urlParams.duo_code);
 			} else {
 			// Login page rendering
 				self.renderLoginPage();
@@ -1451,7 +1445,7 @@ define(function(require) {
 		handleMultiFactor: function(data, loginData, success, error) {
 			var self = this;
 
-			if (data.multi_factor_request.provider_name === 'duo') {
+			if (data.multi_factor_request.provider_name === 'duo_universal') {
 				self.showDuoDialog(data, loginData, success, error);
 			} else {
 				error && error();
@@ -1460,24 +1454,10 @@ define(function(require) {
 
 		showDuoDialog: function(data, loginData) {
 			localStorage.setItem('prevAuth', JSON.stringify(loginData))
+			localStorage.setItem('duoAuthState', _.get(data, 'multi_factor_request.duo_state', ''))
 
-			monster.request({
-				resource: 'duo.auth.url',
-				data: {
-					data: {
-						username: _.get(data, 'user_id'),
-						settings: {
-							duo_api_hostname: _.get(data, 'multi_factor_request.settings.duo_api_hostname'),
-							duo_redirect_url: window.location.origin
-						}
-					}
-				},
-				success: function(data) {
-					localStorage.setItem('duoAuth', JSON.stringify(data))
 
-					window.location.href = data.duoURL
-				}
-			});
+			window.location.href = _.get(data, 'multi_factor_request.duo_redirect', '')
 		},
 
 		/**
