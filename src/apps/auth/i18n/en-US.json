@@ -131,7 +131,11 @@
 	"__comment": "UI-2552: Adding duo integration",
 	"__version": "4.1",
 	"duoDialog": {
-		"title": "Multi-factor Authentication"
+		"title": "Multi-factor Authentication",
+		"eol": {
+			"title": "Invalid DUO settings",
+			"description": "Contact your administrator to update DUO configuration"
+		}
 	},
 	"multiFactor": {
 		"error": "The information sent by the multi-factor plugin isn't valid."
