@@ -1442,22 +1442,39 @@ define(function(require) {
 			});
 		},
 
-		handleMultiFactor: function(data, loginData, success, error) {
-			var self = this;
+		handleMultiFactor: function(data, loginData, _success, error) {
+			var self = this,
+				isDuoUniversal = data.multi_factor_request.provider_name === 'duo_universal',
+				isDuoLegacy = data.multi_factor_request.provider_name === 'duo';
 
-			if (data.multi_factor_request.provider_name === 'duo_universal') {
-				self.showDuoDialog(data, loginData, success, error);
+			if (isDuoUniversal) {
+				self.doDuoUniversalRedirect(data, loginData);
+			} else if (isDuoLegacy) {
+				self.showDuoDialog();
 			} else {
 				error && error();
 			}
 		},
 
-		showDuoDialog: function(data, loginData) {
+		doDuoUniversalRedirect: function(data, loginData) {
 			localStorage.setItem('prevAuth', JSON.stringify(loginData))
 			localStorage.setItem('duoAuthState', _.get(data, 'multi_factor_request.duo_state', ''))
 
-
 			window.location.href = _.get(data, 'multi_factor_request.duo_redirect', '')
+		},
+
+		showDuoDialog: function() {
+			var self = this;
+
+			monster.ui.alert(
+				'warning',
+				self.i18n.active().duoDialog.eol.description,
+				null,
+				{
+					title: self.i18n.active().duoDialog.eol.title,
+					isPersistent: true
+				}
+			);
 		},
 
 		/**
