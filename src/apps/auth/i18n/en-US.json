@@ -93,16 +93,10 @@
 				"reset": "An email has been sent to the address you provided. Please check that email for temporary credentials that you can use to access your account. Once signed in, you will need to change/update your password."
 			},
 			"error": {
-				"reset": {
-					"account_name": "The account name provided could not be found",
-					"account_realm": "The account realm provided could not be found",
-					"phone_number": "The phone number provided could not be found",
-					"username": "The username provided could not be found"
-				},
 				"missing": "Please input either an account name or a phone number linked to your account"
 			}
 		},
-		"successReset": "An email has been sent to the address you provided. Please check that email for temporary credentials that you can use to access your account. Once signed in, you will need to change/update your password.",
+		"successReset": "If the information matches a user account, an email will be sent with details on how to reset your password.",
 		"headline": "In order to recover your password, please enter your email/username:",
 		"emailPlaceholder": "Email/Username",
 		"headline2": "And one of the following (only one is required):",
