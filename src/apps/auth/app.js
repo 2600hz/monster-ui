@@ -1040,25 +1040,7 @@ define(function(require) {
 								content.find('.reset-notification').addClass('animated fadeIn').removeClass('hidden');
 							},
 							error: function(data, error, globalHandler) {
-								if (error.status === 400) {
-									_.keys(data.data).forEach(function(val) {
-										if (self.i18n.active().recoverPassword.toastr.error.reset.hasOwnProperty(val)) {
-											monster.ui.toast({
-												type: 'error',
-												message: self.i18n.active().recoverPassword.toastr.error.reset[val]
-											});
-										} else {
-											if (data.data[val].hasOwnProperty('not_found')) {
-												monster.ui.toast({
-													type: 'error',
-													message: data.data[val].not_found
-												});
-											}
-										}
-									});
-								} else {
-									globalHandler(data);
-								}
+								globalHandler(data);
 							}
 						});
 					} else {

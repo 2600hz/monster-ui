@@ -45,22 +45,16 @@
 "text": "Geef aub uw gebruikersnaam plus een account realm of een telefoonnummer uit uw account op."
 },
 "button": {
-"recover": "Herstel Wachtwoord"
-},
-"toastr": {
-"success": {
-"reset": "Uw wachtwoord is succesvol hersteld"
-},
-"error": {
-"reset": {
-"account_name": "De opgegeven account naam werd niet gevonden",
-"account_realm": "De opgegeven account realm werd niet gevonden",
-"phone_number": "Het opgegeven telefoonnummer werd niet gevonden",
-"username": "De opgegeven gebruikersnaam werd niet gevonden"
-},
-"missing": "Geef aub een account naam, account realm of een telefoonnummer uit uw account in"
-}
-}
+		"recover": "Herstel Wachtwoord"
+		},
+		"toastr": {
+		"success": {
+			"reset": "Uw wachtwoord is succesvol hersteld"
+		},
+		"error": {
+			"missing": "Geef aub een account naam, account realm of een telefoonnummer uit uw account in"
+		}
+	}
 },
 "passwordUpdate": {
 "title": "Wachtwoord Bijwerken",
