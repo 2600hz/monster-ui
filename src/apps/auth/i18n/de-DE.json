@@ -93,12 +93,6 @@
 				"reset": "Eine E-Mail wurde an die von Ihnen genannte Adresse gesendet. In dieser E-Mail finden Sie temporäre Anmeldedaten, mit denen Sie auf Ihren Account zugreifen können. Nachdem Sie sich angemeldet haben, müssen Sie Ihr Kennwort ändern/aktualisieren."
 			},
 			"error": {
-				"reset": {
-					"account_name": "Der angegebene Account-Name konnte nicht gefunden werden",
-					"account_realm": "Der angegebene Account-Bereich konnte nicht gefunden werden",
-					"phone_number": "Die angegebene Telefonnummer konnte nicht gefunden werden",
-					"username": "Der angegebene Benutzername konnte nicht gefunden werden"
-				},
 				"missing": "Bitte geben Sie einen Account-Namen oder eine Telefonnummer ein, die mit Ihrem Account verknüpft sind"
 			}
 		},

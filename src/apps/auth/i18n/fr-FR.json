@@ -79,12 +79,6 @@
 				"reset": "Votre mot de passe a été réinitialisé avec succès. Un email a été envoyé à votre adresse de login."
 			},
 			"error": {
-				"reset": {
-					"account_name": "Le nom de compte fourni n'a pas pu être trouvé",
-					"account_realm": "Le royaume de compte fourni n'a pas pu être trouvé",
-					"phone_number": "Le numéro de téléphone fourni n'a pas pu être trouvé",
-					"username": "Le nom d'utilisateur founi n'a pas pu être trouvé"
-				},
 				"missing": "Veuillez spécifier un nom de compte ou un numéro de téléphone lié à votre compte"
 			}
 		},
