@@ -1,6 +1,6 @@
 # monster.ui.disableAutoFill()
 
-![](images/disableAutoFill.gif)
+![](./images/disableAutoFill.gif)
 
 ## Syntax
 ```javascript

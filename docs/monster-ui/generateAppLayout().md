@@ -1,6 +1,6 @@
 # monster.ui.generateAppLayout()
 
-![](images/generateAppLayout-preview.png)
+![](./images/generateAppLayout-preview.png)
 
 ### Syntax
 ```javascript
@@ -80,22 +80,22 @@ An app can have three different types: `default`, `fullscreen` and `docked`. Tho
 #### `default`
 Maximum width of 1280px with 20px of on each sides to keep it from hitting the sides on smaller screens.
 
-![](images/generateAppLayout-content-default.png)
+![](./images/generateAppLayout-content-default.png)
 
 #### `fullscreen`
 Takes the full width of the window minus the 20px of padding on each side.
 
-![](images/generateAppLayout-content-fullscreen.png)
+![](./images/generateAppLayout-content-fullscreen.png)
 
 #### `docked`
 No margin or padding around the wrapper, the content will be right next to the topbar and take full size of the window.
 
-![](images/generateAppLayout-content-docked.png)
+![](./images/generateAppLayout-content-docked.png)
 
 ## Examples
 ### Generate layout with `navbar` and menus
 
-![Layout with navbar and multiple menus](images/generateAppLayout-navbar-menus.png)
+![Layout with navbar and multiple menus](./images/generateAppLayout-navbar-menus.png)
 
 ```javascript
 monster.ui.generateAppLayout(app, {
@@ -128,7 +128,7 @@ The concept of multiple menus is simply used to group tabs together with a separ
 
 ### Generate layout with `navbar` and sub-menus
 
-![Layout with navbar and sub-menus](images/generateAppLayout-navbar-menus-sub.png)
+![Layout with navbar and sub-menus](./images/generateAppLayout-navbar-menus-sub.png)
 
 ```javascript
 monster.ui.generateAppLayout(app, {
@@ -169,7 +169,7 @@ When a menu has sub-menus, the callback of the first sub-menu will be used as it
 
 ### Generate layout with `navbar` and menus pulled right
 
-![Layout with navbar and menus pulled right](images/generateAppLayout-navbar-menus-pull.png)
+![Layout with navbar and menus pulled right](./images/generateAppLayout-navbar-menus-pull.png)
 
 ```javascript
 monster.ui.generateAppLayout(app, {
@@ -188,7 +188,7 @@ monster.ui.generateAppLayout(app, {
 
 ### Generate layout without `navbar`
 
-![Layout without navbar](images/generateAppLayout-navbar-none.png)
+![Layout without navbar](./images/generateAppLayout-navbar-none.png)
 
 ```javascript
 monster.ui.generateAppLayout(app, {

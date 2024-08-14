@@ -1,6 +1,6 @@
 # keyValueSelector
 
-![](images/keyValueSelector.gif)
+![](./images/keyValueSelector.gif)
 
 ## Syntax
 ```javascript

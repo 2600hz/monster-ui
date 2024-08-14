@@ -1,7 +1,7 @@
 # monster.ui.jsoneditor()
 The `monster.ui.jsoneditor()` method generates an instance of a JSON editor with a set of handy methods and properties.
 
-![](images/jsoneditor-preview.png)
+![](./images/jsoneditor-preview.png)
 
 ## Syntax
 ```javascript
