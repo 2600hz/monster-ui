@@ -14,7 +14,7 @@
                 </li>
             </ul>
             <div class="divider"></div>
-            <span class="label label-default">1-{{rowCount}} of {{rowCount}}</span>
+            <span class="label label-default">{{#compare rowCount "===" 0}}0{{else}}1{{/compare}}-{{rowCount}} of {{rowCount}}</span>
         </div>
-    </td>    
+    </td>
 </tr>
