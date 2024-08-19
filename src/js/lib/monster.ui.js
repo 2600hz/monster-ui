@@ -2868,15 +2868,23 @@ define(function(require) {
 					// If we gave a selector with many table, we need to add the component to each table, so we need to loop thru each table included in the jquery selector
 					$.each(table, function(k, singleTable) {
 						var $singleTable = $(singleTable),
-							$tablePaging = $singleTable.find('.footable-paging td');
+							$tablePaging = $singleTable.find('.footable-paging td'),
+							rowCount = footable.get($singleTable).rows.all.length;
 
 						if ($tablePaging.length === 0) {
+							var cols = 0;
+
+							$singleTable.find('tbody > tr:first > td').each(function() {
+								var colspanStr = $(this).attr('colspan');
+								cols += (_.parseInt(colspanStr) || 1);
+							});
+
 							$singleTable.find('tfoot').append(
 								$(monster.template(
 									monster.apps.core, 'monster-table-paging',
 									{
-										cols: $singleTable.find('tbody > tr:first > td').length,
-										rowCount: footable.get($singleTable).rows.all.length
+										cols: cols,
+										rowCount: rowCount
 									}
 								))
 							);
