@@ -43,7 +43,7 @@ Note that each of these settings, if provided, will override the similar ones se
 * `success(responseData)`: A function called when the API call returns successfully, where `responseData` is the response payload from the API.
 * `error(responseData, error)`: A function called when the API call returns an error, where `responseData` is the JSON-parsed response payload from the API and error is the response from the API as a jqXHR object.
 * `onChargesCancelled()`: an optional function with no parameter that will be executed when a user refuses to confirm the charges related to an action.
-* `filters`: A map of filters to append to the API URL where the key is the URL parameter and the value is the parameter's value. For instance, `{ "filter_type": "admin" }` will be translated into `<your_api_url>?filter_type=admin`. [See the wiki](https://docs.2600hz.com/supported/applications/crossbar/doc/filters/) for more info about filters.
+* `filters`: A map of filters to append to the API URL where the key is the URL parameter and the value is the parameter's value. For instance, `{ "filter_type": "admin" }` will be translated into `<your_api_url>?filter_type=admin`. [See the wiki](https://docs.2600hz.com/git/2600hz/kazoo-crossbar/doc/filters.md) for more info about filters.
 * `headers`: An object of additional header key/value pairs to send along with request (e.g. `{ 'Accept': 'application/octet-stream' }`).
 * `cache`: A boolean specifying whether to use the cache or not for GET & HEAD requests. False by default.
 
