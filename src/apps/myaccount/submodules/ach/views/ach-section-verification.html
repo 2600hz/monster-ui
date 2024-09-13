@@ -22,43 +22,43 @@
 				{{i18n.achDirectDebit.verificationFailure.message}}
 			{{/monsterPanelText}}
 		</div>
-		{{#if isAwaitingSettlement}}
+	{{#if isAwaitingSettlement}}
 		<div class="ach-section-waiting">
 			{{#monsterPanelText null "warning" "fill-width"}}
 				{{i18n.achDirectDebit.awaitingSettlement.description}}
 			{{/monsterPanelText}}
 		</div>
-		{{/if}}
+	{{/if}}
 		<div class="ach-section">
 			<form id="form_ach_verification" class="ach-verification-form">
-				{{#unless isAwaitingSettlement}}
+			{{#unless isAwaitingSettlement}}
 				<fieldset class="settings-item-section">
 					<div class="control-group">
 						<label class="control-label" for="deposit_amount_1">{{i18n.achDirectDebit.achVerification.achVerificationForm.depositAmount.label}}</label>
 						<div class="controls">
-							<input type="text" id="deposit_amount_1" name="deposit_amount_1" value="" pattern="\d+(\.\d{2})?" placeholder="{{i18n.achDirectDebit.achVerification.achVerificationForm.depositAmount.placeholder}}">
+							<input type="text" id="deposit_amount_1" name="deposit_amount_1" class="ach-deposit-amout" value="" pattern="\d+(\.\d{2})?" placeholder="{{i18n.achDirectDebit.achVerification.achVerificationForm.depositAmount.placeholder}}">
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="deposit_amount_2">{{i18n.achDirectDebit.achVerification.achVerificationForm.depositAmount.label}}</label>
 						<div class="controls">
-							<input type="text" id="deposit_amount_2" name="deposit_amount_2" value="" pattern="\d+(\.\d{2})?" placeholder="{{i18n.achDirectDebit.achVerification.achVerificationForm.depositAmount.placeholder}}">
+							<input type="text" id="deposit_amount_2" name="deposit_amount_2" class="ach-deposit-amout" value="" pattern="\d+(\.\d{2})?" placeholder="{{i18n.achDirectDebit.achVerification.achVerificationForm.depositAmount.placeholder}}">
 						</div>
 					</div>
 				</fieldset>
-				{{/unless}}
+			{{/unless}}
 				<button id="remove_account" class="monster-button-danger">
-          	        	      {{i18n.achDirectDebit.achVerification.button.removeAccount}}
-                		</button>
-				{{#unless isAwaitingSettlement}}
+					{{i18n.achDirectDebit.achVerification.button.removeAccount}}
+				</button>
+			{{#unless isAwaitingSettlement}}
 				<button id="verify_account" class="monster-button-primary">
 					{{#if billingHasPendingChanges}}
 						{{i18n.achDirectDebit.achVerification.button.saveAndVerifyAccount}}
 					{{else}}
 						{{i18n.achDirectDebit.achVerification.button.verifyAccount}}
 					{{/if}}
-                		</button>
-				{{/unless}}
+				</button>
+			{{/unless}}
 			</form>
 		</div>
 	</div>
