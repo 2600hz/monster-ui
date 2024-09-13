@@ -312,11 +312,9 @@ define(function(require) {
 							enableVerifyButton();
 						};
 
-					template
-						.find('input[type="text"]')
-							.mask('#0.00', {
-								reverse: true
-							});
+					monster.ui.mask(template.find('input.ach-deposit-amout'), '#0.00', {
+						reverse: true
+					});
 
 					//set validation to false on load
 					_.each(self.appFlags.ach.validAchVerificationFormFields, (value, key) => {
