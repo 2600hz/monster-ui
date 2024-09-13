@@ -44,8 +44,6 @@ define({
 });
 ```
 
-*For a full list and comprehensive descriptions of all the configurable options, head over to the [dedicated documentation](https://docs.2600hz.com/ui/docs/configuration/)*.
-
 ### Build
 
 Use the `gulp` command to build and launch the web server
