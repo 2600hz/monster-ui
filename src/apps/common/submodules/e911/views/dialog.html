@@ -39,16 +39,6 @@
 					<input id="region" type="text" name="region" placeholder='{{ i18n.e911.state }}' value="{{region}}" />
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="country">{{ i18n.e911.country }}</label>
-				<div class="controls">
-					<select class="country-list" name="country">
-						<option value="{{ i18n.e911.countries.us.value }}" selected>
-							{{ i18n.e911.countries.us.option }}
-						</option>
-					</select>
-				</div>
-			</div>
 			{{#if status}}
 				<div class="control-group gmap_link_div" style="display: none;">
 					<div class="controls">
