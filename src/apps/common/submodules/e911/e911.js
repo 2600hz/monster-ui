@@ -227,6 +227,11 @@ define(function(require) {
 		},
 
 		e911Format: function(data) {
+			if (_.isUndefined(data)) {
+				return;
+			}
+
+			data.full_street_address = _.get(data, 'legacy_data.house_number') + ' ' + _.get(data, 'street_address');
 			return _.merge({}, data, {
 				notification_contact_emails: _
 					.chain(data)
