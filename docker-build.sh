@@ -1,18 +1,62 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status
 
-if [[ "$1" == 'update' ]]; then
-    pushd src/apps
-    for app in ./*/; do
-        pushd "$app"
-        gu="$(git config --get remote.origin.url)"
-        if [[ 'git@github.com:2600hz/monster-ui.git' != "$gu" ]]; then
-            echo Pulling from "$gu"
-            git pull
-        fi
-        popd
-    done
-    popd
+if [[ "$1" == 'allapps' ]]; then
+    echo "adding callflows updates"
+    #callflows
+    mkdir -p $(pwd)/tmp
+    git clone https://github.com/mooseable/monster-ui-callflows-ng.git $(pwd)/tmp
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding resources app"
+    #resources
+    mkdir -p $(pwd)/tmp/src
+    git clone https://github.com/mooseable/monster-ui-resources.git $(pwd)/tmp/src
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding rates app"
+    #rates
+    mkdir -p $(pwd)/tmp/src
+    git clone https://github.com/mooseable/monster-ui-rates.git $(pwd)/tmp/src
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding callcenter app"
+    #callcenter
+    mkdir -p $(pwd)/tmp
+    git clone https://github.com/mooseable/monster-ui-callcenter.git $(pwd)/tmp
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding storagemgmt app"
+    #storagemgmt
+    mkdir -p $(pwd)/tmp
+    git clone https://github.com/mooseable/monster-ui-storagemgmt.git $(pwd)/tmp
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding whitelabel app"
+    #whitelabel
+    mkdir -p $(pwd)/tmp
+    git clone https://github.com/mooseable/monster-ui-whitelabel.git $(pwd)/tmp
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding addressbooks app"
+    #addressbooks
+    mkdir -p $(pwd)/tmp
+    git clone https://github.com/mooseable/monster-ui-addressbooks.git $(pwd)/tmp
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding registrations app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src
+    git clone https://github.com/mooseable/monster-ui-registrations.git $(pwd)/tmp/src
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
 fi
 
 # Define build output directories on the host
