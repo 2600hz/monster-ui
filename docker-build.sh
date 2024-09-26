@@ -1,6 +1,33 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status
 
+DATATABLES_PATHS=(
+    "'datatables.net': 'js/vendor/datatables/jquery.dataTables.min',"
+    "'datatables.net-bs': 'js/vendor/datatables/dataTables.bootstrap.min',"
+    "'datatables.net-buttons': 'js/vendor/datatables/dataTables.buttons.min',"
+    "'datatables.net-buttons-html5': 'js/vendor/datatables/buttons.html5.min',"
+    "'datatables.net-buttons-bootstrap':'js/vendor/datatables/buttons.bootstrap.min'"
+)
+MAIN_JS="$(pwd)/src/js/main.js"
+# Function to add a line to the paths object if it doesn't already exist
+add_line_if_missing() {
+    local line="$1"
+    local file="$2"
+
+    # Escape forward slashes for grep and sed
+    local escaped_line=$(echo "$line" | sed 's/\//\\\//g')
+
+    # Check if the line exists in the file
+    if ! grep -qF "$line" "$file"; then
+        # Insert the line before the closing '}' of the paths object
+        # Assumes that 'paths: {' and the closing '}' are properly formatted
+        sed -i "/paths\s*:\s*{/a \ \ \ \ $escaped_line" "$file"
+        echo "Added line: $line"
+    else
+        echo "Line already exists: $line"
+    fi
+}
+
 if [[ "$1" == 'allapps' ]]; then
     echo "adding callflows updates"
     #callflows
@@ -30,12 +57,13 @@ if [[ "$1" == 'allapps' ]]; then
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
-    echo "adding storagemgmt app"
-    #storagemgmt
-    mkdir -p $(pwd)/tmp
-    git clone https://github.com/mooseable/monster-ui-storagemgmt.git $(pwd)/tmp
-    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
-    rm -rf $(pwd)/tmp
+    #echo "adding storagemgmt app"
+    ##storagemgmt (fails minify when building)
+    ## around the line for "storageManagerMakeConfig (storageKeyword, data, uuid) {"
+    #mkdir -p $(pwd)/tmp
+    #git clone https://github.com/mooseable/monster-ui-storagemgmt.git $(pwd)/tmp
+    #/bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    #rm -rf $(pwd)/tmp
 
     echo "adding whitelabel app"
     #whitelabel
@@ -57,6 +85,10 @@ if [[ "$1" == 'allapps' ]]; then
     git clone https://github.com/mooseable/monster-ui-registrations.git $(pwd)/tmp/src
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
+
+    for line in "${DATATABLES_PATHS[@]}"; do
+        add_line_if_missing "$line" "$MAIN_JS"
+    done
 fi
 
 # Define build output directories on the host
