@@ -6,7 +6,7 @@ DATATABLES_PATHS=(
     "'datatables.net-bs': 'js/vendor/datatables/dataTables.bootstrap.min',"
     "'datatables.net-buttons': 'js/vendor/datatables/dataTables.buttons.min',"
     "'datatables.net-buttons-html5': 'js/vendor/datatables/buttons.html5.min',"
-    "'datatables.net-buttons-bootstrap':'js/vendor/datatables/buttons.bootstrap.min'"
+    "'datatables.net-buttons-bootstrap':'js/vendor/datatables/buttons.bootstrap.min',"
 )
 MAIN_JS="$(pwd)/src/js/main.js"
 # Function to add a line to the paths object if it doesn't already exist
@@ -21,7 +21,7 @@ add_line_if_missing() {
     if ! grep -qF "$line" "$file"; then
         # Insert the line before the closing '}' of the paths object
         # Assumes that 'paths: {' and the closing '}' are properly formatted
-        sed -i "/paths\s*:\s*{/a \ \ \ \ $escaped_line" "$file"
+        sed -i "/paths\s*:\s*{/a \ \ \ \ \ \ \ \ $escaped_line" "$file"
         echo "Added line: $line"
     else
         echo "Line already exists: $line"
