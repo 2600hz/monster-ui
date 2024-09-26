@@ -75,6 +75,20 @@ It also starts by pulling your apps installed in `src/apps` before starting the 
 ./serve.sh no-update
 ```
 
+## Using Docker to Build Only
+
+If you have docker installed, you can build monster-ui so it can then be copied to an nginx/httpd/other server or service of your choice.
+
+```shell
+./docker-build.sh
+```
+
+You can optionall add extra community written apps with
+```shell
+./docker-build.sh allapps
+```
+It will output to monster-ui-build/dist/
+
 ## Documentation
 
 You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/ui/).
