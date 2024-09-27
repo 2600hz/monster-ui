@@ -8,6 +8,9 @@ DATATABLES_PATHS=(
     "'datatables.net-buttons-html5': 'js/vendor/datatables/buttons.html5.min',"
     "'datatables.net-buttons-bootstrap':'js/vendor/datatables/buttons.bootstrap.min',"
 )
+
+GITHUBREPO="https://github.com/mooseable"
+
 MAIN_JS="$(pwd)/src/js/main.js"
 # Function to add a line to the paths object if it doesn't already exist
 add_line_if_missing() {
@@ -32,28 +35,28 @@ if [[ "$1" == 'allapps' ]]; then
     echo "adding callflows updates"
     #callflows
     mkdir -p $(pwd)/tmp
-    git clone https://github.com/mooseable/monster-ui-callflows-ng.git $(pwd)/tmp
+    git clone $GITHUBREPO/monster-ui-callflows-ng.git $(pwd)/tmp
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
     echo "adding resources app"
     #resources
     mkdir -p $(pwd)/tmp/src
-    git clone https://github.com/mooseable/monster-ui-resources.git $(pwd)/tmp/src
+    git clone $GITHUBREPO/monster-ui-resources.git $(pwd)/tmp/src
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
     echo "adding rates app"
     #rates
     mkdir -p $(pwd)/tmp/src
-    git clone https://github.com/mooseable/monster-ui-rates.git $(pwd)/tmp/src
+    git clone $GITHUBREPO/monster-ui-rates.git $(pwd)/tmp/src
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
     echo "adding callcenter app"
     #callcenter
     mkdir -p $(pwd)/tmp
-    git clone https://github.com/mooseable/monster-ui-callcenter.git $(pwd)/tmp
+    git clone $GITHUBREPO/monster-ui-callcenter.git $(pwd)/tmp
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
@@ -61,28 +64,28 @@ if [[ "$1" == 'allapps' ]]; then
     ##storagemgmt (fails minify when building)
     ## around the line for "storageManagerMakeConfig (storageKeyword, data, uuid) {"
     #mkdir -p $(pwd)/tmp
-    #git clone https://github.com/mooseable/monster-ui-storagemgmt.git $(pwd)/tmp
+    #git clone $GITHUBREPO/monster-ui-storagemgmt.git $(pwd)/tmp
     #/bin/cp -rf $(pwd)/tmp/src $(pwd)/
     #rm -rf $(pwd)/tmp
 
     echo "adding whitelabel app"
     #whitelabel
     mkdir -p $(pwd)/tmp
-    git clone https://github.com/mooseable/monster-ui-whitelabel.git $(pwd)/tmp
+    git clone $GITHUBREPO/monster-ui-whitelabel.git $(pwd)/tmp
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
     echo "adding addressbooks app"
     #addressbooks
     mkdir -p $(pwd)/tmp
-    git clone https://github.com/mooseable/monster-ui-addressbooks.git $(pwd)/tmp
+    git clone $GITHUBREPO/monster-ui-addressbooks.git $(pwd)/tmp
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
     echo "adding registrations app"
     #registrations
     mkdir -p $(pwd)/tmp/src
-    git clone https://github.com/mooseable/monster-ui-registrations.git $(pwd)/tmp/src
+    git clone $GITHUBREPO/monster-ui-registrations.git $(pwd)/tmp/src
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
