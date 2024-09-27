@@ -2,6 +2,8 @@
 
 The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
+Forked from https://github.com/2600hz/monster-ui.git and maintained by the community.
+
 ## Getting Started
 
 *These instructions will get you a copy of the project up and running on your local machine for development purposes. See the [Using Docker](#using-docker) section for notes on how to automate the following steps by running a script within a Docker container*
@@ -14,10 +16,10 @@ The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
 ### Install
 
-Clone the official `monster-ui` repository:
+Clone the kazoo-classic `monster-ui` repository:
 
 ```
-git clone https://github.com/2600hz/monster-ui.git monster-ui
+git clone https://github.com/kazoo-classic/monster-ui.git monster-ui
 ```
 
 Go to the project's folder:
@@ -91,17 +93,17 @@ It will output to monster-ui-build/dist/
 
 ## Documentation
 
-You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/ui/).
+You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/monsterui/).
 
 The documentation is stored on this repository (`/docs`) which allows you to easily improve it or add new pages when making PRs against the core of Monster UI.
 
 ## Contributing
 
-1. [Fork it!](https://github.com/2600hz/monster-ui/fork)
+1. [Fork it! (2600hz)](https://github.com/2600hz/monster-ui/fork) or [Fork it! (kazoo-classic)](https://github.com/kazoo-classic/monster-ui/fork)
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+5. Submit a pull request
 
 ## License
 

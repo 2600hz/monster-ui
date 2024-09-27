@@ -9,7 +9,7 @@ DATATABLES_PATHS=(
     "'datatables.net-buttons-bootstrap':'js/vendor/datatables/buttons.bootstrap.min',"
 )
 
-GITHUBREPO="https://github.com/mooseable"
+GITHUBREPO="https://github.com/kazoo-classic"
 
 MAIN_JS="$(pwd)/src/js/main.js"
 # Function to add a line to the paths object if it doesn't already exist
