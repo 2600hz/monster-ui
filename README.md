@@ -91,6 +91,8 @@ You can optionall add extra community written apps with
 ```
 It will output to monster-ui-build/dist/
 
+Note that this requires all monster apps to be present in kazoo-classic, and all stored as the master branch, which it currently does not, though we will work on this soon. You can instead change the $GITHUBREPO to your own desired repository.
+
 ## Documentation
 
 You can find all the documentation related to Monster UI on the [dedicated website](https://docs.2600hz.com/monsterui/).

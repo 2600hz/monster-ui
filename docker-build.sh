@@ -103,6 +103,55 @@ if [[ "$1" == 'allapps' ]]; then
     /bin/cp -rf $(pwd)/tmp/src $(pwd)/
     rm -rf $(pwd)/tmp
 
+    echo "adding SmartPBX app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/voip
+    git clone $GITHUBREPO/monster-ui-voip.git $(pwd)/tmp/src/apps/voip
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding Accounts app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/accounts
+    git clone $GITHUBREPO/monster-ui-accounts.git $(pwd)/tmp/src/apps/accounts
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding CSV-Onboarding app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/csv-onboarding
+    git clone $GITHUBREPO/monster-ui-csv-onboarding.git $(pwd)/tmp/src/apps/csv-onboarding
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding Fax app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/fax
+    git clone $GITHUBREPO/monster-ui-fax.git $(pwd)/tmp/src/apps/fax
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding Numbers app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/numbers
+    git clone $GITHUBREPO/monster-ui-numbers.git $(pwd)/tmp/src/apps/numbers
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding PBXs app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/pbxs
+    git clone $GITHUBREPO/monster-ui-pbxs.git $(pwd)/tmp/src/apps/pbxs
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
+    echo "adding Webhooks app"
+    #registrations
+    mkdir -p $(pwd)/tmp/src/apps/webhooks
+    git clone $GITHUBREPO/monster-ui-webhooks.git $(pwd)/tmp/src/apps/webhooks
+    /bin/cp -rf $(pwd)/tmp/src $(pwd)/
+    rm -rf $(pwd)/tmp
+
     for line in "${DATATABLES_PATHS[@]}"; do
         add_line_if_missing "$line" "$MAIN_JS"
     done
