@@ -436,7 +436,7 @@ define(function(require) {
 						},
 						success: function(data, status) {
 							self.triggerMasquerading({
-								account: data,
+								account: data.data,
 								callback: function() {
 									var currentApp = monster.apps.getActiveApp();
 									if (currentApp in monster.apps) {
@@ -480,7 +480,7 @@ define(function(require) {
 
 		triggerMasquerading: function(args) {
 			var self = this,
-				account = args.account.data,
+				account = args.account,
 				callback = args.callback,
 				afterGetData = function(account) {
 					monster.apps.auth.currentAccount = $.extend(true, {}, account);
