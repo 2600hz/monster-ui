@@ -882,7 +882,9 @@ define(function(require) {
 					}
 				}
 			} else if (type === 'account') {
-				delete params.data.contact.billing.region_select;
+				if (_.get(params.data, 'contact.billing.region_select')) {
+					delete params.data.contact.billing.region_select;
+				}
 
 				if (_.get(params.data, ['braintree', 'surcharge_accepted'], '') === '') {
 					_.unset(params.data, 'braintree');
