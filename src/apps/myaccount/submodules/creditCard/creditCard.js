@@ -603,9 +603,11 @@ define(function(require) {
 					country = _.get(account, ['contact', 'billing', 'country']),
 					region = _.get(account, ['contact', 'billing', 'region']),
 					surcharge = self.billingGetCreditCardSurcharge(country, region),
-					isCardAccepted = !!surcharge;
+					isCardAccepted = !!surcharge,
+					hasVerifiedACH = _.chain(billing).get('payments', []).some({ 'type': 'ach', 'verified': true }).value();
 
-				if (!hasCreditCards || country !== 'US' || (isCardAccepted && isSurchargeAccepted)) {
+				if (
+					!hasCreditCards || country !== 'US' || (isCardAccepted && isSurchargeAccepted) || hasVerifiedACH) {
 					return;
 				}
 
