@@ -576,21 +576,7 @@ define(function(require) {
 						}
 					});
 				},
-				billing: function(next) {
-					self.callApi({
-						resource: 'billing.get',
-						data: {
-							accountId: self.accountId,
-							generateError: false
-						},
-						success: function(data) {
-							next(null, data.data);
-						},
-						error: function() {
-							next(true);
-						}
-					});
-				}
+				billing: _.bind(self.billingGetBillingData, self)
 			}, function(err, results) {
 				if (err) {
 					return;
@@ -599,12 +585,12 @@ define(function(require) {
 				var account = results.account,
 					billing = results.billing,
 					isSurchargeAccepted = self.billingIsSurchargeAccepted(account),
-					hasCreditCards = !_.chain(billing).get('credit_cards', []).isEmpty().value(),
+					hasCreditCards = !_.chain(billing).get('customer.credit_cards', []).isEmpty().value(),
 					country = _.get(account, ['contact', 'billing', 'country']),
 					region = _.get(account, ['contact', 'billing', 'region']),
 					surcharge = self.billingGetCreditCardSurcharge(country, region),
 					isCardAccepted = !!surcharge,
-					hasVerifiedACH = _.chain(billing).get('payments', []).some({ 'type': 'ach', 'verified': true }).value();
+					hasVerifiedACH = _.chain(billing).get('payments', []).some({ type: 'ach', verified: true, 'default': true }).value();
 
 				if (
 					!hasCreditCards || country !== 'US' || (isCardAccepted && isSurchargeAccepted) || hasVerifiedACH) {
