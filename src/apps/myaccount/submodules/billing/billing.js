@@ -481,7 +481,7 @@ define(function(require) {
 						return next(null, mainData);
 					}
 
-					self.getPaymentMethods({
+					self.billingGetPaymentMethods({
 						success: function(payments) {
 							next(null, _.assign({}, mainData, { payments: payments }));
 						},
@@ -644,7 +644,7 @@ define(function(require) {
 
 					monster.waterfall([
 						function reloadPaymentMethods(next) {
-							self.getPaymentMethods({
+							self.billingGetPaymentMethods({
 								success: function(payments) {
 									next(null, payments);
 								},
@@ -1144,7 +1144,7 @@ define(function(require) {
 			});
 		},
 
-		getPaymentMethods: function(args) {
+		billingGetPaymentMethods: function(args) {
 			var self = this;
 
 			monster.request({
