@@ -436,7 +436,7 @@ define(function(require) {
 						},
 						success: function(data, status) {
 							self.triggerMasquerading({
-								account: data.data,
+								account: _.chain(data.metadata).pick(['billing_mode', 'enabled', 'superduper_admin', 'wnm_allow_additions', 'created', 'is_reseller', 'reseller_id']).merge(data.data).value(),
 								callback: function() {
 									var currentApp = monster.apps.getActiveApp();
 									if (currentApp in monster.apps) {
@@ -486,8 +486,8 @@ define(function(require) {
 					monster.apps.auth.currentAccount = $.extend(true, {}, account);
 					self.updateApps(account.id);
 
-					monster.apps.auth.currentAccount.reseller_id = _.get(args, 'account.metadata.reseller_id');
-					monster.apps.auth.currentAccount.is_reseller = _.get(args, 'account.metadata.is_reseller');
+					monster.apps.auth.currentAccount.reseller_id = _.get(args, 'account.reseller_id');
+					monster.apps.auth.currentAccount.is_reseller = _.get(args, 'account.is_reseller');
 
 					monster.pub('myaccount.renderNavLinks', {
 						name: account.name,
