@@ -522,8 +522,7 @@ define(function(require) {
 						generateError: false
 					},
 					success: function(data, status) {
-						account = data.data;
-
+						account = _.chain(data.metadata).pick(['billing_mode', 'enabled', 'superduper_admin', 'wnm_allow_additions', 'created', 'is_reseller', 'reseller_id']).merge(data.data).value();
 						afterGetData(account);
 					},
 					error: function() {
