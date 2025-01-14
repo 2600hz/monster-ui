@@ -165,7 +165,7 @@ define(function() {
 							return;
 						}
 
-						if (_.has(data, 'data') && _.has(data, 'metadata')) {
+						if (_.has(data, 'data') && !_.isArray(data.data) && _.has(data, 'metadata')) {
 							data = _.assignIn({}, data, {
 								data: _.assignIn({}, data.data, { _metadata: data.metadata })
 							});
