@@ -160,7 +160,20 @@ define(function() {
 				var apiSplit = params.resource.split('.'),
 					module = apiSplit[0],
 					method = apiSplit[1],
-					successCallback = params.success,
+					appendMetadataSuccessCallback = function(data, status) {
+						if (!params.success) {
+							return;
+						}
+
+						if (_.has(data, 'data') && _.has(data, 'metadata')) {
+							data = _.assignIn({}, data, {
+								data: _.assignIn({}, data.data, { _metadata: data.metadata })
+							});
+						}
+
+						params.success(data, status)
+					},
+					successCallback = appendMetadataSuccessCallback,
 					errorCallback = params.error,
 					cancelCall = false; //Used to cancel the Api Call before it is actually sent
 
@@ -180,7 +193,7 @@ define(function() {
 									monster.pub('auth.originalAccountUpdated', data.data);
 								}
 
-								params.success && params.success(data, status);
+								appendMetadataSuccessCallback(data, status);
 							};
 
 							break;
@@ -191,7 +204,7 @@ define(function() {
 									return monster.util.cmp(a.first_name.toLowerCase(), b.first_name.toLowerCase()) || monster.util.cmp(a.last_name.toLowerCase(), b.last_name.toLowerCase());
 								});
 
-								params.success && params.success(data, status);
+								appendMetadataSuccessCallback(data, status);
 							};
 							break;
 
@@ -209,11 +222,11 @@ define(function() {
 											data: data.data
 										},
 										success: function(data, status) {
-											params.success && params.success(data, status);
+											appendMetadataSuccessCallback(data, status);
 										}
 									});
 								} else {
-									params.success && params.success(data, status);
+									appendMetadataSuccessCallback(data, status);
 								}
 							};
 							break;
@@ -231,7 +244,7 @@ define(function() {
 											});
 										}
 									], function() {
-										params.success && params.success(data, status);
+										appendMetadataSuccessCallback(data, status);
 									});
 								};
 							}
@@ -252,7 +265,7 @@ define(function() {
 									delete data.data.dash_e911;
 								}
 
-								params.success && params.success(data, status);
+								appendMetadataSuccessCallback(data, status);
 							};
 							break;
 						case 'numbers.update':
@@ -282,7 +295,7 @@ define(function() {
 									monster.config.whitelabel = $.extend(true, {}, monster.config.whitelabel, whitelabelData);
 								}
 
-								params.success && params.success(data, status);
+								appendMetadataSuccessCallback(data, status);
 							};
 							break;
 
@@ -340,7 +353,7 @@ define(function() {
 									self.uploadProgress.runningApis--;
 									container.find('#' + progressId).remove();
 									hideContainer();
-									params.success && params.success(data, status);
+									appendMetadataSuccessCallback(data, status);
 								};
 
 								errorCallback = function(error, status) {
@@ -359,7 +372,7 @@ define(function() {
 									monster.pub('auth.currentAppsStore.fetched', {
 										response: data.data,
 										callback: function() {
-											params.success && params.success(data, status);
+											appendMetadataSuccessCallback(data, status);
 										}
 									});
 								};
@@ -373,7 +386,7 @@ define(function() {
 									monster.pub('auth.currentAppsStore.updated', {
 										request: params.data,
 										callback: function() {
-											params.success && params.success(data, status);
+											appendMetadataSuccessCallback(data, status);
 										}
 									});
 								};
@@ -386,7 +399,7 @@ define(function() {
 									monster.pub('auth.currentAppsStore.deleted', {
 										request: params.data,
 										callback: function() {
-											params.success && params.success(data, status);
+											appendMetadataSuccessCallback(data, status);
 										}
 									});
 								};
@@ -397,24 +410,28 @@ define(function() {
 					if (cancelCall) {
 						return errorCallback && errorCallback();
 					} else {
-						var apiSettings = _.assignIn({	// lodash#assignIn is used here to have a shallow merge (only top level properties)
-							authToken: params.authToken || app.getAuthToken(),
-							apiRoot: params.apiUrl || app.apiUrl,
-							uiMetadata: {
-								version: monster.util.getVersion(),
-								ui: 'monster-ui',
-								origin: app.name
+						var data = _.has(params.data, 'data._metadata')
+								? { data: _.omit(params.data.data, '_metadata') }
+								: {},
+							apiSettings = _.assignIn({	// lodash#assignIn is used here to have a shallow merge (only top level properties)
+								authToken: params.authToken || app.getAuthToken(),
+								apiRoot: params.apiUrl || app.apiUrl,
+								uiMetadata: {
+									version: monster.util.getVersion(),
+									ui: 'monster-ui',
+									origin: app.name
+								},
+								success: successCallback,
+								error: errorCallback,
+								headers: {},
+								requestEventParams: _.pick(params, 'bypassProgressIndicator')
 							},
-							success: successCallback,
-							error: errorCallback,
-							headers: {},
-							requestEventParams: _.pick(params, 'bypassProgressIndicator')
-						},
-						params.data,
-						monster.config.whitelabel.acceptCharges.autoAccept ? {
-							acceptCharges: monster.config.whitelabel.acceptCharges.autoAccept
-						} : {},
-						_.pick(params, 'onChargesCancelled')
+							params.data,
+							data,
+							monster.config.whitelabel.acceptCharges.autoAccept ? {
+								acceptCharges: monster.config.whitelabel.acceptCharges.autoAccept
+							} : {},
+							_.pick(params, 'onChargesCancelled')
 						);
 
 						if (_.has(monster.config, 'kazooClusterId')) {
