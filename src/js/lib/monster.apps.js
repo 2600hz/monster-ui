@@ -162,13 +162,69 @@ define(function() {
 					method = apiSplit[1],
 					successCallback = params.success,
 					errorCallback = params.error,
-					cancelCall = false; //Used to cancel the Api Call before it is actually sent
+					cancelCall = false, //Used to cancel the Api Call before it is actually sent
+					requestData = _.has(params.data, 'data') && !_.isNil(params.data.data)
+						? { data: params.data.data }
+						: undefined,
+					mergeAccountMetadata = function(data) {
+						return (!_.has(data, 'data') || !_.has(data, 'metadata'))
+							? data
+							: _.assignIn({}, data.data, {
+								data: _.chain(data.metadata)
+									.pick([
+										'billing_mode',
+										'enabled',
+										'superduper_admin',
+										'wnm_allow_additions',
+										'created',
+										'is_reseller',
+										'reseller_id'
+									])
+									.merge(data.data)
+									.value()
+							});
+					},
+					removeAccountMetadata = function(reqData) {
+						if (!reqData) {
+							return reqData;
+						}
+
+						reqData.data = _.omit(requestData.data, [
+							'billing_mode',
+							'enabled',
+							'superduper_admin',
+							'wnm_allow_additions',
+							'created',
+							'is_reseller',
+							'reseller_id'
+						]);
+
+						return reqData;
+					};
 
 				if (apiSplit.length === 2 && module in monster.kazooSdk && method in monster.kazooSdk[module]) {
 					//Handling special cases:
 					switch (params.resource) {
+						case 'account.get':
+							successCallback = function(data, status) {
+								params.success && params.success(mergeAccountMetadata(data), status);
+							};
+
+							break;
+
+						case 'account.create':
+							requestData = removeAccountMetadata(requestData);
+
+							successCallback = function(data, status) {
+								params.success && params.success(mergeAccountMetadata(data), status);
+							};
+
+							break;
+
 						case 'account.update':
 						case 'account.patch':
+							requestData = removeAccountMetadata(requestData);
+
 							successCallback = function(data, status) {
 								if (params.data.accountId === monster.apps.auth.currentAccount.id) {
 									monster.apps.auth.currentAccount = data.data;
@@ -180,7 +236,7 @@ define(function() {
 									monster.pub('auth.originalAccountUpdated', data.data);
 								}
 
-								params.success && params.success(data, status);
+								params.success && params.success(mergeAccountMetadata(data), status);
 							};
 
 							break;
