@@ -436,7 +436,7 @@ define(function(require) {
 						},
 						success: function(data, status) {
 							self.triggerMasquerading({
-								account: _.chain(data.metadata).pick(['billing_mode', 'enabled', 'superduper_admin', 'wnm_allow_additions', 'created', 'is_reseller', 'reseller_id']).merge(data.data).value(),
+								account: data.data,
 								callback: function() {
 									var currentApp = monster.apps.getActiveApp();
 									if (currentApp in monster.apps) {
@@ -486,9 +486,6 @@ define(function(require) {
 					monster.apps.auth.currentAccount = $.extend(true, {}, account);
 					self.updateApps(account.id);
 
-					monster.apps.auth.currentAccount.reseller_id = _.get(args, 'account.reseller_id');
-					monster.apps.auth.currentAccount.is_reseller = _.get(args, 'account.is_reseller');
-
 					monster.pub('myaccount.renderNavLinks', {
 						name: account.name,
 						isMasquerading: true
@@ -522,8 +519,7 @@ define(function(require) {
 						generateError: false
 					},
 					success: function(data, status) {
-						account = _.chain(data.metadata).pick(['billing_mode', 'enabled', 'superduper_admin', 'wnm_allow_additions', 'created', 'is_reseller', 'reseller_id']).merge(data.data).value();
-						afterGetData(account);
+						afterGetData(data.data);
 					},
 					error: function() {
 						// If we couldn't get the account, the id must have been wrong, we just continue with the original callback
