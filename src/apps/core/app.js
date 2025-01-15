@@ -486,9 +486,6 @@ define(function(require) {
 					monster.apps.auth.currentAccount = $.extend(true, {}, account);
 					self.updateApps(account.id);
 
-					monster.apps.auth.currentAccount.reseller_id = _.get(args, 'account.metadata.reseller_id');
-					monster.apps.auth.currentAccount.is_reseller = _.get(args, 'account.metadata.is_reseller');
-
 					monster.pub('myaccount.renderNavLinks', {
 						name: account.name,
 						isMasquerading: true
@@ -522,9 +519,7 @@ define(function(require) {
 						generateError: false
 					},
 					success: function(data, status) {
-						account = data.data;
-
-						afterGetData(account);
+						afterGetData(data.data);
 					},
 					error: function() {
 						// If we couldn't get the account, the id must have been wrong, we just continue with the original callback
