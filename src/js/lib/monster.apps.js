@@ -169,7 +169,7 @@ define(function() {
 					mergeAccountMetadata = function(data) {
 						return (!_.has(data, 'data') || !_.has(data, 'metadata'))
 							? data
-							: _.assignIn({}, data.data, {
+							: _.assignIn({}, data, {
 								data: _.chain(data.metadata)
 									.pick([
 										'billing_mode',
@@ -226,6 +226,8 @@ define(function() {
 							requestData = removeAccountMetadata(requestData);
 
 							successCallback = function(data, status) {
+								data = mergeAccountMetadata(data);
+
 								if (params.data.accountId === monster.apps.auth.currentAccount.id) {
 									monster.apps.auth.currentAccount = data.data;
 									monster.pub('auth.currentAccountUpdated', data.data);
@@ -236,7 +238,7 @@ define(function() {
 									monster.pub('auth.originalAccountUpdated', data.data);
 								}
 
-								params.success && params.success(mergeAccountMetadata(data), status);
+								params.success && params.success(data, status);
 							};
 
 							break;
@@ -467,6 +469,7 @@ define(function() {
 							requestEventParams: _.pick(params, 'bypassProgressIndicator')
 						},
 						params.data,
+						requestData,
 						monster.config.whitelabel.acceptCharges.autoAccept ? {
 							acceptCharges: monster.config.whitelabel.acceptCharges.autoAccept
 						} : {},
