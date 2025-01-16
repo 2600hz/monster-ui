@@ -19,10 +19,10 @@ cd $MONSTER_ROOT
 
 if [ ! -d ${APP_PATH} ]; then
     cp -R ${APP_DIR} ${MONSTER_ROOT}/${APP_PATH}
-    if [! -d ${CIRCLE_REPOSITORY_URL} ]; then
+    if [ ! -z ${CIRCLE_REPOSITORY_URL} ]; then
         echo adding submodule to ${MONSTER_ROOT}
         git submodule add -f ${CIRCLE_REPOSITORY_URL} ${APP_PATH}
-    elif [! -d ${APP_VCS_URL} ]; then
+    elif [ ! -z ${APP_VCS_URL} ]; then
         echo adding submodule from ${APP_VCS_URL} to ${MONSTER_ROOT}
         git submodule add -f ${APP_VCS_URL} ${APP_PATH}
     else
