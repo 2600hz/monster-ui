@@ -18,9 +18,17 @@ fi
 cd $MONSTER_ROOT
 
 if [ ! -d ${APP_PATH} ]; then
-    cp -R ${APP_DIR} ${MONSTER_ROOT}/${APP_PATH} 
-    echo adding submodule to $MONSTER_ROOT
-    git submodule add -f ${CIRCLE_REPOSITORY_URL} ${APP_PATH}
+    cp -R ${APP_DIR} ${MONSTER_ROOT}/${APP_PATH}
+    if [! -d ${CIRCLE_REPOSITORY_URL} ]; then
+        echo adding submodule to ${MONSTER_ROOT}
+        git submodule add -f ${CIRCLE_REPOSITORY_URL} ${APP_PATH}
+    elif [! -d ${APP_VCS_URL} ]; then
+        echo adding submodule from ${APP_VCS_URL} to ${MONSTER_ROOT}
+        git submodule add -f ${APP_VCS_URL} ${APP_PATH}
+    else
+        echo no CI repo url and no APP_VCS_URL defined unable to make submodule in${MONSTER_ROOT}
+        die
+    fi
 fi
 
 echo resetting monster-ui-core to $CORE_IDENTITY
