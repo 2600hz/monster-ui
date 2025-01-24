@@ -437,8 +437,8 @@ define(function(require) {
 			monster.ui.footable(template.find('.footable'), {
 				getData: function(filters, callback) {
 					filters = $.extend(true, filters, {
-						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
-						created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
+						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate)
 					});
 
 					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback);
