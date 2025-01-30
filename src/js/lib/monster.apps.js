@@ -191,7 +191,7 @@ define(function() {
 
 						reqData.data = _.omit(requestData.data, [
 							'billing_mode',
-							'enabled',
+							// 'enabled' is not omitted despite being part of the metadata because it can be set to enable/disable the account
 							'superduper_admin',
 							'wnm_allow_additions',
 							'created',
