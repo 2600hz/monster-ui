@@ -200,6 +200,7 @@ define(function(require) {
 				formattedData.isShoutcast = true;
 				formattedData.shoutcastValue = formattedData.selectedOption;
 				formattedData.selectedOption = 'shoutcast';
+				formattedData.mediaId = 'shoutcast';
 			};
 
 			return formattedData;
