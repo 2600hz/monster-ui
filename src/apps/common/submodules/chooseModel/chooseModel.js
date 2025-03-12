@@ -261,9 +261,9 @@ define(function(require) {
 
 			templateDevice.find('.action-device').on('click', function() {
 				if (monster.ui.valid(templateDevice.find('#device_form'))) {
-					var brandSelected = _.find(dataTemplate.brands, { id: selectedBrand }),
-						familySelected = _.find(_.get(brandSelected, 'families'), { id: selectedFamily }),
-						modelSelected = _.find(familySelected.models, { id: selectedModel }),
+					var brandSelected = _.chain(dataTemplate).get('brands', []).find({ id: selectedBrand }).value(),
+						familySelected = _.chain(brandSelected).get('families', []).find({ id: selectedFamily }).value(),
+						modelSelected = _.chain(familySelected).get('models', []).find({ id: selectedModel }).value(),
 						formData = monster.ui.getFormData('device_form'),
 						dataDevice = {
 							device_type: 'sip_device',
