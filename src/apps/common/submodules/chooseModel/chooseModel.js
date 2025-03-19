@@ -72,7 +72,8 @@ define(function(require) {
 								models: _.map(family.models, function(model, modelKey) {
 									return {
 										id: _.toLower(modelKey),
-										name: resolveModelName(family.name, model.name)
+										name: resolveModelName(family.name, model.name),
+										template_id: model.id
 									};
 								})
 							};
@@ -260,7 +261,10 @@ define(function(require) {
 
 			templateDevice.find('.action-device').on('click', function() {
 				if (monster.ui.valid(templateDevice.find('#device_form'))) {
-					var formData = monster.ui.getFormData('device_form'),
+					var brandSelected = _.chain(dataTemplate).get('brands', []).find({ id: selectedBrand }).value(),
+						familySelected = _.chain(brandSelected).get('families', []).find({ id: selectedFamily }).value(),
+						modelSelected = _.chain(familySelected).get('models', []).find({ id: selectedModel }).value(),
+						formData = monster.ui.getFormData('device_form'),
 						dataDevice = {
 							device_type: 'sip_device',
 							enabled: true,
@@ -269,7 +273,8 @@ define(function(require) {
 							provision: {
 								endpoint_brand: selectedBrand,
 								endpoint_family: selectedFamily,
-								endpoint_model: selectedModel
+								endpoint_model: selectedModel,
+								id: _.get(modelSelected, 'template_id')
 							},
 							sip: {
 								password: monster.util.randomString(12),
