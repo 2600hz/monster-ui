@@ -138,7 +138,8 @@
 		"germanGerman": "Немецкий (de-DE)",
 		"spanishSpain": "испанский (es-ES)",
 		"britishEnglish": "Английский (en-GB)",
-		"canadianFrench": "Французский (fr-CA)"
+		"canadianFrench": "Французский (fr-CA)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"cnam": "CNAM",

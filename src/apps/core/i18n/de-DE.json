@@ -178,7 +178,8 @@
 		"canadianFrench": "Französisch (fr-CA)",
 		"__comment": "Spanisch zur Sprachauswahlliste in Mein Account hinzugefügt",
 		"__version": "v3.22",
-		"spainSpanish": "Spanisch (es-ES)"
+		"spainSpanish": "Spanisch (es-ES)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"cnam": "CNAM",

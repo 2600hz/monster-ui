@@ -147,7 +147,8 @@
 		"germanGerman": "Allemand (de-DE)",
 		"spainSpanish": "Espagnol (es-ES)",
 		"britishEnglish": "Anglais (en-GB)",
-		"canadianFrench": "Français (fr-CA)"
+		"canadianFrench": "Français (fr-CA)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"twoway_trunks": "Twoway Trunks",
