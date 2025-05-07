@@ -225,7 +225,8 @@
 		"canadianFrench": "French (fr-CA)",
 		"__comment": "Add Spanish to the list of selectable languages in My Account",
 		"__version": "v3.22",
-		"spainSpanish": "Spanish (es-ES)"
+		"spainSpanish": "Spanish (es-ES)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"cnam": "CNAM",

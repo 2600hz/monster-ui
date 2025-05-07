@@ -126,6 +126,7 @@ Key | Description | Type | Default | Required
 `useDropdownApploader` | If set to true, the apploader will render as a dropdown list instead of a page on top of the window. False by default. | `Boolean` | `false` | `false`
 `disableFirstUseWalkthrough` | If set to true, the new user walkthrough will not be displayed. False by default. | `Boolean` | `false` | `false`
 `invoiceRangeConfig` | The range of months one can navigate back to for the invoices in the Invoice Generator. Its default value is 6 months from the current month, but it is not required to have a value assigned to it | `Number` | `6` | `false`
+`ttsVoice` | The default Text-to-Speech voice to use throughout the platform. Format should be 'gender/language', for example 'female/en-US' or 'male/fr-FR'. | `String` | `female/en-US` | `false`
 
 #### `acceptCharges`
 
