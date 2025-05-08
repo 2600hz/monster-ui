@@ -24,7 +24,8 @@ define(function(require) {
 		'es-ES',
 		'fr-FR',
 		'nl-NL',
-		'ru-RU'
+		'ru-RU',
+		'nl-BE'
 	];
 
 	var defaultConfig = {
