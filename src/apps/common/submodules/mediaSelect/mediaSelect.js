@@ -491,7 +491,7 @@ define(function(require) {
 					type: _.get(args, 'tts.type', ''),
 					tts: {
 						text: args.selectedMedia.tts.text,
-						voice: 'female/en-US'
+						voice: monster.config.whitelabel.ttsVoice || monster.defaultTTSVoice
 					}
 				};
 

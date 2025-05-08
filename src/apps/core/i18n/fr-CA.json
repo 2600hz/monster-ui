@@ -147,7 +147,8 @@
 		"germanGerman": "Allemand (de-DE)",
 		"spainSpanish": "Espagnol (es-ES)",
 		"britishEnglish": "Anglais (en-GB)",
-		"canadianFrench": "Français (fr-CA)"
+		"canadianFrench": "Français (fr-CA)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"twoway_trunks": "Twoway Trunks",
@@ -610,6 +611,7 @@
 		"es-ES": "Espagnol (es-ES)",
 		"fr-FR": "Français (fr-FR)",
 		"nl-NL": "Néerlandais (nl-NL)",
-		"ru-RU": "Russe (ru-RU)"
+		"ru-RU": "Russe (ru-RU)",
+		"nl-BE": "Dutch (Belgium)"
 	}
 }

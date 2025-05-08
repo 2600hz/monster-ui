@@ -144,7 +144,8 @@
 		"americanEnglish": "English (en-US)",
 		"dutchDUTCH": "Dutch (NL-NL)",
 		"frenchFrench": "French (fr-FR)",
-		"russianRussian": "Russian (ru-RU)"
+		"russianRussian": "Russian (ru-RU)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"cnam": "CNAM",
@@ -273,6 +274,7 @@
 		"es-ES": "Spaans (es-ES)",
 		"fr-FR": "Frans (fr-FR)",
 		"nl-NL": "Nederlands (nl-NL)",
-		"ru-RU": "Russisch (ru-RU)"
+		"ru-RU": "Russisch (ru-RU)",
+		"nl-BE": "Dutch (Belgium)"
 	}
 }

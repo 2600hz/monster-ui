@@ -138,7 +138,8 @@
 		"germanGerman": "Немецкий (de-DE)",
 		"spanishSpain": "испанский (es-ES)",
 		"britishEnglish": "Английский (en-GB)",
-		"canadianFrench": "Французский (fr-CA)"
+		"canadianFrench": "Французский (fr-CA)",
+		"dutchBelgium": "Dutch (nl-BE)"
 	},
 	"services": {
 		"cnam": "CNAM",
@@ -502,6 +503,7 @@
 		"es-ES": "Spanish (es-ES)",
 		"fr-FR": "French (fr-FR)",
 		"nl-NL": "Dutch (nl-NL)",
-		"ru-RU": "Russian (ru-RU)"
+		"ru-RU": "Russian (ru-RU)",
+		"nl-BE": "Dutch (Belgium)"
 	}
 }
