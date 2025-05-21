@@ -586,6 +586,7 @@ define(function(require) {
 			var self = this,
 				userToSave = self.uiFlags.user.set('showfirstUseWalkthrough', false);
 
+			delete userToSave.is_password_expired;
 			self.updateUser(userToSave, function(user) {
 				callback && callback(user);
 			});

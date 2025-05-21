@@ -385,7 +385,10 @@ define(function(require) {
 				},
 				user: function(callback) {
 					self.getUser(function(data) {
-						callback(null, data.data);
+						callback(
+							null,
+							_.merge({'is_password_expired': _.get(data.metadata, 'is_password_expired', false)}, data.data)
+						);
 					},
 					function(data) {
 						callback('error user', data);
@@ -396,8 +399,10 @@ define(function(require) {
 				if (err) {
 					monster.util.logoutAndReload();
 				} else {
+					var isPasswordExpired = _.get(results.user, 'is_password_expired', false);
+
 					if (results.user.hasOwnProperty('require_password_update') && results.user.require_password_update) {
-						self.newPassword();
+						self.newPassword(isPasswordExpired);
 					}
 
 					monster.util.autoLogout();
@@ -537,6 +542,7 @@ define(function(require) {
 				updateUser = function(callback) {
 					var userToSave = self.uiFlags.user.set('hasLoggedIn', true);
 
+					delete userToSave.is_password_expired;
 					self.updateUser(userToSave, function(user) {
 						callback && callback(user);
 					});
@@ -1166,10 +1172,13 @@ define(function(require) {
 			monster.util.logoutAndReload();
 		},
 
-		newPassword: function() {
+		newPassword: function(isPasswordExpired) {
 			var self = this,
 				$template = $(self.getTemplate({
-					name: 'dialogPasswordUpdate'
+					name: 'dialogPasswordUpdate',
+					data: {
+						isPasswordExpired: isPasswordExpired
+					}
 				})),
 				$form = $template.find('#form_password_update'),
 				passwordRules = {
@@ -1179,7 +1188,8 @@ define(function(require) {
 				getI18n = _.partial(monster.util.tryI18n, self.i18n.active().passwordUpdate),
 				$popup = monster.ui.dialog($template, {
 					isPersistent: true,
-					title: getI18n('title')
+					title: getI18n('title'),
+					hideClose: isPasswordExpired
 				}),
 				isFormInvalid = _.bind(_.negate(monster.ui.valid), monster.ui, $form),
 				getNewPassword = _.flow(
