@@ -401,6 +401,7 @@ define(function(require) {
 				} else {
 					var isPasswordExpired = _.get(results.user, 'is_password_expired', false);
 
+					delete results.user.is_password_expired;
 					if (results.user.hasOwnProperty('require_password_update') && results.user.require_password_update) {
 						self.newPassword(isPasswordExpired);
 					}
@@ -542,7 +543,6 @@ define(function(require) {
 				updateUser = function(callback) {
 					var userToSave = self.uiFlags.user.set('hasLoggedIn', true);
 
-					delete userToSave.is_password_expired;
 					self.updateUser(userToSave, function(user) {
 						callback && callback(user);
 					});
