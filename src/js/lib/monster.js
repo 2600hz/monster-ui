@@ -16,6 +16,7 @@ define(function(require) {
 	var defaultCountryCode = 'US';
 	var defaultCurrencyCode = 'USD';
 	var defaultLanguage = 'en-US';
+	var defaultTTSVoice = 'female/en-US';
 
 	var supportedLanguages = [
 		'de-DE',
@@ -23,7 +24,8 @@ define(function(require) {
 		'es-ES',
 		'fr-FR',
 		'nl-NL',
-		'ru-RU'
+		'ru-RU',
+		'nl-BE'
 	];
 
 	var defaultConfig = {
@@ -57,7 +59,8 @@ define(function(require) {
 		'whitelabel.useDropdownApploader': [_.isBoolean, false],
 		bypassAppStorePermissions: [_.isBoolean, false],
 		'whitelabel.disableFirstUseWalkthrough': [_.isBoolean, false],
-		'whitelabel.invoiceRangeConfig': [_.isNumber, 6]
+		'whitelabel.invoiceRangeConfig': [_.isNumber, 6],
+		'whitelabel.ttsVoice': [_.isString, defaultTTSVoice]
 	};
 
 	var featureSets = {
@@ -1126,6 +1129,7 @@ define(function(require) {
 	monster.initConfig = initConfig;
 	monster.setDefaultLanguage = setDefaultLanguage;
 	monster.supportedLanguages = supportedLanguages;
+	monster.defaultTTSVoice = defaultTTSVoice;
 
 	// We added this so Google Maps could execute a callback in the global namespace
 	// See example in Cluster Manager
