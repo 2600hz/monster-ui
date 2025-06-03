@@ -1,7 +1,7 @@
 name: monster-ui-core
 custom_files: null
 exposure: private
-base_branch: origin/master
+base_branch: origin/5.5
 base_core: null
 template: monster-ui-core.spec.tmpl
 package:
@@ -56,6 +56,6 @@ metapackage:
   -
     name: meta-monster-ui
     type: required
-    branch: master
+    branch: '5.5'
     package: monster-ui-core
 dependencies: null
