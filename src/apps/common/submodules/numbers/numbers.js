@@ -125,7 +125,8 @@ define(function(require) {
 					viewType: data.viewType,
 					canAddExternalCids: monster.util.getCapability('caller_id.external_numbers').isEnabled,
 					canAddExternalNumbers: monster.util.canAddExternalNumbers(),
-					listAccounts: []
+					listAccounts: [],
+					listExternalNumbersAccounts: []
 				};
 
 			/* Initializing accounts metadata */
@@ -171,6 +172,19 @@ define(function(require) {
 					value.spareNumbers.sort(sortByName);
 					value.usedNumbers.sort(sortByName);
 				}
+			});
+
+			/* Save a list of the acccounts that have an associated external number */
+			_.each(mapAccounts, function(value) {
+				self.listAccountExternalNumbers(value.id, function(data) {
+					if (data.length > 0) {
+						_.each(data, function(element) {
+							element.accountId = value.id;
+						});
+						templateData.listExternalNumbersAccounts.push(data);
+						templateData.listExternalNumbersAccounts = _.flatten(templateData.listExternalNumbersAccounts);
+					}
+				});
 			});
 
 			/* Order the subaccount list by name */
@@ -811,6 +825,47 @@ define(function(require) {
 				});
 			};
 
+			var searchExternalNumber = function(searchString, parent) {
+				var viewList = parent,
+					searchString = monster.util.unformatPhoneNumber(searchString),
+					foundNumber = _.find(dataNumbers.listExternalNumbersAccounts, { number: searchString }),
+					accountId = foundNumber ? foundNumber.accountId : '',
+					numberId = foundNumber ? foundNumber.id : '';
+
+				if (accountId) {
+					var section = viewList.find('[data-id="' + accountId + '"]'),
+						toggle = function() {
+							section.addClass('open');
+
+							var numberBox = parent.find('.number-box[data-id="' + numberId + '"]');
+
+							if (!section.hasClass('open')) {
+								section.find('input[type="checkbox"]:checked').prop('checked', false);
+								section.find('.number-box.selected').removeClass('selected');
+							}
+
+							monster.ui.highlight(numberBox, {
+								timer: 5000
+							});
+
+							_.each(dataNumbers.listAccounts, function(account) {
+								if (account.id === accountId) {
+									account.open = section.hasClass('open') ? 'open' : '';
+								}
+							});
+						};
+
+					displayNumberList(accountId, function() {
+						toggle();
+					});
+				} else {
+					monster.ui.toast({
+						type: 'error',
+						message: self.i18n.active().numbers.numberNotFound
+					});
+				}
+			};
+
 			parent.on('click', '.list-numbers[data-type="spare"] button.search-numbers', function(e) {
 				var spareList = parent.find('.list-numbers[data-type="spare"]'),
 					searchString = spareList.find('.search-custom input[type="text"]').val().toLowerCase();
@@ -843,6 +898,24 @@ define(function(require) {
 
 					if (val) {
 						searchListNumbers(val, usedList);
+					}
+				}
+			});
+
+			parent.on('click', '.list-numbers[data-type="external"] button.search-numbers', function(e) {
+				var externalList = parent.find('.list-numbers[data-type="external"]'),
+					searchString = externalList.find('.search-custom input[type="text"]').val().toLowerCase();
+
+				searchExternalNumber(searchString, externalList);
+			});
+
+			parent.on('keyup', '.list-numbers[data-type="external"] .search-custom input[type="text"]', function(e) {
+				if (e.keyCode === 13) {
+					var val = e.target.value.toLowerCase(),
+						externalList = parent.find('.list-numbers[data-type="external"]');
+
+					if (val) {
+						searchExternalNumber(val, externalList);
 					}
 				}
 			});
@@ -1535,6 +1608,21 @@ define(function(require) {
 							message: self.i18n.active().numbers.numberNotFound
 						});
 					}
+				}
+			});
+		},
+
+		listAccountExternalNumbers: function(accountId, success) {
+			var self = this;
+
+			self.callApi({
+				resource: 'externalNumbers.list',
+				data: {
+					accountId: accountId,
+					generateError: false
+				},
+				success: function(_data, status) {
+					success && success(_data.data);
 				}
 			});
 		},
