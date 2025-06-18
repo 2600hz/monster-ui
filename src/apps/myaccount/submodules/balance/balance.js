@@ -900,7 +900,7 @@ define(function(require) {
 				dlFrom = monster.util.dateToBeginningOfGregorianDay(from, 'UTC'),
 				dlTo = monster.util.dateToEndOfGregorianDay(to, 'UTC'),
 				type = template.find('.tab-type-ledger.active').data('type'),
-				url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/' + type + '?created_from=' + dlFrom + '&created_to=' + dlTo + '&accept=csv&auth_token=' + self.getAuthToken();
+				url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/' + type + '?created_from=' + dlFrom + '&created_to=' + dlTo + '&accept=csv&paginate=false&auth_token=' + self.getAuthToken();
 
 			window.open(url, '_blank');
 		},
