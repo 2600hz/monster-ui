@@ -739,6 +739,11 @@ define(function(require) {
 				var stringSeconds = getString(remainingSeconds, ['second', 'seconds']);
 				displayTime = displayTime.concat(remainingSeconds, ' ', stringSeconds);
 			}
+		} else if (mode === 'shortVerboseMinutes') {
+			var allMinutes = Math.floor(seconds / 60);
+			var stringMinutes = getString(minutes, ['minute', 'minutes']);
+
+			displayTime = allMinutes.toLocaleString('en-US') + ' ' + stringMinutes;
 		} else {
 			displayTime = format2Digits(minutes) + ':' + format2Digits(remainingSeconds);
 
