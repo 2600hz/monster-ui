@@ -741,7 +741,7 @@ define(function(require) {
 			}
 		} else if (mode === 'shortVerboseMinutes') {
 			var allMinutes = Math.floor(seconds / 60);
-			var stringMinutes = getString(minutes, ['minute', 'minutes']);
+			var stringMinutes = getString(allMinutes, ['minute', 'minutes']);
 
 			displayTime = allMinutes.toLocaleString('en-US') + ' ' + stringMinutes;
 		} else {
