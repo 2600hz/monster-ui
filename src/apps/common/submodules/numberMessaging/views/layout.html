@@ -30,11 +30,6 @@
 					{{replaceVar @root.i18n.numberMessaging.info (tryI18n @root.i18n.numberMessaging.labels feature)}}
 				{{/monsterText}}
 			</div>
-		{{#if isActivationManual}}
-			{{#monsterPanelText @root.i18n.numberMessaging.warningPanel.title "warning" "fill-width"}}
-				{{@root.i18n.numberMessaging.warningPanel.text}}
-			{{/monsterPanelText}}
-		{{/if}}
 		</div>
 {{/if}}
 {{/inline}}
