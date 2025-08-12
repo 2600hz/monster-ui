@@ -120,6 +120,7 @@ define(function(require) {
 				.find('#redirect')
 					.on('click', function(event) {
 						window.open('https://trunking.io');
+						popup.dialog('close').remove();
 					});
 		},
 
