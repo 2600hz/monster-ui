@@ -2037,13 +2037,14 @@ define(function(require) {
 			}
 		},
 
-		numbersGetTrunkingioSettings: function(accountId, success) {
+		numbersGetTrunkingioSettings: function(accountId, success, error) {
 			var self = this;
 
 			self.callApi({
 				resource: 'trunkingio.get',
 				data: {
-					accountId: accountId
+					accountId: accountId,
+					generateError: false
 				},
 				success: function(_data, status) {
 					_data.data['metadata'] = _.get(_data, 'metadata', {});
@@ -2051,7 +2052,11 @@ define(function(require) {
 					success && success(_data.data);
 				},
 				error: function(_data, status) {
-					error && error(_data.data);
+					if (_data.error === '404'&& _data.hasOwnProperty('data') && _data.data.hasOwnProperty('message')) {
+						success && success(_data);
+					} else {
+						error && error(_data.data);
+					}
 				}
 			});
 		},
