@@ -476,3 +476,74 @@
 #numbers_add_external .customize-number-field {
 	margin-top: 5px;
 }
+
+.alert-info-trunkingio {
+	&.monster-alert {
+		.ui-dialog-titlebar {
+			padding: 24px;
+
+			.ui-dialog-title {
+				font-size: 18px;
+				line-height: 18px;
+				text-align: left;
+				color: $woodsmoke;
+
+				.fa {
+					font-size: 2.2rem;
+					margin-right: 16px;
+					float: left;
+				}
+
+				.title {
+					position: relative;
+					top: 9px;
+					color: $woodsmoke;
+				}
+			}
+		}
+
+		.ui-dialog-content {
+			min-width: 500px;
+
+			.dialog-content-wrapper {
+				padding: 0 24px 32px;
+				font-size: 14px;
+				width: 500px;
+
+				p {
+					margin-bottom: 0;
+				}
+			}
+
+
+			.action-buttons {
+				padding: 0 24px 24px;
+				text-align: right;
+
+				a {
+					color: #64646c;
+					margin-right: 1.5rem;
+					padding: 9px 15px;
+					position: relative;
+					left: 9px;
+					top: 1px;
+
+					&:hover {
+						background-color: #DBDBDE;
+						color: $woodsmoke;
+					}
+				}
+
+				button {
+					border: 1px solid $woodsmoke;
+					color: $woodsmoke;
+					font-size: 14px;
+					min-width: 120px;
+					padding: 8px 15px;
+					letter-spacing: 0.02em;
+					border-radius: 2px;
+				}
+			}
+		}
+	}
+}

@@ -509,6 +509,9 @@
 			transactions: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
 			},
+			trunkingio: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/trunkingio_settings' }
+			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/users' },
