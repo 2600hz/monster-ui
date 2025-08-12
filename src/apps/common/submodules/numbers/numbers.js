@@ -114,13 +114,13 @@ define(function(require) {
 				.find('.cancel')
 					.on('click', function(event) {
 						popup.dialog('close').remove();
-					})
+					});
 
 			template
 				.find('#redirect')
 					.on('click', function(event) {
 						window.open('https://trunking.io');
-					})
+					});
 		},
 
 		//_util
@@ -1954,7 +1954,7 @@ define(function(require) {
 					phoneNumber: phoneNumber
 				},
 				success: function(_data, status) {
-					_data.data['metadata'] = _.get(_data, 'metadata', {});
+					_data.data.metadata = _.get(_data, 'metadata', {});
 
 					success && success(_data.data);
 				},
@@ -2047,12 +2047,12 @@ define(function(require) {
 					generateError: false
 				},
 				success: function(_data, status) {
-					_data.data['metadata'] = _.get(_data, 'metadata', {});
+					_data.data.metadata = _.get(_data, 'metadata', {});
 
 					success && success(_data.data);
 				},
 				error: function(_data, status) {
-					if (_data.error === '404'&& _data.hasOwnProperty('data') && _data.data.hasOwnProperty('message')) {
+					if (_data.error === '404' && _data.hasOwnProperty('data') && _data.data.hasOwnProperty('message')) {
 						success && success(_data);
 					} else {
 						error && error(_data.data);
@@ -2065,12 +2065,11 @@ define(function(require) {
 			var self = this;
 
 			self.numbersGetTrunkingioSettings(accountId, function(trunkingioData) {
-				isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
+				var isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
 					isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked';
 
 				if (isClientTio && isTioLinked) {
 					self.renderTioInfoDialog();
-
 				} else {
 					monster.pub('common.portListing.render', {
 						data: {
