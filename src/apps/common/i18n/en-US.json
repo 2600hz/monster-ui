@@ -1637,11 +1637,11 @@
 			"dialog": "Configure Messaging"
 		},
 		"labels": {
-			"sms": "SMS Services",
-			"mms": "MMS Services",
+			"sms": "Enable SMS Services",
+			"mms": "Enable MMS Services",
 			"messaging": "Messaging"
 		},
-		"info": "Enable or Disable {{variable}} messaging feature for this number.",
+		"info": "In order to configure MMS capabilities, SMS must be enabled first.",
 		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}"
 	}
 }
