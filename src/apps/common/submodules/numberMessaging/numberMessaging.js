@@ -48,15 +48,17 @@ define(function(require) {
 				accountId = _.get(args, 'accountId', self.accountId),
 				success = _.get(args, 'success', function() {}),
 				error = _.get(args, 'error', function() {}),
+				numberMessagingFormatted = self.numberMessagingFormatData({
+					numberData: numberData
+				}),
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: self.numberMessagingFormatData({
-						numberData: numberData
-					}),
+					data: numberMessagingFormatted,
 					submodule: 'numberMessaging'
 				})),
 				popup;
 
+			self.trunkingCarrierEvents(popup_html, numberMessagingFormatted);
 			popup_html.on('submit', function(ev) {
 				ev.preventDefault();
 
@@ -103,9 +105,52 @@ define(function(require) {
 				popup.dialog('close');
 			});
 
+			var featureSelectionItem = popup_html.find('.feature-selection .sds_SelectionList_Item');
+			featureSelectionItem.on('click', function(e) {
+				var $this = $(this),
+					$input = $this.find('input'),
+					isChecked = $input.prop('checked');
+
+				e.preventDefault();
+				$input.prop('checked', !isChecked);
+				self.trunkingCarrierEvents(popup_html, numberMessagingFormatted, true);
+			});
+
 			popup = monster.ui.dialog(popup_html, {
 				title: self.i18n.active().numberMessaging.titles.dialog
 			});
+		},
+
+		/**
+		 * @param template
+		 * @param  {Object} numberData
+		 */
+		trunkingCarrierEvents: function(template, numberData, wasChanged = false) {
+			var self = this,
+				isCarrierTio = _.get(numberData, 'isCarrierTio', false),
+				isReseller = _.get(numberData, 'isReseller', false),
+				$smsSelectionItem = template.find('.feature-selection .feature-sms-item'),
+				$mmsSelectionItem = template.find('.feature-selection .feature-mms-item'),
+				isSmsChecked = $smsSelectionItem.find('input').prop('checked');
+
+			if (!isReseller && isCarrierTio) {
+				$smsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
+				$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
+				return;
+			}
+
+			if (isCarrierTio) {
+				if (isSmsChecked) {
+					$mmsSelectionItem.removeClass('sds_SelectionList_Item_Disabled');
+				} else {
+					$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
+				}
+
+				if (!isSmsChecked && $mmsSelectionItem.find('input').prop('checked') && wasChanged) {
+					$mmsSelectionItem.find('input').prop('checked', false);
+				}
+			}
+		
 		},
 
 		/**
@@ -121,10 +166,11 @@ define(function(require) {
 					return {
 						feature: feature,
 						isEnabled: _.get(numberData, [feature, 'enabled'], false),
-						isConfigured: _.get(settings, [feature, 'enabled'], false),
-						isActivationManual: _.get(settings, [feature, 'activation']) === 'manual'
+						isConfigured: _.get(settings, [feature, 'enabled'], false)
 					};
-				})
+				}),
+				isCarrierTio: _.get(numberData, 'metadata.carrier_module') === 'trunkingio',
+				isReseller: monster.apps.auth.isReseller
 			};
 		},
 
