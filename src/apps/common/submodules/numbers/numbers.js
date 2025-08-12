@@ -419,31 +419,13 @@ define(function(require) {
 			parent.on('click', '.account-header .action-number.port', function(e) {
 				var accountId = $(this).parents('.account-section').data('id');
 
-				self.numbersGetTrunkingioSettings(accountId, function(trunkingioData) {
-					isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
-						isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked';
-
-					if (isClientTio && isTioLinked) {
-						self.renderTioInfoDialog();
-
-					} else {
-						monster.pub('common.portListing.render', {
-							data: {
-								accountId: accountId
-							}
-						});
-					}
-				});
+				self.numbersPortCheckCarrier(accountId);
 			});
 
 			parent.on('click', '.actions-wrapper .action-number.port', function(e) {
 				var accountId = self.accountId;
 
-				monster.pub('common.portListing.render', {
-					data: {
-						accountId: accountId
-					}
-				});
+				self.numbersPortCheckCarrier(accountId);
 			});
 
 			function syncNumbers(accountId) {
@@ -2070,6 +2052,26 @@ define(function(require) {
 				},
 				error: function(_data, status) {
 					error && error(_data.data);
+				}
+			});
+		},
+
+		numbersPortCheckCarrier: function(accountId) {
+			var self = this;
+
+			self.numbersGetTrunkingioSettings(accountId, function(trunkingioData) {
+				isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
+					isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked';
+
+				if (isClientTio && isTioLinked) {
+					self.renderTioInfoDialog();
+
+				} else {
+					monster.pub('common.portListing.render', {
+						data: {
+							accountId: accountId
+						}
+					});
 				}
 			});
 		}

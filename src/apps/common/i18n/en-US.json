@@ -590,7 +590,7 @@
 		},
 		"dialogInfoTioPort": {
 			"title": "Please port numbers via carrier website",
-			"message": "The numbers in this account are currently serviced by Trunking.io as its carrier. To complete number porting, please log into Trunking.io Portal and follow porting process. Once porting is complete, you will be able to manage the number as usual.",
+			"message": "The numbers in this account are currently serviced by Trunking.io as its carrier. To complete number porting, please log into Trunking.io Portal and follow porting process there. Once porting is complete, you will be able to manage the numbers as usual.",
 			"buttons": {
 				"redirect": "Trunking.io"
 			}
