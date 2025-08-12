@@ -97,6 +97,32 @@ define(function(require) {
 			});
 		},
 
+		renderTioInfoDialog: function() {
+			var self = this,
+				template = $(self.getTemplate({
+					name: 'dialog-tio-info',
+					submodule: 'numbers'
+				})),
+				optionsPopup = {
+					position: ['center', 20],
+					title: '<i class="fa fa-info-circle monster-blue"></i><div class="title">' + self.i18n.active().numbers.dialogInfoTioPort.title + '</div>',
+					dialogClass: 'monster-alert alert-info-trunkingio'
+				},
+				popup = monster.ui.dialog(template, optionsPopup);
+
+			template
+				.find('.cancel')
+					.on('click', function(event) {
+						popup.dialog('close').remove();
+					})
+
+			template
+				.find('#redirect')
+					.on('click', function(event) {
+						window.open('https://trunking.io');
+					})
+		},
+
 		//_util
 		numbersFormatNumber: function(value) {
 			var self = this;
@@ -393,9 +419,19 @@ define(function(require) {
 			parent.on('click', '.account-header .action-number.port', function(e) {
 				var accountId = $(this).parents('.account-section').data('id');
 
-				monster.pub('common.portListing.render', {
-					data: {
-						accountId: accountId
+				self.numbersGetTrunkingioSettings(accountId, function(trunkingioData) {
+					isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
+						isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked';
+
+					if (isClientTio && isTioLinked) {
+						self.renderTioInfoDialog();
+
+					} else {
+						monster.pub('common.portListing.render', {
+							data: {
+								accountId: accountId
+							}
+						});
 					}
 				});
 			});
@@ -2017,6 +2053,25 @@ define(function(require) {
 			} else {
 				return features;
 			}
+		},
+
+		numbersGetTrunkingioSettings: function(accountId, success) {
+			var self = this;
+
+			self.callApi({
+				resource: 'trunkingio.get',
+				data: {
+					accountId: accountId
+				},
+				success: function(_data, status) {
+					_data.data['metadata'] = _.get(_data, 'metadata', {});
+
+					success && success(_data.data);
+				},
+				error: function(_data, status) {
+					error && error(_data.data);
+				}
+			});
 		}
 	};
 
