@@ -588,6 +588,13 @@
 		"dialogAlertNowAllowed": {
 			"info": "The number you searched for exists, but you are not allowed to manage it"
 		},
+		"dialogInfoTioPort": {
+			"title": "Please port numbers via Trunking.io self service portal",
+			"message": "The numbers in this account are currently serviced by Trunking.io as its carrier. To complete number porting, please log into Trunking.io Portal and follow porting process there. Once porting is complete, you will be able to manage the numbers as usual.",
+			"buttons": {
+				"redirect": "Trunking.io"
+			}
+		},
 		"__comment": "UI-1219: Adding the prepend feature to numbers",
 		"__version": "v3.20_s1",
 		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone",
