@@ -1,7 +1,14 @@
 <form class="form-horizontal trunkstore_popup numberMessaging clearfix" id="form_number_messaging">
-{{#each features}}
-	{{> featureContent}}
-{{/each}}
+	<div class="popup-content">
+		<div class="sds_SelectionList sds_SelectionList_Grid feature-selection">
+			{{#each features}}
+				{{> featureContent}}
+			{{/each}}
+		</div>
+		{{#if isCarrierTio}}
+			<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
+		{{/if}}
+	</div>
 	<div class="popup-content popup-actions clearfix">
 		<div class="pull-right">
 			<a class="cancel-link monster-link blue" href="javascript:void(0);">
@@ -16,25 +23,19 @@
 
 {{#*inline "featureContent"}}
 	{{#if isConfigured}}
-		<div class="popup-content">
-			<div class="control-group">
-				<label for="{{feature}}_switch" class="control-label">
-					{{tryI18n @root.i18n.numberMessaging.labels feature}}
-				</label>
-				<div class="controls">
-				{{#monsterSwitch}}
-					<input type="checkbox" name="{{feature}}.enabled" id="{{feature}}_switch"{{#if isEnabled}} checked="checked"{{/if}}>
-				{{/monsterSwitch}}
+		<div class="sds_SelectionList_Item feature-{{feature}}-item" data-feature-type={{feature}}">
+			<input type="checkbox" class="sds_CheckboxRaw_Input sds_SelectionList_Item_Selector_Input" name="{{feature}}.enabled" {{#if isEnabled}} checked="checked"{{/if}}>
+			<label class="sds_CheckboxRaw sds_SelectionList_Item_Selector" for="feature_{{feature}}" />
+			<label for="feature_{{feature}}" class="sds_SelectionList_Item_LabelBox">
+				<div class="sds_SelectionList_Item_LabelBox_Header">
+					<div class="sds_SelectionList_Item_Content">
+						<span class="sds_SelectionList_Item_Content_Title">
+							{{ tryI18n @root.i18n.numberMessaging.labels feature }}
+						</span>
+						</div>
+						<div class="sds_SelectionList_Item_Selector sds_SelectionList_Item_Selector_Checkbox">
+					</div>
 				</div>
-				{{#monsterText}}
-					{{replaceVar @root.i18n.numberMessaging.info (tryI18n @root.i18n.numberMessaging.labels feature)}}
-				{{/monsterText}}
-			</div>
-		{{#if isActivationManual}}
-			{{#monsterPanelText @root.i18n.numberMessaging.warningPanel.title "warning" "fill-width"}}
-				{{@root.i18n.numberMessaging.warningPanel.text}}
-			{{/monsterPanelText}}
-		{{/if}}
-		</div>
-{{/if}}
+			</label>
+		</div> {{/if}}
 {{/inline}}

@@ -1650,15 +1650,11 @@
 			"dialog": "Configure Messaging"
 		},
 		"labels": {
-			"sms": "SMS Services",
-			"mms": "MMS Services",
+			"sms": "Enable SMS Services",
+			"mms": "Enable MMS Services",
 			"messaging": "Messaging"
 		},
-		"info": "Enable or Disable {{variable}} messaging feature for this number.",
-		"warningPanel": {
-			"title": "Action Warning",
-			"text": "This service requires a manual activation. An email will be sent to Operations to complete this action. This can take up to 72 hours"
-		},
+		"info": "In order to configure MMS capabilities, SMS must be enabled first.",
 		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}"
 	}
 }
