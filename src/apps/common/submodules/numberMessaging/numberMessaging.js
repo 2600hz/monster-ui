@@ -170,7 +170,7 @@ define(function(require) {
 					};
 				}),
 				isCarrierTio: _.get(numberData, 'metadata.carrier_module') === 'trunkingio',
-				isReseller: monster.apps.auth.isReseller
+				isReseller: monster.util.isReseller()
 			};
 		},
 
