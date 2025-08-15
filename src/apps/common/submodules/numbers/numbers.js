@@ -97,15 +97,22 @@ define(function(require) {
 			});
 		},
 
-		renderTioInfoDialog: function() {
+		renderTioInfoDialog: function(portalUrl) {
 			var self = this,
+				isReseller = monster.util.isReseller(),
 				template = $(self.getTemplate({
 					name: 'dialog-tio-info',
+					data: {
+						isReseller: isReseller
+					},
 					submodule: 'numbers'
 				})),
+				popUpTitle = isReseller
+					? self.i18n.active().numbers.dialogInfoTioPort.reseller.title
+					: self.i18n.active().numbers.dialogInfoTioPort.notReseller.title,
 				optionsPopup = {
 					position: ['center', 20],
-					title: '<i class="fa fa-info-circle monster-blue"></i><div class="title">' + self.i18n.active().numbers.dialogInfoTioPort.title + '</div>',
+					title: '<i class="fa fa-info-circle monster-blue"></i><div class="title">' + popUpTitle + '</div>',
 					dialogClass: 'monster-alert alert-info-trunkingio'
 				},
 				popup = monster.ui.dialog(template, optionsPopup);
@@ -117,9 +124,9 @@ define(function(require) {
 					});
 
 			template
-				.find('#redirect')
+				.find('.redirect')
 					.on('click', function(event) {
-						window.open('https://trunking.io');
+						window.open(portalUrl);
 						popup.dialog('close').remove();
 					});
 		},
@@ -2042,7 +2049,7 @@ define(function(require) {
 			var self = this;
 
 			self.callApi({
-				resource: 'trunkingio.get',
+				resource: 'trunkingio.getCheck',
 				data: {
 					accountId: accountId,
 					generateError: false
@@ -2067,10 +2074,11 @@ define(function(require) {
 
 			self.numbersGetTrunkingioSettings(accountId, function(trunkingioData) {
 				var isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
-					isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked';
+					isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked',
+					portalUrl = _.get(trunkingioData, 'metadata.portal_url', 'https://trunking.io');
 
 				if (isClientTio && isTioLinked) {
-					self.renderTioInfoDialog();
+					self.renderTioInfoDialog(portalUrl);
 				} else {
 					monster.pub('common.portListing.render', {
 						data: {
