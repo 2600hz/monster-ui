@@ -1,16 +1,25 @@
 <div id="alert_dialog" class="alert-tio-port">
 	<div class="dialog-content-wrapper">
-		<p>{{i18n.numbers.dialogInfoTioPort.message}}</p>
+		{{#if isReseller}}
+			<p>{{i18n.numbers.dialogInfoTioPort.reseller.message}}</p>
+		{{else}}
+			<p>{{i18n.numbers.dialogInfoTioPort.notReseller.message}}</p>
+		{{/if}}
 	</div>
-
 	<div class="alert-dialog-buttons clearfix">
 		<div class="action-buttons">
-			<button class="monster-button-primary" id="redirect">
-				{{ i18n.numbers.dialogInfoTioPort.buttons.redirect }}
-			</button>
-			<a class="cancel">
-				{{ i18n.cancel }}
-			</a>
+			{{#if isReseller}}
+				<button class="monster-button-primary redirect">
+					{{ i18n.numbers.dialogInfoTioPort.buttons.redirect }}
+				</button>
+				<a class="cancel">
+					{{ i18n.cancel }}
+				</a>
+			{{else}}
+				<button class="monster-button-primary cancel">
+					{{ i18n.close }}
+				</button>
+			{{/if}}	
 		</div>
 	</div>
 </div>
