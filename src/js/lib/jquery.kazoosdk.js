@@ -510,7 +510,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
 			},
 			trunkingio: {
-				'get': { verb: 'GET', url: 'accounts/{accountId}/trunkingio_settings' }
+				'get': { verb: 'GET', url: 'accounts/{accountId}/trunkingio_settings' },
+				'getCheck': { verb: 'GET', url: 'accounts/{accountId}/trunkingio_settings/check' }
 			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },
