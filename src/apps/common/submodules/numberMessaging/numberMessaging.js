@@ -9,6 +9,11 @@ define(function(require) {
 			'common.numberMessaging.renderPopup': 'numberMessagingEdit'
 		},
 
+		appFlags: {
+			users: {},
+			oomaSmsBoxes: {}
+		},
+
 		/**
 		 * @param  {Object} args
 		 * @param  {String} args.phoneNumber
@@ -18,21 +23,55 @@ define(function(require) {
 		 */
 		numberMessagingEdit: function(args) {
 			var self = this,
-				argsCommon = {
-					success: function(numberData) {
-						self.numberMessagingRender(_.merge({
-							numberData: numberData,
-							accountId: args.accountId
-						}, args.callbacks));
-					},
-					number: args.phoneNumber
-				};
+				accountId = _.get(args, 'accountId', self.accountId);
 
-			if (args.hasOwnProperty('accountId')) {
-				argsCommon.accountId = args.accountId;
-			}
+			monster.waterfall([
+				function(callback) {
+					monster.pub('common.numbers.editFeatures', {
+						accountId: args.accountId,
+						number: args.phoneNumber,
+						success: function(numberData) {
+							callback && callback(null, numberData);
+						}
+					});
+				},
+				function(numberData, callback) {
+					var isCarrierTio = _.get(numberData, 'metadata.carrier_module') === 'trunkingio';
 
-			monster.pub('common.numbers.editFeatures', argsCommon);
+					if (isCarrierTio) {
+						monster.parallel({
+							users: function(callback) {
+								self.numberMessagingListUsers(accountId, function(users) {
+									_.each(users, function(user) {
+										user.name = user.first_name + ' ' + user.last_name;
+									});
+
+									self.appFlags.users[accountId] = users;
+									callback && callback(null, users);
+								});
+							},
+							oomaSmsBoxes: function(callback) {
+								self.numberMessagingListOomasmsBoxes(accountId, function(oomaSmsBoxes) {
+									self.appFlags.oomaSmsBoxes[accountId] = oomaSmsBoxes;
+									callback && callback(null, oomaSmsBoxes);
+								});
+							}
+						}, function(err, results) {
+							callback && callback(null, numberData);
+						});
+					} else {
+						callback && callback(null, numberData);
+					}
+				}
+			], function(err, results) {
+				console.log(results);
+				console.log(self.appFlags);
+				self.numberMessagingRender(_.merge({
+					numberData: results.numberData,
+					users: results.users,
+					accountId: accountId
+				}, args.callbacks));
+			});
 		},
 
 		/**
@@ -45,20 +84,23 @@ define(function(require) {
 		numberMessagingRender: function(args) {
 			var self = this,
 				numberData = args.numberData,
+				users = args.users,
 				accountId = _.get(args, 'accountId', self.accountId),
 				success = _.get(args, 'success', function() {}),
 				error = _.get(args, 'error', function() {}),
 				numberMessagingFormatted = self.numberMessagingFormatData({
-					numberData: numberData
+					numberData: args.numberData
 				}),
 				popup_html = $(self.getTemplate({
 					name: 'layout',
-					data: numberMessagingFormatted,
+					data: _.merge({
+						users: users
+					}, numberMessagingFormatted),
 					submodule: 'numberMessaging'
 				})),
 				popup;
 
-			self.trunkingCarrierEvents(popup_html, numberMessagingFormatted);
+			self.trunkingCarrierEvents(popup_html, numberMessagingFormatted, users);
 			popup_html.on('submit', function(ev) {
 				ev.preventDefault();
 
@@ -113,7 +155,7 @@ define(function(require) {
 
 				e.preventDefault();
 				$input.prop('checked', !isChecked);
-				self.trunkingCarrierEvents(popup_html, numberMessagingFormatted, true);
+				self.trunkingCarrierEvents(popup_html, numberMessagingFormatted, users, true);
 			});
 
 			popup = monster.ui.dialog(popup_html, {
@@ -124,8 +166,9 @@ define(function(require) {
 		/**
 		 * @param template
 		 * @param  {Object} numberData
+		 * @param {boolean} wasChanged
 		 */
-		trunkingCarrierEvents: function(template, numberData, wasChanged = false) {
+		trunkingCarrierEvents: function(template, numberData, users, wasChanged = false) {
 			var self = this,
 				isCarrierTio = _.get(numberData, 'isCarrierTio', false),
 				isReseller = _.get(numberData, 'isReseller', false),
@@ -149,6 +192,10 @@ define(function(require) {
 				if (!isSmsChecked && $mmsSelectionItem.find('input').prop('checked') && wasChanged) {
 					$mmsSelectionItem.find('input').prop('checked', false);
 				}
+
+				//Initialize selectors
+			//	monster.ui.chosen(template.find('#owners_list'));
+			//	monster.ui.chosen(template.find('#members_list'));
 			}
 		
 		},
@@ -196,6 +243,52 @@ define(function(require) {
 				},
 				onChargesCancelled: function() {
 					_.has(args, 'error') && args.error();
+				}
+			});
+		},
+
+		/**
+		 * @param {String} accountId
+		 * @param  {Function} callback
+		 */
+		numberMessagingListUsers: function(accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'user.list',
+				data: {
+					accountId: accountId,
+					filters: {
+						paginate: 'false'
+					},
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				}
+			});
+		},
+
+		/**
+		 * @param {String} accountId
+		 * @param  {Function} callback
+		 */
+		numberMessagingListOomasmsBoxes: function(accountId, callback) {
+			var self = this;
+
+			self.callApi({
+				resource: 'oomasmsboxes.list',
+				data: {
+					accountId: accountId,
+					filters: {
+						paginate: 'false'
+					},
+					generateError: false
+				},
+				success: function(data) {
+					callback && callback(data.data);
+				},
+				error: function(data, status) {
+					callback && callback([]);
 				}
 			});
 		}
