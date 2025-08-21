@@ -7,6 +7,42 @@
 		</div>
 		{{#if isCarrierTio}}
 			<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
+
+			<div class="popup-row">
+				<label for="owners_list" class="popup-control-label">
+					{{@root.i18n.numberMessaging.labels.owner}}
+				</label>
+				<div class="popup-controls">
+					<select id="owners_list" name="owners_list" class="dropout-to-owner">
+						<option value>{{@root.i18n.numberMessaging.select.noOwner}}</option>
+						{{#select userId}}
+							{{#each users}}
+								<option value="{{id}}" data-type="{{module}}">
+									{{this.name}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+				<span class="info-carrierTio">{{@root.i18n.numberMessaging.ownerInfo}}</span>
+			</div>
+			<div class="popup-row">
+				<label for="members_list" class="popup-control-label">
+					{{@root.i18n.numberMessaging.labels.additionalMembers}}
+				</label>
+				<div class="popup-controls">
+					<select id="members_list" name="members_list" class="dropout-to-owner">
+						{{#select memberId}}
+							<option value>{{@root.i18n.numberMessaging.select.noMember}}</option>
+							{{#each users}}
+								<option value="{{id}}" data-type="{{module}}">
+									{{this.name}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+			</div>
 		{{/if}}
 	</div>
 	<div class="popup-content popup-actions clearfix">
@@ -37,5 +73,6 @@
 					</div>
 				</div>
 			</label>
-		</div> {{/if}}
+		</div>
+	{{/if}}
 {{/inline}}
