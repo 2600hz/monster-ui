@@ -117,10 +117,22 @@ define(function(require) {
 			var self = this,
 				fromDate = template.find('input.filter-from').datepicker('getDate'),
 				toDate = template.find('input.filter-to').datepicker('getDate'),
-				filters = $.extend({}, {
-					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
-					created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
-				}, optFilters || {});
+				filters = _.assign(
+					{
+						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
+					},
+					ledgerName === 'adjustments'
+						? {}
+						: ledgerName.endsWith('_tool')
+							? {
+								'filter_metadata.manual_bookkeeping_tool': true
+							}
+							: {
+								'filter_not_metadata.manual_bookkeeping_tool': true
+							},
+					optFilters || {}
+				);
 
 			monster.parallel({
 				globalLedgers: function(callback) {
@@ -155,7 +167,15 @@ define(function(require) {
 
 			_.each(data.globalLedgers, function(ledger, ledgerName) {
 				if (template.find('.tab-type-ledger[data-type="' + ledgerName + '"]').length === 0) {
-					template.find('.ledger-tabs').append(self.getTemplate({ name: 'generic-tab-ledger', data: { ledgerName: ledgerName }, submodule: 'balance' }));
+					template
+						.find('.ledger-tabs .tab-type-ledger-separator')
+						.before(self.getTemplate({ name: 'generic-tab-ledger', data: { ledgerName: ledgerName }, submodule: 'balance' }));
+
+					if (ledgerName !== 'adjustments') {
+						template
+							.find('.ledger-tabs')
+							.append(self.getTemplate({ name: 'generic-tab-ledger', data: { ledgerName: ledgerName + '_tool' }, submodule: 'balance' }));
+					}
 				}
 
 				template.find('.tab-type-ledger[data-type="' + ledgerName + '"]').show();
@@ -436,7 +456,7 @@ define(function(require) {
 
 			monster.ui.footable(template.find('.footable'), {
 				getData: function(filters, callback) {
-					filters = $.extend(true, filters, {
+					filters = _.assign({}, filters, {
 						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
 						created_to: monster.util.dateToEndOfGregorianDay(toDate)
 					});
