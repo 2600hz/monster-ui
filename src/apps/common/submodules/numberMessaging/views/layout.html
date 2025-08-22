@@ -9,13 +9,13 @@
 			<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
 
 			<div class="popup-row">
-				<label for="owners_list" class="popup-control-label">
+				<label for="owner" class="popup-control-label">
 					{{@root.i18n.numberMessaging.labels.owner}}
 				</label>
 				<div class="popup-controls">
-					<select id="owners_list" name="owners_list" class="dropout-to-owner">
+					<select id="owner" name="owner" class="dropout-to-owner" required>
 						<option value>{{@root.i18n.numberMessaging.select.noOwner}}</option>
-						{{#select userId}}
+						{{#select owner}}
 							{{#each users}}
 								<option value="{{id}}" data-type="{{module}}">
 									{{this.name}}
@@ -27,12 +27,12 @@
 				<span class="info-carrierTio">{{@root.i18n.numberMessaging.ownerInfo}}</span>
 			</div>
 			<div class="popup-row">
-				<label for="members_list" class="popup-control-label">
+				<label for="member" class="popup-control-label">
 					{{@root.i18n.numberMessaging.labels.additionalMembers}}
 				</label>
 				<div class="popup-controls">
-					<select id="members_list" name="members_list" class="dropout-to-owner">
-						{{#select memberId}}
+					<select id="member" name="member" class="dropout-to-member">
+						{{#select member}}
 							<option value>{{@root.i18n.numberMessaging.select.noMember}}</option>
 							{{#each users}}
 								<option value="{{id}}" data-type="{{module}}">
