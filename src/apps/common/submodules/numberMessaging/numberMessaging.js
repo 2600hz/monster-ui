@@ -42,7 +42,7 @@ define(function(require) {
 					self.appFlags.oomaSmsBox = {};
 					self.appFlags.isCarrierTio = isCarrierTio;
 
-					if (!isCarrierTio) {
+					if (isCarrierTio) {
 						monster.parallel({
 							users: function(callback) {
 								var storedUsers = self.appFlags.users[accountId];
@@ -177,6 +177,14 @@ define(function(require) {
 
 				monster.waterfall([
 					function(callback) {
+						var isReseller = monster.util.isReseller();
+
+
+						if (!isReseller && isCarrierTio) {
+							callback(null, {});
+							return;
+						}
+
 						self.numberMessagingPatchNumber({
 							data: {
 								accountId: accountId,
@@ -207,10 +215,8 @@ define(function(require) {
 						});
 					},
 					function(number, callback) {
-						var isCarrierTio = self.appFlags.isCarrierTio,
-							oomaSmsBox = self.appFlags.oomaSmsBox;
+						var oomaSmsBox = self.appFlags.oomaSmsBox;
 							isUpdateOomaSmsBox = !_.isEmpty(oomaSmsBox);
-
 
 						if (!isCarrierTio) {
 							callback(null, {});
