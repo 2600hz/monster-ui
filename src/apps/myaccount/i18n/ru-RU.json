@@ -383,7 +383,33 @@
 		"accountColumn": "Клиент",
 		"__comment": "UI-1324: Adding the option to disable Braintree through a config flag",
 		"__version": "v3.20_s4",
-		"disabledAddCreditTooltip": "Для выполнения этой операции требуется подключение к Braintree"
+		"disabledAddCreditTooltip": "Для выполнения этой операции требуется подключение к Braintree",
+
+		"genericLedger": {
+			"columns": {
+				"account": "Account",
+				"amount": "Amount",
+				"date": "Date",
+				"description": "Description",
+				"usage": "Usage",
+				"agent": "Agent"
+			},
+			"ledgers": {
+				"mobile_data": "Mobile Data",
+				"2600Hz-mobile": "Mobile Data",
+				"per-minute-voip": "Per Minute",
+				"payments": "Payments",
+				"prorations": "Prorations",
+				"rollovers": "Rollovers",
+				"adjustments": "Adjustments",
+				"mobile_data_tool": "Mobile Data Adjustments",
+				"2600Hz-mobile_tool": "Mobile Data Adjustments",
+				"per-minute-voip_tool": "Per Minute Adjustments",
+				"payments_tool": "Payments Adjustments",
+				"prorations_tool": "Prorations Adjustments",
+				"rollovers_tool": "Rollovers Adjustments"
+			}
+		}
 	},
 
 		"servicePlan": {
