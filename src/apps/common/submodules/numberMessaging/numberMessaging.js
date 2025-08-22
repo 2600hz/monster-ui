@@ -11,7 +11,8 @@ define(function(require) {
 
 		appFlags: {
 			users: {},
-			oomaSmsBoxes: {}
+			isCarrierTio: false,
+			oomaSmsBox: {}
 		},
 
 		/**
@@ -31,46 +32,81 @@ define(function(require) {
 						accountId: args.accountId,
 						number: args.phoneNumber,
 						success: function(numberData) {
-							callback && callback(null, numberData);
+							callback && callback(null, {numberData: numberData});
 						}
 					});
 				},
 				function(numberData, callback) {
-					var isCarrierTio = _.get(numberData, 'metadata.carrier_module') === 'trunkingio';
+					var isCarrierTio = _.get(numberData, 'numberData.metadata.carrier_module') === 'trunkingio';
 
-					if (isCarrierTio) {
+					self.appFlags.oomaSmsBox = {};
+					self.appFlags.isCarrierTio = isCarrierTio;
+
+					if (!isCarrierTio) {
 						monster.parallel({
 							users: function(callback) {
-								self.numberMessagingListUsers(accountId, function(users) {
-									_.each(users, function(user) {
-										user.name = user.first_name + ' ' + user.last_name;
-									});
+								var storedUsers = self.appFlags.users[accountId];
 
-									self.appFlags.users[accountId] = users;
-									callback && callback(null, users);
-								});
+								if (storedUsers) {
+									callback && callback(null, storedUsers);
+								} else {
+									self.numberMessagingListUsers({
+										data: {
+											accountId: accountId,
+											filters: {
+												paginate: 'false'
+											}
+										}, 
+										success: function(users) {
+											_.each(users, function(user) {
+												user.name = user.first_name + ' ' + user.last_name;
+											});
+
+											self.appFlags.users[accountId] = users;
+											callback && callback(null, users);
+										}
+									});
+								}
 							},
 							oomaSmsBoxes: function(callback) {
-								self.numberMessagingListOomasmsBoxes(accountId, function(oomaSmsBoxes) {
-									self.appFlags.oomaSmsBoxes[accountId] = oomaSmsBoxes;
-									callback && callback(null, oomaSmsBoxes);
+								self.numberMessagingListOomaSmsBoxes({
+									data: {
+										accountId: accountId,
+										filters: {
+											paginate: 'false'
+										},
+										generateError: false
+									},
+									success: function(oomaSmsBoxes) {
+										var number = numberData.numberData.id;
+
+										_.each(oomaSmsBoxes, function(oomaSmsBox) {
+											if (_.includes(oomaSmsBox.numbers, number)) {
+												self.appFlags.oomaSmsBox = oomaSmsBox;
+											}
+										});
+										callback && callback(null, oomaSmsBoxes);
+									},
+									error: function(dataError) {
+										callback && callback(null, {});
+									}
 								});
 							}
 						}, function(err, results) {
-							callback && callback(null, numberData);
+							results.numberData = numberData.numberData;
+							callback && callback(null, results);
 						});
 					} else {
 						callback && callback(null, numberData);
 					}
 				}
 			], function(err, results) {
-				console.log(results);
-				console.log(self.appFlags);
 				self.numberMessagingRender(_.merge({
-					numberData: results.numberData,
-					users: results.users,
+					callbacks: args.callbacks,
 					accountId: accountId
-				}, args.callbacks));
+				}, _.omit(results, [
+					'oomaSmsBoxes'
+				])));
 			});
 		},
 
@@ -105,41 +141,109 @@ define(function(require) {
 				ev.preventDefault();
 
 				var $button = $(this).find('button[type="submit"]'),
-					formData = monster.ui.getFormData('form_number_messaging');
+					formData = monster.ui.getFormData('form_number_messaging'),
+					isCarrierTio = self.appFlags.isCarrierTio,
+					owner,
+					members = {},
+					oomaSmsBoxData = {
+						numbers: [
+							numberData.id
+						]
+					};
 
 				$button.prop('disabled', 'disabled');
 
-				self.numberMessagingPatchNumber({
-					data: {
-						accountId: accountId,
-						phoneNumber: numberData.id,
-						data: formData
+				if (isCarrierTio) {
+					owner = formData.owner;
+					memberData = _.find( self.appFlags.users[accountId], {id: formData.member });
+
+					oomaSmsBoxData.owner = owner;
+
+					if (memberData) {
+						oomaSmsBoxData.members = [
+							{
+								id: formData.member,
+								name: memberData.name,
+								type: 'user'
+							}
+						]
+					} else {
+						oomaSmsBoxData.shared_box = false;
+					}
+
+					delete formData.owner;
+					delete formData.member;
+				}
+
+				monster.waterfall([
+					function(callback) {
+						self.numberMessagingPatchNumber({
+							data: {
+								accountId: accountId,
+								phoneNumber: numberData.id,
+								data: formData
+							},
+							success: function(number) {
+								var phoneNumber = monster.util.formatPhoneNumber(number.id),
+									template = self.getTemplate({
+										name: '!' + self.i18n.active().numberMessaging.successUpdate,
+										data: {
+											phoneNumber: phoneNumber
+										}
+									});
+
+								monster.ui.toast({
+									type: 'success',
+									message: template
+								});
+
+
+								callback(null, number);
+							},
+							error: function(dataError) {
+								$button.prop('disabled', false);
+								error(dataError);
+							}
+						});
 					},
-					success: function(number) {
-						var phoneNumber = monster.util.formatPhoneNumber(number.id),
-							template = self.getTemplate({
-								name: '!' + self.i18n.active().numberMessaging.successUpdate,
+					function(number, callback) {
+						var isCarrierTio = self.appFlags.isCarrierTio,
+							oomaSmsBox = self.appFlags.oomaSmsBox;
+							isUpdateOomaSmsBox = !_.isEmpty(oomaSmsBox);
+
+
+						if (!isCarrierTio) {
+							callback(null, {});
+							return;
+						}
+
+						if (isUpdateOomaSmsBox) {
+							self.numberMessagingUpdateOomaSmsBox({
 								data: {
-									phoneNumber: phoneNumber
+									accountId: accountId,
+									boxId: oomaSmsBox.id,
+									data: oomaSmsBoxData
+								},
+								success: function(oomaSmsBox) {
+									callback(null, oomaSmsBox);
 								}
 							});
-
-						monster.ui.toast({
-							type: 'success',
-							message: template
-						});
-
-						popup.dialog('close');
-
-						success({
-							data: number
-						});
-					},
-					error: function(dataError) {
-						$button.prop('disabled', false);
-						error(dataError);
+						} else {
+							self.numberMessagingCreateOomaSmsBox({
+								data: {
+									accountId: accountId,
+									data: oomaSmsBoxData
+								},
+								success: function(oomaSmsBox) {
+									callback(null, oomaSmsBox);
+								}
+							});
+						}
 					}
+				], function(err, results) {
+					popup.dialog('close');
 				});
+									
 			});
 
 			popup_html.find('.cancel-link').on('click', function(e) {
@@ -170,34 +274,31 @@ define(function(require) {
 		 */
 		trunkingCarrierEvents: function(template, numberData, users, wasChanged = false) {
 			var self = this,
-				isCarrierTio = _.get(numberData, 'isCarrierTio', false),
+				isCarrierTio = self.appFlags.isCarrierTio,
 				isReseller = _.get(numberData, 'isReseller', false),
 				$smsSelectionItem = template.find('.feature-selection .feature-sms-item'),
 				$mmsSelectionItem = template.find('.feature-selection .feature-mms-item'),
 				isSmsChecked = $smsSelectionItem.find('input').prop('checked');
 
-			if (!isReseller && isCarrierTio) {
+			if (!isCarrierTio) {
+				return;
+			}
+
+			if (!isReseller) {
 				$smsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
 				$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
 				return;
 			}
 
-			if (isCarrierTio) {
-				if (isSmsChecked) {
-					$mmsSelectionItem.removeClass('sds_SelectionList_Item_Disabled');
-				} else {
-					$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
-				}
-
-				if (!isSmsChecked && $mmsSelectionItem.find('input').prop('checked') && wasChanged) {
-					$mmsSelectionItem.find('input').prop('checked', false);
-				}
-
-				//Initialize selectors
-			//	monster.ui.chosen(template.find('#owners_list'));
-			//	monster.ui.chosen(template.find('#members_list'));
+			if (isSmsChecked) {
+				$mmsSelectionItem.removeClass('sds_SelectionList_Item_Disabled');
+			} else {
+				$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
 			}
-		
+
+			if (!isSmsChecked && $mmsSelectionItem.find('input').prop('checked') && wasChanged) {
+				$mmsSelectionItem.find('input').prop('checked', false);
+			}
 		},
 
 		/**
@@ -206,19 +307,29 @@ define(function(require) {
 		numberMessagingFormatData: function(args) {
 			var self = this,
 				numberData = args.numberData,
-				settings = _.get(numberData, 'metadata.features.settings', {});
+				settings = _.get(numberData, 'metadata.features.settings', {}),
+				returnData = {
+					features: _.map(['sms', 'mms'], function(feature) {
+						return {
+							feature: feature,
+							isEnabled: _.get(numberData, [feature, 'enabled'], false),
+							isConfigured: _.get(settings, [feature, 'enabled'], false)
+						};
+					}),
+					isCarrierTio: self.appFlags.isCarrierTio,
+					isReseller: monster.util.isReseller()
+				},
+				oomaSmsBox = self.appFlags.oomaSmsBox;
 
-			return {
-				features: _.map(['sms', 'mms'], function(feature) {
-					return {
-						feature: feature,
-						isEnabled: _.get(numberData, [feature, 'enabled'], false),
-						isConfigured: _.get(settings, [feature, 'enabled'], false)
-					};
-				}),
-				isCarrierTio: _.get(numberData, 'metadata.carrier_module') === 'trunkingio',
-				isReseller: monster.util.isReseller()
-			};
+			if (self.appFlags.isCarrierTio && !_.isEmpty(oomaSmsBox)) {
+				var memberData = _.find(oomaSmsBox.members, { type: 'user' });
+
+				returnData.id = oomaSmsBox.id;
+				returnData.owner = oomaSmsBox.owner;
+				returnData.member = _.get(memberData, 'id', null);
+			}
+
+			return returnData;
 		},
 
 		/**
@@ -248,47 +359,79 @@ define(function(require) {
 		},
 
 		/**
-		 * @param {String} accountId
-		 * @param  {Function} callback
+		 * @param  {Object} args
+		 * @param  {Function} [args.success]
 		 */
-		numberMessagingListUsers: function(accountId, callback) {
+		numberMessagingListUsers: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'user.list',
-				data: {
-					accountId: accountId,
-					filters: {
-						paginate: 'false'
-					},
-				},
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data) {
-					callback && callback(data.data);
+					_.has(args, 'success') && args.success(data.data);
 				}
 			});
 		},
 
 		/**
-		 * @param {String} accountId
-		 * @param  {Function} callback
+		 * @param  {Object} args
+		 * @param  {Function} [args.success]
+		 * @param  {Function} [args.error]
 		 */
-		numberMessagingListOomasmsBoxes: function(accountId, callback) {
+		numberMessagingListOomaSmsBoxes: function(args) {
 			var self = this;
 
 			self.callApi({
 				resource: 'oomasmsboxes.list',
-				data: {
-					accountId: accountId,
-					filters: {
-						paginate: 'false'
-					},
-					generateError: false
-				},
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
 				success: function(data) {
-					callback && callback(data.data);
+					_.has(args, 'success') && args.success(data.data);
 				},
 				error: function(data, status) {
-					callback && callback([]);
+					_.has(args, 'error') && args.error([]);
+				}
+			});
+		},
+
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} args.data.oomaSmsBox
+		 * @param  {Function} [args.success]
+		 */
+		numberMessagingCreateOomaSmsBox: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'oomasmsboxes.create',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					_.has(args, 'success') && args.success(data);
+				}
+			});
+		},
+
+		/**
+		 * @param  {Object} args
+		 * @param  {Object} args.data.OomaSmsBox
+		 * @param  {Function} [args.success]
+		 */
+		numberMessagingUpdateOomaSmsBox: function(args) {
+			var self = this;
+
+			self.callApi({
+				resource: 'oomasmsboxes.update',
+				data: _.merge({
+					accountId: self.accountId
+				}, args.data),
+				success: function(data) {
+					_.has(args, 'success') && args.success(data.data);
 				}
 			});
 		}
