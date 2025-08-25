@@ -31,8 +31,9 @@
 	{{/if}}
 
 	<ul class="nav nav-tabs ledger-tabs">
-		<li data-type="per-minute-voip" class="tab-type-ledger active"><a href="javascript:void(0);">{{ i18n.balance.genericLedger.ledgers.per-minute-voip }}</a></li>
+		<li data-type="per-minute-voip" data-bookkeeping-tool="false" class="tab-type-ledger active"><a href="javascript:void(0);">{{ i18n.balance.genericLedger.ledgers.per-minute-voip }}</a></li>
 		<li class="tab-type-ledger-separator"></li>
+		<li data-type="per-minute-voip" data-bookkeeping-tool="true" class="tab-type-ledger"><a href="javascript:void(0);">{{replaceVar i18n.balance.genericLedger.ledgerAdjustments i18n.balance.genericLedger.ledgers.per-minute-voip}}</a></li>
 	</ul>
 
 	<div class="monster-table-wrapper">
