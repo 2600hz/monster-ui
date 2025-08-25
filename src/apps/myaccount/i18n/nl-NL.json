@@ -363,13 +363,9 @@
 				"prorations": "Prorations",
 				"rollovers": "Rollovers",
 				"adjustments": "Adjustments",
-				"mobile_data_tool": "Mobile Data Adjustments",
-				"2600Hz-mobile_tool": "Mobile Data Adjustments",
-				"per-minute-voip_tool": "Per Minute Adjustments",
-				"payments_tool": "Payments Adjustments",
-				"prorations_tool": "Prorations Adjustments",
-				"rollovers_tool": "Rollovers Adjustments"
-			}
+				"recurring": "Recurring"
+			},
+			"ledgerAdjustments": "{{variable}} Adjustments"
 		}
 	},
 
