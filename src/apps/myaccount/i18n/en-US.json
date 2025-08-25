@@ -549,8 +549,10 @@
 				"payments": "Payments",
 				"prorations": "Prorations",
 				"rollovers": "Rollovers",
-				"adjustments": "Adjustments"
-			}
+				"adjustments": "Adjustments",
+				"recurring": "Recurring"
+			},
+			"ledgerAdjustments": "{{variable}} Adjustments"
 		},
 
 		"cidHint": "CID"

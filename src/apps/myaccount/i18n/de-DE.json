@@ -500,8 +500,15 @@
 			},
 			"ledgers": {
 				"mobile_data": "Mobile Daten",
-				"per-minute-voip": "Pro Minute"
-			}
+				"2600Hz-mobile": "Mobile Data",
+				"per-minute-voip": "Pro Minute",
+				"payments": "Payments",
+				"prorations": "Prorations",
+				"rollovers": "Rollovers",
+				"adjustments": "Adjustments",
+				"recurring": "Recurring"
+			},
+			"ledgerAdjustments": "{{variable}} Adjustments"
 		},
 
 		"cidHint": "CID"
