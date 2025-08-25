@@ -3,7 +3,7 @@
 	margin: 0;
 
 	.popup-content {
-		padding: 15px 25px;
+		padding: 16px;
 
 		&:not(:first-child) {
 			border-top: 1px solid #ccc;
@@ -11,6 +11,14 @@
 
 		.help-box {
 			margin-top: 20px;
+		}
+
+		.popup-row {
+			margin-top: 16px;
+
+			.popup-controls select {
+				width: 100%;
+			}
 		}
 	 }
 
@@ -30,6 +38,7 @@
 	}
 
 	.info-carrierTio {
-		font-size: 14px;
+		font-size: 12px;
+		color: #454545;
 	}
 }
