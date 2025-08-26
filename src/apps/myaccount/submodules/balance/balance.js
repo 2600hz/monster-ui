@@ -1,6 +1,7 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
+		footable = require('footable'),
 		monster = require('monster');
 
 	var balance = {
@@ -31,6 +32,11 @@ define(function(require) {
 						format: 'balanceFormatMobileDataTable',
 						table: 'mobile-table',
 						rows: 'mobile-rows'
+					},
+					'manual-adjustments': {
+						format: 'balanceFormatManualAdjustmentsDataTable',
+						table: 'manual-adjustments-table',
+						rows: 'manual-adjustments-rows'
 					}
 				},
 				digits: {
@@ -99,7 +105,7 @@ define(function(require) {
 
 						self.balanceBindEvents(balance, renderData.uiRestrictions.balance.show_credit);
 
-						self.balanceDisplayGenericTable('per-minute-voip', false, balance, renderData.uiRestrictions.balance.show_credit, function() {
+						self.balanceDisplayGenericTable('per-minute-voip', balance, renderData.uiRestrictions.balance.show_credit, function() {
 							monster.pub('myaccount.updateMenu', args);
 
 							monster.pub('myaccount.renderSubmodule', balance);
@@ -117,35 +123,80 @@ define(function(require) {
 			var self = this,
 				fromDate = template.find('input.filter-from').datepicker('getDate'),
 				toDate = template.find('input.filter-to').datepicker('getDate'),
-				filters = _.assign(
-					{
-						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
-						created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
-					},
-					optFilters || {}
-				);
+				filters = $.extend({}, {
+					created_from: monster.util.dateToBeginningOfGregorianDay(fromDate, 'UTC'),
+					created_to: monster.util.dateToEndOfGregorianDay(toDate, 'UTC')
+				}, optFilters || {});
 
-			monster.parallel({
-				globalLedgers: function(callback) {
+			monster.waterfall([
+				function getGlobalLedgers(callback) {
 					var globalFilters = {
 						created_from: filters.created_from,
 						created_to: filters.created_to
 					};
 
 					self.balanceListFilteredLedgers(globalFilters, function(data) {
-						callback(null, data);
+						callback(null, {
+							globalLedgers: data
+						});
 					});
 				},
-				ledger: function(callback) {
-					self.balanceGetLedgerDocuments(ledgerName, filters, function(documents) {
-						callback(null, documents);
+				function getLedgerDocuments(data, callback) {
+					if (ledgerName === 'manual-adjustments') {
+						var filterBookkeepingTool = _.assign({}, filters, {
+							paginate: false,
+							'filter_metadata.manual_bookkeeping_tool': true
+						});
+
+						return self.balanceGetMultipleLedgerDocuments({
+							ledgers: _.chain(data.globalLedgers)
+								.keys()
+								.concat(['per-minute-voip'])
+								.value(),
+							filters: filterBookkeepingTool,
+							callback: function(documents) {
+								callback(null, _.assign(data, { ledger: documents }));
+							}
+						});
+					}
+
+					var filtersNotBookkeepingTool = _.assign({}, filters, {
+						'filter_not_metadata.manual_bookkeeping_tool': true
+					});
+
+					self.balanceGetLedgerDocuments(ledgerName, filtersNotBookkeepingTool, function(documents) {
+						callback(null, _.assign(data, { ledger: documents }));
 					});
 				}
-			}, function(err, results) {
+			], function(err, results) {
 				self.balanceUpdateStats(template, results, ledgerName);
 
 				callback && callback(results);
 			});
+		},
+
+		balanceGetMultipleLedgerDocuments: function(args) {
+			var self = this,
+				ledgers = args.ledgers,
+				filters = args.filters,
+				callback = args.callback;
+
+			monster.parallel(
+				_.map(ledgers, function(ledgerName) {
+					return function(next) {
+						self.balanceGetLedgerDocuments(ledgerName, filters, function(documents) {
+							next(null, documents);
+						});
+					};
+				}),
+				function(error, results) {
+					var data = _.reduce(results, function(accum, result) {
+						return _.concat(accum, result.data);
+					}, []);
+
+					callback({ data: data });
+				}
+			);
 		},
 
 		balanceUpdateStats: function(template, data, currentLedger) {
@@ -163,28 +214,10 @@ define(function(require) {
 						.before(
 							self.getTemplate({
 								name: 'generic-tab-ledger',
-								data: {
-									ledgerName: ledgerName,
-									tool: ledgerName === 'adjustments' ? '' : false
-								},
+								data: { ledgerName: ledgerName },
 								submodule: 'balance'
 							})
 						);
-
-					if (ledgerName !== 'adjustments') {
-						template
-							.find('.ledger-tabs')
-							.append(
-								self.getTemplate({
-									name: 'generic-tab-ledger',
-									data: {
-										ledgerName: ledgerName,
-										tool: true
-									},
-									submodule: 'balance'
-								})
-							);
-					}
 				}
 
 				template.find('.tab-type-ledger[data-type="' + ledgerName + '"]').show();
@@ -426,10 +459,7 @@ define(function(require) {
 			var self = this;
 			return _
 				.chain(data)
-				.filter(function(item) {
-					return _.get(item, 'metadata.item.billable')
-						|| _.get(item, 'metadata.manual_bookkeeping_tool');
-				})
+				.filter('metadata.item.billable')
 				.map(function(value) {
 					var item = value.metadata.item;
 					return {
@@ -454,7 +484,36 @@ define(function(require) {
 				.value();
 		},
 
-		balanceDisplayGenericTable: function(ledgerName, bookkeepingTool, parent, showCredits, afterRender) {
+		balanceFormatManualAdjustmentsDataTable: function(data) {
+			var self = this;
+			return _.map(data, function(value) {
+				var item = _.get(value, 'metadata.item');
+				var serviceName = !item
+					? ''
+					: item.name
+						? _.startCase(item.name)
+						: item.category && item.item
+							? _.startCase(item.category) + ' / ' + _.startCase(item.item)
+							: '';
+
+				return {
+					amount: {
+						value: value.amount,
+						digits: self.appFlags.balance.digits.genericTableAmount
+					},
+					description: value.description,
+					name: value.account.name,
+					serviceName: serviceName,
+					timestamp: _.get(
+						value,
+						'period.end',
+						_.get(value, 'period.start', undefined)
+					)
+				};
+			});
+		},
+
+		balanceDisplayGenericTable: function(ledgerName, parent, showCredits, afterRender) {
 			var self = this,
 				template = $(self.getTemplate({
 					name: _.get(self.appFlags.balance.customLedgers, ledgerName + '.table', 'generic-table'),
@@ -468,27 +527,17 @@ define(function(require) {
 
 			monster.ui.footable(template.find('.footable'), {
 				getData: function(filters, callback) {
-					filters = _.assign(
-						{},
-						filters,
-						{
-							created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
-							created_to: monster.util.dateToEndOfGregorianDay(toDate)
-						},
-						_.isNil(bookkeepingTool)
-							? {}
-							: bookkeepingTool
-								? {
-									'filter_metadata.manual_bookkeeping_tool': true
-								}
-								: {
-									'filter_not_metadata.manual_bookkeeping_tool': true
-								}
-					);
+					filters = $.extend(true, filters, {
+						created_from: monster.util.dateToBeginningOfGregorianDay(fromDate),
+						created_to: monster.util.dateToEndOfGregorianDay(toDate)
+					});
 
 					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback);
 				},
-				backendPagination: {
+				backendPagination: ledgerName === 'manual-adjustments' ? {
+					enabled: false,
+					allowLoadAll: false
+				} : {
 					enabled: true,
 					allowLoadAll: false
 				},
@@ -940,35 +989,31 @@ define(function(require) {
 
 		balanceDownloadActiveTable: function(template) {
 			var self = this,
-				from = template.find('input.filter-from').datepicker('getDate'),
-				to = template.find('input.filter-to').datepicker('getDate'),
-				dlFrom = monster.util.dateToBeginningOfGregorianDay(from, 'UTC'),
-				dlTo = monster.util.dateToEndOfGregorianDay(to, 'UTC'),
-				$tab = template.find('.tab-type-ledger.active'),
-				type = $tab.data('type'),
-				bookkeepingTool = $tab.data('bookkeeping-tool'),
-				url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/' + type + '?created_from=' + dlFrom + '&created_to=' + dlTo;
+				type = template.find('.tab-type-ledger.active').data('type');
 
-			url = _.isNil(bookkeepingTool)
-				? url
-				: bookkeepingTool
-					? url + '&filter_metadata.manual_bookkeeping_tool=true'
-					: url + '&filter_not_metadata.manual_bookkeeping_tool=true';
+			if (type === 'manual-adjustments') {
+				var csvContent = footable.get('#transactions_grid').toCSV(false);
+				const dataUri = 'data:text/csv;charset=utf-8,' + csvContent;
+				const encodedUri = encodeURI(dataUri);
+				window.open(encodedUri);
+			} else {
+				var from = template.find('input.filter-from').datepicker('getDate'),
+					to = template.find('input.filter-to').datepicker('getDate'),
+					dlFrom = monster.util.dateToBeginningOfGregorianDay(from, 'UTC'),
+					dlTo = monster.util.dateToEndOfGregorianDay(to, 'UTC'),
+					url = self.apiUrl + 'accounts/' + self.accountId + '/ledgers/' + type + '?created_from=' + dlFrom + '&created_to=' + dlTo + '&accept=csv&paginate=false&auth_token=' + self.getAuthToken();
 
-			url = url + '&accept=csv&paginate=false&auth_token=' + self.getAuthToken();
-
-			window.open(url, '_blank');
+				window.open(url, '_blank');
+			}
 		},
 
 		balanceRefreshActiveTable: function(template, showCredits, afterRender) {
 			var self = this,
-				$tab = template.find('.tab-type-ledger.active'),
-				type = $tab.data('type'),
-				bookkeepingTool = $tab.data('bookkeeping-tool');
+				type = template.find('.tab-type-ledger.active').data('type');
 
 			template.find('.table-container').empty();
 
-			self.balanceDisplayGenericTable(type, bookkeepingTool, template, showCredits, afterRender);
+			self.balanceDisplayGenericTable(type, template, showCredits, afterRender);
 		},
 
 		//utils
