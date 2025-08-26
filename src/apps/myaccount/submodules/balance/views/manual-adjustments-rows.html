@@ -1,0 +1,21 @@
+{{#each transactions}}
+	<tr class="transaction-row">
+		<td data-sort-value="{{timestamp}}">
+			{{toFriendlyDate timestamp}}
+		</td>
+		<td>
+			{{name}}
+		</td>
+		<td>
+			{{description}}
+		</td>
+		<td>
+			{{serviceName}}
+		</td>
+	{{#if @root.showCredits}}
+		<td data-sort-value="{{amount.value}}">
+			{{formatPrice amount.value amount.digits}}
+		</td>
+	{{/if}}
+	</tr>
+{{/each}}
