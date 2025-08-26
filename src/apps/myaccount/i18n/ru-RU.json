@@ -402,9 +402,8 @@
 				"prorations": "Prorations",
 				"rollovers": "Rollovers",
 				"adjustments": "Adjustments",
-				"recurring": "Recurring"
-			},
-			"ledgerAdjustments": "{{variable}} Adjustments"
+				"manual-adjustments": "Manual Adjustments"
+			}
 		}
 	},
 

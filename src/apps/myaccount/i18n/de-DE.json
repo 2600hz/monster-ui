@@ -496,7 +496,8 @@
 				"amount": "Betrag",
 				"date": "Datum",
 				"description": "Beschreibung",
-				"usage": "Nutzung"
+				"usage": "Nutzung",
+				"agent": "Agent"
 			},
 			"ledgers": {
 				"mobile_data": "Mobile Daten",
@@ -506,9 +507,8 @@
 				"prorations": "Prorations",
 				"rollovers": "Rollovers",
 				"adjustments": "Adjustments",
-				"recurring": "Recurring"
-			},
-			"ledgerAdjustments": "{{variable}} Adjustments"
+				"manual-adjustments": "Manual Adjustments"
+			}
 		},
 
 		"cidHint": "CID"

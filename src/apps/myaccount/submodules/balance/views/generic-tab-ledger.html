@@ -1,9 +1,1 @@
-<li data-type="{{ledgerName}}" data-bookkeeping-tool="{{tool}}" class="tab-type-ledger">
-	<a href="javascript:void(0);">
-	{{#compare tool "===" true}}
-		{{replaceVar i18n.balance.genericLedger.ledgerAdjustments (tryI18n i18n.balance.genericLedger.ledgers ledgerName)}}
-	{{else}}
-		{{tryI18n i18n.balance.genericLedger.ledgers ledgerName}}
-	{{/compare}}
-	</a>
-</li>
+<li data-type="{{ledgerName}}" class="tab-type-ledger"><a href="javascript:void(0);">{{ tryI18n i18n.balance.genericLedger.ledgers ledgerName}}</a></li>
