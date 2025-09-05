@@ -33,10 +33,10 @@ define(function(require) {
 						table: 'mobile-table',
 						rows: 'mobile-rows'
 					},
-					'manual-adjustments': {
-						format: 'balanceFormatManualAdjustmentsDataTable',
-						table: 'manual-adjustments-table',
-						rows: 'manual-adjustments-rows'
+					'adjustments': {
+						format: 'balanceFormatAdjustmentsDataTable',
+						table: 'adjustments-table',
+						rows: 'adjustments-rows'
 					}
 				},
 				digits: {
@@ -142,30 +142,37 @@ define(function(require) {
 					});
 				},
 				function getLedgerDocuments(data, callback) {
-					if (ledgerName === 'manual-adjustments') {
-						var filterBookkeepingTool = _.assign({}, filters, {
-							paginate: false,
-							'filter_metadata.manual_bookkeeping_tool': true
+					if (ledgerName !== 'adjustments') {
+						var filtersNotBookkeepingTool = _.assign({}, filters, {
+							'filter_not_metadata.manual_bookkeeping_tool': true
 						});
 
-						return self.balanceGetMultipleLedgerDocuments({
-							ledgers: _.chain(data.globalLedgers)
-								.keys()
-								.concat(['per-minute-voip'])
-								.value(),
-							filters: filterBookkeepingTool,
-							callback: function(documents) {
-								callback(null, _.assign(data, { ledger: documents }));
-							}
+						return self.balanceGetLedgerDocuments(ledgerName, filtersNotBookkeepingTool, function(documents) {
+							callback(null, _.assign(data, { ledger: documents }));
 						});
 					}
 
-					var filtersNotBookkeepingTool = _.assign({}, filters, {
-						'filter_not_metadata.manual_bookkeeping_tool': true
-					});
+					var filterNoPagination = _.assign({}, filters, {
+							paginate: false
+						}),
+						filterBookkeepingTool = _.assign({}, filterNoPagination, {
+							'filter_metadata.manual_bookkeeping_tool': true
+						});
 
-					self.balanceGetLedgerDocuments(ledgerName, filtersNotBookkeepingTool, function(documents) {
-						callback(null, _.assign(data, { ledger: documents }));
+					return self.balanceGetMultipleLedgerDocuments({
+						filtersByLedgers: _.chain(data.globalLedgers)
+							.mapValues(function(_value, ledgerName) {
+								return ledgerName === 'adjustments'
+									? filterNoPagination
+									: filterBookkeepingTool;
+							})
+							.assign({
+								'per-minute-voip': filterBookkeepingTool
+							})
+							.value(),
+						callback: function(documents) {
+							callback(null, _.assign(data, { ledger: documents }));
+						}
 					});
 				}
 			], function(err, results) {
@@ -177,14 +184,13 @@ define(function(require) {
 
 		balanceGetMultipleLedgerDocuments: function(args) {
 			var self = this,
-				ledgers = args.ledgers,
-				filters = args.filters,
+				filtersByLedgers = args.filtersByLedgers,
 				callback = args.callback;
 
 			monster.parallel(
-				_.map(ledgers, function(ledgerName) {
+				_.map(filtersByLedgers, function(ledgerFilters, ledgerName) {
 					return function(next) {
-						self.balanceGetLedgerDocuments(ledgerName, filters, function(documents) {
+						self.balanceGetLedgerDocuments(ledgerName, ledgerFilters, function(documents) {
 							next(null, documents);
 						});
 					};
@@ -484,7 +490,7 @@ define(function(require) {
 				.value();
 		},
 
-		balanceFormatManualAdjustmentsDataTable: function(data) {
+		balanceFormatAdjustmentsDataTable: function(data) {
 			var self = this;
 			return _.map(data, function(value) {
 				var item = _.get(value, 'metadata.item');
@@ -534,7 +540,7 @@ define(function(require) {
 
 					self.balanceGenericGetRows(ledgerName, parent, filters, showCredits, callback);
 				},
-				backendPagination: ledgerName === 'manual-adjustments' ? {
+				backendPagination: ledgerName === 'adjustments' ? {
 					enabled: false,
 					allowLoadAll: false
 				} : {
@@ -991,7 +997,7 @@ define(function(require) {
 			var self = this,
 				type = template.find('.tab-type-ledger.active').data('type');
 
-			if (type === 'manual-adjustments') {
+			if (type === 'adjustments') {
 				var csvContent = footable.get('#transactions_grid').toCSV(false);
 				const dataUri = 'data:text/csv;charset=utf-8,' + csvContent;
 				const encodedUri = encodeURI(dataUri);
