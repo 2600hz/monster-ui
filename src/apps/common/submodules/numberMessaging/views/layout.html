@@ -31,9 +31,8 @@
 					{{@root.i18n.numberMessaging.labels.additionalMembers}}
 				</label>
 				<div class="popup-controls">
-					<select id="member" name="member" class="dropout-to-member">
-						{{#select member}}
-							<option value>{{@root.i18n.numberMessaging.select.noMember}}</option>
+					<select multiple id="members" name="members" class="dropout-to-members" data-placeholder="{{@root.i18n.numberMessaging.select.noMember}}">
+						{{#select members}}
 							{{#each users}}
 								<option value="{{id}}" data-type="{{module}}">
 									{{this.name}}
