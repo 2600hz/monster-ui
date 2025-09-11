@@ -144,35 +144,40 @@ define(function(require) {
 					formData = monster.ui.getFormData('form_number_messaging'),
 					isCarrierTio = self.appFlags.isCarrierTio,
 					owner,
-					members = {},
+					members = numberMessagingFormatted.nonMembers || [],
 					oomaSmsBoxData = {
 						numbers: [
 							numberData.id
-						]
+						],
+						shared_box: false
 					};
 
 				$button.prop('disabled', 'disabled');
 
 				if (isCarrierTio) {
 					owner = formData.owner;
-					memberData = _.find( self.appFlags.users[accountId], {id: formData.member });
+
+					_.each(formData.members, function(memberId) {
+						var member = _.find( self.appFlags.users[accountId], {id: memberId });
+
+						if (member) {
+							members.push({
+								id: memberId,
+								name: member.name,
+								type: 'user'
+							});
+						}
+					});
 
 					oomaSmsBoxData.owner = owner;
 
-					if (memberData) {
-						oomaSmsBoxData.members = [
-							{
-								id: formData.member,
-								name: memberData.name,
-								type: 'user'
-							}
-						]
-					} else {
-						oomaSmsBoxData.shared_box = false;
+					if (_.size(members) > 0) {
+						oomaSmsBoxData.members = members;
+						oomaSmsBoxData.shared_box = true;
 					}
 
 					delete formData.owner;
-					delete formData.member;
+					delete formData.members;
 				}
 
 				monster.waterfall([
@@ -290,6 +295,10 @@ define(function(require) {
 				return;
 			}
 
+			monster.ui.chosen(template.find('#members'), {
+				width: '100%'
+			});
+
 			if (!isReseller) {
 				$smsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
 				$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
@@ -328,11 +337,19 @@ define(function(require) {
 				oomaSmsBox = self.appFlags.oomaSmsBox;
 
 			if (self.appFlags.isCarrierTio && !_.isEmpty(oomaSmsBox)) {
-				var memberData = _.find(oomaSmsBox.members, { type: 'user' });
+				var [allMembers, nonMembers] = _.partition(oomaSmsBox.members, function(member) {
+						return member.type === 'user';
+					}),
+					members = [];
+
+				_.each(allMembers, function(member) {
+					members.push(member.id);
+				});
 
 				returnData.id = oomaSmsBox.id;
 				returnData.owner = oomaSmsBox.owner;
-				returnData.member = _.get(memberData, 'id', null);
+				returnData.nonMembers = nonMembers;
+				returnData.members = members;
 			}
 
 			return returnData;
