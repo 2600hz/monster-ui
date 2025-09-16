@@ -21,8 +21,8 @@
 			}
 		}
 
-		.chosen-drop  {
-			width: 100%;
+		.chosen-container .chosen-drop {
+			z-index: 25000 !important;
 		}
 	 }
 
@@ -46,3 +46,5 @@
 		color: #454545;
 	}
 }
+
+
