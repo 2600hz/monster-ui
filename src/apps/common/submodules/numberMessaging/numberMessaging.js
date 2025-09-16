@@ -299,6 +299,50 @@ define(function(require) {
 				width: '100%'
 			});
 
+			// Dynamic positioning fix for dropdown in modal using position:fixed
+			template.find('#members').on('chosen:showing_dropdown', function(event) {
+				event.stopPropagation();
+				var $select = $(this),
+					$chosenContainer = $select.siblings('.chosen-container'),
+					$dropdown = $chosenContainer.find('.chosen-drop'),
+					position = $chosenContainer.offset();
+
+				// Position dropdown using fixed positioning relative to viewport
+				$dropdown.css({
+					'position': 'fixed',
+					'top': (position.top + $chosenContainer.outerHeight()),
+					'left': position.left,
+					'width': $chosenContainer.outerWidth(),
+					'z-index': '25000'
+				});
+			});
+
+			template.closest('.ui-dialog-content').on('scroll', function() {
+				var $membersSelect = template.find('#members'),
+					$chosenContainer = $membersSelect.siblings('.chosen-container'),
+					$dropdown = $chosenContainer.find('.chosen-drop');
+
+				if ($dropdown.is(':visible')) {
+					var position = $chosenContainer.offset();
+					$dropdown.css({
+						'top': (position.top + $chosenContainer.outerHeight()),
+						'left': position.left,
+						'width': $chosenContainer.outerWidth()
+					});
+				}
+			});
+
+			// Hide dropdown on window resize events
+			$(window).on('resize', function() {
+				var $membersSelect = template.find('#members'),
+					$chosenContainer = $membersSelect.siblings('.chosen-container'),
+					$dropdown = $chosenContainer.find('.chosen-drop');
+
+				if ($dropdown.is(':visible')) {
+					$membersSelect.trigger('chosen:close');
+				}
+			});
+
 			if (!isReseller) {
 				$smsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
 				$mmsSelectionItem.addClass('sds_SelectionList_Item_Disabled');
