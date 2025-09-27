@@ -239,5 +239,10 @@
 		},
 		"saveSuccess": "De Carrier instellingen zijn succesvol verwerkt voor dit account!",
 		"huntError": "Uw bestande instellingen voor de No_match route worden niet ondersteund door de MONSTER UI, wilt u toch doorgaan verander dan niets in dit scherm. U kunt een en ander ook aanpassen door een optie te selecteren in de dropdown!"
+	},
+
+	"monsterMultiSelector": {
+		"ok": "OK",
+		"cancel": "Cancel"
 	}
 }

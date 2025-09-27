@@ -329,5 +329,10 @@
 				"usedBy": "Elle correspond au téléphone nommé {{variable}}."
 			}
 		}
+	},
+
+	"monsterMultiSelector": {
+		"ok": "OK",
+		"cancel": "Cancel"
 	}
 }

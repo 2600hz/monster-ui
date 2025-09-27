@@ -1663,5 +1663,10 @@
 		"info": "In order to configure MMS capabilities, SMS must be enabled first.",
 		"ownerInfo": "All Messaging DIDs must have an owner.",
 		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}"
+	},
+
+	"monsterMultiSelector": {
+		"ok": "OK",
+		"cancel": "Cancel"
 	}
 }
