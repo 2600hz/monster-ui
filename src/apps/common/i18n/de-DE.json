@@ -1004,5 +1004,10 @@
 			"deleteConferences": "Die Konferenzen dieses Benutzers ebenfalls entfernen",
 			"deleteConferencesHelp": "Wenn Sie diese Option deaktiviert lassen, werden Sie die Konferenznummer des Benutzers nirgends anders verwenden können, da sie weiterhin von dieser Konferenz belegt sein wird."
 		}
+	},
+
+	"monsterMultiSelector": {
+		"ok": "OK",
+		"cancel": "Cancel"
 	}
 }
