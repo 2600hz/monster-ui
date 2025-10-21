@@ -746,9 +746,17 @@ $media-size-medium: "(max-width : 980px)";
 				input {
 					display: block;
 					width: 100%;
-					height: 30px;
-					margin-top: 0.25rem;
-					margin-bottom: 0.25rem;
+
+					&:not(.ui-spinner-input) {
+						height: 30px;
+						margin-top: 0.25rem;
+						margin-bottom: 0.25rem;
+					}
+
+					&.ui-spinner-input {
+						margin: 0;
+						padding: 0.25rem 6px;
+					}
 				}
 			}
 		}
