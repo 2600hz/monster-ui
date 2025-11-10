@@ -231,12 +231,7 @@ define(function(require) {
 				return;
 			}
 
-			var streetAddress = _.get(data, 'street_address', ''),
-				houseNumber = _.get(data, 'legacy_data.house_number', ''),
-				streetStartsWithHouse = _.startsWith(streetAddress, houseNumber),
-				fullStreetAddress = streetStartsWithHouse || _.isEmpty(houseNumber) ? streetAddress : _.trim([houseNumber, streetAddress].join(' '));
-
-			data.full_street_address = fullStreetAddress;
+			data.full_street_address = _.get(data, 'legacy_data.house_number') + ' ' + _.get(data, 'street_address');
 			return _.merge({}, data, {
 				notification_contact_emails: _
 					.chain(data)
@@ -247,20 +242,12 @@ define(function(require) {
 		},
 
 		e911Normalize: function(data) {
-			var streetAddress = _.trim(_.get(data, 'street_address', '')),
-				splitAddress = streetAddress.split(/\s+/g),
-				houseNumber = _.head(splitAddress),
-				existingLegacyData = _.get(data, 'legacy_data', {}),
-				legacyData = _.isPlainObject(existingLegacyData) ? _.clone(existingLegacyData) : {};
-
+			var splitAddress = data.street_address.split(/\s/g);
 			data.caller_name = monster.apps.auth.currentAccount.name;
-			data.street_address = streetAddress;
-
-			if (/^\d/.test(houseNumber)) {
-				legacyData.house_number = houseNumber;
-			}
-
-			data.legacy_data = legacyData;
+			data.legacy_data = {
+				house_number: _.head(splitAddress)
+			};
+			data.street_address = splitAddress.slice(1).join(' ');
 
 			return _.merge({}, data, {
 				notification_contact_emails: _
