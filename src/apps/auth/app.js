@@ -985,6 +985,25 @@ define(function(require) {
 			// ----------------
 
 			content
+				.find('.password-icon')
+					.on('click', function() {
+						var $this = $(this),
+							password = content.find('#password'),
+							inputType = password.attr('type')
+							classList = 'password-icon svg-icon';
+
+						if (inputType === 'password') {
+							password.attr('type', 'text');
+							$this.attr('class', classList + ' telicon2-eye--fill');
+							$this.find('use').attr('xlink:href', '#telicon2-eye--fill');
+						} else {
+							password.attr('type', 'password');
+							$this.attr('class', classList + ' telicon2-eye-slash--fill');
+							$this.find('use').attr('xlink:href', '#telicon2-eye-slash--fill');
+						}
+					});
+
+			content
 				.find('.form-toggle')
 					.on('click', function() {
 						var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
