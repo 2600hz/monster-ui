@@ -27,6 +27,7 @@ define(function(require) {
 	require('monthpicker');
 	require('timepicker');
 	require('validate');
+	require('validate-addons');
 	require('wysiwyg');
 
 	function initializeHandlebarsHelper() {
@@ -52,6 +53,12 @@ define(function(require) {
 
 				if (arguments.length < 3) {
 					throw new Error('Handlebars Helper "compare" needs 2 parameters');
+				}
+
+				if (operator === '===' && (lvalue === 'e164' /*|| rvalue === 'e164'*/)) {
+					console.log('Handlebars:compare', {
+						lvalue, operator, rvalue, options
+					});
 				}
 
 				if (options === undefined) {
