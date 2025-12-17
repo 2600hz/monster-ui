@@ -55,12 +55,6 @@ define(function(require) {
 					throw new Error('Handlebars Helper "compare" needs 2 parameters');
 				}
 
-				if (operator === '===' && (lvalue === 'e164' /*|| rvalue === 'e164'*/)) {
-					console.log('Handlebars:compare', {
-						lvalue, operator, rvalue, options
-					});
-				}
-
 				if (options === undefined) {
 					options = rvalue;
 					rvalue = operator;
