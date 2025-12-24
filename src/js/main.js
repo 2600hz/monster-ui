@@ -74,7 +74,13 @@ require.config({
 		'toastr': 'js/vendor/toastr-1.3.0',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
 		'validate': 'js/vendor/jquery.validate.min',
+		'validate-addons': 'js/vendor/jquery.validate.additional-methods.min',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min'
+	},
+	map: {
+		'validate-addons': {
+			'jquery.validate.min': 'validate'
+		}
 	},
 	shim: {
 		'bootstrap': ['jqueryui'],
@@ -113,6 +119,8 @@ require.config({
 			exports: 'renderjson'
 		},
 		'touch-punch': ['jqueryui'],
+		'validate': ['jquery'],
+		'validate-addons': ['validate'],
 		vfs_fonts: ['pdfmake']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()
