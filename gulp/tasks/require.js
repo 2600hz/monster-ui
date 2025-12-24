@@ -90,6 +90,7 @@ const libsToExcludeFromApp = [
 	'toastr',
 	'touch-punch',
 	'validate',
+	'validate-addons',
 	'vfs_fonts',
 	'wysiwyg'
 ];
