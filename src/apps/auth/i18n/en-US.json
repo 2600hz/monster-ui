@@ -132,7 +132,31 @@
 		}
 	},
 	"multiFactor": {
-		"error": "The information sent by the multi-factor plugin isn't valid."
+		"error": "The information sent by the multi-factor plugin isn't valid.",
+		"verification": {
+			"title": "Enter your MFA code",
+			"description": "Please enter the verification code from your authentication app.",
+			"verificationCode": "Verification code",
+			"invalidCode": "Invalid code",
+			"verifyButton": "Verify",
+			"setupDesciption": "Don't have an authentication app setup yet?",
+			"setupButton": "Set up MFA"
+		},
+		"setup": {
+			"title": "Set up MFA",
+			"description": "To set up your MFA, scan this QR code with your multi-factor authentication app on your phone.",
+			"noAuthAppTitle": "Don't have an authentication app?",
+			"noAuthAppDescription": "Below are suggested options, but you can use any authentication app you prefer. After setting it up, scan the QR code above to refresh this screen.",
+			"apps": {
+				"googleAuthenticator": "Google Authenticator",
+				"authy": "Authy",
+				"microsoftAuthenticator": "Microsoft Authenticator"
+			},
+			"enterCodeButton": "Enter the code"
+		},
+		"common": {
+			"returnToLogin": "Return to login"
+		}
 	},
 	"__comment": "UI-2422: Adding duo integration",
 	"__version": "4.1",
