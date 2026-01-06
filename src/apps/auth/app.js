@@ -1426,8 +1426,8 @@ define(function(require) {
 					break;
 				case 'otp':
 					self.showOtpVerificationDialog({
-						loginData,
-						success
+						loginData: loginData,
+						success: success
 					});
 					break;
 				default:
