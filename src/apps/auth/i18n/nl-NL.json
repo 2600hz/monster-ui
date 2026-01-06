@@ -1,86 +1,112 @@
 {
-"welcome": "Uw Unified Communications Platform",
-"password": "Wachtwoord",
-"rememberMe": "Onthoud Mij",
-"forgotPassword": "Wachtwoord Vergeten",
-"username": "Gebruikersnaam",
-"registerMessage": "Gebruik 1 account voor alle 2600Hz diensten",
-"registerLink": "registreer",
-"or": "OF",
-"errorLoadingAccount": "Er ging iets fout met het laden van uw account",
-"confirmLogout": "Weet u zeker dat u wilt uitloggen?",
-"account": {
-"name": "Account Naam",
-"namePlaceholder": "Bedrijfsnaam",
-"realm": "Account Realm",
-"realmPlaceholder": "Account Realm"
-},
-"login":{
-"buttonText": "Log In"
-},
-"conferenceLogin": {
-"userTab": "Gebruiker",
-"adminTab": "Administrator",
-"headerLabel": "Conference Login",
-"pinLabel": "Pin Nummer",
-"nameLabel": "Naam",
-"callInLabel": "Uw 'Call-in' Telefoon Nummer",
-"optionalSplitter": "Optioneel",
-"buttonLabel": "Log-in op Conference"
-},
-"passwordRecovery": {
-"title": "W Rechtwoord herstel",
-"label": {
-"phoneNumber": "Telefoonnummer"
-},
-"placeholder": {
-"username": "john@doe.com",
-"account": {
-"name": "2600hz",
-"realm": "sip.2600hz.com"
-},
-"phoneNumber": "+14151234567"
-},
-"help": {
-"text": "Geef aub uw gebruikersnaam plus een account realm of een telefoonnummer uit uw account op."
-},
-"button": {
-		"recover": "Herstel Wachtwoord"
+	"welcome": "Uw Unified Communications Platform",
+	"password": "Wachtwoord",
+	"rememberMe": "Onthoud Mij",
+	"forgotPassword": "Wachtwoord Vergeten",
+	"username": "Gebruikersnaam",
+	"registerMessage": "Gebruik 1 account voor alle 2600Hz diensten",
+	"registerLink": "registreer",
+	"or": "OF",
+	"errorLoadingAccount": "Er ging iets fout met het laden van uw account",
+	"confirmLogout": "Weet u zeker dat u wilt uitloggen?",
+	"account": {
+		"name": "Account Naam",
+		"namePlaceholder": "Bedrijfsnaam",
+		"realm": "Account Realm",
+		"realmPlaceholder": "Account Realm"
+	},
+	"login": {
+		"buttonText": "Log In"
+	},
+	"conferenceLogin": {
+		"userTab": "Gebruiker",
+		"adminTab": "Administrator",
+		"headerLabel": "Conference Login",
+		"pinLabel": "Pin Nummer",
+		"nameLabel": "Naam",
+		"callInLabel": "Uw 'Call-in' Telefoon Nummer",
+		"optionalSplitter": "Optioneel",
+		"buttonLabel": "Log-in op Conference"
+	},
+	"passwordRecovery": {
+		"title": "W Rechtwoord herstel",
+		"label": {
+			"phoneNumber": "Telefoonnummer"
+		},
+		"placeholder": {
+			"username": "john@doe.com",
+			"account": {
+				"name": "2600hz",
+				"realm": "sip.2600hz.com"
+			},
+			"phoneNumber": "+14151234567"
+		},
+		"help": {
+			"text": "Geef aub uw gebruikersnaam plus een account realm of een telefoonnummer uit uw account op."
+		},
+		"button": {
+			"recover": "Herstel Wachtwoord"
 		},
 		"toastr": {
-		"success": {
-			"reset": "Uw wachtwoord is succesvol hersteld"
+			"success": {
+				"reset": "Uw wachtwoord is succesvol hersteld"
+			},
+			"error": {
+				"missing": "Geef aub een account naam, account realm of een telefoonnummer uit uw account in"
+			}
+		}
+	},
+	"passwordUpdate": {
+		"title": "Wachtwoord Bijwerken",
+		"label": {
+			"password": {
+				"new": "Nieuw Wachtwoord",
+				"confirmation": "Bevestig Nieuwe Wachtwoord"
+			}
 		},
-		"error": {
-			"missing": "Geef aub een account naam, account realm of een telefoonnummer uit uw account in"
+		"help": {
+			"text": "U heeft uw wachtwoord veranderd en gebruikt nu een automatisch gegenereerde. U kunt deze veranderen of blijven gebruiken."
+		},
+		"button": {
+			"update": "Wachtwoord Bijwerken"
+		},
+		"toastr": {
+			"success": {
+				"update": "Uw wachtwoord is succesvol bijgewerkt"
+			},
+			"error": {
+				"password": "De wachtwoorden komen niet overeen, probeert u het opnieuw."
+			}
+		}
+	},
+	"toastrMessages": {
+		"appListError": "Er is een probleem met het laden van de lijst met uw applicaties."
+	},
+	"multiFactor": {
+		"error": "The information sent by the multi-factor plugin isn't valid.",
+		"verification": {
+			"title": "Enter your MFA code",
+			"description": "Please enter the verification code from your authentication app.",
+			"verificationCode": "Verification code",
+			"invalidCode": "Invalid code",
+			"verifyButton": "Verify",
+			"setupDesciption": "Don't have an authentication app setup yet?",
+			"setupButton": "Set up MFA"
+		},
+		"setup": {
+			"title": "Set up MFA",
+			"description": "To set up your MFA, scan this QR code with your multi-factor authentication app on your phone.",
+			"noAuthAppTitle": "Don't have an authentication app?",
+			"noAuthAppDescription": "Below are suggested options, but you can use any authentication app you prefer. After setting it up, scan the QR code above to refresh this screen.",
+			"apps": {
+				"googleAuthenticator": "Google Authenticator",
+				"authy": "Authy",
+				"microsoftAuthenticator": "Microsoft Authenticator"
+			},
+			"enterCodeButton": "Enter the code"
+		},
+		"common": {
+			"returnToLogin": "Return to login"
 		}
 	}
-},
-"passwordUpdate": {
-"title": "Wachtwoord Bijwerken",
-"label": {
-"password": {
-"new": "Nieuw Wachtwoord",
-"confirmation": "Bevestig Nieuwe Wachtwoord"
 }
-},
-"help": {
-"text": "U heeft uw wachtwoord veranderd en gebruikt nu een automatisch gegenereerde. U kunt deze veranderen of blijven gebruiken."
-},
-"button": {
-"update": "Wachtwoord Bijwerken"
-},
-"toastr": {
-"success": {
-"update": "Uw wachtwoord is succesvol bijgewerkt"
-},
-"error": {
-"password": "De wachtwoorden komen niet overeen, probeert u het opnieuw."
-}
-}
-},
-"toastrMessages": {
-"appListError": "Er is een probleem met het laden van de lijst met uw applicaties."
-}
-}
- 
