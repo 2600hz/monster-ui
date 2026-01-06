@@ -131,11 +131,11 @@ define(function(require) {
 					window.location = sso.login;
 				}
 			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-				const duoAuthState = localStorage.getItem('duoAuthState')
+				const duoAuthState = localStorage.getItem('duoAuthState');
 
 				if (duoAuthState === urlParams.state) {
 					self.checkDuoAuth(urlParams.code);
-					return
+					return;
 				}
 
 				// OAuth redirect
@@ -1413,25 +1413,33 @@ define(function(require) {
 			});
 		},
 
-		handleMultiFactor: function(data, loginData, _success, error) {
+		handleMultiFactor: function(data, loginData, success, error) {
 			var self = this,
-				isDuoUniversal = data.multi_factor_request.provider_name === 'duo_universal',
-				isDuoLegacy = data.multi_factor_request.provider_name === 'duo';
+				mfaProvider = data.multi_factor_request.provider_name;
 
-			if (isDuoUniversal) {
-				self.doDuoUniversalRedirect(data, loginData);
-			} else if (isDuoLegacy) {
-				self.showDuoDialog();
-			} else {
-				error && error();
+			switch (mfaProvider) {
+				case 'duo_universal':
+					self.doDuoUniversalRedirect(data, loginData);
+					break;
+				case 'duo':
+					self.showDuoDialog();
+					break;
+				case 'otp':
+					self.showOtpVerificationDialog({
+						loginData,
+						success
+					});
+					break;
+				default:
+					error && error();
 			}
 		},
 
 		doDuoUniversalRedirect: function(data, loginData) {
-			localStorage.setItem('prevAuth', JSON.stringify(loginData))
-			localStorage.setItem('duoAuthState', _.get(data, 'multi_factor_request.duo_state', ''))
+			localStorage.setItem('prevAuth', JSON.stringify(loginData));
+			localStorage.setItem('duoAuthState', _.get(data, 'multi_factor_request.duo_state', ''));
 
-			window.location.href = _.get(data, 'multi_factor_request.duo_redirect', '')
+			window.location.href = _.get(data, 'multi_factor_request.duo_redirect', '');
 		},
 
 		showDuoDialog: function() {
@@ -1446,6 +1454,258 @@ define(function(require) {
 					isPersistent: true
 				}
 			);
+		},
+
+		/**
+		 * Shows the OTP verification dialog.
+		 * @param {Object}   args
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} args.success  Login success callback
+		 */
+		showOtpVerificationDialog: function(args) {
+			var self = this,
+				$template = $(self.getTemplate({
+					name: 'mfa-otpVerificationDialog'
+				})),
+				$dialog = monster.ui.dialog($template, {
+					title: self.i18n.active().multiFactor.verification.title
+				}),
+				bindArgs = _.assign({
+					$dialog: $dialog
+				}, args);
+
+			self.bindOtpVerificationDialogEvents(bindArgs);
+		},
+
+		/**
+		 * Binds the events for the OTP verification dialog elements.
+		 * @param {Object}   args
+		 * @param {jQUery}   args.$dialog  jQuery dialog element
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} args.success  Login success callback
+		 */
+		bindOtpVerificationDialogEvents: function(args) {
+			var self = this,
+				$dialog = args.$dialog,
+				loginData = args.loginData,
+				validator = args.validator,
+				successCallback = args.success,
+				$form = $dialog.find('form'),
+				validator = monster.ui.validate($form, {
+					rules: {
+						mfaCode: {
+							required: true
+						}
+					}
+				}),
+				$mfaCode = $form.find('#mfa_code'),
+				$btnVerify = $dialog.find('#btn_mfa_verify');
+
+			monster.ui.mask($mfaCode, '000000', {
+				placeholder: '______'
+			});
+
+			$mfaCode.on('input', function() {
+				var value = $(this).val();
+				$btnVerify.prop('disabled', value.length !== 6);
+			});
+
+			$dialog.find('#btn_mfa_setup').on('click', function(e) {
+				e.preventDefault();
+				$dialog.dialog('close');
+				self.showOtpSetupDialog({
+					loginData: loginData,
+					success: successCallback
+				});
+			});
+
+			$dialog.find('#btn_mfa_verify').on('click', function(e) {
+				e.preventDefault();
+
+				if (!monster.ui.valid($form)) {
+					return;
+				}
+
+				self.verifyOtp({
+					loginData: loginData,
+					code: $mfaCode.val(),
+					success: function() {
+						successCallback();
+					},
+					error: function(_parsedError, errorData) {
+						if (errorData.status !== /*401*/ 405) {
+							return;
+						}
+
+						validator.showErrors({
+							mfaCode: self.i18n.active().multiFactor.verification.invalidCode
+						});
+					}
+				});
+			});
+		},
+
+		/**
+		 * Shows the OTP setup dialog.
+		 * @param {Object}   args
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} args.success  Login success callback
+		 */
+		showOtpSetupDialog: function(args) {
+			var self = this,
+				loginData = args.loginData,
+				successCallback = args.success,
+				$template = $(self.getTemplate({
+					name: 'mfa-otpSetupDialog'
+				})),
+				$qrcodeContainer = $template.find('#mfa_setup_qrcode_container'),
+				$spinner = $(monster.getTemplate({
+					name: 'monster-insertTemplate-spinner',
+					app: monster.apps.core
+				})),
+				$dialog = monster.ui.dialog($template, {
+					title: self.i18n.active().multiFactor.setup.title
+				});
+
+			$qrcodeContainer.append($spinner);
+
+			monster.parallel({
+				bindEvents: function bindEvents(next) {
+					self.bindOtpSetupDialogEvents({
+						$dialog: $dialog,
+						loginData: loginData,
+						success: successCallback
+					});
+
+					next();
+				},
+				qrCodeUrl: function getQrCode(next) {
+					self.getSetupQrCode({
+						loginData: loginData,
+						success: function(data) {
+							next(null, data.qr_url);
+						},
+						error: function(parsedError) {
+							next(parsedError);
+						}
+					});
+				}
+			}, function(err, results) {
+				if (err) {
+					// Default error dialog for API call will be shown,
+					// so close setup dialog
+					$dialog.dialog('close');
+					return;
+				}
+
+				$spinner.remove();
+
+				var $qrCode = $(self.getTemplate({
+					name: 'mfa-otpSetupQrCode',
+					data: {
+						qrCodeUrl: results.qrCodeUrl
+					}
+				}));
+
+				$qrcodeContainer.append($qrCode);
+			});
+		},
+
+		/**
+		 * Binds the events for the OTP setup dialog elements.
+		 * @param {Object}   args
+		 * @param {jQUery}   args.$dialog  jQuery dialog element
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} args.success  Login success callback
+		 */
+		bindOtpSetupDialogEvents: function(args) {
+			var self = this,
+				$dialog = args.$dialog,
+				loginData = args.loginData,
+				successCallback = args.success;
+
+			$dialog.find('#btn_mfa_enter_code').on('click', function(e) {
+				e.preventDefault();
+				$dialog.dialog('close');
+				self.showOtpVerificationDialog({
+					loginData: loginData,
+					success: successCallback
+				});
+			});
+		},
+
+		/**
+		 * Executes an API call to verify the OTP code.
+		 * @param {Object}   args
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} [args.success]  Optional API call success callback
+		 * @param {Function} [args.error]  Optional API call error callback
+		 */
+		verifyOtp: function(args) {
+			var self = this,
+				loginData = args.loginData,
+				code = args.code,
+				success = args.success,
+				error = args.error;
+
+			self.callApi({
+				resource: 'multifactor.qrcode',
+				data: {
+					data: {
+						credentials: loginData.credentials,
+						account_name: loginData.account_name,
+						totp_code: code
+					}
+				},
+				success: function(data) {
+					success && success(data.data);
+				},
+				error: function(parsedError, errorData) {
+					error && error(parsedError, errorData);
+				}
+			});
+		},
+
+		/**
+		 * Executes an API call to get the OTP QR code.
+		 * @param {Object}   args
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} [args.success]  Optional API call success callback
+		 * @param {Function} [args.error]  Optional API call error callback
+		 */
+		getSetupQrCode: function(args) {
+			var self = this,
+				loginData = args.loginData,
+				success = args.success,
+				error = args.error;
+
+			self.callApi({
+				resource: 'multifactor.qrcode',
+				data: {
+					data: {
+						credentials: loginData.credentials,
+						account_name: loginData.account_name
+					}
+				},
+				success: function(data) {
+					success && success(data.data);
+				},
+				error: function(parsedError, errorData) {
+					error && error(parsedError, errorData);
+				}
+			});
 		},
 
 		/**
