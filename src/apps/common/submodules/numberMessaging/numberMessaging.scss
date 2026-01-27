@@ -65,4 +65,16 @@
 	label.monster-invalid {
 		position: unset;
 	}
+
+	/* Position chosen popup above input field */
+	.chosen-container .chosen-drop {
+		top: auto;
+		bottom: 100%;
+		border-top: 1px solid $primary-color;
+		border-bottom: 0 none;
+
+		.chosen-results {
+			max-height: 100px;
+		}
+	}
 }
