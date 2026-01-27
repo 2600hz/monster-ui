@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 .trunkstore_popup.numberMessaging {
 	width: 510px;
 	margin: 0;
@@ -45,6 +47,22 @@
 		font-size: 12px;
 		color: #454545;
 	}
+
+	.number-messaging-switch label {
+		display: inline-block;
+		margin-right: 1rem;
+	}
+
+	.number-messaging-section-hidden {
+		display: none;
+	}
+
+	.text-danger {
+		color: $danger-color;
+		font-weight: 600;
+	}
+
+	label.monster-invalid {
+		position: unset;
+	}
 }
-
-

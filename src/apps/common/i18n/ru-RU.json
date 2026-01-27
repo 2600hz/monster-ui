@@ -298,5 +298,44 @@
 			"deleteConferences": "Также удалить конференц-комнаты пользователя из системы",
 			"deleteConferencesHelp": "Если оставите эту опцию не выделенной, Вы не сможете использовать номер конференции пользователя где-либо еще, так как он будет использоваться данной конференцией."
 		}
+	},
+
+	"numberMessaging": {
+		"titles": {
+			"sms": "SMS",
+			"mms": "MMS",
+			"dialog": "Configure Messaging"
+		},
+		"labels": {
+			"sms": "Enable SMS Services",
+			"mms": "Enable MMS Services",
+			"messaging": "Messaging"
+		},
+		"select": {
+			"noOwner": "- No owner selected -",
+			"noMember": "- No members selected -"
+		},
+		"info": "In order to configure MMS capabilities, SMS must be enabled first.",
+		"ownerInfo": "All Messaging DIDs must have an owner.",
+		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}",
+		"messagingServicesUnavailable": "SMS and MMS services are disabled. Contact your service provider for more information.",
+		"mfaNotice": "Messaging requires multi-factor authentication to be enabled for all users on your account. This requirement ensures ongoing compliance and secure access to Messaging features.",
+		"configureTioSmsBox": {
+			"label": "Create and configure message box",
+			"info": "This setting applies only to messaging boxes managed through the platform's official applications and does not affect customer-supplied or third-party integrations.",
+			"textingCampaignRegistrationNotice": "This phone number must be approved for texting before you can send and receive text messages. Please complete the Text Campaign Registration process in the Trunking.io application.",
+			"owner": "Owner",
+			"additionalMembers": "Additional Members"
+		},
+		"mfaNotConfiguredError": "MFA has not been configured for this account. Contact your administrator.",
+		"mfaEnabledDialog": {
+			"title": "Multi-factor authentication enabled for your account.",
+			"description": "Messaging requires multi-factor authentication to be enabled for all users on your account. To continue using Messaging, please ensure MFA is set up through your preferred authentication app."
+		}
+	},
+
+	"monsterMultiSelector": {
+		"ok": "OK",
+		"cancel": "Cancel"
 	}
 }

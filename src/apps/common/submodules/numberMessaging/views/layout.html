@@ -1,48 +1,16 @@
 <form class="form-horizontal trunkstore_popup numberMessaging clearfix" id="form_number_messaging">
 	<div class="popup-content">
+		{{#unless isReseller}}
+			{{#if isCarrierTio}}
+				{{#monsterText}}{{ i18n.numberMessaging.messagingServicesUnavailable }}{{/monsterText}}
+			{{/if}}
+		{{/unless}}
 		<div class="sds_SelectionList sds_SelectionList_Grid feature-selection">
 			{{#each features}}
 				{{> featureContent}}
 			{{/each}}
 		</div>
-		{{#if isCarrierTio}}
-			<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
-
-			<div class="popup-row">
-				<label for="owner" class="popup-control-label">
-					{{@root.i18n.numberMessaging.labels.owner}}
-				</label>
-				<div class="popup-controls">
-					<select id="owner" name="owner" class="dropout-to-owner" required>
-						<option value>{{@root.i18n.numberMessaging.select.noOwner}}</option>
-						{{#select owner}}
-							{{#each users}}
-								<option value="{{id}}" data-type="{{module}}">
-									{{this.name}}
-								</option>
-							{{/each}}
-						{{/select}}
-					</select>
-				</div>
-				<span class="info-carrierTio">{{@root.i18n.numberMessaging.ownerInfo}}</span>
-			</div>
-			<div class="popup-row">
-				<label for="member" class="popup-control-label">
-					{{@root.i18n.numberMessaging.labels.additionalMembers}}
-				</label>
-				<div class="popup-controls">
-					<select multiple id="members" name="members" class="dropout-to-members" data-placeholder="{{@root.i18n.numberMessaging.select.noMember}}">
-						{{#select members}}
-							{{#each users}}
-								<option value="{{id}}" data-type="{{module}}">
-									{{this.name}}
-								</option>
-							{{/each}}
-						{{/select}}
-					</select>
-				</div>
-			</div>
-		{{/if}}
+		<div id="number_messaging_tio"></div>
 	</div>
 	<div class="popup-content popup-actions clearfix">
 		<div class="pull-right">
@@ -58,8 +26,8 @@
 
 {{#*inline "featureContent"}}
 	{{#if isConfigured}}
-		<div class="sds_SelectionList_Item feature-{{feature}}-item" data-feature-type={{feature}}">
-			<input type="checkbox" class="sds_CheckboxRaw_Input sds_SelectionList_Item_Selector_Input" name="{{feature}}.enabled" {{#if isEnabled}} checked="checked"{{/if}}>
+		<div class="sds_SelectionList_Item {{#unless isEnabled}} sds_SelectionList_Item_Disabled{{/unless}}" data-feature-type={{feature}}">
+			<input type="checkbox" class="sds_CheckboxRaw_Input sds_SelectionList_Item_Selector_Input" name="{{feature}}.enabled" value="{{feature}}" {{#if isChecked}} checked="checked"{{/if}}>
 			<label class="sds_CheckboxRaw sds_SelectionList_Item_Selector" for="feature_{{feature}}" />
 			<label for="feature_{{feature}}" class="sds_SelectionList_Item_LabelBox">
 				<div class="sds_SelectionList_Item_LabelBox_Header">
