@@ -1,0 +1,55 @@
+<div id="tio_sms_box_form">
+	{{#if isReseller}}
+		<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
+	{{/if}}
+
+	<div id="tio_sms_box_available_section"{{#unless isSmsBoxAvailable}} class="number-messaging-section-hidden"{{/unless}}>
+		{{#monsterText "warning"}}{{ i18n.numberMessaging.mfaNotice }}{{/monsterText}}
+
+		<div class="number-messaging-switch">
+			<label for="configure_tio_sms_box">{{ i18n.numberMessaging.configureTioSmsBox.label }}</label>
+			{{#monsterSwitch}}
+				<input type="checkbox" id="configure_tio_sms_box" name="configureTioSmsBox"{{#unless isReseller}} disabled="true" checked="true"{{/unless}} />
+			{{/monsterSwitch}}
+		</div>
+		<span class="info-carrierTio">{{@root.i18n.numberMessaging.configureTioSmsBox.info}}</span>
+
+		<div id="tio_sms_box_enabled_section"{{#unless configureTioSmsBox}} class="number-messaging-section-hidden"{{/unless}}>
+			{{#monsterText}}{{ i18n.numberMessaging.configureTioSmsBox.textingCampaignRegistrationNotice }}{{/monsterText}}
+			<div class="popup-row">
+				<label for="owner" class="popup-control-label">
+					{{@root.i18n.numberMessaging.configureTioSmsBox.owner}}<span class="text-danger">*</span>
+				</label>
+				<div class="popup-controls">
+					<select id="owner" name="owner" class="dropout-to-owner" required>
+						<option value>{{@root.i18n.numberMessaging.select.noOwner}}</option>
+						{{#select owner}}
+							{{#each users}}
+								<option value="{{id}}" data-type="{{module}}">
+									{{this.name}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+				<span class="info-carrierTio">{{@root.i18n.numberMessaging.ownerInfo}}</span>
+			</div>
+			<div class="popup-row">
+				<label for="member" class="popup-control-label">
+					{{@root.i18n.numberMessaging.configureTioSmsBox.additionalMembers}}
+				</label>
+				<div class="popup-controls">
+					<select multiple id="members" name="members" class="dropout-to-members" data-placeholder="{{@root.i18n.numberMessaging.select.noMember}}">
+						{{#select members}}
+							{{#each users}}
+								<option value="{{id}}" data-type="{{module}}">
+									{{this.name}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
