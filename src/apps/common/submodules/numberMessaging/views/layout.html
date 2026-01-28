@@ -1,9 +1,7 @@
 <form class="form-horizontal trunkstore_popup numberMessaging clearfix" id="form_number_messaging">
 	<div class="popup-content">
 		{{#unless isReseller}}
-			{{#if isCarrierTio}}
-				{{#monsterText}}{{ i18n.numberMessaging.messagingServicesUnavailable }}{{/monsterText}}
-			{{/if}}
+			{{#monsterText}}{{ i18n.numberMessaging.messagingServicesUnavailable }}{{/monsterText}}
 		{{/unless}}
 		<div class="sds_SelectionList sds_SelectionList_Grid feature-selection">
 			{{#each features}}
@@ -27,7 +25,7 @@
 {{#*inline "featureContent"}}
 	{{#if isConfigured}}
 		<div class="sds_SelectionList_Item {{#unless isEnabled}} sds_SelectionList_Item_Disabled{{/unless}}" data-feature-type={{feature}}">
-			<input type="checkbox" class="sds_CheckboxRaw_Input sds_SelectionList_Item_Selector_Input" name="{{feature}}.enabled" value="{{feature}}" {{#if isChecked}} checked="checked"{{/if}}>
+			<input type="checkbox" class="sds_CheckboxRaw_Input sds_SelectionList_Item_Selector_Input" name="{{feature}}.enabled" {{#if isChecked}} checked="checked"{{/if}}>
 			<label class="sds_CheckboxRaw sds_SelectionList_Item_Selector" for="feature_{{feature}}" />
 			<label for="feature_{{feature}}" class="sds_SelectionList_Item_LabelBox">
 				<div class="sds_SelectionList_Item_LabelBox_Header">

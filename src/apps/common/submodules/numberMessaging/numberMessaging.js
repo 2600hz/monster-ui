@@ -238,7 +238,7 @@ define(function(require) {
 				}
 
 				// If checkbox is SMS and carrier is TIO
-				if ($input.val() === 'sms' && isCarrierTio) {
+				if ($this.data('feature-type') === 'sms' && isCarrierTio) {
 					if (isChecked) {
 						$tioBoxAvailableSection.slideUp();
 					} else {
@@ -290,7 +290,8 @@ define(function(require) {
 		 * @param  {Function} [args.error]  Error callback.
 		 */
 		numberMessagingSaveData: function(args) {
-			var $form = args.$form,
+			var self = this,
+				$form = args.$form,
 				accountId = args.accountId,
 				isCarrierTio = args.isCarrierTio,
 				number = args.number,
@@ -304,13 +305,18 @@ define(function(require) {
 			}
 
 			var $button = $form.find('button[type="submit"]'),
-				formData = monster.ui.getFormData('form_number_messaging');
+				formData = monster.ui.getFormData('form_number_messaging'),
+				features = ['sms', 'mms'],
+				isAnyMessagingFeatureEnabled = _.some(features, function(featureName) {
+					return _.get(formData, [featureName, 'enabled'], false);
+				}),
+				shouldCheckMfaConfig = isCarrierTio && isAnyMessagingFeatureEnabled;
 
 			$button.prop('disabled', true);
 
 			monster.waterfall([
 				function checkMfaConfiguration(callback) {
-					if (!isCarrierTio || formData.configureTioSmsBox) {
+					if (!shouldCheckMfaConfig) {
 						callback(null, formData, null);
 						return;
 					}
@@ -328,24 +334,19 @@ define(function(require) {
 					});
 				},
 				function checkOtpConfig(formData, otpConfig, callback) {
-					if (formData.configureTioSmsBox && !otpConfig) {
+					if (shouldCheckMfaConfig && !otpConfig) {
 						monster.ui.alert('error', self.i18n.active().numberMessaging.mfaNotConfiguredError);
 						callback('MfaOtpNotConfigured');
 						return;
 					}
 
-					callback(formData, otpConfig);
+					callback(null, formData, otpConfig);
 				},
 				function formatOomaSmsBoxData(formData, otpConfig, callback) {
-					var oomaSmsBoxData = {
-						numbers: [
-							number
-						],
-						shared_box: false
-					};
+					var oomaSmsBoxData;
 
-					if (!isCarrierTio || formData.configureTioSmsBox) {
-						callback(null, formData, otpConfig, oomaSmsBoxData);
+					if (!isCarrierTio || !formData.configureTioSmsBox) {
+						callback(null, formData, otpConfig, null);
 						return;
 					}
 
@@ -361,22 +362,26 @@ define(function(require) {
 						}
 					});
 
-					oomaSmsBoxData.owner = formData.owner;
-
-					if (_.size(members) > 0) {
-						oomaSmsBoxData.members = members;
-						oomaSmsBoxData.shared_box = true;
-					}
-
-					delete formData.owner;
-					delete formData.members;
+					oomaSmsBoxData = _.assign(
+						{
+							numbers: [
+								number
+							],
+							shared_box: false,
+							owner: formData.owner
+						},
+						(_.size(members) > 0) ? {
+							members: members,
+							shared_box: true
+						} : {}
+					);
 
 					callback(null, formData, otpConfig, oomaSmsBoxData);
 				},
 				function patchNumber(formData, otpConfig, oomaSmsBoxData, callback) {
 					var isReseller = monster.util.isReseller();
 
-					if (!isReseller && isCarrierTio) {
+					if (!isReseller) {
 						callback(null, otpConfig, oomaSmsBoxData, {});
 						return;
 					}
@@ -385,7 +390,7 @@ define(function(require) {
 						data: {
 							accountId: accountId,
 							phoneNumber: number,
-							data: formData
+							data: _.pick(formData, features)
 						},
 						success: function(number) {
 							callback(null, otpConfig, oomaSmsBoxData, number);
@@ -398,7 +403,7 @@ define(function(require) {
 				function saveSmsBox(otpConfig, oomaSmsBoxData, number, callback) {
 					var isUpdateOomaSmsBox = !_.isEmpty(oomaSmsBox);
 
-					if (!isCarrierTio) {
+					if (!isCarrierTio || _.isEmpty(oomaSmsBoxData)) {
 						callback(null, otpConfig, number);
 						return;
 					}
@@ -433,7 +438,7 @@ define(function(require) {
 					}
 				},
 				function enableMfaOtpConfig(otpConfig, number, callback) {
-					if (otpConfig.enabled) {
+					if (!shouldCheckMfaConfig || _.get(otpConfig, 'enabled', false)) {
 						callback(null, number);
 						return;
 					}
@@ -560,7 +565,7 @@ define(function(require) {
 					features: _.reduce(['sms', 'mms'], function(features, feature) {
 						features.push({
 							feature: feature,
-							isEnabled: isReseller && (features.length === 0 || _.get(features, [features.length - 1, 'enabled'], false)),
+							isEnabled: isReseller && (features.length === 0 || _.get(features, [features.length - 1, 'isChecked'], false)),
 							isChecked: _.get(numberData, [feature, 'enabled'], false),
 							isConfigured: _.get(settings, [feature, 'enabled'], false)
 						});

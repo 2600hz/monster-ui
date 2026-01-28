@@ -9,7 +9,12 @@
 		<div class="number-messaging-switch">
 			<label for="configure_tio_sms_box">{{ i18n.numberMessaging.configureTioSmsBox.label }}</label>
 			{{#monsterSwitch}}
-				<input type="checkbox" id="configure_tio_sms_box" name="configureTioSmsBox"{{#unless isReseller}} disabled="true" checked="true"{{/unless}} />
+				<input type="checkbox"
+					id="configure_tio_sms_box"
+					name="configureTioSmsBox"
+					{{#unless isReseller}}disabled="true"{{/unless}}
+					{{#if configureTioSmsBox}}checked="true"{{/if}}
+				/>
 			{{/monsterSwitch}}
 		</div>
 		<span class="info-carrierTio">{{@root.i18n.numberMessaging.configureTioSmsBox.info}}</span>
