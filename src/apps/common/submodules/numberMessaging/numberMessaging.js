@@ -136,21 +136,30 @@ define(function(require) {
 				error = _.get(args, 'error', function() {}),
 				oomaSmsBox = _.get(args, 'oomaSmsBox', {}),
 				isCarrierTio = args.isCarrierTio,
+				configureTioSmsBox = !_.isEmpty(oomaSmsBox),
 				numberMessagingFormatted = self.numberMessagingFormatData({
 					numberData: numberData,
 					oomaSmsBox: oomaSmsBox,
-					isCarrierTio: isCarrierTio
+					isCarrierTio: isCarrierTio,
+					configureTioSmsBox: configureTioSmsBox
 				}),
 				$popupForm = $(self.getTemplate({
 					name: 'layout',
 					data: numberMessagingFormatted,
 					submodule: 'numberMessaging'
-				}));
+				})),
+				dialogTitle = self.getTemplate({
+					name: '!' + self.i18n.active().numberMessaging.titles.dialog,
+					data: {
+						phoneNumber: monster.util.formatPhoneNumber(numberData.id)
+					}
+				});
 
-			if (isCarrierTio) {
+			if (isCarrierTio || configureTioSmsBox) {
 				self.numberMessagingTioSmsBoxFormRender({
 					$container: $popupForm.find('#number_messaging_tio'),
 					isCarrierTio: isCarrierTio,
+					configureTioSmsBox: configureTioSmsBox,
 					data: _.merge({
 						users: users
 					}, numberMessagingFormatted)
@@ -170,7 +179,8 @@ define(function(require) {
 			});
 
 			monster.ui.dialog($popupForm, {
-				title: self.i18n.active().numberMessaging.titles.dialog
+				title: dialogTitle,
+				dialogClass: 'number-messaging-dialog'
 			});
 		},
 
@@ -494,29 +504,35 @@ define(function(require) {
 		 * Render the form section corresponding to the SMS box settings.
 		 * @param  {Object} args
 		 * @param  {jQuery} args.$container  Container where the form section should be rendered.
-		 * @param  {Object} args.data  Number messaging settings.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
+		 * @param  {Boolean} args.configureTioSmsBox  Whether or not a sms box is available to configure.
+		 * @param  {Object} args.data  Number messaging settings.
 		 */
 		numberMessagingTioSmsBoxFormRender: function(args) {
 			var self = this,
 				$container = args.$container,
 				data = args.data,
 				isCarrierTio = args.isCarrierTio,
-				isReseller = monster.util.isReseller(),
 				isSmsBoxAvailable = _.chain(data)
 					.get('features', [])
 					.find({ feature: 'sms' })
 					.get('isChecked', false)
 					.value(),
-				configureTioSmsBox = isSmsBoxAvailable && (!isReseller || !!_.get(data, 'owner')),
+				configureTioSmsBox = args.configureTioSmsBox,
+				configureTioSmsBoxDisabled = !monster.util.isReseller() || !!_.get(data, 'owner'),
 				$tioSmsBoxForm = $(self.getTemplate({
 					name: 'tioSmsBoxForm',
 					data: _.assign({
 						isSmsBoxAvailable: isSmsBoxAvailable,
-						configureTioSmsBox: configureTioSmsBox
+						configureTioSmsBox: configureTioSmsBox,
+						configureTioSmsBoxDisabled: configureTioSmsBoxDisabled
 					}, data),
 					submodule: 'numberMessaging'
 				}));
+
+			if (configureTioSmsBoxDisabled) {
+				$tioSmsBoxForm.find('.sms-box-switch .monster-switch').addClass('disabled');
+			}
 
 			self.numberMessagingTioSmsBoxFormBindEvents({
 				$template: $tioSmsBoxForm,
@@ -553,12 +569,14 @@ define(function(require) {
 		 * @param  {Object} args.numberData  Phone number data.
 		 * @param  {Object} args.oomaSmsBox  SMS box settings.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
+		 * @param  {Boolean} args.configureTioSmsBox  Whether or not a sms box is available to configure.
 		 * @returns  Phone number settings formatted data.
 		 */
 		numberMessagingFormatData: function(args) {
 			var self = this,
 				isReseller = monster.util.isReseller(),
 				isCarrierTio = args.isCarrierTio,
+				configureTioSmsBox = args.configureTioSmsBox,
 				numberData = args.numberData,
 				settings = _.get(numberData, 'metadata.features.settings', {}),
 				returnData = {
@@ -573,11 +591,12 @@ define(function(require) {
 						return features;
 					}, []),
 					isReseller: isReseller,
-					isCarrierTio: isCarrierTio
+					isCarrierTio: isCarrierTio,
+					editable: isReseller || configureTioSmsBox
 				},
 				oomaSmsBox = args.oomaSmsBox;
 
-			if (isCarrierTio && !_.isEmpty(oomaSmsBox)) {
+			if (isCarrierTio && configureTioSmsBox) {
 				var [allMembers, nonMembers] = _.partition(oomaSmsBox.members, function(member) {
 						return member.type === 'user';
 					}),

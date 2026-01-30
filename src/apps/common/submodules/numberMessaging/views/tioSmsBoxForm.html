@@ -6,20 +6,22 @@
 	<div id="tio_sms_box_available_section"{{#unless isSmsBoxAvailable}} class="number-messaging-section-hidden"{{/unless}}>
 		{{#monsterText "warning"}}{{ i18n.numberMessaging.mfaNotice }}{{/monsterText}}
 
-		<div class="number-messaging-switch">
+		<div class="sms-box-switch">
 			<label for="configure_tio_sms_box">{{ i18n.numberMessaging.configureTioSmsBox.label }}</label>
 			{{#monsterSwitch}}
 				<input type="checkbox"
 					id="configure_tio_sms_box"
 					name="configureTioSmsBox"
-					{{#unless isReseller}}disabled="true"{{/unless}}
+					{{#if configureTioSmsBoxDisabled}}disabled="true"{{/if}}
 					{{#if configureTioSmsBox}}checked="true"{{/if}}
 				/>
 			{{/monsterSwitch}}
 		</div>
 		<span class="info-carrierTio">{{@root.i18n.numberMessaging.configureTioSmsBox.info}}</span>
 
-		<div id="tio_sms_box_enabled_section"{{#unless configureTioSmsBox}} class="number-messaging-section-hidden"{{/unless}}>
+		<div id="tio_sms_box_enabled_section"
+			{{#unless configureTioSmsBox}}class="number-messaging-section-hidden"{{/unless}}
+		>
 			{{#monsterText}}{{ i18n.numberMessaging.configureTioSmsBox.textingCampaignRegistrationNotice }}{{/monsterText}}
 			<div class="popup-row">
 				<label for="owner" class="popup-control-label">
