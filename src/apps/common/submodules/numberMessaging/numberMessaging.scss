@@ -48,7 +48,7 @@
 		color: #454545;
 	}
 
-	.number-messaging-switch label {
+	.sms-box-switch label {
 		display: inline-block;
 		margin-right: 1rem;
 	}
@@ -72,9 +72,15 @@
 		bottom: 100%;
 		border-top: 1px solid $primary-color;
 		border-bottom: 0 none;
+		width: 478px;
 
 		.chosen-results {
 			max-height: 100px;
+			width: 476px;
 		}
 	}
+}
+
+.number-messaging-dialog.ui-dialog .ui-dialog-title {
+	font-size: 22px;
 }

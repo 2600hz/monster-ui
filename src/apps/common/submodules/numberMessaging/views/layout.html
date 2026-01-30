@@ -13,11 +13,13 @@
 	<div class="popup-content popup-actions clearfix">
 		<div class="pull-right">
 			<a class="cancel-link monster-link blue" href="javascript:void(0);">
-				{{i18n.cancel}}
+				{{i18n.numberMessaging.buttons.close}}
 			</a>
+		{{#if editable}}
 			<button type="submit" class="monster-button-success">
-				{{i18n.saveChanges}}
+				{{i18n.numberMessaging.buttons.saveChanges}}
 			</button>
+		{{/if}}
 		</div>
 	</div>
 </form>
