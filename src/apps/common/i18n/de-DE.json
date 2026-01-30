@@ -1010,7 +1010,7 @@
 		"titles": {
 			"sms": "SMS",
 			"mms": "MMS",
-			"dialog": "Configure Messaging"
+			"dialog": "Messaging Configuration: {{phoneNumber}}"
 		},
 		"labels": {
 			"sms": "Enable SMS Services",
@@ -1037,6 +1037,10 @@
 		"mfaEnabledDialog": {
 			"title": "Multi-factor authentication enabled for your account.",
 			"description": "Messaging requires multi-factor authentication to be enabled for all users on your account. To continue using Messaging, please ensure MFA is set up through your preferred authentication app."
+		},
+		"buttons": {
+			"close": "Close",
+			"saveChanges": "Save changes"
 		}
 	},
 
