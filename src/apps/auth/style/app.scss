@@ -201,6 +201,16 @@
 		display: inline-block;
 		float: right;
 	}
+	#password {
+		width: 93%;
+	}
+	.password-icon {
+		margin-left: 8px;
+		cursor: pointer;
+		position: relative;
+		bottom: 5px;
+	}
+
 	/*
 	=====================================
 		FORM INPUTS WITH .error CLASS
