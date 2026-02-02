@@ -1,31 +1,31 @@
-<div id="tio_sms_box_form">
+<div id="sms_box_form">
 	{{#if isReseller}}
 		<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
 	{{/if}}
 
-	<div id="tio_sms_box_available_section"{{#unless isSmsBoxAvailable}} class="number-messaging-section-hidden"{{/unless}}>
+	<div id="sms_box_available_section"{{#unless isSmsBoxAvailable}} class="number-messaging-section-hidden"{{/unless}}>
 		{{#monsterText "warning"}}{{ i18n.numberMessaging.mfaNotice }}{{/monsterText}}
 
 		<div class="sms-box-switch">
-			<label for="configure_tio_sms_box">{{ i18n.numberMessaging.configureTioSmsBox.label }}</label>
+			<label for="configure_sms_box">{{ i18n.numberMessaging.configureSmsBox.label }}</label>
 			{{#monsterSwitch}}
 				<input type="checkbox"
-					id="configure_tio_sms_box"
-					name="configureTioSmsBox"
-					{{#if configureTioSmsBoxDisabled}}disabled="true"{{/if}}
-					{{#if configureTioSmsBox}}checked="true"{{/if}}
+					id="configure_sms_box"
+					name="configureSmsBox"
+					{{#if configureSmsBoxDisabled}}disabled="true"{{/if}}
+					{{#if smsBoxExists}}checked="true"{{/if}}
 				/>
 			{{/monsterSwitch}}
 		</div>
-		<span class="info-carrierTio">{{@root.i18n.numberMessaging.configureTioSmsBox.info}}</span>
+		<span class="info-carrierTio">{{@root.i18n.numberMessaging.configureSmsBox.info}}</span>
 
-		<div id="tio_sms_box_enabled_section"
-			{{#unless configureTioSmsBox}}class="number-messaging-section-hidden"{{/unless}}
+		<div id="sms_box_enabled_section"
+			{{#unless smsBoxExists}}class="number-messaging-section-hidden"{{/unless}}
 		>
-			{{#monsterText}}{{ i18n.numberMessaging.configureTioSmsBox.textingCampaignRegistrationNotice }}{{/monsterText}}
+			{{#monsterText}}{{ i18n.numberMessaging.configureSmsBox.textingCampaignRegistrationNotice }}{{/monsterText}}
 			<div class="popup-row">
 				<label for="owner" class="popup-control-label">
-					{{@root.i18n.numberMessaging.configureTioSmsBox.owner}}<span class="text-danger">*</span>
+					{{@root.i18n.numberMessaging.configureSmsBox.owner}}<span class="text-danger">*</span>
 				</label>
 				<div class="popup-controls">
 					<select id="owner" name="owner" class="dropout-to-owner" required>
@@ -43,7 +43,7 @@
 			</div>
 			<div class="popup-row">
 				<label for="member" class="popup-control-label">
-					{{@root.i18n.numberMessaging.configureTioSmsBox.additionalMembers}}
+					{{@root.i18n.numberMessaging.configureSmsBox.additionalMembers}}
 				</label>
 				<div class="popup-controls">
 					<select multiple id="members" name="members" class="dropout-to-members" data-placeholder="{{@root.i18n.numberMessaging.select.noMember}}">

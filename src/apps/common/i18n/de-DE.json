@@ -1026,7 +1026,7 @@
 		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}",
 		"messagingServicesUnavailable": "SMS and MMS services are disabled. Contact your service provider for more information.",
 		"mfaNotice": "Messaging requires multi-factor authentication to be enabled for all users on your account. This requirement ensures ongoing compliance and secure access to Messaging features.",
-		"configureTioSmsBox": {
+		"configureSmsBox": {
 			"label": "Create and configure message box",
 			"info": "This setting applies only to messaging boxes managed through the platform's official applications and does not affect customer-supplied or third-party integrations.",
 			"textingCampaignRegistrationNotice": "This phone number must be approved for texting before you can send and receive text messages. Please complete the Text Campaign Registration process in the Trunking.io application.",

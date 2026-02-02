@@ -26,7 +26,7 @@
 
 {{#*inline "featureContent"}}
 	{{#if isConfigured}}
-		<div class="sds_SelectionList_Item {{#unless isEnabled}} sds_SelectionList_Item_Disabled{{/unless}}" data-feature-type={{feature}}">
+		<div class="sds_SelectionList_Item {{#unless isEnabled}} sds_SelectionList_Item_Disabled{{/unless}}" data-feature-type="{{feature}}">
 			<input type="checkbox" class="sds_CheckboxRaw_Input sds_SelectionList_Item_Selector_Input" name="{{feature}}.enabled" {{#if isChecked}} checked="checked"{{/if}}>
 			<label class="sds_CheckboxRaw sds_SelectionList_Item_Selector" for="feature_{{feature}}" />
 			<label for="feature_{{feature}}" class="sds_SelectionList_Item_LabelBox">
