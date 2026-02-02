@@ -217,7 +217,7 @@ define(function(require) {
 			monster.ui.validate($form, {
 				rules: {
 					owner: {
-						required: function(element) {
+						required: function(_element) {
 							var isSmsFeatureEnabled = $form
 									.find('[name="sms.enabled"]')
 									.prop('checked'),
@@ -340,28 +340,28 @@ define(function(require) {
 						data: {
 							accountId: accountId
 						},
-						success: function(otpConfig) {
-							callback(null, formData, otpConfig);
+						success: function(mfaConfig) {
+							callback(null, formData, mfaConfig);
 						},
 						error: function(parsedError) {
 							callback(parsedError);
 						}
 					});
 				},
-				function checkOtpConfig(formData, otpConfig, callback) {
-					if (shouldCheckMfaConfig && !otpConfig) {
+				function checkMfaConfig(formData, mfaConfig, callback) {
+					if (shouldCheckMfaConfig && !mfaConfig.enabled && !mfaConfig.otpConfigId) {
 						monster.ui.alert('error', self.i18n.active().numberMessaging.mfaNotConfiguredError);
 						callback('MfaOtpNotConfigured');
 						return;
 					}
 
-					callback(null, formData, otpConfig);
+					callback(null, formData, mfaConfig);
 				},
-				function formatOomaSmsBoxData(formData, otpConfig, callback) {
+				function formatOomaSmsBoxData(formData, mfaConfig, callback) {
 					var oomaSmsBoxData;
 
 					if (!isCarrierTio || !formData.configureSmsBox) {
-						callback(null, formData, otpConfig, null);
+						callback(null, formData, mfaConfig, null);
 						return;
 					}
 
@@ -391,13 +391,13 @@ define(function(require) {
 						} : {}
 					);
 
-					callback(null, formData, otpConfig, oomaSmsBoxData);
+					callback(null, formData, mfaConfig, oomaSmsBoxData);
 				},
-				function patchNumber(formData, otpConfig, oomaSmsBoxData, callback) {
+				function patchNumber(formData, mfaConfig, oomaSmsBoxData, callback) {
 					var isReseller = monster.util.isReseller();
 
 					if (!isReseller) {
-						callback(null, otpConfig, oomaSmsBoxData, {});
+						callback(null, mfaConfig, oomaSmsBoxData, {});
 						return;
 					}
 
@@ -408,18 +408,18 @@ define(function(require) {
 							data: _.pick(formData, features)
 						},
 						success: function(number) {
-							callback(null, otpConfig, oomaSmsBoxData, number);
+							callback(null, mfaConfig, oomaSmsBoxData, number);
 						},
 						error: function(dataError) {
 							callback(dataError || 'charges_rejected');
 						}
 					});
 				},
-				function saveSmsBox(otpConfig, oomaSmsBoxData, number, callback) {
+				function saveSmsBox(mfaConfig, oomaSmsBoxData, number, callback) {
 					var isUpdateOomaSmsBox = !_.isEmpty(oomaSmsBox);
 
 					if (!isCarrierTio || _.isEmpty(oomaSmsBoxData)) {
-						callback(null, otpConfig, number);
+						callback(null, mfaConfig, number);
 						return;
 					}
 
@@ -431,7 +431,7 @@ define(function(require) {
 								data: oomaSmsBoxData
 							},
 							success: function() {
-								callback(null, otpConfig, number);
+								callback(null, mfaConfig, number);
 							},
 							error: function(parsedError) {
 								callback(parsedError);
@@ -444,7 +444,7 @@ define(function(require) {
 								data: oomaSmsBoxData
 							},
 							success: function() {
-								callback(null, otpConfig, number);
+								callback(null, mfaConfig, number);
 							},
 							error: function(parsedError) {
 								callback(parsedError);
@@ -452,15 +452,16 @@ define(function(require) {
 						});
 					}
 				},
-				function enableMfaOtpConfig(otpConfig, number, callback) {
-					if (!shouldCheckMfaConfig || _.get(otpConfig, 'enabled', false)) {
+				function enableMfaOtpConfig(mfaConfig, number, callback) {
+					if (!shouldCheckMfaConfig || _.get(mfaConfig, 'enabled', false)) {
 						callback(null, number);
 						return;
 					}
 
 					self.numberMessagingEnableOtpMultifactor({
 						data: {
-							accountId: accountId
+							accountId: accountId,
+							configurationId: mfaConfig.otpConfigId
 						},
 						success: function() {
 							monster.ui.alert(
@@ -687,26 +688,49 @@ define(function(require) {
 		numberMessagingGetOtpMultifactorConfig: function(args) {
 			var self = this;
 
-			self.callApi({
-				resource: 'multifactor.list',
-				data: args.data,
-				success: function(data) {
-					if (!_.has(args, 'success')) {
-						return;
-					}
+			monster.parallel({
+				otpSettings: function(callback) {
+					self.callApi({
+						resource: 'multifactor.list',
+						data: args.data,
+						success: function(data) {
+							var otpSettings = _.chain(data)
+								.get('data.multi_factor_providers', [])
+								.find({
+									provider_name: 'otp',
+									enabled: true
+								})
+								.value();
 
-					var otpConfig = _.chain(data)
-						.get('data.multi_factor_providers', [])
-						.find({
-							provider_name: 'otp'
-						})
-						.value();
-
-					args.success(otpConfig);
+							callback(null, otpSettings);
+						},
+						error: function(parsedError) {
+							callback(parsedError);
+						}
+					});
 				},
-				error: function(parsedError) {
-					_.has(args, 'error') && args.error(parsedError);
+				securitySettings: function(callback) {
+					self.callApi({
+						resource: 'security.get',
+						data: args.data,
+						success: function(data) {
+							callback(null, data.data);
+						},
+						error: function(parsedError) {
+							callback(parsedError);
+						}
+					});
 				}
+			}, function(error, results) {
+				if (error) {
+					_.has(args, 'error') && args.error(error);
+					return;
+				}
+
+				_.has(args, 'success') && args.success({
+					otpConfigId: _.get(results, 'otpSettings.id'),
+					enabled: _.get(results, 'securitySettings.account.auth_modules.cb_user_auth.multi_factor.enabled', false)
+				});
 			});
 		},
 
@@ -715,31 +739,34 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Object} args.data
 		 * @param  {String} args.data.accountId  ID of the account.
+		 * @param  {String} args.data.configurationId  Multi-factor configuration ID.
 		 * @param  {Function} [args.success]  Success callback, which receives the OTP configuration object.
 		 * @param  {Function} [args.error]  Error callback.
 		 */
 		numberMessagingEnableOtpMultifactor: function(args) {
 			var self = this,
+				accountId = args.data.accountId,
 				data = {
 					'auth_modules': {
 						'cb_user_auth': {
 							'multi_factor': {
-								'configuration_id': args.configurationId,
-								'account_id': self.accountId,
+								'configuration_id': args.data.configurationId,
+								'account_id': accountId,
 								'enabled': true
 							}
 						}
 					},
-					accountId: self.accountId
+					accountId: accountId
 				};
 
 			self.callApi({
 				resource: 'security.update',
-				data: _.merge({
+				data: {
+					accountId: accountId,
 					data: data
-				}, args.data),
+				},
 				success: function(data) {
-					_.has(args, 'success') && args.error(data.data);
+					_.has(args, 'success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					_.has(args, 'error') && args.error(parsedError);
