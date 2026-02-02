@@ -19,6 +19,7 @@ define(function(require) {
 		 * @param  {String} args.phoneNumber  Phone number to edit.
 		 * @param  {Object} [args.accountId]  ID of the account that owns the phone number.
 		 * 									  If not specified, the current account ID is used.
+		 * @param  {Object} [args.callbacks]  Callback functions.
 		 * @param  {Function} [args.callbacks.success]  Success callback.
 		 * @param  {Function} [args.callbacks.error]  Error callback.
 		 */
@@ -124,24 +125,25 @@ define(function(require) {
 		 * @param  {Object} args.numberData  Phone number data.
 		 * @param  {Object} args.oomaSmsBox  SMS box data.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
-		 * @param  {Function} [args.success]  Success callback.
-		 * @param  {Function} [args.error]  Error callback.
+		 * @param  {Object} [args.callbacks]  Callback functions.
+		 * @param  {Function} [args.callbacks.success]  Success callback.
+		 * @param  {Function} [args.callbacks.error]  Error callback.
 		 */
 		numberMessagingRender: function(args) {
 			var self = this,
 				numberData = args.numberData,
 				users = args.users,
 				accountId = _.get(args, 'accountId', self.accountId),
-				success = _.get(args, 'success', function() {}),
-				error = _.get(args, 'error', function() {}),
+				success = _.get(args, 'callbacks.success', function() {}),
+				error = _.get(args, 'callbacks.error', function() {}),
 				oomaSmsBox = _.get(args, 'oomaSmsBox', {}),
 				isCarrierTio = args.isCarrierTio,
-				configureTioSmsBox = !_.isEmpty(oomaSmsBox),
+				smsBoxExists = !_.isEmpty(oomaSmsBox),
 				numberMessagingFormatted = self.numberMessagingFormatData({
 					numberData: numberData,
 					oomaSmsBox: oomaSmsBox,
 					isCarrierTio: isCarrierTio,
-					configureTioSmsBox: configureTioSmsBox
+					smsBoxExists: smsBoxExists
 				}),
 				$popupForm = $(self.getTemplate({
 					name: 'layout',
@@ -155,11 +157,11 @@ define(function(require) {
 					}
 				});
 
-			if (isCarrierTio || configureTioSmsBox) {
+			if (isCarrierTio || smsBoxExists) {
 				self.numberMessagingTioSmsBoxFormRender({
 					$container: $popupForm.find('#number_messaging_tio'),
 					isCarrierTio: isCarrierTio,
-					configureTioSmsBox: configureTioSmsBox,
+					smsBoxExists: smsBoxExists,
 					data: _.merge({
 						users: users
 					}, numberMessagingFormatted)
@@ -173,6 +175,7 @@ define(function(require) {
 				numberData: numberData,
 				oomaSmsBox: oomaSmsBox,
 				isCarrierTio: isCarrierTio,
+				smsBoxExists: smsBoxExists,
 				users: users,
 				success: success,
 				error: error
@@ -193,6 +196,7 @@ define(function(require) {
 		 * @param  {Object} args.numberData  Phone number data.
 		 * @param  {Object} args.oomaSmsBox  SMS box data.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
+		 * @param  {Boolean} args.smsBoxExists  Whether or not a sms box is available to configure.
 		 * @param  {Function} [args.success]  Success callback.
 		 * @param  {Function} [args.error]  Error callback.
 		 */
@@ -206,8 +210,9 @@ define(function(require) {
 				success = args.success,
 				error = args.error,
 				isCarrierTio = args.isCarrierTio,
-				$tioBoxAvailableSection = $form.find('#tio_sms_box_available_section'),
-				$tioBoxEnabledSection = $tioBoxAvailableSection.find('#tio_sms_box_enabled_section');
+				smsBoxExists = args.smsBoxExists,
+				$tioBoxAvailableSection = $form.find('#sms_box_available_section'),
+				$tioBoxEnabledSection = $tioBoxAvailableSection.find('#sms_box_enabled_section');
 
 			monster.ui.validate($form, {
 				rules: {
@@ -216,11 +221,11 @@ define(function(require) {
 							var isSmsFeatureEnabled = $form
 									.find('[name="sms.enabled"]')
 									.prop('checked'),
-								mustConfigureTioSmsBox = $form
-									.find('#configure_tio_sms_box')
+								mustConfigureSmsBox = $form
+									.find('#configure_sms_box')
 									.prop('checked');
 
-							return isSmsFeatureEnabled && mustConfigureTioSmsBox;
+							return isSmsFeatureEnabled && mustConfigureSmsBox;
 						}
 					}
 				}
@@ -248,7 +253,7 @@ define(function(require) {
 				}
 
 				// If checkbox is SMS and carrier is TIO
-				if ($this.data('feature-type') === 'sms' && isCarrierTio) {
+				if (!smsBoxExists && $this.data('feature-type') === 'sms' && isCarrierTio) {
 					if (isChecked) {
 						$tioBoxAvailableSection.slideUp();
 					} else {
@@ -257,7 +262,7 @@ define(function(require) {
 				}
 			});
 
-			$form.find('#configure_tio_sms_box').on('change', function(e) {
+			$form.find('#configure_sms_box').on('change', function(e) {
 				var isChecked = $(this).prop('checked');
 
 				if (isChecked) {
@@ -355,7 +360,7 @@ define(function(require) {
 				function formatOomaSmsBoxData(formData, otpConfig, callback) {
 					var oomaSmsBoxData;
 
-					if (!isCarrierTio || !formData.configureTioSmsBox) {
+					if (!isCarrierTio || !formData.configureSmsBox) {
 						callback(null, formData, otpConfig, null);
 						return;
 					}
@@ -406,7 +411,7 @@ define(function(require) {
 							callback(null, otpConfig, oomaSmsBoxData, number);
 						},
 						error: function(dataError) {
-							callback(dataError);
+							callback(dataError || 'charges_rejected');
 						}
 					});
 				},
@@ -474,10 +479,10 @@ define(function(require) {
 						}
 					});
 				}
-			], function(errorData, _results) {
+			], function(errorData, numberData) {
 				if (errorData) {
 					$button.prop('disabled', false);
-					error && error(errorData);
+					errorData !== 'charges_rejected' && error && error(errorData);
 					return;
 				}
 
@@ -496,7 +501,9 @@ define(function(require) {
 
 				$form.closest('.ui-dialog-content').dialog('close');
 
-				success && success();
+				success && success({
+					data: numberData
+				});
 			});
 		},
 
@@ -505,7 +512,7 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {jQuery} args.$container  Container where the form section should be rendered.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
-		 * @param  {Boolean} args.configureTioSmsBox  Whether or not a sms box is available to configure.
+		 * @param  {Boolean} args.smsBoxExists  Whether or not a sms box is available to configure.
 		 * @param  {Object} args.data  Number messaging settings.
 		 */
 		numberMessagingTioSmsBoxFormRender: function(args) {
@@ -513,34 +520,35 @@ define(function(require) {
 				$container = args.$container,
 				data = args.data,
 				isCarrierTio = args.isCarrierTio,
-				isSmsBoxAvailable = _.chain(data)
-					.get('features', [])
-					.find({ feature: 'sms' })
-					.get('isChecked', false)
-					.value(),
-				configureTioSmsBox = args.configureTioSmsBox,
-				configureTioSmsBoxDisabled = !monster.util.isReseller() || !!_.get(data, 'owner'),
-				$tioSmsBoxForm = $(self.getTemplate({
-					name: 'tioSmsBoxForm',
+				smsBoxExists = args.smsBoxExists,
+				isSmsBoxAvailable = smsBoxExists
+					|| _.chain(data)
+						.get('features', [])
+						.find({ feature: 'sms' })
+						.get('isChecked', false)
+						.value(),
+				configureSmsBoxDisabled = !monster.util.isReseller() || smsBoxExists,
+				$smsBoxForm = $(self.getTemplate({
+					name: 'smsBoxForm',
 					data: _.assign({
 						isSmsBoxAvailable: isSmsBoxAvailable,
-						configureTioSmsBox: configureTioSmsBox,
-						configureTioSmsBoxDisabled: configureTioSmsBoxDisabled
+						smsBoxExists: smsBoxExists,
+						configureSmsBoxDisabled: configureSmsBoxDisabled
 					}, data),
 					submodule: 'numberMessaging'
 				}));
 
-			if (configureTioSmsBoxDisabled) {
-				$tioSmsBoxForm.find('.sms-box-switch .monster-switch').addClass('disabled');
+			if (configureSmsBoxDisabled) {
+				$smsBoxForm.find('.sms-box-switch .monster-switch').addClass('disabled');
 			}
 
 			self.numberMessagingTioSmsBoxFormBindEvents({
-				$template: $tioSmsBoxForm,
+				$template: $smsBoxForm,
 				isCarrierTio: isCarrierTio
 			});
 
 			$container
-				.append($tioSmsBoxForm);
+				.append($smsBoxForm);
 		},
 
 		/**
@@ -569,14 +577,14 @@ define(function(require) {
 		 * @param  {Object} args.numberData  Phone number data.
 		 * @param  {Object} args.oomaSmsBox  SMS box settings.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
-		 * @param  {Boolean} args.configureTioSmsBox  Whether or not a sms box is available to configure.
+		 * @param  {Boolean} args.smsBoxExists  Whether or not a sms box is available to configure.
 		 * @returns  Phone number settings formatted data.
 		 */
 		numberMessagingFormatData: function(args) {
 			var self = this,
 				isReseller = monster.util.isReseller(),
 				isCarrierTio = args.isCarrierTio,
-				configureTioSmsBox = args.configureTioSmsBox,
+				smsBoxExists = args.smsBoxExists,
 				numberData = args.numberData,
 				settings = _.get(numberData, 'metadata.features.settings', {}),
 				returnData = {
@@ -592,11 +600,11 @@ define(function(require) {
 					}, []),
 					isReseller: isReseller,
 					isCarrierTio: isCarrierTio,
-					editable: isReseller || configureTioSmsBox
+					editable: isReseller || smsBoxExists
 				},
 				oomaSmsBox = args.oomaSmsBox;
 
-			if (isCarrierTio && configureTioSmsBox) {
+			if (isCarrierTio && smsBoxExists) {
 				var [allMembers, nonMembers] = _.partition(oomaSmsBox.members, function(member) {
 						return member.type === 'user';
 					}),
@@ -781,7 +789,7 @@ define(function(require) {
 				resource: 'oomasmsboxes.create',
 				data: args.data,
 				success: function(data) {
-					_.has(args, 'success') && args.success(data);
+					_.has(args, 'success') && args.success(data.data);
 				},
 				error: function(parsedError) {
 					_.has(args, 'error') && args.error(parsedError);
