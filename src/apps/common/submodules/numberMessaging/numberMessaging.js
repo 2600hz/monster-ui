@@ -325,7 +325,10 @@ define(function(require) {
 				isAnyMessagingFeatureEnabled = _.some(features, function(featureName) {
 					return _.get(formData, [featureName, 'enabled'], false);
 				}),
-				shouldCheckMfaConfig = isCarrierTio && isAnyMessagingFeatureEnabled;
+				shouldCreateSmsBox = formData.configureSmsBox && _.isEmpty(oomaSmsBox),
+				shouldCheckMfaConfig = isCarrierTio
+					&& isAnyMessagingFeatureEnabled
+					&& shouldCreateSmsBox;
 
 			$button.prop('disabled', true);
 
@@ -416,18 +419,15 @@ define(function(require) {
 					});
 				},
 				function saveSmsBox(mfaConfig, oomaSmsBoxData, number, callback) {
-					var isUpdateOomaSmsBox = !_.isEmpty(oomaSmsBox);
-
 					if (!isCarrierTio || _.isEmpty(oomaSmsBoxData)) {
 						callback(null, mfaConfig, number);
 						return;
 					}
 
-					if (isUpdateOomaSmsBox) {
-						self.numberMessagingUpdateOomaSmsBox({
+					if (shouldCreateSmsBox) {
+						self.numberMessagingCreateOomaSmsBox({
 							data: {
 								accountId: accountId,
-								boxId: oomaSmsBox.id,
 								data: oomaSmsBoxData
 							},
 							success: function() {
@@ -438,9 +438,10 @@ define(function(require) {
 							}
 						});
 					} else {
-						self.numberMessagingCreateOomaSmsBox({
+						self.numberMessagingUpdateOomaSmsBox({
 							data: {
 								accountId: accountId,
+								boxId: oomaSmsBox.id,
 								data: oomaSmsBoxData
 							},
 							success: function() {
