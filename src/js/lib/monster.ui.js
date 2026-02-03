@@ -304,7 +304,7 @@ define(function(require) {
 					validTypes = ['info', 'question', 'error', 'warning'],
 					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
 					templateData = {
-						className: className || '',
+						className: _.isString(className) ? className : '',
 						content: new Handlebars.SafeString(htmlContent)
 					},
 					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
