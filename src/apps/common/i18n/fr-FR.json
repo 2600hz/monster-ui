@@ -367,10 +367,5 @@
 			"close": "Close",
 			"saveChanges": "Save changes"
 		}
-	},
-
-	"monsterMultiSelector": {
-		"ok": "OK",
-		"cancel": "Cancel"
 	}
 }
