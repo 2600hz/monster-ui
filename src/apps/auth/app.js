@@ -1,7 +1,8 @@
 define(function(require) {
 	var $ = require('jquery'),
 		_ = require('lodash'),
-		monster = require('monster');
+		monster = require('monster'),
+		QRCode = require('qrcode');
 
 	var app = {
 		i18n: {
@@ -1608,7 +1609,7 @@ define(function(require) {
 					self.getSetupQrCode({
 						loginData: loginData,
 						success: function(data) {
-							next(null, data.qr_url);
+							next(null, _.get(data, [0, 'qr_url']));
 						},
 						error: function(parsedError) {
 							next(parsedError);
@@ -1623,16 +1624,17 @@ define(function(require) {
 					return;
 				}
 
-				$spinner.remove();
-
 				var $qrCode = $(self.getTemplate({
-					name: 'mfa-otpSetupQrCode',
-					data: {
-						qrCodeUrl: results.qrCodeUrl
-					}
+					name: 'mfa-otpSetupQrCode'
 				}));
 
+				$spinner.remove();
+
 				$qrcodeContainer.append($qrCode);
+
+				var _qrcode = new QRCode($qrCode.get(0), {
+					text: results.qrCodeUrl
+				});
 			});
 		},
 
