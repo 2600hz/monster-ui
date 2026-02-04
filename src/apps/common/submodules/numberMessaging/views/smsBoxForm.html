@@ -1,0 +1,62 @@
+<div id="sms_box_form">
+	{{#if isReseller}}
+		<span class="info-carrierTio">{{@root.i18n.numberMessaging.info}}</span>
+	{{/if}}
+
+	<div id="sms_box_available_section"{{#unless isSmsBoxAvailable}} class="number-messaging-section-hidden"{{/unless}}>
+		{{#monsterText "warning"}}{{ i18n.numberMessaging.mfaNotice }}{{/monsterText}}
+
+		<div class="sms-box-switch">
+			<label for="configure_sms_box">{{ i18n.numberMessaging.configureSmsBox.label }}</label>
+			{{#monsterSwitch}}
+				<input type="checkbox"
+					id="configure_sms_box"
+					name="configureSmsBox"
+					{{#if configureSmsBoxDisabled}}disabled="true"{{/if}}
+					{{#if smsBoxExists}}checked="true"{{/if}}
+				/>
+			{{/monsterSwitch}}
+		</div>
+		<span class="info-carrierTio">{{@root.i18n.numberMessaging.configureSmsBox.info}}</span>
+
+		<div id="sms_box_enabled_section"
+			{{#unless smsBoxExists}}class="number-messaging-section-hidden"{{/unless}}
+		>
+			{{#monsterText}}{{ i18n.numberMessaging.configureSmsBox.textingCampaignRegistrationNotice }}{{/monsterText}}
+			<div class="popup-row">
+				<label for="owner" class="popup-control-label">
+					{{@root.i18n.numberMessaging.configureSmsBox.owner}}<span class="text-danger">*</span>
+				</label>
+				<div class="popup-controls">
+					<select id="owner" name="owner" class="dropout-to-owner" required>
+						<option value>{{@root.i18n.numberMessaging.select.noOwner}}</option>
+						{{#select owner}}
+							{{#each users}}
+								<option value="{{id}}" data-type="{{module}}">
+									{{this.name}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+				<span class="info-carrierTio">{{@root.i18n.numberMessaging.ownerInfo}}</span>
+			</div>
+			<div class="popup-row">
+				<label for="member" class="popup-control-label">
+					{{@root.i18n.numberMessaging.configureSmsBox.additionalMembers}}
+				</label>
+				<div class="popup-controls">
+					<select multiple id="members" name="members" class="dropout-to-members" data-placeholder="{{@root.i18n.numberMessaging.select.noMember}}">
+						{{#select members}}
+							{{#each users}}
+								<option value="{{id}}" data-type="{{module}}">
+									{{this.name}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
