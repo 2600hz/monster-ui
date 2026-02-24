@@ -30,7 +30,7 @@ define(function(require) {
 			monster.waterfall([
 				function(callback) {
 					monster.pub('common.numbers.editFeatures', {
-						accountId: args.accountId,
+						accountId: accountId,
 						number: args.phoneNumber,
 						success: function(numberData) {
 							callback && callback(null, { numberData: numberData });
