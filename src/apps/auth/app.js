@@ -1659,6 +1659,8 @@ define(function(require) {
 				}
 
 				// Show text based on whether the account is already verified or not
+				$dialog.dialog('option', 'title', self.i18n.active().multiFactor.setup.accountVerifiedTitle);
+
 				$template.addClass(
 					results.qrCodeData.isVerified
 						? 'mfa-setup-verified'
