@@ -1512,7 +1512,7 @@ define(function(require) {
 		/**
 		 * Binds the events for the OTP verification dialog elements.
 		 * @param {Object}   args
-		 * @param {jQUery}   args.$dialog  jQuery dialog element
+		 * @param {jQuery}   args.$dialog  jQuery dialog element
 		 * @param {Object}   args.loginData  Login data
 		 * @param {String}   args.loginData.credentials  Hashed credentials
 		 * @param {String}   args.loginData.accout_name  Account name
@@ -1533,7 +1533,8 @@ define(function(require) {
 					}
 				}),
 				$mfaCode = $form.find('#mfa_code'),
-				$btnVerify = $dialog.find('#btn_mfa_verify');
+				$btnVerify = $dialog.find('#btn_mfa_verify'),
+				isCodeLengthInvalid = true;
 
 			monster.ui.mask($mfaCode, '000000', {
 				placeholder: '______'
@@ -1541,7 +1542,14 @@ define(function(require) {
 
 			$mfaCode.on('input', function() {
 				var value = $(this).val();
-				$btnVerify.prop('disabled', value.length !== 6);
+				isCodeLengthInvalid = value.length !== 6;
+				$btnVerify.prop('disabled', isCodeLengthInvalid);
+			});
+
+			$mfaCode.on('keypress', function(e) {
+				if (!isCodeLengthInvalid && e.keyCode === 13) {
+					$form.trigger('submit');
+				}
 			});
 
 			$dialog.find('#btn_mfa_setup').on('click', function(e) {
@@ -1553,28 +1561,53 @@ define(function(require) {
 				});
 			});
 
-			$dialog.find('#btn_mfa_verify').on('click', function(e) {
+			$form.on('submit', function(e) {
 				e.preventDefault();
+				e.stopPropagation();
 
 				if (!monster.ui.valid($form)) {
 					return;
 				}
 
-				self.verifyOtp({
-					loginData: loginData,
-					code: $mfaCode.val(),
-					success: function() {
-						successCallback();
-					},
-					error: function(_parsedError, errorData) {
-						if (errorData.status !== /*401*/ 405) {
-							return;
-						}
+				var code = $mfaCode.val();
 
+				$form.find('input,button').prop('disabled', true);
+
+				monster.waterfall([
+					function verifySetup(next) {
+						self.verifyOtp({
+							loginData: loginData,
+							code: code,
+							success: function(_data) {
+								next(null, true);
+							},
+							error: function(parsedError, errorData) {
+								if (errorData.status !== 401) {
+									next(parsedError);
+									return;
+								}
+
+								next(null, false);
+							}
+						});
+					}
+				], function(err, setupCodeValid) {
+					if (err) {
+						$form.find('input,button').prop('disabled', false);
+						return;
+					}
+
+					if (!setupCodeValid) {
+						$form.find('input,button').prop('disabled', false);
 						validator.showErrors({
 							mfaCode: self.i18n.active().multiFactor.verification.invalidCode
 						});
+						return;
 					}
+
+					successCallback(_.assign({
+						multi_factor_response: code
+					}, loginData));
 				});
 			});
 		},
@@ -1615,11 +1648,12 @@ define(function(require) {
 
 					next();
 				},
-				qrCodeUrl: function getQrCode(next) {
-					self.getSetupQrCode({
+				qrCodeData: function getQrCode(next) {
+					self.renderQrCode({
 						loginData: loginData,
-						success: function(data) {
-							next(null, _.get(data, [0, 'qr_url']));
+						$container: $qrcodeContainer,
+						success: function(qrCodeData) {
+							next(null, qrCodeData);
 						},
 						error: function(parsedError) {
 							next(parsedError);
@@ -1634,24 +1668,105 @@ define(function(require) {
 					return;
 				}
 
-				var $qrCode = $(self.getTemplate({
-					name: 'mfa-otpSetupQrCode'
+				// Show text based on whether the account is already verified or not
+				$template.addClass(
+					results.qrCodeData.isVerified
+						? 'mfa-setup-verified'
+						: 'mfa-setup-pending'
+				);
+			});
+		},
+
+		/**
+		 * Gets and render the QR code.
+		 * @param {Object}   args
+		 * @param {jQuery}   args.$container  QR code container
+		 * @param {Object}   args.loginData  Login data
+		 * @param {String}   args.loginData.credentials  Hashed credentials
+		 * @param {String}   args.loginData.accout_name  Account name
+		 * @param {Function} args.success  Render success callback
+		 * @param {Function} args.error  Render error callback
+		 */
+		renderQrCode: function(args) {
+			var self = this,
+				loginData = args.loginData,
+				$qrcodeContainer = args.$container,
+				$spinner = $(monster.getTemplate({
+					name: 'monster-insertTemplate-spinner',
+					app: monster.apps.core
 				}));
 
-				$spinner.remove();
+			$qrcodeContainer
+				.empty()
+				.append($spinner);
 
-				$qrcodeContainer.append($qrCode);
+			monster.waterfall([
+				function getQrCode(next) {
+					self.getSetupQrCode({
+						loginData: loginData,
+						success: function(qrCodeData) {
+							next(null, qrCodeData);
+						},
+						error: function(parsedError) {
+							next(parsedError);
+						}
+					});
+				}
+			], function(err, qrCodeData) {
+				if (err) {
+					args.error && args.error(err);
+					return;
+				}
 
-				var _qrcode = new QRCode($qrCode.get(0), {
-					text: results.qrCodeUrl
-				});
+				var $qrCode = qrCodeData.isVerified
+						? $(monster.ui.getSvgIconTemplate({
+							id: 'telicon2--check--circle',
+							attributes: {
+								'class': 'verified-icon'
+							}
+						}))
+						: $(self.getTemplate({
+							name: 'mfa-otpSetupQrCode'
+						})),
+					_qrCodeElement = $qrCode && !qrCodeData.isVerified
+						? new QRCode($qrCode.get(0), {
+							text: qrCodeData.url
+						})
+						: null,
+					timeoutDuration;
+
+				// Remove tooltip added by the QRCode library
+				$qrCode.removeAttr('title');
+
+				$qrcodeContainer
+					.empty()
+					.append($qrCode);
+
+				if (qrCodeData.isVerified) {
+					args.success && args.success(qrCodeData);
+					return;
+				}
+
+				timeoutDuration = qrCodeData.expiration.getTime() - new Date().getTime();
+
+				setTimeout(function() {
+					$qrCode
+						.filter('#mfa_setup_refresh_qrcode')
+						.removeClass('mfa-element-hidden')
+						.on('click', function(e) {
+							e.preventDefault();
+							self.renderQrCode(args);
+						});
+				}, timeoutDuration);
+
+				args.success && args.success(qrCodeData);
 			});
 		},
 
 		/**
 		 * Binds the events for the OTP setup dialog elements.
 		 * @param {Object}   args
-		 * @param {jQUery}   args.$dialog  jQuery dialog element
+		 * @param {jQuery}   args.$dialog  jQuery dialog element
 		 * @param {Object}   args.loginData  Login data
 		 * @param {String}   args.loginData.credentials  Hashed credentials
 		 * @param {String}   args.loginData.accout_name  Account name
@@ -1695,13 +1810,18 @@ define(function(require) {
 					data: {
 						credentials: loginData.credentials,
 						account_name: loginData.account_name,
-						totp_code: code
-					}
+						multi_factor_response: code
+					},
+					generateError: false
 				},
 				success: function(data) {
 					success && success(data.data);
 				},
-				error: function(parsedError, errorData) {
+				error: function(parsedError, errorData, globalHandler) {
+					if (errorData.status !== 401) {
+						globalHandler(errorData, { generateError: true });
+					}
+
 					error && error(parsedError, errorData);
 				}
 			});
@@ -1728,12 +1848,38 @@ define(function(require) {
 					data: {
 						credentials: loginData.credentials,
 						account_name: loginData.account_name
-					}
+					},
+					generateError: false
 				},
 				success: function(data) {
-					success && success(data.data);
+					if (!success) {
+						return;
+					}
+
+					var qrCodeUrl = _.get(data, ['data', 0, 'qr_url']),
+						qrCodeUrlObj = new URL(qrCodeUrl),
+						duration = parseInt(qrCodeUrlObj.searchParams.period || 30),
+						qrCodeData = {
+							url: qrCodeUrl,
+							expiration: new Date(new Date().getTime() + (duration * 1000)),
+							isVerified: false
+						};
+
+					success(qrCodeData);
 				},
-				error: function(parsedError, errorData) {
+				error: function(parsedError, errorData, globalHandler) {
+					var isVerified = parsedError
+						&& parsedError.httpErrorStatus === 403
+						&& parsedError.message
+						&& parsedError.message.toLowerCase() === 'qr code already verified.';
+
+					if (isVerified) {
+						success && success({ isVerified: isVerified });
+						return;
+					}
+
+					globalHandler(errorData, { generateError: true });
+
 					error && error(parsedError, errorData);
 				}
 			});
