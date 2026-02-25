@@ -418,8 +418,8 @@
 		position: relative;
 
 		.verified-icon {
-			width: 10rem;
-			height: 10rem;
+			width: 8rem;
+			height: 8rem;
 			color: $success-color;
 		}
 	}
@@ -476,7 +476,6 @@
 		&-container {
 			display: flex;
 			justify-content: space-between;
-			margin-bottom: 25px;
 		}
 
 		&-logo {
@@ -489,6 +488,7 @@
 	.mfa-setup-footer {
 		display: flex;
 		justify-content: flex-end;
+		margin-top: 25px;
 	}
 
 	.mfa-setup-top, .mfa-setup-bottom {
@@ -502,6 +502,10 @@
 	&.mfa-setup-pending .mfa-setup-pending-content,
 	&.mfa-setup-verified .mfa-setup-verified-content {
 		display: block;
+
+		&.mfa-setup-app-container {
+			display:flex;
+		}
 	}
 }
 
