@@ -153,6 +153,7 @@
 				"microsoftAuthenticator": "Microsoft Authenticator"
 			},
 			"enterCodeButton": "Enter the code",
+			"accountVerifiedTitle": "MFA already setup",
 			"accountVerified": "Multi-factor authentication has been successfully set up. Use your authenticator app to generate a code when signing in.",
 			"accountVerifiedInfo": "If you lose access to your device, contact your System Administrator for assistance."
 		},
