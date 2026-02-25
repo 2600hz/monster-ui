@@ -1,0 +1,27 @@
+<div id="mfa_verification_dialog" class="mfa-dialog">
+	<form id="mfa_verification_form" data-type="mfa-verification">
+		<div class="form-content">
+			<p class="form-info">
+				{{ i18n.multiFactor.verification.description }}
+			</p>
+			<div class="control-group">
+				<label for="mfa_code" class="control-label">
+					{{ i18n.multiFactor.verification.verificationCode }}
+				</label>
+				<div class="controls">
+					<input type="text" id="mfa_code" name="mfaCode" autocomplete="off" />
+				</div>
+			</div>
+			<button class="btn-submit monster-button monster-button-primary" id="btn_mfa_verify" type="submit" disabled="true">
+				{{ i18n.multiFactor.verification.verifyButton }}
+			</button>
+			<hr />
+			<p class="form-footer">
+				{{ i18n.multiFactor.verification.setupDesciption }}
+				<a href="javascript:void(0);" id="btn_mfa_setup" class="form-toggle medium-link">
+					{{ i18n.multiFactor.verification.setupButton }}
+				</a>
+			</p>
+		</div>
+	</form>
+</div>
