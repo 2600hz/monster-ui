@@ -9,10 +9,10 @@
 					{{ i18n.multiFactor.verification.verificationCode }}
 				</label>
 				<div class="controls">
-					<input type="text" id="mfa_code" name="mfaCode">
+					<input type="text" id="mfa_code" name="mfaCode" autocomplete="off" />
 				</div>
 			</div>
-			<button class="btn-submit monster-button monster-button-primary" id="btn_mfa_verify" type="button" disabled="true">
+			<button class="btn-submit monster-button monster-button-primary" id="btn_mfa_verify" type="submit" disabled="true">
 				{{ i18n.multiFactor.verification.verifyButton }}
 			</button>
 			<hr />

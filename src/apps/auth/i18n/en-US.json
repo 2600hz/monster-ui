@@ -152,7 +152,9 @@
 				"authy": "Authy",
 				"microsoftAuthenticator": "Microsoft Authenticator"
 			},
-			"enterCodeButton": "Enter the code"
+			"enterCodeButton": "Enter the code",
+			"accountVerified": "Your account is already connected to an authenticator app. Use the code from your app to log in.",
+			"accountVerifiedInfo": "If you lose access to your device, please contact your System Administrator to reset your MFA."
 		},
 		"common": {
 			"returnToLogin": "Return to login"

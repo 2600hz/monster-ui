@@ -363,7 +363,8 @@
 =====================================
 */
 .mfa-dialog {
-	max-width: 330px;
+	min-width: 21rem;
+	max-width: 21rem;
 	padding: 20px;
 
 	#mfa_verification_form {
@@ -407,19 +408,50 @@
 
 	#mfa_setup_qrcode_container {
 		display: flex;
-		align-content: center;
+		align-items: center;
 		justify-content: center;
 		flex-direction: column;
-		height: 190px;
-		margin-top: 10px;
+		min-height: 10rem;
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		position: relative;
+
+		.verified-icon {
+			width: 10rem;
+			height: 10rem;
+			color: $success-color;
+		}
 	}
 
 	#mfa_setup_qrcode {
-		width: 180px;
-		height: 180px;
-		max-width: 180px;
-		max-height: 180px;
-		align-self: center;
+		width: 10rem;
+		height: 10rem;
+		max-width: 10rem;
+		max-height: 10rem;
+	}
+
+	#mfa_setup_refresh_qrcode {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 10rem;
+		height: 10rem;
+		opacity: 0.9;
+		background-color: $panel-background-color;
+		cursor: pointer;
+
+		&.mfa-element-hidden {
+			display: none;
+		}
+
+		.refresh-button {
+			width: 5rem;
+			height: 5rem;
+		}
 	}
 
 	.mfa-setup-description {
@@ -456,6 +488,19 @@
 	.mfa-setup-footer {
 		display: flex;
 		justify-content: flex-end;
+	}
+
+	.mfa-setup-top, .mfa-setup-bottom {
+		min-height: 2.5rem;
+	}
+
+	.mfa-setup-pending-content, .mfa-setup-verified-content {
+		display: none;
+	}
+
+	&.mfa-setup-pending .mfa-setup-pending-content,
+	&.mfa-setup-verified .mfa-setup-verified-content {
+		display: block;
 	}
 }
 

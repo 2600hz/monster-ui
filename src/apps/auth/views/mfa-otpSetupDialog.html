@@ -1,10 +1,20 @@
 <div id="mfa_setup_dialog" class="mfa-dialog">
-	<div class="mfa-setup-description">{{ i18n.multiFactor.setup.description }}</div>
+	<div class="mfa-setup-top">
+		<!-- Setup pending contents -->
+		<div class="mfa-setup-description mfa-setup-pending-content">{{ i18n.multiFactor.setup.description }}</div>
+		<!-- Setup verified contents -->
+		<div class="mfa-setup-description mfa-setup-verified-content">{{ i18n.multiFactor.setup.accountVerified }}</div>
+	</div>
 	<div id="mfa_setup_qrcode_container">
 	</div>
-	<hr />
-	<h4 class="mfa-setup-title-small">{{ i18n.multiFactor.setup.noAuthAppTitle }}</h4>
-	<div class="mfa-setup-description-small">{{ i18n.multiFactor.setup.noAuthAppDescription }}</div>
+	<div class="mfa-setup-bottom">
+		<!-- Setup pending contents -->
+		<hr class="mfa-setup-pending-content" />
+		<h4 class="mfa-setup-title-small mfa-setup-pending-content">{{ i18n.multiFactor.setup.noAuthAppTitle }}</h4>
+		<div class="mfa-setup-description-small mfa-setup-pending-content">{{ i18n.multiFactor.setup.noAuthAppDescription }}</div>
+		<!-- Setup verified contents -->
+		<div class="mfa-setup-description-small mfa-setup-verified-content">{{ i18n.multiFactor.setup.accountVerifiedInfo }}</div>
+	</div>
 	<div class="mfa-setup-app-container">
 		<div class="mfa-setup-app">
 			<img class="mfa-setup-app-logo" src="apps/auth/style/static/images/google-authenticator.svg" />
