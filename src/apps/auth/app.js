@@ -984,7 +984,7 @@ define(function(require) {
 					.on('click', function() {
 						var $this = $(this),
 							password = content.find('#password'),
-							inputType = password.attr('type')
+							inputType = password.attr('type'),
 							classList = 'password-icon svg-icon';
 
 						if (inputType === 'password') {
