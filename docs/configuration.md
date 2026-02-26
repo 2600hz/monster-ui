@@ -93,6 +93,7 @@ Key | Description | Type | Default | Required
 `authentication` | Third party application to handle authentication in place of `auth`. | `Object` | | `false`
 `bookkeepers` | | `Object`([#bookkeepers](#bookkeepers)) | | `false`
 `brandColor` | Hexadecimal color code used as primary color on the login page. | `String` | | `false`
+`callRecording` | Call Recording app specific settings. | `Object`([#callRecording](#callrecording)) | | `false`
 `callReportEmail` | E-mail address used to report calls in SmartPBX's Call Logs. "Report Call" link won't be displayed if no address is specified. This address can either be set here in the config file, or through the Branding app. | `String` | | `false`
 `carrier` | | `Object`([#carrier](#carrier)) | | `false`
 `companyName` | Company Name, used in many places in the UI | `String` | | `false`
@@ -157,6 +158,12 @@ Key | Description | Type | Default | Required
 `braintree` | Whether or not bookkeeping transactions can be performed through Braintree. | `Boolean` | `true` | `false`
 `iou` | Whether or not bookkeeping transactions can be performed through Kazoo. | `Boolean` | `true` | `false`
 `payphone` | Whether or not bookkeeping transactions can be performed through HTTP. | `Boolean` | `true` | `false`
+
+#### `callRecording`
+
+Key | Description | Type | Default | Required
+--- | --- | :---: | :---: | :---:
+`enableWithoutConnector` | When set to `true`, enables the Call Recording app's Configuration and Stored Recordings menus without requiring an external storage connector (S3, Google Drive), and hides the Storage Settings menu. Use this when storing recordings locally in CouchDB via `sup kapps_config set_boolean media store_recordings true`. | `Boolean` | `false` | `false`
 
 #### `carrier`
 
