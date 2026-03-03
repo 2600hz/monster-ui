@@ -488,7 +488,7 @@ define(function(require) {
 					return;
 				}
 
-				var phoneNumber = monster.util.formatPhoneNumber(number.id),
+				var phoneNumber = monster.util.formatPhoneNumber(number),
 					template = self.getTemplate({
 						name: '!' + self.i18n.active().numberMessaging.successUpdate,
 						data: {
