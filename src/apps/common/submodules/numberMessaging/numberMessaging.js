@@ -73,8 +73,8 @@ define(function(require) {
 								});
 							}
 						},
-						oomaSmsBox: function(callback) {
-							self.numberMessagingListOomaSmsBoxes({
+						telexSmsBox: function(callback) {
+							self.numberMessagingListTelexSmsBoxes({
 								data: {
 									accountId: accountId,
 									filters: {
@@ -82,12 +82,12 @@ define(function(require) {
 									},
 									generateError: false
 								},
-								success: function(oomaSmsBoxes) {
+								success: function(telexSmsBoxes) {
 									var number = wrappedNumberData.numberData.id,
-										oomaSmsBox = _.findLast(oomaSmsBoxes, function(oomaSmsBox) {
-											return _.includes(oomaSmsBox.numbers, number);
+										telexSmsBox = _.findLast(telexSmsBoxes, function(telexSmsBox) {
+											return _.includes(telexSmsBox.numbers, number);
 										});
-									callback(null, oomaSmsBox);
+									callback(null, telexSmsBox);
 								},
 								error: function(_dataError) {
 									callback(null, {});
@@ -123,7 +123,7 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Object} [args.accountId]  ID of the account that owns the phone number.
 		 * @param  {Object} args.numberData  Phone number data.
-		 * @param  {Object} args.oomaSmsBox  SMS box data.
+		 * @param  {Object} args.telexSmsBox  SMS box data.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
 		 * @param  {Object} [args.callbacks]  Callback functions.
 		 * @param  {Function} [args.callbacks.success]  Success callback.
@@ -136,12 +136,12 @@ define(function(require) {
 				accountId = _.get(args, 'accountId', self.accountId),
 				success = _.get(args, 'callbacks.success', function() {}),
 				error = _.get(args, 'callbacks.error', function() {}),
-				oomaSmsBox = _.get(args, 'oomaSmsBox', {}),
+				telexSmsBox = _.get(args, 'telexSmsBox', {}),
 				isCarrierTio = args.isCarrierTio,
-				smsBoxExists = !_.isEmpty(oomaSmsBox),
+				smsBoxExists = !_.isEmpty(telexSmsBox),
 				numberMessagingFormatted = self.numberMessagingFormatData({
 					numberData: numberData,
-					oomaSmsBox: oomaSmsBox,
+					telexSmsBox: telexSmsBox,
 					isCarrierTio: isCarrierTio,
 					smsBoxExists: smsBoxExists
 				}),
@@ -173,7 +173,7 @@ define(function(require) {
 				$form: $popupForm,
 				formattedData: numberMessagingFormatted,
 				numberData: numberData,
-				oomaSmsBox: oomaSmsBox,
+				telexSmsBox: telexSmsBox,
 				isCarrierTio: isCarrierTio,
 				smsBoxExists: smsBoxExists,
 				users: users,
@@ -194,7 +194,7 @@ define(function(require) {
 		 * @param  {jQuery} args.$form  Settings form template.
 		 * @param  {Object} args.formattedData  Formatted settings data for the UI.
 		 * @param  {Object} args.numberData  Phone number data.
-		 * @param  {Object} args.oomaSmsBox  SMS box data.
+		 * @param  {Object} args.telexSmsBox  SMS box data.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
 		 * @param  {Boolean} args.smsBoxExists  Whether or not a sms box is available to configure.
 		 * @param  {Function} [args.success]  Success callback.
@@ -206,7 +206,7 @@ define(function(require) {
 				$form = args.$form,
 				numberMessagingFormatted = args.formattedData,
 				numberData = args.numberData,
-				oomaSmsBox = args.oomaSmsBox,
+				telexSmsBox = args.telexSmsBox,
 				success = args.success,
 				error = args.error,
 				isCarrierTio = args.isCarrierTio,
@@ -285,7 +285,7 @@ define(function(require) {
 					accountId: accountId,
 					isCarrierTio: isCarrierTio,
 					number: numberData.id,
-					oomaSmsBox: oomaSmsBox,
+					telexSmsBox: telexSmsBox,
 					nonMembers: numberMessagingFormatted.nonMembers || [],
 					success: success,
 					error: error
@@ -299,7 +299,7 @@ define(function(require) {
 		 * @param  {String} args.accountId  ID of the account that owns the phone number.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
 		 * @param  {String} args.number  Phone number.
-		 * @param  {Object} args.oomaSmsBox  SMS box data.
+		 * @param  {Object} args.telexSmsBox  SMS box data.
 		 * @param  {Object[]} args.nonMembers  Non-user SMS box members.
 		 * @param  {Function} [args.success]  Success callback.
 		 * @param  {Function} [args.error]  Error callback.
@@ -310,7 +310,7 @@ define(function(require) {
 				accountId = args.accountId,
 				isCarrierTio = args.isCarrierTio,
 				number = args.number,
-				oomaSmsBox = args.oomaSmsBox,
+				telexSmsBox = args.telexSmsBox,
 				members = _.concat([], args.nonMembers),
 				success = args.success,
 				error = args.error;
@@ -325,7 +325,7 @@ define(function(require) {
 				isAnyMessagingFeatureEnabled = _.some(features, function(featureName) {
 					return _.get(formData, [featureName, 'enabled'], false);
 				}),
-				shouldCreateSmsBox = formData.configureSmsBox && _.isEmpty(oomaSmsBox),
+				shouldCreateSmsBox = formData.configureSmsBox && _.isEmpty(telexSmsBox),
 				shouldCheckMfaConfig = isCarrierTio
 					&& isAnyMessagingFeatureEnabled
 					&& shouldCreateSmsBox;
@@ -360,8 +360,8 @@ define(function(require) {
 
 					callback(null, formData, mfaConfig);
 				},
-				function formatOomaSmsBoxData(formData, mfaConfig, callback) {
-					var oomaSmsBoxData;
+				function formatTelexSmsBoxData(formData, mfaConfig, callback) {
+					var telexSmsBoxData;
 
 					if (!isCarrierTio || !formData.configureSmsBox) {
 						callback(null, formData, mfaConfig, null);
@@ -380,7 +380,7 @@ define(function(require) {
 						}
 					});
 
-					oomaSmsBoxData = _.assign(
+					telexSmsBoxData = _.assign(
 						{
 							numbers: [
 								number
@@ -394,13 +394,13 @@ define(function(require) {
 						} : {}
 					);
 
-					callback(null, formData, mfaConfig, oomaSmsBoxData);
+					callback(null, formData, mfaConfig, telexSmsBoxData);
 				},
-				function patchNumber(formData, mfaConfig, oomaSmsBoxData, callback) {
+				function patchNumber(formData, mfaConfig, telexSmsBoxData, callback) {
 					var isReseller = monster.util.isReseller();
 
 					if (!isReseller) {
-						callback(null, mfaConfig, oomaSmsBoxData, {});
+						callback(null, mfaConfig, telexSmsBoxData, {});
 						return;
 					}
 
@@ -411,24 +411,24 @@ define(function(require) {
 							data: _.pick(formData, features)
 						},
 						success: function(number) {
-							callback(null, mfaConfig, oomaSmsBoxData, number);
+							callback(null, mfaConfig, telexSmsBoxData, number);
 						},
 						error: function(dataError) {
 							callback(dataError || 'charges_rejected');
 						}
 					});
 				},
-				function saveSmsBox(mfaConfig, oomaSmsBoxData, number, callback) {
-					if (!isCarrierTio || _.isEmpty(oomaSmsBoxData)) {
+				function saveSmsBox(mfaConfig, telexSmsBoxData, number, callback) {
+					if (!isCarrierTio || _.isEmpty(telexSmsBoxData)) {
 						callback(null, mfaConfig, number);
 						return;
 					}
 
 					if (shouldCreateSmsBox) {
-						self.numberMessagingCreateOomaSmsBox({
+						self.numberMessagingCreateTelexSmsBox({
 							data: {
 								accountId: accountId,
-								data: oomaSmsBoxData
+								data: telexSmsBoxData
 							},
 							success: function() {
 								callback(null, mfaConfig, number);
@@ -438,11 +438,11 @@ define(function(require) {
 							}
 						});
 					} else {
-						self.numberMessagingUpdateOomaSmsBox({
+						self.numberMessagingUpdateTelexSmsBox({
 							data: {
 								accountId: accountId,
-								boxId: oomaSmsBox.id,
-								data: oomaSmsBoxData
+								boxId: telexSmsBox.id,
+								data: telexSmsBoxData
 							},
 							success: function() {
 								callback(null, mfaConfig, number);
@@ -577,7 +577,7 @@ define(function(require) {
 		 * Formats the phone number and SMS box data to be rendered in the UI.
 		 * @param  {Object} args
 		 * @param  {Object} args.numberData  Phone number data.
-		 * @param  {Object} args.oomaSmsBox  SMS box settings.
+		 * @param  {Object} args.telexSmsBox  SMS box settings.
 		 * @param  {Boolean} args.isCarrierTio  Whether or not the number carrier is Trunking.io.
 		 * @param  {Boolean} args.smsBoxExists  Whether or not a sms box is available to configure.
 		 * @returns  Phone number settings formatted data.
@@ -604,10 +604,10 @@ define(function(require) {
 					isCarrierTio: isCarrierTio,
 					editable: isReseller || smsBoxExists
 				},
-				oomaSmsBox = args.oomaSmsBox;
+				telexSmsBox = args.telexSmsBox;
 
 			if (isCarrierTio && smsBoxExists) {
-				var [allMembers, nonMembers] = _.partition(oomaSmsBox.members, function(member) {
+				var [allMembers, nonMembers] = _.partition(telexSmsBox.members, function(member) {
 						return member.type === 'user';
 					}),
 					members = [];
@@ -616,8 +616,8 @@ define(function(require) {
 					members.push(member.id);
 				});
 
-				returnData.id = oomaSmsBox.id;
-				returnData.owner = oomaSmsBox.owner;
+				returnData.id = telexSmsBox.id;
+				returnData.owner = telexSmsBox.owner;
 				returnData.nonMembers = nonMembers;
 				returnData.members = members;
 			}
@@ -786,11 +786,11 @@ define(function(require) {
 		 * @param  {Function} [args.success]  Success callback.
 		 * @param  {Function} [args.error]  Error callback.
 		 */
-		numberMessagingListOomaSmsBoxes: function(args) {
+		numberMessagingListTelexSmsBoxes: function(args) {
 			var self = this;
 
 			self.callApi({
-				resource: 'oomasmsboxes.list',
+				resource: 'telexsmsboxes.list',
 				data: args.data,
 				success: function(data) {
 					_.has(args, 'success') && args.success(data.data);
@@ -810,11 +810,11 @@ define(function(require) {
 		 * @param  {Function} [args.success]  Success callback.
 		 * @param  {Function} [args.error]  Error callback.
 		 */
-		numberMessagingCreateOomaSmsBox: function(args) {
+		numberMessagingCreateTelexSmsBox: function(args) {
 			var self = this;
 
 			self.callApi({
-				resource: 'oomasmsboxes.create',
+				resource: 'telexsmsboxes.create',
 				data: args.data,
 				success: function(data) {
 					_.has(args, 'success') && args.success(data.data);
@@ -835,11 +835,11 @@ define(function(require) {
 		 * @param  {Function} [args.success]  Success callback.
 		 * @param  {Function} [args.error]  Error callback.
 		 */
-		numberMessagingUpdateOomaSmsBox: function(args) {
+		numberMessagingUpdateTelexSmsBox: function(args) {
 			var self = this;
 
 			self.callApi({
-				resource: 'oomasmsboxes.update',
+				resource: 'telexsmsboxes.update',
 				data: args.data,
 				success: function(data) {
 					_.has(args, 'success') && args.success(data.data);
