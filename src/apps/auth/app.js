@@ -1414,7 +1414,7 @@ define(function(require) {
 								}, wrongCredsCallback);
 							};
 
-							if (additionalArgs && additionalArgs.hasOwnProperty('isRetryLoginRequest') && additionalArgs.isRetryLoginRequest === true) {
+							if (_.get(additionalArgs, 'isRetryLoginRequest', false) === true) {
 								monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
 									handleMultifactor();
 								}, function() {
