@@ -1414,7 +1414,6 @@ define(function(require) {
 									}, wrongCredsCallback, cancelCallback);
 								},
 								showReconnectDialog = function() {
-									console.log('showReconnectDialog');
 									monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
 										handleMultifactor(showReconnectDialog);
 									}, function() {
