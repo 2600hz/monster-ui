@@ -15,6 +15,7 @@
 			<button class="btn-submit monster-button monster-button-primary" id="btn_mfa_verify" type="submit" disabled="true">
 				{{ i18n.multiFactor.verification.verifyButton }}
 			</button>
+		{{#unless isRetryLoginRequest}}
 			<hr />
 			<p class="form-footer">
 				{{ i18n.multiFactor.verification.setupDesciption }}
@@ -22,6 +23,7 @@
 					{{ i18n.multiFactor.verification.setupButton }}
 				</a>
 			</p>
+		{{/unless}}
 		</div>
 	</form>
 </div>
