@@ -397,6 +397,8 @@ define(function(require) {
 					$description.addClass('expanded');
 					$toggle.text(self.i18n.active().appSelector.viewLess);
 				}
+
+				$appList.isotope('reLayout');
 			});
 
 			// Select app
