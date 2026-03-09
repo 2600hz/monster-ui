@@ -196,6 +196,18 @@ define(function(require) {
 						itemSelector: 'li',
 						filter: '.app-item'
 					});
+
+					// Show "View more" only for descriptions that actually overflow.
+					// Must run after the template is in the DOM so layout is computed.
+					$template.find('.app-list .app-item').each(function() {
+						var $descriptionText = $(this).find('.description-text'),
+							$toggle = $(this).find('.description-toggle'),
+							descriptionTextEl = $descriptionText[0];
+
+						if (descriptionTextEl && descriptionTextEl.scrollWidth > descriptionTextEl.offsetWidth) {
+							$toggle.show();
+						}
+					});
 				}
 			});
 		},
@@ -370,6 +382,22 @@ define(function(require) {
 
 				applyFilters();
 			}, 200));
+
+			// Toggle description expand/collapse
+			$appList.find('.description-toggle').on('click', function(e) {
+				e.stopPropagation();
+
+				var $toggle = $(this),
+					$description = $toggle.closest('.app-description');
+
+				if ($description.hasClass('expanded')) {
+					$description.removeClass('expanded');
+					$toggle.text(self.i18n.active().appSelector.viewMore);
+				} else {
+					$description.addClass('expanded');
+					$toggle.text(self.i18n.active().appSelector.viewLess);
+				}
+			});
 
 			// Select app
 			$appList.find('.app-item').on('click', function() {
