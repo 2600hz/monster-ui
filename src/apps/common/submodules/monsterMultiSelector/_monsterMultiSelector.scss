@@ -1,0 +1,19 @@
+.monster-multi-selector-dialog-container .monster-multi-selector-container {
+	padding: 1rem 1.5rem;
+
+	.dialog-buttons-wrapper {
+		padding-top: 1rem;
+
+		.cancel {
+			margin-right: 10px;
+		}
+	}
+
+	.items-selector .box-selector {
+		max-width: 300px;
+
+		.search-wrapper input {
+			width: 247px;
+		}
+	}
+}

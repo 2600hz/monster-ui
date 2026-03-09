@@ -10,7 +10,13 @@ if [ -z $BASE_BRANCH ]; then
 fi
 
 if [[ $BASE_BRANCH != "origin/master" ]]; then
-    CORE_IDENTITY=`curl https://api.github.com/repos/2600hz/monster-ui/git/refs/tags | grep "refs" | sed 's|[^0-9\.]||g' | sort --version-sort | grep "${BASE_BRANCH#origin/}" | tail -1`
+    CORE_IDENTITY=`curl https://api.github.com/repos/2600hz/monster-ui/git/refs/tags \
+	               | grep "refs" \
+				   | sed 's|[^0-9\.]||g' \
+				   | sort --version-sort \
+				   | grep "^${BASE_BRANCH#origin/}" \
+				   | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+				   | tail -1`
 else
     CORE_IDENTITY='master'
 fi

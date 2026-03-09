@@ -306,7 +306,8 @@
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/multi_factor/{mfaId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/multi_factor' },
 				'listAttempts': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts' },
-				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts/{attemptId}' }
+				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts/{attemptId}' },
+				'qrcode': { verb: 'PUT', url: 'multi_factor/qrcode' }
 			},
 			numbers: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
@@ -329,6 +330,12 @@
 				'syncOne': { verb: 'POST', url: 'accounts/{accountId}/phone_numbers/fix/{number}' },
 				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' },
 				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' }
+			},
+			telexsmsboxes: {
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/telexsmsboxes' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/telexsmsboxes' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/telexsmsboxes/{boxId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/telexsmsboxes/{boxId}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
@@ -508,6 +515,10 @@
 			},
 			transactions: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/transactions' }
+			},
+			trunkingio: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/trunkingio_settings' },
+				'getCheck': { verb: 'GET', url: 'accounts/{accountId}/trunkingio_settings/check' }
 			},
 			user: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}' },

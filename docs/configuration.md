@@ -54,6 +54,8 @@ Key | Description | Type | Default | Required
 `phonebook` | Set Project Phonebook URL if you want to use it to search phone numbers | `String` | | `false`
 `provisioner` | If you have provisioner turned on in your install and can use the one provided by 2600Hz, set it up here | `String` | | `false`
 `socket` | If you want to use WebSockets you need to turn Blackhole on in the back-end and then set it up here | `String` | | `false`
+`provisioner6` | Provisioner 6 URL, needed for phone-config-builder and advanced-provisioner-nemo | `String` | | `false`
+`s3_nemo_url` | S3 url to download single-spa build of nemo for advanced-provisioner-nemo | `String` | | `false`
 
 ### `developerFlags`
 

@@ -79,6 +79,7 @@ const libsToExcludeFromApp = [
 	'pdfmake',
 	'popup-redirect',
 	'postal',
+	'qrcode',
 	'randomColor',
 	'renderjson',
 	'signals',
@@ -90,6 +91,7 @@ const libsToExcludeFromApp = [
 	'toastr',
 	'touch-punch',
 	'validate',
+	'validate-addons',
 	'vfs_fonts',
 	'wysiwyg'
 ];

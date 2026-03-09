@@ -97,6 +97,40 @@ define(function(require) {
 			});
 		},
 
+		renderTioInfoDialog: function(portalUrl) {
+			var self = this,
+				isReseller = monster.util.isReseller(),
+				template = $(self.getTemplate({
+					name: 'dialog-tio-info',
+					data: {
+						isReseller: isReseller
+					},
+					submodule: 'numbers'
+				})),
+				popUpTitle = isReseller
+					? self.i18n.active().numbers.dialogInfoTioPort.reseller.title
+					: self.i18n.active().numbers.dialogInfoTioPort.notReseller.title,
+				optionsPopup = {
+					position: ['center', 20],
+					title: '<i class="fa fa-info-circle monster-blue"></i><div class="title">' + popUpTitle + '</div>',
+					dialogClass: 'monster-alert alert-info-trunkingio'
+				},
+				popup = monster.ui.dialog(template, optionsPopup);
+
+			template
+				.find('.cancel')
+					.on('click', function(event) {
+						popup.dialog('close').remove();
+					});
+
+			template
+				.find('.redirect')
+					.on('click', function(event) {
+						window.open(portalUrl);
+						popup.dialog('close').remove();
+					});
+		},
+
 		//_util
 		numbersFormatNumber: function(value) {
 			var self = this;
@@ -393,21 +427,13 @@ define(function(require) {
 			parent.on('click', '.account-header .action-number.port', function(e) {
 				var accountId = $(this).parents('.account-section').data('id');
 
-				monster.pub('common.portListing.render', {
-					data: {
-						accountId: accountId
-					}
-				});
+				self.numbersPortCheckCarrier(accountId);
 			});
 
 			parent.on('click', '.actions-wrapper .action-number.port', function(e) {
 				var accountId = self.accountId;
 
-				monster.pub('common.portListing.render', {
-					data: {
-						accountId: accountId
-					}
-				});
+				self.numbersPortCheckCarrier(accountId);
 			});
 
 			function syncNumbers(accountId) {
@@ -1936,7 +1962,7 @@ define(function(require) {
 					phoneNumber: phoneNumber
 				},
 				success: function(_data, status) {
-					_data.data['metadata'] = _.get(_data, 'metadata', {});
+					_data.data.metadata = _.get(_data, 'metadata', {});
 
 					success && success(_data.data);
 				},
@@ -2017,6 +2043,50 @@ define(function(require) {
 			} else {
 				return features;
 			}
+		},
+
+		numbersGetTrunkingioSettings: function(accountId, success, error) {
+			var self = this;
+
+			self.callApi({
+				resource: 'trunkingio.getCheck',
+				data: {
+					accountId: accountId,
+					generateError: false
+				},
+				success: function(_data, status) {
+					_data.data.metadata = _.get(_data, 'metadata', {});
+
+					success && success(_data.data);
+				},
+				error: function(_data, status) {
+					if (_data.error === '404' && _data.hasOwnProperty('data') && _data.data.hasOwnProperty('message')) {
+						success && success(_data);
+					} else {
+						error && error(_data.data);
+					}
+				}
+			});
+		},
+
+		numbersPortCheckCarrier: function(accountId) {
+			var self = this;
+
+			self.numbersGetTrunkingioSettings(accountId, function(trunkingioData) {
+				var isClientTio = _.get(trunkingioData, 'metadata.enabled', false),
+					isTioLinked = _.get(trunkingioData, 'metadata.status') === 'linked',
+					portalUrl = _.get(trunkingioData, 'metadata.portal_url', 'https://trunking.io');
+
+				if (isClientTio && isTioLinked) {
+					self.renderTioInfoDialog(portalUrl);
+				} else {
+					monster.pub('common.portListing.render', {
+						data: {
+							accountId: accountId
+						}
+					});
+				}
+			});
 		}
 	};
 

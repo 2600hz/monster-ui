@@ -63,6 +63,7 @@ require.config({
 		'vfs_fonts': 'js/vendor/pdfmake/build/vfs_fonts',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
+		'qrcode': 'js/vendor/qrcode.min',
 		'randomColor': 'js/vendor/randomColor',
 		'renderjson': 'js/vendor/renderjson',
 		'signals': 'js/vendor/signals.min',
@@ -74,7 +75,13 @@ require.config({
 		'toastr': 'js/vendor/toastr-1.3.0',
 		'touch-punch': 'js/vendor/jquery.ui.touch-punch.min',
 		'validate': 'js/vendor/jquery.validate.min',
+		'validate-addons': 'js/vendor/jquery.validate.additional-methods.min',
 		'wysiwyg': 'js/vendor/bootstrap.wysiwyg.min'
+	},
+	map: {
+		'validate-addons': {
+			'jquery.validate.min': 'validate'
+		}
 	},
 	shim: {
 		'bootstrap': ['jqueryui'],
@@ -109,10 +116,16 @@ require.config({
 		'popup-redirect': {
 			exports: 'Popup'
 		},
+		qrcode: {
+			deps: ['jquery'],
+			exports: 'QRCode'
+		},
 		renderjson: {
 			exports: 'renderjson'
 		},
 		'touch-punch': ['jqueryui'],
+		'validate': ['jquery'],
+		'validate-addons': ['validate'],
 		vfs_fonts: ['pdfmake']
 	},
 	urlArgs: 'bust=' + (new Date()).getTime()

@@ -308,7 +308,27 @@
 		"toColumn": "À",
 		"accountColumn": "Compte",
 
-		"disabledAddCreditTooltip": "Braintree est requis pour ajouter du crédit. Pour plus d'informations, veuillez contacter votre administrateur."
+		"disabledAddCreditTooltip": "Braintree est requis pour ajouter du crédit. Pour plus d'informations, veuillez contacter votre administrateur.",
+
+		"genericLedger": {
+			"columns": {
+				"account": "Account",
+				"amount": "Amount",
+				"date": "Date",
+				"description": "Description",
+				"usage": "Usage",
+				"agent": "Agent"
+			},
+			"ledgers": {
+				"mobile_data": "Mobile Data",
+				"2600Hz-mobile": "Mobile Data",
+				"per-minute-voip": "Per Minute",
+				"payments": "Payments",
+				"prorations": "Prorations",
+				"rollovers": "Rollovers",
+				"adjustments": "Adjustments"
+			}
+		}
 	},
 
 	"transactions": {

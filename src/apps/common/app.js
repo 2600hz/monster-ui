@@ -18,6 +18,7 @@ define(function(require) {
 			'failover',
 			'mediaSelect',
 			'monsterListing',
+			'monsterMultiSelector',
 			'navigationWizard',
 			'numberFeaturesMenu',
 			'numberPrepend',
@@ -32,6 +33,7 @@ define(function(require) {
 			'servicePlanItemEditor',
 			'storagePlanManager',
 			'storageSelector',
+			'userSelector',
 			'webphone'
 		],
 

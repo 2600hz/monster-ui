@@ -588,6 +588,19 @@
 		"dialogAlertNowAllowed": {
 			"info": "The number you searched for exists, but you are not allowed to manage it"
 		},
+		"dialogInfoTioPort": {
+			"reseller": {
+				"title": "Please port numbers via Trunking.io self service portal",
+				"message": "The numbers in this account are currently serviced by Trunking.io as its carrier. To complete number porting, please log into Trunking.io Portal and follow porting process there. Once porting is complete, you will be able to manage the numbers as usual."
+			},
+			"notReseller": {
+				"title": "Please contact your service provider for number porting",
+				"message": "Please contact your service provider for number porting. Once porting is complete, you will be able to manage the numbers as usual."
+			},
+			"buttons": {
+				"redirect": "Trunking.io"
+			}
+		},
 		"__comment": "UI-1219: Adding the prepend feature to numbers",
 		"__version": "v3.20_s1",
 		"prependIconHelp": "This icon means that this number will show up with a custom prepended text on your phone",
@@ -1634,18 +1647,42 @@
 		"titles": {
 			"sms": "SMS",
 			"mms": "MMS",
-			"dialog": "Configure Messaging"
+			"dialog": "Messaging Configuration: {{phoneNumber}}"
 		},
 		"labels": {
-			"sms": "SMS Services",
-			"mms": "MMS Services",
+			"sms": "Enable SMS Services",
+			"mms": "Enable MMS Services",
 			"messaging": "Messaging"
 		},
-		"info": "Enable or Disable {{variable}} messaging feature for this number.",
-		"warningPanel": {
-			"title": "Action Warning",
-			"text": "This service requires a manual activation. An email will be sent to Operations to complete this action. This can take up to 72 hours"
+		"select": {
+			"noOwner": "- No owner selected -",
+			"noMember": "- No members selected -"
 		},
-		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}"
+		"info": "In order to configure MMS capabilities, SMS must be enabled first.",
+		"ownerInfo": "All Messaging DIDs must have an owner.",
+		"successUpdate": "You successfully updated the messaging configuration for {{phoneNumber}}",
+		"messagingServicesUnavailable": "SMS and MMS services are disabled. Contact your service provider for more information.",
+		"mfaNotice": "Messaging requires multi-factor authentication to be enabled for all users on your account. This requirement ensures ongoing compliance and secure access to Messaging features.",
+		"configureSmsBox": {
+			"label": "Create and configure message box",
+			"info": "This setting applies only to messaging boxes managed through the platform's official applications and does not affect customer-supplied or third-party integrations.",
+			"textingCampaignRegistrationNotice": "This phone number must be approved for texting before you can send and receive text messages. Please complete the Text Campaign Registration process in the Trunking.io application.",
+			"owner": "Owner",
+			"additionalMembers": "Additional Members"
+		},
+		"mfaNotConfiguredError": "MFA has not been configured for this account. Contact your administrator.",
+		"mfaEnabledDialog": {
+			"title": "Multi-factor authentication enabled for your account.",
+			"description": "Messaging requires multi-factor authentication to be enabled for all users on your account. To continue using Messaging, please ensure MFA is set up through your preferred authentication app."
+		},
+		"buttons": {
+			"close": "Close",
+			"saveChanges": "Save changes"
+		}
+	},
+
+	"monsterMultiSelector": {
+		"ok": "OK",
+		"cancel": "Cancel"
 	}
 }

@@ -27,6 +27,7 @@ define(function(require) {
 	require('monthpicker');
 	require('timepicker');
 	require('validate');
+	require('validate-addons');
 	require('wysiwyg');
 
 	function initializeHandlebarsHelper() {
@@ -304,7 +305,7 @@ define(function(require) {
 					validTypes = ['info', 'question', 'error', 'warning'],
 					type = typeof type === 'string' && validTypes.indexOf(type) >= 0 ? type : 'info',
 					templateData = {
-						className: className || '',
+						className: _.isString(className) ? className : '',
 						content: new Handlebars.SafeString(htmlContent)
 					},
 					// We set the 6th argument to true so we don't remove white-spaces. Important to display API response with properly formatted JSON.
@@ -1340,7 +1341,8 @@ define(function(require) {
 					time24h: /^(([01]?[0-9]|2[0-3])(:[0-5]\d){1,2})$/i,
 					realm: /^[0-9a-z.-]+$/,
 					hexadecimal: /^[0-9A-F]+$/i,
-					protocol: /:\/\//i
+					protocol: /:\/\//i,
+					alphanumeric: /^[a-zA-Z0-9_]+$/
 				},
 				complexRules = {
 					checkList: function(value, element, listToCheck) {
@@ -1431,6 +1433,22 @@ define(function(require) {
 										.map(_.toUpper)
 										.join(', ')
 										.value()
+								}
+							});
+						}
+					},
+					alphanumeric: {
+						method: function(value, element, regex) {
+							var regex = new RegExp(regex, 'i'),
+								method = _.bind(getRegexBasedRuleMethod(regex), this);
+
+							return method(value, element);
+						},
+						message: function(regex) {
+							return monster.apps.core.getTemplate({
+								name: '!' + getRuleMessageForOne('alphanumeric'),
+								data: {
+									regex: regex
 								}
 							});
 						}
