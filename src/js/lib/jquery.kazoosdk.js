@@ -331,11 +331,11 @@
 				'getCarrierInfo': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/carriers_info' },
 				'patch': { verb: 'PATCH', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' }
 			},
-			oomasmsboxes: {
-				'create': { verb: 'PUT', url: 'accounts/{accountId}/oomasmsboxes' },
-				'list': { verb: 'GET', url: 'accounts/{accountId}/oomasmsboxes' },
-				'update': { verb: 'POST', url: 'accounts/{accountId}/oomasmsboxes/{boxId}' },
-				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/oomasmsboxes/{boxId}' }
+			telexsmsboxes: {
+				'create': { verb: 'PUT', url: 'accounts/{accountId}/telexsmsboxes' },
+				'list': { verb: 'GET', url: 'accounts/{accountId}/telexsmsboxes' },
+				'update': { verb: 'POST', url: 'accounts/{accountId}/telexsmsboxes/{boxId}' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/telexsmsboxes/{boxId}' }
 			},
 			parkedCalls: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/parked_calls' }
