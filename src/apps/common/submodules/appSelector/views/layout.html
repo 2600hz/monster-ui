@@ -36,15 +36,16 @@
 			<ul class="app-list text-non-selectable">
 			{{#each apps}}
 				<li class="app-item{{#each tags}} {{this}}{{/each}}{{#ifInArray id @root.selectedAppIds}} selected{{/ifInArray}}{{#if isEven}} even{{/if}}" data-id="{{id}}" data-name="{{toLowerCase label}}">
-					<div class="text-container">
-						<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
-						<div class="app-title">
-							{{label}}
-						</div>
-						<div class="app-description">
-							{{description}}
-						</div>
+				<div class="text-container">
+					<div class="app-icon {{extraCssClass}}" {{#if icon}}style="background-image:url({{icon}})"{{/if}}></div>
+					<div class="app-title">
+						{{label}}
 					</div>
+				<div class="app-description">
+					<span class="description-text">{{description}}</span>
+					<a href="javascript:void(0);" class="description-toggle" style="display:none;">View more</a>
+				</div>
+				</div>
 				</li>
 			{{/each}}
 				<li class="no-apps-item">
