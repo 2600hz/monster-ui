@@ -1615,6 +1615,8 @@
 	},
 
 	"appSelector": {
+		"viewMore": "View more",
+		"viewLess": "View less",
 		"dialog": {
 			"title": "Select Applications",
 			"acceptButton": "Select Applications"

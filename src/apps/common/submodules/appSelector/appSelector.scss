@@ -256,15 +256,41 @@
 							align-self: center;
 						}
 
-						.app-description {
-							width: 100%;
-							padding-right: 25%;
-							font-size: 0.75rem;
-							line-height: 1rem;
+					.app-description {
+						display: flex;
+						align-items: flex-end;
+						gap: 0.375rem;
+						width: 100%;
+						padding-right: 25%;
+						font-size: 0.75rem;
+						line-height: 1rem;
+
+						.description-text {
+							flex: 1;
+							min-width: 0;
 							white-space: nowrap;
-							overflow-x: hidden;
+							overflow: hidden;
 							text-overflow: ellipsis;
 						}
+
+						.description-toggle {
+							flex: none;
+							white-space: nowrap;
+							color: #2297ff;
+							font-size: 0.75rem;
+							text-decoration: none;
+
+							&:hover {
+								text-decoration: underline;
+							}
+						}
+
+						&.expanded .description-text {
+							white-space: normal;
+							overflow: visible;
+							text-overflow: clip;
+						}
+					}
 					}
 
 					&.no-apps-item {
