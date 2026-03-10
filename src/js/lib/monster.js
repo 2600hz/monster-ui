@@ -889,6 +889,14 @@ define(function(require) {
 		var error = args.error;
 		var errorMessage = _.get(args, 'errorMessage', monster.apps.core.i18n.active().invalidCredentialsMessage);
 		var options = args.options;
+		var retryRequest = function() {
+			requestHandler(_.assign({}, options, {
+				// Used to feed the updated token to the SDK (when requestHandler() references monster.kazooSdk.request())
+				authToken: monster.util.getAuthToken(),
+				// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
+				preventCallbackError: false
+			}));
+		};
 
 		// If we have a 401 after being logged in, it means our session expired, or that it's a MFA denial of the relogin attempt
 		// We don't want to show the normal error box for 401s, but still want to check the payload if they happen, via the error tool.
@@ -903,9 +911,7 @@ define(function(require) {
 		// If it's a retryLoginRequest, we don't want to prevent the callback as it could be a MFA denial
 		} else if (!_.get(options, 'isRetryLoginRequest', false)) {
 			if (_privateFlags.lockRetryAttempt) {
-				_privateFlags.addRetryFunction(function() {
-					requestHandler(options);
-				});
+				_privateFlags.addRetryFunction(retryRequest);
 			} else {
 				// We added a new locking mechanism. Basically if your module use a parallel request, you could have 5 requests ending in a 401. We don't want to automatically re-login 5 times, so we lock the system
 				// Once the re-login is effective, we'll unlock it.
@@ -920,12 +926,7 @@ define(function(require) {
 						isRetryLoginRequest: true
 					},
 					success: function() {
-						requestHandler($.extend(true, {}, options, {
-							// Used to feed the updated token to the SDK (when requestHandler() references monster.kazooSdk.request())
-							authToken: monster.util.getAuthToken(),
-							// We setup the flag to false this time, so that if it errors out again, we properly log out of the UI
-							preventCallbackError: false
-						}));
+						retryRequest();
 						_privateFlags.unlockRetryFunctions();
 					},
 					error: function() {
