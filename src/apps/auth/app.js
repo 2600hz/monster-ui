@@ -1302,7 +1302,7 @@ define(function(require) {
 				},
 				error: function(errorPayload, data, globalHandler) {
 					if (data.status === 401 && errorPayload.data.hasOwnProperty('multi_factor_request')) {
-						self.handleMultiFactor(errorPayload.data, dataRecovery, function(augmentedDataRecovery) {
+						self.handleMultiFactor(errorPayload.data, dataRecovery, null, function(augmentedDataRecovery) {
 							self.recoveryWithResetId(augmentedDataRecovery, success, error);
 						}, function() {
 							monster.util.logoutAndReload();
@@ -1408,18 +1408,21 @@ define(function(require) {
 							// If it's a 401 that is about requesting additional login information via MFA, we need to know if it comes from a reconnect attempt
 							// If it comes from a reconnect attempt, then we show a popup to ask them if they want to reconnect.
 							// If we don't do that and the system automatically reconnected, then the User would see a popup asking him to re-authenticate Duo without any context.
-							var handleMultifactor = function() {
-								self.handleMultiFactor(errorPayload.data, loginData, function(augmentedLoginData) {
-									self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
-								}, wrongCredsCallback);
-							};
+							var handleMultifactor = function(cancelCallback) {
+									self.handleMultiFactor(errorPayload.data, loginData, additionalArgs, function(augmentedLoginData) {
+										self.putAuth(augmentedLoginData, callback, wrongCredsCallback, pUpdateLayout, additionalArgs);
+									}, wrongCredsCallback, cancelCallback);
+								},
+								showReconnectDialog = function() {
+									monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
+										handleMultifactor(showReconnectDialog);
+									}, function() {
+										monster.util.logoutAndReload();
+									});
+								};
 
-							if (additionalArgs && additionalArgs.hasOwnProperty('isRetryLoginRequest') && additionalArgs.isRetryLoginRequest === true) {
-								monster.ui.confirm(self.i18n.active().retryLoginConfirmText, function() {
-									handleMultifactor();
-								}, function() {
-									monster.util.logoutAndReload();
-								});
+							if (_.get(additionalArgs, 'isRetryLoginRequest', false) === true) {
+								showReconnectDialog();
 							} else {
 								handleMultifactor();
 							}
@@ -1433,9 +1436,10 @@ define(function(require) {
 			});
 		},
 
-		handleMultiFactor: function(data, loginData, success, error) {
+		handleMultiFactor: function(data, loginData, additionalArgs, success, error, cancel) {
 			var self = this,
-				mfaProvider = data.multi_factor_request.provider_name;
+				mfaProvider = data.multi_factor_request.provider_name,
+				isRetryLoginRequest = _.get(additionalArgs, 'isRetryLoginRequest', false);
 
 			switch (mfaProvider) {
 				case 'duo_universal':
@@ -1446,8 +1450,10 @@ define(function(require) {
 					break;
 				case 'otp':
 					self.showOtpVerificationDialog({
+						isRetryLoginRequest: isRetryLoginRequest,
 						loginData: loginData,
-						success: success
+						success: success,
+						cancel: cancel
 					});
 					break;
 				default:
@@ -1479,24 +1485,34 @@ define(function(require) {
 		/**
 		 * Shows the OTP verification dialog.
 		 * @param {Object}   args
+		 * @param {Boolean}  [args.isRetryLoginRequest]  Whether or not is a login retry request
 		 * @param {Object}   args.loginData  Login data
 		 * @param {String}   args.loginData.credentials  Hashed credentials
 		 * @param {String}   args.loginData.accout_name  Account name
 		 * @param {Function} args.success  Login success callback
+		 * @param {Function} args.cancel  Cancel callback
 		 */
 		showOtpVerificationDialog: function(args) {
 			var self = this,
 				$template = $(self.getTemplate({
-					name: 'mfa-otpVerificationDialog'
+					name: 'mfa-otpVerificationDialog',
+					data: {
+						isRetryLoginRequest: !!args.isRetryLoginRequest
+					}
 				})),
 				$dialog = monster.ui.dialog($template, {
 					title: self.i18n.active().multiFactor.verification.title
 				}),
-				bindArgs = _.assign({
-					$dialog: $dialog
-				}, args);
+				bindArgs = _.chain(args)
+					.pick(['loginData', 'success', 'cancel'])
+					.assign({
+						$dialog: $dialog
+					})
+					.value();
 
 			self.bindOtpVerificationDialogEvents(bindArgs);
+
+			$template.find('#mfa_code').focus();
 		},
 
 		/**
@@ -1507,6 +1523,7 @@ define(function(require) {
 		 * @param {String}   args.loginData.credentials  Hashed credentials
 		 * @param {String}   args.loginData.accout_name  Account name
 		 * @param {Function} args.success  Login success callback
+		 * @param {Function} args.cancel  Cancel callback
 		 */
 		bindOtpVerificationDialogEvents: function(args) {
 			var self = this,
@@ -1514,6 +1531,7 @@ define(function(require) {
 				loginData = args.loginData,
 				validator = args.validator,
 				successCallback = args.success,
+				cancelCallback = args.cancel,
 				$form = $dialog.find('form'),
 				validator = monster.ui.validate($form, {
 					rules: {
@@ -1524,7 +1542,8 @@ define(function(require) {
 				}),
 				$mfaCode = $form.find('#mfa_code'),
 				$btnVerify = $dialog.find('#btn_mfa_verify'),
-				isCodeLengthInvalid = true;
+				isCodeLengthInvalid = true,
+				isSubmitted = false;
 
 			monster.ui.mask($mfaCode, '000000', {
 				placeholder: '______'
@@ -1547,7 +1566,8 @@ define(function(require) {
 				$dialog.dialog('close');
 				self.showOtpSetupDialog({
 					loginData: loginData,
-					success: successCallback
+					success: successCallback,
+					cancel: cancelCallback
 				});
 			});
 
@@ -1595,10 +1615,22 @@ define(function(require) {
 						return;
 					}
 
+					isSubmitted = true;
+
+					$dialog.dialog('close');
+
 					successCallback(_.assign({
 						multi_factor_response: code
 					}, loginData));
 				});
+			});
+
+			$dialog.on('dialogclose', function() {
+				if (isSubmitted) {
+					return;
+				}
+
+				cancelCallback && cancelCallback();
 			});
 		},
 
@@ -1613,7 +1645,6 @@ define(function(require) {
 		showOtpSetupDialog: function(args) {
 			var self = this,
 				loginData = args.loginData,
-				successCallback = args.success,
 				$template = $(self.getTemplate({
 					name: 'mfa-otpSetupDialog'
 				})),
@@ -1630,11 +1661,11 @@ define(function(require) {
 
 			monster.parallel({
 				bindEvents: function bindEvents(next) {
-					self.bindOtpSetupDialogEvents({
-						$dialog: $dialog,
-						loginData: loginData,
-						success: successCallback
-					});
+					var bindArgs = _.assign({
+						$dialog: $dialog
+					}, args);
+
+					self.bindOtpSetupDialogEvents(bindArgs);
 
 					next();
 				},
@@ -1767,16 +1798,12 @@ define(function(require) {
 		bindOtpSetupDialogEvents: function(args) {
 			var self = this,
 				$dialog = args.$dialog,
-				loginData = args.loginData,
-				successCallback = args.success;
+				showOtpVerificationDialogArgs = _.pick(args, ['loginData', 'success', 'cancel']);
 
 			$dialog.find('#btn_mfa_enter_code').on('click', function(e) {
 				e.preventDefault();
 				$dialog.dialog('close');
-				self.showOtpVerificationDialog({
-					loginData: loginData,
-					success: successCallback
-				});
+				self.showOtpVerificationDialog(showOtpVerificationDialogArgs);
 			});
 		},
 
