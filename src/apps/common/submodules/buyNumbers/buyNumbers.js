@@ -209,6 +209,10 @@ define(function(require) {
 							}
 						},
 						success: function(data) {
+							if (data.hasOwnProperty('error') && !_.isEmpty(data.error)) {
+								var errMsg = self.i18n.active().buyNumbers.partialPurchaseFailure + ' ' + _.keys(data.error).join(' ');
+								monster.ui.alert('error', errMsg);
+							}
 							if (data.hasOwnProperty('success') && !_.isEmpty(data.success)) {
 								callbacks.hasOwnProperty('success') && callbacks.success(data.success);
 							}
