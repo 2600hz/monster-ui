@@ -1,3 +1,5 @@
+@import "../../../../css/partials/base";
+
 .trunkstore_popup.numberMessaging {
 	width: 510px;
 	margin: 0;
@@ -45,6 +47,40 @@
 		font-size: 12px;
 		color: #454545;
 	}
+
+	.sms-box-switch label {
+		display: inline-block;
+		margin-right: 1rem;
+	}
+
+	.number-messaging-section-hidden {
+		display: none;
+	}
+
+	.text-danger {
+		color: $danger-color;
+		font-weight: 600;
+	}
+
+	label.monster-invalid {
+		position: unset;
+	}
+
+	/* Position chosen popup above input field */
+	.chosen-container .chosen-drop {
+		top: auto;
+		bottom: 100%;
+		border-top: 1px solid $primary-color;
+		border-bottom: 0 none;
+		width: 478px;
+
+		.chosen-results {
+			max-height: 100px;
+			width: 476px;
+		}
+	}
 }
 
-
+.number-messaging-dialog.ui-dialog .ui-dialog-title {
+	font-size: 22px;
+}

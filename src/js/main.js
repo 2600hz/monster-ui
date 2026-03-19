@@ -63,6 +63,7 @@ require.config({
 		'vfs_fonts': 'js/vendor/pdfmake/build/vfs_fonts',
 		'postal': 'js/vendor/postal-2.0.4',
 		'popup-redirect': 'js/vendor/popup-redirect',
+		'qrcode': 'js/vendor/qrcode.min',
 		'randomColor': 'js/vendor/randomColor',
 		'renderjson': 'js/vendor/renderjson',
 		'signals': 'js/vendor/signals.min',
@@ -114,6 +115,10 @@ require.config({
 		'moment-timezone': ['moment'],
 		'popup-redirect': {
 			exports: 'Popup'
+		},
+		qrcode: {
+			deps: ['jquery'],
+			exports: 'QRCode'
 		},
 		renderjson: {
 			exports: 'renderjson'
