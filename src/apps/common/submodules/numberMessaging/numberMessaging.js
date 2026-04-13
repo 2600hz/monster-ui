@@ -352,7 +352,9 @@ define(function(require) {
 					});
 				},
 				function checkMfaConfig(formData, mfaConfig, callback) {
-					if (shouldCheckMfaConfig && !mfaConfig.enabled && !mfaConfig.otpConfigId) {
+					var isMfaConfigEnabled = _.get(mfaConfig, 'securitySettings.account.auth_modules.cb_user_auth.multi_factor.enabled', false);
+
+					if (shouldCheckMfaConfig && !isMfaConfigEnabled && !mfaConfig.otpConfigId) {
 						monster.ui.alert('error', self.i18n.active().numberMessaging.mfaNotConfiguredError);
 						callback('MfaOtpNotConfigured');
 						return;
@@ -454,7 +456,9 @@ define(function(require) {
 					}
 				},
 				function enableMfaOtpConfig(mfaConfig, number, callback) {
-					if (!shouldCheckMfaConfig || _.get(mfaConfig, 'enabled', false)) {
+					var isMfaConfigEnabled = _.get(mfaConfig, 'securitySettings.account.auth_modules.cb_user_auth.multi_factor.enabled', false);
+
+					if (!shouldCheckMfaConfig || isMfaConfigEnabled) {
 						callback(null, number);
 						return;
 					}
@@ -462,7 +466,7 @@ define(function(require) {
 					self.numberMessagingEnableOtpMultifactor({
 						data: {
 							accountId: accountId,
-							configurationId: mfaConfig.otpConfigId
+							mfaConfig: mfaConfig
 						},
 						success: function() {
 							monster.ui.alert(
@@ -730,7 +734,7 @@ define(function(require) {
 
 				_.has(args, 'success') && args.success({
 					otpConfigId: _.get(results, 'otpSettings.id'),
-					enabled: _.get(results, 'securitySettings.account.auth_modules.cb_user_auth.multi_factor.enabled', false)
+					securitySettings: _.get(results, 'securitySettings', {})
 				});
 			});
 		},
@@ -740,25 +744,37 @@ define(function(require) {
 		 * @param  {Object} args
 		 * @param  {Object} args.data
 		 * @param  {String} args.data.accountId  ID of the account.
-		 * @param  {String} args.data.configurationId  Multi-factor configuration ID.
+		 * @param  {Object} args.data.mfaConfig  Multi-factor configuration data.
+		 * @param  {String} args.data.mfaConfig.otpConfigId  OTP configuration ID.
+		 * @param  {Object} args.data.mfaConfig.securitySettings  Security settings object.
 		 * @param  {Function} [args.success]  Success callback, which receives the OTP configuration object.
 		 * @param  {Function} [args.error]  Error callback.
 		 */
 		numberMessagingEnableOtpMultifactor: function(args) {
 			var self = this,
 				accountId = args.data.accountId,
-				data = {
-					'auth_modules': {
-						'cb_user_auth': {
-							'multi_factor': {
-								'configuration_id': args.data.configurationId,
-								'account_id': accountId,
-								'enabled': true
-							}
-						}
-					},
-					accountId: accountId
-				};
+				configurationId = args.data.mfaConfig.otpConfigId,
+				securitySettings = args.data.mfaConfig.securitySettings,
+				multifactorData = {
+					multi_factor: {
+						configuration_id: configurationId,
+						account_id: accountId,
+						enabled: true
+					}
+				},
+				data = _.merge(
+					{},
+					_.get(securitySettings, 'account', {}),
+					{
+						auth_modules: {
+							cb_user_auth: multifactorData,
+							cb_desktop_auth: multifactorData,
+							cb_mobile_auth: multifactorData,
+							cb_web_auth: multifactorData
+						},
+						accountId: accountId
+					}
+				);
 
 			self.callApi({
 				resource: 'security.update',
