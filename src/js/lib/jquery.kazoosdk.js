@@ -307,7 +307,8 @@
 				'list': { verb: 'GET', url: 'accounts/{accountId}/multi_factor' },
 				'listAttempts': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts' },
 				'getAttempt': { verb: 'GET', url: 'accounts/{accountId}/multi_factor/attempts/{attemptId}' },
-				'qrcode': { verb: 'PUT', url: 'multi_factor/qrcode' }
+				'qrcode': { verb: 'PUT', url: 'multi_factor/qrcode' },
+				'resetQrcode': { verb: 'PUT', url: 'multi_factor/reset_qrcode' }
 			},
 			numbers: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/phone_numbers/{phoneNumber}' },
