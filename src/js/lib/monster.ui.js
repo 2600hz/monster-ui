@@ -27,6 +27,7 @@ define(function(require) {
 	require('monthpicker');
 	require('timepicker');
 	require('validate');
+	require('validate-addons');
 	require('wysiwyg');
 
 	function initializeHandlebarsHelper() {

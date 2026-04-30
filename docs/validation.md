@@ -81,7 +81,7 @@ monster.ui.validate(formToValidate, {
 
 For the full list of standard validation rules, see [here][validation_methods].
 
-### Cutsom validation rules
+### Custom validation rules
 
 We added the following custom rules to the set of usable validation rules:
 
