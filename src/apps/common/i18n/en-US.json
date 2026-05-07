@@ -754,6 +754,24 @@
 			"us": {
 				"value": "US",
 				"option": "United States"
+			},
+			"ca": {
+				"value": "CA",
+				"option": "Canada"
+			}
+		},
+		"labels": {
+			"us": {
+				"postalCode": "Zip Code",
+				"region": "State",
+				"postalPlaceholder": "12345",
+				"regionPlaceholder": "CA"
+			},
+			"ca": {
+				"postalCode": "Postal Code",
+				"region": "Province",
+				"postalPlaceholder": "A1A 1A1",
+				"regionPlaceholder": "ON"
 			}
 		}
 	},

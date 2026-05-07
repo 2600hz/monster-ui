@@ -57,6 +57,14 @@ define(function(require) {
 				}
 			});
 
+			var initialCountry = _.get(dataNumber, 'e911.country', 'US');
+			popupHtml.find('select[name="country"]').val(initialCountry);
+			self.e911ApplyCountryUi(popupHtml, initialCountry);
+
+			popupHtml.find('select[name="country"]').on('change', function() {
+				self.e911ApplyCountryUi(popupHtml, $(this).val());
+			});
+
 			popupHtml.find('#postal_code').change(function() {
 				var zipCode = $(this).val();
 
@@ -224,6 +232,22 @@ define(function(require) {
 				top: 40 + rotatedTextOffset + 'px',
 				left: 25 - rotatedTextOffset + 'px'
 			});
+		},
+
+		e911ApplyCountryUi: function(form, country) {
+			var self = this,
+				key = (country || 'US').toLowerCase(),
+				i18nLabels = _.get(self.i18n.active(), 'e911.labels', {}),
+				labels = i18nLabels[key] || i18nLabels.us;
+
+			if (!labels) {
+				return;
+			}
+
+			form.find('label[for="postal_code"]').text(labels.postalCode);
+			form.find('#postal_code').attr('placeholder', labels.postalPlaceholder);
+			form.find('label[for="region"]').text(labels.region);
+			form.find('#region').attr('placeholder', labels.regionPlaceholder);
 		},
 
 		e911Format: function(data) {
