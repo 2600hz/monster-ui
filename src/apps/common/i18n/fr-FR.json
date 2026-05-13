@@ -118,7 +118,7 @@
 	},
 	"e911":{
 		"addressLine1":"Ligne Adresse 1",
-		"addressLine2":"Ligne Adresse 2",
+		"addressLine2":"Adresse étendue",
 		"city":"Ville",
 		"dialogTitle":"Modifier location d'urgence",
 		"gmapPinLabel":"Votre+Adresse+d'Urgence",
@@ -127,7 +127,7 @@
 		"lastE911Error":"Vous devez configurer l'Adresse d'Urgence (E911) sur un au moins un numéro de votre compte, veuillez le configurer sur un autre numéro avant de le retirer de celui-ci.",
 		"postalCode":"Code Postal",
 		"rotatedText":"Pour Services d'Urgences",
-		"state":"État",
+		"state":"État/Province",
 		"country": "Country",
 		"successE911":"Mise à jour de l'Adresse d'Urgence de <br> {{phoneNumber}} réussie",
 		"title":"Adresse d'Urgence",
@@ -143,6 +143,10 @@
 			"us": {
 				"value": "US",
 				"option": "United States"
+			},
+			"canada": {
+				"value": "CA",
+				"option": "Canada"
 			}
 		}
 	},

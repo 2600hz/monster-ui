@@ -43,9 +43,14 @@
 				<label class="control-label" for="country">{{ i18n.e911.country }}</label>
 				<div class="controls">
 					<select class="country-list" name="country">
+						{{#select country}}
+						<option value="{{ i18n.e911.countries.canada.value }}">
+							{{ i18n.e911.countries.canada.option }}
+						</option>
 						<option value="{{ i18n.e911.countries.us.value }}" selected>
 							{{ i18n.e911.countries.us.option }}
 						</option>
+						{{/select}}
 					</select>
 				</div>
 			</div>

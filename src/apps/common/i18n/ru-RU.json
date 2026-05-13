@@ -95,7 +95,7 @@
 
 	"e911": {
 		"addressLine1": "Адрес (строка 1)",
-		"addressLine2": "Адрес (строка 2)",
+		"addressLine2": "Расширенный адрес",
 		"city": "Город",
 		"dialogTitle": "Редактировать местоположение для экстренных вызовов",
 		"gmapPinLabel": "Ваше местоположение для экстренных вызовов",
@@ -113,6 +113,10 @@
 			"us": {
 				"value": "US",
 				"option": "United States"
+			},
+			"canada": {
+				"value": "CA",
+				"option": "Canada"
 			}
 		}
 	},

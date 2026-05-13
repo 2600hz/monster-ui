@@ -727,16 +727,16 @@
 			"placeholder": "Space separated"
 		},
 		"addressLine1": "Address Line 1",
-		"addressLine2": "Address Line 2",
+		"addressLine2": "Extended Address",
 		"city": "City",
 		"dialogTitle": "Edit 911 Location",
 		"gmapPinLabel": "Your+E911+Location",
 		"infoBox": "This information will show up to 911 emergency services when you dial it from your number.",
 		"label": "e911",
 		"lastE911Error": "You must have e911 set up on at least one number in your account. Please set it up on another number before removing it from this one.",
-		"postalCode": "Zip Code",
+		"postalCode": "Zip/Postal Code",
 		"rotatedText": "For emergency services",
-		"state": "State",
+		"state": "State/Province",
 		"country": "Country",
 		"successE911": "You successfully updated the e911 information of <br> {{phoneNumber}}",
 		"title": "E911 Information",
@@ -754,6 +754,10 @@
 			"us": {
 				"value": "US",
 				"option": "United States"
+			},
+			"canada": {
+				"value": "CA",
+				"option": "Canada"
 			}
 		}
 	},
