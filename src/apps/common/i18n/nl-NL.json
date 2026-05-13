@@ -97,7 +97,7 @@
 
 	"e911": {
 		"addressLine1": "Adres Lijn 1",
-		"addressLine2": "Adres Lijn 2",
+		"addressLine2": "Uitgebreid adres",
 		"city": "Stad",
 		"dialogTitle": "Bewerk 112 locatie",
 		"gmapPinLabel": "Uw+112+Locatie",
@@ -106,7 +106,7 @@
 		"lastE911Error": "U moet op tenminste 1 nummer de instellingen voor 112 actief hebben.Stel dit aub in op een ander nummer voordat u dit nummer verwijderd.",
 		"postalCode": "Postcode",
 		"rotatedText": "Voor alarmdiensten",
-		"state": "Provincie",
+		"state": "Staat/Provincie",
 		"country": "Country",
 		"successE911": "U werkte met succes het 112 alarmdienst adres bij voor {{phoneNumber}}",
 		"title": "112 Adres",
@@ -115,6 +115,10 @@
 			"us": {
 				"value": "US",
 				"option": "United States"
+			},
+			"canada": {
+				"value": "CA",
+				"option": "Canada"
 			}
 		}
 	},

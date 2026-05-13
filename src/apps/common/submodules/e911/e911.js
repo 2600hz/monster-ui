@@ -53,6 +53,9 @@ define(function(require) {
 				rules: {
 					notification_contact_emails: {
 						listOf: 'email'
+					},
+					region: {
+						maxlength: 2
 					}
 				}
 			});

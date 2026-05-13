@@ -195,14 +195,14 @@
 
 	"e911": {
 		"addressLine1": "Adresszeile 1",
-		"addressLine2": "Adresszeile 2",
+		"addressLine2": "Erweiterte Adresse",
 		"city": "Ort",
 		"dialogTitle": "Notrufstandort bearbeiten",
 		"gmapPinLabel": "Ihr+E911+Standort",
 		"infoBox": "Diese Adresse wird Notdiensten angezeigt, wenn Sie eine Notrufnummer wählen.",
 		"label": "e911",
 		"lastE911Error": "Die e911-Funktion (Notruf) muss für mindestens eine Nummer in Ihrem Konto eingerichtet sein. Konfigurieren Sie erst eine andere Nummer, bevor Sie die Funktion von dieser Nummer entfernen.",
-		"postalCode": "PLZ",
+		"postalCode": "PLZ/Postleitzahl",
 		"rotatedText": "Für Notdienste",
 		"state": "Bundesland/Kanton",
 		"country": "Country",
@@ -222,7 +222,11 @@
 			"us": {
 				"value": "US",
 				"option": "United States"
-			}
+			},
+			"canada": {
+				 "value": "CA",
+				"option": "Canada"
+			 }
 		}
 	},
 
