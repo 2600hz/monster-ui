@@ -44,6 +44,10 @@
 
 	.control-group {
 		margin-bottom: 10px;
+
+		label.monster-invalid {
+			position: unset;
+		}
 	}
 
 	.control-group .control-label {
