@@ -759,6 +759,16 @@
 				"value": "CA",
 				"option": "Canada"
 			}
+		},
+		"placeholders": {
+			"us": {
+				"postalCode": "12345",
+				"region": "CA"
+			},
+			"ca": {
+				"postalCode": "A1A 1A1",
+				"region": "ON"
+			}
 		}
 	},
 
