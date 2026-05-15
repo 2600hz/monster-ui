@@ -47,6 +47,9 @@
 
 		label.monster-invalid {
 			position: unset;
+			max-width: 196px;
+			white-space: normal;
+			word-wrap: break-word;
 		}
 	}
 
