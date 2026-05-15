@@ -55,7 +55,9 @@ define(function(require) {
 						listOf: 'email'
 					},
 					region: {
-						maxlength: 2
+						minlength: 2,
+						maxlength: 2,
+						lettersonly: true
 					}
 				}
 			});
