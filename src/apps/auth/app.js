@@ -1443,10 +1443,13 @@ define(function(require) {
 		},
 
 		doDuoUniversalRedirect: function(data, loginData) {
-			localStorage.setItem('prevAuth', JSON.stringify(loginData));
-			localStorage.setItem('duoAuthState', _.get(data, 'multi_factor_request.duo_state', ''));
+			var multiFactorRequest = _.get(data, 'multi_factor_request'),
+				duoRedirect = _.get(multiFactorRequest, 'duo_authorize_url') + '?' + _.get(multiFactorRequest, 'duo_form_body');
 
-			window.location.href = _.get(data, 'multi_factor_request.duo_redirect', '');
+			localStorage.setItem('prevAuth', JSON.stringify(loginData));
+			localStorage.setItem('duoAuthState', _.get(multiFactorRequest, 'duo_state', ''));
+
+			window.location.href = duoRedirect;
 		},
 
 		showDuoDialog: function() {
