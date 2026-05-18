@@ -247,8 +247,33 @@ define(function(require) {
 		},
 
 		e911Normalize: function(data) {
+			var specialCharsRegex = /['"<>&]/g,
+				streetAddress = _.trim(_.get(data, 'street_address', '')).replace(specialCharsRegex, ''),
+				splitAddress = streetAddress.split(/\s+/g),
+				houseNumber = _.head(splitAddress),
+				existingLegacyData = _.get(data, 'legacy_data', {}),
+				legacyData = _.isPlainObject(existingLegacyData) ? _.clone(existingLegacyData) : {};
+
 			data.caller_name = monster.apps.auth.currentAccount.name;
-			data.street_address = _.trim(_.get(data, 'street_address', ''));
+			data.street_address = streetAddress;
+
+			if (data.extended_address) {
+				data.extended_address = data.extended_address.replace(specialCharsRegex, '');
+			}
+
+			if (data.locality) {
+				data.locality = data.locality.replace(specialCharsRegex, '');
+			}
+
+			if (data.region) {
+				data.region = data.region.replace(specialCharsRegex, '');
+			}
+
+			if (/^\d/.test(houseNumber)) {
+				legacyData.house_number = houseNumber;
+			}
+
+			data.legacy_data = legacyData;
 
 			return _.merge({}, data, {
 				notification_contact_emails: _
