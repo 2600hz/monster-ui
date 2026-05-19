@@ -62,6 +62,8 @@ define(function(require) {
 				}
 			});
 
+			monster.ui.valid(popupHtml);
+
 			self.e911ApplyCountryUi(popupHtml, _.get(dataNumber, 'e911.country', 'US'));
 
 			popupHtml.find('select[name="country"]').on('change', function() {

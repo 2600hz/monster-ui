@@ -12,13 +12,13 @@
 			<div class="control-group">
 				<label class="control-label" for="postal_code">{{ i18n.e911.postalCode }}</label>
 				<div class="controls">
-					<input id="postal_code" type="text" placeholder='{{ i18n.e911.placeholders.us.postalCode }}' name="postal_code" value="{{postal_code}}"/>
+					<input id="postal_code" required type="text" placeholder='{{ i18n.e911.placeholders.us.postalCode }}' name="postal_code" value="{{postal_code}}"/>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="street_address">{{ i18n.e911.addressLine1 }}</label>
 				<div class="controls">
-					<input id="street_address" type="text" placeholder='{{ i18n.e911.addressLine1 }}' name="street_address" value="{{full_street_address}}" />
+					<input id="street_address" required type="text" placeholder='{{ i18n.e911.addressLine1 }}' name="street_address" value="{{full_street_address}}" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -30,13 +30,13 @@
 			<div class="control-group">
 				<label class="control-label" for="locality">{{ i18n.e911.city }}</label>
 				<div class="controls">
-					<input id="locality" type="text" name="locality" placeholder='{{ i18n.e911.city }}' value="{{locality}}" />
+					<input id="locality" required type="text" name="locality" placeholder='{{ i18n.e911.city }}' value="{{locality}}" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="region">{{ i18n.e911.state }}</label>
 				<div class="controls">
-					<input id="region" type="text" name="region" placeholder='{{ i18n.e911.placeholders.us.region }}' value="{{region}}" />
+					<input id="region" required type="text" name="region" placeholder='{{ i18n.e911.placeholders.us.region }}' value="{{region}}" />
 				</div>
 			</div>
 			<div class="control-group">
