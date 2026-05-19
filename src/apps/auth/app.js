@@ -131,11 +131,11 @@ define(function(require) {
 					window.location = sso.login;
 				}
 			} else if (urlParams.hasOwnProperty('state') && urlParams.hasOwnProperty('code')) {
-				const duoAuthState = localStorage.getItem('duoAuthState')
+				const duoAuthState = localStorage.getItem('duoAuthState');
 
 				if (duoAuthState === urlParams.state) {
 					self.checkDuoAuth(urlParams.code);
-					return
+					return;
 				}
 
 				// OAuth redirect
@@ -1466,7 +1466,7 @@ define(function(require) {
 				loginData = {
 					account_name: _.get(cookieData, 'accountName'),
 					credentials: _.get(cookieData, 'credentials')
-				
+				};
 
 			if (
 				_.isUndefined(loginData.account_name)
