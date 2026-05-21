@@ -389,6 +389,9 @@ define(function(require) {
 				wsc.logger.log('attempting to reauthenticate...');
 
 				monster.pub('auth.retryLogin', {
+					additionalArgs: {
+						isRetryLoginRequest: true
+					},
 					success: function() {
 						wsc.logger.log('reauthentication successful');
 						wsc.bind(params);

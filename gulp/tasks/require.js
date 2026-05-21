@@ -79,6 +79,7 @@ const libsToExcludeFromApp = [
 	'pdfmake',
 	'popup-redirect',
 	'postal',
+	'qrcode',
 	'randomColor',
 	'renderjson',
 	'signals',

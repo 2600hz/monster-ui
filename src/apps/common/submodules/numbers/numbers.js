@@ -577,7 +577,7 @@ define(function(require) {
 							if ($(this).parent().data('number') === requestData.numbers[number]) {
 								var tbody = $(this).parent().parent().parent(),
 									childCount = tbody[0].childElementCount,
-									numbersCount = dialogTemplate.find('h4').find('.monster-blue');
+									numbersCount = dialogTemplate.find('h4').find('.monster-primary-color');
 
 								requestData.numbers.splice(number, 1);
 								$(this).parent().parent().remove();
@@ -685,7 +685,7 @@ define(function(require) {
 						if ($(this).parent().data('number') === requestData.numbers[number]) {
 							var tbody = $(this).parent().parent().parent(),
 								childCount = tbody[0].childElementCount,
-								numbersCount = dialogTemplate.find('h4').find('.monster-blue:first-child');
+								numbersCount = dialogTemplate.find('h4').find('.monster-primary-color:first-child');
 
 							requestData.numbers.splice(number, 1);
 							$(this).parent().parent().remove();
