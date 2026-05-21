@@ -738,7 +738,7 @@
 		"rotatedText": "For emergency services",
 		"state": {
 			"label": "State",
-			"placeholder": "2-letter code"
+			"placeholder": "2 Letter Code"
 		},
 		"country": "Country",
 		"successE911": "You successfully updated the e911 information of <br> {{phoneNumber}}",
