@@ -1269,8 +1269,12 @@ define(function(require) {
 
 		checkDuoAuth: function(duoCode) {
 			var self = this,
-				loginData = JSON.parse(localStorage.getItem('prevAuth')),
-				duoData = JSON.parse(localStorage.getItem('duoAuth'));
+				loginData = JSON.parse(localStorage.getItem('prevAuth'));
+
+			history.replaceState(null, '', window.location.hash || '/');
+
+			localStorage.removeItem('duoAuthState');
+			localStorage.removeItem('prevAuth');
 
 			loginData.multi_factor_response = {
 				code: duoCode,
@@ -1279,7 +1283,7 @@ define(function(require) {
 
 			self.putAuth(loginData, function(data) {
 				// Do Auth success
-			});
+			}, self.renderLoginPage.bind(self));
 		},
 
 		checkRecoveryId: function(recoveryId, callback) {
