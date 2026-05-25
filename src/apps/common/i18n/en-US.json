@@ -726,8 +726,8 @@
 			"label": "Email Address(es)",
 			"placeholder": "Space separated"
 		},
-		"addressLine1": "Address Line 1",
-		"addressLine2": "Address Line 2",
+		"addressLine1": "Address",
+		"addressLine2": "Extended Address",
 		"city": "City",
 		"dialogTitle": "Edit 911 Location",
 		"gmapPinLabel": "Your+E911+Location",
@@ -736,7 +736,10 @@
 		"lastE911Error": "You must have e911 set up on at least one number in your account. Please set it up on another number before removing it from this one.",
 		"postalCode": "Zip Code",
 		"rotatedText": "For emergency services",
-		"state": "State",
+		"state": {
+			"label": "State",
+			"placeholder": "2 Letter Code"
+		},
 		"country": "Country",
 		"successE911": "You successfully updated the e911 information of <br> {{phoneNumber}}",
 		"title": "E911 Information",
@@ -753,7 +756,21 @@
 		"countries": {
 			"us": {
 				"value": "US",
-				"option": "United States"
+				"option": "United States",
+				"postalCode": {
+					"label": "Zip Code",
+					"placeholder": "12345"
+				},
+				"region": "State"
+			},
+			"ca": {
+				"value": "CA",
+				"option": "Canada",
+				"postalCode": {
+					"label": "Postal Code",
+					"placeholder": "A1A 1A1"
+				},
+				"region": "Province"
 			}
 		}
 	},
