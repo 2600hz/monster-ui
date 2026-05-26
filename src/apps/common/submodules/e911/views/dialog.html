@@ -10,15 +10,24 @@
 
 		<div class="pull-left">
 			<div class="control-group">
-				<label class="control-label" for="postal_code">{{ i18n.e911.postalCode }}</label>
+				<label class="control-label" for="country">{{ i18n.e911.country }}</label>
 				<div class="controls">
-					<input id="postal_code" type="text" placeholder='{{ i18n.e911.postalCode }}' name="postal_code" value="{{postal_code}}"/>
+					<select class="country-list" name="country">
+						{{#select country}}
+						<option value="{{ i18n.e911.countries.us.value }}">
+							{{ i18n.e911.countries.us.option }}
+						</option>
+						<option value="{{ i18n.e911.countries.ca.value }}">
+							{{ i18n.e911.countries.ca.option }}
+						</option>
+						{{/select}}
+					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="street_address">{{ i18n.e911.addressLine1 }}</label>
 				<div class="controls">
-					<input id="street_address" type="text" placeholder='{{ i18n.e911.addressLine1 }}' name="street_address" value="{{full_street_address}}" />
+					<input id="street_address" required type="text" placeholder='{{ i18n.e911.addressLine1 }}' name="street_address" value="{{full_street_address}}" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -30,23 +39,19 @@
 			<div class="control-group">
 				<label class="control-label" for="locality">{{ i18n.e911.city }}</label>
 				<div class="controls">
-					<input id="locality" type="text" name="locality" placeholder='{{ i18n.e911.city }}' value="{{locality}}" />
+					<input id="locality" required type="text" name="locality" placeholder='{{ i18n.e911.city }}' value="{{locality}}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="region">{{ i18n.e911.state }}</label>
+				<label class="control-label" for="region">{{ i18n.e911.state.label }}</label>
 				<div class="controls">
-					<input id="region" type="text" name="region" placeholder='{{ i18n.e911.state }}' value="{{region}}" />
+					<input id="region" required type="text" maxlength="2" name="region" placeholder='{{ i18n.e911.state.placeholder }}' value="{{region}}" />
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="country">{{ i18n.e911.country }}</label>
+				<label class="control-label" for="postal_code">{{ i18n.e911.postalCode }}</label>
 				<div class="controls">
-					<select class="country-list" name="country">
-						<option value="{{ i18n.e911.countries.us.value }}" selected>
-							{{ i18n.e911.countries.us.option }}
-						</option>
-					</select>
+					<input id="postal_code" required type="text" placeholder='{{ i18n.e911.placeholders.us.postalCode }}' name="postal_code" value="{{postal_code}}"/>
 				</div>
 			</div>
 			{{#if status}}
