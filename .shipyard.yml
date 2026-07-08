@@ -59,3 +59,4 @@ metapackage:
     branch: '5.4'
     package: monster-ui-core
 dependencies: null
+
