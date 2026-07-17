@@ -37,15 +37,19 @@ define(function(require) {
 					submodule: 'monsterMultiSelector'
 				})),
 				$container = $layoutTemplate,
+				isOkResult = false,
 				$popup = monster.ui.dialog($layoutTemplate, {
-					title: title
+					title: title,
+					onClose: function() {
+						!isOkResult && args.cancelCallback && args.cancelCallback();
+					}
 				}),
 				okCallback = function(selectedKeys) {
+					isOkResult = true;
 					args.okCallback && args.okCallback(selectedKeys);
 					$popup.dialog('close');
 				},
 				cancelCallback = function() {
-					args.cancelCallback && args.cancelCallback();
 					$popup.dialog('close');
 				};
 
