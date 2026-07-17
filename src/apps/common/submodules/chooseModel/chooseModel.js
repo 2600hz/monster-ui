@@ -169,7 +169,8 @@ define(function(require) {
 				selectedBrand,
 				selectedFamily,
 				selectedModel,
-				templateDevice;
+				templateDevice,
+				selectedBrandName;
 
 			templateDevice = $(self.getTemplate({
 				name: 'provisioner',
@@ -200,7 +201,8 @@ define(function(require) {
 					brand = $this.data('brand'),
 					$searchBox = templateDevice.find('.device-popup-search[data-search_type="models"]');
 
-				selectedBrand = brand;
+				selectedBrand = brand
+				selectedBrandName = $this.data('name');
 
 				if (!$this.hasClass('unselected') && !$this.hasClass('selected')) {
 					$this.addClass('selected');
@@ -239,7 +241,7 @@ define(function(require) {
 						.text(self.getTemplate({
 							name: '!' + self.i18n.active().chooseModel.deviceSelected,
 							data: {
-								brand: selectedBrand,
+								brand: selectedBrandName,
 								model: selectedModel
 							},
 							submodule: 'chooseModel'

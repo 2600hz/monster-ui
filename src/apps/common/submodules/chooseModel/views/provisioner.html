@@ -15,7 +15,10 @@
 
 		<div class="brand-selection">
 			{{#each brands}}
-			<div class="brand-box" data-brand="{{id}}" style="background-image: url('css/assets/brands/{{id}}.png');" />
+			<div class="brand-box" data-brand="{{id}}" data-name="{{name}}" style="background-image: url('css/assets/brands/{{id}}.png');">
+				<span class="brand-box-fallback" style="display:none" onerror-placeholder>{{name}}</span>
+				<img src="css/assets/brands/{{id}}.png" style="display:none" onerror="this.parentElement.backgroundImage='none'; this.previousElementSibling.style.display='flex';">
+			</div>
 			{{/each}}
 		</div>
 	</div>
@@ -40,8 +43,11 @@
 					{{#each families}}
 						{{#each models}}
 							<div class="model-box" data-family="{{../id}}" data-model="{{id}}">
-								<div class="model-image" style="background-image: url('css/assets/models/{{../../id}}_{{../id}}_{{id}}.jpg');"></div>
-								<div class="model-name">{{name}}</div>
+								<div class="model-image" style="background-image: url('css/assets/models/{{../../id}}_{{../id}}_{{id}}.jpg');">
+									<span class="model-image-fallback" style="display:none" onerror-placeholder>{{name}}</span>
+									<img src="css/assets/models/{{../../id}}_{{../id}}_{{id}}.jpg" style="display:none" onerror="this.parentElement.backgroundImage='none'; this.previousElementSibling.style.display='flex'; document.getElementById('{{../../id}}_{{../id}}_{{id}}').style.display='none';">
+								</div>
+								<div class="model-name" id="{{../../id}}_{{../id}}_{{id}}">{{name}}</div>
 							</div>
 						{{/each}}
 					{{/each}}
