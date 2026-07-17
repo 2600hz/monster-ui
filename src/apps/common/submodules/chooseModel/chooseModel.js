@@ -273,7 +273,7 @@ define(function(require) {
 							mac_address: formData.mac_address,
 							name: formData.name,
 							provision: {
-								endpoint_brand: selectedBrand,
+								endpoint_brand: selectedBrandName,
 								endpoint_family: selectedFamily,
 								endpoint_model: selectedModel,
 								id: _.get(modelSelected, 'template_id')
