@@ -2051,11 +2051,12 @@ define(function(require) {
 		},
 
 		/**
-		 * @desc Two columns UI element with sortable items
-		 * @param target - mandatory jQuery Object
-		 * @param data - mandatory object of items
-		 * @param selectedData - mandatory object of selected items
-		 * @param options - optional list of settings
+		 * Two columns UI element with sortable items.
+		 * @param {jQuery Object} target  <input> or <select> element where the dropdown is appended.
+		 * @param {Object} items          Mandatory object of items.
+		 * @param {Object} selectedItems  Mandatory object of selected items.
+		 * @param {Object} [options]      Optional list of settings for JQueryUI's sortable + custom ones.
+		 * @param {Function} [options.onChange]  Optional callback invoked whenever an item moves between columns (drag-and-drop or double-click).
 		 */
 		linkedColumns: function(target, items, selectedItems, pOptions) {
 			var self = this,
@@ -2091,13 +2092,18 @@ define(function(require) {
 					.sortable({
 						items: '.item-selector',
 						connectWith: '.connected',
-						tolerance: 'pointer'
+						tolerance: 'pointer',
+						update: function() {
+							typeof options.onChange === 'function' && options.onChange();
+						}
 					});
 
 			widgetTemplate.find('.available, .selected').on('dblclick', '.item-selector', function() {
 				var newColumnClass = $(this).parent().hasClass('available') ? '.selected' : '.available';
 
 				$(this).appendTo(widgetTemplate.find(newColumnClass));
+
+				typeof options.onChange === 'function' && options.onChange();
 			});
 
 			if (options.searchable) {
