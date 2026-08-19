@@ -344,7 +344,27 @@
 		"fromColumn": "Van",
 		"toColumn": "Naar",
 		"directionColumn": " ",
-		"accountColumn": "Account"
+		"accountColumn": "Account",
+
+		"genericLedger": {
+			"columns": {
+				"account": "Account",
+				"amount": "Amount",
+				"date": "Date",
+				"description": "Description",
+				"usage": "Usage",
+				"agent": "Agent"
+			},
+			"ledgers": {
+				"mobile_data": "Mobile Data",
+				"2600Hz-mobile": "Mobile Data",
+				"per-minute-voip": "Per Minute",
+				"payments": "Payments",
+				"prorations": "Prorations",
+				"rollovers": "Rollovers",
+				"adjustments": "Adjustments"
+			}
+		}
 	},
 
 	"servicePlan": {
