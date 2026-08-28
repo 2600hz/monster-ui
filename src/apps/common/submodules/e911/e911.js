@@ -310,11 +310,25 @@ define(function(require) {
 				},
 				error: function(_data, status, globalHandler) {
 					if (_data.error === '400') {
-						if (data.message === 'multiple_choice') {
+						if (_data.message === 'multiple_choice') {
 							callbacks.multipleChoices && callbacks.multipleChoices(_data.data.multiple_choice.e911);
 						} else {
 							callbacks.invalidAddress && callbacks.invalidAddress();
 						}
+					} else if (_data.error === '500' && _data.message === 'address_timeout') {
+						monster.ui.confirm(
+							self.i18n.active().e911.retryDialog.message,
+							function() {
+								self.e911UpdateNumber(phoneNumber, accountId, data, callbacks);
+							},
+							null,
+							{
+								type: 'warning',
+								title: self.i18n.active().e911.retryDialog.title,
+								confirmButtonText: self.i18n.active().e911.retryDialog.retry,
+								confirmButtonClass: 'monster-button-primary'
+							}
+						);
 					} else {
 						globalHandler(_data, { generateError: true });
 					}
