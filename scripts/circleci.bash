@@ -2,7 +2,7 @@
 
 if [ ! -d $MONSTER_ROOT ]; then
     echo Cloning kazoo into $MONSTER_ROOT
-    git clone https://github.com/2600hz/monster-ui $MONSTER_ROOT
+    git clone https://gitlab.com/oomaforbin/oomacorp/2600hz/monster-ui.git $MONSTER_ROOT
 fi
 
 if [ -z $BASE_BRANCH ]; then
@@ -10,13 +10,14 @@ if [ -z $BASE_BRANCH ]; then
 fi
 
 if [[ $BASE_BRANCH != "origin/master" ]]; then
-    CORE_IDENTITY=`curl https://api.github.com/repos/2600hz/monster-ui/git/refs/tags \
-	               | grep "refs" \
-				   | sed 's|[^0-9\.]||g' \
-				   | sort --version-sort \
-				   | grep "^${BASE_BRANCH#origin/}" \
-				   | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
-				   | tail -1`
+    cd $MONSTER_ROOT
+    git fetch --tags
+    CORE_IDENTITY=$(git tag -l \
+        | sort --version-sort \
+        | grep "^${BASE_BRANCH#origin/}" \
+        | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+        | tail -1)
+    cd -
 else
     CORE_IDENTITY='master'
 fi
