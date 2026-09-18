@@ -747,12 +747,17 @@ define(function(require) {
 	function getCookiesManager() {
 		var mergeAttributes = function(attributes) {
 			var allowCrossSiteUsage = monster.config.allowCrossSiteUsage;
+			var defaultAttributes = {
+				samesite: 'strict',
+				secure: true
+			};
 			var crossSiteAttributes = {
 				samesite: 'none',
 				secure: true
 			};
 			return _.merge(
 				{},
+				defaultAttributes,
 				attributes,
 				allowCrossSiteUsage && crossSiteAttributes
 			);
