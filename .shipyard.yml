@@ -6,7 +6,7 @@ metapackage:
   -
     name: meta-monster-ui
     type: required
-    branch: master
+    branch: 'master'
     package: monster-ui-core
 dependencies: null
 base_core: null
