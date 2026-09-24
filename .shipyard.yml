@@ -2,6 +2,13 @@ name: monster-ui-core
 custom_files: null
 exposure: private
 base_branch: origin/master
+metapackage:
+  -
+    name: meta-monster-ui
+    type: required
+    branch: master
+    package: monster-ui-core
+dependencies: null
 base_core: null
 template: monster-ui-core.spec.tmpl
 package:
@@ -21,10 +28,3 @@ package:
     url: 'http://www.2600hz.org/'
     vendor: 2600hz
     dist: .el9
-metapackage:
-  -
-    name: meta-monster-ui
-    type: required
-    branch: master
-    package: monster-ui-core
-dependencies: null
