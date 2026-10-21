@@ -849,6 +849,18 @@ define(function(require) {
 				generateError: _.get(request, 'generateError', true)
 			},
 			beforeSend: function(jqXHR) {
+				var provisionerApiRoot = _.get(monster.config, 'api.provisioner');
+				var isProvisionerRequest = _.isString(provisionerApiRoot)
+					&& normalizeUrlPathEnding(apiUrl) === normalizeUrlPathEnding(provisionerApiRoot);
+				var currentAccount = _.get(monster.apps, 'auth.currentAccount', {});
+				// Explicit account context for Prov6: token alone reflects the masquerading
+				// (parent) account, not the sub-account being operated on.
+				var provisionerHeaders = isProvisionerRequest
+					? _.omitBy({
+						'x-account-id': _.get(currentAccount, 'id') || _.get(monster.apps, 'auth.accountId'),
+						'x-reseller-id': _.get(currentAccount, 'reseller_id') || _.get(monster.apps, 'auth.resellerId')
+					}, _.isNil)
+					: {};
 				var headers = _
 					.chain(request)
 					.get('headers', {})
@@ -857,8 +869,8 @@ define(function(require) {
 						'X-Auth-Token': app.getAuthToken()
 					}, _.has(monster.config, 'kazooClusterId')
 						? { 'X-Kazoo-Cluster-ID': monster.config.kazooClusterId }
-						: {}
-					)
+						: {},
+					provisionerHeaders)
 					.omitBy(function(value, key) {
 						return _.includes(headersToRemove, _.toLower(key));
 					})
