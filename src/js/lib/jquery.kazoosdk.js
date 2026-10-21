@@ -83,6 +83,12 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/blacklists/{blacklistId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/blacklists/{blacklistId}' }
 			},
+			entitlements: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/entitlements' },
+				'enrollAccount': { verb: 'POST', url: 'accounts/{accountId}/entitlements/enrollment' },
+				'getUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/entitlements' },
+				'enrollUser': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/entitlements/enrollment' }
+			},
 			callflow: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },

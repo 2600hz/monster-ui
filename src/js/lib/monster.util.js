@@ -28,6 +28,7 @@ define(function(require) {
 		formatVariableToDisplay: formatVariableToDisplay,
 		friendlyTimer: friendlyTimer,
 		generateAccountRealm: generateAccountRealm,
+		generateUserPassword: generateUserPassword,
 		getAppIconPath: getAppIconPath,
 		getAppStoreMetadata: getAppStoreMetadata,
 		getAuthToken: getAuthToken,
@@ -1764,6 +1765,44 @@ define(function(require) {
 		if (monster.isDev()) {
 			printLogs();
 		}
+	}
+
+	/**
+	 * Generates a random password for a user, following the requirements set in
+	 * `config.userPassword.requirements` when defined.
+	 * @return {String} A random password.
+	 */
+	function generateUserPassword() {
+		if (!_.get(monster, 'config.userPassword.requirements')) {
+			return randomString(8, 'safe');
+		}
+		var charsets = {
+			lowercase: 'abcdefghijklmnopqrstuvwxyz',
+			uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			numbers: '1234567890',
+			specialcharacters: '!@#$%^&*()_+~|}{:;,.-'
+		};
+		var passwordLength = _.get(monster, 'config.userPassword.minLength', 12);
+		var requirements = monster.config.userPassword.requirements;
+		var requiredLength = 0;
+		var password = '';
+
+		_.forEach(requirements, function(value, key) {
+			var charset = key.replace('numOf', '').toLowerCase();
+			var count = value > 0 ? value : 0;
+
+			if (_.isUndefined(charsets[charset])) {
+				return;
+			}
+			requiredLength += value;
+			// _.sample keeps the charset case, randomString would randomize it
+			password += _.times(count, function() {
+				return _.sample(charsets[charset]);
+			}).join('');
+		});
+		password += randomString(passwordLength - requiredLength, 'safe');
+
+		return _.shuffle(password).join('');
 	}
 
 	/**
