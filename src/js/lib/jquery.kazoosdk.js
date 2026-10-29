@@ -89,6 +89,9 @@
 				'getUser': { verb: 'GET', url: 'accounts/{accountId}/users/{userId}/entitlements' },
 				'enrollUser': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/entitlements/enrollment' }
 			},
+			serviceBundles: {
+				'list': { verb: 'GET', url: 'accounts/{accountId}/service_bundles' }
+			},
 			callflow: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
 				'create': { verb: 'PUT', url: 'accounts/{accountId}/callflows' },
