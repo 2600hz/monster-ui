@@ -183,6 +183,7 @@
 		"tollfreeRadioLabel":"Choisissez un prefixe de numéro verts:",
 		"buyNumbers":"Acheter Numéros",
 		"noSelectedNumAlert":"Vous n'avez pas sélectionné de numéros à acheter.",
+		"courtesyUserNotAllowed":"Courtesy users are not allowed to buy numbers.",
 		"buyNumber":"Acheter Numéro",
 		"searchAgain":"Chercher un autre numéro",
 		"summaryTotalNumbers":"Nombre de numéros sélectionnés",

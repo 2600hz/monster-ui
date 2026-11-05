@@ -156,6 +156,7 @@
 		"tollfreeRadioLabel": "Selecteer een Gratis prefix (0800):",
 		"buyNumbers": "Koop Nummers",
 		"noSelectedNumAlert": "U selecteerde geen numer om te kopen.",
+		"courtesyUserNotAllowed": "Courtesy users are not allowed to buy numbers.",
 		"buyNumber": "Koop Nummer",
 		"searchAgain": "Zoek een ander Nummer",
 		"summaryTotalNumbers": "Totaal geselecteerde nummers",

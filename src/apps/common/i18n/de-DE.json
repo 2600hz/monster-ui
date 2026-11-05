@@ -264,6 +264,7 @@
 		"tollfreeRadioLabel": "Präfix für gebührenfreie Nummer angeben:",
 		"buyNumbers": "Nummern kaufen",
 		"noSelectedNumAlert": "Sie haben keine Nummer zum Kauf ausgewählt.",
+		"courtesyUserNotAllowed": "Courtesy users are not allowed to buy numbers.",
 		"buyNumber": "Nummer kaufen",
 		"searchAgain": "Andere Nummer suchen",
 		"summaryTotalNumbers": "Ausgewählte Nummern (Summe)",
