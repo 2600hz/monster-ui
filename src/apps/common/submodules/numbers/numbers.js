@@ -155,6 +155,7 @@ define(function(require) {
 					hideBuyNumbers: monster.config.whitelabel.hasOwnProperty('hideBuyNumbers')
 						? monster.config.whitelabel.hideBuyNumbers
 						: false,
+					disableBuyNumbers: _.get(monster, 'apps.auth.currentUser.bundle_type') === 'courtesy',
 					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
 					canAddExternalCids: monster.util.getCapability('caller_id.external_numbers').isEnabled,
@@ -394,6 +395,11 @@ define(function(require) {
 				});
 
 				showLinks();
+			});
+
+			parent.on('click', '.buy-dropdown.disabled', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
 			});
 
 			parent.on('click', '.account-header .buy-numbers-link', function(e) {

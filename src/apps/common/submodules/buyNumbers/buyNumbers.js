@@ -51,8 +51,14 @@ define(function(require) {
 			if (monster.config.whitelabel.hideBuyNumbers) {
 				throw new Error('Whitelabeling configuration does not allow for this common control to be loaded');
 			}
-			var self = this,
-				accountId = _.get(params, 'accountId', self.accountId),
+			var self = this;
+
+			if (_.get(monster, 'apps.auth.currentUser.bundle_type') === 'courtesy') {
+				monster.ui.alert('info', self.i18n.active().buyNumbers.courtesyUserNotAllowed);
+				return;
+			}
+
+			var accountId = _.get(params, 'accountId', self.accountId),
 				searchType = _.get(params, 'searchType', 'regular'),
 				singleSelect = _.isBoolean(params.singleSelect)
 					? params.singleSelect

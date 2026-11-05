@@ -18,7 +18,7 @@
 			{{#unless hideBuyNumbers}}
 			<ul class="nav buy-numbers-dropdown">
 				<li class="dropdown">
-					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart monster-green"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
+					<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number{{#if @root.disableBuyNumbers}} disabled{{/if}}"{{#unless @root.disableBuyNumbers}} data-toggle="dropdown"{{/unless}} data-target="#"><i class="fa fa-shopping-cart monster-green"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li><a class="buy-numbers-link" data-type="regular" href="#">{{@root.i18n.numbers.buyNumberLinks.regular}}</a></li>
 						<li><a class="buy-numbers-link" data-type="tollfree" href="#">{{@root.i18n.numbers.buyNumberLinks.tollfree}}</a></li>
@@ -52,7 +52,7 @@
 					{{#unless @root.hideBuyNumbers}}
 						<ul class="nav buy-numbers-dropdown">
 							<li class="dropdown">
-								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number" data-toggle="dropdown" data-target="#"><i class="fa fa-shopping-cart"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
+								<a href="#" id="buy_numbers" class="dropdown-toggle buy-dropdown action-number{{#if @root.disableBuyNumbers}} disabled{{/if}}"{{#unless @root.disableBuyNumbers}} data-toggle="dropdown"{{/unless}} data-target="#"><i class="fa fa-shopping-cart"></i><span class="action-text">{{ @root.i18n.numbers.buy }}</span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li><a class="buy-numbers-link" data-type="regular" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.regular}}</a></li>
 									<li><a class="buy-numbers-link" data-type="tollfree" href="javascript:void(0);">{{@root.i18n.numbers.buyNumberLinks.tollfree}}</a></li>

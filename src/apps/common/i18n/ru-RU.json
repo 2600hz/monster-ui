@@ -154,6 +154,7 @@
 		"tollfreeRadioLabel": "Выберите префикс номера 8-800:",
 		"buyNumbers": "Купить номера",
 		"noSelectedNumAlert": "Вы не выбрали номера для покупки.",
+		"courtesyUserNotAllowed": "Courtesy users are not allowed to buy numbers.",
 		"buyNumber": "Купить номер",
 		"searchAgain": "Найти другой номер",
 		"summaryTotalNumbers": "Всего выбрано номеров",
