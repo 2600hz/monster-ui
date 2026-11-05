@@ -277,6 +277,18 @@
 	display: inline-block;
 }
 
+#numbers_container .buy-numbers-dropdown a.buy-dropdown.disabled,
+#numbers_container .buy-numbers-dropdown a.buy-dropdown.disabled > *,
+#numbers_container .account-section.open .account-header .right-links a.buy-dropdown.disabled > * {
+	color: #aaaaaa;
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+#numbers_container .buy-numbers-dropdown a.buy-dropdown.disabled:hover .action-text {
+	text-decoration: none;
+}
+
 #numbers_container .actions-wrapper label{
 	font-size: 16px;
 	font-weight: 600;
