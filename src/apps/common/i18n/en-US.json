@@ -818,6 +818,7 @@
 		"tollfreeRadioLabel": "Select a tollfree prefix:",
 		"buyNumbers": "Buy Numbers",
 		"noSelectedNumAlert": "You didn't select any number to buy.",
+		"courtesyUserNotAllowed": "Courtesy users are not allowed to buy numbers.",
 		"buyNumber": "Buy Number",
 		"searchAgain": "Search another number",
 		"summaryTotalNumbers": "Total selected numbers",

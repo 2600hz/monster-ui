@@ -152,9 +152,9 @@ define(function(require) {
 					'externalNumbers'
 				])),
 				templateData = {
-					hideBuyNumbers: monster.config.whitelabel.hasOwnProperty('hideBuyNumbers')
+					hideBuyNumbers: (monster.config.whitelabel.hasOwnProperty('hideBuyNumbers')
 						? monster.config.whitelabel.hideBuyNumbers
-						: false,
+						: false) || _.get(monster, 'apps.auth.currentUser.bundle_type') === 'courtesy',
 					hidePort: monster.config.whitelabel.hasOwnProperty('hide_port') ? monster.config.whitelabel.hide_port : false,
 					viewType: data.viewType,
 					canAddExternalCids: monster.util.getCapability('caller_id.external_numbers').isEnabled,
