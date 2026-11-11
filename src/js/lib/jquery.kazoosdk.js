@@ -90,7 +90,7 @@
 				'enrollUser': { verb: 'POST', url: 'accounts/{accountId}/users/{userId}/entitlements/enrollment' }
 			},
 			serviceBundles: {
-				'list': { verb: 'GET', url: 'accounts/{accountId}/service_bundles' }
+				'list': { verb: 'GET', url: 'service_bundles' }
 			},
 			callflow: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/callflows/{callflowId}' },
